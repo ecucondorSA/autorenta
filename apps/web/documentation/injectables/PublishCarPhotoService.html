@@ -1,0 +1,2367 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >PublishCarPhotoService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/cars/publish/services/publish-car-photo.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Service for managing car photos</p>
+<p>Responsibilities:</p>
+<ul>
+<li>Photo selection and validation</li>
+<li>AI photo generation</li>
+<li>Photo upload to storage</li>
+<li>Photo removal</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#ALLOWED_TYPES" >ALLOWED_TYPES</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carsService" >carsService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isGeneratingAIPhotos" >isGeneratingAIPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isProcessingPhotos" >isProcessingPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_FILE_SIZE" >MAX_FILE_SIZE</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_PHOTOS" >MAX_PHOTOS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#notifications" >notifications</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#uploadedPhotos" >uploadedPhotos</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addAIPhotos" >addAIPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addAIPhotosFiles" >addAIPhotosFiles</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addStockPhotos" >addStockPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addStockPhotosFiles" >addStockPhotosFiles</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#base64ToFile" >base64ToFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildGeminiPrompts" >buildGeminiPrompts</a>
+                            </li>
+                            <li>
+                                <a href="#clearPhotos" >clearPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createPreview" >createPreview</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateAIPhotos" >generateAIPhotos</a>
+                            </li>
+                            <li>
+                                <a href="#getPhotoCount" >getPhotoCount</a>
+                            </li>
+                            <li>
+                                <a href="#hasMinimumPhotos" >hasMinimumPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadExistingPhotos" >loadExistingPhotos</a>
+                            </li>
+                            <li>
+                                <a href="#removePhoto" >removePhoto</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#selectPhotos" >selectPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadPhotos" >uploadPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validatePhoto" >validatePhoto</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addAIPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addAIPhotos</b></span>
+                        <a href="#addAIPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addAIPhotos(photoUrls: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="450"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:450</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Add AI generated photos (URLs) to the photo list</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>photoUrls</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addAIPhotosFiles"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addAIPhotosFiles</b></span>
+                        <a href="#addAIPhotosFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addAIPhotosFiles(files: File[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="417"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:417</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Add AI generated photos (Files) to the photo list</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>files</td>
+                                            <td>
+                                                        <code>File[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addStockPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addStockPhotos</b></span>
+                        <a href="#addStockPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addStockPhotos(photoUrls: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="377"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:377</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Add stock photos (URLs) to the photo list</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>photoUrls</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addStockPhotosFiles"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addStockPhotosFiles</b></span>
+                        <a href="#addStockPhotosFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addStockPhotosFiles(files: File[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:344</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Add stock photos (Files) to the photo list</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>files</td>
+                                            <td>
+                                                        <code>File[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="base64ToFile"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>base64ToFile</b></span>
+                        <a href="#base64ToFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>base64ToFile(base64String: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, filename: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, mimeType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, maxBytes: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, maxDimension: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="249"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:249</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>base64String</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>filename</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>mimeType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;image/png&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>maxBytes</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>900_000</code>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>maxDimension</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>1600</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;File&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildGeminiPrompts"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildGeminiPrompts</b></span>
+                        <a href="#buildGeminiPrompts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildGeminiPrompts(brand: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, model: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="486"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:486</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>brand</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>year</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearPhotos"></a>
+                    <span class="name">
+                        <span ><b>clearPhotos</b></span>
+                        <a href="#clearPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearPhotos()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="323"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:323</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Clear all photos</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createPreview"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createPreview</b></span>
+                        <a href="#createPreview"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createPreview(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create preview URL for photo</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateAIPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>generateAIPhotos</b></span>
+                        <a href="#generateAIPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateAIPhotos(brand: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, model: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="106"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:106</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Generate AI photos for a car</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>brand</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>year</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPhotoCount"></a>
+                    <span class="name">
+                        <span ><b>getPhotoCount</b></span>
+                        <a href="#getPhotoCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getPhotoCount()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="330"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:330</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get photo count</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasMinimumPhotos"></a>
+                    <span class="name">
+                        <span ><b>hasMinimumPhotos</b></span>
+                        <a href="#hasMinimumPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasMinimumPhotos()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="337"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:337</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if minimum photos requirement is met</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadExistingPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadExistingPhotos</b></span>
+                        <a href="#loadExistingPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadExistingPhotos(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="543"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:543</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Load existing photos for editing</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removePhoto"></a>
+                    <span class="name">
+                        <span ><b>removePhoto</b></span>
+                        <a href="#removePhoto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removePhoto(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="301"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:301</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Remove photo at index</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>selectPhotos</b></span>
+                        <a href="#selectPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>selectPhotos(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle photo selection from file input</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadPhotos</b></span>
+                        <a href="#uploadPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadPhotos(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="310"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:310</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Upload photos to storage for a car</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validatePhoto"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>validatePhoto</b></span>
+                        <a href="#validatePhoto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validatePhoto(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="77"
+                                    class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validate photo file</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ALLOWED_TYPES"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>ALLOWED_TYPES</b></span>
+                        <a href="#ALLOWED_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&#x27;image/jpeg&#x27;, &#x27;image/jpg&#x27;, &#x27;image/png&#x27;, &#x27;image/webp&#x27;]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carsService</b></span>
+                        <a href="#carsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CarsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isGeneratingAIPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isGeneratingAIPhotos</b></span>
+                        <a href="#isGeneratingAIPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isProcessingPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isProcessingPhotos</b></span>
+                        <a href="#isProcessingPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_FILE_SIZE"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_FILE_SIZE</b></span>
+                        <a href="#MAX_FILE_SIZE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10 * 1024 * 1024</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_PHOTOS"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_PHOTOS</b></span>
+                        <a href="#MAX_PHOTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notifications"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>notifications</b></span>
+                        <a href="#notifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationManagerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:23</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadedPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>uploadedPhotos</b></span>
+                        <a href="#uploadedPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;PhotoPreview[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/features/cars/publish/services/publish-car-photo.service.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject, signal } from &#x27;@angular/core&#x27;;
+import { environment } from &#x27;../../../../../environments/environment&#x27;;
+import { CarsService } from &#x27;../../../../core/services/cars.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../../core/services/notification-manager.service&#x27;;
+
+export interface PhotoPreview {
+  file: File;
+  preview: string;
+}
+
+/**
+ * Service for managing car photos
+ *
+ * Responsibilities:
+ * - Photo selection and validation
+ * - AI photo generation
+ * - Photo upload to storage
+ * - Photo removal
+ */
+@Injectable()
+export class PublishCarPhotoService {
+  private readonly carsService &#x3D; inject(CarsService);
+  private readonly notifications &#x3D; inject(NotificationManagerService);
+
+  // State
+  readonly uploadedPhotos &#x3D; signal&lt;PhotoPreview[]&gt;([]);
+  readonly isProcessingPhotos &#x3D; signal(false);
+  readonly isGeneratingAIPhotos &#x3D; signal(false);
+
+  private readonly MAX_PHOTOS &#x3D; 10;
+  private readonly MAX_FILE_SIZE &#x3D; 10 * 1024 * 1024; // 10MB
+  private readonly ALLOWED_TYPES &#x3D; [&#x27;image/jpeg&#x27;, &#x27;image/jpg&#x27;, &#x27;image/png&#x27;, &#x27;image/webp&#x27;];
+
+  /**
+   * Handle photo selection from file input
+   */
+  async selectPhotos(event: Event): Promise&lt;void&gt; {
+    const input &#x3D; event.target as HTMLInputElement;
+    if (!input.files || input.files.length &#x3D;&#x3D;&#x3D; 0) return;
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const files &#x3D; Array.from(input.files);
+      const currentPhotos &#x3D; this.uploadedPhotos();
+
+      // Check max limit
+      if (currentPhotos.length + files.length &gt; this.MAX_PHOTOS) {
+        throw new Error(&#x60;Máximo ${this.MAX_PHOTOS} fotos permitidas&#x60;);
+      }
+
+      // Validate and create previews
+      const newPhotos: PhotoPreview[] &#x3D; [];
+
+      for (const file of files) {
+        this.validatePhoto(file);
+        const preview &#x3D; await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      // Update state
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+      // Reset input
+      input.value &#x3D; &#x27;&#x27;;
+    }
+  }
+
+  /**
+   * Validate photo file
+   */
+  private validatePhoto(file: File): void {
+    // Check file type
+    if (!this.ALLOWED_TYPES.includes(file.type)) {
+      throw new Error(&#x60;Tipo de archivo no válido: ${file.type}. Usa JPG, PNG o WebP.&#x60;);
+    }
+
+    // Check file size
+    if (file.size &gt; this.MAX_FILE_SIZE) {
+      throw new Error(
+        &#x60;Archivo muy pesado: ${(file.size / 1024 / 1024).toFixed(1)}MB. Máximo 10MB.&#x60;,
+      );
+    }
+  }
+
+  /**
+   * Create preview URL for photo
+   */
+  private createPreview(file: File): Promise&lt;string&gt; {
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      const reader &#x3D; new FileReader();
+      reader.onload &#x3D; () &#x3D;&gt; resolve(reader.result as string);
+      reader.onerror &#x3D; () &#x3D;&gt; reject(new Error(&#x27;Error al leer archivo&#x27;));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
+   * Generate AI photos for a car
+   */
+  async generateAIPhotos(brand: string, model: string, year: number): Promise&lt;void&gt; {
+    if (!brand || !model || !year) {
+      alert(&#x27;Debes seleccionar marca, modelo y año para generar fotos con IA.&#x27;);
+      return;
+    }
+
+    const currentPhotos &#x3D; this.uploadedPhotos();
+    // Solo generaremos hasta 3 imágenes nuevas (front, rear, interior) respetando el máximo total de fotos
+    let remainingSlots &#x3D; Math.min(this.MAX_PHOTOS - currentPhotos.length, 3);
+
+    if (remainingSlots &lt;&#x3D; 0) {
+      alert(&#x27;Ya alcanzaste el máximo de fotos permitidas.&#x27;);
+      return;
+    }
+
+    this.isGeneratingAIPhotos.set(true);
+
+    try {
+      if (!environment.googleAiImageUrl) {
+        alert(&#x27;Falta configurar NG_APP_GOOGLE_AI_IMAGE_URL (endpoint de Gemini).&#x27;);
+      }
+
+      // Cloudflare worker es opcional si usamos Google
+      const googleEnabled &#x3D; Boolean(environment.googleAiImageUrl);
+      const cloudflareEnabled &#x3D; Boolean(environment.cloudflareWorkerUrl);
+
+      const generatedPhotos: PhotoPreview[] &#x3D; [];
+      const errors: string[] &#x3D; [];
+
+      // Generar 3 imágenes con Gemini: exterior front, interior, exterior rear
+      const googlePrompts &#x3D; this.buildGeminiPrompts(brand, model, year);
+
+      if (googleEnabled) {
+        for (const [index, prompt] of googlePrompts.entries()) {
+          if (remainingSlots &lt;&#x3D; 0) break;
+
+          try {
+            const googleRequestBody &#x3D; {
+              contents: [
+                {
+                  role: &#x27;user&#x27;,
+                  parts: [{ text: prompt }],
+                },
+              ],
+              generationConfig: {
+                responseModalities: [&#x27;IMAGE&#x27;],
+                imageConfig: {
+                  aspectRatio: &#x27;4:3&#x27;, // Formato foto de móvil para look natural
+                },
+              },
+            };
+
+            const googleResponse &#x3D; await fetch(&#x60;${environment.googleAiImageUrl}&#x60;, {
+              method: &#x27;POST&#x27;,
+              headers: { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+              body: JSON.stringify(googleRequestBody),
+            });
+
+            const googleResult &#x3D; await googleResponse.json().catch(() &#x3D;&gt; ({}));
+
+            const inlineData &#x3D; googleResult?.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+            if (!googleResponse.ok || !inlineData?.data) {
+              const message &#x3D;
+                googleResult?.error?.message || googleResult?.error || googleResponse.statusText;
+              throw new Error(message || &#x27;Respuesta inesperada de Gemini (imagen)&#x27;);
+            }
+
+            const mimeType &#x3D; inlineData.mimeType || &#x27;image/png&#x27;;
+            const fileExtension &#x3D; mimeType.split(&#x27;/&#x27;)[1] || &#x27;png&#x27;;
+            const googleFile &#x3D; await this.base64ToFile(
+              inlineData.data,
+              &#x60;google-ai-${brand}-${model}-${Date.now()}-${index}.${fileExtension}&#x60;,
+              mimeType,
+            );
+            const googlePreview &#x3D; await this.createPreview(googleFile);
+            generatedPhotos.push({ file: googleFile, preview: googlePreview });
+            remainingSlots--;
+          } catch (error) {
+            console.error(&#x27;Error generando foto con Google AI:&#x27;, error);
+            errors.push(
+              &#x60;Gemini #${index + 1}: ${error instanceof Error ? error.message : &#x27;falló&#x27;}&#x60;,
+            );
+          }
+        }
+      }
+
+      // Generar las imágenes restantes (hasta 2) con Cloudflare Worker
+      if (cloudflareEnabled) {
+        const numCloudflarePhotos &#x3D; Math.min(2, remainingSlots); // Generar hasta 2 fotos más, respetando slots disponibles
+        for (let i &#x3D; 0; i &lt; numCloudflarePhotos; i++) {
+          try {
+            const workerResponse &#x3D; await fetch(&#x60;${environment.cloudflareWorkerUrl}&#x60;, {
+              method: &#x27;POST&#x27;,
+              headers: { &#x27;Content-Type&#x27;: &#x27;application/json&#x27; },
+              body: JSON.stringify({
+                brand,
+                model,
+                year,
+                angle: &#x27;3/4-front&#x27;, // Puedes variar el ángulo o estilo si el worker lo soporta
+                style: &#x27;showroom&#x27;,
+                num_steps: 8,
+              }),
+            });
+
+            const workerResult &#x3D; await workerResponse.json().catch(() &#x3D;&gt; ({}));
+
+            if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
+              const message &#x3D; workerResult?.error || workerResponse.statusText;
+              throw new Error(message || &#x27;Error al generar foto con Cloudflare Worker&#x27;);
+            }
+
+            const workerFile &#x3D; await this.base64ToFile(
+              workerResult.image,
+              &#x60;cf-worker-ai-${brand}-${model}-${Date.now()}-${i}.png&#x60;,
+            );
+            const workerPreview &#x3D; await this.createPreview(workerFile);
+            generatedPhotos.push({ file: workerFile, preview: workerPreview });
+          } catch (error) {
+            console.error(&#x60;Error generando foto ${i + 1} con Cloudflare Worker:&#x60;, error);
+            errors.push(&#x60;Worker #${i + 1}: ${error instanceof Error ? error.message : &#x27;falló&#x27;}&#x60;);
+          }
+        }
+      }
+
+      if (generatedPhotos.length &gt; 0) {
+        this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
+        const errorMsg &#x3D; errors.length ? &#x60; (algunas fallaron: ${errors.join(&#x27;; &#x27;)})&#x60; : &#x27;&#x27;;
+        alert(&#x60;✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}.&#x60;);
+      } else {
+        const msg &#x3D; errors.length
+          ? &#x60;No se generaron fotos. Errores: ${errors.join(&#x27;; &#x27;)}&#x60;
+          : &#x27;No se pudo generar ninguna foto con IA. Verifica configuración de NG_APP_GOOGLE_AI_IMAGE_URL o NG_APP_CLOUDFLARE_WORKER_URL.&#x27;;
+        alert(msg);
+      }
+    } catch (error) {
+      console.error(&#x27;Error general durante la generación de fotos con IA:&#x27;, error);
+      alert(&#x27;Ocurrió un error inesperado al generar fotos con IA. Intenta nuevamente.&#x27;);
+    } finally {
+      this.isGeneratingAIPhotos.set(false);
+    }
+  }
+
+  // Helper function to convert base64 to File object
+  private async base64ToFile(
+    base64String: string,
+    filename: string,
+    mimeType &#x3D; &#x27;image/png&#x27;,
+    maxBytes &#x3D; 900_000,
+    maxDimension &#x3D; 1600,
+  ): Promise&lt;File&gt; {
+    const dataUrl &#x3D; base64String.startsWith(&#x27;data:&#x27;)
+      ? base64String
+      : &#x60;data:${mimeType};base64,${base64String}&#x60;;
+
+    // Cargar la imagen en un elemento &lt;img&gt;
+    const image &#x3D; await new Promise&lt;HTMLImageElement&gt;((resolve, reject) &#x3D;&gt; {
+      const img &#x3D; new Image();
+      img.onload &#x3D; () &#x3D;&gt; resolve(img);
+      img.onerror &#x3D; () &#x3D;&gt; reject(new Error(&#x27;No se pudo cargar la imagen generada&#x27;));
+      img.src &#x3D; dataUrl;
+    });
+
+    // Ajustar dimensiones si excede el máximo permitido
+    const { width, height } &#x3D; image;
+    const scale &#x3D; Math.min(1, maxDimension / Math.max(width, height));
+    const targetWidth &#x3D; Math.round(width * scale);
+    const targetHeight &#x3D; Math.round(height * scale);
+
+    const canvas &#x3D; document.createElement(&#x27;canvas&#x27;);
+    canvas.width &#x3D; targetWidth;
+    canvas.height &#x3D; targetHeight;
+    const ctx &#x3D; canvas.getContext(&#x27;2d&#x27;);
+    if (!ctx) {
+      throw new Error(&#x27;No se pudo crear el contexto de canvas&#x27;);
+    }
+    ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+    // Comprimir iterativamente hasta quedar debajo de maxBytes o calidad mínima
+    let quality &#x3D; 0.85;
+    let compressedDataUrl &#x3D; canvas.toDataURL(&#x27;image/jpeg&#x27;, quality);
+    while (compressedDataUrl.length &gt; maxBytes * 1.37 &amp;&amp; quality &gt; 0.5) {
+      // dataURL pesa ~1.37x el binario base64
+      quality -&#x3D; 0.05;
+      compressedDataUrl &#x3D; canvas.toDataURL(&#x27;image/jpeg&#x27;, quality);
+    }
+
+    // Convertir dataURL a Blob
+    const compressedBlob &#x3D; await (await fetch(compressedDataUrl)).blob();
+    const finalMime &#x3D; compressedBlob.type || &#x27;image/jpeg&#x27;;
+    return new File([compressedBlob], filename.replace(/\.[^.]+$/, &#x27;.jpg&#x27;), { type: finalMime });
+  }
+
+  /**
+   * Remove photo at index
+   */
+  removePhoto(index: number): void {
+    const photos &#x3D; this.uploadedPhotos();
+    const newPhotos &#x3D; photos.filter((_, i) &#x3D;&gt; i !&#x3D;&#x3D; index);
+    this.uploadedPhotos.set(newPhotos);
+  }
+
+  /**
+   * Upload photos to storage for a car
+   */
+  async uploadPhotos(carId: string): Promise&lt;void&gt; {
+    const photos &#x3D; this.uploadedPhotos();
+    if (photos.length &#x3D;&#x3D;&#x3D; 0) return;
+
+    for (let i &#x3D; 0; i &lt; photos.length; i++) {
+      const photo &#x3D; photos[i];
+      await this.carsService.uploadPhoto(photo.file, carId, i);
+    }
+  }
+
+  /**
+   * Clear all photos
+   */
+  clearPhotos(): void {
+    this.uploadedPhotos.set([]);
+  }
+
+  /**
+   * Get photo count
+   */
+  getPhotoCount(): number {
+    return this.uploadedPhotos().length;
+  }
+
+  /**
+   * Check if minimum photos requirement is met
+   */
+  hasMinimumPhotos(): boolean {
+    return this.uploadedPhotos().length &gt;&#x3D; 3;
+  }
+
+  /**
+   * Add stock photos (Files) to the photo list
+   */
+  async addStockPhotosFiles(files: File[]): Promise&lt;void&gt; {
+    const currentPhotos &#x3D; this.uploadedPhotos();
+    const remainingSlots &#x3D; this.MAX_PHOTOS - currentPhotos.length;
+
+    if (files.length &gt; remainingSlots) {
+      alert(&#x60;Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.&#x60;);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] &#x3D; [];
+
+      for (const file of files) {
+        this.validatePhoto(file);
+        const preview &#x3D; await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add stock photos (URLs) to the photo list
+   */
+  async addStockPhotos(photoUrls: string[]): Promise&lt;void&gt; {
+    const currentPhotos &#x3D; this.uploadedPhotos();
+    const remainingSlots &#x3D; this.MAX_PHOTOS - currentPhotos.length;
+
+    if (photoUrls.length &gt; remainingSlots) {
+      alert(&#x60;Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.&#x60;);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] &#x3D; [];
+
+      for (const url of photoUrls) {
+        // Fetch image and convert to File
+        const response &#x3D; await fetch(url);
+        const blob &#x3D; await response.blob();
+        const file &#x3D; new File([blob], &#x60;stock-${Date.now()}.jpg&#x60;, {
+          type: blob.type || &#x27;image/jpeg&#x27;,
+        });
+
+        this.validatePhoto(file);
+        const preview &#x3D; await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add AI generated photos (Files) to the photo list
+   */
+  async addAIPhotosFiles(files: File[]): Promise&lt;void&gt; {
+    const currentPhotos &#x3D; this.uploadedPhotos();
+    const remainingSlots &#x3D; this.MAX_PHOTOS - currentPhotos.length;
+
+    if (files.length &gt; remainingSlots) {
+      alert(&#x60;Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.&#x60;);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] &#x3D; [];
+
+      for (const file of files) {
+        this.validatePhoto(file);
+        const preview &#x3D; await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  /**
+   * Add AI generated photos (URLs) to the photo list
+   */
+  async addAIPhotos(photoUrls: string[]): Promise&lt;void&gt; {
+    const currentPhotos &#x3D; this.uploadedPhotos();
+    const remainingSlots &#x3D; this.MAX_PHOTOS - currentPhotos.length;
+
+    if (photoUrls.length &gt; remainingSlots) {
+      alert(&#x60;Solo puedes agregar ${remainingSlots} foto(s) más. Máximo ${this.MAX_PHOTOS} fotos.&#x60;);
+      return;
+    }
+
+    this.isProcessingPhotos.set(true);
+
+    try {
+      const newPhotos: PhotoPreview[] &#x3D; [];
+
+      for (const url of photoUrls) {
+        // Fetch image and convert to File
+        const response &#x3D; await fetch(url);
+        const blob &#x3D; await response.blob();
+        const file &#x3D; new File([blob], &#x60;ai-${Date.now()}.png&#x60;, { type: blob.type || &#x27;image/png&#x27; });
+
+        this.validatePhoto(file);
+        const preview &#x3D; await this.createPreview(file);
+        newPhotos.push({ file, preview });
+      }
+
+      this.uploadedPhotos.set([...currentPhotos, ...newPhotos]);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.isProcessingPhotos.set(false);
+    }
+  }
+
+  // Genera prompts variados para evitar imágenes repetidas
+  private buildGeminiPrompts(brand: string, model: string, year: number): string[] {
+    const pick &#x3D; &lt;T&gt;(list: T[]): T &#x3D;&gt; list[Math.floor(Math.random() * list.length)];
+
+    const weather &#x3D; pick([
+      &#x27;bright sunny day with soft shadows&#x27;,
+      &#x27;slightly overcast day with diffused light&#x27;,
+      &#x27;after-rain damp ground and cloudy sky&#x27;,
+      &#x27;golden hour warm light with long shadows&#x27;,
+      &#x27;early morning cool light with a bit of mist&#x27;,
+    ]);
+
+    const terrain &#x3D; pick([
+      &#x27;on a dirt road with light tire marks&#x27;,
+      &#x27;on a gravel turnout near trees&#x27;,
+      &#x27;on a rural roadside with dry grass&#x27;,
+      &#x27;on a damp compacted earth surface&#x27;,
+      &#x27;on a light muddy patch with puddles nearby&#x27;,
+    ]);
+
+    const background &#x3D; pick([
+      &#x27;trees and bushes behind the car&#x27;,
+      &#x27;a distant hill line&#x27;,
+      &#x27;light forest edge&#x27;,
+      &#x27;open countryside&#x27;,
+      &#x27;sparse shrubs and a cloudy horizon&#x27;,
+    ]);
+
+    const camera &#x3D; pick([
+      &#x27;handheld smartphone at eye level&#x27;,
+      &#x27;handheld smartphone slightly low angle&#x27;,
+      &#x27;handheld smartphone slightly high angle&#x27;,
+    ]);
+
+    const interiorLight &#x3D; pick([
+      &#x27;natural daylight entering through windows&#x27;,
+      &#x27;soft overcast light through windshield&#x27;,
+      &#x27;late afternoon warm light through side windows&#x27;,
+    ]);
+
+    const interiorWeather &#x3D; pick([
+      &#x27;windows slightly dusty&#x27;,
+      &#x27;light reflections from cloudy sky&#x27;,
+      &#x27;subtle streaks on glass from recent rain&#x27;,
+    ]);
+
+    const exteriorPrompt &#x3D; &#x60;Generate a realistic photo (not render, not showroom) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 front. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe. Vary the scene subtly each time so photos are not identical.&#x60;;
+
+    const interiorPrompt &#x3D; &#x60;Generate a realistic interior photo (not render) of a ${year} ${brand} ${model} car. Show front seats, dashboard and steering wheel from driver&#x27;s door perspective. Lighting: ${interiorLight}, ${interiorWeather}. Style: handheld smartphone photo, slight imperfections, realistic textures, no studio lighting, no advertising vibe. Vary small details so photos are not identical.&#x60;;
+
+    const rearPrompt &#x3D; &#x60;Generate a realistic photo (not render) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 rear view showing trunk and tail lights. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe.&#x60;;
+
+    return [exteriorPrompt, interiorPrompt, rearPrompt];
+  }
+
+  /**
+   * Load existing photos for editing
+   */
+  async loadExistingPhotos(carId: string): Promise&lt;void&gt; {
+    try {
+      const photos &#x3D; await this.carsService.getCarPhotos(carId);
+
+      const previews: PhotoPreview[] &#x3D; await Promise.all(
+        photos.map(async (photo) &#x3D;&gt; {
+          const response &#x3D; await fetch(photo.url);
+          if (!response.ok) throw new Error(&#x27;No se pudo descargar la foto existente&#x27;);
+          const blob &#x3D; await response.blob();
+          const file &#x3D; new File([blob], &#x60;photo-${photo.position || 0}.jpg&#x60;, {
+            type: blob.type || &#x27;image/jpeg&#x27;,
+          });
+          return { file, preview: photo.url };
+        }),
+      );
+
+      this.uploadedPhotos.set(previews);
+    } catch (error) {
+      console.error(&#x27;Failed to load existing photos:&#x27;, error);
+      this.notifications.warning(&#x27;Fotos&#x27;, &#x27;No pudimos cargar las fotos existentes.&#x27;);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'PublishCarPhotoService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

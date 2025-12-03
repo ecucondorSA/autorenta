@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "outDir": "./dist-playwright",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@app/*": [
+        "./apps/web/src/app/*"
+      ],
+      "@core/*": [
+        "./apps/web/src/app/core/*"
+      ],
+      "@shared/*": [
+        "./apps/web/src/app/shared/*"
+      ],
+      "@features/*": [
+        "./apps/web/src/app/features/*"
+      ],
+      "@environment": [
+        "./apps/web/src/environments/environment"
+      ],
+      "@contracts/*": [
+        "./functions/contracts/*"
+      ]
+    }
+  },
+  "include": [
+    "tests/**/*.ts",
+    "apps/web/src/environments/**/*.ts",
+    "apps/web/src/app/**/*.ts",
+    "playwright.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "documentation",
+    "apps/web/e2e"
+  ]
+}

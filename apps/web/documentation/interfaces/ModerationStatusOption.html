@@ -1,0 +1,900 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ModerationStatusOption</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/admin/reviews/admin-reviews.page.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#label" 
+>
+                                            label
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#value" 
+>
+                                            value
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="label"></a>
+                                        <span class="name "><b>label</b>
+                                            <a href="#label">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>label:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="value"></a>
+                                        <span class="name "><b>value</b>
+                                            <a href="#value">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>value:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, inject, signal, computed } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { RouterLink } from &#x27;@angular/router&#x27;;
+import { ReviewsService } from &#x27;../../../core/services/reviews.service&#x27;;
+import { Review } from &#x27;../../../core/models&#x27;;
+
+interface ModerationStatusOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Admin Reviews Moderation Dashboard
+ * Lists all flagged reviews with filtering by moderation status
+ * Allows admin to approve or reject flagged reviews
+ */
+@Component({
+  selector: &#x27;app-admin-reviews&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;max-w-7xl mx-auto py-8 px-4&quot;&gt;
+      &lt;!-- Header --&gt;
+      &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+        &lt;button
+          routerLink&#x3D;&quot;/admin&quot;
+          class&#x3D;&quot;inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4&quot;
+        &gt;
+          &lt;svg class&#x3D;&quot;w-4 h-4&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M10 19l-7-7m0 0l7-7m-7 7h18&quot;
+            /&gt;
+          &lt;/svg&gt;
+          Volver al Dashboard
+        &lt;/button&gt;
+
+        &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+          &lt;div&gt;
+            &lt;h1 class&#x3D;&quot;text-3xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+              Moderación de Reseñas
+            &lt;/h1&gt;
+            &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-secondary mt-1&quot;&gt;
+              Gestiona reseñas reportadas por usuarios
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-right&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;Reseñas pendientes&lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+              {{ pendingCount() }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Filters --&gt;
+      &lt;div
+        class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm&quot;
+      &gt;
+        &lt;h3 class&#x3D;&quot;text-sm font-semibold text-text-primary dark:text-text-secondary mb-3&quot;&gt;
+          Filtros
+        &lt;/h3&gt;
+        &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-2 gap-4&quot;&gt;
+          &lt;!-- Status Filter --&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;
+            &gt;
+              Estado de Moderación
+            &lt;/label&gt;
+            &lt;select
+              [(ngModel)]&#x3D;&quot;filterStatus&quot;
+              (ngModelChange)&#x3D;&quot;onFilterChange()&quot;
+              class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+            &gt;
+              &lt;option value&#x3D;&quot;&quot;&gt;Todos los estados&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let status of statusOptions&quot; [value]&#x3D;&quot;status.value&quot;&gt;
+                {{ status.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Bulk Actions --&gt;
+          &lt;div *ngIf&#x3D;&quot;selectedReviews().length &gt; 0&quot; class&#x3D;&quot;flex items-end gap-2&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;bulkApprove()&quot;
+              class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+            &gt;
+              Aprobar Seleccionadas ({{ selectedReviews().length }})
+            &lt;/button&gt;
+            &lt;button
+              (click)&#x3D;&quot;bulkReject()&quot;
+              class&#x3D;&quot;px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+            &gt;
+              Rechazar Seleccionadas ({{ selectedReviews().length }})
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Loading State --&gt;
+      &lt;div *ngIf&#x3D;&quot;loading()&quot; class&#x3D;&quot;text-center py-12&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent&quot;
+        &gt;&lt;/div&gt;
+        &lt;p class&#x3D;&quot;mt-4 text-text-secondary dark:text-text-muted&quot;&gt;Cargando reseñas...&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Error State --&gt;
+      &lt;div
+        *ngIf&#x3D;&quot;error() &amp;&amp; !loading()&quot;
+        class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center&quot;
+      &gt;
+        &lt;p class&#x3D;&quot;text-error-strong&quot;&gt;{{ error() }}&lt;/p&gt;
+        &lt;button
+          (click)&#x3D;&quot;loadReviews()&quot;
+          class&#x3D;&quot;mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors&quot;
+        &gt;
+          Reintentar
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Reviews List --&gt;
+      &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; !error()&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+        &lt;!-- Empty State --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;filteredReviews().length &#x3D;&#x3D;&#x3D; 0&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center&quot;
+        &gt;
+          &lt;svg
+            class&#x3D;&quot;mx-auto h-12 w-12 text-text-muted&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+            /&gt;
+          &lt;/svg&gt;
+          &lt;h3 class&#x3D;&quot;mt-2 text-sm font-medium text-text-primary dark:text-text-inverse&quot;&gt;
+            No hay reseñas reportadas
+          &lt;/h3&gt;
+          &lt;p class&#x3D;&quot;mt-1 text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+            Todas las reseñas están en buen estado.
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Review Cards --&gt;
+        &lt;div
+          *ngFor&#x3D;&quot;let review of filteredReviews()&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow&quot;
+        &gt;
+          &lt;!-- Header with Checkbox --&gt;
+          &lt;div class&#x3D;&quot;flex items-start gap-4&quot;&gt;
+            &lt;input
+              type&#x3D;&quot;checkbox&quot;
+              [checked]&#x3D;&quot;isSelected(review.id)&quot;
+              (change)&#x3D;&quot;toggleSelection(review.id)&quot;
+              class&#x3D;&quot;mt-1 h-4 w-4 rounded border-border-muted&quot;
+            /&gt;
+
+            &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+              &lt;!-- Review Info --&gt;
+              &lt;div class&#x3D;&quot;flex items-start justify-between mb-4&quot;&gt;
+                &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+                  &lt;img
+                    [src]&#x3D;&quot;review.reviewer_avatar || &#x27;/assets/avatar-placeholder.png&#x27;&quot;
+                    [alt]&#x3D;&quot;review.reviewer_name&quot;
+                    class&#x3D;&quot;h-10 w-10 rounded-full object-cover&quot;
+                  /&gt;
+                  &lt;div&gt;
+                    &lt;p class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                      {{ review.reviewer_name }}
+                    &lt;/p&gt;
+                    &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-muted&quot;&gt;
+                      Reseña para: {{ review.reviewee_name }}
+                    &lt;/p&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Moderation Status Badge --&gt;
+                &lt;span
+                  [class]&#x3D;&quot;getModerationBadgeClass(review.moderation_status)&quot;
+                  class&#x3D;&quot;inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold&quot;
+                &gt;
+                  {{ getModerationStatusLabel(review.moderation_status) }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Rating --&gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-2 mb-2&quot;&gt;
+                &lt;span class&#x3D;&quot;text-lg font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+                  {{ getOverallRating(review).toFixed(1) }}
+                &lt;/span&gt;
+                &lt;div class&#x3D;&quot;flex gap-0.5&quot;&gt;
+                  &lt;svg
+                    *ngFor&#x3D;&quot;let _ of [1, 2, 3, 4, 5]&quot;
+                    class&#x3D;&quot;h-4 w-4 text-warning-400&quot;
+                    fill&#x3D;&quot;currentColor&quot;
+                    viewBox&#x3D;&quot;0 0 20 20&quot;
+                  &gt;
+                    &lt;path
+                      d&#x3D;&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;
+                    /&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                  {{ review.created_at | date: &#x27;short&#x27; }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Category Ratings --&gt;
+              &lt;div class&#x3D;&quot;grid grid-cols-3 gap-2 mb-4&quot;&gt;
+                &lt;div
+                  *ngFor&#x3D;&quot;let category of getCategoryRatings(review)&quot;
+                  class&#x3D;&quot;flex items-center justify-between text-xs&quot;
+                &gt;
+                  &lt;span class&#x3D;&quot;text-text-secondary dark:text-text-muted&quot;
+                    &gt;{{ category.label }}:&lt;/span
+                  &gt;
+                  &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                    {{ category.value.toFixed(1) }}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Public Comment --&gt;
+              &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded-lg p-3 mb-4&quot;&gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;&gt;
+                  Comentario Público:
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-primary dark:text-text-inverse&quot;&gt;
+                  {{ review.comment_public || &#x27;(Sin comentario público)&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Flag Reason --&gt;
+              &lt;div class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4&quot;&gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-error-strong mb-1&quot;&gt;Motivo del Reporte:&lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ review.flag_reason }}&lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-xs text-error-text mt-1&quot;&gt;
+                  Reportado por: {{ review.flagged_by_name || &#x27;Usuario&#x27; }} el
+                  {{ review.flagged_at | date: &#x27;short&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Moderation Notes (if moderated) --&gt;
+              &lt;div
+                *ngIf&#x3D;&quot;review.moderation_notes&quot;
+                class&#x3D;&quot;bg-cta-default/10 dark:bg-cta-default/10 rounded-lg p-3 mb-4&quot;
+              &gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-cta-default dark:text-cta-default mb-1&quot;&gt;
+                  Notas de Moderación:
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-cta-default dark:text-cta-default&quot;&gt;
+                  {{ review.moderation_notes }}
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default mt-1&quot;&gt;
+                  Moderado por: {{ review.moderated_by_name || &#x27;Usuario&#x27; }} el
+                  {{ review.moderated_at | date: &#x27;short&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Action Buttons --&gt;
+              &lt;div *ngIf&#x3D;&quot;review.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot; class&#x3D;&quot;flex gap-2&quot;&gt;
+                &lt;button
+                  (click)&#x3D;&quot;openModerationModal(review, &#x27;approved&#x27;)&quot;
+                  class&#x3D;&quot;flex-1 px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+                &gt;
+                  ✓ Aprobar
+                &lt;/button&gt;
+                &lt;button
+                  (click)&#x3D;&quot;openModerationModal(review, &#x27;rejected&#x27;)&quot;
+                  class&#x3D;&quot;flex-1 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+                &gt;
+                  ✗ Rechazar
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Moderation Modal --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;showModal()&quot;
+      class&#x3D;&quot;fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay bg-opacity-50 p-4&quot;
+      (click)&#x3D;&quot;closeModal()&quot;
+    &gt;
+      &lt;div
+        class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-md w-full p-6&quot;
+        (click)&#x3D;&quot;$event.stopPropagation()&quot;
+      &gt;
+        &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-inverse mb-4&quot;&gt;
+          {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;Aprobar&#x27; : &#x27;Rechazar&#x27; }} Reseña
+        &lt;/h3&gt;
+
+        &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted mb-4&quot;&gt;
+          ¿Estás seguro de que deseas {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;aprobar&#x27; : &#x27;rechazar&#x27; }}
+          esta reseña?
+          {{
+            modalAction() &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;
+              ? &#x27;La reseña será ocultada y no será visible públicamente.&#x27;
+              : &#x27;&#x27;
+          }}
+        &lt;/p&gt;
+
+        &lt;!-- Notes Input --&gt;
+        &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+          &lt;label class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-2&quot;&gt;
+            Notas de moderación (opcional):
+          &lt;/label&gt;
+          &lt;textarea
+            [(ngModel)]&#x3D;&quot;moderationNotes&quot;
+            rows&#x3D;&quot;3&quot;
+            class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+            placeholder&#x3D;&quot;Agrega notas sobre esta decisión...&quot;
+          &gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Action Buttons --&gt;
+        &lt;div class&#x3D;&quot;flex gap-2&quot;&gt;
+          &lt;button
+            (click)&#x3D;&quot;closeModal()&quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-secondary rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 transition-colors text-sm font-medium&quot;
+          &gt;
+            Cancelar
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;confirmModeration()&quot;
+            [disabled]&#x3D;&quot;processing()&quot;
+            [class]&#x3D;&quot;
+              modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;
+                ? &#x27;bg-success-light hover:bg-success-light&#x27;
+                : &#x27;bg-error-600 hover:bg-error-700&#x27;
+            &quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 text-text-inverse rounded-lg transition-colors text-sm font-medium disabled:opacity-50&quot;
+          &gt;
+            {{ processing() ? &#x27;Procesando...&#x27; : &#x27;Confirmar&#x27; }}
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+})
+export class AdminReviewsPage implements OnInit {
+  private readonly reviewsService &#x3D; inject(ReviewsService);
+
+  // State
+  readonly reviews &#x3D; signal&lt;Review[]&gt;([]);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly processing &#x3D; signal(false);
+
+  // Filters
+  filterStatus &#x3D; &#x27;&#x27;;
+
+  // Moderation modal
+  readonly showModal &#x3D; signal(false);
+  readonly selectedReview &#x3D; signal&lt;Review | null&gt;(null);
+  readonly modalAction &#x3D; signal&lt;&#x27;approved&#x27; | &#x27;rejected&#x27;&gt;(&#x27;approved&#x27;);
+  moderationNotes &#x3D; &#x27;&#x27;;
+
+  // Bulk actions
+  readonly selectedReviews &#x3D; signal&lt;string[]&gt;([]);
+
+  // Options
+  readonly statusOptions: ModerationStatusOption[] &#x3D; [
+    { value: &#x27;pending&#x27;, label: &#x27;Pendiente&#x27; },
+    { value: &#x27;approved&#x27;, label: &#x27;Aprobado&#x27; },
+    { value: &#x27;rejected&#x27;, label: &#x27;Rechazado&#x27; },
+  ];
+
+  // Computed
+  readonly filteredReviews &#x3D; computed(() &#x3D;&gt; {
+    const reviews &#x3D; this.reviews();
+    if (!this.filterStatus) return reviews;
+    return reviews.filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; this.filterStatus);
+  });
+
+  readonly pendingCount &#x3D; computed(() &#x3D;&gt; {
+    return this.reviews().filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length;
+  });
+
+  ngOnInit(): void {
+    this.loadReviews();
+  }
+
+  async loadReviews(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const reviews &#x3D; await this.reviewsService.getFlaggedReviews();
+      this.reviews.set(reviews);
+    } catch (err) {
+      this.error.set(&#x27;Error al cargar las reseñas reportadas&#x27;);
+      console.error(err);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  onFilterChange(): void {
+    // Filter is computed automatically
+  }
+
+  openModerationModal(review: Review, action: &#x27;approved&#x27; | &#x27;rejected&#x27;): void {
+    this.selectedReview.set(review);
+    this.modalAction.set(action);
+    this.moderationNotes &#x3D; &#x27;&#x27;;
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+    this.selectedReview.set(null);
+    this.moderationNotes &#x3D; &#x27;&#x27;;
+  }
+
+  async confirmModeration(): Promise&lt;void&gt; {
+    const review &#x3D; this.selectedReview();
+    if (!review) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.moderateReview(
+        review.id,
+        this.modalAction(),
+        this.moderationNotes || undefined,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.closeModal();
+      } else {
+        this.error.set(result.error || &#x27;Error al moderar la reseña&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al moderar la reseña&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  toggleSelection(reviewId: string): void {
+    const selected &#x3D; this.selectedReviews();
+    if (selected.includes(reviewId)) {
+      this.selectedReviews.set(selected.filter((id) &#x3D;&gt; id !&#x3D;&#x3D; reviewId));
+    } else {
+      this.selectedReviews.set([...selected, reviewId]);
+    }
+  }
+
+  isSelected(reviewId: string): boolean {
+    return this.selectedReviews().includes(reviewId);
+  }
+
+  async bulkApprove(): Promise&lt;void&gt; {
+    if (this.selectedReviews().length &#x3D;&#x3D;&#x3D; 0) return;
+
+    if (!confirm(&#x60;¿Aprobar ${this.selectedReviews().length} reseñas seleccionadas?&#x60;)) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.bulkModerateReviews(
+        this.selectedReviews(),
+        &#x27;approved&#x27;,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.selectedReviews.set([]);
+      } else {
+        this.error.set(result.error || &#x27;Error al aprobar las reseñas&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al aprobar las reseñas&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  async bulkReject(): Promise&lt;void&gt; {
+    if (this.selectedReviews().length &#x3D;&#x3D;&#x3D; 0) return;
+
+    if (!confirm(&#x60;¿Rechazar ${this.selectedReviews().length} reseñas seleccionadas?&#x60;)) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.bulkModerateReviews(
+        this.selectedReviews(),
+        &#x27;rejected&#x27;,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.selectedReviews.set([]);
+      } else {
+        this.error.set(result.error || &#x27;Error al rechazar las reseñas&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al rechazar las reseñas&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  getModerationStatusLabel(status: string): string {
+    const labels: Record&lt;string, string&gt; &#x3D; {
+      pending: &#x27;Pendiente&#x27;,
+      approved: &#x27;Aprobado&#x27;,
+      rejected: &#x27;Rechazado&#x27;,
+    };
+    return labels[status] || status;
+  }
+
+  getModerationBadgeClass(status: string): string {
+    const classes: Record&lt;string, string&gt; &#x3D; {
+      pending:
+        &#x27;bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300&#x27;,
+      approved:
+        &#x27;bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light&#x27;,
+      rejected: &#x27;bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300&#x27;,
+    };
+    return classes[status] || &#x27;bg-surface-raised text-text-primary&#x27;;
+  }
+
+  getOverallRating(review: Review): number {
+    return (
+      (review.rating_cleanliness +
+        review.rating_communication +
+        review.rating_accuracy +
+        review.rating_location +
+        review.rating_checkin +
+        review.rating_value) /
+      6
+    );
+  }
+
+  getCategoryRatings(review: Review): Array&lt;{ label: string; value: number }&gt; {
+    return [
+      { label: &#x27;Limpieza&#x27;, value: review.rating_cleanliness },
+      { label: &#x27;Comunicación&#x27;, value: review.rating_communication },
+      { label: &#x27;Precisión&#x27;, value: review.rating_accuracy },
+      { label: &#x27;Ubicación&#x27;, value: review.rating_location },
+      { label: &#x27;Check-in&#x27;, value: review.rating_checkin },
+      { label: &#x27;Valor&#x27;, value: review.rating_value },
+    ];
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ModerationStatusOption.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

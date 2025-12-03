@@ -1,0 +1,750 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  AutorentarCreditRenewalResult</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/autorentar-credit.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#expires_at" 
+>
+                                            expires_at
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#message" 
+>
+                                            message
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#new_balance_cents" 
+>
+                                            new_balance_cents
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#renewed" 
+>
+                                            renewed
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#success" 
+>
+                                            success
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="expires_at"></a>
+                                        <span class="name "><b>expires_at</b>
+                                            <a href="#expires_at">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>expires_at:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="message"></a>
+                                        <span class="name "><b>message</b>
+                                            <a href="#message">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>message:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="new_balance_cents"></a>
+                                        <span class="name "><b>new_balance_cents</b>
+                                            <a href="#new_balance_cents">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>new_balance_cents:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="renewed"></a>
+                                        <span class="name "><b>renewed</b>
+                                            <a href="#renewed">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>renewed:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="success"></a>
+                                        <span class="name "><b>success</b>
+                                            <a href="#success">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>success:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, signal, computed, inject } from &#x27;@angular/core&#x27;;
+import { SupabaseClient } from &#x27;@supabase/supabase-js&#x27;;
+import { from, Observable, throwError } from &#x27;rxjs&#x27;;
+import { catchError, map, take, tap } from &#x27;rxjs/operators&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+import { LoggerService } from &#x27;./logger.service&#x27;;
+
+export interface AutorentarCreditInfo {
+  balance: number;
+  issued_at: string | null;
+  expires_at: string | null;
+  last_renewal: string | null;
+  days_until_expiration: number | null;
+  is_expired: boolean;
+  is_renewable: boolean;
+}
+
+export interface AutorentarCreditIssueResult {
+  success: boolean;
+  message: string;
+  credit_balance_cents: number;
+  issued_at: string;
+  expires_at: string;
+}
+
+export interface AutorentarCreditConsumeResult {
+  success: boolean;
+  message: string;
+  autorentar_credit_used_cents: number;
+  wallet_balance_used_cents: number;
+  remaining_claim_cents: number;
+  new_autorentar_credit_balance: number;
+  new_wallet_balance: number;
+}
+
+export interface AutorentarCreditRenewalResult {
+  success: boolean;
+  message: string;
+  renewed: boolean;
+  new_balance_cents: number;
+  expires_at: string | null;
+}
+
+export interface AutorentarCreditBreakageResult {
+  success: boolean;
+  message: string;
+  breakage_amount_cents: number;
+  reason: string;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class AutorentarCreditService {
+  private readonly supabase: SupabaseClient &#x3D; inject(SupabaseClientService).getClient();
+  private readonly logger &#x3D; inject(LoggerService);
+
+  readonly creditInfo &#x3D; signal&lt;AutorentarCreditInfo | null&gt;(null);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;{ message: string } | null&gt;(null);
+
+  // Computed signals
+  readonly balance &#x3D; computed(() &#x3D;&gt; this.creditInfo()?.balance ?? 0);
+  readonly balanceCents &#x3D; computed(() &#x3D;&gt; Math.round((this.creditInfo()?.balance ?? 0) * 100));
+  readonly expiresAt &#x3D; computed(() &#x3D;&gt; this.creditInfo()?.expires_at ?? null);
+  readonly daysUntilExpiration &#x3D; computed(() &#x3D;&gt; this.creditInfo()?.days_until_expiration ?? null);
+  readonly isExpired &#x3D; computed(() &#x3D;&gt; this.creditInfo()?.is_expired ?? false);
+  readonly isRenewable &#x3D; computed(() &#x3D;&gt; this.creditInfo()?.is_renewable ?? false);
+
+  constructor() {
+    // Auto-load credit info on service init
+    this.getCreditInfo().pipe(take(1)).subscribe();
+  }
+
+  /**
+   * Get Autorentar Credit balance and info
+   */
+  getCreditInfo(): Observable&lt;AutorentarCreditInfo&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return from(this.supabase.rpc(&#x27;wallet_get_autorentar_credit_info&#x27;)).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        if (!data || data.length &#x3D;&#x3D;&#x3D; 0) {
+          // No credit info, return default
+          const defaultInfo: AutorentarCreditInfo &#x3D; {
+            balance: 0,
+            issued_at: null,
+            expires_at: null,
+            last_renewal: null,
+            days_until_expiration: null,
+            is_expired: false,
+            is_renewable: false,
+          };
+          this.creditInfo.set(defaultInfo);
+          return defaultInfo;
+        }
+        const info &#x3D; data[0] as AutorentarCreditInfo;
+        this.creditInfo.set(info);
+        return info;
+      }),
+      catchError((err) &#x3D;&gt; {
+        this.handleError(err, &#x27;Error al obtener información de Crédito Autorentar&#x27;);
+        return throwError(() &#x3D;&gt; err);
+      }),
+      tap(() &#x3D;&gt; this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Issue initial Autorentar Credit to user
+   */
+  issueCredit(
+    userId: string,
+    amountCents: number &#x3D; 30000,
+  ): Observable&lt;AutorentarCreditIssueResult&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return from(
+      this.supabase.rpc(&#x27;issue_autorentar_credit&#x27;, {
+        p_user_id: userId,
+        p_amount_cents: amountCents,
+      }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        const result &#x3D; data[0] as AutorentarCreditIssueResult;
+
+        // Refresh credit info after issuance
+        this.getCreditInfo().pipe(take(1)).subscribe();
+
+        return result;
+      }),
+      catchError((err) &#x3D;&gt; {
+        this.handleError(err, &#x27;Error al emitir Crédito Autorentar&#x27;);
+        return throwError(() &#x3D;&gt; err);
+      }),
+      tap(() &#x3D;&gt; this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Consume Autorentar Credit for claim coverage
+   */
+  consumeCredit(params: {
+    userId: string;
+    claimAmountCents: number;
+    bookingId: string;
+    claimId?: string;
+  }): Observable&lt;AutorentarCreditConsumeResult&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return from(
+      this.supabase.rpc(&#x27;consume_autorentar_credit_for_claim&#x27;, {
+        p_user_id: params.userId,
+        p_claim_amount_cents: params.claimAmountCents,
+        p_booking_id: params.bookingId,
+        p_claim_id: params.claimId ?? null,
+      }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        const result &#x3D; data[0] as AutorentarCreditConsumeResult;
+
+        // Refresh credit info after consumption
+        this.getCreditInfo().pipe(take(1)).subscribe();
+
+        return result;
+      }),
+      catchError((err) &#x3D;&gt; {
+        this.handleError(err, &#x27;Error al consumir Crédito Autorentar&#x27;);
+        return throwError(() &#x3D;&gt; err);
+      }),
+      tap(() &#x3D;&gt; this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Extend/renew Autorentar Credit for good history
+   */
+  extendCredit(userId: string): Observable&lt;AutorentarCreditRenewalResult&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return from(
+      this.supabase.rpc(&#x27;extend_autorentar_credit_for_good_history&#x27;, {
+        p_user_id: userId,
+      }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        const result &#x3D; data[0] as AutorentarCreditRenewalResult;
+
+        // Refresh credit info after renewal
+        if (result.success &amp;&amp; result.renewed) {
+          this.getCreditInfo().pipe(take(1)).subscribe();
+        }
+
+        return result;
+      }),
+      catchError((err) &#x3D;&gt; {
+        this.handleError(err, &#x27;Error al renovar Crédito Autorentar&#x27;);
+        return throwError(() &#x3D;&gt; err);
+      }),
+      tap(() &#x3D;&gt; this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Check renewal eligibility (called from UI)
+   */
+  checkRenewalEligibility(userId: string): Observable&lt;boolean&gt; {
+    return this.extendCredit(userId).pipe(
+      map((result) &#x3D;&gt; result.success &amp;&amp; result.renewed),
+      catchError(() &#x3D;&gt; from([false])),
+    );
+  }
+
+  /**
+   * Recognize breakage revenue (admin only)
+   */
+  recognizeBreakage(userId: string): Observable&lt;AutorentarCreditBreakageResult&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    return from(
+      this.supabase.rpc(&#x27;recognize_autorentar_credit_breakage&#x27;, {
+        p_user_id: userId,
+      }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        const result &#x3D; data[0] as AutorentarCreditBreakageResult;
+
+        // Refresh credit info after breakage
+        if (result.success) {
+          this.getCreditInfo().pipe(take(1)).subscribe();
+        }
+
+        return result;
+      }),
+      catchError((err) &#x3D;&gt; {
+        this.handleError(err, &#x27;Error al reconocer breakage de Crédito Autorentar&#x27;);
+        return throwError(() &#x3D;&gt; err);
+      }),
+      tap(() &#x3D;&gt; this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Refresh credit info (useful after changes)
+   */
+  refresh(): void {
+    this.getCreditInfo().pipe(take(1)).subscribe();
+  }
+
+  /**
+   * Format balance for display
+   */
+  formatBalance(): string {
+    const balance &#x3D; this.balance();
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;USD&#x27;,
+    }).format(balance);
+  }
+
+  /**
+   * Format expiration date for display
+   */
+  formatExpirationDate(): string | null {
+    const expiresAt &#x3D; this.expiresAt();
+    if (!expiresAt) return null;
+
+    const date &#x3D; new Date(expiresAt);
+    return new Intl.DateTimeFormat(&#x27;es-AR&#x27;, {
+      year: &#x27;numeric&#x27;,
+      month: &#x27;long&#x27;,
+      day: &#x27;numeric&#x27;,
+    }).format(date);
+  }
+
+  private handleError(error: unknown, defaultMessage: string): void {
+    const message &#x3D;
+      error instanceof Error
+        ? error.message
+        : typeof error &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; error !&#x3D;&#x3D; null &amp;&amp; &#x27;message&#x27; in error
+          ? String((error as { message: unknown }).message)
+          : defaultMessage;
+    this.error.set({ message });
+    this.loading.set(false);
+    this.logger.error(defaultMessage, error instanceof Error ? error.message : String(error));
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'AutorentarCreditRenewalResult.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

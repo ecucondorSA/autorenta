@@ -1,0 +1,2200 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ProfileService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/profile.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#acceptTOS" >acceptTOS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addStrike" >addStrike</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#canBookCars" >canBookCars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#canPublishCars" >canPublishCars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#completeOnboarding" >completeOnboarding</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createProfile" >createProfile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteAvatar" >deleteAvatar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteDocument" >deleteDocument</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAuditLog" >getAuditLog</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getCurrentProfile" >getCurrentProfile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDocument" >getDocument</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDocumentSignedUrl" >getDocumentSignedUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMe" >getMe</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMyDocuments" >getMyDocuments</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getProfileById" >getProfileById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#hasAcceptedTOS" >hasAcceptedTOS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#hasCompletedOnboarding" >hasCompletedOnboarding</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#requestAccountDeletion" >requestAccountDeletion</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#requestDataExport" >requestDataExport</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#safeUpdateProfile" >safeUpdateProfile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateProfile" >updateProfile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadAvatar" >uploadAvatar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadDocument" >uploadDocument</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="acceptTOS"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>acceptTOS</b></span>
+                        <a href="#acceptTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>acceptTOS()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="406"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:406</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addStrike"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addStrike</b></span>
+                        <a href="#addStrike"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addStrike(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, reason: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bookingId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="486"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:486</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Registra una infracción (strike) contra un usuario
+Útil para penalizar dueños por autos sucios o cancelaciones injustificadas</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>reason</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canBookCars"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>canBookCars</b></span>
+                        <a href="#canBookCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>canBookCars()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canPublishCars"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>canPublishCars</b></span>
+                        <a href="#canPublishCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>canPublishCars()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="215"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:215</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completeOnboarding"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>completeOnboarding</b></span>
+                        <a href="#completeOnboarding"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>completeOnboarding()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="386"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:386</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>createProfile</b></span>
+                        <a href="#createProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createProfile(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>email</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteAvatar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteAvatar</b></span>
+                        <a href="#deleteAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteAvatar()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:170</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteDocument</b></span>
+                        <a href="#deleteDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteDocument(documentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="348"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:348</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>documentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAuditLog"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAuditLog</b></span>
+                        <a href="#getAuditLog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAuditLog()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="425"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:425</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;ProfileAudit[]&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCurrentProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getCurrentProfile</b></span>
+                        <a href="#getCurrentProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCurrentProfile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="50"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile | null&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getDocument</b></span>
+                        <a href="#getDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDocument(documentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="333"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:333</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>documentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserDocument | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocumentSignedUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getDocumentSignedUrl</b></span>
+                        <a href="#getDocumentSignedUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDocumentSignedUrl(storagePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="364"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:364</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>storagePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMe"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMe</b></span>
+                        <a href="#getMe"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMe()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:225</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMyDocuments"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMyDocuments</b></span>
+                        <a href="#getMyDocuments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMyDocuments()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="311"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:311</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserDocument[]&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getProfileById"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getProfileById</b></span>
+                        <a href="#getProfileById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getProfileById(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile | null&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasAcceptedTOS"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>hasAcceptedTOS</b></span>
+                        <a href="#hasAcceptedTOS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasAcceptedTOS()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="381"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:381</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasCompletedOnboarding"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>hasCompletedOnboarding</b></span>
+                        <a href="#hasCompletedOnboarding"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasCompletedOnboarding()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="376"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:376</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requestAccountDeletion"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>requestAccountDeletion</b></span>
+                        <a href="#requestAccountDeletion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>requestAccountDeletion(reason?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="462"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:462</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>reason</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requestDataExport"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>requestDataExport</b></span>
+                        <a href="#requestDataExport"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>requestDataExport()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="448"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:448</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="safeUpdateProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>safeUpdateProfile</b></span>
+                        <a href="#safeUpdateProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>safeUpdateProfile(updates: <a href="../interfaces/UpdateProfileData.html" target="_self">UpdateProfileData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:235</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>updates</td>
+                                            <td>
+                                                            <code><a href="../interfaces/UpdateProfileData.html" target="_self" >UpdateProfileData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateProfile</b></span>
+                        <a href="#updateProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateProfile(updates: <a href="../interfaces/UpdateProfileData.html" target="_self">UpdateProfileData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:97</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>updates</td>
+                                            <td>
+                                                            <code><a href="../interfaces/UpdateProfileData.html" target="_self" >UpdateProfileData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Promise&lt;UserProfile&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadAvatar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadAvatar</b></span>
+                        <a href="#uploadAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadAvatar(file: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadDocument</b></span>
+                        <a href="#uploadDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadDocument(file: File, kind: <a href="../undefineds/DocumentKind.html" target="_self">DocumentKind</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">src/app/core/services/profile.service.ts:247</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>file</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#DocumentKind" target="_self" >DocumentKind</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserDocument&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SupabaseClientService).getClient()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/core/services/profile.service.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { v4 as uuidv4 } from &#x27;uuid&#x27;;
+import {
+  UserProfile,
+  Role,
+  UserDocument,
+  DocumentKind,
+  NotificationPrefs,
+  ProfileAudit,
+} from &#x27;../models&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+// Re-export UserProfile for convenience
+export type { UserProfile };
+
+export interface UpdateProfileData {
+  full_name?: string;
+  role?: Role;
+  avatar_url?: string;
+  phone?: string;
+  whatsapp?: string;
+  dni?: string;
+  gov_id_type?: string;
+  gov_id_number?: string;
+  driver_license_number?: string;
+  driver_license_country?: string;
+  driver_license_expiry?: string;
+  date_of_birth?: string | null; // ISO date string YYYY-MM-DD
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
+  timezone?: string;
+  locale?: string;
+  currency?: string;
+  marketing_opt_in?: boolean;
+  notif_prefs?: NotificationPrefs;
+  tos_accepted_at?: boolean;
+  preferred_search_radius_km?: number | null;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class ProfileService {
+  private readonly supabase &#x3D; inject(SupabaseClientService).getClient();
+
+  async getCurrentProfile(): Promise&lt;UserProfile | null&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado - getUser() retornó null&#x27;);
+    }
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;id&#x27;, user.id)
+      .single();
+
+    if (error) {
+      if (error.code &#x3D;&#x3D;&#x3D; &#x27;PGRST116&#x27;) {
+        return this.createProfile(user.id, user.email ?? &#x27;&#x27;);
+      }
+
+      if (error.code &#x3D;&#x3D;&#x3D; &#x27;42501&#x27;) {
+        throw new Error(
+          &#x60;RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. Error: ${error.message}&#x60;,
+        );
+      }
+
+      throw new Error(&#x60;Error cargando perfil (${error.code}): ${error.message}&#x60;);
+    }
+
+    return data as UserProfile;
+  }
+
+  async getProfileById(userId: string): Promise&lt;UserProfile | null&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;id&#x27;, userId)
+      .single();
+
+    if (error) {
+      if (error.code &#x3D;&#x3D;&#x3D; &#x27;PGRST116&#x27;) return null;
+      throw error;
+    }
+
+    return data as UserProfile;
+  }
+
+  async updateProfile(updates: UpdateProfileData): Promise&lt;UserProfile&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const payload: Record&lt;string, unknown&gt; &#x3D; { ...updates };
+
+    if (updates.tos_accepted_at &#x3D;&#x3D;&#x3D; true) {
+      payload.tos_accepted_at &#x3D; new Date().toISOString();
+    } else {
+      delete payload.tos_accepted_at;
+    }
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .update(payload)
+      .eq(&#x27;id&#x27;, user.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as UserProfile;
+  }
+
+  async uploadAvatar(file: File): Promise&lt;string&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const allowedTypes &#x3D; [&#x27;image/jpeg&#x27;, &#x27;image/jpg&#x27;, &#x27;image/png&#x27;, &#x27;image/webp&#x27;];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error(&#x27;Formato no permitido. Use JPG, PNG o WEBP&#x27;);
+    }
+
+    if (file.size &gt; 2 * 1024 * 1024) {
+      throw new Error(&#x27;La imagen no debe superar 2MB&#x27;);
+    }
+
+    const extension &#x3D; file.name.split(&#x27;.&#x27;).pop() ?? &#x27;jpg&#x27;;
+    const filename &#x3D; &#x60;${uuidv4()}.${extension}&#x60;;
+    const filePath &#x3D; &#x60;${user.id}/${filename}&#x60;;
+
+    const { error: uploadError } &#x3D; await this.supabase.storage
+      .from(&#x27;avatars&#x27;)
+      .upload(filePath, file, {
+        cacheControl: &#x27;3600&#x27;,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const {
+      data: { publicUrl },
+    } &#x3D; this.supabase.storage.from(&#x27;avatars&#x27;).getPublicUrl(filePath);
+
+    await this.updateProfile({ avatar_url: publicUrl });
+
+    return publicUrl;
+  }
+
+  async deleteAvatar(): Promise&lt;void&gt; {
+    const profile &#x3D; await this.getCurrentProfile();
+
+    if (!profile?.avatar_url) {
+      return;
+    }
+
+    const url &#x3D; new URL(profile.avatar_url);
+    const pathParts &#x3D; url.pathname.split(&#x27;/avatars/&#x27;);
+    if (pathParts.length &gt; 1) {
+      const storagePath &#x3D; pathParts[1];
+      await this.supabase.storage.from(&#x27;avatars&#x27;).remove([storagePath]);
+    }
+
+    await this.updateProfile({ avatar_url: &#x27;&#x27; });
+  }
+
+  private async createProfile(userId: string, email: string): Promise&lt;UserProfile&gt; {
+    const newProfile: Partial&lt;UserProfile&gt; &#x3D; {
+      id: userId,
+      full_name: email.split(&#x27;@&#x27;)[0],
+      role: &#x27;renter&#x27;,
+      country: &#x27;AR&#x27;,
+    };
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .insert(newProfile)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(
+        &#x60;Error creando perfil (${error.code}): ${error.message}. Details: ${error.details}. Hint: ${error.hint}&#x60;,
+      );
+    }
+
+    console.log(&#x27;✅ Perfil creado:&#x27;, {
+      id: data?.id,
+      full_name: data?.full_name,
+    });
+
+    return data as UserProfile;
+  }
+
+  async canPublishCars(): Promise&lt;boolean&gt; {
+    const profile &#x3D; await this.getCurrentProfile();
+    return profile?.role &#x3D;&#x3D;&#x3D; &#x27;owner&#x27; || profile?.role &#x3D;&#x3D;&#x3D; &#x27;both&#x27;;
+  }
+
+  async canBookCars(): Promise&lt;boolean&gt; {
+    const profile &#x3D; await this.getCurrentProfile();
+    return profile?.role &#x3D;&#x3D;&#x3D; &#x27;renter&#x27; || profile?.role &#x3D;&#x3D;&#x3D; &#x27;both&#x27;;
+  }
+
+  async getMe(): Promise&lt;UserProfile&gt; {
+    const { data, error } &#x3D; await this.supabase.from(&#x27;me_profile&#x27;).select(&#x27;*&#x27;).single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as UserProfile;
+  }
+
+  async safeUpdateProfile(updates: UpdateProfileData): Promise&lt;UserProfile&gt; {
+    const { data, error } &#x3D; await this.supabase.rpc(&#x27;update_my_profile&#x27;, {
+      payload: updates,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data as UserProfile;
+  }
+
+  async uploadDocument(file: File, kind: DocumentKind): Promise&lt;UserDocument&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const allowedTypes &#x3D; [&#x27;image/jpeg&#x27;, &#x27;image/jpg&#x27;, &#x27;image/png&#x27;, &#x27;application/pdf&#x27;];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error(&#x27;Formato no permitido. Use JPG, PNG o PDF&#x27;);
+    }
+
+    if (file.size &gt; 5 * 1024 * 1024) {
+      throw new Error(&#x27;El archivo no debe superar 5MB&#x27;);
+    }
+
+    const extension &#x3D; file.name.split(&#x27;.&#x27;).pop() ?? &#x27;jpg&#x27;;
+    const filename &#x3D; &#x60;${uuidv4()}-${kind}.${extension}&#x60;;
+    const filePath &#x3D; &#x60;${user.id}/${filename}&#x60;;
+
+    const { error: uploadError } &#x3D; await this.supabase.storage
+      .from(&#x27;documents&#x27;)
+      .upload(filePath, file, {
+        cacheControl: &#x27;3600&#x27;,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data, error: insertError } &#x3D; await this.supabase
+      .from(&#x27;user_documents&#x27;)
+      .insert({
+        user_id: user.id,
+        kind,
+        storage_path: filePath,
+        status: &#x27;pending&#x27;,
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      await this.supabase.storage.from(&#x27;documents&#x27;).remove([filePath]);
+      throw insertError;
+    }
+
+    try {
+      await this.supabase.functions.invoke(&#x27;verify-user-docs&#x27;, {
+        body: {
+          document_id: data.id,
+          kind,
+          trigger: &#x27;document-upload&#x27;,
+        },
+      });
+    } catch (verificationError) {
+      console.warn(&#x27;Document verification failed (non-blocking):&#x27;, verificationError);
+    }
+
+    return data as UserDocument;
+  }
+
+  async getMyDocuments(): Promise&lt;UserDocument[]&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;user_documents&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;user_id&#x27;, user.id)
+      .order(&#x27;created_at&#x27;, { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data as UserDocument[]) ?? [];
+  }
+
+  async getDocument(documentId: string): Promise&lt;UserDocument | null&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;user_documents&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;id&#x27;, documentId)
+      .single();
+
+    if (error) {
+      if (error.code &#x3D;&#x3D;&#x3D; &#x27;PGRST116&#x27;) return null;
+      throw error;
+    }
+
+    return data as UserDocument;
+  }
+
+  async deleteDocument(documentId: string): Promise&lt;void&gt; {
+    const document &#x3D; await this.getDocument(documentId);
+
+    if (!document) {
+      throw new Error(&#x27;Documento no encontrado&#x27;);
+    }
+
+    await this.supabase.storage.from(&#x27;documents&#x27;).remove([document.storage_path]);
+
+    const { error } &#x3D; await this.supabase.from(&#x27;user_documents&#x27;).delete().eq(&#x27;id&#x27;, documentId);
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async getDocumentSignedUrl(storagePath: string): Promise&lt;string&gt; {
+    const { data, error } &#x3D; await this.supabase.storage
+      .from(&#x27;documents&#x27;)
+      .createSignedUrl(storagePath, 3600);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.signedUrl;
+  }
+
+  async hasCompletedOnboarding(): Promise&lt;boolean&gt; {
+    const profile &#x3D; await this.getMe();
+    return profile.onboarding &#x3D;&#x3D;&#x3D; &#x27;complete&#x27;;
+  }
+
+  async hasAcceptedTOS(): Promise&lt;boolean&gt; {
+    const profile &#x3D; await this.getMe();
+    return profile.tos_accepted_at !&#x3D;&#x3D; null;
+  }
+
+  async completeOnboarding(): Promise&lt;void&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const { error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .update({ onboarding: &#x27;complete&#x27; })
+      .eq(&#x27;id&#x27;, user.id);
+
+    if (error) {
+      console.error(&#x27;Error completing onboarding:&#x27;, error);
+      throw error;
+    }
+  }
+
+  async acceptTOS(): Promise&lt;void&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const { error } &#x3D; await this.supabase
+      .from(&#x27;profiles&#x27;)
+      .update({ tos_accepted_at: new Date().toISOString() })
+      .eq(&#x27;id&#x27;, user.id);
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  async getAuditLog(): Promise&lt;ProfileAudit[]&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;profile_audit_log&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;user_id&#x27;, user.id)
+      .order(&#x27;created_at&#x27;, { ascending: false })
+      .limit(50);
+
+    if (error) {
+      throw error;
+    }
+
+    return (data as ProfileAudit[]) ?? [];
+  }
+
+  async requestDataExport(): Promise&lt;void&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    await this.supabase.functions.invoke(&#x27;export-user-data&#x27;, {
+      body: { user_id: user.id },
+    });
+  }
+
+  async requestAccountDeletion(reason?: string): Promise&lt;void&gt; {
+    const {
+      data: { user },
+    } &#x3D; await this.supabase.auth.getUser();
+
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const { error } &#x3D; await this.supabase.from(&#x27;account_deletion_requests&#x27;).insert({
+      user_id: user.id,
+      reason: reason ?? &#x27;User requested deletion&#x27;,
+      status: &#x27;pending&#x27;,
+    });
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Registra una infracción (strike) contra un usuario
+   * Útil para penalizar dueños por autos sucios o cancelaciones injustificadas
+   */
+  async addStrike(userId: string, reason: string, bookingId?: string): Promise&lt;void&gt; {
+    try {
+      // Intentar insertar en tabla de strikes
+      // Nota: Si la tabla no existe, esto fallará silenciosamente en el catch
+      const { error } &#x3D; await this.supabase.from(&#x27;user_strikes&#x27;).insert({
+        user_id: userId,
+        reason,
+        booking_id: bookingId,
+        created_at: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.warn(&#x27;Could not record strike (table might not exist):&#x27;, error.message);
+      } else {
+        console.log(&#x60;Strike added to user ${userId}: ${reason}&#x60;);
+      }
+    } catch (err) {
+      console.error(&#x27;Error adding strike:&#x27;, err);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

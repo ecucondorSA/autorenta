@@ -1,0 +1,647 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  AuditLogOptions</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/decorators/audit-log.decorator.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Decorator options</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#buildDetails" 
+>
+                                            buildDetails
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#getResourceId" 
+>
+                                            getResourceId
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#includeParams" 
+>
+                                            includeParams
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#includeResult" 
+>
+                                            includeResult
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="buildDetails"></a>
+                                        <span class="name "><b>buildDetails</b>
+                                            <a href="#buildDetails">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>buildDetails:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Custom function to build audit details
+Default: includes params and/or result based on options</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="getResourceId"></a>
+                                        <span class="name "><b>getResourceId</b>
+                                            <a href="#getResourceId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>getResourceId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Custom function to extract resource ID from parameters
+Default: uses first parameter</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="includeParams"></a>
+                                        <span class="name "><b>includeParams</b>
+                                            <a href="#includeParams">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>includeParams:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Include method parameters in audit details
+Default: false (for privacy/size considerations)</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="includeResult"></a>
+                                        <span class="name "><b>includeResult</b>
+                                            <a href="#includeResult">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>includeResult:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Include method return value in audit details
+Default: false (for privacy/size considerations)</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AdminService } from &#x27;../services/admin.service&#x27;;
+import type { AdminActionContext } from &#x27;../types/admin.types&#x27;;
+
+/**
+ * Decorator options
+ */
+export interface AuditLogOptions {
+  /**
+   * Include method parameters in audit details
+   * Default: false (for privacy/size considerations)
+   */
+  includeParams?: boolean;
+
+  /**
+   * Include method return value in audit details
+   * Default: false (for privacy/size considerations)
+   */
+  includeResult?: boolean;
+
+  /**
+   * Custom function to extract resource ID from parameters
+   * Default: uses first parameter
+   */
+  getResourceId?: (args: unknown[], result: unknown) &#x3D;&gt; string | undefined;
+
+  /**
+   * Custom function to build audit details
+   * Default: includes params and/or result based on options
+   */
+  buildDetails?: (args: unknown[], result: unknown) &#x3D;&gt; Record&lt;string, unknown&gt;;
+}
+
+/**
+ * AuditLog Method Decorator
+ *
+ * Automatically logs admin actions with configurable detail level.
+ *
+ * @param action - The action being performed (e.g., &#x27;approve_user&#x27;, &#x27;delete_booking&#x27;)
+ * @param resourceType - The type of resource being acted upon (e.g., &#x27;user&#x27;, &#x27;booking&#x27;)
+ * @param options - Optional configuration for audit logging
+ */
+export function AuditLog(action: string, resourceType: string, options: AuditLogOptions &#x3D; {}) {
+  return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    const originalMethod &#x3D; descriptor.value;
+
+    descriptor.value &#x3D; async function (this: { adminService?: AdminService }, ...args: unknown[]) {
+      // Execute the original method
+      let result: unknown;
+      let error: unknown;
+
+      try {
+        result &#x3D; await originalMethod.apply(this, args);
+      } catch (e) {
+        error &#x3D; e;
+        // Re-throw after logging
+      }
+
+      // Log the action
+      try {
+        // Get AdminService instance (should be injected in the class)
+        const adminService &#x3D; (this as { adminService?: AdminService }).adminService;
+
+        if (!adminService) {
+          console.warn(
+            &#x60;AuditLog decorator: AdminService not found on ${target.constructor.name}.&#x60; +
+              &#x60; Make sure to inject AdminService in your class.&#x60;,
+          );
+          if (error) throw error;
+          return result;
+        }
+
+        // Build resource ID
+        let resourceId: string | undefined;
+        if (options.getResourceId) {
+          resourceId &#x3D; options.getResourceId(args, result);
+        } else if (args.length &gt; 0 &amp;&amp; typeof args[0] &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+          resourceId &#x3D; args[0];
+        }
+
+        // Build audit details
+        let details: Record&lt;string, unknown&gt; | undefined;
+        if (options.buildDetails) {
+          details &#x3D; options.buildDetails(args, result);
+        } else {
+          details &#x3D; {};
+          if (options.includeParams) {
+            details.params &#x3D; args;
+          }
+          if (options.includeResult &amp;&amp; !error) {
+            details.result &#x3D; result;
+          }
+          if (error) {
+            details.error &#x3D; {
+              message: error instanceof Error ? error.message : String(error),
+              name: error instanceof Error ? error.name : &#x27;UnknownError&#x27;,
+            };
+          }
+        }
+
+        // Create audit context
+        const context: AdminActionContext &#x3D; {
+          action,
+          resourceType,
+          resourceId,
+          details: Object.keys(details).length &gt; 0 ? details : undefined,
+        };
+
+        // Log the action (fire and forget - don&#x27;t block on logging errors)
+        adminService.logAction(context).catch((logError) &#x3D;&gt; {
+          console.error(&#x27;AuditLog decorator: Failed to log action&#x27;, {
+            action,
+            resourceType,
+            resourceId,
+            error: logError,
+          });
+        });
+      } catch (logError) {
+        console.error(&#x27;AuditLog decorator: Error in logging logic&#x27;, logError);
+      }
+
+      // Re-throw original error if any
+      if (error) {
+        throw error;
+      }
+
+      return result;
+    };
+
+    return descriptor;
+  };
+}
+
+/**
+ * Convenience decorators for common patterns
+ */
+
+/**
+ * Log approval actions (includes first parameter as resource ID and params in details)
+ */
+export function AuditApproval(resourceType: string) {
+  return AuditLog(&#x60;approve_${resourceType}&#x60;, resourceType, { includeParams: true });
+}
+
+/**
+ * Log rejection actions (includes first parameter as resource ID and params in details)
+ */
+export function AuditRejection(resourceType: string) {
+  return AuditLog(&#x60;reject_${resourceType}&#x60;, resourceType, { includeParams: true });
+}
+
+/**
+ * Log creation actions (includes result as resource ID if it&#x27;s a string)
+ */
+export function AuditCreation(resourceType: string) {
+  return AuditLog(&#x60;create_${resourceType}&#x60;, resourceType, {
+    includeParams: true,
+    getResourceId: (args: unknown[], result: unknown) &#x3D;&gt;
+      typeof result &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? result : undefined,
+  });
+}
+
+/**
+ * Log deletion actions (includes first parameter as resource ID)
+ */
+export function AuditDeletion(resourceType: string) {
+  return AuditLog(&#x60;delete_${resourceType}&#x60;, resourceType, { includeParams: true });
+}
+
+/**
+ * Log update actions (includes first parameter as resource ID and params in details)
+ */
+export function AuditUpdate(resourceType: string) {
+  return AuditLog(&#x60;update_${resourceType}&#x60;, resourceType, { includeParams: true });
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'AuditLogOptions.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

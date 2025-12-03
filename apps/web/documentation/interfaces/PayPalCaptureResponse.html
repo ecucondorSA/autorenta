@@ -1,0 +1,858 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  PayPalCaptureResponse</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/paypal-booking-gateway.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>PayPal Capture Response
+Response from paypal-capture-order Edge Function</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#amount" 
+>
+                                            amount
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#booking_id" 
+>
+                                            booking_id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#capture_id" 
+>
+                                            capture_id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#currency" 
+>
+                                            currency
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#error" 
+>
+                                            error
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#order_id" 
+>
+                                            order_id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#status" 
+>
+                                            status
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#success" 
+>
+                                            success
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="amount"></a>
+                                        <span class="name "><b>amount</b>
+                                            <a href="#amount">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>amount:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="booking_id"></a>
+                                        <span class="name "><b>booking_id</b>
+                                            <a href="#booking_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>booking_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="capture_id"></a>
+                                        <span class="name "><b>capture_id</b>
+                                            <a href="#capture_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>capture_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="currency"></a>
+                                        <span class="name "><b>currency</b>
+                                            <a href="#currency">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>currency:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="error"></a>
+                                        <span class="name "><b>error</b>
+                                            <a href="#error">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>error:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="order_id"></a>
+                                        <span class="name "><b>order_id</b>
+                                            <a href="#order_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>order_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="status"></a>
+                                        <span class="name "><b>status</b>
+                                            <a href="#status">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>status:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="success"></a>
+                                        <span class="name "><b>success</b>
+                                            <a href="#success">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>success:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { Observable, from, throwError } from &#x27;rxjs&#x27;;
+import { catchError } from &#x27;rxjs/operators&#x27;;
+import {
+  PaymentGateway,
+  PaymentPreferenceResponse,
+  PaymentProvider,
+} from &#x27;../interfaces/payment-gateway.interface&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+/**
+ * PayPal Create Order Response
+ * Response from paypal-create-order Edge Function
+ */
+interface PayPalCreateOrderResponse {
+  success: boolean;
+  order_id: string;
+  approval_url: string;
+  status: string;
+  amount_usd: string;
+  currency: string;
+  split_enabled: boolean;
+  error?: string;
+}
+
+/**
+ * PayPal Capture Response
+ * Response from paypal-capture-order Edge Function
+ */
+interface PayPalCaptureResponse {
+  success: boolean;
+  capture_id: string;
+  order_id: string;
+  status: string;
+  amount: string;
+  currency: string;
+  booking_id: string;
+  error?: string;
+}
+
+/**
+ * Gateway de PayPal para Bookings (Internacional)
+ *
+ * Abstrae la integración con las Edge Functions de PayPal:
+ * - paypal-create-order: Crea orden de pago con split payments (85/15)
+ * - paypal-capture-order: Captura orden después de aprobación del usuario
+ *
+ * Implementa la interfaz PaymentGateway para compatibilidad multi-provider.
+ *
+ * Características:
+ * - Split payments: 85% dueño, 15% plataforma (INSTANT disbursement)
+ * - Multi-moneda: Convierte ARS → USD automáticamente
+ * - PayPal Orders API v2
+ * - Webhook integration para confirmación automática
+ *
+ * Ventajas:
+ * - Separación de capas (UI no conoce infraestructura)
+ * - Facilita testing (mockear el gateway)
+ * - Manejo centralizado de errores
+ * - Type-safety con interfaces TypeScript
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class PayPalBookingGatewayService implements PaymentGateway {
+  readonly provider: PaymentProvider &#x3D; &#x27;paypal&#x27;;
+  private readonly supabaseService &#x3D; inject(SupabaseClientService);
+
+  /**
+   * Crea una orden de pago en PayPal para un booking
+   *
+   * @param bookingId - ID del booking
+   * @param useSplitPayment - Si se debe usar split payment (85/15) - opcional
+   * @returns Observable con la respuesta de PayPal
+   */
+  createBookingPreference(
+    bookingId: string,
+    useSplitPayment &#x3D; false,
+  ): Observable&lt;PaymentPreferenceResponse&gt; {
+    return from(this._createOrder(bookingId, useSplitPayment)).pipe(
+      catchError((err) &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(this.formatError(err)));
+      }),
+    );
+  }
+
+  /**
+   * Implementación interna usando async/await
+   */
+  private async _createOrder(
+    bookingId: string,
+    useSplitPayment: boolean,
+  ): Promise&lt;PaymentPreferenceResponse&gt; {
+    const supabase &#x3D; this.supabaseService.getClient();
+
+    // Obtener token de autenticación
+    const {
+      data: { session },
+    } &#x3D; await supabase.auth.getSession();
+
+    if (!session) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    // Obtener URL base de Supabase
+    const supabaseUrl &#x3D; this.getSupabaseUrl();
+    const edgeFunctionUrl &#x3D; &#x60;${supabaseUrl}/functions/v1/paypal-create-order&#x60;;
+
+    // Llamar a Edge Function
+    const response &#x3D; await fetch(edgeFunctionUrl, {
+      method: &#x27;POST&#x27;,
+      headers: {
+        &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+        Authorization: &#x60;Bearer ${session.access_token}&#x60;,
+      },
+      body: JSON.stringify({
+        booking_id: bookingId,
+        use_split_payment: useSplitPayment,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData &#x3D; await response.json().catch(() &#x3D;&gt; ({
+        error: &#x60;HTTP ${response.status}: ${response.statusText}&#x60;,
+      }));
+      throw new Error(errorData.error || &#x27;Error al crear orden de pago en PayPal&#x27;);
+    }
+
+    const data: PayPalCreateOrderResponse &#x3D; await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || &#x27;Error desconocido al crear orden de PayPal&#x27;);
+    }
+
+    // Convertir a formato genérico PaymentPreferenceResponse
+    return {
+      success: true,
+      preference_id: data.order_id,
+      init_point: data.approval_url,
+      amount_usd: parseFloat(data.amount_usd),
+      currency: data.currency,
+      provider: &#x27;paypal&#x27;,
+    };
+  }
+
+  /**
+   * Captura una orden de PayPal después de la aprobación del usuario
+   *
+   * Este método debe llamarse después de que el usuario apruebe el pago en PayPal
+   * y sea redirigido de vuelta a la aplicación.
+   *
+   * @param orderId - ID de la orden de PayPal
+   * @returns Observable con la respuesta de captura
+   */
+  captureOrder(orderId: string): Observable&lt;PayPalCaptureResponse&gt; {
+    return from(this._captureOrder(orderId)).pipe(
+      catchError((err) &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(this.formatError(err)));
+      }),
+    );
+  }
+
+  /**
+   * Implementación interna de captura
+   */
+  private async _captureOrder(orderId: string): Promise&lt;PayPalCaptureResponse&gt; {
+    const supabase &#x3D; this.supabaseService.getClient();
+
+    const {
+      data: { session },
+    } &#x3D; await supabase.auth.getSession();
+
+    if (!session) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    const supabaseUrl &#x3D; this.getSupabaseUrl();
+    const edgeFunctionUrl &#x3D; &#x60;${supabaseUrl}/functions/v1/paypal-capture-order&#x60;;
+
+    const response &#x3D; await fetch(edgeFunctionUrl, {
+      method: &#x27;POST&#x27;,
+      headers: {
+        &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,
+        Authorization: &#x60;Bearer ${session.access_token}&#x60;,
+      },
+      body: JSON.stringify({ order_id: orderId }),
+    });
+
+    if (!response.ok) {
+      const errorData &#x3D; await response.json().catch(() &#x3D;&gt; ({
+        error: &#x60;HTTP ${response.status}: ${response.statusText}&#x60;,
+      }));
+      throw new Error(errorData.error || &#x27;Error al capturar pago de PayPal&#x27;);
+    }
+
+    const data: PayPalCaptureResponse &#x3D; await response.json();
+
+    if (!data.success) {
+      throw new Error(data.error || &#x27;Error desconocido al capturar orden de PayPal&#x27;);
+    }
+
+    return data;
+  }
+
+  /**
+   * Verifica si una orden de PayPal sigue válida
+   *
+   * @param orderId - ID de la orden de PayPal
+   * @returns true si la orden existe y no ha sido capturada
+   */
+  async isPreferenceValid(orderId: string): Promise&lt;boolean&gt; {
+    try {
+      const supabase &#x3D; this.supabaseService.getClient();
+      const {
+        data: { session },
+      } &#x3D; await supabase.auth.getSession();
+
+      if (!session) return false;
+
+      // Verificar en la tabla bookings si la orden sigue activa
+      const { data: booking } &#x3D; await supabase
+        .from(&#x27;bookings&#x27;)
+        .select(&#x27;payment_preference_id, payment_provider, status&#x27;)
+        .eq(&#x27;payment_preference_id&#x27;, orderId)
+        .eq(&#x27;payment_provider&#x27;, &#x27;paypal&#x27;)
+        .single();
+
+      if (!booking) return false;
+
+      // La orden es válida si el booking no ha sido confirmado aún
+      return booking.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Redirige al usuario al checkout de PayPal
+   *
+   * @param approvalUrl - URL de aprobación de PayPal
+   * @param openInNewTab - Si true, abre en nueva pestaña (default: false)
+   */
+  redirectToCheckout(approvalUrl: string, openInNewTab &#x3D; false): void {
+    if (openInNewTab) {
+      window.open(approvalUrl, &#x27;_blank&#x27;);
+    } else {
+      window.location.href &#x3D; approvalUrl;
+    }
+  }
+
+  /**
+   * Obtiene la URL base de Supabase desde variables de entorno
+   */
+  private getSupabaseUrl(): string {
+    const supabase &#x3D; this.supabaseService.getClient();
+    // @ts-expect-error - Acceso interno al URL
+    return supabase.supabaseUrl || &#x27;&#x27;;
+  }
+
+  /**
+   * Formatea errores para mostrar al usuario
+   */
+  private formatError(error: unknown): string {
+    if (error &amp;&amp; typeof error &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;message&#x27; in error) {
+      return String(error.message);
+    }
+
+    if (typeof error &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      return error;
+    }
+
+    return &#x27;Error al procesar el pago con PayPal. Por favor intente nuevamente.&#x27;;
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'PayPalCaptureResponse.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

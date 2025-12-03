@@ -1,0 +1,1778 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ProtectionCreditService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/protection-credit.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authService" >authService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#balance" >balance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#balanceCents" >balanceCents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#balanceUsd" >balanceUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#daysUntilExpiry" >daysUntilExpiry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#expiresAt" >expiresAt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasBalance" >hasBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isExpired" >isExpired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isNearExpiry" >isNearExpiry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#state" >state</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#calculateCoverage" >calculateCoverage</a>
+                            </li>
+                            <li>
+                                <a href="#calculatePaymentBreakdown" >calculatePaymentBreakdown</a>
+                            </li>
+                            <li>
+                                <a href="#canCoverAmount" >canCoverAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkRenewalEligibility" >checkRenewalEligibility</a>
+                            </li>
+                            <li>
+                                <a href="#getDaysRemainingText" >getDaysRemainingText</a>
+                            </li>
+                            <li>
+                                <a href="#getFormattedBalance" >getFormattedBalance</a>
+                            </li>
+                            <li>
+                                <a href="#getFormattedExpiry" >getFormattedExpiry</a>
+                            </li>
+                            <li>
+                                <a href="#getInfoMessage" >getInfoMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getRenewalProgress" >getRenewalProgress</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusBadgeColor" >getStatusBadgeColor</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusIcon" >getStatusIcon</a>
+                            </li>
+                            <li>
+                                <a href="#getUsagePercentage" >getUsagePercentage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadBalance" >loadBalance</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateCoverage"></a>
+                    <span class="name">
+                        <span ><b>calculateCoverage</b></span>
+                        <a href="#calculateCoverage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>calculateCoverage(claimAmountCents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Calcula cuánto CP cubriría un siniestro</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>claimAmountCents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculatePaymentBreakdown"></a>
+                    <span class="name">
+                        <span ><b>calculatePaymentBreakdown</b></span>
+                        <a href="#calculatePaymentBreakdown"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>calculatePaymentBreakdown(totalAmountCents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, walletBalanceCents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:279</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Calcula el desglose de pago con waterfall</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>totalAmountCents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>walletBalanceCents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canCoverAmount"></a>
+                    <span class="name">
+                        <span ><b>canCoverAmount</b></span>
+                        <a href="#canCoverAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canCoverAmount(amountCents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="272"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:272</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Verifica si se puede usar CP para un monto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amountCents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkRenewalEligibility"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkRenewalEligibility</b></span>
+                        <a href="#checkRenewalEligibility"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkRenewalEligibility()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:121</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Verifica elegibilidad para renovación gratuita
+(10+ bookings completados sin siniestros)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDaysRemainingText"></a>
+                    <span class="name">
+                        <span ><b>getDaysRemainingText</b></span>
+                        <a href="#getDaysRemainingText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDaysRemainingText()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene días restantes como texto</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFormattedBalance"></a>
+                    <span class="name">
+                        <span ><b>getFormattedBalance</b></span>
+                        <a href="#getFormattedBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFormattedBalance()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:160</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Formatea el balance para mostrar en UI</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFormattedExpiry"></a>
+                    <span class="name">
+                        <span ><b>getFormattedExpiry</b></span>
+                        <a href="#getFormattedExpiry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFormattedExpiry()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:168</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene fecha de expiración formateada</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getInfoMessage"></a>
+                    <span class="name">
+                        <span ><b>getInfoMessage</b></span>
+                        <a href="#getInfoMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getInfoMessage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:243</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene mensaje informativo sobre el CP</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getRenewalProgress"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getRenewalProgress</b></span>
+                        <a href="#getRenewalProgress"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getRenewalProgress()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="331"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:331</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene progreso hacia renovación gratuita</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusBadgeColor"></a>
+                    <span class="name">
+                        <span ><b>getStatusBadgeColor</b></span>
+                        <a href="#getStatusBadgeColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusBadgeColor()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:199</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene color del badge según estado</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusIcon"></a>
+                    <span class="name">
+                        <span ><b>getStatusIcon</b></span>
+                        <a href="#getStatusIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusIcon()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene ícono representativo del estado</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUsagePercentage"></a>
+                    <span class="name">
+                        <span ><b>getUsagePercentage</b></span>
+                        <a href="#getUsagePercentage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getUsagePercentage()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="209"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:209</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene el porcentaje de balance usado</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadBalance</b></span>
+                        <a href="#loadBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBalance()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/app/core/services/protection-credit.service.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga el balance de Crédito de Protección</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ProtectionCreditBalance.html" target="_self" >Promise&lt;ProtectionCreditBalance | null&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authService</b></span>
+                        <a href="#authService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/core/services/protection-credit.service.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="balance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>balance</b></span>
+                        <a href="#balance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/app/core/services/protection-credit.service.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="balanceCents"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>balanceCents</b></span>
+                        <a href="#balanceCents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance?.balance_cents ?? 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/core/services/protection-credit.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="balanceUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>balanceUsd</b></span>
+                        <a href="#balanceUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance?.balance_usd ?? 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/core/services/protection-credit.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="daysUntilExpiry"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>daysUntilExpiry</b></span>
+                        <a href="#daysUntilExpiry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance?.days_until_expiry ?? null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/core/services/protection-credit.service.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().error)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/core/services/protection-credit.service.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expiresAt"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>expiresAt</b></span>
+                        <a href="#expiresAt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance?.expires_at)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/core/services/protection-credit.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasBalance</b></span>
+                        <a href="#hasBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; (this.state().balance?.balance_cents ?? 0) &gt; 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/core/services/protection-credit.service.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isExpired"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isExpired</b></span>
+                        <a href="#isExpired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().balance?.is_expired ?? false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/core/services/protection-credit.service.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isNearExpiry"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isNearExpiry</b></span>
+                        <a href="#isNearExpiry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const days &#x3D; this.state().balance?.days_until_expiry;
+    return days !&#x3D;&#x3D; null &amp;&amp; days !&#x3D;&#x3D; undefined &amp;&amp; days &lt;&#x3D; 30; // Próximo a expirar en 30 días
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/core/services/protection-credit.service.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.state().loading)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/core/services/protection-credit.service.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="state"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>state</b></span>
+                        <a href="#state"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;ProtectionCreditState&gt;({
+    balance: null,
+    loading: false,
+    error: null,
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/core/services/protection-credit.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>injectSupabase()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/core/services/protection-credit.service.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, computed, signal, inject } from &#x27;@angular/core&#x27;;
+import { injectSupabase } from &#x27;./supabase-client.service&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
+
+/**
+ * ProtectionCreditService
+ *
+ * Servicio para gestión del Crédito de Protección (CP).
+ *
+ * CRÉDITO DE PROTECCIÓN (CP):
+ * - Crédito no retirable otorgado a usuarios nuevos
+ * - Monto inicial: $300 USD
+ * - Válido por 1 año
+ * - Se consume en siniestros antes que el balance retirable
+ * - Renovable gratis tras 10 bookings sin siniestros
+ * - Breakage: CP no usado se reconoce como ingreso al cerrar cuenta
+ *
+ * WATERFALL DE CONSUMO:
+ * 1. Crédito de Protección (no retirable)
+ * 2. Wallet Retirable
+ * 3. Pago externo (tarjeta/efectivo)
+ */
+
+export interface ProtectionCreditBalance {
+  balance_cents: number;
+  balance_usd: number;
+  issued_at: string | null;
+  expires_at: string | null;
+  is_expired: boolean;
+  days_until_expiry: number | null;
+}
+
+export interface ProtectionCreditConsumption {
+  cp_used_cents: number;
+  wr_used_cents: number;
+  remaining_claim_cents: number;
+  transaction_id: string;
+}
+
+interface ProtectionCreditState {
+  balance: ProtectionCreditBalance | null;
+  loading: boolean;
+  error: string | null;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class ProtectionCreditService {
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly authService &#x3D; inject(AuthService);
+
+  private readonly state &#x3D; signal&lt;ProtectionCreditState&gt;({
+    balance: null,
+    loading: false,
+    error: null,
+  });
+
+  // Computed signals
+  readonly balance &#x3D; computed(() &#x3D;&gt; this.state().balance);
+  readonly balanceUsd &#x3D; computed(() &#x3D;&gt; this.state().balance?.balance_usd ?? 0);
+  readonly balanceCents &#x3D; computed(() &#x3D;&gt; this.state().balance?.balance_cents ?? 0);
+  readonly expiresAt &#x3D; computed(() &#x3D;&gt; this.state().balance?.expires_at);
+  readonly isExpired &#x3D; computed(() &#x3D;&gt; this.state().balance?.is_expired ?? false);
+  readonly daysUntilExpiry &#x3D; computed(() &#x3D;&gt; this.state().balance?.days_until_expiry ?? null);
+  readonly loading &#x3D; computed(() &#x3D;&gt; this.state().loading);
+  readonly error &#x3D; computed(() &#x3D;&gt; this.state().error);
+
+  // Computed helpers
+  readonly hasBalance &#x3D; computed(() &#x3D;&gt; (this.state().balance?.balance_cents ?? 0) &gt; 0);
+  readonly isNearExpiry &#x3D; computed(() &#x3D;&gt; {
+    const days &#x3D; this.state().balance?.days_until_expiry;
+    return days !&#x3D;&#x3D; null &amp;&amp; days !&#x3D;&#x3D; undefined &amp;&amp; days &lt;&#x3D; 30; // Próximo a expirar en 30 días
+  });
+
+  /**
+   * Carga el balance de Crédito de Protección
+   */
+  async loadBalance(): Promise&lt;ProtectionCreditBalance | null&gt; {
+    this.state.update((s) &#x3D;&gt; ({ ...s, loading: true, error: null }));
+
+    try {
+      const user &#x3D; await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error(&#x27;Usuario no autenticado&#x27;);
+      }
+
+      const { data, error } &#x3D; await this.supabase.rpc(&#x27;get_protection_credit_balance&#x27;, {
+        p_user_id: user.id,
+      });
+
+      if (error) {
+        throw new Error(&#x60;Error al cargar balance CP: ${error.message}&#x60;);
+      }
+
+      const balance &#x3D; data?.[0] || null;
+
+      this.state.update((s) &#x3D;&gt; ({
+        ...s,
+        balance,
+        loading: false,
+      }));
+
+      return balance;
+    } catch (error: unknown) {
+      const errorMessage &#x3D; error instanceof Error ? error.message : &#x27;Error desconocido&#x27;;
+      this.state.update((s) &#x3D;&gt; ({
+        ...s,
+        loading: false,
+        error: errorMessage,
+      }));
+      console.error(&#x27;[ProtectionCreditService] Error:&#x27;, errorMessage);
+      return null;
+    }
+  }
+
+  /**
+   * Verifica elegibilidad para renovación gratuita
+   * (10+ bookings completados sin siniestros)
+   */
+  async checkRenewalEligibility(): Promise&lt;{
+    eligible: boolean;
+    completedBookings: number;
+    totalClaims: number;
+    bookingsNeeded: number;
+  }&gt; {
+    const user &#x3D; await this.authService.getCurrentUser();
+    if (!user) {
+      throw new Error(&#x27;Usuario no autenticado&#x27;);
+    }
+
+    // Contar bookings completados
+    const { count: completedBookings } &#x3D; await this.supabase
+      .from(&#x27;bookings&#x27;)
+      .select(&#x27;*&#x27;, { count: &#x27;exact&#x27;, head: true })
+      .eq(&#x27;renter_id&#x27;, user.id)
+      .eq(&#x27;status&#x27;, &#x27;completed&#x27;);
+
+    // Contar siniestros
+    const { count: totalClaims } &#x3D; await this.supabase
+      .from(&#x27;booking_claims&#x27;)
+      .select(&#x27;*&#x27;, { count: &#x27;exact&#x27;, head: true })
+      .eq(&#x27;user_id&#x27;, user.id)
+      .in(&#x27;status&#x27;, [&#x27;approved&#x27;, &#x27;resolved&#x27;]);
+
+    const eligible &#x3D; (completedBookings ?? 0) &gt;&#x3D; 10 &amp;&amp; (totalClaims ?? 0) &#x3D;&#x3D;&#x3D; 0;
+    const bookingsNeeded &#x3D; Math.max(0, 10 - (completedBookings ?? 0));
+
+    return {
+      eligible,
+      completedBookings: completedBookings ?? 0,
+      totalClaims: totalClaims ?? 0,
+      bookingsNeeded,
+    };
+  }
+
+  /**
+   * Formatea el balance para mostrar en UI
+   */
+  getFormattedBalance(): string {
+    const usd &#x3D; this.balanceUsd();
+    return &#x60;$${usd.toFixed(2)} USD&#x60;;
+  }
+
+  /**
+   * Obtiene fecha de expiración formateada
+   */
+  getFormattedExpiry(): string {
+    const expiresAt &#x3D; this.expiresAt();
+    if (!expiresAt) return &#x27;Sin expiración&#x27;;
+
+    const date &#x3D; new Date(expiresAt);
+    return date.toLocaleDateString(&#x27;es-AR&#x27;, {
+      day: &#x27;numeric&#x27;,
+      month: &#x27;long&#x27;,
+      year: &#x27;numeric&#x27;,
+    });
+  }
+
+  /**
+   * Obtiene días restantes como texto
+   */
+  getDaysRemainingText(): string {
+    const days &#x3D; this.daysUntilExpiry();
+
+    if (days &#x3D;&#x3D;&#x3D; null) return &#x27;&#x27;;
+    if (days &lt; 0) return &#x27;Expirado&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 0) return &#x27;Expira hoy&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 1) return &#x27;Expira mañana&#x27;;
+    if (days &lt;&#x3D; 7) return &#x60;Expira en ${days} días&#x60;;
+    if (days &lt;&#x3D; 30) return &#x60;Expira en ${days} días&#x60;;
+
+    return &#x60;${days} días restantes&#x60;;
+  }
+
+  /**
+   * Obtiene color del badge según estado
+   */
+  getStatusBadgeColor(): string {
+    if (this.isExpired()) return &#x27;danger&#x27;;
+    if (this.isNearExpiry()) return &#x27;warning&#x27;;
+    if (this.hasBalance()) return &#x27;success&#x27;;
+    return &#x27;secondary&#x27;;
+  }
+
+  /**
+   * Obtiene el porcentaje de balance usado
+   */
+  getUsagePercentage(): number {
+    const balance &#x3D; this.balanceCents();
+    const initial &#x3D; 30000; // $300 USD inicial
+
+    if (balance &gt;&#x3D; initial) return 0; // No usado o renovado
+    return Math.round(((initial - balance) / initial) * 100);
+  }
+
+  /**
+   * Calcula cuánto CP cubriría un siniestro
+   */
+  calculateCoverage(claimAmountCents: number): {
+    cpWillCover: number;
+    cpWillCoverPct: number;
+    remainingClaim: number;
+    willFullyCover: boolean;
+  } {
+    const balance &#x3D; this.balanceCents();
+    const cpWillCover &#x3D; Math.min(balance, claimAmountCents);
+    const cpWillCoverPct &#x3D; claimAmountCents &gt; 0 ? (cpWillCover / claimAmountCents) * 100 : 0;
+    const remainingClaim &#x3D; claimAmountCents - cpWillCover;
+    const willFullyCover &#x3D; cpWillCover &gt;&#x3D; claimAmountCents;
+
+    return {
+      cpWillCover,
+      cpWillCoverPct: Math.round(cpWillCoverPct),
+      remainingClaim,
+      willFullyCover,
+    };
+  }
+
+  /**
+   * Obtiene mensaje informativo sobre el CP
+   */
+  getInfoMessage(): string {
+    if (this.isExpired()) {
+      return &#x27;Tu Crédito de Protección ha expirado. Completa 10 bookings sin siniestros para renovarlo gratis.&#x27;;
+    }
+
+    if (!this.hasBalance()) {
+      return &#x27;No tienes Crédito de Protección disponible. Completa 10 bookings sin siniestros para obtenerlo.&#x27;;
+    }
+
+    if (this.isNearExpiry()) {
+      return &#x60;Tu Crédito de Protección expira pronto (${this.getDaysRemainingText()}). Se renovará automáticamente si cumples los requisitos.&#x60;;
+    }
+
+    return &#x27;Tu Crédito de Protección te protege en caso de siniestros. No es retirable pero se usa antes que tu balance.&#x27;;
+  }
+
+  /**
+   * Obtiene ícono representativo del estado
+   */
+  getStatusIcon(): string {
+    if (this.isExpired()) return &#x27;❌&#x27;;
+    if (this.isNearExpiry()) return &#x27;⚠️&#x27;;
+    if (this.hasBalance()) return &#x27;✅&#x27;;
+    return &#x27;➖&#x27;;
+  }
+
+  /**
+   * Verifica si se puede usar CP para un monto
+   */
+  canCoverAmount(amountCents: number): boolean {
+    return this.balanceCents() &gt;&#x3D; amountCents &amp;&amp; !this.isExpired();
+  }
+
+  /**
+   * Calcula el desglose de pago con waterfall
+   */
+  calculatePaymentBreakdown(
+    totalAmountCents: number,
+    walletBalanceCents: number,
+  ): {
+    cpUsed: number;
+    wrUsed: number;
+    externalPayment: number;
+    breakdown: Array&lt;{ source: string; amount: number; percentage: number }&gt;;
+  } {
+    const cpAvailable &#x3D; this.isExpired() ? 0 : this.balanceCents();
+    let remaining &#x3D; totalAmountCents;
+
+    // 1. Usar CP primero
+    const cpUsed &#x3D; Math.min(cpAvailable, remaining);
+    remaining -&#x3D; cpUsed;
+
+    // 2. Usar WR segundo
+    const wrUsed &#x3D; Math.min(walletBalanceCents, remaining);
+    remaining -&#x3D; wrUsed;
+
+    // 3. Resto es pago externo
+    const externalPayment &#x3D; remaining;
+
+    const breakdown &#x3D; [
+      {
+        source: &#x27;Crédito de Protección&#x27;,
+        amount: cpUsed,
+        percentage: (cpUsed / totalAmountCents) * 100,
+      },
+      {
+        source: &#x27;Balance Retirable&#x27;,
+        amount: wrUsed,
+        percentage: (wrUsed / totalAmountCents) * 100,
+      },
+      {
+        source: &#x27;Pago Externo&#x27;,
+        amount: externalPayment,
+        percentage: (externalPayment / totalAmountCents) * 100,
+      },
+    ].filter((item) &#x3D;&gt; item.amount &gt; 0);
+
+    return {
+      cpUsed,
+      wrUsed,
+      externalPayment,
+      breakdown,
+    };
+  }
+
+  /**
+   * Obtiene progreso hacia renovación gratuita
+   */
+  async getRenewalProgress(): Promise&lt;{
+    eligible: boolean;
+    progress: number;
+    message: string;
+  }&gt; {
+    const eligibility &#x3D; await this.checkRenewalEligibility();
+
+    const progress &#x3D; Math.min((eligibility.completedBookings / 10) * 100, 100);
+
+    let message &#x3D; &#x27;&#x27;;
+    if (eligibility.eligible) {
+      message &#x3D; &#x27;¡Felicitaciones! Eres elegible para renovación gratuita de CP.&#x27;;
+    } else if (eligibility.totalClaims &gt; 0) {
+      message &#x3D; &#x60;Tienes ${eligibility.totalClaims} siniestro(s). No calificas para renovación gratuita.&#x60;;
+    } else {
+      message &#x3D; &#x60;Completa ${eligibility.bookingsNeeded} bookings más sin siniestros para renovación gratuita.&#x60;;
+    }
+
+    return {
+      eligible: eligibility.eligible,
+      progress: Math.round(progress),
+      message,
+    };
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProtectionCreditService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

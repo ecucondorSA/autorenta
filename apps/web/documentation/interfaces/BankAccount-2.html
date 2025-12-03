@@ -1,0 +1,1005 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  BankAccount</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/payout.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#accountHolder" 
+>
+                                            accountHolder
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#accountNumber" 
+>
+                                            accountNumber
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#accountType" 
+>
+                                            accountType
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#bankCode" 
+>
+                                            bankCode
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#createdAt" 
+>
+                                            createdAt
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#id" 
+>
+                                            id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#isDefault" 
+>
+                                            isDefault
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#status" 
+>
+                                            status
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#userId" 
+>
+                                            userId
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="accountHolder"></a>
+                                        <span class="name "><b>accountHolder</b>
+                                            <a href="#accountHolder">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>accountHolder:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="accountNumber"></a>
+                                        <span class="name "><b>accountNumber</b>
+                                            <a href="#accountNumber">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>accountNumber:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="accountType"></a>
+                                        <span class="name "><b>accountType</b>
+                                            <a href="#accountType">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>accountType:     <code>&quot;checking&quot; | &quot;savings&quot;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;checking&quot; | &quot;savings&quot;</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="bankCode"></a>
+                                        <span class="name "><b>bankCode</b>
+                                            <a href="#bankCode">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>bankCode:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="createdAt"></a>
+                                        <span class="name "><b>createdAt</b>
+                                            <a href="#createdAt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>createdAt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="id"></a>
+                                        <span class="name "><b>id</b>
+                                            <a href="#id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="isDefault"></a>
+                                        <span class="name "><b>isDefault</b>
+                                            <a href="#isDefault">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>isDefault:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="status"></a>
+                                        <span class="name "><b>status</b>
+                                            <a href="#status">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>status:     <code>&quot;verified&quot; | &quot;unverified&quot; | &quot;invalid&quot;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;verified&quot; | &quot;unverified&quot; | &quot;invalid&quot;</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="userId"></a>
+                                        <span class="name "><b>userId</b>
+                                            <a href="#userId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>userId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Observable, from, interval, throwError, of } from &#x27;rxjs&#x27;;
+import { map, catchError, switchMap, filter, take } from &#x27;rxjs/operators&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+export interface PayoutRequest {
+  splitId: string;
+  userId: string;
+  amount: number;
+  currency: string;
+}
+
+export interface Payout {
+  id: string;
+  splitId: string;
+  userId: string;
+  bankAccountId: string;
+  amount: number;
+  currency: string;
+  status: &#x27;pending&#x27; | &#x27;processing&#x27; | &#x27;completed&#x27; | &#x27;failed&#x27; | &#x27;cancelled&#x27;;
+  provider: string;
+  providerPayoutId?: string;
+  providerResponse?: Record&lt;string, unknown&gt;;
+  createdAt: string;
+  completedAt?: string;
+  failureReason?: string;
+}
+
+export interface BankAccount {
+  id: string;
+  userId: string;
+  accountNumber: string;
+  bankCode: string;
+  accountHolder: string;
+  accountType: &#x27;checking&#x27; | &#x27;savings&#x27;;
+  isDefault: boolean;
+  status: &#x27;verified&#x27; | &#x27;unverified&#x27; | &#x27;invalid&#x27;;
+  createdAt: string;
+}
+
+interface WalletBalance {
+  available_balance: number;
+}
+
+@Injectable({ providedIn: &#x27;root&#x27; })
+export class PayoutService {
+  private readonly PAYOUT_MIN_AMOUNT &#x3D; 1000; // ARS 1000 minimum
+  private readonly PAYOUT_MAX_AMOUNT &#x3D; 1000000; // ARS 1,000,000 maximum
+  private readonly PROCESSING_TIMEOUT &#x3D; 300000; // 5 minutes
+
+  constructor(private supabase: SupabaseClientService) {}
+
+  /**
+   * Initiate a payout to a collector&#x27;s bank account
+   */
+  initiatePayout(request: PayoutRequest): Observable&lt;Payout&gt; {
+    return from(this.validateAndInitiatePayout(request));
+  }
+
+  /**
+   * Get all payouts for a user
+   * @deprecated Use getUserPayoutsPaginated instead
+   */
+  getUserPayouts(userId: string): Observable&lt;Payout[]&gt; {
+    return from(
+      this.supabase
+        .getClient()
+        .from(&#x27;payouts&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;user_id&#x27;, userId)
+        .order(&#x27;created_at&#x27;, { ascending: false }),
+    ).pipe(
+      map(({ data }) &#x3D;&gt; data as Payout[]),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to fetch payouts&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Get paginated payouts for a user
+   * @param userId - User ID
+   * @param limit - Number of records per page (default 10)
+   * @param offset - Offset for pagination (default 0)
+   */
+  getUserPayoutsPaginated(
+    userId: string,
+    limit: number &#x3D; 10,
+    offset: number &#x3D; 0,
+  ): Observable&lt;{ data: Payout[]; total: number; hasMore: boolean }&gt; {
+    return from(
+      Promise.all([
+        // Get paginated data
+        this.supabase
+          .getClient()
+          .from(&#x27;payouts&#x27;)
+          .select(&#x27;*&#x27;)
+          .eq(&#x27;user_id&#x27;, userId)
+          .order(&#x27;created_at&#x27;, { ascending: false })
+          .range(offset, offset + limit - 1),
+        // Get total count
+        this.supabase
+          .getClient()
+          .from(&#x27;payouts&#x27;)
+          .select(&#x27;id&#x27;, { count: &#x27;exact&#x27;, head: true })
+          .eq(&#x27;user_id&#x27;, userId),
+      ]),
+    ).pipe(
+      map(([dataResponse, countResponse]) &#x3D;&gt; {
+        const data &#x3D; (dataResponse.data || []) as Payout[];
+        const total &#x3D; countResponse.count || 0;
+        const hasMore &#x3D; offset + limit &lt; total;
+        return { data, total, hasMore };
+      }),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to fetch payouts&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Get payout status
+   */
+  getPayoutStatus(payoutId: string): Observable&lt;Payout&gt; {
+    return from(
+      this.supabase.getClient().from(&#x27;payouts&#x27;).select(&#x27;*&#x27;).eq(&#x27;id&#x27;, payoutId).single(),
+    ).pipe(
+      map(({ data }) &#x3D;&gt; data as Payout),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to fetch payout status&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Get user&#x27;s default bank account
+   */
+  getDefaultBankAccount(userId: string): Observable&lt;BankAccount | null&gt; {
+    return from(
+      this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;user_id&#x27;, userId)
+        .eq(&#x27;is_default&#x27;, true)
+        .single(),
+    ).pipe(
+      map(({ data }) &#x3D;&gt; (data as BankAccount) || null),
+      catchError(() &#x3D;&gt; {
+        return of(null); // No default account found
+      }),
+    );
+  }
+
+  /**
+   * Get all bank accounts for a user
+   */
+  getUserBankAccounts(userId: string): Observable&lt;BankAccount[]&gt; {
+    return from(
+      this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;user_id&#x27;, userId)
+        .order(&#x27;is_default&#x27;, { ascending: false }),
+    ).pipe(
+      map(({ data }) &#x3D;&gt; data as BankAccount[]),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to fetch bank accounts&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Add a new bank account
+   */
+  addBankAccount(
+    userId: string,
+    account: Omit&lt;BankAccount, &#x27;id&#x27; | &#x27;userId&#x27; | &#x27;createdAt&#x27; | &#x27;status&#x27;&gt;,
+  ): Observable&lt;BankAccount&gt; {
+    return from(
+      this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .insert({
+          user_id: userId,
+          ...account,
+          status: &#x27;unverified&#x27;,
+          created_at: new Date().toISOString(),
+        })
+        .select()
+        .single(),
+    ).pipe(
+      map(({ data }) &#x3D;&gt; data as BankAccount),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to add bank account&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Set default bank account
+   */
+  setDefaultBankAccount(userId: string, accountId: string): Observable&lt;BankAccount&gt; {
+    return from(
+      this.supabase.getClient().rpc(&#x27;set_default_bank_account&#x27;, {
+        user_id: userId,
+        account_id: accountId,
+      }),
+    ).pipe(
+      switchMap(() &#x3D;&gt;
+        this.supabase.getClient().from(&#x27;bank_accounts&#x27;).select(&#x27;*&#x27;).eq(&#x27;id&#x27;, accountId).single(),
+      ),
+      map(({ data }) &#x3D;&gt; data as BankAccount),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to set default bank account&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Monitor payout processing status
+   */
+  monitorPayoutStatus(payoutId: string): Observable&lt;Payout&gt; {
+    return interval(5000).pipe(
+      switchMap(() &#x3D;&gt; this.getPayoutStatus(payoutId)),
+      filter((payout) &#x3D;&gt; payout.status !&#x3D;&#x3D; &#x27;processing&#x27;),
+      take(1),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to monitor payout status&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Get payout statistics for a user
+   */
+  getPayoutStats(userId: string): Observable&lt;{
+    totalPayouts: number;
+    totalAmount: number;
+    pendingPayouts: number;
+    pendingAmount: number;
+    completedPayouts: number;
+    completedAmount: number;
+    averagePayoutAmount: number;
+  }&gt; {
+    return this.getUserPayouts(userId).pipe(
+      map((payouts) &#x3D;&gt; {
+        const completed &#x3D; payouts.filter((p) &#x3D;&gt; p.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;);
+        const pending &#x3D; payouts.filter((p) &#x3D;&gt; p.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27; || p.status &#x3D;&#x3D;&#x3D; &#x27;processing&#x27;);
+
+        return {
+          totalPayouts: payouts.length,
+          totalAmount: payouts.reduce((sum, p) &#x3D;&gt; sum + p.amount, 0),
+          pendingPayouts: pending.length,
+          pendingAmount: pending.reduce((sum, p) &#x3D;&gt; sum + p.amount, 0),
+          completedPayouts: completed.length,
+          completedAmount: completed.reduce((sum, p) &#x3D;&gt; sum + p.amount, 0),
+          averagePayoutAmount:
+            completed.length &gt; 0
+              ? completed.reduce((sum, p) &#x3D;&gt; sum + p.amount, 0) / completed.length
+              : 0,
+        };
+      }),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to calculate payout statistics&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Request a manual payout
+   */
+  requestPayout(userId: string, amount: number): Observable&lt;Payout&gt; {
+    return this.getDefaultBankAccount(userId).pipe(
+      switchMap((bankAccount) &#x3D;&gt; {
+        if (!bankAccount) {
+          return throwError(() &#x3D;&gt; new Error(&#x27;No default bank account configured&#x27;));
+        }
+
+        if (bankAccount.status !&#x3D;&#x3D; &#x27;verified&#x27;) {
+          return throwError(() &#x3D;&gt; new Error(&#x27;Bank account not verified&#x27;));
+        }
+
+        return this.initiatePayout({
+          splitId: &#x60;manual_${Date.now()}&#x60;,
+          userId,
+          amount,
+          currency: &#x27;ARS&#x27;,
+        });
+      }),
+      catchError(() &#x3D;&gt; {
+        return throwError(() &#x3D;&gt; new Error(&#x27;Failed to request payout&#x27;));
+      }),
+    );
+  }
+
+  /**
+   * Private: Validate and initiate payout
+   */
+  private async validateAndInitiatePayout(request: PayoutRequest): Promise&lt;Payout&gt; {
+    // Validar monto
+    if (request.amount &lt; this.PAYOUT_MIN_AMOUNT) {
+      throw new Error(&#x60;Minimum payout amount is ${this.PAYOUT_MIN_AMOUNT} ${request.currency}&#x60;);
+    }
+
+    if (request.amount &gt; this.PAYOUT_MAX_AMOUNT) {
+      throw new Error(&#x60;Maximum payout amount is ${this.PAYOUT_MAX_AMOUNT} ${request.currency}&#x60;);
+    }
+
+    // Obtener cuenta bancaria default
+    const { data: bankAccountData, error: baError } &#x3D; await this.supabase
+      .getClient()
+      .from(&#x27;bank_accounts&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;user_id&#x27;, request.userId)
+      .eq(&#x27;is_default&#x27;, true)
+      .single();
+
+    const bankAccount &#x3D; (bankAccountData as BankAccount | null) ?? null;
+
+    if (baError || !bankAccount) {
+      throw new Error(&#x27;No default bank account configured&#x27;);
+    }
+
+    if (bankAccount.status !&#x3D;&#x3D; &#x27;verified&#x27;) {
+      throw new Error(&#x27;Bank account not verified&#x27;);
+    }
+
+    // Validar que el usuario tenga suficiente balance
+    const { data: walletData } &#x3D; await this.supabase
+      .getClient()
+      .from(&#x27;user_wallets&#x27;)
+      .select(&#x27;available_balance&#x27;)
+      .eq(&#x27;user_id&#x27;, request.userId)
+      .single();
+
+    const wallet &#x3D; (walletData as WalletBalance | null) ?? null;
+
+    if (!wallet || wallet.available_balance &lt; request.amount) {
+      throw new Error(&#x27;Insufficient balance for payout&#x27;);
+    }
+
+    // Crear registro de payout
+    const payoutId &#x3D; &#x60;payout_${Date.now()}_${Math.random().toString(36).substr(2, 9)}&#x60;;
+
+    const payout: Payout &#x3D; {
+      id: payoutId,
+      splitId: request.splitId,
+      userId: request.userId,
+      bankAccountId: bankAccount.id,
+      amount: request.amount,
+      currency: request.currency,
+      status: &#x27;pending&#x27;,
+      provider: &#x27;mercadopago&#x27;,
+      createdAt: new Date().toISOString(),
+    };
+
+    const { error: insertError } &#x3D; await this.supabase.getClient().from(&#x27;payouts&#x27;).insert(payout);
+
+    if (insertError) {
+      throw new Error(&#x60;Failed to create payout: ${insertError.message}&#x60;);
+    }
+
+    // Descontar del balance del usuario
+    const { error: updateError } &#x3D; await this.supabase
+      .getClient()
+      .from(&#x27;user_wallets&#x27;)
+      .update({
+        available_balance: wallet.available_balance - request.amount,
+      })
+      .eq(&#x27;user_id&#x27;, request.userId);
+
+    if (updateError) {
+      // Si falla, revertir
+      await this.supabase.getClient().from(&#x27;payouts&#x27;).delete().eq(&#x27;id&#x27;, payoutId);
+      throw new Error(&#x60;Failed to update wallet: ${updateError.message}&#x60;);
+    }
+
+    // Crear transacción de auditoría
+    await this.supabase.getClient().from(&#x27;wallet_transactions&#x27;).insert({
+      user_id: request.userId,
+      type: &#x27;withdrawal&#x27;,
+      status: &#x27;pending&#x27;,
+      amount: request.amount,
+      currency: request.currency,
+      reference_type: &#x27;payout&#x27;,
+      reference_id: payoutId,
+      provider: &#x27;mercadopago&#x27;,
+      provider_transaction_id: payoutId,
+      created_at: new Date().toISOString(),
+    });
+
+    return payout;
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'BankAccount-2.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

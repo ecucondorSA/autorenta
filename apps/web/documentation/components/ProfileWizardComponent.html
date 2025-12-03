@@ -1,0 +1,3193 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ProfileWizardComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/profile/components/profile-wizard/profile-wizard.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>ProfileWizardComponent - Wizard de edición de perfil por pasos</p>
+<p>Features:</p>
+<ul>
+<li>Pasos: General → Contacto → Dirección → Licencia</li>
+<li>Validaciones progresivas por paso</li>
+<li>Persistencia optimista con rollback en error</li>
+<li>Autosave silencioso para campos menores (WhatsApp, ciudad)</li>
+<li>Toasts de éxito/error</li>
+<li>Tracking analítico de eventos</li>
+</ul>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-profile-wizard</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>ReactiveFormsModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./profile-wizard.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./profile-wizard.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#addressForm" >addressForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#analytics" >analytics</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#canGoNext" >canGoNext</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#canGoPrevious" >canGoPrevious</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#completedSteps" >completedSteps</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#contactForm" >contactForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#currentStep" >currentStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#currentStepIndex" >currentStepIndex</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#dirtySteps" >dirtySteps</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fb" >fb</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#generalForm" >generalForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isLastStep" >isLastStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#licenseForm" >licenseForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#profileStore" >profileStore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#progressPercentage" >progressPercentage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#roles" >roles</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#saving" >saving</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#savingStep" >savingStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#steps" >steps</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#toastService" >toastService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getFormDataForStep" >getFormDataForStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getStepLabel" >getStepLabel</a>
+                            </li>
+                            <li>
+                                <a href="#getStepStatusIcon" >getStepStatusIcon</a>
+                            </li>
+                            <li>
+                                <a href="#goToStep" >goToStep</a>
+                            </li>
+                            <li>
+                                <a href="#isStepCompleted" >isStepCompleted</a>
+                            </li>
+                            <li>
+                                <a href="#isStepDirty" >isStepDirty</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#markFormAsTouched" >markFormAsTouched</a>
+                            </li>
+                            <li>
+                                <a href="#nextStep" >nextStep</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCancelClick" >onCancelClick</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#populateForms" >populateForms</a>
+                            </li>
+                            <li>
+                                <a href="#previousStep" >previousStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#saveCurrentStep" >saveCurrentStep</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#saveStepSilently" >saveStepSilently</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setupAutosave" >setupAutosave</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#initialData" >initialData</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#cancelWizard" >cancelWizard</a>
+                            </li>
+                            <li>
+                                <a href="#completeWizard" >completeWizard</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="143" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:143</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="initialData"></a>
+                        <b>initialData</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >UpdateProfileData | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:47</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="cancelWizard"></a>
+                        <b>cancelWizard</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:48</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="completeWizard"></a>
+                        <b>completeWizard</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:49</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFormDataForStep"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getFormDataForStep</b></span>
+                        <a href="#getFormDataForStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getFormDataForStep(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:224</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get form data for current step</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Partial&lt;UpdateProfileData&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStepLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getStepLabel</b></span>
+                        <a href="#getStepLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStepLabel(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="430"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:430</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get step label</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStepStatusIcon"></a>
+                    <span class="name">
+                        <span ><b>getStepStatusIcon</b></span>
+                        <a href="#getStepStatusIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStepStatusIcon(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="451"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:451</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get step status icon</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToStep"></a>
+                    <span class="name">
+                        <span ><b>goToStep</b></span>
+                        <a href="#goToStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToStep(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="379"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:379</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Go to specific step (only if completed or previous step)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isStepCompleted"></a>
+                    <span class="name">
+                        <span ><b>isStepCompleted</b></span>
+                        <a href="#isStepCompleted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isStepCompleted(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="437"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:437</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if step is completed</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isStepDirty"></a>
+                    <span class="name">
+                        <span ><b>isStepDirty</b></span>
+                        <a href="#isStepDirty"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isStepDirty(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="444"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:444</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if step is dirty</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="markFormAsTouched"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>markFormAsTouched</b></span>
+                        <a href="#markFormAsTouched"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>markFormAsTouched(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="410"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:410</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mark form as touched for validation</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="nextStep"></a>
+                    <span class="name">
+                        <span ><b>nextStep</b></span>
+                        <a href="#nextStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>nextStep()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="352"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:352</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Navigate to next step</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCancelClick"></a>
+                    <span class="name">
+                        <span ><b>onCancelClick</b></span>
+                        <a href="#onCancelClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCancelClick()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="401"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:401</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Cancel wizard</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="populateForms"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>populateForms</b></span>
+                        <a href="#populateForms"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>populateForms(data: <a href="../interfaces/UpdateProfileData.html" target="_self">UpdateProfileData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Populate all forms with initial data</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/UpdateProfileData.html" target="_self" >UpdateProfileData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="previousStep"></a>
+                    <span class="name">
+                        <span ><b>previousStep</b></span>
+                        <a href="#previousStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>previousStep()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="368"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:368</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Navigate to previous step</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveCurrentStep"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>saveCurrentStep</b></span>
+                        <a href="#saveCurrentStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveCurrentStep()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:279</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Save current step with optimistic update</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveStepSilently"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>saveStepSilently</b></span>
+                        <a href="#saveStepSilently"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveStepSilently(step: <a href="../interfaces/WizardStep.html" target="_self">WizardStep</a>, updates: <a href="../undefineds/Profile.html" target="_self">Partial&lt;UpdateProfileData&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="260"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:260</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Save step silently (for autosave)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>step</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WizardStep.html" target="_self" >WizardStep</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>updates</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Profile" target="_self" >Partial&lt;UpdateProfileData&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setupAutosave"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setupAutosave</b></span>
+                        <a href="#setupAutosave"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setupAutosave()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="161"
+                                    class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:161</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Setup autosave for minor fields (WhatsApp, city)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addressForm"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>addressForm</b></span>
+                        <a href="#addressForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.group({
+    address_line1: [&#x27;&#x27;],
+    address_line2: [&#x27;&#x27;],
+    city: [&#x27;&#x27;],
+    state: [&#x27;&#x27;],
+    postal_code: [&#x27;&#x27;],
+    country: [&#x27;&#x27;],
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="analytics"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>analytics</b></span>
+                        <a href="#analytics"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AnalyticsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canGoNext"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>canGoNext</b></span>
+                        <a href="#canGoNext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const step &#x3D; this.currentStep();
+    switch (step) {
+      case &#x27;general&#x27;:
+        return this.generalForm.valid;
+      case &#x27;contact&#x27;:
+        return this.contactForm.valid;
+      case &#x27;address&#x27;:
+        return this.addressForm.valid;
+      case &#x27;license&#x27;:
+        return this.licenseForm.valid;
+      default:
+        return false;
+    }
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:121</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canGoPrevious"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>canGoPrevious</b></span>
+                        <a href="#canGoPrevious"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.currentStepIndex() &gt; 0;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completedSteps"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>completedSteps</b></span>
+                        <a href="#completedSteps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Set&lt;WizardStep&gt;&gt;(new Set())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="contactForm"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>contactForm</b></span>
+                        <a href="#contactForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.group({
+    phone: [&#x27;&#x27;, [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+    whatsapp: [&#x27;&#x27;, [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentStep"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>currentStep</b></span>
+                        <a href="#currentStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WizardStep&gt;(&#x27;general&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentStepIndex"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>currentStepIndex</b></span>
+                        <a href="#currentStepIndex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.steps.findIndex((s) &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; this.currentStep());
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:113</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dirtySteps"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>dirtySteps</b></span>
+                        <a href="#dirtySteps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Set&lt;WizardStep&gt;&gt;(new Set())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fb</b></span>
+                        <a href="#fb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FormBuilder)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generalForm"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>generalForm</b></span>
+                        <a href="#generalForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.nonNullable.group({
+    full_name: [&#x27;&#x27;, [Validators.required, Validators.minLength(3)]],
+    role: [&#x27;renter&#x27; as Role, Validators.required],
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLastStep"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isLastStep</b></span>
+                        <a href="#isLastStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.currentStepIndex() &#x3D;&#x3D;&#x3D; this.steps.length - 1;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:141</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="licenseForm"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>licenseForm</b></span>
+                        <a href="#licenseForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.group({
+    driver_license_number: [&#x27;&#x27;],
+    driver_license_country: [&#x27;&#x27;],
+    driver_license_expiry: [&#x27;&#x27;],
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profileStore"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>profileStore</b></span>
+                        <a href="#profileStore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ProfileStore)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="progressPercentage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>progressPercentage</b></span>
+                        <a href="#progressPercentage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return ((this.currentStepIndex() + 1) / this.steps.length) * 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:117</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="roles"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>roles</b></span>
+                        <a href="#roles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      value: &#x27;renter&#x27;,
+      label: &#x27;Locatario&#x27;,
+      description: &#x27;Solo quiero reservar autos&#x27;,
+    },
+    {
+      value: &#x27;owner&#x27;,
+      label: &#x27;Locador&#x27;,
+      description: &#x27;Solo quiero publicar mis autos&#x27;,
+    },
+    {
+      value: &#x27;both&#x27;,
+      label: &#x27;Ambos&#x27;,
+      description: &#x27;Quiero reservar y publicar autos&#x27;,
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saving"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>saving</b></span>
+                        <a href="#saving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.savingStep() !&#x3D;&#x3D; null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:84</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="savingStep"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>savingStep</b></span>
+                        <a href="#savingStep"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WizardStep | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="steps"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>steps</b></span>
+                        <a href="#steps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Array&lt;literal type&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { id: &#x27;general&#x27;, label: &#x27;General&#x27;, description: &#x27;Nombre y rol&#x27; },
+    { id: &#x27;contact&#x27;, label: &#x27;Contacto&#x27;, description: &#x27;Teléfono y WhatsApp&#x27; },
+    { id: &#x27;address&#x27;, label: &#x27;Dirección&#x27;, description: &#x27;Ubicación completa&#x27; },
+    { id: &#x27;license&#x27;, label: &#x27;Licencia&#x27;, description: &#x27;Licencia de conducir&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toastService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>toastService</b></span>
+                        <a href="#toastService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationManagerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/features/profile/components/profile-wizard/profile-wizard.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from &#x27;@angular/core&#x27;;
+import { FormBuilder, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+import { debounceTime, distinctUntilChanged, filter } from &#x27;rxjs/operators&#x27;;
+import type { Role, UpdateProfileData } from &#x27;../../../../core/models&#x27;;
+import { AnalyticsService } from &#x27;../../../../core/services/analytics.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../../core/services/notification-manager.service&#x27;;
+import { ProfileStore } from &#x27;../../../../core/stores/profile.store&#x27;;
+
+export type WizardStep &#x3D; &#x27;general&#x27; | &#x27;contact&#x27; | &#x27;address&#x27; | &#x27;license&#x27;;
+
+/**
+ * ProfileWizardComponent - Wizard de edición de perfil por pasos
+ *
+ * Features:
+ * - Pasos: General → Contacto → Dirección → Licencia
+ * - Validaciones progresivas por paso
+ * - Persistencia optimista con rollback en error
+ * - Autosave silencioso para campos menores (WhatsApp, ciudad)
+ * - Toasts de éxito/error
+ * - Tracking analítico de eventos
+ */
+@Component({
+  selector: &#x27;app-profile-wizard&#x27;,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: &#x27;./profile-wizard.component.html&#x27;,
+  styleUrls: [&#x27;./profile-wizard.component.css&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ProfileWizardComponent implements OnInit {
+  private readonly fb &#x3D; inject(FormBuilder);
+  private readonly profileStore &#x3D; inject(ProfileStore);
+  private readonly toastService &#x3D; inject(NotificationManagerService);
+  private readonly analytics &#x3D; inject(AnalyticsService);
+
+  // Inputs
+  readonly initialData &#x3D; input&lt;UpdateProfileData | null&gt;(null);
+  readonly cancelWizard &#x3D; output&lt;void&gt;();
+  readonly completeWizard &#x3D; output&lt;void&gt;();
+
+  // Step management
+  readonly currentStep &#x3D; signal&lt;WizardStep&gt;(&#x27;general&#x27;);
+  readonly completedSteps &#x3D; signal&lt;Set&lt;WizardStep&gt;&gt;(new Set());
+  readonly dirtySteps &#x3D; signal&lt;Set&lt;WizardStep&gt;&gt;(new Set());
+
+  // Forms for each step
+  readonly generalForm &#x3D; this.fb.nonNullable.group({
+    full_name: [&#x27;&#x27;, [Validators.required, Validators.minLength(3)]],
+    role: [&#x27;renter&#x27; as Role, Validators.required],
+  });
+
+  readonly contactForm &#x3D; this.fb.group({
+    phone: [&#x27;&#x27;, [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+    whatsapp: [&#x27;&#x27;, [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+  });
+
+  readonly addressForm &#x3D; this.fb.group({
+    address_line1: [&#x27;&#x27;],
+    address_line2: [&#x27;&#x27;],
+    city: [&#x27;&#x27;],
+    state: [&#x27;&#x27;],
+    postal_code: [&#x27;&#x27;],
+    country: [&#x27;&#x27;],
+  });
+
+  readonly licenseForm &#x3D; this.fb.group({
+    driver_license_number: [&#x27;&#x27;],
+    driver_license_country: [&#x27;&#x27;],
+    driver_license_expiry: [&#x27;&#x27;],
+  });
+
+  // Loading states
+  readonly savingStep &#x3D; signal&lt;WizardStep | null&gt;(null);
+  readonly saving &#x3D; computed(() &#x3D;&gt; this.savingStep() !&#x3D;&#x3D; null);
+
+  // Steps configuration
+  readonly steps: Array&lt;{ id: WizardStep; label: string; description: string }&gt; &#x3D; [
+    { id: &#x27;general&#x27;, label: &#x27;General&#x27;, description: &#x27;Nombre y rol&#x27; },
+    { id: &#x27;contact&#x27;, label: &#x27;Contacto&#x27;, description: &#x27;Teléfono y WhatsApp&#x27; },
+    { id: &#x27;address&#x27;, label: &#x27;Dirección&#x27;, description: &#x27;Ubicación completa&#x27; },
+    { id: &#x27;license&#x27;, label: &#x27;Licencia&#x27;, description: &#x27;Licencia de conducir&#x27; },
+  ];
+
+  readonly roles: Array&lt;{ value: Role; label: string; description: string }&gt; &#x3D; [
+    {
+      value: &#x27;renter&#x27;,
+      label: &#x27;Locatario&#x27;,
+      description: &#x27;Solo quiero reservar autos&#x27;,
+    },
+    {
+      value: &#x27;owner&#x27;,
+      label: &#x27;Locador&#x27;,
+      description: &#x27;Solo quiero publicar mis autos&#x27;,
+    },
+    {
+      value: &#x27;both&#x27;,
+      label: &#x27;Ambos&#x27;,
+      description: &#x27;Quiero reservar y publicar autos&#x27;,
+    },
+  ];
+
+  // Computed values
+  readonly currentStepIndex &#x3D; computed(() &#x3D;&gt; {
+    return this.steps.findIndex((s) &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; this.currentStep());
+  });
+
+  readonly progressPercentage &#x3D; computed(() &#x3D;&gt; {
+    return ((this.currentStepIndex() + 1) / this.steps.length) * 100;
+  });
+
+  readonly canGoNext &#x3D; computed(() &#x3D;&gt; {
+    const step &#x3D; this.currentStep();
+    switch (step) {
+      case &#x27;general&#x27;:
+        return this.generalForm.valid;
+      case &#x27;contact&#x27;:
+        return this.contactForm.valid;
+      case &#x27;address&#x27;:
+        return this.addressForm.valid;
+      case &#x27;license&#x27;:
+        return this.licenseForm.valid;
+      default:
+        return false;
+    }
+  });
+
+  readonly canGoPrevious &#x3D; computed(() &#x3D;&gt; {
+    return this.currentStepIndex() &gt; 0;
+  });
+
+  readonly isLastStep &#x3D; computed(() &#x3D;&gt; {
+    return this.currentStepIndex() &#x3D;&#x3D;&#x3D; this.steps.length - 1;
+  });
+
+  constructor() {
+    // Setup autosave for minor fields (WhatsApp, city)
+    this.setupAutosave();
+  }
+
+  ngOnInit(): void {
+    // Populate forms with initial data
+    const data &#x3D; this.initialData();
+    if (data) {
+      this.populateForms(data);
+    }
+  }
+
+  /**
+   * Setup autosave for minor fields (WhatsApp, city)
+   */
+  private setupAutosave(): void {
+    // Autosave WhatsApp (silent, no toast)
+    this.contactForm
+      .get(&#x27;whatsapp&#x27;)
+      ?.valueChanges.pipe(
+        debounceTime(2000), // 2 seconds
+        distinctUntilChanged(),
+        filter(() &#x3D;&gt; this.contactForm.get(&#x27;whatsapp&#x27;)?.valid ?? false),
+      )
+      .subscribe(async (whatsapp) &#x3D;&gt; {
+        if (whatsapp) {
+          await this.saveStepSilently(&#x27;contact&#x27;, { whatsapp });
+        }
+      });
+
+    // Autosave city (silent, no toast)
+    this.addressForm
+      .get(&#x27;city&#x27;)
+      ?.valueChanges.pipe(
+        debounceTime(2000), // 2 seconds
+        distinctUntilChanged(),
+        filter(() &#x3D;&gt; this.addressForm.get(&#x27;city&#x27;)?.valid ?? false),
+      )
+      .subscribe(async (city) &#x3D;&gt; {
+        if (city) {
+          await this.saveStepSilently(&#x27;address&#x27;, { city });
+        }
+      });
+  }
+
+  /**
+   * Populate all forms with initial data
+   */
+  private populateForms(data: UpdateProfileData): void {
+    this.generalForm.patchValue({
+      full_name: data.full_name ?? &#x27;&#x27;,
+      role: data.role ?? &#x27;renter&#x27;,
+    });
+
+    this.contactForm.patchValue({
+      phone: data.phone ?? &#x27;&#x27;,
+      whatsapp: data.whatsapp ?? &#x27;&#x27;,
+    });
+
+    this.addressForm.patchValue({
+      address_line1: data.address_line1 ?? &#x27;&#x27;,
+      address_line2: data.address_line2 ?? &#x27;&#x27;,
+      city: data.city ?? &#x27;&#x27;,
+      state: data.state ?? &#x27;&#x27;,
+      postal_code: data.postal_code ?? &#x27;&#x27;,
+      country: data.country ?? &#x27;&#x27;,
+    });
+
+    this.licenseForm.patchValue({
+      driver_license_number: data.driver_license_number ?? &#x27;&#x27;,
+      driver_license_country: data.driver_license_country ?? &#x27;&#x27;,
+      driver_license_expiry: data.driver_license_expiry ?? &#x27;&#x27;,
+    });
+  }
+
+  /**
+   * Get form data for current step
+   */
+  private getFormDataForStep(step: WizardStep): Partial&lt;UpdateProfileData&gt; {
+    switch (step) {
+      case &#x27;general&#x27;:
+        return this.generalForm.getRawValue();
+      case &#x27;contact&#x27;: {
+        const values &#x3D; this.contactForm.getRawValue();
+        return {
+          phone: values.phone || undefined,
+          whatsapp: values.whatsapp || undefined,
+        };
+      }
+      case &#x27;address&#x27;: {
+        const values &#x3D; this.addressForm.getRawValue();
+        return {
+          address_line1: values.address_line1 || undefined,
+          address_line2: values.address_line2 || undefined,
+          city: values.city || undefined,
+          state: values.state || undefined,
+          postal_code: values.postal_code || undefined,
+          country: values.country || undefined,
+        };
+      }
+      case &#x27;license&#x27;: {
+        const values &#x3D; this.licenseForm.getRawValue();
+        return {
+          driver_license_number: values.driver_license_number || undefined,
+          driver_license_country: values.driver_license_country || undefined,
+          driver_license_expiry: values.driver_license_expiry || undefined,
+        };
+      }
+    }
+  }
+
+  /**
+   * Save step silently (for autosave)
+   */
+  private async saveStepSilently(
+    step: WizardStep,
+    updates: Partial&lt;UpdateProfileData&gt;,
+  ): Promise&lt;void&gt; {
+    try {
+      await this.profileStore.updateProfile(updates);
+      // Mark as dirty but don&#x27;t show toast
+      const dirty &#x3D; new Set(this.dirtySteps());
+      dirty.add(step);
+      this.dirtySteps.set(dirty);
+    } catch (err) {
+      // Silent failure for autosave
+      console.warn(&#x60;Autosave failed for step ${step}:&#x60;, err);
+    }
+  }
+
+  /**
+   * Save current step with optimistic update
+   */
+  async saveCurrentStep(): Promise&lt;void&gt; {
+    const step &#x3D; this.currentStep();
+
+    if (!this.canGoNext()) {
+      this.markFormAsTouched(step);
+      return;
+    }
+
+    this.savingStep.set(step);
+    const formData &#x3D; this.getFormDataForStep(step);
+
+    // Optimistic update
+    const currentProfile &#x3D; this.profileStore.profile();
+    if (currentProfile) {
+      this.profileStore.profile.set({
+        ...currentProfile,
+        ...formData,
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    }
+
+    try {
+      await this.profileStore.updateProfile(formData);
+
+      // Mark step as completed
+      const completed &#x3D; new Set(this.completedSteps());
+      completed.add(step);
+      this.completedSteps.set(completed);
+
+      // Mark as dirty
+      const dirty &#x3D; new Set(this.dirtySteps());
+      dirty.add(step);
+      this.dirtySteps.set(dirty);
+
+      // Show success toast
+      this.toastService.success(
+        &#x27;Paso guardado&#x27;,
+        &#x60;Información de ${this.getStepLabel(step)} guardada exitosamente&#x60;,
+      );
+
+      // Track analytics
+      this.analytics.trackEvent(&#x27;cta_clicked&#x27;, {
+        action: &#x27;profile_step_saved&#x27;,
+        step,
+        step_index: this.currentStepIndex() + 1,
+      });
+
+      // Auto-advance to next step if not last
+      if (!this.isLastStep()) {
+        this.nextStep();
+      } else {
+        // Last step completed
+        this.completeWizard.emit();
+      }
+    } catch (err) {
+      // Rollback on error
+      await this.profileStore.refresh();
+      const errorMessage &#x3D; err instanceof Error ? err.message : &#x27;No pudimos guardar los cambios.&#x27;;
+      this.toastService.error(&#x27;Error al guardar&#x27;, errorMessage);
+
+      // Track analytics
+      this.analytics.trackEvent(&#x27;cta_clicked&#x27;, {
+        action: &#x27;profile_step_save_failed&#x27;,
+        step,
+        error: errorMessage,
+      });
+    } finally {
+      this.savingStep.set(null);
+    }
+  }
+
+  /**
+   * Navigate to next step
+   */
+  nextStep(): void {
+    if (!this.canGoNext()) {
+      this.markFormAsTouched(this.currentStep());
+      return;
+    }
+
+    const currentIndex &#x3D; this.currentStepIndex();
+    if (currentIndex &lt; this.steps.length - 1) {
+      const nextStep &#x3D; this.steps[currentIndex + 1];
+      this.currentStep.set(nextStep.id);
+    }
+  }
+
+  /**
+   * Navigate to previous step
+   */
+  previousStep(): void {
+    if (this.canGoPrevious()) {
+      const currentIndex &#x3D; this.currentStepIndex();
+      const previousStep &#x3D; this.steps[currentIndex - 1];
+      this.currentStep.set(previousStep.id);
+    }
+  }
+
+  /**
+   * Go to specific step (only if completed or previous step)
+   */
+  goToStep(step: WizardStep): void {
+    if (this.saving()) return;
+
+    const targetIndex &#x3D; this.steps.findIndex((s) &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; step);
+    const currentIndex &#x3D; this.currentStepIndex();
+
+    // Allow navigation to:
+    // 1. Current step
+    // 2. Previous steps
+    // 3. Next step if current is completed
+    if (
+      targetIndex &#x3D;&#x3D;&#x3D; currentIndex ||
+      targetIndex &lt; currentIndex ||
+      (targetIndex &#x3D;&#x3D;&#x3D; currentIndex + 1 &amp;&amp; this.isStepCompleted(this.currentStep()))
+    ) {
+      this.currentStep.set(step);
+    }
+  }
+
+  /**
+   * Cancel wizard
+   */
+  onCancelClick(): void {
+    // Restore original profile
+    void this.profileStore.refresh();
+    this.cancelWizard.emit();
+  }
+
+  /**
+   * Mark form as touched for validation
+   */
+  private markFormAsTouched(step: WizardStep): void {
+    switch (step) {
+      case &#x27;general&#x27;:
+        this.generalForm.markAllAsTouched();
+        break;
+      case &#x27;contact&#x27;:
+        this.contactForm.markAllAsTouched();
+        break;
+      case &#x27;address&#x27;:
+        this.addressForm.markAllAsTouched();
+        break;
+      case &#x27;license&#x27;:
+        this.licenseForm.markAllAsTouched();
+        break;
+    }
+  }
+
+  /**
+   * Get step label
+   */
+  private getStepLabel(step: WizardStep): string {
+    return this.steps.find((s) &#x3D;&gt; s.id &#x3D;&#x3D;&#x3D; step)?.label ?? step;
+  }
+
+  /**
+   * Check if step is completed
+   */
+  isStepCompleted(step: WizardStep): boolean {
+    return this.completedSteps().has(step);
+  }
+
+  /**
+   * Check if step is dirty
+   */
+  isStepDirty(step: WizardStep): boolean {
+    return this.dirtySteps().has(step);
+  }
+
+  /**
+   * Get step status icon
+   */
+  getStepStatusIcon(step: WizardStep): string {
+    if (this.isStepCompleted(step)) {
+      return &#x27;check-circle&#x27;;
+    }
+    if (this.isStepDirty(step)) {
+      return &#x27;edit&#x27;;
+    }
+    return &#x27;circle&#x27;;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;profile-wizard&quot;&gt;
+  &lt;!-- Progress Bar --&gt;
+  &lt;div class&#x3D;&quot;wizard-progress&quot;&gt;
+    &lt;div class&#x3D;&quot;progress-bar-wrapper&quot;&gt;
+      &lt;div
+        class&#x3D;&quot;progress-bar bg-surface-secondary dark:bg-surface-secondary/60 rounded-full h-2 overflow-hidden&quot;
+      &gt;
+        &lt;div
+          class&#x3D;&quot;progress-bar-fill bg-cta-default h-full transition-all duration-300 ease-out&quot;
+          [style.width.%]&#x3D;&quot;progressPercentage()&quot;
+        &gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;flex justify-between mt-2 text-xs&quot;&gt;
+        @for (step of steps; track step.id; let i &#x3D; $index) {
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;goToStep(step.id)&quot;
+            [disabled]&#x3D;&quot;saving()&quot;
+            class&#x3D;&quot;flex flex-col items-center gap-1 transition-base disabled:opacity-50 disabled:cursor-not-allowed&quot;
+            [class.cursor-pointer]&#x3D;&quot;
+              !saving() &amp;&amp; (isStepCompleted(step.id) || i &lt; currentStepIndex())
+            &quot;
+            [class.opacity-50]&#x3D;&quot;i &gt; currentStepIndex() &amp;&amp; !isStepCompleted(step.id)&quot;
+          &gt;
+            &lt;div
+              class&#x3D;&quot;flex h-6 w-6 items-center justify-center rounded-full border-2 transition-base&quot;
+              [class.bg-cta-default]&#x3D;&quot;currentStep() &#x3D;&#x3D;&#x3D; step.id&quot;
+              [class.border-cta-default]&#x3D;&quot;currentStep() &#x3D;&#x3D;&#x3D; step.id || isStepCompleted(step.id)&quot;
+              [class.bg-success-light]&#x3D;&quot;isStepCompleted(step.id) &amp;&amp; currentStep() !&#x3D;&#x3D; step.id&quot;
+              [class.border-success-light]&#x3D;&quot;isStepCompleted(step.id) &amp;&amp; currentStep() !&#x3D;&#x3D; step.id&quot;
+              [class.border-border-default]&#x3D;&quot;currentStep() !&#x3D;&#x3D; step.id &amp;&amp; !isStepCompleted(step.id)&quot;
+            &gt;
+              @if (isStepCompleted(step.id) &amp;&amp; currentStep() !&#x3D;&#x3D; step.id) {
+                &lt;svg
+                  class&#x3D;&quot;h-4 w-4 text-text-primary&quot;
+                  fill&#x3D;&quot;none&quot;
+                  stroke&#x3D;&quot;currentColor&quot;
+                  viewBox&#x3D;&quot;0 0 24 24&quot;
+                &gt;
+                  &lt;path
+                    stroke-linecap&#x3D;&quot;round&quot;
+                    stroke-linejoin&#x3D;&quot;round&quot;
+                    stroke-width&#x3D;&quot;2&quot;
+                    d&#x3D;&quot;M5 13l4 4L19 7&quot;
+                  &gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              } @else {
+                &lt;span class&#x3D;&quot;text-xs font-semibold&quot;&gt;{{ i + 1 }}&lt;/span&gt;
+              }
+            &lt;/div&gt;
+            &lt;span
+              class&#x3D;&quot;text-xs transition-base&quot;
+              [class.font-semibold]&#x3D;&quot;currentStep() &#x3D;&#x3D;&#x3D; step.id || isStepCompleted(step.id)&quot;
+              [class.text-cta-default]&#x3D;&quot;currentStep() &#x3D;&#x3D;&#x3D; step.id&quot;
+              [class.text-success-light]&#x3D;&quot;isStepCompleted(step.id) &amp;&amp; currentStep() !&#x3D;&#x3D; step.id&quot;
+              [class.text-text-secondary]&#x3D;&quot;currentStep() !&#x3D;&#x3D; step.id &amp;&amp; !isStepCompleted(step.id)&quot;
+            &gt;
+              {{ step.label }}
+            &lt;/span&gt;
+          &lt;/button&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Step Content --&gt;
+  &lt;div class&#x3D;&quot;wizard-content&quot;&gt;
+    &lt;!-- Step 1: General --&gt;
+    @if (currentStep() &#x3D;&#x3D;&#x3D; &#x27;general&#x27;) {
+      &lt;div class&#x3D;&quot;step-content&quot;&gt;
+        &lt;h3 class&#x3D;&quot;step-title&quot;&gt;Información General&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;step-description&quot;&gt;Completa tu nombre y elige tu rol en la plataforma&lt;/p&gt;
+
+        &lt;form [formGroup]&#x3D;&quot;generalForm&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+          &lt;!-- Full Name --&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              Nombre completo *
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;full_name&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              [class.border-warning-light]&#x3D;&quot;
+                generalForm.controls.full_name.touched &amp;&amp; generalForm.controls.full_name.invalid
+              &quot;
+              placeholder&#x3D;&quot;Juan Pérez&quot;
+            /&gt;
+            @if (
+              generalForm.controls.full_name.touched &amp;&amp;
+              generalForm.controls.full_name.errors?.[&#x27;required&#x27;]
+            ) {
+              &lt;p class&#x3D;&quot;mt-1 text-xs text-warning-light&quot;&gt;El nombre es obligatorio&lt;/p&gt;
+            }
+            @if (
+              generalForm.controls.full_name.touched &amp;&amp;
+              generalForm.controls.full_name.errors?.[&#x27;minlength&#x27;]
+            ) {
+              &lt;p class&#x3D;&quot;mt-1 text-xs text-warning-light&quot;&gt;
+                El nombre debe tener al menos 3 caracteres
+              &lt;/p&gt;
+            }
+          &lt;/div&gt;
+
+          &lt;!-- Role Selection --&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-2&quot;
+            &gt;
+              Rol *
+            &lt;/label&gt;
+            &lt;div class&#x3D;&quot;space-y-3&quot;&gt;
+              @for (roleOption of roles; track roleOption.value) {
+                &lt;div
+                  [ngClass]&#x3D;&quot;{
+                    &#x27;border-cta-default&#x27;: generalForm.value.role &#x3D;&#x3D;&#x3D; roleOption.value,
+                    &#x27;bg-cta-default/5&#x27;: generalForm.value.role &#x3D;&#x3D;&#x3D; roleOption.value,
+                    &#x27;border-border-default&#x27;: generalForm.value.role !&#x3D;&#x3D; roleOption.value,
+                  }&quot;
+                  class&#x3D;&quot;relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-surface-secondary dark:hover:bg-slate-deep/60&quot;
+                &gt;
+                  &lt;input
+                    type&#x3D;&quot;radio&quot;
+                    [value]&#x3D;&quot;roleOption.value&quot;
+                    formControlName&#x3D;&quot;role&quot;
+                    class&#x3D;&quot;mt-1 h-4 w-4 border-border-default text-cta-default focus:ring-cta-default&quot;
+                  /&gt;
+                  &lt;label class&#x3D;&quot;ml-3 flex flex-1 cursor-pointer flex-col&quot;&gt;
+                    &lt;span
+                      class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-primary&quot;
+                    &gt;
+                      {{ roleOption.label }}
+                    &lt;/span&gt;
+                    &lt;span class&#x3D;&quot;block text-xs text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                      {{ roleOption.description }}
+                    &lt;/span&gt;
+                  &lt;/label&gt;
+                &lt;/div&gt;
+              }
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    }
+
+    &lt;!-- Step 2: Contact --&gt;
+    @if (currentStep() &#x3D;&#x3D;&#x3D; &#x27;contact&#x27;) {
+      &lt;div class&#x3D;&quot;step-content&quot;&gt;
+        &lt;h3 class&#x3D;&quot;step-title&quot;&gt;Información de Contacto&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;step-description&quot;&gt;
+          Agrega tu teléfono y WhatsApp para que otros usuarios puedan contactarte
+        &lt;/p&gt;
+
+        &lt;form [formGroup]&#x3D;&quot;contactForm&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              Teléfono
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;tel&quot;
+              formControlName&#x3D;&quot;phone&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;+598 99 123 456&quot;
+            /&gt;
+            @if (
+              contactForm.controls.phone.touched &amp;&amp; contactForm.controls.phone.errors?.[&#x27;pattern&#x27;]
+            ) {
+              &lt;p class&#x3D;&quot;mt-1 text-xs text-warning-light&quot;&gt;Formato de teléfono inválido&lt;/p&gt;
+            }
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              WhatsApp
+              &lt;span class&#x3D;&quot;text-xs text-text-muted dark:text-text-secondary/60 ml-1&quot;
+                &gt;(se guarda automáticamente)&lt;/span
+              &gt;
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;tel&quot;
+              formControlName&#x3D;&quot;whatsapp&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;+598 99 123 456&quot;
+            /&gt;
+            @if (
+              contactForm.controls.whatsapp.touched &amp;&amp;
+              contactForm.controls.whatsapp.errors?.[&#x27;pattern&#x27;]
+            ) {
+              &lt;p class&#x3D;&quot;mt-1 text-xs text-warning-light&quot;&gt;Formato de WhatsApp inválido&lt;/p&gt;
+            }
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    }
+
+    &lt;!-- Step 3: Address --&gt;
+    @if (currentStep() &#x3D;&#x3D;&#x3D; &#x27;address&#x27;) {
+      &lt;div class&#x3D;&quot;step-content&quot;&gt;
+        &lt;h3 class&#x3D;&quot;step-title&quot;&gt;Dirección&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;step-description&quot;&gt;
+          Completa tu dirección para mejorar las búsquedas de autos cercanos
+        &lt;/p&gt;
+
+        &lt;form [formGroup]&#x3D;&quot;addressForm&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              Calle y Número
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;address_line1&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;18 de Julio 1234&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              Apartamento, Suite, etc. (opcional)
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;address_line2&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;Apto 101&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-3 gap-4&quot;&gt;
+            &lt;div&gt;
+              &lt;label
+                class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+              &gt;
+                Ciudad
+                &lt;span class&#x3D;&quot;text-xs text-text-muted dark:text-text-secondary/60 ml-1&quot;&gt;
+                  &lt;span class&#x3D;&quot;inline-flex items-center gap-1&quot;&gt;
+                    &lt;svg class&#x3D;&quot;h-3 w-3&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                      &lt;path
+                        stroke-linecap&#x3D;&quot;round&quot;
+                        stroke-linejoin&#x3D;&quot;round&quot;
+                        stroke-width&#x3D;&quot;2&quot;
+                        d&#x3D;&quot;M13 10V3L4 14h7v7l9-11h-7z&quot;
+                      &gt;&lt;/path&gt;
+                    &lt;/svg&gt;
+                    Se guarda automáticamente
+                  &lt;/span&gt;
+                &lt;/span&gt;
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                formControlName&#x3D;&quot;city&quot;
+                class&#x3D;&quot;input-premium w-full&quot;
+                placeholder&#x3D;&quot;Montevideo&quot;
+              /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label
+                class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+              &gt;
+                Departamento
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                formControlName&#x3D;&quot;state&quot;
+                class&#x3D;&quot;input-premium w-full&quot;
+                placeholder&#x3D;&quot;Montevideo&quot;
+              /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label
+                class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+              &gt;
+                Código Postal
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                formControlName&#x3D;&quot;postal_code&quot;
+                class&#x3D;&quot;input-premium w-full&quot;
+                placeholder&#x3D;&quot;11200&quot;
+              /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              País
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;country&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;Uruguay&quot;
+            /&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    }
+
+    &lt;!-- Step 4: License --&gt;
+    @if (currentStep() &#x3D;&#x3D;&#x3D; &#x27;license&#x27;) {
+      &lt;div class&#x3D;&quot;step-content&quot;&gt;
+        &lt;h3 class&#x3D;&quot;step-title&quot;&gt;Licencia de Conducir&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;step-description&quot;&gt;Agrega tu licencia de conducir para poder reservar autos&lt;/p&gt;
+
+        &lt;form [formGroup]&#x3D;&quot;licenseForm&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+            &gt;
+              Número de Licencia
+            &lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;driver_license_number&quot;
+              class&#x3D;&quot;input-premium w-full&quot;
+              placeholder&#x3D;&quot;ABC123456&quot;
+            /&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-2 gap-4&quot;&gt;
+            &lt;div&gt;
+              &lt;label
+                class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1&quot;
+              &gt;
+                País de Emisión
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                formControlName&#x3D;&quot;driver_license_country&quot;
+                class&#x3D;&quot;input-premium w-full&quot;
+                placeholder&#x3D;&quot;Uruguay&quot;
+              /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;label
+                class&#x3D;&quot;block text-sm font-medium text-text-secondary dark:text-secondary/80 mb-1&quot;
+              &gt;
+                Fecha de Vencimiento
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;date&quot;
+                formControlName&#x3D;&quot;driver_license_expiry&quot;
+                class&#x3D;&quot;input-premium w-full&quot;
+              /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    }
+  &lt;/div&gt;
+
+  &lt;!-- Navigation Buttons --&gt;
+  &lt;div class&#x3D;&quot;wizard-actions&quot;&gt;
+    &lt;div class&#x3D;&quot;flex items-center justify-between gap-3&quot;&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        (click)&#x3D;&quot;onCancelClick()&quot;
+        class&#x3D;&quot;btn-secondary px-4 py-2 text-sm&quot;
+        [disabled]&#x3D;&quot;saving()&quot;
+      &gt;
+        Cancelar
+      &lt;/button&gt;
+
+      &lt;div class&#x3D;&quot;flex gap-3&quot;&gt;
+        &lt;button
+          type&#x3D;&quot;button&quot;
+          (click)&#x3D;&quot;previousStep()&quot;
+          class&#x3D;&quot;btn-secondary px-4 py-2 text-sm&quot;
+          [disabled]&#x3D;&quot;!canGoPrevious() || saving()&quot;
+        &gt;
+          Anterior
+        &lt;/button&gt;
+
+        @if (isLastStep()) {
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;saveCurrentStep()&quot;
+            class&#x3D;&quot;btn-primary px-4 py-2 text-sm&quot;
+            [disabled]&#x3D;&quot;!canGoNext() || saving()&quot;
+          &gt;
+            {{ saving() ? &#x27;Guardando...&#x27; : &#x27;Finalizar&#x27; }}
+          &lt;/button&gt;
+        } @else {
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;saveCurrentStep()&quot;
+            class&#x3D;&quot;btn-primary px-4 py-2 text-sm&quot;
+            [disabled]&#x3D;&quot;!canGoNext() || saving()&quot;
+          &gt;
+            {{ saving() ? &#x27;Guardando...&#x27; : &#x27;Guardar y continuar&#x27; }}
+          &lt;/button&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./profile-wizard.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.profile-wizard {
+  @apply space-y-6;
+}
+
+.wizard-progress {
+  @apply mb-6;
+}
+
+.progress-bar-wrapper {
+  @apply space-y-4;
+}
+
+.progress-bar {
+  @apply h-2 overflow-hidden rounded-full;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-cta-default transition-all duration-300 ease-out;
+}
+
+.wizard-content {
+  @apply min-h-[400px];
+}
+
+.step-content {
+  @apply space-y-4;
+}
+
+.step-title {
+  @apply text-xl font-semibold text-text-primary dark:text-text-primary mb-1;
+}
+
+.step-description {
+  @apply text-sm text-text-secondary dark:text-text-secondary/70 mb-6;
+}
+
+.wizard-actions {
+  @apply pt-6 border-t border-border-default dark:border-slate-deep/70;
+}
+
+/* Step indicators */
+.step-indicator {
+  @apply flex items-center gap-2 text-sm;
+}
+
+.step-indicator.active {
+  @apply text-cta-default font-semibold;
+}
+
+.step-indicator.completed {
+  @apply text-success-light;
+}
+
+.step-indicator.pending {
+  @apply text-text-muted dark:text-text-secondary/60;
+}
+
+/* Step navigation buttons */
+button[type&#x3D;&#x27;button&#x27;]:not(:disabled):hover {
+  @apply opacity-80;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="profile-wizard">  <!-- Progress Bar -->  <div class="wizard-progress">    <div class="progress-bar-wrapper">      <div        class="progress-bar bg-surface-secondary dark:bg-surface-secondary/60 rounded-full h-2 overflow-hidden"      >        <div          class="progress-bar-fill bg-cta-default h-full transition-all duration-300 ease-out"          [style.width.%]="progressPercentage()"        ></div>      </div>      <div class="flex justify-between mt-2 text-xs">        @for (step of steps; track step.id; let i = $index) {          <button            type="button"            (click)="goToStep(step.id)"            [disabled]="saving()"            class="flex flex-col items-center gap-1 transition-base disabled:opacity-50 disabled:cursor-not-allowed"            [class.cursor-pointer]="              !saving() && (isStepCompleted(step.id) || i < currentStepIndex())            "            [class.opacity-50]="i > currentStepIndex() && !isStepCompleted(step.id)"          >            <div              class="flex h-6 w-6 items-center justify-center rounded-full border-2 transition-base"              [class.bg-cta-default]="currentStep() === step.id"              [class.border-cta-default]="currentStep() === step.id || isStepCompleted(step.id)"              [class.bg-success-light]="isStepCompleted(step.id) && currentStep() !== step.id"              [class.border-success-light]="isStepCompleted(step.id) && currentStep() !== step.id"              [class.border-border-default]="currentStep() !== step.id && !isStepCompleted(step.id)"            >              @if (isStepCompleted(step.id) && currentStep() !== step.id) {                <svg                  class="h-4 w-4 text-text-primary"                  fill="none"                  stroke="currentColor"                  viewBox="0 0 24 24"                >                  <path                    stroke-linecap="round"                    stroke-linejoin="round"                    stroke-width="2"                    d="M5 13l4 4L19 7"                  ></path>                </svg>              } @else {                <span class="text-xs font-semibold">{{ i + 1 }}</span>              }            </div>            <span              class="text-xs transition-base"              [class.font-semibold]="currentStep() === step.id || isStepCompleted(step.id)"              [class.text-cta-default]="currentStep() === step.id"              [class.text-success-light]="isStepCompleted(step.id) && currentStep() !== step.id"              [class.text-text-secondary]="currentStep() !== step.id && !isStepCompleted(step.id)"            >              {{ step.label }}            </span>          </button>        }      </div>    </div>  </div>  <!-- Step Content -->  <div class="wizard-content">    <!-- Step 1: General -->    @if (currentStep() === \'general\') {      <div class="step-content">        <h3 class="step-title">Información General</h3>        <p class="step-description">Completa tu nombre y elige tu rol en la plataforma</p>        <form [formGroup]="generalForm" class="space-y-4">          <!-- Full Name -->          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              Nombre completo *            </label>            <input              type="text"              formControlName="full_name"              class="input-premium w-full"              [class.border-warning-light]="                generalForm.controls.full_name.touched && generalForm.controls.full_name.invalid              "              placeholder="Juan Pérez"            />            @if (              generalForm.controls.full_name.touched &&              generalForm.controls.full_name.errors?.[\'required\']            ) {              <p class="mt-1 text-xs text-warning-light">El nombre es obligatorio</p>            }            @if (              generalForm.controls.full_name.touched &&              generalForm.controls.full_name.errors?.[\'minlength\']            ) {              <p class="mt-1 text-xs text-warning-light">                El nombre debe tener al menos 3 caracteres              </p>            }          </div>          <!-- Role Selection -->          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-2"            >              Rol *            </label>            <div class="space-y-3">              @for (roleOption of roles; track roleOption.value) {                <div                  [ngClass]="{                    \'border-cta-default\': generalForm.value.role === roleOption.value,                    \'bg-cta-default/5\': generalForm.value.role === roleOption.value,                    \'border-border-default\': generalForm.value.role !== roleOption.value,                  }"                  class="relative flex cursor-pointer rounded-xl border p-4 transition-base hover:bg-surface-secondary dark:hover:bg-slate-deep/60"                >                  <input                    type="radio"                    [value]="roleOption.value"                    formControlName="role"                    class="mt-1 h-4 w-4 border-border-default text-cta-default focus:ring-cta-default"                  />                  <label class="ml-3 flex flex-1 cursor-pointer flex-col">                    <span                      class="block text-sm font-medium text-text-primary dark:text-text-primary"                    >                      {{ roleOption.label }}                    </span>                    <span class="block text-xs text-text-secondary dark:text-text-secondary/70">                      {{ roleOption.description }}                    </span>                  </label>                </div>              }            </div>          </div>        </form>      </div>    }    <!-- Step 2: Contact -->    @if (currentStep() === \'contact\') {      <div class="step-content">        <h3 class="step-title">Información de Contacto</h3>        <p class="step-description">          Agrega tu teléfono y WhatsApp para que otros usuarios puedan contactarte        </p>        <form [formGroup]="contactForm" class="space-y-4">          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              Teléfono            </label>            <input              type="tel"              formControlName="phone"              class="input-premium w-full"              placeholder="+598 99 123 456"            />            @if (              contactForm.controls.phone.touched && contactForm.controls.phone.errors?.[\'pattern\']            ) {              <p class="mt-1 text-xs text-warning-light">Formato de teléfono inválido</p>            }          </div>          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              WhatsApp              <span class="text-xs text-text-muted dark:text-text-secondary/60 ml-1"                >(se guarda automáticamente)</span              >            </label>            <input              type="tel"              formControlName="whatsapp"              class="input-premium w-full"              placeholder="+598 99 123 456"            />            @if (              contactForm.controls.whatsapp.touched &&              contactForm.controls.whatsapp.errors?.[\'pattern\']            ) {              <p class="mt-1 text-xs text-warning-light">Formato de WhatsApp inválido</p>            }          </div>        </form>      </div>    }    <!-- Step 3: Address -->    @if (currentStep() === \'address\') {      <div class="step-content">        <h3 class="step-title">Dirección</h3>        <p class="step-description">          Completa tu dirección para mejorar las búsquedas de autos cercanos        </p>        <form [formGroup]="addressForm" class="space-y-4">          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              Calle y Número            </label>            <input              type="text"              formControlName="address_line1"              class="input-premium w-full"              placeholder="18 de Julio 1234"            />          </div>          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              Apartamento, Suite, etc. (opcional)            </label>            <input              type="text"              formControlName="address_line2"              class="input-premium w-full"              placeholder="Apto 101"            />          </div>          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">            <div>              <label                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"              >                Ciudad                <span class="text-xs text-text-muted dark:text-text-secondary/60 ml-1">                  <span class="inline-flex items-center gap-1">                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">                      <path                        stroke-linecap="round"                        stroke-linejoin="round"                        stroke-width="2"                        d="M13 10V3L4 14h7v7l9-11h-7z"                      ></path>                    </svg>                    Se guarda automáticamente                  </span>                </span>              </label>              <input                type="text"                formControlName="city"                class="input-premium w-full"                placeholder="Montevideo"              />            </div>            <div>              <label                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"              >                Departamento              </label>              <input                type="text"                formControlName="state"                class="input-premium w-full"                placeholder="Montevideo"              />            </div>            <div>              <label                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"              >                Código Postal              </label>              <input                type="text"                formControlName="postal_code"                class="input-premium w-full"                placeholder="11200"              />            </div>          </div>          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              País            </label>            <input              type="text"              formControlName="country"              class="input-premium w-full"              placeholder="Uruguay"            />          </div>        </form>      </div>    }    <!-- Step 4: License -->    @if (currentStep() === \'license\') {      <div class="step-content">        <h3 class="step-title">Licencia de Conducir</h3>        <p class="step-description">Agrega tu licencia de conducir para poder reservar autos</p>        <form [formGroup]="licenseForm" class="space-y-4">          <div>            <label              class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"            >              Número de Licencia            </label>            <input              type="text"              formControlName="driver_license_number"              class="input-premium w-full"              placeholder="ABC123456"            />          </div>          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">            <div>              <label                class="block text-sm font-medium text-text-secondary dark:text-text-secondary/80 mb-1"              >                País de Emisión              </label>              <input                type="text"                formControlName="driver_license_country"                class="input-premium w-full"                placeholder="Uruguay"              />            </div>            <div>              <label                class="block text-sm font-medium text-text-secondary dark:text-secondary/80 mb-1"              >                Fecha de Vencimiento              </label>              <input                type="date"                formControlName="driver_license_expiry"                class="input-premium w-full"              />            </div>          </div>        </form>      </div>    }  </div>  <!-- Navigation Buttons -->  <div class="wizard-actions">    <div class="flex items-center justify-between gap-3">      <button        type="button"        (click)="onCancelClick()"        class="btn-secondary px-4 py-2 text-sm"        [disabled]="saving()"      >        Cancelar      </button>      <div class="flex gap-3">        <button          type="button"          (click)="previousStep()"          class="btn-secondary px-4 py-2 text-sm"          [disabled]="!canGoPrevious() || saving()"        >          Anterior        </button>        @if (isLastStep()) {          <button            type="button"            (click)="saveCurrentStep()"            class="btn-primary px-4 py-2 text-sm"            [disabled]="!canGoNext() || saving()"          >            {{ saving() ? \'Guardando...\' : \'Finalizar\' }}          </button>        } @else {          <button            type="button"            (click)="saveCurrentStep()"            class="btn-primary px-4 py-2 text-sm"            [disabled]="!canGoNext() || saving()"          >            {{ saving() ? \'Guardando...\' : \'Guardar y continuar\' }}          </button>        }      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'ProfileWizardComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileWizardComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

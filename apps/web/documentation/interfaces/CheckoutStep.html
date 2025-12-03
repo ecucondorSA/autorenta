@@ -1,0 +1,862 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  CheckoutStep</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/shared/components/simple-checkout/simple-checkout.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#completed" 
+>
+                                            completed
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#id" 
+>
+                                            id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#title" 
+>
+                                            title
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="completed"></a>
+                                        <span class="name "><b>completed</b>
+                                            <a href="#completed">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>completed:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="id"></a>
+                                        <span class="name "><b>id</b>
+                                            <a href="#id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="title"></a>
+                                        <span class="name "><b>title</b>
+                                            <a href="#title">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>title:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  inject,
+  computed,
+  effect,
+} from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule, ReactiveFormsModule } from &#x27;@angular/forms&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { DatePipe } from &#x27;@angular/common&#x27;;
+import { firstValueFrom } from &#x27;rxjs&#x27;;
+
+// Services
+import { CarsService } from &#x27;../../../core/services/cars.service&#x27;;
+import { BookingsService } from &#x27;../../../core/services/bookings.service&#x27;;
+import { PaymentsService } from &#x27;../../../core/services/payments.service&#x27;;
+import { WalletService } from &#x27;../../../core/services/wallet.service&#x27;;
+import { NotificationsService } from &#x27;../../../core/services/user-notifications.service&#x27;;
+import { ErrorHandlerService } from &#x27;../../../core/services/error-handler.service&#x27;;
+import { WaitlistService } from &#x27;../../../core/services/waitlist.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../core/services/notification-manager.service&#x27;;
+import { TikTokEventsService } from &#x27;../../../core/services/tiktok-events.service&#x27;;
+
+// Models
+import type { Car } from &#x27;../../../core/models&#x27;;
+
+// Utils
+import { getCarImageUrl } from &#x27;../../utils/car-placeholder.util&#x27;;
+import { IconComponent } from &#x27;../icon/icon.component&#x27;;
+
+interface CheckoutStep {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+@Component({
+  standalone: true,
+  selector: &#x27;app-simple-checkout&#x27;,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, IconComponent],
+  templateUrl: &#x27;./simple-checkout.component.html&#x27;,
+  styleUrls: [&#x27;./simple-checkout.component.css&#x27;],
+})
+export class SimpleCheckoutComponent {
+  @Input() car!: Car;
+  @Output() bookingCreated &#x3D; new EventEmitter&lt;{ id: string; [key: string]: unknown }&gt;();
+  @Output() cancelled &#x3D; new EventEmitter&lt;void&gt;();
+
+  private readonly router &#x3D; inject(Router);
+  private readonly carsService &#x3D; inject(CarsService);
+  private readonly bookingsService &#x3D; inject(BookingsService);
+  private readonly paymentsService &#x3D; inject(PaymentsService);
+  private readonly walletService &#x3D; inject(WalletService);
+  private readonly notificationsService &#x3D; inject(NotificationsService);
+  private readonly errorHandler &#x3D; inject(ErrorHandlerService);
+  private readonly waitlistService &#x3D; inject(WaitlistService);
+  private readonly toastService &#x3D; inject(NotificationManagerService);
+  private readonly tiktokEvents &#x3D; inject(TikTokEventsService);
+
+  // Estado del checkout
+  readonly currentStep &#x3D; signal(0);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly canWaitlist &#x3D; signal(false); // Indica si se puede agregar a waitlist
+  readonly addingToWaitlist &#x3D; signal(false); // Loading state para waitlist
+
+  // Fechas
+  readonly startDate &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+  readonly endDate &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+  readonly availabilitySuggestion &#x3D; signal&lt;{ startDate: string; endDate: string } | null&gt;(null);
+  readonly availabilityInfo &#x3D; signal&lt;string | null&gt;(null);
+
+  // Cálculos automáticos
+  readonly totalDays &#x3D; computed(() &#x3D;&gt; {
+    if (!this.startDate() || !this.endDate()) return 0;
+    const start &#x3D; new Date(this.startDate());
+    const end &#x3D; new Date(this.endDate());
+    const diffTime &#x3D; Math.abs(end.getTime() - start.getTime());
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  });
+
+  readonly totalPrice &#x3D; computed(() &#x3D;&gt; {
+    return this.totalDays() * (this.car.price_per_day || 0);
+  });
+
+  readonly depositAmount &#x3D; computed(() &#x3D;&gt; {
+    // Depósito de garantía: 250 USD fijos
+    return 250;
+  });
+
+  readonly finalTotal &#x3D; computed(() &#x3D;&gt; {
+    return this.totalPrice() + this.depositAmount();
+  });
+
+  // Pasos del proceso
+  readonly steps: CheckoutStep[] &#x3D; [
+    { id: &#x27;dates&#x27;, title: &#x27;Seleccionar Fechas&#x27;, completed: false },
+    { id: &#x27;review&#x27;, title: &#x27;Revisar Reserva&#x27;, completed: false },
+    { id: &#x27;payment&#x27;, title: &#x27;Pago Seguro&#x27;, completed: false },
+    { id: &#x27;confirm&#x27;, title: &#x27;Confirmación&#x27;, completed: false },
+  ];
+
+  // Métodos de pago
+  readonly paymentMethod &#x3D; signal&lt;&#x27;wallet&#x27; | &#x27;card&#x27; | &#x27;cash&#x27;&gt;(&#x27;wallet&#x27;);
+
+  // Balance de wallet
+  readonly walletBalance &#x3D; signal(0);
+
+  constructor() {
+    this.loadWalletBalance();
+
+    // 🎯 TikTok Events: Track AddPaymentInfo when payment method changes
+    effect(() &#x3D;&gt; {
+      const method &#x3D; this.paymentMethod();
+      const step &#x3D; this.currentStep();
+
+      // Only track if we&#x27;re on the payment step (step 2)
+      if (step &#x3D;&#x3D;&#x3D; 2 &amp;&amp; method) {
+        void this.tiktokEvents.trackAddPaymentInfo({
+          value: this.finalTotal(),
+          currency: this.car.currency || &#x27;ARS&#x27;,
+          contentId: this.car.id,
+        });
+      }
+    });
+  }
+
+  private async loadWalletBalance() {
+    try {
+      const balance &#x3D; await firstValueFrom(this.walletService.getBalance());
+      this.walletBalance.set(balance.available_balance);
+    } catch (_error) {
+      console.warn(&#x27;Could not load wallet balance:&#x27;, _error);
+    }
+  }
+
+  setStep(stepIndex: number) {
+    if (stepIndex &lt;&#x3D; this.currentStep()) {
+      this.currentStep.set(stepIndex);
+    }
+  }
+
+  async nextStep() {
+    const previousStep &#x3D; this.currentStep();
+    const currentStepData &#x3D; this.steps[previousStep];
+
+    // Validar paso actual
+    const stepIsValid &#x3D; await this.runStepValidation();
+    if (!stepIsValid) {
+      return;
+    }
+
+    // Marcar paso como completado
+    currentStepData.completed &#x3D; true;
+
+    // Avanzar al siguiente paso
+    if (previousStep &lt; this.steps.length - 1) {
+      const newStep &#x3D; previousStep + 1;
+      this.currentStep.update(() &#x3D;&gt; newStep);
+
+      // 🎯 TikTok Events: Track InitiateCheckout when entering payment step
+      if (newStep &#x3D;&#x3D;&#x3D; 2) {
+        void this.tiktokEvents.trackInitiateCheckout({
+          contentId: this.car.id,
+          contentName: this.car.title || &#x60;${this.car.brand} ${this.car.model}&#x60;,
+          value: this.finalTotal(),
+          currency: this.car.currency || &#x27;ARS&#x27;,
+        });
+      }
+    } else {
+      // Último paso - procesar reserva
+      this.processBooking();
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep() &gt; 0) {
+      this.currentStep.update((step) &#x3D;&gt; step - 1);
+    }
+  }
+
+  validateCurrentStep(): boolean {
+    const stepIndex &#x3D; this.currentStep();
+
+    switch (stepIndex) {
+      case 0: {
+        // Fechas
+        if (!this.startDate() || !this.endDate()) {
+          this.error.set(&#x27;Por favor selecciona las fechas de alquiler&#x27;);
+          return false;
+        }
+        const start &#x3D; new Date(this.startDate());
+        const end &#x3D; new Date(this.endDate());
+        if (start &gt;&#x3D; end) {
+          this.error.set(&#x27;La fecha de fin debe ser posterior a la fecha de inicio&#x27;);
+          return false;
+        }
+        if (start &lt; new Date()) {
+          this.error.set(&#x27;La fecha de inicio no puede ser en el pasado&#x27;);
+          return false;
+        }
+        return true;
+      }
+
+      case 2: // Pago
+        if (this.paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; &amp;&amp; this.finalTotal() &gt; this.walletBalance()) {
+          this.error.set(&#x27;Saldo insuficiente en tu wallet&#x27;);
+          return false;
+        }
+        // Para pago en efectivo no se requiere validación previa
+        if (this.paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;cash&#x27;) {
+          return true;
+        }
+        break;
+    }
+
+    this.error.set(null);
+    return true;
+  }
+
+  private async runStepValidation(): Promise&lt;boolean&gt; {
+    // ✅ FIX 2025-11-06: Eliminar validación redundante de disponibilidad
+    // La validación ahora se hace de forma atómica en request_booking()
+    // Esto evita race conditions donde otro usuario reserva entre la validación y la creación
+    const baseValid &#x3D; this.validateCurrentStep();
+    if (!baseValid) {
+      return false;
+    }
+
+    // ❌ REMOVIDO: validateAvailability() - causaba race condition
+    // La validación de disponibilidad ahora se hace dentro de createBookingWithValidation()
+    // de forma atómica en la función SQL request_booking()
+
+    return true;
+  }
+
+  private async validateAvailability(): Promise&lt;boolean&gt; {
+    if (!this.startDate() || !this.endDate()) return false;
+
+    this.clearAvailabilityHints();
+
+    try {
+      const isAvailable &#x3D; await this.carsService.isCarAvailable(
+        this.car.id,
+        this.startDate(),
+        this.endDate(),
+      );
+
+      if (isAvailable) {
+        this.error.set(null);
+        this.canWaitlist.set(false);
+        return true;
+      }
+
+      const nextRanges &#x3D; await this.carsService.getNextAvailableRange(
+        this.car.id,
+        this.startDate(),
+        this.endDate(),
+      );
+
+      if (nextRanges &amp;&amp; nextRanges.length &gt; 0) {
+        const nextRange &#x3D; nextRanges[0];
+        const formattedStart &#x3D; this.formatInputDateValue(nextRange.startDate);
+        const formattedEnd &#x3D; this.formatInputDateValue(nextRange.endDate);
+
+        this.startDate.set(formattedStart);
+        this.endDate.set(formattedEnd);
+        this.availabilitySuggestion.set({
+          startDate: formattedStart,
+          endDate: formattedEnd,
+        });
+        this.availabilityInfo.set(
+          &#x60;Actualizamos tus fechas al primer espacio libre: ${this.formatHumanDate(
+            formattedStart,
+          )} → ${this.formatHumanDate(formattedEnd)}&#x60;,
+        );
+        this.toastService.info(
+          &#x27;Fechas sugeridas&#x27;,
+          &#x27;Encontramos la próxima ventana disponible y actualizamos tu reserva.&#x27;,
+        );
+        this.error.set(null);
+        this.canWaitlist.set(false);
+        return true;
+      }
+
+      this.error.set(&#x27;El auto no está disponible para esas fechas. Por favor elige otras fechas.&#x27;);
+      this.canWaitlist.set(true);
+      return false;
+    } catch (_error) {
+      console.warn(&#x27;No se pudo verificar disponibilidad:&#x27;, _error);
+      return true;
+    }
+  }
+
+  private async processBooking() {
+    this.loading.set(true);
+    this.error.set(null);
+    this.canWaitlist.set(false); // Reset waitlist flag
+
+    try {
+      // ✅ FIX: Intentar crear el booking directamente
+      // Esto permite que el error de constraint se capture y active canWaitlist
+      // La validación de disponibilidad se hace dentro de createBookingWithValidation
+      const bookingResult &#x3D; await this.bookingsService.createBookingWithValidation(
+        this.car.id,
+        this.startDate(),
+        this.endDate(),
+      );
+
+      if (!bookingResult.success) {
+        const errorMsg &#x3D; bookingResult.error || &#x27;Error al crear la reserva&#x27;;
+        const shouldShowWaitlist &#x3D; bookingResult.canWaitlist ?? false;
+
+        // Log para debugging
+        console.log(&#x27;Booking failed:&#x27;, {
+          error: errorMsg,
+          canWaitlist: shouldShowWaitlist,
+          bookingResult,
+        });
+
+        this.error.set(errorMsg);
+        this.canWaitlist.set(shouldShowWaitlist); // Mostrar opción de waitlist si está disponible
+        this.loading.set(false);
+        return;
+      }
+
+      const booking &#x3D; bookingResult.booking!;
+
+      // 3. Procesar pago
+      if (this.paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;) {
+        await this.processWalletPayment(booking.id);
+      } else if (this.paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;cash&#x27;) {
+        await this.processCashPayment(booking.id);
+      } else {
+        await this.processCardPayment(booking.id);
+      }
+
+      // 4. Notificar al usuario
+      await this.notificationsService.notifyBookingCreated(booking.id, this.car.title);
+
+      // 5. Emitir evento y redirigir
+      this.bookingCreated.emit(booking as unknown as { id: string; [key: string]: unknown });
+      this.router.navigate([&#x27;/bookings/success&#x27;, booking.id]);
+    } catch (error: unknown) {
+      // Use ErrorHandlerService for consistent error handling
+      this.errorHandler.handleBookingError(error, &#x27;Processing booking&#x27;, true);
+      this.error.set(
+        error instanceof Error
+          ? error.message
+          : &#x27;Error al procesar la reserva. Inténtalo nuevamente.&#x27;,
+      );
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * Agrega el usuario a la lista de espera cuando el auto no está disponible
+   */
+  async addToWaitlist(): Promise&lt;void&gt; {
+    this.addingToWaitlist.set(true);
+    try {
+      const result &#x3D; await this.waitlistService.addToWaitlist(
+        this.car.id,
+        this.startDate(),
+        this.endDate(),
+      );
+
+      if (result.success) {
+        // Mostrar mensaje de éxito
+        this.error.set(null);
+        this.canWaitlist.set(false);
+
+        // Mostrar toast de éxito
+        this.toastService.success(
+          &#x27;Éxito&#x27;,
+          &#x27;✅ Te agregamos a la lista de espera. Te notificaremos cuando el auto esté disponible.&#x27;,
+          5000,
+        );
+      } else {
+        this.error.set(result.error || &#x27;Error al agregar a la lista de espera&#x27;);
+      }
+    } catch (error: unknown) {
+      this.errorHandler.handleError(error, &#x27;Adding to waitlist&#x27;, true);
+      this.error.set(&#x27;Error al agregar a la lista de espera. Inténtalo nuevamente.&#x27;);
+    } finally {
+      this.addingToWaitlist.set(false);
+    }
+  }
+
+  onDateInput(type: &#x27;start&#x27; | &#x27;end&#x27;, event: Event): void {
+    const value &#x3D; (event.target as HTMLInputElement).value;
+    if (type &#x3D;&#x3D;&#x3D; &#x27;start&#x27;) {
+      this.startDate.set(value);
+    } else {
+      this.endDate.set(value);
+    }
+    this.clearAvailabilityHints();
+    this.error.set(null);
+    this.canWaitlist.set(false);
+  }
+
+  onRetry(): void {
+    this.error.set(null);
+    this.canWaitlist.set(false);
+    this.clearAvailabilityHints();
+  }
+
+  private async processWalletPayment(bookingId: string) {
+    // Bloquear fondos en wallet
+    await firstValueFrom(
+      this.walletService.lockFunds(bookingId, this.finalTotal() * 100, &#x27;Reserva de auto&#x27;),
+    );
+
+    // Crear payment intent
+    await this.paymentsService.createPaymentIntent(bookingId, &#x27;wallet&#x27;);
+  }
+
+  private async processCardPayment(bookingId: string) {
+    // Crear payment intent para tarjeta
+    await this.paymentsService.createPaymentIntent(bookingId, &#x27;mercadopago&#x27;);
+
+    // Aquí se integraría MercadoPago para autorizar la tarjeta
+    // Por ahora, marcamos como pendiente de aprobación manual
+  }
+
+  private async processCashPayment(bookingId: string) {
+    // Crear payment intent para pago en efectivo
+    await this.paymentsService.createPaymentIntent(bookingId, &#x27;cash&#x27;);
+
+    // Para pagos en efectivo, el pago se realiza al momento de retirar el vehículo
+    // La reserva queda confirmada pero el pago pendiente hasta el encuentro
+    this.toastService.success(
+      &#x27;Reserva confirmada&#x27;,
+      &#x27;Recuerda llevar el efectivo al momento de retirar el vehículo&#x27;,
+    );
+  }
+
+  getMinDate(): string {
+    const tomorrow &#x3D; new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split(&#x27;T&#x27;)[0];
+  }
+
+  getMaxDate(): string {
+    const maxDate &#x3D; new Date();
+    maxDate.setDate(maxDate.getDate() + 90); // Máximo 90 días adelante
+    return maxDate.toISOString().split(&#x27;T&#x27;)[0];
+  }
+
+  private clearAvailabilityHints(): void {
+    this.availabilitySuggestion.set(null);
+    this.availabilityInfo.set(null);
+  }
+
+  private formatInputDateValue(date: string | Date): string {
+    const parsed &#x3D; typeof date &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? new Date(date) : date;
+    return parsed.toISOString().split(&#x27;T&#x27;)[0];
+  }
+
+  private formatHumanDate(date: string): string {
+    const parsed &#x3D; new Date(date);
+    return new Intl.DateTimeFormat(&#x27;es-AR&#x27;, {
+      weekday: &#x27;short&#x27;,
+      day: &#x27;2-digit&#x27;,
+      month: &#x27;short&#x27;,
+    }).format(parsed);
+  }
+
+  cancel() {
+    this.cancelled.emit();
+  }
+
+  getCarPhotoUrl(): string {
+    const photos &#x3D; this.car.photos || (this.car as { car_photos?: unknown[] }).car_photos;
+    return getCarImageUrl(photos as { url: string }[] | undefined, {
+      brand: this.car.brand || this.car.brand_name || &#x27;&#x27;,
+      model: this.car.model || this.car.model_name || &#x27;&#x27;,
+      year: this.car.year,
+      id: this.car.id,
+    });
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'CheckoutStep.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

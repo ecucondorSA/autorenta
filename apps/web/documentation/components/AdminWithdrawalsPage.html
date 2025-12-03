@@ -1,0 +1,2413 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AdminWithdrawalsPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/admin/withdrawals/admin-withdrawals.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>autorenta-admin-withdrawals-page</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                            <code>MoneyPipe</code>
+                            <code>TranslateModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./admin-withdrawals.page.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./admin-withdrawals.page.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#actionNotes" >actionNotes</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#actionNotesSignal" >actionNotesSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#adminService" >adminService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filterStatus" >filterStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filterStatusSignal" >filterStatusSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loadingSignal" >loadingSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pendingCount" >pendingCount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedWithdrawal" >selectedWithdrawal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedWithdrawalSignal" >selectedWithdrawalSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#totalPendingAmount" >totalPendingAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#withdrawals" >withdrawals</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#withdrawalsSignal" >withdrawalsSignal</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#approveWithdrawal" >approveWithdrawal</a>
+                            </li>
+                            <li>
+                                <a href="#closeModal" >closeModal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#completeWithdrawal" >completeWithdrawal</a>
+                            </li>
+                            <li>
+                                <a href="#exportToCSV" >exportToCSV</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#filterByStatus" >filterByStatus</a>
+                            </li>
+                            <li>
+                                <a href="#formatAccountType" >formatAccountType</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusBadgeClass" >getStatusBadgeClass</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusText" >getStatusText</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadWithdrawals" >loadWithdrawals</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#rejectWithdrawal" >rejectWithdrawal</a>
+                            </li>
+                            <li>
+                                <a href="#selectWithdrawal" >selectWithdrawal</a>
+                            </li>
+                            <li>
+                                <a href="#updateActionNotes" >updateActionNotes</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="approveWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>approveWithdrawal</b></span>
+                        <a href="#approveWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>approveWithdrawal(withdrawal: <a href="../interfaces/WithdrawalRequest.html" target="_self">WithdrawalRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>withdrawal</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalRequest.html" target="_self" >WithdrawalRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeModal"></a>
+                    <span class="name">
+                        <span ><b>closeModal</b></span>
+                        <a href="#closeModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completeWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>completeWithdrawal</b></span>
+                        <a href="#completeWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>completeWithdrawal(withdrawal: <a href="../interfaces/WithdrawalRequest.html" target="_self">WithdrawalRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="117"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:117</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>withdrawal</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalRequest.html" target="_self" >WithdrawalRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="exportToCSV"></a>
+                    <span class="name">
+                        <span ><b>exportToCSV</b></span>
+                        <a href="#exportToCSV"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>exportToCSV()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="156"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:156</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterByStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>filterByStatus</b></span>
+                        <a href="#filterByStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>filterByStatus(status: WithdrawalStatus | string)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                        <code>WithdrawalStatus | string</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatAccountType"></a>
+                    <span class="name">
+                        <span ><b>formatAccountType</b></span>
+                        <a href="#formatAccountType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatAccountType(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:219</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusBadgeClass"></a>
+                    <span class="name">
+                        <span ><b>getStatusBadgeClass</b></span>
+                        <a href="#getStatusBadgeClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusBadgeClass(status: <a href="../undefineds/WithdrawalStatus.html" target="_self">WithdrawalStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#WithdrawalStatus" target="_self" >WithdrawalStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusText"></a>
+                    <span class="name">
+                        <span ><b>getStatusText</b></span>
+                        <a href="#getStatusText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusText(status: <a href="../undefineds/WithdrawalStatus.html" target="_self">WithdrawalStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#WithdrawalStatus" target="_self" >WithdrawalStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadWithdrawals"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadWithdrawals</b></span>
+                        <a href="#loadWithdrawals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadWithdrawals()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rejectWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>rejectWithdrawal</b></span>
+                        <a href="#rejectWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>rejectWithdrawal(withdrawal: <a href="../interfaces/WithdrawalRequest.html" target="_self">WithdrawalRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="135"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:135</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>withdrawal</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalRequest.html" target="_self" >WithdrawalRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectWithdrawal"></a>
+                    <span class="name">
+                        <span ><b>selectWithdrawal</b></span>
+                        <a href="#selectWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectWithdrawal(withdrawal: <a href="../interfaces/WithdrawalRequest.html" target="_self">WithdrawalRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>withdrawal</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalRequest.html" target="_self" >WithdrawalRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateActionNotes"></a>
+                    <span class="name">
+                        <span ><b>updateActionNotes</b></span>
+                        <a href="#updateActionNotes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateActionNotes(notes: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>notes</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="actionNotes"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>actionNotes</b></span>
+                        <a href="#actionNotes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.actionNotesSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="actionNotesSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>actionNotesSignal</b></span>
+                        <a href="#actionNotesSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>adminService</b></span>
+                        <a href="#adminService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AdminService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filterStatus</b></span>
+                        <a href="#filterStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.filterStatusSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterStatusSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filterStatusSignal</b></span>
+                        <a href="#filterStatusSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WithdrawalStatus | &#x27;&#x27;&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.loadingSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loadingSignal</b></span>
+                        <a href="#loadingSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pendingCount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pendingCount</b></span>
+                        <a href="#pendingCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(
+    () &#x3D;&gt; this.withdrawalsSignal().filter((w) &#x3D;&gt; w.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length,
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedWithdrawal</b></span>
+                        <a href="#selectedWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.selectedWithdrawalSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedWithdrawalSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedWithdrawalSignal</b></span>
+                        <a href="#selectedWithdrawalSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WithdrawalRequest | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalPendingAmount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>totalPendingAmount</b></span>
+                        <a href="#totalPendingAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt;
+    this.withdrawalsSignal()
+      .filter((w) &#x3D;&gt; w.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;)
+      .reduce((sum, w) &#x3D;&gt; sum + w.net_amount, 0),
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="withdrawals"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>withdrawals</b></span>
+                        <a href="#withdrawals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.withdrawalsSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="withdrawalsSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>withdrawalsSignal</b></span>
+                        <a href="#withdrawalsSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WithdrawalRequest[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/features/admin/withdrawals/admin-withdrawals.page.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+
+import { AdminService } from &#x27;@core/services/admin.service&#x27;;
+import { WithdrawalRequest, WithdrawalStatus } from &#x27;@core/models&#x27;;
+import { MoneyPipe } from &#x27;@shared/pipes/money.pipe&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+
+interface WithdrawalExportRow {
+  fecha: string;
+  usuario: string;
+  email: string;
+  cuenta: string;
+  titular: string;
+  documento: string;
+  monto: number;
+  comision: number;
+  neto: number;
+  estado: string;
+}
+
+@Component({
+  selector: &#x27;autorenta-admin-withdrawals-page&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, MoneyPipe, TranslateModule],
+  templateUrl: &#x27;./admin-withdrawals.page.html&#x27;,
+  styleUrl: &#x27;./admin-withdrawals.page.css&#x27;,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AdminWithdrawalsPage implements OnInit {
+  private readonly adminService &#x3D; inject(AdminService);
+
+  private readonly withdrawalsSignal &#x3D; signal&lt;WithdrawalRequest[]&gt;([]);
+  private readonly loadingSignal &#x3D; signal&lt;boolean&gt;(true);
+  private readonly filterStatusSignal &#x3D; signal&lt;WithdrawalStatus | &#x27;&#x27;&gt;(&#x27;&#x27;);
+  private readonly selectedWithdrawalSignal &#x3D; signal&lt;WithdrawalRequest | null&gt;(null);
+  private readonly actionNotesSignal &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+
+  readonly withdrawals &#x3D; computed(() &#x3D;&gt; this.withdrawalsSignal());
+  readonly loading &#x3D; computed(() &#x3D;&gt; this.loadingSignal());
+  readonly filterStatus &#x3D; computed(() &#x3D;&gt; this.filterStatusSignal());
+  readonly selectedWithdrawal &#x3D; computed(() &#x3D;&gt; this.selectedWithdrawalSignal());
+  readonly actionNotes &#x3D; computed(() &#x3D;&gt; this.actionNotesSignal());
+
+  readonly pendingCount &#x3D; computed(
+    () &#x3D;&gt; this.withdrawalsSignal().filter((w) &#x3D;&gt; w.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length,
+  );
+
+  readonly totalPendingAmount &#x3D; computed(() &#x3D;&gt;
+    this.withdrawalsSignal()
+      .filter((w) &#x3D;&gt; w.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;)
+      .reduce((sum, w) &#x3D;&gt; sum + w.net_amount, 0),
+  );
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadWithdrawals();
+  }
+
+  async loadWithdrawals(): Promise&lt;void&gt; {
+    this.loadingSignal.set(true);
+    try {
+      const status &#x3D; this.filterStatusSignal();
+      const withdrawals &#x3D; await this.adminService.listWithdrawalRequests(status || undefined);
+      this.withdrawalsSignal.set(withdrawals);
+    } catch {
+      this.withdrawalsSignal.set([]);
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  async filterByStatus(status: WithdrawalStatus | &#x27;&#x27;): Promise&lt;void&gt; {
+    this.filterStatusSignal.set(status);
+    await this.loadWithdrawals();
+  }
+
+  selectWithdrawal(withdrawal: WithdrawalRequest): void {
+    this.selectedWithdrawalSignal.set(withdrawal);
+    this.actionNotesSignal.set(&#x27;&#x27;);
+  }
+
+  closeModal(): void {
+    this.selectedWithdrawalSignal.set(null);
+    this.actionNotesSignal.set(&#x27;&#x27;);
+  }
+
+  updateActionNotes(notes: string): void {
+    this.actionNotesSignal.set(notes);
+  }
+
+  async approveWithdrawal(withdrawal: WithdrawalRequest): Promise&lt;void&gt; {
+    if (!confirm(&#x60;¿Aprobar retiro de ${withdrawal.user_name} por $${withdrawal.net_amount}?&#x60;)) {
+      return;
+    }
+
+    try {
+      await this.adminService.approveWithdrawal(
+        withdrawal.id,
+        this.actionNotesSignal() || undefined,
+      );
+      alert(&#x27;Retiro aprobado exitosamente&#x27;);
+      this.closeModal();
+      await this.loadWithdrawals();
+    } catch (error) {
+      alert(&#x27;Error al aprobar retiro: &#x27; + (error as Error).message);
+    }
+  }
+
+  async completeWithdrawal(withdrawal: WithdrawalRequest): Promise&lt;void&gt; {
+    const transactionId &#x3D; prompt(&#x27;Ingrese el ID de transacción bancaria/MercadoPago:&#x27;, &#x27;&#x27;);
+    if (!transactionId) return;
+
+    try {
+      await this.adminService.completeWithdrawal(withdrawal.id, transactionId, {
+        completed_by: &#x27;admin&#x27;,
+        notes: this.actionNotesSignal() || undefined,
+        completed_at: new Date().toISOString(),
+      });
+      alert(&#x27;Retiro completado exitosamente&#x27;);
+      this.closeModal();
+      await this.loadWithdrawals();
+    } catch (error) {
+      alert(&#x27;Error al completar retiro: &#x27; + (error as Error).message);
+    }
+  }
+
+  async rejectWithdrawal(withdrawal: WithdrawalRequest): Promise&lt;void&gt; {
+    const reason &#x3D; this.actionNotesSignal() || prompt(&#x27;Motivo del rechazo:&#x27;, &#x27;&#x27;);
+    if (!reason) {
+      alert(&#x27;Debe ingresar un motivo de rechazo&#x27;);
+      return;
+    }
+
+    if (!confirm(&#x60;¿Rechazar retiro de ${withdrawal.user_name}?&#x60;)) {
+      return;
+    }
+
+    try {
+      await this.adminService.rejectWithdrawal(withdrawal.id, reason);
+      alert(&#x27;Retiro rechazado&#x27;);
+      this.closeModal();
+      await this.loadWithdrawals();
+    } catch (error) {
+      alert(&#x27;Error al rechazar retiro: &#x27; + (error as Error).message);
+    }
+  }
+
+  exportToCSV(): void {
+    const rows: WithdrawalExportRow[] &#x3D; this.withdrawalsSignal().map((w) &#x3D;&gt; ({
+      fecha: new Date(w.created_at).toLocaleDateString(&#x27;es-AR&#x27;),
+      usuario: w.user_name || &#x27;N/A&#x27;,
+      email: w.user_email || &#x27;N/A&#x27;,
+      cuenta: w.bank_account?.account_number || &#x27;N/A&#x27;,
+      titular: w.bank_account?.account_holder_name || &#x27;N/A&#x27;,
+      documento: w.bank_account?.account_holder_document || &#x27;N/A&#x27;,
+      monto: w.amount,
+      comision: w.fee_amount,
+      neto: w.net_amount,
+      estado: w.status,
+    }));
+
+    const headers &#x3D; Object.keys(rows[0] || {}).join(&#x27;,&#x27;);
+    const csvContent &#x3D; [
+      headers,
+      ...rows.map((row) &#x3D;&gt;
+        Object.values(row)
+          .map((v) &#x3D;&gt; (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; v.includes(&#x27;,&#x27;) ? &#x60;&quot;${v}&quot;&#x60; : v))
+          .join(&#x27;,&#x27;),
+      ),
+    ].join(&#x27;\n&#x27;);
+
+    const blob &#x3D; new Blob([csvContent], { type: &#x27;text/csv;charset&#x3D;utf-8;&#x27; });
+    const link &#x3D; document.createElement(&#x27;a&#x27;);
+    const url &#x3D; URL.createObjectURL(blob);
+
+    link.setAttribute(&#x27;href&#x27;, url);
+    link.setAttribute(&#x27;download&#x27;, &#x60;retiros-${new Date().toISOString().split(&#x27;T&#x27;)[0]}.csv&#x60;);
+    link.style.visibility &#x3D; &#x27;hidden&#x27;;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  getStatusBadgeClass(status: WithdrawalStatus): string {
+    const classes: Record&lt;WithdrawalStatus, string&gt; &#x3D; {
+      pending: &#x27;bg-warning-bg-hover text-warning-strong&#x27;,
+      approved: &#x27;bg-cta-default/20 text-cta-default&#x27;,
+      processing: &#x27;bg-cta-default/20 text-cta-default&#x27;,
+      completed: &#x27;bg-success-light/20 text-success-light&#x27;,
+      failed: &#x27;bg-error-bg-hover text-error-strong&#x27;,
+      rejected: &#x27;bg-surface-raised text-text-primary&#x27;,
+      cancelled: &#x27;bg-surface-raised text-text-primary&#x27;,
+    };
+    return classes[status] || &#x27;bg-surface-raised text-text-primary&#x27;;
+  }
+
+  getStatusText(status: WithdrawalStatus): string {
+    const texts: Record&lt;WithdrawalStatus, string&gt; &#x3D; {
+      pending: &#x27;Pendiente&#x27;,
+      approved: &#x27;Aprobado&#x27;,
+      processing: &#x27;Procesando&#x27;,
+      completed: &#x27;Completado&#x27;,
+      failed: &#x27;Fallido&#x27;,
+      rejected: &#x27;Rechazado&#x27;,
+      cancelled: &#x27;Cancelado&#x27;,
+    };
+    return texts[status] || status;
+  }
+
+  formatAccountType(type: string): string {
+    const types: Record&lt;string, string&gt; &#x3D; {
+      cbu: &#x27;CBU&#x27;,
+      cvu: &#x27;CVU&#x27;,
+      alias: &#x27;Alias&#x27;,
+    };
+    return types[type] || type.toUpperCase();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;min-h-screen bg-surface-base dark:bg-surface-base py-8 px-4 sm:px-6 lg:px-8&quot;&gt;
+  &lt;div class&#x3D;&quot;max-w-7xl mx-auto&quot;&gt;
+    &lt;!-- Header --&gt;
+    &lt;div class&#x3D;&quot;mb-8&quot;&gt;
+      &lt;h1 class&#x3D;&quot;text-3xl font-bold text-text-primary&quot;&gt;Gestión de Retiros&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;mt-2 text-text-secondary dark:text-text-secondary&quot;&gt;
+        Administra las solicitudes de retiro de fondos de los locadores
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Stats Cards --&gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-3 gap-6 mb-8&quot;&gt;
+      &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center&quot;&gt;
+          &lt;div class&#x3D;&quot;flex-shrink-0 bg-warning-bg0 rounded-md p-3&quot;&gt;
+            &lt;svg
+              class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;ml-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-secondary dark:text-text-secondary&quot;&gt;
+              Retiros Pendientes
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-2xl font-semibold text-text-primary&quot;&gt;{{ pendingCount() }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center&quot;&gt;
+          &lt;div class&#x3D;&quot;flex-shrink-0 bg-success-light rounded-md p-3&quot;&gt;
+            &lt;svg
+              class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;ml-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-secondary dark:text-text-secondary&quot;&gt;
+              Monto Total Pendiente
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-2xl font-semibold text-text-primary&quot;&gt;
+              {{ totalPendingAmount() | money: &#x27;ARS&#x27; }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center&quot;&gt;
+          &lt;div class&#x3D;&quot;flex-shrink-0 bg-cta-default rounded-md p-3&quot;&gt;
+            &lt;svg
+              class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;ml-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-secondary dark:text-text-secondary&quot;&gt;
+              Total Solicitudes
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-2xl font-semibold text-text-primary&quot;&gt;{{ withdrawals().length }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Filters and Actions --&gt;
+    &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow mb-6 p-4&quot;&gt;
+      &lt;div class&#x3D;&quot;flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4&quot;&gt;
+        &lt;div class&#x3D;&quot;flex gap-2 flex-wrap&quot;&gt;
+          &lt;button
+            (click)&#x3D;&quot;filterByStatus(&#x27;&#x27;)&quot;
+            [class]&#x3D;&quot;
+              filterStatus() &#x3D;&#x3D;&#x3D; &#x27;&#x27;
+                ? &#x27;bg-cta-default text-cta-text&#x27;
+                : &#x27;bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed&#x27;
+            &quot;
+            class&#x3D;&quot;px-4 py-2 rounded-md font-medium transition-colors&quot;
+          &gt;
+            Todos
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;filterByStatus(&#x27;pending&#x27;)&quot;
+            [class]&#x3D;&quot;
+              filterStatus() &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;
+                ? &#x27;bg-warning-600 text-text-inverse&#x27;
+                : &#x27;bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed&#x27;
+            &quot;
+            class&#x3D;&quot;px-4 py-2 rounded-md font-medium transition-colors&quot;
+          &gt;
+            Pendientes
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;filterByStatus(&#x27;approved&#x27;)&quot;
+            [class]&#x3D;&quot;
+              filterStatus() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;
+                ? &#x27;bg-cta-default text-cta-text&#x27;
+                : &#x27;bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed&#x27;
+            &quot;
+            class&#x3D;&quot;px-4 py-2 rounded-md font-medium transition-colors&quot;
+          &gt;
+            Aprobados
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;filterByStatus(&#x27;completed&#x27;)&quot;
+            [class]&#x3D;&quot;
+              filterStatus() &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;
+                ? &#x27;bg-success-light text-text-primary&#x27;
+                : &#x27;bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed&#x27;
+            &quot;
+            class&#x3D;&quot;px-4 py-2 rounded-md font-medium transition-colors&quot;
+          &gt;
+            Completados
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;button
+          (click)&#x3D;&quot;exportToCSV()&quot;
+          class&#x3D;&quot;bg-success-light text-text-primary px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2&quot;
+        &gt;
+          &lt;svg class&#x3D;&quot;h-5 w-5&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+            /&gt;
+          &lt;/svg&gt;
+          Exportar CSV
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Withdrawals Table --&gt;
+    &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow overflow-hidden&quot;&gt;
+      @if (loading()) {
+        &lt;div class&#x3D;&quot;flex justify-center items-center p-12&quot;&gt;
+          &lt;div class&#x3D;&quot;animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      } @else if (withdrawals().length &#x3D;&#x3D;&#x3D; 0) {
+        &lt;div class&#x3D;&quot;text-center py-12&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;mx-auto h-12 w-12 text-text-muted dark:text-text-secondary&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+            /&gt;
+          &lt;/svg&gt;
+          &lt;h3 class&#x3D;&quot;mt-2 text-sm font-medium text-text-primary&quot;&gt;No hay solicitudes de retiro&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;mt-1 text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+            @if (filterStatus()) {
+              Prueba cambiando el filtro.
+            } @else {
+              Las solicitudes aparecerán aquí cuando los usuarios las creen.
+            }
+          &lt;/p&gt;
+        &lt;/div&gt;
+      } @else {
+        &lt;div class&#x3D;&quot;overflow-x-auto&quot;&gt;
+          &lt;table class&#x3D;&quot;min-w-full divide-y divide-gray-200&quot;&gt;
+            &lt;thead class&#x3D;&quot;bg-surface-base dark:bg-surface-base&quot;&gt;
+              &lt;tr&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Fecha
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Usuario
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Cuenta Bancaria
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Monto
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Comisión
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Neto
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-center text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Estado
+                &lt;/th&gt;
+                &lt;th
+                  class&#x3D;&quot;px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase&quot;
+                &gt;
+                  Acciones
+                &lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary divide-y divide-gray-200&quot;&gt;
+              @for (withdrawal of withdrawals(); track withdrawal.id) {
+                &lt;tr class&#x3D;&quot;hover:bg-surface-base dark:bg-surface-base&quot;&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-sm text-text-primary&quot;&gt;
+                    {{ withdrawal.created_at | date: &#x27;short&#x27; }}
+                  &lt;/td&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap&quot;&gt;
+                    &lt;div class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;
+                      {{ withdrawal.user_name || &#x27;N/A&#x27; }}
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+                      {{ withdrawal.user_email || &#x27;N/A&#x27; }}
+                    &lt;/div&gt;
+                  &lt;/td&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap&quot;&gt;
+                    &lt;div class&#x3D;&quot;text-sm text-text-primary&quot;&gt;
+                      {{ formatAccountType(withdrawal.bank_account?.account_type || &#x27;&#x27;) }}:
+                      {{ withdrawal.bank_account?.account_number || &#x27;N/A&#x27; }}
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+                      {{ withdrawal.bank_account?.account_holder_name || &#x27;N/A&#x27; }}
+                    &lt;/div&gt;
+                  &lt;/td&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-sm text-right text-text-primary&quot;&gt;
+                    {{ withdrawal.amount | money: withdrawal.currency }}
+                  &lt;/td&gt;
+                  &lt;td
+                    class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-sm text-right text-text-secondary dark:text-text-secondary&quot;
+                  &gt;
+                    -{{ withdrawal.fee_amount | money: withdrawal.currency }}
+                  &lt;/td&gt;
+                  &lt;td
+                    class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-text-primary&quot;
+                  &gt;
+                    {{ withdrawal.net_amount | money: withdrawal.currency }}
+                  &lt;/td&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-center&quot;&gt;
+                    &lt;span
+                      [class]&#x3D;&quot;getStatusBadgeClass(withdrawal.status)&quot;
+                      class&#x3D;&quot;px-2 inline-flex text-xs leading-5 font-semibold rounded-full&quot;
+                    &gt;
+                      {{ getStatusText(withdrawal.status) }}
+                    &lt;/span&gt;
+                  &lt;/td&gt;
+                  &lt;td class&#x3D;&quot;px-6 py-4 whitespace-nowrap text-right text-sm font-medium&quot;&gt;
+                    &lt;button
+                      (click)&#x3D;&quot;selectWithdrawal(withdrawal)&quot;
+                      class&#x3D;&quot;text-cta-default hover:text-cta-default&quot;
+                    &gt;
+                      Ver detalles
+                    &lt;/button&gt;
+                  &lt;/td&gt;
+                &lt;/tr&gt;
+              }
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Modal de Detalles --&gt;
+@if (selectedWithdrawal()) {
+  &lt;div
+    class&#x3D;&quot;fixed inset-0 bg-surface-base bg-opacity-75 flex items-center justify-center p-4 z-50&quot;
+  &gt;
+    &lt;div
+      class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;px-6 py-4 border-b border-border-default dark:border-border-muted&quot;&gt;
+        &lt;div class&#x3D;&quot;flex justify-between items-start&quot;&gt;
+          &lt;h3 class&#x3D;&quot;text-lg font-medium text-text-primary&quot;&gt;Detalles de Solicitud de Retiro&lt;/h3&gt;
+          &lt;button
+            (click)&#x3D;&quot;closeModal()&quot;
+            class&#x3D;&quot;text-text-muted dark:text-text-secondary hover:text-text-secondary dark:text-text-secondary&quot;
+          &gt;
+            &lt;svg class&#x3D;&quot;h-6 w-6&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M6 18L18 6M6 6l12 12&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;px-6 py-4&quot;&gt;
+        &lt;!-- User Info --&gt;
+        &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+          &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Usuario&lt;/h4&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-primary&quot;&gt;{{ selectedWithdrawal()!.user_name || &#x27;N/A&#x27; }}&lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+            {{ selectedWithdrawal()!.user_email || &#x27;N/A&#x27; }}
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Bank Account Info --&gt;
+        &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+          &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Cuenta Bancaria&lt;/h4&gt;
+          &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded p-3&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;font-medium&quot;&gt;Tipo:&lt;/span&gt;
+              {{ formatAccountType(selectedWithdrawal()!.bank_account?.account_type || &#x27;&#x27;) }}
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;font-medium&quot;&gt;Número:&lt;/span&gt;
+              {{ selectedWithdrawal()!.bank_account?.account_number || &#x27;N/A&#x27; }}
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;font-medium&quot;&gt;Titular:&lt;/span&gt;
+              {{ selectedWithdrawal()!.bank_account?.account_holder_name || &#x27;N/A&#x27; }}
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;font-medium&quot;&gt;Documento:&lt;/span&gt;
+              {{ selectedWithdrawal()!.bank_account?.account_holder_document || &#x27;N/A&#x27; }}
+            &lt;/p&gt;
+            @if (selectedWithdrawal()!.bank_account?.bank_name) {
+              &lt;p class&#x3D;&quot;text-sm&quot;&gt;
+                &lt;span class&#x3D;&quot;font-medium&quot;&gt;Banco:&lt;/span&gt;
+                {{ selectedWithdrawal()!.bank_account!.bank_name }}
+              &lt;/p&gt;
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Amounts --&gt;
+        &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+          &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Montos&lt;/h4&gt;
+          &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded p-3&quot;&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm mb-1&quot;&gt;
+              &lt;span&gt;Monto solicitado:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium&quot;&gt;{{
+                selectedWithdrawal()!.amount | money: selectedWithdrawal()!.currency
+              }}&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm mb-1&quot;&gt;
+              &lt;span&gt;Comisión (1.5%):&lt;/span&gt;
+              &lt;span class&#x3D;&quot;text-error-text&quot;
+                &gt;-{{
+                  selectedWithdrawal()!.fee_amount | money: selectedWithdrawal()!.currency
+                }}&lt;/span
+              &gt;
+            &lt;/div&gt;
+            &lt;div
+              class&#x3D;&quot;flex justify-between text-sm font-medium pt-2 border-t border-border-default dark:border-border-muted&quot;
+            &gt;
+              &lt;span&gt;Monto neto a transferir:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;text-success-light&quot;&gt;{{
+                selectedWithdrawal()!.net_amount | money: selectedWithdrawal()!.currency
+              }}&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Status and Dates --&gt;
+        &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+          &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Estado&lt;/h4&gt;
+          &lt;span
+            [class]&#x3D;&quot;getStatusBadgeClass(selectedWithdrawal()!.status)&quot;
+            class&#x3D;&quot;px-3 py-1 inline-flex text-sm font-semibold rounded-full&quot;
+          &gt;
+            {{ getStatusText(selectedWithdrawal()!.status) }}
+          &lt;/span&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary mt-2&quot;&gt;
+            Creado: {{ selectedWithdrawal()!.created_at | date: &#x27;medium&#x27; }}
+          &lt;/p&gt;
+          @if (selectedWithdrawal()!.approved_at) {
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+              Aprobado: {{ selectedWithdrawal()!.approved_at | date: &#x27;medium&#x27; }}
+            &lt;/p&gt;
+          }
+          @if (selectedWithdrawal()!.completed_at) {
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+              Completado: {{ selectedWithdrawal()!.completed_at | date: &#x27;medium&#x27; }}
+            &lt;/p&gt;
+          }
+        &lt;/div&gt;
+
+        &lt;!-- User Notes --&gt;
+        @if (selectedWithdrawal()!.user_notes) {
+          &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+            &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Notas del Usuario&lt;/h4&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-primary bg-cta-default/10 rounded p-3&quot;&gt;
+              {{ selectedWithdrawal()!.user_notes }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        }
+
+        &lt;!-- Admin Notes --&gt;
+        @if (selectedWithdrawal()!.admin_notes) {
+          &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+            &lt;h4 class&#x3D;&quot;text-sm font-medium text-text-primary mb-2&quot;&gt;Notas del Admin&lt;/h4&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-primary bg-warning-bg rounded p-3&quot;&gt;
+              {{ selectedWithdrawal()!.admin_notes }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        }
+
+        &lt;!-- Action Notes Input --&gt;
+        @if (
+          selectedWithdrawal()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27; || selectedWithdrawal()!.status &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;
+        ) {
+          &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+            &lt;label for&#x3D;&quot;actionNotes&quot; class&#x3D;&quot;block text-sm font-medium text-text-primary mb-2&quot;&gt;
+              Notas para esta acción
+            &lt;/label&gt;
+            &lt;textarea
+              id&#x3D;&quot;actionNotes&quot;
+              [value]&#x3D;&quot;actionNotes()&quot;
+              (input)&#x3D;&quot;updateActionNotes($any($event.target).value)&quot;
+              rows&#x3D;&quot;3&quot;
+              class&#x3D;&quot;w-full border border-border-muted dark:border-border-default rounded-md shadow-sm p-2 focus:ring-cta-default focus:border-cta-default&quot;
+              placeholder&#x3D;&quot;Ingrese notas adicionales...&quot;
+            &gt;&lt;/textarea&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+
+      &lt;!-- Actions --&gt;
+      &lt;div
+        class&#x3D;&quot;px-6 py-4 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-border-muted flex justify-end gap-2&quot;
+      &gt;
+        @if (selectedWithdrawal()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;) {
+          &lt;button
+            (click)&#x3D;&quot;rejectWithdrawal(selectedWithdrawal()!)&quot;
+            class&#x3D;&quot;px-4 py-2 border border-error-300 text-error-strong rounded-md hover:bg-error-bg&quot;
+          &gt;
+            Rechazar
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;approveWithdrawal(selectedWithdrawal()!)&quot;
+            class&#x3D;&quot;px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default&quot;
+          &gt;
+            Aprobar
+          &lt;/button&gt;
+        }
+        @if (selectedWithdrawal()!.status &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;) {
+          &lt;button
+            (click)&#x3D;&quot;completeWithdrawal(selectedWithdrawal()!)&quot;
+            class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary rounded-md hover:bg-success-light&quot;
+          &gt;
+            Marcar como Completado
+          &lt;/button&gt;
+        }
+        &lt;button
+          (click)&#x3D;&quot;closeModal()&quot;
+          class&#x3D;&quot;px-4 py-2 border border-border-muted dark:border-border-default text-text-primary rounded-md hover:bg-surface-base dark:bg-surface-base&quot;
+        &gt;
+          Cerrar
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="min-h-screen bg-surface-base dark:bg-surface-base py-8 px-4 sm:px-6 lg:px-8">  <div class="max-w-7xl mx-auto">    <!-- Header -->    <div class="mb-8">      <h1 class="text-3xl font-bold text-text-primary">Gestión de Retiros</h1>      <p class="mt-2 text-text-secondary dark:text-text-secondary">        Administra las solicitudes de retiro de fondos de los locadores      </p>    </div>    <!-- Stats Cards -->    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">        <div class="flex items-center">          <div class="flex-shrink-0 bg-warning-bg0 rounded-md p-3">            <svg              class="h-6 w-6 text-text-inverse"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"              />            </svg>          </div>          <div class="ml-4">            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary">              Retiros Pendientes            </p>            <p class="text-2xl font-semibold text-text-primary">{{ pendingCount() }}</p>          </div>        </div>      </div>      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">        <div class="flex items-center">          <div class="flex-shrink-0 bg-success-light rounded-md p-3">            <svg              class="h-6 w-6 text-text-inverse"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"              />            </svg>          </div>          <div class="ml-4">            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary">              Monto Total Pendiente            </p>            <p class="text-2xl font-semibold text-text-primary">              {{ totalPendingAmount() | money: \'ARS\' }}            </p>          </div>        </div>      </div>      <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow p-6">        <div class="flex items-center">          <div class="flex-shrink-0 bg-cta-default rounded-md p-3">            <svg              class="h-6 w-6 text-text-inverse"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"              />            </svg>          </div>          <div class="ml-4">            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary">              Total Solicitudes            </p>            <p class="text-2xl font-semibold text-text-primary">{{ withdrawals().length }}</p>          </div>        </div>      </div>    </div>    <!-- Filters and Actions -->    <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow mb-6 p-4">      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">        <div class="flex gap-2 flex-wrap">          <button            (click)="filterByStatus(\'\')"            [class]="              filterStatus() === \'\'                ? \'bg-cta-default text-cta-text\'                : \'bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed\'            "            class="px-4 py-2 rounded-md font-medium transition-colors"          >            Todos          </button>          <button            (click)="filterByStatus(\'pending\')"            [class]="              filterStatus() === \'pending\'                ? \'bg-warning-600 text-text-inverse\'                : \'bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed\'            "            class="px-4 py-2 rounded-md font-medium transition-colors"          >            Pendientes          </button>          <button            (click)="filterByStatus(\'approved\')"            [class]="              filterStatus() === \'approved\'                ? \'bg-cta-default text-cta-text\'                : \'bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed\'            "            class="px-4 py-2 rounded-md font-medium transition-colors"          >            Aprobados          </button>          <button            (click)="filterByStatus(\'completed\')"            [class]="              filterStatus() === \'completed\'                ? \'bg-success-light text-text-primary\'                : \'bg-surface-hover dark:bg-surface-base text-text-primary hover:bg-surface-pressed\'            "            class="px-4 py-2 rounded-md font-medium transition-colors"          >            Completados          </button>        </div>        <button          (click)="exportToCSV()"          class="bg-success-light text-text-primary px-4 py-2 rounded-md font-medium transition-colors flex items-center gap-2"        >          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"            />          </svg>          Exportar CSV        </button>      </div>    </div>    <!-- Withdrawals Table -->    <div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow overflow-hidden">      @if (loading()) {        <div class="flex justify-center items-center p-12">          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default"></div>        </div>      } @else if (withdrawals().length === 0) {        <div class="text-center py-12">          <svg            class="mx-auto h-12 w-12 text-text-muted dark:text-text-secondary"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"            />          </svg>          <h3 class="mt-2 text-sm font-medium text-text-primary">No hay solicitudes de retiro</h3>          <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">            @if (filterStatus()) {              Prueba cambiando el filtro.            } @else {              Las solicitudes aparecerán aquí cuando los usuarios las creen.            }          </p>        </div>      } @else {        <div class="overflow-x-auto">          <table class="min-w-full divide-y divide-gray-200">            <thead class="bg-surface-base dark:bg-surface-base">              <tr>                <th                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Fecha                </th>                <th                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Usuario                </th>                <th                  class="px-6 py-3 text-left text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Cuenta Bancaria                </th>                <th                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Monto                </th>                <th                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Comisión                </th>                <th                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Neto                </th>                <th                  class="px-6 py-3 text-center text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Estado                </th>                <th                  class="px-6 py-3 text-right text-xs font-medium text-text-secondary dark:text-text-secondary uppercase"                >                  Acciones                </th>              </tr>            </thead>            <tbody class="bg-surface-raised dark:bg-surface-secondary divide-y divide-gray-200">              @for (withdrawal of withdrawals(); track withdrawal.id) {                <tr class="hover:bg-surface-base dark:bg-surface-base">                  <td class="px-6 py-4 whitespace-nowrap text-sm text-text-primary">                    {{ withdrawal.created_at | date: \'short\' }}                  </td>                  <td class="px-6 py-4 whitespace-nowrap">                    <div class="text-sm font-medium text-text-primary">                      {{ withdrawal.user_name || \'N/A\' }}                    </div>                    <div class="text-sm text-text-secondary dark:text-text-secondary">                      {{ withdrawal.user_email || \'N/A\' }}                    </div>                  </td>                  <td class="px-6 py-4 whitespace-nowrap">                    <div class="text-sm text-text-primary">                      {{ formatAccountType(withdrawal.bank_account?.account_type || \'\') }}:                      {{ withdrawal.bank_account?.account_number || \'N/A\' }}                    </div>                    <div class="text-sm text-text-secondary dark:text-text-secondary">                      {{ withdrawal.bank_account?.account_holder_name || \'N/A\' }}                    </div>                  </td>                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-primary">                    {{ withdrawal.amount | money: withdrawal.currency }}                  </td>                  <td                    class="px-6 py-4 whitespace-nowrap text-sm text-right text-text-secondary dark:text-text-secondary"                  >                    -{{ withdrawal.fee_amount | money: withdrawal.currency }}                  </td>                  <td                    class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-text-primary"                  >                    {{ withdrawal.net_amount | money: withdrawal.currency }}                  </td>                  <td class="px-6 py-4 whitespace-nowrap text-center">                    <span                      [class]="getStatusBadgeClass(withdrawal.status)"                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"                    >                      {{ getStatusText(withdrawal.status) }}                    </span>                  </td>                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">                    <button                      (click)="selectWithdrawal(withdrawal)"                      class="text-cta-default hover:text-cta-default"                    >                      Ver detalles                    </button>                  </td>                </tr>              }            </tbody>          </table>        </div>      }    </div>  </div></div><!-- Modal de Detalles -->@if (selectedWithdrawal()) {  <div    class="fixed inset-0 bg-surface-base bg-opacity-75 flex items-center justify-center p-4 z-50"  >    <div      class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"    >      <div class="px-6 py-4 border-b border-border-default dark:border-border-muted">        <div class="flex justify-between items-start">          <h3 class="text-lg font-medium text-text-primary">Detalles de Solicitud de Retiro</h3>          <button            (click)="closeModal()"            class="text-text-muted dark:text-text-secondary hover:text-text-secondary dark:text-text-secondary"          >            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M6 18L18 6M6 6l12 12"              />            </svg>          </button>        </div>      </div>      <div class="px-6 py-4">        <!-- User Info -->        <div class="mb-6">          <h4 class="text-sm font-medium text-text-primary mb-2">Usuario</h4>          <p class="text-sm text-text-primary">{{ selectedWithdrawal()!.user_name || \'N/A\' }}</p>          <p class="text-sm text-text-secondary dark:text-text-secondary">            {{ selectedWithdrawal()!.user_email || \'N/A\' }}          </p>        </div>        <!-- Bank Account Info -->        <div class="mb-6">          <h4 class="text-sm font-medium text-text-primary mb-2">Cuenta Bancaria</h4>          <div class="bg-surface-base dark:bg-surface-base rounded p-3">            <p class="text-sm">              <span class="font-medium">Tipo:</span>              {{ formatAccountType(selectedWithdrawal()!.bank_account?.account_type || \'\') }}            </p>            <p class="text-sm">              <span class="font-medium">Número:</span>              {{ selectedWithdrawal()!.bank_account?.account_number || \'N/A\' }}            </p>            <p class="text-sm">              <span class="font-medium">Titular:</span>              {{ selectedWithdrawal()!.bank_account?.account_holder_name || \'N/A\' }}            </p>            <p class="text-sm">              <span class="font-medium">Documento:</span>              {{ selectedWithdrawal()!.bank_account?.account_holder_document || \'N/A\' }}            </p>            @if (selectedWithdrawal()!.bank_account?.bank_name) {              <p class="text-sm">                <span class="font-medium">Banco:</span>                {{ selectedWithdrawal()!.bank_account!.bank_name }}              </p>            }          </div>        </div>        <!-- Amounts -->        <div class="mb-6">          <h4 class="text-sm font-medium text-text-primary mb-2">Montos</h4>          <div class="bg-surface-base dark:bg-surface-base rounded p-3">            <div class="flex justify-between text-sm mb-1">              <span>Monto solicitado:</span>              <span class="font-medium">{{                selectedWithdrawal()!.amount | money: selectedWithdrawal()!.currency              }}</span>            </div>            <div class="flex justify-between text-sm mb-1">              <span>Comisión (1.5%):</span>              <span class="text-error-text"                >-{{                  selectedWithdrawal()!.fee_amount | money: selectedWithdrawal()!.currency                }}</span              >            </div>            <div              class="flex justify-between text-sm font-medium pt-2 border-t border-border-default dark:border-border-muted"            >              <span>Monto neto a transferir:</span>              <span class="text-success-light">{{                selectedWithdrawal()!.net_amount | money: selectedWithdrawal()!.currency              }}</span>            </div>          </div>        </div>        <!-- Status and Dates -->        <div class="mb-6">          <h4 class="text-sm font-medium text-text-primary mb-2">Estado</h4>          <span            [class]="getStatusBadgeClass(selectedWithdrawal()!.status)"            class="px-3 py-1 inline-flex text-sm font-semibold rounded-full"          >            {{ getStatusText(selectedWithdrawal()!.status) }}          </span>          <p class="text-sm text-text-secondary dark:text-text-secondary mt-2">            Creado: {{ selectedWithdrawal()!.created_at | date: \'medium\' }}          </p>          @if (selectedWithdrawal()!.approved_at) {            <p class="text-sm text-text-secondary dark:text-text-secondary">              Aprobado: {{ selectedWithdrawal()!.approved_at | date: \'medium\' }}            </p>          }          @if (selectedWithdrawal()!.completed_at) {            <p class="text-sm text-text-secondary dark:text-text-secondary">              Completado: {{ selectedWithdrawal()!.completed_at | date: \'medium\' }}            </p>          }        </div>        <!-- User Notes -->        @if (selectedWithdrawal()!.user_notes) {          <div class="mb-6">            <h4 class="text-sm font-medium text-text-primary mb-2">Notas del Usuario</h4>            <p class="text-sm text-text-primary bg-cta-default/10 rounded p-3">              {{ selectedWithdrawal()!.user_notes }}            </p>          </div>        }        <!-- Admin Notes -->        @if (selectedWithdrawal()!.admin_notes) {          <div class="mb-6">            <h4 class="text-sm font-medium text-text-primary mb-2">Notas del Admin</h4>            <p class="text-sm text-text-primary bg-warning-bg rounded p-3">              {{ selectedWithdrawal()!.admin_notes }}            </p>          </div>        }        <!-- Action Notes Input -->        @if (          selectedWithdrawal()!.status === \'pending\' || selectedWithdrawal()!.status === \'approved\'        ) {          <div class="mb-6">            <label for="actionNotes" class="block text-sm font-medium text-text-primary mb-2">              Notas para esta acción            </label>            <textarea              id="actionNotes"              [value]="actionNotes()"              (input)="updateActionNotes($any($event.target).value)"              rows="3"              class="w-full border border-border-muted dark:border-border-default rounded-md shadow-sm p-2 focus:ring-cta-default focus:border-cta-default"              placeholder="Ingrese notas adicionales..."            ></textarea>          </div>        }      </div>      <!-- Actions -->      <div        class="px-6 py-4 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-border-muted flex justify-end gap-2"      >        @if (selectedWithdrawal()!.status === \'pending\') {          <button            (click)="rejectWithdrawal(selectedWithdrawal()!)"            class="px-4 py-2 border border-error-300 text-error-strong rounded-md hover:bg-error-bg"          >            Rechazar          </button>          <button            (click)="approveWithdrawal(selectedWithdrawal()!)"            class="px-4 py-2 bg-cta-default text-cta-text rounded-md hover:bg-cta-default"          >            Aprobar          </button>        }        @if (selectedWithdrawal()!.status === \'approved\') {          <button            (click)="completeWithdrawal(selectedWithdrawal()!)"            class="px-4 py-2 bg-success-light text-text-primary rounded-md hover:bg-success-light"          >            Marcar como Completado          </button>        }        <button          (click)="closeModal()"          class="px-4 py-2 border border-border-muted dark:border-border-default text-text-primary rounded-md hover:bg-surface-base dark:bg-surface-base"        >          Cerrar        </button>      </div>    </div>  </div>}</div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'AdminWithdrawalsPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AdminWithdrawalsPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

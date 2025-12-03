@@ -1,0 +1,2016 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  PaymentMethodSelectorComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/payment-method-selector/payment-method-selector.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>PaymentMethodSelectorComponent</p>
+<p>Componente para seleccionar el método de pago en el flujo de reservas.</p>
+<p>Permite elegir entre:</p>
+<ul>
+<li>100% Tarjeta de crédito (Mercado Pago)</li>
+<li>100% Wallet (si hay fondos suficientes)</li>
+<li>Pago mixto: Wallet + Tarjeta (si hay fondos parciales)</li>
+</ul>
+<p>Características:</p>
+<ul>
+<li>Validación automática de fondos disponibles</li>
+<li>Cálculo de montos parciales en tiempo real</li>
+<li>Visual feedback del balance del wallet</li>
+<li>Integración con WalletService</li>
+</ul>
+<p>Uso:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-html">&lt;app-payment-method-selector
+  [totalAmount]=&quot;bookingTotal&quot;
+  (paymentMethodChange)=&quot;handlePaymentMethodChange($event)&quot;&gt;
+&lt;/app-payment-method-selector&gt;</code></pre></div>
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-payment-method-selector</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                            <code>TranslateModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./payment-method-selector.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./payment-method-selector.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#availableBalance" >availableBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cardAmount" >cardAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasPartialFunds" >hasPartialFunds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasSufficientFunds" >hasSufficientFunds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isLoadingBalance" >isLoadingBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#Math" >Math</a>
+                            </li>
+                            <li>
+                                <a href="#selectedMethod" >selectedMethod</a>
+                            </li>
+                            <li>
+                                <a href="#walletAmountToUse" >walletAmountToUse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#walletPercentage" >walletPercentage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#walletService" >walletService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#autoSelectPaymentMethod" >autoSelectPaymentMethod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#emitChange" >emitChange</a>
+                            </li>
+                            <li>
+                                <a href="#formatCurrency" >formatCurrency</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadBalance" >loadBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#selectMethod" >selectMethod</a>
+                            </li>
+                            <li>
+                                <a href="#updateWalletAmount" >updateWalletAmount</a>
+                            </li>
+                            <li>
+                                <a href="#useMaxWallet" >useMaxWallet</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#totalAmount" >totalAmount</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#paymentMethodChange" >paymentMethodChange</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="totalAmount"></a>
+                        <b>totalAmount</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Required : </i>&nbsp;<b>true</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:56</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Monto total de la reserva (en USD)</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="paymentMethodChange"></a>
+                        <b>paymentMethodChange</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:61</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Evento emitido cuando cambia el método de pago seleccionado</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="autoSelectPaymentMethod"></a>
+                    <span class="name">
+                        <span ><b>autoSelectPaymentMethod</b></span>
+                        <a href="#autoSelectPaymentMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>autoSelectPaymentMethod()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="161"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:161</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Auto-selecciona el mejor método de pago basado en el balance</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="emitChange"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>emitChange</b></span>
+                        <a href="#emitChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>emitChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Emite el evento de cambio de método de pago</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatCurrency"></a>
+                    <span class="name">
+                        <span ><b>formatCurrency</b></span>
+                        <a href="#formatCurrency"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatCurrency(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:243</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Formatea un número como moneda USD</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadBalance</b></span>
+                        <a href="#loadBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBalance()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:147</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga el balance del wallet</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="135"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:135</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectMethod"></a>
+                    <span class="name">
+                        <span ><b>selectMethod</b></span>
+                        <a href="#selectMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectMethod(method: <a href="../undefineds/BookingPaymentMethod.html" target="_self">BookingPaymentMethod</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="179"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:179</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Selecciona un método de pago</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>method</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#BookingPaymentMethod" target="_self" >BookingPaymentMethod</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateWalletAmount"></a>
+                    <span class="name">
+                        <span ><b>updateWalletAmount</b></span>
+                        <a href="#updateWalletAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateWalletAmount(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:196</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Actualiza el monto a usar del wallet (para partial_wallet)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="useMaxWallet"></a>
+                    <span class="name">
+                        <span ><b>useMaxWallet</b></span>
+                        <a href="#useMaxWallet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>useMaxWallet()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:211</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Establece el monto del wallet al máximo disponible</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="availableBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>availableBalance</b></span>
+                        <a href="#availableBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.walletService.availableBalance</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:82</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Balance del wallet (del servicio)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cardAmount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cardAmount</b></span>
+                        <a href="#cardAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    if (this.selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;) {
+      return this.totalAmount;
+    }
+    if (this.selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;) {
+      return 0;
+    }
+    // partial_wallet
+    return this.totalAmount - this.walletAmountToUse();
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:114</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Calcula el monto que se pagará con tarjeta</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasPartialFunds"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasPartialFunds</b></span>
+                        <a href="#hasPartialFunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const balance &#x3D; this.availableBalance();
+    return balance &gt; 0 &amp;&amp; balance &lt; this.totalAmount;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:106</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indica si el usuario tiene fondos parciales</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasSufficientFunds"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasSufficientFunds</b></span>
+                        <a href="#hasSufficientFunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.availableBalance() &gt;&#x3D; this.totalAmount;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="99" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:99</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indica si el usuario tiene fondos suficientes para pagar 100% con wallet</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLoadingBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isLoadingBalance</b></span>
+                        <a href="#isLoadingBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:87</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Estado de carga del balance</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Math"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>Math</b></span>
+                        <a href="#Math"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Math</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:92</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Expose Math for template</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedMethod"></a>
+                    <span class="name">
+                        <span ><b>selectedMethod</b></span>
+                        <a href="#selectedMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BookingPaymentMethod&gt;(&#x27;credit_card&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Método de pago seleccionado</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletAmountToUse"></a>
+                    <span class="name">
+                        <span ><b>walletAmountToUse</b></span>
+                        <a href="#walletAmountToUse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number&gt;(0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:77</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Monto a usar del wallet (solo para partial_wallet)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletPercentage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>walletPercentage</b></span>
+                        <a href="#walletPercentage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    if (this.totalAmount &#x3D;&#x3D;&#x3D; 0) return 0;
+    return Math.round((this.walletAmountToUse() / this.totalAmount) * 100);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:128</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Calcula el porcentaje del total que representa el wallet amount</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>walletService</b></span>
+                        <a href="#walletService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(WalletService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/shared/components/payment-method-selector/payment-method-selector.component.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+} from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import type { BookingPaymentMethod } from &#x27;../../../core/models/wallet.model&#x27;;
+import { WalletService } from &#x27;../../../core/services/wallet.service&#x27;;
+
+/**
+ * PaymentMethodSelectorComponent
+ *
+ * Componente para seleccionar el método de pago en el flujo de reservas.
+ *
+ * Permite elegir entre:
+ * - 100% Tarjeta de crédito (Mercado Pago)
+ * - 100% Wallet (si hay fondos suficientes)
+ * - Pago mixto: Wallet + Tarjeta (si hay fondos parciales)
+ *
+ * Características:
+ * - Validación automática de fondos disponibles
+ * - Cálculo de montos parciales en tiempo real
+ * - Visual feedback del balance del wallet
+ * - Integración con WalletService
+ *
+ * Uso:
+ * &#x60;&#x60;&#x60;html
+ * &lt;app-payment-method-selector
+ *   [totalAmount]&#x3D;&quot;bookingTotal&quot;
+ *   (paymentMethodChange)&#x3D;&quot;handlePaymentMethodChange($event)&quot;&gt;
+ * &lt;/app-payment-method-selector&gt;
+ * &#x60;&#x60;&#x60;
+ */
+@Component({
+  selector: &#x27;app-payment-method-selector&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, TranslateModule],
+  templateUrl: &#x27;./payment-method-selector.component.html&#x27;,
+  styleUrls: [&#x27;./payment-method-selector.component.css&#x27;],
+})
+export class PaymentMethodSelectorComponent implements OnInit {
+  private readonly walletService &#x3D; inject(WalletService);
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; INPUTS &amp; OUTPUTS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Monto total de la reserva (en USD)
+   */
+  @Input({ required: true }) totalAmount!: number;
+
+  /**
+   * Evento emitido cuando cambia el método de pago seleccionado
+   */
+  @Output() paymentMethodChange &#x3D; new EventEmitter&lt;{
+    method: BookingPaymentMethod;
+    walletAmount: number;
+    cardAmount: number;
+  }&gt;();
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; SIGNALS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Método de pago seleccionado
+   */
+  selectedMethod &#x3D; signal&lt;BookingPaymentMethod&gt;(&#x27;credit_card&#x27;);
+
+  /**
+   * Monto a usar del wallet (solo para partial_wallet)
+   */
+  walletAmountToUse &#x3D; signal&lt;number&gt;(0);
+
+  /**
+   * Balance del wallet (del servicio)
+   */
+  readonly availableBalance &#x3D; this.walletService.availableBalance;
+
+  /**
+   * Estado de carga del balance
+   */
+  readonly isLoadingBalance &#x3D; signal(false);
+
+  /**
+   * Expose Math for template
+   */
+  readonly Math &#x3D; Math;
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; COMPUTED SIGNALS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Indica si el usuario tiene fondos suficientes para pagar 100% con wallet
+   */
+  readonly hasSufficientFunds &#x3D; computed(() &#x3D;&gt; {
+    return this.availableBalance() &gt;&#x3D; this.totalAmount;
+  });
+
+  /**
+   * Indica si el usuario tiene fondos parciales
+   */
+  readonly hasPartialFunds &#x3D; computed(() &#x3D;&gt; {
+    const balance &#x3D; this.availableBalance();
+    return balance &gt; 0 &amp;&amp; balance &lt; this.totalAmount;
+  });
+
+  /**
+   * Calcula el monto que se pagará con tarjeta
+   */
+  readonly cardAmount &#x3D; computed(() &#x3D;&gt; {
+    if (this.selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;) {
+      return this.totalAmount;
+    }
+    if (this.selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;) {
+      return 0;
+    }
+    // partial_wallet
+    return this.totalAmount - this.walletAmountToUse();
+  });
+
+  /**
+   * Calcula el porcentaje del total que representa el wallet amount
+   */
+  readonly walletPercentage &#x3D; computed(() &#x3D;&gt; {
+    if (this.totalAmount &#x3D;&#x3D;&#x3D; 0) return 0;
+    return Math.round((this.walletAmountToUse() / this.totalAmount) * 100);
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; LIFECYCLE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadBalance();
+
+    // Auto-seleccionar el mejor método de pago
+    this.autoSelectPaymentMethod();
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; PUBLIC METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Carga el balance del wallet
+   */
+  async loadBalance(): Promise&lt;void&gt; {
+    this.isLoadingBalance.set(true);
+    try {
+      await this.walletService.getBalance();
+    } catch {
+      /* Silenced */
+    } finally {
+      this.isLoadingBalance.set(false);
+    }
+  }
+
+  /**
+   * Auto-selecciona el mejor método de pago basado en el balance
+   */
+  autoSelectPaymentMethod(): void {
+    if (this.hasSufficientFunds()) {
+      // Si tiene fondos suficientes, sugerir wallet
+      this.selectMethod(&#x27;wallet&#x27;);
+    } else if (this.hasPartialFunds()) {
+      // Si tiene fondos parciales, sugerir pago mixto
+      this.selectMethod(&#x27;partial_wallet&#x27;);
+      // Usar todo el balance disponible
+      this.walletAmountToUse.set(this.availableBalance());
+    } else {
+      // Sin fondos, usar tarjeta
+      this.selectMethod(&#x27;credit_card&#x27;);
+    }
+  }
+
+  /**
+   * Selecciona un método de pago
+   */
+  selectMethod(method: BookingPaymentMethod): void {
+    this.selectedMethod.set(method);
+
+    // Ajustar wallet amount según el método
+    if (method &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;) {
+      this.walletAmountToUse.set(this.totalAmount);
+    } else if (method &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;) {
+      this.walletAmountToUse.set(0);
+    }
+    // Para partial_wallet, mantener el valor actual
+
+    this.emitChange();
+  }
+
+  /**
+   * Actualiza el monto a usar del wallet (para partial_wallet)
+   */
+  updateWalletAmount(value: string): void {
+    const numValue &#x3D; parseFloat(value);
+    const validValue &#x3D; isNaN(numValue) ? 0 : numValue;
+
+    // Limitar entre 0 y el mínimo entre balance disponible y total
+    const maxWallet &#x3D; Math.min(this.availableBalance(), this.totalAmount);
+    const clampedValue &#x3D; Math.max(0, Math.min(validValue, maxWallet));
+
+    this.walletAmountToUse.set(clampedValue);
+    this.emitChange();
+  }
+
+  /**
+   * Establece el monto del wallet al máximo disponible
+   */
+  useMaxWallet(): void {
+    const maxWallet &#x3D; Math.min(this.availableBalance(), this.totalAmount);
+    this.walletAmountToUse.set(maxWallet);
+    this.emitChange();
+  }
+
+  /**
+   * Emite el evento de cambio de método de pago
+   */
+  private emitChange(): void {
+    const method &#x3D; this.selectedMethod();
+    let walletAmount &#x3D; 0;
+    let cardAmount &#x3D; this.totalAmount;
+
+    if (method &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;) {
+      walletAmount &#x3D; this.totalAmount;
+      cardAmount &#x3D; 0;
+    } else if (method &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;) {
+      walletAmount &#x3D; this.walletAmountToUse();
+      cardAmount &#x3D; this.totalAmount - walletAmount;
+    }
+
+    this.paymentMethodChange.emit({
+      method,
+      walletAmount,
+      cardAmount,
+    });
+  }
+
+  /**
+   * Formatea un número como moneda USD
+   */
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat(&#x27;en-US&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;USD&#x27;,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;payment-method-selector&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+    &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary mb-1&quot;&gt;Método de Pago&lt;/h3&gt;
+    &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+      Selecciona cómo deseas pagar tu reserva
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Loading State --&gt;
+  &lt;div *ngIf&#x3D;&quot;isLoadingBalance()&quot; class&#x3D;&quot;py-8 text-center&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cta-default&quot;
+    &gt;&lt;/div&gt;
+    &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary mt-2&quot;&gt;
+      Cargando información del wallet...
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Payment Options --&gt;
+  &lt;div *ngIf&#x3D;&quot;!isLoadingBalance()&quot; class&#x3D;&quot;space-y-3&quot;&gt;
+    &lt;!-- Option 1: Credit Card (Mercado Pago) --&gt;
+    &lt;div
+      class&#x3D;&quot;payment-option border rounded-lg p-4 cursor-pointer transition-all&quot;
+      [class.border-cta-default]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+      [class.bg-cta-default/10]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+      [class.border-border-default]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+      [class.hover:border-border-muted]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+      (click)&#x3D;&quot;selectMethod(&#x27;credit_card&#x27;)&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;flex items-start&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;radio&quot;
+          name&#x3D;&quot;paymentMethod&quot;
+          value&#x3D;&quot;credit_card&quot;
+          [checked]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+          class&#x3D;&quot;mt-1 mr-3 text-cta-default focus:ring-cta-default&quot;
+        /&gt;
+        &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center justify-between mb-1&quot;&gt;
+            &lt;span class&#x3D;&quot;font-medium text-text-primary&quot;&gt;Tarjeta de Crédito/Débito&lt;/span&gt;
+            &lt;svg
+              class&#x3D;&quot;w-5 h-5 text-text-secondary dark:text-text-secondary&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;Paga con Mercado Pago&lt;/p&gt;
+          &lt;div class&#x3D;&quot;mt-2 flex items-center gap-2&quot;&gt;
+            &lt;span class&#x3D;&quot;text-xs px-2 py-1 bg-success-light/20 text-success-light rounded&quot;
+              &gt;Mercado Pago&lt;/span
+            &gt;
+            &lt;span class&#x3D;&quot;text-xs px-2 py-1 bg-surface-raised text-text-primary rounded&quot;
+              &gt;Todas las tarjetas&lt;/span
+            &gt;
+          &lt;/div&gt;
+          &lt;div
+            *ngIf&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;&quot;
+            class&#x3D;&quot;mt-3 p-3 bg-surface-raised rounded border border-cta-default/40&quot;
+          &gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;Total a pagar:&lt;/p&gt;
+            &lt;p class&#x3D;&quot;h4 text-cta-default&quot;&gt;{{ formatCurrency(totalAmount) }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Option 2: 100% Wallet (only if sufficient funds) --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;hasSufficientFunds()&quot;
+      class&#x3D;&quot;payment-option border rounded-lg p-4 cursor-pointer transition-all&quot;
+      [class.border-success-light]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;
+      [class.bg-success-light/10]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;
+      [class.border-border-default]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;wallet&#x27;&quot;
+      [class.hover:border-border-muted]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;wallet&#x27;&quot;
+      (click)&#x3D;&quot;selectMethod(&#x27;wallet&#x27;)&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;flex items-start&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;radio&quot;
+          name&#x3D;&quot;paymentMethod&quot;
+          value&#x3D;&quot;wallet&quot;
+          [checked]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;
+          class&#x3D;&quot;mt-1 mr-3 text-success-light focus:ring-success-light&quot;
+        /&gt;
+        &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center justify-between mb-1&quot;&gt;
+            &lt;span class&#x3D;&quot;font-medium text-text-primary&quot;&gt;Pagar con Wallet&lt;/span&gt;
+            &lt;svg
+              class&#x3D;&quot;w-5 h-5 text-text-secondary dark:text-text-secondary&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+            Usa tu saldo disponible
+          &lt;/p&gt;
+          &lt;div class&#x3D;&quot;mt-2 flex items-center gap-2&quot;&gt;
+            &lt;span
+              class&#x3D;&quot;text-xs px-2 py-1 bg-success-light/20 text-success-light rounded flex items-center gap-1&quot;
+            &gt;
+              &lt;svg class&#x3D;&quot;w-3 h-3&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M5 13l4 4L19 7&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+              Fondos suficientes
+            &lt;/span&gt;
+            &lt;span class&#x3D;&quot;text-xs px-2 py-1 bg-cta-default/20 text-cta-default rounded&quot;
+              &gt;Sin comisiones&lt;/span
+            &gt;
+          &lt;/div&gt;
+          &lt;div *ngIf&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot; class&#x3D;&quot;mt-3 space-y-2&quot;&gt;
+            &lt;div class&#x3D;&quot;p-3 bg-surface-raised rounded border border-success-light/40&quot;&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Balance disponible:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;{{
+                  formatCurrency(availableBalance())
+                }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div
+                class&#x3D;&quot;flex justify-between items-center mt-2 pt-2 border-t border-border-default&quot;
+              &gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;Se usará del wallet:&lt;/span&gt;
+                &lt;span class&#x3D;&quot;h4 text-success-light&quot;&gt;{{ formatCurrency(totalAmount) }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center mt-1&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Balance restante:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;{{
+                  formatCurrency(availableBalance() - totalAmount)
+                }}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Option 3: Partial Wallet + Card (only if partial funds) --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;hasPartialFunds()&quot;
+      class&#x3D;&quot;payment-option border rounded-lg p-4 cursor-pointer transition-all&quot;
+      [class.border-purple-600]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot;
+      [class.bg-purple-50]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot;
+      [class.border-border-default]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot;
+      [class.hover:border-border-muted]&#x3D;&quot;selectedMethod() !&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot;
+      (click)&#x3D;&quot;selectMethod(&#x27;partial_wallet&#x27;)&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;flex items-start&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;radio&quot;
+          name&#x3D;&quot;paymentMethod&quot;
+          value&#x3D;&quot;partial_wallet&quot;
+          [checked]&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot;
+          class&#x3D;&quot;mt-1 mr-3 text-purple-600 focus:ring-purple-500&quot;
+        /&gt;
+        &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center justify-between mb-1&quot;&gt;
+            &lt;span class&#x3D;&quot;font-medium text-text-primary&quot;&gt;Pago Mixto&lt;/span&gt;
+            &lt;div class&#x3D;&quot;flex items-center gap-1&quot;&gt;
+              &lt;svg
+                class&#x3D;&quot;w-5 h-5 text-text-secondary dark:text-text-secondary&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+              &gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+              &lt;span class&#x3D;&quot;text-text-muted dark:text-text-secondary&quot;&gt;+&lt;/span&gt;
+              &lt;svg
+                class&#x3D;&quot;w-5 h-5 text-text-secondary dark:text-text-secondary&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+              &gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;&gt;
+            Combina wallet y tarjeta
+          &lt;/p&gt;
+          &lt;div class&#x3D;&quot;mt-2&quot;&gt;
+            &lt;span class&#x3D;&quot;text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded&quot;
+              &gt;Optimiza tu saldo&lt;/span
+            &gt;
+          &lt;/div&gt;
+
+          &lt;!-- Wallet Amount Adjuster (only when selected) --&gt;
+          &lt;div *ngIf&#x3D;&quot;selectedMethod() &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;&quot; class&#x3D;&quot;mt-3 space-y-3&quot;&gt;
+            &lt;div class&#x3D;&quot;p-3 bg-surface-raised rounded border border-purple-200&quot;&gt;
+              &lt;label for&#x3D;&quot;walletAmount&quot; class&#x3D;&quot;block text-sm font-medium text-text-primary mb-2&quot;&gt;
+                Monto a usar del wallet:
+              &lt;/label&gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-2&quot;&gt;
+                &lt;div class&#x3D;&quot;relative flex-1&quot;&gt;
+                  &lt;span
+                    class&#x3D;&quot;absolute left-3 top-2.5 text-text-secondary dark:text-text-secondary font-medium&quot;
+                    &gt;$&lt;/span
+                  &gt;
+                  &lt;input
+                    type&#x3D;&quot;number&quot;
+                    id&#x3D;&quot;walletAmount&quot;
+                    [value]&#x3D;&quot;walletAmountToUse()&quot;
+                    (input)&#x3D;&quot;updateWalletAmount($any($event.target).value)&quot;
+                    [min]&#x3D;&quot;0&quot;
+                    [max]&#x3D;&quot;Math.min(availableBalance(), totalAmount)&quot;
+                    step&#x3D;&quot;10&quot;
+                    class&#x3D;&quot;pl-8 pr-3 py-2 w-full border border-border-muted rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent&quot;
+                  /&gt;
+                &lt;/div&gt;
+                &lt;button
+                  type&#x3D;&quot;button&quot;
+                  (click)&#x3D;&quot;useMaxWallet()&quot;
+                  class&#x3D;&quot;px-3 py-2 text-sm bg-purple-600 text-text-inverse rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap&quot;
+                &gt;
+                  Usar Máximo
+                &lt;/button&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;mt-2 flex items-center&quot;&gt;
+                &lt;div class&#x3D;&quot;flex-1 bg-surface-hover rounded-full h-2&quot;&gt;
+                  &lt;div
+                    class&#x3D;&quot;bg-purple-600 h-2 rounded-full transition-all&quot;
+                    [style.width.%]&#x3D;&quot;walletPercentage()&quot;
+                  &gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;span class&#x3D;&quot;ml-2 text-xs text-text-secondary dark:text-text-secondary&quot;
+                  &gt;{{ walletPercentage() }}%&lt;/span
+                &gt;
+              &lt;/div&gt;
+              &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary mt-1&quot;&gt;
+                Disponible: {{ formatCurrency(availableBalance()) }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Payment Breakdown --&gt;
+            &lt;div class&#x3D;&quot;p-3 bg-surface-raised rounded border border-purple-200 space-y-2&quot;&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Del wallet:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-purple-700&quot;&gt;{{
+                  formatCurrency(walletAmountToUse())
+                }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Con tarjeta:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-cta-default&quot;&gt;{{
+                  formatCurrency(cardAmount())
+                }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center pt-2 border-t border-border-default&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm font-medium text-text-primary&quot;&gt;Total:&lt;/span&gt;
+                &lt;span class&#x3D;&quot;text-lg font-bold text-text-primary&quot;&gt;{{
+                  formatCurrency(totalAmount)
+                }}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- No Funds Warning (only if no wallet funds) --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;!hasSufficientFunds() &amp;&amp; !hasPartialFunds()&quot;
+      class&#x3D;&quot;bg-cta-default/10 border border-cta-default/40 rounded-lg p-4&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;flex items-start&quot;&gt;
+        &lt;svg
+          class&#x3D;&quot;w-5 h-5 text-cta-default mt-0.5 flex-shrink-0&quot;
+          fill&#x3D;&quot;none&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          viewBox&#x3D;&quot;0 0 24 24&quot;
+        &gt;
+          &lt;path
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            d&#x3D;&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+        &lt;div class&#x3D;&quot;ml-3&quot;&gt;
+          &lt;h4 class&#x3D;&quot;text-sm font-medium text-cta-default&quot;&gt;Sin saldo en wallet&lt;/h4&gt;
+          &lt;p class&#x3D;&quot;text-sm text-cta-default mt-1&quot;&gt;
+            Deposita fondos en tu wallet para pagar sin tarjeta de crédito.
+            &lt;a href&#x3D;&quot;/wallet&quot; class&#x3D;&quot;underline hover:text-cta-default&quot;&gt;Ir a Wallet&lt;/a&gt;
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./payment-method-selector.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/**
+ * PaymentMethodSelectorComponent Styles
+ *
+ * Estilos complementarios para el selector de método de pago.
+ * La mayoría del diseño utiliza Tailwind CSS, aquí solo
+ * definimos animaciones y estilos específicos del componente.
+ */
+
+/* Animation for payment option cards */
+.payment-option {
+  transition: all 0.2s ease-in-out;
+}
+
+.payment-option:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Smooth transitions for input slider */
+input[type&#x3D;&#x27;number&#x27;] {
+  transition: border-color 0.2s ease-in-out;
+}
+
+input[type&#x3D;&#x27;number&#x27;]:focus {
+  outline: none;
+}
+
+/* Custom styling for radio buttons */
+input[type&#x3D;&#x27;radio&#x27;] {
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Progress bar animation */
+.bg-cta-default,
+.bg-success-light,
+.bg-purple-600 {
+  transition: width 0.3s ease-in-out;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="payment-method-selector">  <!-- Header -->  <div class="mb-4">    <h3 class="text-lg font-semibold text-text-primary mb-1">Método de Pago</h3>    <p class="text-sm text-text-secondary dark:text-text-secondary">      Selecciona cómo deseas pagar tu reserva    </p>  </div>  <!-- Loading State -->  <div *ngIf="isLoadingBalance()" class="py-8 text-center">    <div      class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cta-default"    ></div>    <p class="text-sm text-text-secondary dark:text-text-secondary mt-2">      Cargando información del wallet...    </p>  </div>  <!-- Payment Options -->  <div *ngIf="!isLoadingBalance()" class="space-y-3">    <!-- Option 1: Credit Card (Mercado Pago) -->    <div      class="payment-option border rounded-lg p-4 cursor-pointer transition-all"      [class.border-cta-default]="selectedMethod() === \'credit_card\'"      [class.bg-cta-default/10]="selectedMethod() === \'credit_card\'"      [class.border-border-default]="selectedMethod() !== \'credit_card\'"      [class.hover:border-border-muted]="selectedMethod() !== \'credit_card\'"      (click)="selectMethod(\'credit_card\')"    >      <div class="flex items-start">        <input          type="radio"          name="paymentMethod"          value="credit_card"          [checked]="selectedMethod() === \'credit_card\'"          class="mt-1 mr-3 text-cta-default focus:ring-cta-default"        />        <div class="flex-1">          <div class="flex items-center justify-between mb-1">            <span class="font-medium text-text-primary">Tarjeta de Crédito/Débito</span>            <svg              class="w-5 h-5 text-text-secondary dark:text-text-secondary"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"              ></path>            </svg>          </div>          <p class="text-sm text-text-secondary dark:text-text-secondary">Paga con Mercado Pago</p>          <div class="mt-2 flex items-center gap-2">            <span class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded"              >Mercado Pago</span            >            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"              >Todas las tarjetas</span            >          </div>          <div            *ngIf="selectedMethod() === \'credit_card\'"            class="mt-3 p-3 bg-surface-raised rounded border border-cta-default/40"          >            <p class="text-sm font-medium text-text-primary">Total a pagar:</p>            <p class="h4 text-cta-default">{{ formatCurrency(totalAmount) }}</p>          </div>        </div>      </div>    </div>    <!-- Option 2: 100% Wallet (only if sufficient funds) -->    <div      *ngIf="hasSufficientFunds()"      class="payment-option border rounded-lg p-4 cursor-pointer transition-all"      [class.border-success-light]="selectedMethod() === \'wallet\'"      [class.bg-success-light/10]="selectedMethod() === \'wallet\'"      [class.border-border-default]="selectedMethod() !== \'wallet\'"      [class.hover:border-border-muted]="selectedMethod() !== \'wallet\'"      (click)="selectMethod(\'wallet\')"    >      <div class="flex items-start">        <input          type="radio"          name="paymentMethod"          value="wallet"          [checked]="selectedMethod() === \'wallet\'"          class="mt-1 mr-3 text-success-light focus:ring-success-light"        />        <div class="flex-1">          <div class="flex items-center justify-between mb-1">            <span class="font-medium text-text-primary">Pagar con Wallet</span>            <svg              class="w-5 h-5 text-text-secondary dark:text-text-secondary"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"              ></path>            </svg>          </div>          <p class="text-sm text-text-secondary dark:text-text-secondary">            Usa tu saldo disponible          </p>          <div class="mt-2 flex items-center gap-2">            <span              class="text-xs px-2 py-1 bg-success-light/20 text-success-light rounded flex items-center gap-1"            >              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M5 13l4 4L19 7"                ></path>              </svg>              Fondos suficientes            </span>            <span class="text-xs px-2 py-1 bg-cta-default/20 text-cta-default rounded"              >Sin comisiones</span            >          </div>          <div *ngIf="selectedMethod() === \'wallet\'" class="mt-3 space-y-2">            <div class="p-3 bg-surface-raised rounded border border-success-light/40">              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-text-secondary"                  >Balance disponible:</span                >                <span class="text-sm font-medium text-text-primary">{{                  formatCurrency(availableBalance())                }}</span>              </div>              <div                class="flex justify-between items-center mt-2 pt-2 border-t border-border-default"              >                <span class="text-sm font-medium text-text-primary">Se usará del wallet:</span>                <span class="h4 text-success-light">{{ formatCurrency(totalAmount) }}</span>              </div>              <div class="flex justify-between items-center mt-1">                <span class="text-sm text-text-secondary dark:text-text-secondary"                  >Balance restante:</span                >                <span class="text-sm font-medium text-text-primary">{{                  formatCurrency(availableBalance() - totalAmount)                }}</span>              </div>            </div>          </div>        </div>      </div>    </div>    <!-- Option 3: Partial Wallet + Card (only if partial funds) -->    <div      *ngIf="hasPartialFunds()"      class="payment-option border rounded-lg p-4 cursor-pointer transition-all"      [class.border-purple-600]="selectedMethod() === \'partial_wallet\'"      [class.bg-purple-50]="selectedMethod() === \'partial_wallet\'"      [class.border-border-default]="selectedMethod() !== \'partial_wallet\'"      [class.hover:border-border-muted]="selectedMethod() !== \'partial_wallet\'"      (click)="selectMethod(\'partial_wallet\')"    >      <div class="flex items-start">        <input          type="radio"          name="paymentMethod"          value="partial_wallet"          [checked]="selectedMethod() === \'partial_wallet\'"          class="mt-1 mr-3 text-purple-600 focus:ring-purple-500"        />        <div class="flex-1">          <div class="flex items-center justify-between mb-1">            <span class="font-medium text-text-primary">Pago Mixto</span>            <div class="flex items-center gap-1">              <svg                class="w-5 h-5 text-text-secondary dark:text-text-secondary"                fill="none"                stroke="currentColor"                viewBox="0 0 24 24"              >                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"                ></path>              </svg>              <span class="text-text-muted dark:text-text-secondary">+</span>              <svg                class="w-5 h-5 text-text-secondary dark:text-text-secondary"                fill="none"                stroke="currentColor"                viewBox="0 0 24 24"              >                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"                ></path>              </svg>            </div>          </div>          <p class="text-sm text-text-secondary dark:text-text-secondary">            Combina wallet y tarjeta          </p>          <div class="mt-2">            <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded"              >Optimiza tu saldo</span            >          </div>          <!-- Wallet Amount Adjuster (only when selected) -->          <div *ngIf="selectedMethod() === \'partial_wallet\'" class="mt-3 space-y-3">            <div class="p-3 bg-surface-raised rounded border border-purple-200">              <label for="walletAmount" class="block text-sm font-medium text-text-primary mb-2">                Monto a usar del wallet:              </label>              <div class="flex items-center gap-2">                <div class="relative flex-1">                  <span                    class="absolute left-3 top-2.5 text-text-secondary dark:text-text-secondary font-medium"                    >$</span                  >                  <input                    type="number"                    id="walletAmount"                    [value]="walletAmountToUse()"                    (input)="updateWalletAmount($any($event.target).value)"                    [min]="0"                    [max]="Math.min(availableBalance(), totalAmount)"                    step="10"                    class="pl-8 pr-3 py-2 w-full border border-border-muted rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"                  />                </div>                <button                  type="button"                  (click)="useMaxWallet()"                  class="px-3 py-2 text-sm bg-purple-600 text-text-inverse rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap"                >                  Usar Máximo                </button>              </div>              <div class="mt-2 flex items-center">                <div class="flex-1 bg-surface-hover rounded-full h-2">                  <div                    class="bg-purple-600 h-2 rounded-full transition-all"                    [style.width.%]="walletPercentage()"                  ></div>                </div>                <span class="ml-2 text-xs text-text-secondary dark:text-text-secondary"                  >{{ walletPercentage() }}%</span                >              </div>              <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">                Disponible: {{ formatCurrency(availableBalance()) }}              </p>            </div>            <!-- Payment Breakdown -->            <div class="p-3 bg-surface-raised rounded border border-purple-200 space-y-2">              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-text-secondary"                  >Del wallet:</span                >                <span class="text-sm font-medium text-purple-700">{{                  formatCurrency(walletAmountToUse())                }}</span>              </div>              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-text-secondary"                  >Con tarjeta:</span                >                <span class="text-sm font-medium text-cta-default">{{                  formatCurrency(cardAmount())                }}</span>              </div>              <div class="flex justify-between items-center pt-2 border-t border-border-default">                <span class="text-sm font-medium text-text-primary">Total:</span>                <span class="text-lg font-bold text-text-primary">{{                  formatCurrency(totalAmount)                }}</span>              </div>            </div>          </div>        </div>      </div>    </div>    <!-- No Funds Warning (only if no wallet funds) -->    <div      *ngIf="!hasSufficientFunds() && !hasPartialFunds()"      class="bg-cta-default/10 border border-cta-default/40 rounded-lg p-4"    >      <div class="flex items-start">        <svg          class="w-5 h-5 text-cta-default mt-0.5 flex-shrink-0"          fill="none"          stroke="currentColor"          viewBox="0 0 24 24"        >          <path            stroke-linecap="round"            stroke-linejoin="round"            stroke-width="2"            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"          ></path>        </svg>        <div class="ml-3">          <h4 class="text-sm font-medium text-cta-default">Sin saldo en wallet</h4>          <p class="text-sm text-cta-default mt-1">            Deposita fondos en tu wallet para pagar sin tarjeta de crédito.            <a href="/wallet" class="underline hover:text-cta-default">Ir a Wallet</a>          </p>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'PaymentMethodSelectorComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'PaymentMethodSelectorComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,646 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ShareData</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/share.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Interfaces auxiliares</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#files" 
+>
+                                            files
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#text" 
+>
+                                            text
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#title" 
+>
+                                            title
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#url" 
+>
+                                            url
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="files"></a>
+                                        <span class="name "><b>files</b>
+                                            <a href="#files">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>files:     <code>File[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>File[]</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="text"></a>
+                                        <span class="name "><b>text</b>
+                                            <a href="#text">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>text:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="title"></a>
+                                        <span class="name "><b>title</b>
+                                            <a href="#title">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>title:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="url"></a>
+                                        <span class="name "><b>url</b>
+                                            <a href="#url">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>url:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+
+type NavigatorWithAdvancedShare &#x3D; Navigator &amp; {
+  canShare?: (data?: ShareData | { files: File[] }) &#x3D;&gt; boolean;
+};
+
+/**
+ * 📤 Share Service
+ *
+ * Maneja la funcionalidad de compartir usando Web Share API
+ * Fallback a clipboard si no está disponible
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class ShareService {
+  /**
+   * Verifica si Web Share API está disponible
+   */
+  get canShare(): boolean {
+    return &#x27;share&#x27; in navigator;
+  }
+
+  /**
+   * Comparte contenido usando Web Share API
+   */
+  async share(data: ShareData): Promise&lt;boolean&gt; {
+    if (!this.canShare) {
+      console.warn(&#x27;Web Share API no disponible&#x27;);
+      return this.fallbackShare(data);
+    }
+
+    try {
+      await navigator.share(data);
+      console.log(&#x27;✅ Compartido exitosamente&#x27;);
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof DOMException &amp;&amp; error.name &#x3D;&#x3D;&#x3D; &#x27;AbortError&#x27;) {
+        console.log(&#x27;Usuario canceló compartir&#x27;);
+        return false;
+      }
+      console.error(&#x27;❌ Error al compartir:&#x27;, error);
+      return this.fallbackShare(data);
+    }
+  }
+
+  /**
+   * Comparte un auto específico
+   */
+  async shareCar(carId: string, carTitle: string, price: number): Promise&lt;boolean&gt; {
+    const url &#x3D; &#x60;${window.location.origin}/cars/${carId}&#x60;;
+    const text &#x3D; &#x60;Mira este ${carTitle} por $${price.toLocaleString()}/día en Autorentar&#x60;;
+
+    return this.share({
+      title: carTitle,
+      text: text,
+      url: url,
+    });
+  }
+
+  /**
+   * Comparte la app completa
+   */
+  async shareApp(): Promise&lt;boolean&gt; {
+    return this.share({
+      title: &#x27;Autorentar - Alquiler de Autos&#x27;,
+      text: &#x27;🚗 Encontrá el auto perfecto para tu próximo viaje&#x27;,
+      url: window.location.origin,
+    });
+  }
+
+  /**
+   * Comparte una reserva
+   */
+  async shareBooking(bookingId: string, details: string): Promise&lt;boolean&gt; {
+    const url &#x3D; &#x60;${window.location.origin}/bookings/${bookingId}&#x60;;
+
+    return this.share({
+      title: &#x27;Mi Reserva - Autorentar&#x27;,
+      text: &#x60;📅 ${details}&#x60;,
+      url: url,
+    });
+  }
+
+  /**
+   * Fallback: copia al clipboard
+   */
+  private async fallbackShare(data: ShareData): Promise&lt;boolean&gt; {
+    try {
+      const textToCopy &#x3D; &#x60;${data.title}\n${data.text}\n${data.url}&#x60;;
+
+      if (&#x27;clipboard&#x27; in navigator) {
+        await navigator.clipboard.writeText(textToCopy);
+        this.showToast(&#x27;¡Enlace copiado al portapapeles!&#x27;);
+        return true;
+      }
+
+      // Fallback más antiguo
+      const textArea &#x3D; document.createElement(&#x27;textarea&#x27;);
+      textArea.value &#x3D; textToCopy;
+      textArea.style.position &#x3D; &#x27;fixed&#x27;;
+      textArea.style.left &#x3D; &#x27;-999999px&#x27;;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand(&#x27;copy&#x27;);
+      document.body.removeChild(textArea);
+
+      this.showToast(&#x27;¡Enlace copiado!&#x27;);
+      return true;
+    } catch (error) {
+      console.error(&#x27;❌ Error en fallback:&#x27;, error);
+      this.showToast(&#x27;No se pudo copiar el enlace&#x27;);
+      return false;
+    }
+  }
+
+  /**
+   * Verifica si puede compartir archivos
+   */
+  canShareFiles(files: File[]): boolean {
+    if (!this.canShare) return false;
+
+    try {
+      const navigatorWithShare &#x3D; navigator as NavigatorWithAdvancedShare;
+      return navigatorWithShare.canShare?.({ files }) ?? false;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Comparte archivos (imágenes, PDFs, etc)
+   */
+  async shareFiles(files: File[], title?: string, text?: string): Promise&lt;boolean&gt; {
+    if (!this.canShareFiles(files)) {
+      console.warn(&#x27;No se pueden compartir archivos&#x27;);
+      return false;
+    }
+
+    try {
+      await navigator.share({
+        files,
+        title,
+        text,
+      });
+      return true;
+    } catch (error) {
+      console.error(&#x27;❌ Error al compartir archivos:&#x27;, error);
+      return false;
+    }
+  }
+
+  /**
+   * Toast simple para feedback
+   */
+  private showToast(message: string): void {
+    // Crear toast element
+    const toast &#x3D; document.createElement(&#x27;div&#x27;);
+    toast.textContent &#x3D; message;
+    toast.style.cssText &#x3D; &#x60;
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      z-index: 9999;
+      animation: fadeInOut 2s ease-in-out;
+    &#x60;;
+
+    // Agregar animación
+    const style &#x3D; document.createElement(&#x27;style&#x27;);
+    style.textContent &#x3D; &#x60;
+      @keyframes fadeInOut {
+        0%, 100% { opacity: 0; }
+        10%, 90% { opacity: 1; }
+      }
+    &#x60;;
+    document.head.appendChild(style);
+
+    document.body.appendChild(toast);
+
+    setTimeout(() &#x3D;&gt; {
+      document.body.removeChild(toast);
+      document.head.removeChild(style);
+    }, 2000);
+  }
+}
+
+/**
+ * Interfaces auxiliares
+ */
+export interface ShareData {
+  title?: string;
+  text?: string;
+  url?: string;
+  files?: File[];
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ShareData.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1784 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  MessagesPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/messages/messages.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Página de mensajes standalone
+Soporta dos modos:</p>
+<ol>
+<li>Chat de reserva: /messages?bookingId=xxx&amp;userId=xxx&amp;userName=xxx</li>
+<li>Chat de auto: /messages?carId=xxx&amp;userId=xxx&amp;carName=xxx</li>
+</ol>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>OnDestroy</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-messages</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                                <code><a href="../components/BookingChatComponent.html" target="_self" >BookingChatComponent</a></code>
+                                <code><a href="../components/CarChatComponent.html" target="_self" >CarChatComponent</a></code>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;min-h-screen bg-surface-base dark:bg-surface-raised&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base&quot;&gt;
+    &lt;div class&#x3D;&quot;mx-auto max-w-4xl px-4 py-4&quot;&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+        &lt;!-- Back button --&gt;
+        &lt;button
+          (click)&#x3D;&quot;goBack()&quot;
+          class&#x3D;&quot;flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised dark:hover:bg-gray-700&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          &lt;svg class&#x3D;&quot;h-6 w-6&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M15 19l-7-7 7-7&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/button&gt;
+
+        &lt;div&gt;
+          &lt;h1 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+            Mensajes
+          &lt;/h1&gt;
+          &lt;p
+            class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary&quot;
+          &gt;
+            @if (bookingId()) {
+              Conversación sobre reserva
+            } @else if (carId()) {
+              Consulta sobre auto
+            } @else {
+              Chat
+            }
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Content --&gt;
+  &lt;div class&#x3D;&quot;mx-auto max-w-4xl p-4&quot;&gt;
+    &lt;!-- Booking Context Card --&gt;
+    @if (hasBookingContext() &amp;&amp; bookingContext()) {
+      &lt;div
+        class&#x3D;&quot;mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+          &lt;div class&#x3D;&quot;flex-shrink-0&quot;&gt;
+            &lt;svg
+              class&#x3D;&quot;h-6 w-6 text-cta-default dark:text-cta-default&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+            &lt;h3 class&#x3D;&quot;text-sm font-semibold text-cta-default dark:text-cta-default mb-1&quot;&gt;
+              Reserva: {{ bookingContext()!.carTitle }}
+            &lt;/h3&gt;
+            @if (bookingContext()!.dates) {
+              &lt;p class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default mb-2&quot;&gt;
+                📅 {{ bookingContext()!.dates }}
+              &lt;/p&gt;
+            }
+            &lt;div class&#x3D;&quot;flex items-center gap-2&quot;&gt;
+              &lt;span
+                class&#x3D;&quot;inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium&quot;
+                [class.bg-cta-default/20]&#x3D;&quot;
+                  bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27; ||
+                  bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;
+                &quot;
+                [class.text-cta-default]&#x3D;&quot;
+                  bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27; ||
+                  bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;
+                &quot;
+                [class.bg-warning-bg-hover]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot;
+                [class.text-warning-strong]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot;
+                [class.bg-success-light/20]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;&quot;
+                [class.text-success-light]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;&quot;
+              &gt;
+                {{ bookingContext()!.statusLabel }}
+              &lt;/span&gt;
+              &lt;a
+                [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, bookingId()]&quot;
+                class&#x3D;&quot;text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline&quot;
+              &gt;
+                Ver detalle
+              &lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    }
+
+    @if (loading()) {
+      &lt;div class&#x3D;&quot;flex h-96 items-center justify-center&quot;&gt;
+        &lt;div class&#x3D;&quot;text-center&quot;&gt;
+          &lt;div
+            class&#x3D;&quot;mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500&quot;
+          &gt;&lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-secondary dark:text-text-secondary&quot;&gt;
+            Cargando chat...
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    } @else if (error()) {
+      &lt;div class&#x3D;&quot;rounded-lg bg-error-bg p-4 dark:bg-error-900/20&quot;&gt;
+        &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ error() }}&lt;/p&gt;
+        &lt;button
+          (click)&#x3D;&quot;goBack()&quot;
+          class&#x3D;&quot;mt-2 text-sm text-error-text underline hover:text-error-strong&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          Volver
+        &lt;/button&gt;
+      &lt;/div&gt;
+    } @else if (bookingId() &amp;&amp; recipientId() &amp;&amp; recipientName()) {
+      &lt;!-- Booking chat --&gt;
+      &lt;app-booking-chat
+        [bookingId]&#x3D;&quot;bookingId()!&quot;
+        [recipientId]&#x3D;&quot;recipientId()!&quot;
+        [recipientName]&#x3D;&quot;recipientName()!&quot;
+      /&gt;
+    } @else if (carId() &amp;&amp; recipientId() &amp;&amp; recipientName()) {
+      &lt;!-- Car chat (pre-booking) --&gt;
+      &lt;app-car-chat
+        [carId]&#x3D;&quot;carId()!&quot;
+        [recipientId]&#x3D;&quot;recipientId()!&quot;
+        [recipientName]&#x3D;&quot;recipientName()!&quot;
+      /&gt;
+    } @else {
+      &lt;div class&#x3D;&quot;rounded-lg bg-warning-bg p-4 dark:bg-warning-900/20&quot;&gt;
+        &lt;p class&#x3D;&quot;text-sm text-warning-strong dark:text-warning-200&quot;&gt;
+          ⚠️ Faltan parámetros para iniciar el chat
+        &lt;/p&gt;
+        &lt;button
+          (click)&#x3D;&quot;goBack()&quot;
+          class&#x3D;&quot;mt-2 text-sm text-warning-text underline hover:text-warning-strong dark:text-warning-400&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          Volver
+        &lt;/button&gt;
+      &lt;/div&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authService" >authService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#booking" >booking</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookingContext" >bookingContext</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookingId" >bookingId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookingsService" >bookingsService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carId" >carId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#destroy$" >destroy$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasBookingContext" >hasBookingContext</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loadingBooking" >loadingBooking</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#recipientId" >recipientId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#recipientName" >recipientName</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatDateTime" >formatDateTime</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getStatusLabel" >getStatusLabel</a>
+                            </li>
+                            <li>
+                                <a href="#goBack" >goBack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadBookingContext" >loadBookingContext</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDateTime"></a>
+                    <span class="name">
+                        <span ><b>formatDateTime</b></span>
+                        <a href="#formatDateTime"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatDateTime(dateStr: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="310"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:310</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Formatea fecha</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dateStr</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getStatusLabel</b></span>
+                        <a href="#getStatusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStatusLabel(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:288</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene la etiqueta del estado del booking</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goBack"></a>
+                    <span class="name">
+                        <span ><b>goBack</b></span>
+                        <a href="#goBack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goBack()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="320"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:320</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBookingContext"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>loadBookingContext</b></span>
+                        <a href="#loadBookingContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBookingContext(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="270"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:270</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga información del booking para mostrar contexto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/app/features/messages/messages.page.ts:222</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authService</b></span>
+                        <a href="#authService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="184" class="link-to-prism">src/app/features/messages/messages.page.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="booking"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>booking</b></span>
+                        <a href="#booking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Booking | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="197" class="link-to-prism">src/app/features/messages/messages.page.ts:197</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingContext"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookingContext</b></span>
+                        <a href="#bookingContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const booking &#x3D; this.booking();
+    if (!booking) return null;
+
+    return {
+      carTitle: booking.car_title || &#x60;${booking.car_brand} ${booking.car_model}&#x60;,
+      dates:
+        booking.start_at &amp;&amp; booking.end_at
+          ? &#x60;${new Date(booking.start_at).toLocaleDateString(&#x27;es-AR&#x27;)} - ${new Date(booking.end_at).toLocaleDateString(&#x27;es-AR&#x27;)}&#x60;
+          : null,
+      status: booking.status,
+      statusLabel: this.getStatusLabel(booking.status),
+    };
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="205" class="link-to-prism">src/app/features/messages/messages.page.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingId"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookingId</b></span>
+                        <a href="#bookingId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="191" class="link-to-prism">src/app/features/messages/messages.page.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookingsService</b></span>
+                        <a href="#bookingsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(BookingsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/app/features/messages/messages.page.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carId"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carId</b></span>
+                        <a href="#carId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="192" class="link-to-prism">src/app/features/messages/messages.page.ts:192</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroy$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>destroy$</b></span>
+                        <a href="#destroy$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;void&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="188" class="link-to-prism">src/app/features/messages/messages.page.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="202" class="link-to-prism">src/app/features/messages/messages.page.ts:202</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasBookingContext"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasBookingContext</b></span>
+                        <a href="#hasBookingContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.booking() !&#x3D;&#x3D; null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="220" class="link-to-prism">src/app/features/messages/messages.page.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="201" class="link-to-prism">src/app/features/messages/messages.page.ts:201</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingBooking"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loadingBooking</b></span>
+                        <a href="#loadingBooking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="198" class="link-to-prism">src/app/features/messages/messages.page.ts:198</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="recipientId"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>recipientId</b></span>
+                        <a href="#recipientId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="193" class="link-to-prism">src/app/features/messages/messages.page.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="recipientName"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>recipientName</b></span>
+                        <a href="#recipientName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">src/app/features/messages/messages.page.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="183" class="link-to-prism">src/app/features/messages/messages.page.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="182" class="link-to-prism">src/app/features/messages/messages.page.ts:182</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, OnDestroy, inject, signal, computed } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router, ActivatedRoute, RouterLink } from &#x27;@angular/router&#x27;;
+import { Subject } from &#x27;rxjs&#x27;;
+import { takeUntil } from &#x27;rxjs/operators&#x27;;
+import { BookingChatComponent } from &#x27;../../shared/components/booking-chat/booking-chat.component&#x27;;
+import { AuthService } from &#x27;../../core/services/auth.service&#x27;;
+import { BookingsService } from &#x27;../../core/services/bookings.service&#x27;;
+import { Booking } from &#x27;../../core/models&#x27;;
+import { CarChatComponent } from &#x27;./components/car-chat.component&#x27;;
+
+/**
+ * Página de mensajes standalone
+ * Soporta dos modos:
+ * 1. Chat de reserva: /messages?bookingId&#x3D;xxx&amp;userId&#x3D;xxx&amp;userName&#x3D;xxx
+ * 2. Chat de auto: /messages?carId&#x3D;xxx&amp;userId&#x3D;xxx&amp;carName&#x3D;xxx
+ */
+@Component({
+  selector: &#x27;app-messages&#x27;,
+  standalone: true,
+  imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
+  hostDirectives: [],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;min-h-screen bg-surface-base dark:bg-surface-raised&quot;&gt;
+      &lt;!-- Header --&gt;
+      &lt;div class&#x3D;&quot;sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base&quot;&gt;
+        &lt;div class&#x3D;&quot;mx-auto max-w-4xl px-4 py-4&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+            &lt;!-- Back button --&gt;
+            &lt;button
+              (click)&#x3D;&quot;goBack()&quot;
+              class&#x3D;&quot;flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised dark:hover:bg-gray-700&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              &lt;svg class&#x3D;&quot;h-6 w-6&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M15 19l-7-7 7-7&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/button&gt;
+
+            &lt;div&gt;
+              &lt;h1 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                Mensajes
+              &lt;/h1&gt;
+              &lt;p
+                class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary&quot;
+              &gt;
+                @if (bookingId()) {
+                  Conversación sobre reserva
+                } @else if (carId()) {
+                  Consulta sobre auto
+                } @else {
+                  Chat
+                }
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Content --&gt;
+      &lt;div class&#x3D;&quot;mx-auto max-w-4xl p-4&quot;&gt;
+        &lt;!-- Booking Context Card --&gt;
+        @if (hasBookingContext() &amp;&amp; bookingContext()) {
+          &lt;div
+            class&#x3D;&quot;mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+              &lt;div class&#x3D;&quot;flex-shrink-0&quot;&gt;
+                &lt;svg
+                  class&#x3D;&quot;h-6 w-6 text-cta-default dark:text-cta-default&quot;
+                  fill&#x3D;&quot;none&quot;
+                  stroke&#x3D;&quot;currentColor&quot;
+                  viewBox&#x3D;&quot;0 0 24 24&quot;
+                &gt;
+                  &lt;path
+                    stroke-linecap&#x3D;&quot;round&quot;
+                    stroke-linejoin&#x3D;&quot;round&quot;
+                    stroke-width&#x3D;&quot;2&quot;
+                    d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+                  /&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+                &lt;h3 class&#x3D;&quot;text-sm font-semibold text-cta-default dark:text-cta-default mb-1&quot;&gt;
+                  Reserva: {{ bookingContext()!.carTitle }}
+                &lt;/h3&gt;
+                @if (bookingContext()!.dates) {
+                  &lt;p class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default mb-2&quot;&gt;
+                    📅 {{ bookingContext()!.dates }}
+                  &lt;/p&gt;
+                }
+                &lt;div class&#x3D;&quot;flex items-center gap-2&quot;&gt;
+                  &lt;span
+                    class&#x3D;&quot;inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium&quot;
+                    [class.bg-cta-default/20]&#x3D;&quot;
+                      bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27; ||
+                      bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;
+                    &quot;
+                    [class.text-cta-default]&#x3D;&quot;
+                      bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27; ||
+                      bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;
+                    &quot;
+                    [class.bg-warning-bg-hover]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot;
+                    [class.text-warning-strong]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot;
+                    [class.bg-success-light/20]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;&quot;
+                    [class.text-success-light]&#x3D;&quot;bookingContext()!.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;&quot;
+                  &gt;
+                    {{ bookingContext()!.statusLabel }}
+                  &lt;/span&gt;
+                  &lt;a
+                    [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, bookingId()]&quot;
+                    class&#x3D;&quot;text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline&quot;
+                  &gt;
+                    Ver detalle
+                  &lt;/a&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        }
+
+        @if (loading()) {
+          &lt;div class&#x3D;&quot;flex h-96 items-center justify-center&quot;&gt;
+            &lt;div class&#x3D;&quot;text-center&quot;&gt;
+              &lt;div
+                class&#x3D;&quot;mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500&quot;
+              &gt;&lt;/div&gt;
+              &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-secondary dark:text-text-secondary&quot;&gt;
+                Cargando chat...
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        } @else if (error()) {
+          &lt;div class&#x3D;&quot;rounded-lg bg-error-bg p-4 dark:bg-error-900/20&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ error() }}&lt;/p&gt;
+            &lt;button
+              (click)&#x3D;&quot;goBack()&quot;
+              class&#x3D;&quot;mt-2 text-sm text-error-text underline hover:text-error-strong&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              Volver
+            &lt;/button&gt;
+          &lt;/div&gt;
+        } @else if (bookingId() &amp;&amp; recipientId() &amp;&amp; recipientName()) {
+          &lt;!-- Booking chat --&gt;
+          &lt;app-booking-chat
+            [bookingId]&#x3D;&quot;bookingId()!&quot;
+            [recipientId]&#x3D;&quot;recipientId()!&quot;
+            [recipientName]&#x3D;&quot;recipientName()!&quot;
+          /&gt;
+        } @else if (carId() &amp;&amp; recipientId() &amp;&amp; recipientName()) {
+          &lt;!-- Car chat (pre-booking) --&gt;
+          &lt;app-car-chat
+            [carId]&#x3D;&quot;carId()!&quot;
+            [recipientId]&#x3D;&quot;recipientId()!&quot;
+            [recipientName]&#x3D;&quot;recipientName()!&quot;
+          /&gt;
+        } @else {
+          &lt;div class&#x3D;&quot;rounded-lg bg-warning-bg p-4 dark:bg-warning-900/20&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-warning-strong dark:text-warning-200&quot;&gt;
+              ⚠️ Faltan parámetros para iniciar el chat
+            &lt;/p&gt;
+            &lt;button
+              (click)&#x3D;&quot;goBack()&quot;
+              class&#x3D;&quot;mt-2 text-sm text-warning-text underline hover:text-warning-strong dark:text-warning-400&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              Volver
+            &lt;/button&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+})
+export class MessagesPage implements OnInit, OnDestroy {
+  private readonly router &#x3D; inject(Router);
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly authService &#x3D; inject(AuthService);
+  private readonly bookingsService &#x3D; inject(BookingsService);
+
+  // ✅ P0-006 FIX: Destroy subject para limpiar subscriptions
+  private readonly destroy$ &#x3D; new Subject&lt;void&gt;();
+
+  // Query params
+  readonly bookingId &#x3D; signal&lt;string | null&gt;(null);
+  readonly carId &#x3D; signal&lt;string | null&gt;(null);
+  readonly recipientId &#x3D; signal&lt;string | null&gt;(null);
+  readonly recipientName &#x3D; signal&lt;string | null&gt;(null);
+
+  // Booking context (when bookingId is available)
+  readonly booking &#x3D; signal&lt;Booking | null&gt;(null);
+  readonly loadingBooking &#x3D; signal(false);
+
+  // State
+  readonly loading &#x3D; signal(true);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+
+  // Computed
+  readonly bookingContext &#x3D; computed(() &#x3D;&gt; {
+    const booking &#x3D; this.booking();
+    if (!booking) return null;
+
+    return {
+      carTitle: booking.car_title || &#x60;${booking.car_brand} ${booking.car_model}&#x60;,
+      dates:
+        booking.start_at &amp;&amp; booking.end_at
+          ? &#x60;${new Date(booking.start_at).toLocaleDateString(&#x27;es-AR&#x27;)} - ${new Date(booking.end_at).toLocaleDateString(&#x27;es-AR&#x27;)}&#x60;
+          : null,
+      status: booking.status,
+      statusLabel: this.getStatusLabel(booking.status),
+    };
+  });
+
+  readonly hasBookingContext &#x3D; computed(() &#x3D;&gt; this.booking() !&#x3D;&#x3D; null);
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    // Verificar autenticación
+    const session &#x3D; this.authService.session$();
+    if (!session) {
+      this.error.set(&#x27;Debes iniciar sesión para ver los mensajes&#x27;);
+      this.loading.set(false);
+      setTimeout(() &#x3D;&gt; {
+        this.router.navigate([&#x27;/auth/login&#x27;], {
+          queryParams: { returnUrl: this.router.url },
+        });
+      }, 2000);
+      return;
+    }
+
+    // Leer query params
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(async (params) &#x3D;&gt; {
+      this.bookingId.set(params[&#x27;bookingId&#x27;] ?? null);
+      this.carId.set(params[&#x27;carId&#x27;] ?? null);
+      this.recipientId.set(params[&#x27;userId&#x27;] ?? null);
+      this.recipientName.set(params[&#x27;userName&#x27;] ?? params[&#x27;carName&#x27;] ?? &#x27;Usuario&#x27;);
+
+      // Validar que tenemos al menos booking o car ID
+      if (!this.bookingId() &amp;&amp; !this.carId()) {
+        this.error.set(&#x27;Falta información para iniciar el chat (booking o car ID)&#x27;);
+      }
+
+      // Validar que tenemos recipient
+      if (!this.recipientId()) {
+        this.error.set(&#x27;Falta información del destinatario&#x27;);
+      }
+
+      // Cargar información del booking si está disponible
+      if (this.bookingId()) {
+        await this.loadBookingContext(this.bookingId()!);
+      }
+
+      this.loading.set(false);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Carga información del booking para mostrar contexto
+   */
+  private async loadBookingContext(bookingId: string): Promise&lt;void&gt; {
+    this.loadingBooking.set(true);
+    try {
+      const booking &#x3D; await this.bookingsService.getBookingById(bookingId);
+      if (booking) {
+        this.booking.set(booking);
+      }
+    } catch (err) {
+      // No fallar si no se puede cargar el booking, solo no mostrar contexto
+      console.error(&#x27;Error loading booking context:&#x27;, err);
+    } finally {
+      this.loadingBooking.set(false);
+    }
+  }
+
+  /**
+   * Obtiene la etiqueta del estado del booking
+   */
+  private getStatusLabel(status: string): string {
+    switch (status) {
+      case &#x27;pending&#x27;:
+        return &#x27;Pendiente de pago&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Confirmada&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;En curso&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Finalizada&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Cancelada&#x27;;
+      case &#x27;expired&#x27;:
+        return &#x27;Vencida&#x27;;
+      default:
+        return status;
+    }
+  }
+
+  /**
+   * Formatea fecha
+   */
+  formatDateTime(dateStr: string): string {
+    return new Date(dateStr).toLocaleString(&#x27;es-AR&#x27;, {
+      day: &#x27;2-digit&#x27;,
+      month: &#x27;2-digit&#x27;,
+      year: &#x27;numeric&#x27;,
+      hour: &#x27;2-digit&#x27;,
+      minute: &#x27;2-digit&#x27;,
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate([&#x27;/&#x27;]);
+  }
+}
+</code></pre>
+    </div>
+
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="min-h-screen bg-surface-base dark:bg-surface-raised">  <!-- Header -->  <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">    <div class="mx-auto max-w-4xl px-4 py-4">      <div class="flex items-center gap-4">        <!-- Back button -->        <button          (click)="goBack()"          class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-raised dark:hover:bg-gray-700"          type="button"        >          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M15 19l-7-7 7-7"            />          </svg>        </button>        <div>          <h1 class="text-xl font-semibold text-text-primary dark:text-text-inverse">            Mensajes          </h1>          <p            class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"          >            @if (bookingId()) {              Conversación sobre reserva            } @else if (carId()) {              Consulta sobre auto            } @else {              Chat            }          </p>        </div>      </div>    </div>  </div>  <!-- Content -->  <div class="mx-auto max-w-4xl p-4">    <!-- Booking Context Card -->    @if (hasBookingContext() && bookingContext()) {      <div        class="mb-4 rounded-lg border border-cta-default/40 bg-cta-default/10 p-4 dark:border-cta-default dark:bg-cta-default/20"      >        <div class="flex items-start gap-3">          <div class="flex-shrink-0">            <svg              class="h-6 w-6 text-cta-default dark:text-cta-default"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"              />            </svg>          </div>          <div class="flex-1">            <h3 class="text-sm font-semibold text-cta-default dark:text-cta-default mb-1">              Reserva: {{ bookingContext()!.carTitle }}            </h3>            @if (bookingContext()!.dates) {              <p class="text-xs text-cta-default dark:text-cta-default mb-2">                📅 {{ bookingContext()!.dates }}              </p>            }            <div class="flex items-center gap-2">              <span                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"                [class.bg-cta-default/20]="                  bookingContext()!.status === \'confirmed\' ||                  bookingContext()!.status === \'in_progress\'                "                [class.text-cta-default]="                  bookingContext()!.status === \'confirmed\' ||                  bookingContext()!.status === \'in_progress\'                "                [class.bg-warning-bg-hover]="bookingContext()!.status === \'pending\'"                [class.text-warning-strong]="bookingContext()!.status === \'pending\'"                [class.bg-success-light/20]="bookingContext()!.status === \'completed\'"                [class.text-success-light]="bookingContext()!.status === \'completed\'"              >                {{ bookingContext()!.statusLabel }}              </span>              <a                [routerLink]="[\'/bookings\', bookingId()]"                class="text-xs text-cta-default hover:text-cta-default dark:text-cta-default dark:hover:text-cta-default underline"              >                Ver detalle              </a>            </div>          </div>        </div>      </div>    }    @if (loading()) {      <div class="flex h-96 items-center justify-center">        <div class="text-center">          <div            class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"          ></div>          <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">            Cargando chat...          </p>        </div>      </div>    } @else if (error()) {      <div class="rounded-lg bg-error-bg p-4 dark:bg-error-900/20">        <p class="text-sm text-error-strong">{{ error() }}</p>        <button          (click)="goBack()"          class="mt-2 text-sm text-error-text underline hover:text-error-strong"          type="button"        >          Volver        </button>      </div>    } @else if (bookingId() && recipientId() && recipientName()) {      <!-- Booking chat -->      <app-booking-chat        [bookingId]="bookingId()!"        [recipientId]="recipientId()!"        [recipientName]="recipientName()!"      />    } @else if (carId() && recipientId() && recipientName()) {      <!-- Car chat (pre-booking) -->      <app-car-chat        [carId]="carId()!"        [recipientId]="recipientId()!"        [recipientName]="recipientName()!"      />    } @else {      <div class="rounded-lg bg-warning-bg p-4 dark:bg-warning-900/20">        <p class="text-sm text-warning-strong dark:text-warning-200">          ⚠️ Faltan parámetros para iniciar el chat        </p>        <button          (click)="goBack()"          class="mt-2 text-sm text-warning-text underline hover:text-warning-strong dark:text-warning-400"          type="button"        >          Volver        </button>      </div>    }  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'MessagesPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MessagesPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,3363 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  VerificationPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/verification/verification.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-verification</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                            <code>TranslateModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      .verification-page {
+        min-height: 100vh;
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div
+  class&#x3D;&quot;verification-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300&quot;
+&gt;
+  &lt;section
+    class&#x3D;&quot;relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white&quot;
+  &gt;
+    &lt;div class&#x3D;&quot;max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10&quot;&gt;
+      &lt;p class&#x3D;&quot;text-xs uppercase tracking-[0.3em] text-white/70 mb-3&quot;&gt;Centro de seguridad&lt;/p&gt;
+      &lt;div class&#x3D;&quot;flex flex-col gap-8 md:flex-row md:items-center md:justify-between&quot;&gt;
+        &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+          &lt;h1 class&#x3D;&quot;text-3xl font-bold leading-tight&quot;&gt;Tu identidad crea confianza&lt;/h1&gt;
+          &lt;p class&#x3D;&quot;text-white/90 max-w-2xl&quot;&gt;
+            Simplificamos la verificación reutilizando datos de tu perfil y documentos ya
+            cargados. Avanza en pocos pasos y publica más rápido.
+          &lt;/p&gt;
+          &lt;div class&#x3D;&quot;flex flex-wrap gap-3&quot;&gt;
+            &lt;a
+              href&#x3D;&quot;#verification-docs&quot;
+              class&#x3D;&quot;inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-semibold text-primary-700 shadow hover:bg-primary-50 transition-colors&quot;
+            &gt;
+              Continuar verificación →
+            &lt;/a&gt;
+            &lt;button
+              type&#x3D;&quot;button&quot;
+              (click)&#x3D;&quot;toggleFaq()&quot;
+              class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-white transition-colors&quot;
+            &gt;
+              {{ showFaq() ? &#x27;Ocultar preguntas&#x27; : &#x27;Preguntas frecuentes&#x27; }}
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;rounded-2xl bg-white/10 backdrop-blur px-6 py-5 min-w-[240px]&quot;&gt;
+          &lt;p class&#x3D;&quot;text-sm uppercase tracking-widest text-white/70 mb-1&quot;&gt;Progreso&lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-4xl font-bold&quot;&gt;{{ completionPercentage() }}%&lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-white/80 text-sm&quot;&gt;
+            {{ completedDocs() }} de {{ totalRequiredDocs }} documentos listos
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+  &lt;div class&#x3D;&quot;max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+    @if (currentStatus(); as status) {
+      &lt;section class&#x3D;&quot;grid gap-4 md:grid-cols-3&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;flex items-start justify-between gap-4&quot;&gt;
+            &lt;div&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                Estado actual
+              &lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-2xl font-semibold text-text-primary dark:text-text-primary mt-1&quot;&gt;
+                {{ getStatusLabel(status.status) }}
+              &lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                Actualizado {{ formatDate(status.updated_at) }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+            &lt;span
+              class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold&quot;
+              [ngClass]&#x3D;&quot;getStatusChipClasses(status.status)&quot;
+            &gt;
+              {{ getStatusEmoji(status.status) }}
+              {{ status.status.toLowerCase() }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;mt-4 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+            {{ getStatusDescription(status.status) }}
+          &lt;/p&gt;
+          @if (status.notes) {
+            &lt;div
+              class&#x3D;&quot;mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 dark:bg-error-900/30 px-4 py-3 text-sm text-error-strong&quot;
+            &gt;
+              {{ status.notes }}
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+        &lt;div
+          class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+        &gt;
+          &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+            Revisión y progreso
+          &lt;/h3&gt;
+          &lt;ul class&#x3D;&quot;mt-4 space-y-3 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+            &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+              &lt;span&gt;Documentos listos&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-primary&quot;&gt;{{
+                completedDocs()
+              }}&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+              &lt;span&gt;Pendientes&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-semibold text-warning-600&quot;&gt;{{ missingDocs().length }}&lt;/span&gt;
+            &lt;/li&gt;
+            &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+              &lt;span&gt;Solicitud creada&lt;/span&gt;
+              &lt;span&gt;{{ formatDate(status.created_at || status.updated_at) }}&lt;/span&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div
+          class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm flex flex-col gap-4&quot;
+        &gt;
+          &lt;div&gt;
+            &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+              Acciones inmediatas
+            &lt;/h3&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+              Completa los documentos marcados como pendientes y solicitaremos una revisión
+              automática.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;button
+            (click)&#x3D;&quot;triggerVerification()&quot;
+            [disabled]&#x3D;&quot;isVerifying()&quot;
+            class&#x3D;&quot;inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2 font-semibold text-text-inverse transition-colors disabled:bg-gray-400&quot;
+          &gt;
+            {{ isVerifying() ? &#x27;Revisando...&#x27; : &#x27;Solicitar revisión ahora&#x27; }}
+          &lt;/button&gt;
+          &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/70&quot;&gt;
+            {{
+              autoTriggered()
+                ? &#x27;Enviamos tu verificación automáticamente porque ya completaste todo.&#x27;
+                : &#x27;Cuando completes todos los pasos enviamos la verificación por vos.&#x27;
+            }}
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+      &lt;section id&#x3D;&quot;verification-docs&quot; class&#x3D;&quot;mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]&quot;&gt;
+        &lt;div class&#x3D;&quot;space-y-6&quot;&gt;
+          @for (category of docCategories; track category.id) {
+            &lt;div
+              class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;flex flex-col gap-3 md:flex-row md:items-center md:justify-between&quot;&gt;
+                &lt;div&gt;
+                  &lt;h2 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                    {{ category.title }}
+                  &lt;/h2&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                    {{ category.description }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div
+                  class&#x3D;&quot;rounded-full bg-surface-base dark:bg-graphite-dark px-4 py-1 text-sm font-semibold text-text-secondary&quot;
+                &gt;
+                  {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
+                  completado
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;mt-5 space-y-4&quot;&gt;
+                @for (doc of category.docs; track doc.id) {
+                  &lt;div
+                    class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-white/70 dark:bg-graphite-dark/60 px-4 py-4 shadow-sm&quot;
+                  &gt;
+                    &lt;div
+                      class&#x3D;&quot;flex flex-col gap-3 md:flex-row md:items-start md:justify-between&quot;
+                    &gt;
+                      &lt;div&gt;
+                        &lt;p
+                          class&#x3D;&quot;text-base font-semibold text-text-primary dark:text-text-primary&quot;
+                        &gt;
+                          {{ doc.emoji }} {{ doc.label }}
+                        &lt;/p&gt;
+                        &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                          {{ doc.description }}
+                        &lt;/p&gt;
+                        @if (getDocPrefillLabels(doc.id).length &gt; 0) {
+                          &lt;p class&#x3D;&quot;mt-2 text-xs text-primary-600 dark:text-primary-300&quot;&gt;
+                            Autocompletamos: {{ getDocPrefillLabels(doc.id).join(&#x27;, &#x27;) }}
+                          &lt;/p&gt;
+                        }
+                        @if (getDocStatusHelperText(doc.id); as helperText) {
+                          &lt;p class&#x3D;&quot;mt-2 text-xs&quot; [class]&#x3D;&quot;getDocStatusHelperClasses(doc.id)&quot;&gt;
+                            {{ helperText }}
+                          &lt;/p&gt;
+                        }
+                      &lt;/div&gt;
+                      &lt;span
+                        class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold&quot;
+                        [ngClass]&#x3D;&quot;getDocStatusClasses(doc.id)&quot;
+                      &gt;
+                        {{ getDocStatusLabel(doc.id) }}
+                      &lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;mt-4 flex flex-wrap gap-3&quot;&gt;
+                      &lt;a
+                        routerLink&#x3D;&quot;/profile&quot;
+                        [queryParams]&#x3D;&quot;{ doc: doc.id }&quot;
+                        class&#x3D;&quot;inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors&quot;
+                      &gt;
+                        {{ isDocCompleted(doc.id) ? &#x27;Revisar documento&#x27; : &#x27;Subir documento&#x27; }}
+                      &lt;/a&gt;
+                      @if (getDocPrefillLabels(doc.id).length &gt; 0) {
+                        &lt;button
+                          type&#x3D;&quot;button&quot;
+                          (click)&#x3D;&quot;prefillDoc(doc.id)&quot;
+                          class&#x3D;&quot;inline-flex items-center gap-2 rounded-xl bg-surface-base/60 dark:bg-graphite-dark px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors&quot;
+                        &gt;
+                          ✨ Autocompletar
+                        &lt;/button&gt;
+                      }
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                }
+              &lt;/div&gt;
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+        &lt;aside class&#x3D;&quot;space-y-6&quot;&gt;
+          &lt;div
+            class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+          &gt;
+            &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+              Datos importados del perfil
+            &lt;/h3&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+              Reutilizamos la información que ya completaste para evitar que escribas todo de
+              nuevo.
+            &lt;/p&gt;
+            &lt;ul class&#x3D;&quot;mt-4 space-y-2 text-sm&quot;&gt;
+              @if (prefilledFields().length &gt; 0) {
+                @for (hint of prefilledFields(); track hint.label) {
+                  &lt;li class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+                    &lt;span class&#x3D;&quot;text-primary-500&quot;&gt;•&lt;/span&gt;
+                    &lt;span&gt;
+                      &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-primary&quot;&gt;{{
+                        hint.label
+                      }}&lt;/span&gt;
+                      &lt;span class&#x3D;&quot;ml-1 text-text-secondary dark:text-text-secondary/80&quot;&gt;{{
+                        hint.value
+                      }}&lt;/span&gt;
+                    &lt;/span&gt;
+                  &lt;/li&gt;
+                }
+              } @else {
+                &lt;li class&#x3D;&quot;text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                  Completa tu perfil para habilitar el autollenado automático.
+                &lt;/li&gt;
+              }
+            &lt;/ul&gt;
+            &lt;a
+              routerLink&#x3D;&quot;/profile&quot;
+              class&#x3D;&quot;mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700&quot;
+            &gt;
+              Actualizar perfil →
+            &lt;/a&gt;
+          &lt;/div&gt;
+          &lt;div
+            class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+          &gt;
+            &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+              ¿Necesitas ayuda?
+            &lt;/h3&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+              Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un
+              problema te avisamos por WhatsApp.
+            &lt;/p&gt;
+            &lt;a
+              href&#x3D;&quot;mailto:hola@autorenta.com&quot;
+              class&#x3D;&quot;mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors&quot;
+            &gt;
+              Escribir a soporte
+            &lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/aside&gt;
+      &lt;/section&gt;
+      @if (showFaq()) {
+        &lt;section class&#x3D;&quot;mt-10&quot;&gt;
+          &lt;div
+            class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+          &gt;
+            &lt;h2 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-primary mb-4&quot;&gt;
+              Preguntas frecuentes
+            &lt;/h2&gt;
+            &lt;div class&#x3D;&quot;divide-y divide-border-default dark:divide-neutral-800/60&quot;&gt;
+              @for (faq of faqItems; track faq.question) {
+                &lt;details class&#x3D;&quot;group py-3&quot;&gt;
+                  &lt;summary
+                    class&#x3D;&quot;flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary dark:text-text-primary&quot;
+                  &gt;
+                    {{ faq.question }}
+                    &lt;span class&#x3D;&quot;text-lg transition-transform group-open:rotate-180&quot;&gt;⌄&lt;/span&gt;
+                  &lt;/summary&gt;
+                  &lt;p class&#x3D;&quot;mt-2 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                    {{ faq.answer }}
+                  &lt;/p&gt;
+                &lt;/details&gt;
+              }
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+      }
+    } @else {
+      &lt;div class&#x3D;&quot;flex justify-center items-center py-12&quot;&gt;
+        &lt;svg class&#x3D;&quot;animate-spin h-12 w-12 text-primary-600&quot; fill&#x3D;&quot;none&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+          &lt;circle
+            class&#x3D;&quot;opacity-25&quot;
+            cx&#x3D;&quot;12&quot;
+            cy&#x3D;&quot;12&quot;
+            r&#x3D;&quot;10&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            stroke-width&#x3D;&quot;4&quot;
+          &gt;&lt;/circle&gt;
+          &lt;path
+            class&#x3D;&quot;opacity-75&quot;
+            fill&#x3D;&quot;currentColor&quot;
+            d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+      &lt;/div&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#autoTriggered" >autoTriggered</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#autoTriggerWatcher" >autoTriggerWatcher</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#completedDocs" >completedDocs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#completionPercentage" >completionPercentage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#currentStatus" >currentStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#docCategories" >docCategories</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#docPrefillHints" >docPrefillHints</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#docStatusMap" >docStatusMap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#documents" >documents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#faqItems" >faqItems</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isVerifying" >isVerifying</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#missingDocs" >missingDocs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#prefilledFields" >prefilledFields</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#profile" >profile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#profileStore" >profileStore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#showFaq" >showFaq</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#totalRequiredDocs" >totalRequiredDocs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#verificationService" >verificationService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#verificationStatus" >verificationStatus</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatDate" >formatDate</a>
+                            </li>
+                            <li>
+                                <a href="#getCategoryStats" >getCategoryStats</a>
+                            </li>
+                            <li>
+                                <a href="#getDocPrefillLabels" >getDocPrefillLabels</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getDocState" >getDocState</a>
+                            </li>
+                            <li>
+                                <a href="#getDocStatusClasses" >getDocStatusClasses</a>
+                            </li>
+                            <li>
+                                <a href="#getDocStatusHelperClasses" >getDocStatusHelperClasses</a>
+                            </li>
+                            <li>
+                                <a href="#getDocStatusHelperText" >getDocStatusHelperText</a>
+                            </li>
+                            <li>
+                                <a href="#getDocStatusLabel" >getDocStatusLabel</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusChipClasses" >getStatusChipClasses</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusDescription" >getStatusDescription</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusEmoji" >getStatusEmoji</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusLabel" >getStatusLabel</a>
+                            </li>
+                            <li>
+                                <a href="#isDocCompleted" >isDocCompleted</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#prefillDoc" >prefillDoc</a>
+                            </li>
+                            <li>
+                                <a href="#toggleFaq" >toggleFaq</a>
+                            </li>
+                            <li>
+                                <a href="#triggerVerification" >triggerVerification</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDate"></a>
+                    <span class="name">
+                        <span ><b>formatDate</b></span>
+                        <a href="#formatDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatDate(value?: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="653"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:653</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCategoryStats"></a>
+                    <span class="name">
+                        <span ><b>getCategoryStats</b></span>
+                        <a href="#getCategoryStats"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCategoryStats(docs: <a href="../interfaces/DocumentTypeConfig.html" target="_self">DocumentTypeConfig[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="562"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:562</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docs</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DocumentTypeConfig.html" target="_self" >DocumentTypeConfig[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocPrefillLabels"></a>
+                    <span class="name">
+                        <span ><b>getDocPrefillLabels</b></span>
+                        <a href="#getDocPrefillLabels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocPrefillLabels(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="571"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:571</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocState"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getDocState</b></span>
+                        <a href="#getDocState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDocState(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="575"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:575</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#DocState" target="_self" >DocState</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocStatusClasses"></a>
+                    <span class="name">
+                        <span ><b>getDocStatusClasses</b></span>
+                        <a href="#getDocStatusClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocStatusClasses(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="614"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:614</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocStatusHelperClasses"></a>
+                    <span class="name">
+                        <span ><b>getDocStatusHelperClasses</b></span>
+                        <a href="#getDocStatusHelperClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocStatusHelperClasses(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="640"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:640</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocStatusHelperText"></a>
+                    <span class="name">
+                        <span ><b>getDocStatusHelperText</b></span>
+                        <a href="#getDocStatusHelperText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocStatusHelperText(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="627"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:627</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocStatusLabel"></a>
+                    <span class="name">
+                        <span ><b>getDocStatusLabel</b></span>
+                        <a href="#getDocStatusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocStatusLabel(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="601"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:601</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusChipClasses"></a>
+                    <span class="name">
+                        <span ><b>getStatusChipClasses</b></span>
+                        <a href="#getStatusChipClasses"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusChipClasses(status: <a href="../interfaces/VerificationStatus.html" target="_self">VerificationStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="701"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:701</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../interfaces/VerificationStatus.html" target="_self" >VerificationStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusDescription"></a>
+                    <span class="name">
+                        <span ><b>getStatusDescription</b></span>
+                        <a href="#getStatusDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusDescription(status: <a href="../interfaces/VerificationStatus.html" target="_self">VerificationStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="679"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:679</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../interfaces/VerificationStatus.html" target="_self" >VerificationStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusEmoji"></a>
+                    <span class="name">
+                        <span ><b>getStatusEmoji</b></span>
+                        <a href="#getStatusEmoji"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusEmoji(status: <a href="../interfaces/VerificationStatus.html" target="_self">VerificationStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="690"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:690</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../interfaces/VerificationStatus.html" target="_self" >VerificationStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusLabel"></a>
+                    <span class="name">
+                        <span ><b>getStatusLabel</b></span>
+                        <a href="#getStatusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusLabel(status: <a href="../interfaces/VerificationStatus.html" target="_self">VerificationStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="668"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:668</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../interfaces/VerificationStatus.html" target="_self" >VerificationStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDocCompleted"></a>
+                    <span class="name">
+                        <span ><b>isDocCompleted</b></span>
+                        <a href="#isDocCompleted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isDocCompleted(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="567"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:567</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="524"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:524</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prefillDoc"></a>
+                    <span class="name">
+                        <span ><b>prefillDoc</b></span>
+                        <a href="#prefillDoc"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>prefillDoc(docId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="556"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:556</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleFaq"></a>
+                    <span class="name">
+                        <span ><b>toggleFaq</b></span>
+                        <a href="#toggleFaq"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleFaq()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="530"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:530</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="triggerVerification"></a>
+                    <span class="name">
+                        <span ><b>triggerVerification</b></span>
+                        <a href="#triggerVerification"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>triggerVerification(auto: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">src/app/features/verification/verification.page.ts:534</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>auto</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="autoTriggered"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>autoTriggered</b></span>
+                        <a href="#autoTriggered"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="446" class="link-to-prism">src/app/features/verification/verification.page.ts:446</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="autoTriggerWatcher"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>autoTriggerWatcher</b></span>
+                        <a href="#autoTriggerWatcher"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>effect(() &#x3D;&gt; {
+    const status &#x3D; this.currentStatus();
+    if (!status) {
+      this.autoTriggered.set(false);
+      return;
+    }
+
+    if (status.status &#x3D;&#x3D;&#x3D; &#x27;VERIFICADO&#x27;) {
+      this.autoTriggered.set(false);
+      return;
+    }
+
+    const pending &#x3D; this.missingDocs().length;
+    if (pending &#x3D;&#x3D;&#x3D; 0 &amp;&amp; !this.autoTriggered() &amp;&amp; !this.isVerifying()) {
+      this.autoTriggered.set(true);
+      this.triggerVerification(true);
+    } else if (pending &gt; 0 &amp;&amp; this.autoTriggered()) {
+      this.autoTriggered.set(false);
+    }
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="503" class="link-to-prism">src/app/features/verification/verification.page.ts:503</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completedDocs"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>completedDocs</b></span>
+                        <a href="#completedDocs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const completed &#x3D; this.totalRequiredDocs - this.missingDocs().length;
+    return Math.max(0, Math.min(this.totalRequiredDocs, completed));
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="449" class="link-to-prism">src/app/features/verification/verification.page.ts:449</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completionPercentage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>completionPercentage</b></span>
+                        <a href="#completionPercentage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    if (this.totalRequiredDocs &#x3D;&#x3D;&#x3D; 0) {
+      return 0;
+    }
+    return Math.min(100, Math.round((this.completedDocs() / this.totalRequiredDocs) * 100));
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="453" class="link-to-prism">src/app/features/verification/verification.page.ts:453</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>currentStatus</b></span>
+                        <a href="#currentStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const statuses &#x3D; this.verificationStatus();
+    return statuses &amp;&amp; statuses.length &gt; 0 ? statuses[0] : null;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="441" class="link-to-prism">src/app/features/verification/verification.page.ts:441</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="docCategories"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>docCategories</b></span>
+                        <a href="#docCategories"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>DOC_CATEGORIES</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="434" class="link-to-prism">src/app/features/verification/verification.page.ts:434</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="docPrefillHints"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>docPrefillHints</b></span>
+                        <a href="#docPrefillHints"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;Record&lt;string, string[]&gt;&gt;(() &#x3D;&gt; {
+    const map: Record&lt;string, string[]&gt; &#x3D; {};
+    for (const field of this.prefilledFields()) {
+      for (const docId of field.docIds) {
+        if (!map[docId]) {
+          map[docId] &#x3D; [];
+        }
+        map[docId].push(field.label);
+      }
+    }
+
+    return map;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="480" class="link-to-prism">src/app/features/verification/verification.page.ts:480</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="docStatusMap"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>docStatusMap</b></span>
+                        <a href="#docStatusMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;Record&lt;string, UserDocument&gt;&gt;(() &#x3D;&gt; {
+    const map: Record&lt;string, UserDocument&gt; &#x3D; {};
+    for (const doc of this.documents()) {
+      if (!map[doc.kind]) {
+        map[doc.kind] &#x3D; doc;
+      }
+    }
+    return map;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="493" class="link-to-prism">src/app/features/verification/verification.page.ts:493</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="documents"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>documents</b></span>
+                        <a href="#documents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.verificationService.documents</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="440" class="link-to-prism">src/app/features/verification/verification.page.ts:440</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="faqItems"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>faqItems</b></span>
+                        <a href="#faqItems"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>FAQ_ITEMS</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="435" class="link-to-prism">src/app/features/verification/verification.page.ts:435</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isVerifying"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isVerifying</b></span>
+                        <a href="#isVerifying"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="445" class="link-to-prism">src/app/features/verification/verification.page.ts:445</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="missingDocs"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>missingDocs</b></span>
+                        <a href="#missingDocs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.currentStatus()?.missing_docs || [])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="448" class="link-to-prism">src/app/features/verification/verification.page.ts:448</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prefilledFields"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>prefilledFields</b></span>
+                        <a href="#prefilledFields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;PrefilledFieldHint[]&gt;(() &#x3D;&gt; {
+    const profile &#x3D; this.profile();
+    if (!profile) {
+      return [];
+    }
+
+    const hints: PrefilledFieldHint[] &#x3D; [];
+    for (const config of PREFILL_CONFIG) {
+      const value &#x3D; profile[config.key];
+      if (!value) {
+        continue;
+      }
+      hints.push({
+        label: config.label,
+        value: String(value),
+        docIds: config.docIds,
+      });
+    }
+
+    return hints;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="459" class="link-to-prism">src/app/features/verification/verification.page.ts:459</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profile"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>profile</b></span>
+                        <a href="#profile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.profileStore.profile</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="438" class="link-to-prism">src/app/features/verification/verification.page.ts:438</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profileStore"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>profileStore</b></span>
+                        <a href="#profileStore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ProfileStore)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="431" class="link-to-prism">src/app/features/verification/verification.page.ts:431</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="432" class="link-to-prism">src/app/features/verification/verification.page.ts:432</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showFaq"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>showFaq</b></span>
+                        <a href="#showFaq"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="447" class="link-to-prism">src/app/features/verification/verification.page.ts:447</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalRequiredDocs"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>totalRequiredDocs</b></span>
+                        <a href="#totalRequiredDocs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>TOTAL_DOCS_REQUIRED</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="436" class="link-to-prism">src/app/features/verification/verification.page.ts:436</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verificationService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>verificationService</b></span>
+                        <a href="#verificationService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(VerificationService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="430" class="link-to-prism">src/app/features/verification/verification.page.ts:430</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verificationStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>verificationStatus</b></span>
+                        <a href="#verificationStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.verificationService.statuses</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="439" class="link-to-prism">src/app/features/verification/verification.page.ts:439</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, signal, computed, inject, effect } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router, RouterLink } from &#x27;@angular/router&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import { VerificationService } from &#x27;../../core/services/verification.service&#x27;;
+import {
+  DocumentTypeConfig,
+  getDocumentsByCategory,
+} from &#x27;../../core/config/document-types.config&#x27;;
+import type { UserProfile, VerificationStatus, UserDocument } from &#x27;../../core/models&#x27;;
+import { ProfileStore } from &#x27;../../core/stores/profile.store&#x27;;
+
+interface PrefilledFieldHint {
+  label: string;
+  value: string;
+  docIds: string[];
+}
+
+interface PrefillFieldConfig {
+  key: keyof Pick&lt;
+    UserProfile,
+    | &#x27;full_name&#x27;
+    | &#x27;gov_id_number&#x27;
+    | &#x27;driver_license_number&#x27;
+    | &#x27;address_line1&#x27;
+    | &#x27;city&#x27;
+    | &#x27;country&#x27;
+    | &#x27;phone&#x27;
+    | &#x27;whatsapp&#x27;
+  &gt;;
+  label: string;
+  docIds: string[];
+}
+
+interface DocCategoryBlock {
+  id: DocumentTypeConfig[&#x27;category&#x27;];
+  title: string;
+  description: string;
+  docs: DocumentTypeConfig[];
+}
+
+const DOC_CATEGORIES: DocCategoryBlock[] &#x3D; [
+  {
+    id: &#x27;identity&#x27;,
+    title: &#x27;Identidad&#x27;,
+    description: &#x27;Validamos tu documento nacional, pasaporte o selfie.&#x27;,
+    docs: getDocumentsByCategory(&#x27;identity&#x27;),
+  },
+  {
+    id: &#x27;vehicle&#x27;,
+    title: &#x27;Documentos de tu auto&#x27;,
+    description: &#x27;Solo pedimos los archivos indispensables para publicar.&#x27;,
+    docs: getDocumentsByCategory(&#x27;vehicle&#x27;),
+  },
+  {
+    id: &#x27;other&#x27;,
+    title: &#x27;Soportes complementarios&#x27;,
+    description: &#x27;Comprobantes que nos ayudan a validar domicilio y contacto.&#x27;,
+    docs: getDocumentsByCategory(&#x27;other&#x27;),
+  },
+];
+
+const TOTAL_DOCS_REQUIRED &#x3D; DOC_CATEGORIES.reduce((count, block) &#x3D;&gt; count + block.docs.length, 0);
+
+const PREFILL_CONFIG: PrefillFieldConfig[] &#x3D; [
+  {
+    key: &#x27;full_name&#x27;,
+    label: &#x27;Nombre completo&#x27;,
+    docIds: [&#x27;gov_id_front&#x27;, &#x27;gov_id_back&#x27;, &#x27;passport&#x27;, &#x27;selfie&#x27;],
+  },
+  { key: &#x27;gov_id_number&#x27;, label: &#x27;Número de documento&#x27;, docIds: [&#x27;gov_id_front&#x27;, &#x27;gov_id_back&#x27;] },
+  { key: &#x27;driver_license_number&#x27;, label: &#x27;Número de licencia&#x27;, docIds: [&#x27;driver_license&#x27;] },
+  { key: &#x27;address_line1&#x27;, label: &#x27;Dirección&#x27;, docIds: [&#x27;utility_bill&#x27;, &#x27;vehicle_registration&#x27;] },
+  { key: &#x27;city&#x27;, label: &#x27;Ciudad&#x27;, docIds: [&#x27;utility_bill&#x27;] },
+  { key: &#x27;country&#x27;, label: &#x27;País&#x27;, docIds: [&#x27;passport&#x27;, &#x27;driver_license&#x27;] },
+  { key: &#x27;phone&#x27;, label: &#x27;Teléfono&#x27;, docIds: [&#x27;selfie&#x27;, &#x27;driver_license&#x27;] },
+  { key: &#x27;whatsapp&#x27;, label: &#x27;WhatsApp&#x27;, docIds: [&#x27;selfie&#x27;] },
+];
+
+const FAQ_ITEMS &#x3D; [
+  {
+    question: &#x27;¿Por qué necesitamos tus datos?&#x27;,
+    answer:
+      &#x27;La verificación protege tus futuras reservas y publicaciones. Solo pedimos lo mínimo indispensable y está encriptado.&#x27;,
+  },
+  {
+    question: &#x27;¿Cuánto demoramos en revisar?&#x27;,
+    answer:
+      &#x27;Nuestro equipo tarda entre 24 y 48 h hábiles. Te avisamos por email y notificaciones cuando haya novedades.&#x27;,
+  },
+  {
+    question: &#x27;¿Se reutilizan mis documentos?&#x27;,
+    answer:
+      &#x27;Sí. Reutilizamos documentos y datos del perfil para evitar que vuelvas a subir archivos o escribir todo de nuevo.&#x27;,
+  },
+];
+
+type DocState &#x3D; &#x27;missing&#x27; | &#x27;in_review&#x27; | &#x27;approved&#x27; | &#x27;rejected&#x27;;
+
+@Component({
+  selector: &#x27;app-verification&#x27;,
+  standalone: true,
+  imports: [CommonModule, RouterLink, TranslateModule],
+  template: &#x60;
+    &lt;div
+      class&#x3D;&quot;verification-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300&quot;
+    &gt;
+      &lt;section
+        class&#x3D;&quot;relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10&quot;&gt;
+          &lt;p class&#x3D;&quot;text-xs uppercase tracking-[0.3em] text-white/70 mb-3&quot;&gt;Centro de seguridad&lt;/p&gt;
+          &lt;div class&#x3D;&quot;flex flex-col gap-8 md:flex-row md:items-center md:justify-between&quot;&gt;
+            &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+              &lt;h1 class&#x3D;&quot;text-3xl font-bold leading-tight&quot;&gt;Tu identidad crea confianza&lt;/h1&gt;
+              &lt;p class&#x3D;&quot;text-white/90 max-w-2xl&quot;&gt;
+                Simplificamos la verificación reutilizando datos de tu perfil y documentos ya
+                cargados. Avanza en pocos pasos y publica más rápido.
+              &lt;/p&gt;
+              &lt;div class&#x3D;&quot;flex flex-wrap gap-3&quot;&gt;
+                &lt;a
+                  href&#x3D;&quot;#verification-docs&quot;
+                  class&#x3D;&quot;inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-semibold text-primary-700 shadow hover:bg-primary-50 transition-colors&quot;
+                &gt;
+                  Continuar verificación →
+                &lt;/a&gt;
+                &lt;button
+                  type&#x3D;&quot;button&quot;
+                  (click)&#x3D;&quot;toggleFaq()&quot;
+                  class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-white transition-colors&quot;
+                &gt;
+                  {{ showFaq() ? &#x27;Ocultar preguntas&#x27; : &#x27;Preguntas frecuentes&#x27; }}
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;rounded-2xl bg-white/10 backdrop-blur px-6 py-5 min-w-[240px]&quot;&gt;
+              &lt;p class&#x3D;&quot;text-sm uppercase tracking-widest text-white/70 mb-1&quot;&gt;Progreso&lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-4xl font-bold&quot;&gt;{{ completionPercentage() }}%&lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-white/80 text-sm&quot;&gt;
+                {{ completedDocs() }} de {{ totalRequiredDocs }} documentos listos
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+      &lt;div class&#x3D;&quot;max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+        @if (currentStatus(); as status) {
+          &lt;section class&#x3D;&quot;grid gap-4 md:grid-cols-3&quot;&gt;
+            &lt;div
+              class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;flex items-start justify-between gap-4&quot;&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                    Estado actual
+                  &lt;/p&gt;
+                  &lt;p class&#x3D;&quot;text-2xl font-semibold text-text-primary dark:text-text-primary mt-1&quot;&gt;
+                    {{ getStatusLabel(status.status) }}
+                  &lt;/p&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                    Actualizado {{ formatDate(status.updated_at) }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;span
+                  class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold&quot;
+                  [ngClass]&#x3D;&quot;getStatusChipClasses(status.status)&quot;
+                &gt;
+                  {{ getStatusEmoji(status.status) }}
+                  {{ status.status.toLowerCase() }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+              &lt;p class&#x3D;&quot;mt-4 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                {{ getStatusDescription(status.status) }}
+              &lt;/p&gt;
+              @if (status.notes) {
+                &lt;div
+                  class&#x3D;&quot;mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 dark:bg-error-900/30 px-4 py-3 text-sm text-error-strong&quot;
+                &gt;
+                  {{ status.notes }}
+                &lt;/div&gt;
+              }
+            &lt;/div&gt;
+            &lt;div
+              class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+            &gt;
+              &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                Revisión y progreso
+              &lt;/h3&gt;
+              &lt;ul class&#x3D;&quot;mt-4 space-y-3 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+                  &lt;span&gt;Documentos listos&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-primary&quot;&gt;{{
+                    completedDocs()
+                  }}&lt;/span&gt;
+                &lt;/li&gt;
+                &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+                  &lt;span&gt;Pendientes&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;font-semibold text-warning-600&quot;&gt;{{ missingDocs().length }}&lt;/span&gt;
+                &lt;/li&gt;
+                &lt;li class&#x3D;&quot;flex items-center justify-between gap-4&quot;&gt;
+                  &lt;span&gt;Solicitud creada&lt;/span&gt;
+                  &lt;span&gt;{{ formatDate(status.created_at || status.updated_at) }}&lt;/span&gt;
+                &lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div
+              class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm flex flex-col gap-4&quot;
+            &gt;
+              &lt;div&gt;
+                &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                  Acciones inmediatas
+                &lt;/h3&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                  Completa los documentos marcados como pendientes y solicitaremos una revisión
+                  automática.
+                &lt;/p&gt;
+              &lt;/div&gt;
+              &lt;button
+                (click)&#x3D;&quot;triggerVerification()&quot;
+                [disabled]&#x3D;&quot;isVerifying()&quot;
+                class&#x3D;&quot;inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2 font-semibold text-text-inverse transition-colors disabled:bg-gray-400&quot;
+              &gt;
+                {{ isVerifying() ? &#x27;Revisando...&#x27; : &#x27;Solicitar revisión ahora&#x27; }}
+              &lt;/button&gt;
+              &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                {{
+                  autoTriggered()
+                    ? &#x27;Enviamos tu verificación automáticamente porque ya completaste todo.&#x27;
+                    : &#x27;Cuando completes todos los pasos enviamos la verificación por vos.&#x27;
+                }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/section&gt;
+          &lt;section id&#x3D;&quot;verification-docs&quot; class&#x3D;&quot;mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]&quot;&gt;
+            &lt;div class&#x3D;&quot;space-y-6&quot;&gt;
+              @for (category of docCategories; track category.id) {
+                &lt;div
+                  class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+                &gt;
+                  &lt;div class&#x3D;&quot;flex flex-col gap-3 md:flex-row md:items-center md:justify-between&quot;&gt;
+                    &lt;div&gt;
+                      &lt;h2 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                        {{ category.title }}
+                      &lt;/h2&gt;
+                      &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                        {{ category.description }}
+                      &lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;div
+                      class&#x3D;&quot;rounded-full bg-surface-base dark:bg-graphite-dark px-4 py-1 text-sm font-semibold text-text-secondary&quot;
+                    &gt;
+                      {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}
+                      completado
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;div class&#x3D;&quot;mt-5 space-y-4&quot;&gt;
+                    @for (doc of category.docs; track doc.id) {
+                      &lt;div
+                        class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-white/70 dark:bg-graphite-dark/60 px-4 py-4 shadow-sm&quot;
+                      &gt;
+                        &lt;div
+                          class&#x3D;&quot;flex flex-col gap-3 md:flex-row md:items-start md:justify-between&quot;
+                        &gt;
+                          &lt;div&gt;
+                            &lt;p
+                              class&#x3D;&quot;text-base font-semibold text-text-primary dark:text-text-primary&quot;
+                            &gt;
+                              {{ doc.emoji }} {{ doc.label }}
+                            &lt;/p&gt;
+                            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                              {{ doc.description }}
+                            &lt;/p&gt;
+                            @if (getDocPrefillLabels(doc.id).length &gt; 0) {
+                              &lt;p class&#x3D;&quot;mt-2 text-xs text-primary-600 dark:text-primary-300&quot;&gt;
+                                Autocompletamos: {{ getDocPrefillLabels(doc.id).join(&#x27;, &#x27;) }}
+                              &lt;/p&gt;
+                            }
+                            @if (getDocStatusHelperText(doc.id); as helperText) {
+                              &lt;p class&#x3D;&quot;mt-2 text-xs&quot; [class]&#x3D;&quot;getDocStatusHelperClasses(doc.id)&quot;&gt;
+                                {{ helperText }}
+                              &lt;/p&gt;
+                            }
+                          &lt;/div&gt;
+                          &lt;span
+                            class&#x3D;&quot;inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold&quot;
+                            [ngClass]&#x3D;&quot;getDocStatusClasses(doc.id)&quot;
+                          &gt;
+                            {{ getDocStatusLabel(doc.id) }}
+                          &lt;/span&gt;
+                        &lt;/div&gt;
+                        &lt;div class&#x3D;&quot;mt-4 flex flex-wrap gap-3&quot;&gt;
+                          &lt;a
+                            routerLink&#x3D;&quot;/profile&quot;
+                            [queryParams]&#x3D;&quot;{ doc: doc.id }&quot;
+                            class&#x3D;&quot;inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors&quot;
+                          &gt;
+                            {{ isDocCompleted(doc.id) ? &#x27;Revisar documento&#x27; : &#x27;Subir documento&#x27; }}
+                          &lt;/a&gt;
+                          @if (getDocPrefillLabels(doc.id).length &gt; 0) {
+                            &lt;button
+                              type&#x3D;&quot;button&quot;
+                              (click)&#x3D;&quot;prefillDoc(doc.id)&quot;
+                              class&#x3D;&quot;inline-flex items-center gap-2 rounded-xl bg-surface-base/60 dark:bg-graphite-dark px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors&quot;
+                            &gt;
+                              ✨ Autocompletar
+                            &lt;/button&gt;
+                          }
+                        &lt;/div&gt;
+                      &lt;/div&gt;
+                    }
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              }
+            &lt;/div&gt;
+            &lt;aside class&#x3D;&quot;space-y-6&quot;&gt;
+              &lt;div
+                class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+              &gt;
+                &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                  Datos importados del perfil
+                &lt;/h3&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                  Reutilizamos la información que ya completaste para evitar que escribas todo de
+                  nuevo.
+                &lt;/p&gt;
+                &lt;ul class&#x3D;&quot;mt-4 space-y-2 text-sm&quot;&gt;
+                  @if (prefilledFields().length &gt; 0) {
+                    @for (hint of prefilledFields(); track hint.label) {
+                      &lt;li class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+                        &lt;span class&#x3D;&quot;text-primary-500&quot;&gt;•&lt;/span&gt;
+                        &lt;span&gt;
+                          &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-primary&quot;&gt;{{
+                            hint.label
+                          }}&lt;/span&gt;
+                          &lt;span class&#x3D;&quot;ml-1 text-text-secondary dark:text-text-secondary/80&quot;&gt;{{
+                            hint.value
+                          }}&lt;/span&gt;
+                        &lt;/span&gt;
+                      &lt;/li&gt;
+                    }
+                  } @else {
+                    &lt;li class&#x3D;&quot;text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                      Completa tu perfil para habilitar el autollenado automático.
+                    &lt;/li&gt;
+                  }
+                &lt;/ul&gt;
+                &lt;a
+                  routerLink&#x3D;&quot;/profile&quot;
+                  class&#x3D;&quot;mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700&quot;
+                &gt;
+                  Actualizar perfil →
+                &lt;/a&gt;
+              &lt;/div&gt;
+              &lt;div
+                class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+              &gt;
+                &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                  ¿Necesitas ayuda?
+                &lt;/h3&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                  Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un
+                  problema te avisamos por WhatsApp.
+                &lt;/p&gt;
+                &lt;a
+                  href&#x3D;&quot;mailto:hola@autorenta.com&quot;
+                  class&#x3D;&quot;mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors&quot;
+                &gt;
+                  Escribir a soporte
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/aside&gt;
+          &lt;/section&gt;
+          @if (showFaq()) {
+            &lt;section class&#x3D;&quot;mt-10&quot;&gt;
+              &lt;div
+                class&#x3D;&quot;rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm&quot;
+              &gt;
+                &lt;h2 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-primary mb-4&quot;&gt;
+                  Preguntas frecuentes
+                &lt;/h2&gt;
+                &lt;div class&#x3D;&quot;divide-y divide-border-default dark:divide-neutral-800/60&quot;&gt;
+                  @for (faq of faqItems; track faq.question) {
+                    &lt;details class&#x3D;&quot;group py-3&quot;&gt;
+                      &lt;summary
+                        class&#x3D;&quot;flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary dark:text-text-primary&quot;
+                      &gt;
+                        {{ faq.question }}
+                        &lt;span class&#x3D;&quot;text-lg transition-transform group-open:rotate-180&quot;&gt;⌄&lt;/span&gt;
+                      &lt;/summary&gt;
+                      &lt;p class&#x3D;&quot;mt-2 text-sm text-text-secondary dark:text-text-secondary/80&quot;&gt;
+                        {{ faq.answer }}
+                      &lt;/p&gt;
+                    &lt;/details&gt;
+                  }
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/section&gt;
+          }
+        } @else {
+          &lt;div class&#x3D;&quot;flex justify-center items-center py-12&quot;&gt;
+            &lt;svg class&#x3D;&quot;animate-spin h-12 w-12 text-primary-600&quot; fill&#x3D;&quot;none&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+              &lt;circle
+                class&#x3D;&quot;opacity-25&quot;
+                cx&#x3D;&quot;12&quot;
+                cy&#x3D;&quot;12&quot;
+                r&#x3D;&quot;10&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                stroke-width&#x3D;&quot;4&quot;
+              &gt;&lt;/circle&gt;
+              &lt;path
+                class&#x3D;&quot;opacity-75&quot;
+                fill&#x3D;&quot;currentColor&quot;
+                d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      .verification-page {
+        min-height: 100vh;
+      }
+    &#x60;,
+  ],
+})
+export class VerificationPage implements OnInit {
+  private readonly verificationService &#x3D; inject(VerificationService);
+  private readonly profileStore &#x3D; inject(ProfileStore);
+  private readonly router &#x3D; inject(Router);
+
+  readonly docCategories &#x3D; DOC_CATEGORIES;
+  readonly faqItems &#x3D; FAQ_ITEMS;
+  readonly totalRequiredDocs &#x3D; TOTAL_DOCS_REQUIRED;
+
+  readonly profile &#x3D; this.profileStore.profile;
+  readonly verificationStatus &#x3D; this.verificationService.statuses;
+  readonly documents &#x3D; this.verificationService.documents;
+  readonly currentStatus &#x3D; computed(() &#x3D;&gt; {
+    const statuses &#x3D; this.verificationStatus();
+    return statuses &amp;&amp; statuses.length &gt; 0 ? statuses[0] : null;
+  });
+  readonly isVerifying &#x3D; signal(false);
+  readonly autoTriggered &#x3D; signal(false);
+  readonly showFaq &#x3D; signal(false);
+  readonly missingDocs &#x3D; computed(() &#x3D;&gt; this.currentStatus()?.missing_docs || []);
+  readonly completedDocs &#x3D; computed(() &#x3D;&gt; {
+    const completed &#x3D; this.totalRequiredDocs - this.missingDocs().length;
+    return Math.max(0, Math.min(this.totalRequiredDocs, completed));
+  });
+  readonly completionPercentage &#x3D; computed(() &#x3D;&gt; {
+    if (this.totalRequiredDocs &#x3D;&#x3D;&#x3D; 0) {
+      return 0;
+    }
+    return Math.min(100, Math.round((this.completedDocs() / this.totalRequiredDocs) * 100));
+  });
+  readonly prefilledFields &#x3D; computed&lt;PrefilledFieldHint[]&gt;(() &#x3D;&gt; {
+    const profile &#x3D; this.profile();
+    if (!profile) {
+      return [];
+    }
+
+    const hints: PrefilledFieldHint[] &#x3D; [];
+    for (const config of PREFILL_CONFIG) {
+      const value &#x3D; profile[config.key];
+      if (!value) {
+        continue;
+      }
+      hints.push({
+        label: config.label,
+        value: String(value),
+        docIds: config.docIds,
+      });
+    }
+
+    return hints;
+  });
+  readonly docPrefillHints &#x3D; computed&lt;Record&lt;string, string[]&gt;&gt;(() &#x3D;&gt; {
+    const map: Record&lt;string, string[]&gt; &#x3D; {};
+    for (const field of this.prefilledFields()) {
+      for (const docId of field.docIds) {
+        if (!map[docId]) {
+          map[docId] &#x3D; [];
+        }
+        map[docId].push(field.label);
+      }
+    }
+
+    return map;
+  });
+  readonly docStatusMap &#x3D; computed&lt;Record&lt;string, UserDocument&gt;&gt;(() &#x3D;&gt; {
+    const map: Record&lt;string, UserDocument&gt; &#x3D; {};
+    for (const doc of this.documents()) {
+      if (!map[doc.kind]) {
+        map[doc.kind] &#x3D; doc;
+      }
+    }
+    return map;
+  });
+
+  private readonly autoTriggerWatcher &#x3D; effect(() &#x3D;&gt; {
+    const status &#x3D; this.currentStatus();
+    if (!status) {
+      this.autoTriggered.set(false);
+      return;
+    }
+
+    if (status.status &#x3D;&#x3D;&#x3D; &#x27;VERIFICADO&#x27;) {
+      this.autoTriggered.set(false);
+      return;
+    }
+
+    const pending &#x3D; this.missingDocs().length;
+    if (pending &#x3D;&#x3D;&#x3D; 0 &amp;&amp; !this.autoTriggered() &amp;&amp; !this.isVerifying()) {
+      this.autoTriggered.set(true);
+      this.triggerVerification(true);
+    } else if (pending &gt; 0 &amp;&amp; this.autoTriggered()) {
+      this.autoTriggered.set(false);
+    }
+  });
+
+  ngOnInit(): void {
+    void this.verificationService.loadStatuses().catch(() &#x3D;&gt; null);
+    void this.verificationService.loadDocuments().catch(() &#x3D;&gt; null);
+    void this.profileStore.loadProfile();
+  }
+
+  toggleFaq(): void {
+    this.showFaq.update((value) &#x3D;&gt; !value);
+  }
+
+  triggerVerification(auto &#x3D; false): void {
+    if (this.isVerifying()) {
+      return;
+    }
+
+    this.isVerifying.set(true);
+    this.verificationService
+      .triggerVerification()
+      .then(() &#x3D;&gt; {
+        this.isVerifying.set(false);
+        if (!auto) {
+          this.autoTriggered.set(false);
+        }
+      })
+      .catch(() &#x3D;&gt; {
+        this.isVerifying.set(false);
+        if (auto) {
+          this.autoTriggered.set(false);
+        }
+      });
+  }
+
+  prefillDoc(docId: string): void {
+    void this.router.navigate([&#x27;/profile&#x27;], {
+      queryParams: { doc: docId, intent: &#x27;prefill&#x27; },
+    });
+  }
+
+  getCategoryStats(docs: DocumentTypeConfig[]): { completed: number; total: number } {
+    const completed &#x3D; docs.filter((doc) &#x3D;&gt; this.isDocCompleted(doc.id)).length;
+    return { completed, total: docs.length };
+  }
+
+  isDocCompleted(docId: string): boolean {
+    return this.getDocState(docId) !&#x3D;&#x3D; &#x27;missing&#x27;;
+  }
+
+  getDocPrefillLabels(docId: string): string[] {
+    return this.docPrefillHints()[docId] ?? [];
+  }
+
+  private getDocState(docId: string): DocState {
+    const docRecord &#x3D; this.docStatusMap()[docId];
+
+    if (docRecord?.status &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;) {
+      return &#x27;rejected&#x27;;
+    }
+
+    if (docRecord?.status &#x3D;&#x3D;&#x3D; &#x27;verified&#x27;) {
+      return &#x27;approved&#x27;;
+    }
+
+    if (docRecord?.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;) {
+      return &#x27;in_review&#x27;;
+    }
+
+    if (docRecord?.status &#x3D;&#x3D;&#x3D; &#x27;not_started&#x27;) {
+      return this.missingDocs().includes(docId) ? &#x27;missing&#x27; : &#x27;in_review&#x27;;
+    }
+
+    if (!docRecord &amp;&amp; this.missingDocs().includes(docId)) {
+      return &#x27;missing&#x27;;
+    }
+
+    return docRecord ? &#x27;in_review&#x27; : &#x27;approved&#x27;;
+  }
+
+  getDocStatusLabel(docId: string): string {
+    switch (this.getDocState(docId)) {
+      case &#x27;approved&#x27;:
+        return &#x27;Aprobado&#x27;;
+      case &#x27;rejected&#x27;:
+        return &#x27;Observado&#x27;;
+      case &#x27;in_review&#x27;:
+        return &#x27;En revisión&#x27;;
+      default:
+        return &#x27;Pendiente&#x27;;
+    }
+  }
+
+  getDocStatusClasses(docId: string): string {
+    switch (this.getDocState(docId)) {
+      case &#x27;approved&#x27;:
+        return &#x27;border-success-light text-success-light bg-success-light/10&#x27;;
+      case &#x27;rejected&#x27;:
+        return &#x27;border-error-border text-error-strong bg-error-bg dark:bg-error-900/30&#x27;;
+      case &#x27;in_review&#x27;:
+        return &#x27;border-primary-400 text-primary-600 bg-primary-50 dark:bg-primary-900/30&#x27;;
+      default:
+        return &#x27;border-warning-border text-warning-600 bg-warning-bg dark:bg-warning-900/20&#x27;;
+    }
+  }
+
+  getDocStatusHelperText(docId: string): string | null {
+    switch (this.getDocState(docId)) {
+      case &#x27;approved&#x27;:
+        return &#x27;Documento aprobado. Solo actualizalo si cambió algo.&#x27;;
+      case &#x27;rejected&#x27;:
+        return &#x27;Hubo observaciones. Revisá las notas en el resumen.&#x27;;
+      case &#x27;in_review&#x27;:
+        return &#x27;Ya lo recibimos y lo estamos revisando.&#x27;;
+      default:
+        return null;
+    }
+  }
+
+  getDocStatusHelperClasses(docId: string): string {
+    switch (this.getDocState(docId)) {
+      case &#x27;approved&#x27;:
+        return &#x27;text-success-light&#x27;;
+      case &#x27;rejected&#x27;:
+        return &#x27;text-error-strong&#x27;;
+      case &#x27;in_review&#x27;:
+        return &#x27;text-primary-600 dark:text-primary-300&#x27;;
+      default:
+        return &#x27;text-text-secondary dark:text-text-secondary/70&#x27;;
+    }
+  }
+
+  formatDate(value?: string | null): string {
+    if (!value) {
+      return &#x27;—&#x27;;
+    }
+
+    try {
+      return new Intl.DateTimeFormat(&#x27;es-AR&#x27;, {
+        dateStyle: &#x27;medium&#x27;,
+        timeStyle: &#x27;short&#x27;,
+      }).format(new Date(value));
+    } catch {
+      return value;
+    }
+  }
+
+  getStatusLabel(status: VerificationStatus): string {
+    switch (status) {
+      case &#x27;VERIFICADO&#x27;:
+        return &#x27;Verificado&#x27;;
+      case &#x27;RECHAZADO&#x27;:
+        return &#x27;Rechazado&#x27;;
+      default:
+        return &#x27;En revisión&#x27;;
+    }
+  }
+
+  getStatusDescription(status: VerificationStatus): string {
+    switch (status) {
+      case &#x27;VERIFICADO&#x27;:
+        return &#x27;Ya podés publicar y recibir reservas sin demoras.&#x27;;
+      case &#x27;RECHAZADO&#x27;:
+        return &#x27;Revisá las notas para corregir los documentos observados.&#x27;;
+      default:
+        return &#x27;Estamos revisando tu documentación. Te avisaremos apenas tengamos novedades.&#x27;;
+    }
+  }
+
+  getStatusEmoji(status: VerificationStatus): string {
+    switch (status) {
+      case &#x27;VERIFICADO&#x27;:
+        return &#x27;✅&#x27;;
+      case &#x27;RECHAZADO&#x27;:
+        return &#x27;❌&#x27;;
+      default:
+        return &#x27;⏳&#x27;;
+    }
+  }
+
+  getStatusChipClasses(status: VerificationStatus): string {
+    switch (status) {
+      case &#x27;VERIFICADO&#x27;:
+        return &#x27;border-success-light text-success-light bg-success-light/10&#x27;;
+      case &#x27;RECHAZADO&#x27;:
+        return &#x27;border-error-border text-error-strong bg-error-bg&#x27;;
+      default:
+        return &#x27;border-warning-border text-warning-600 bg-warning-bg dark:bg-warning-900/20&#x27;;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      .verification-page {
+        min-height: 100vh;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  class="verification-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300">  <section    class="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 text-white"  >    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">      <p class="text-xs uppercase tracking-[0.3em] text-white/70 mb-3">Centro de seguridad</p>      <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">        <div class="space-y-4">          <h1 class="text-3xl font-bold leading-tight">Tu identidad crea confianza</h1>          <p class="text-white/90 max-w-2xl">            Simplificamos la verificación reutilizando datos de tu perfil y documentos ya            cargados. Avanza en pocos pasos y publica más rápido.          </p>          <div class="flex flex-wrap gap-3">            <a              href="#verification-docs"              class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-semibold text-primary-700 shadow hover:bg-primary-50 transition-colors"            >              Continuar verificación →            </a>            <button              type="button"              (click)="toggleFaq()"              class="inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white hover:text-white transition-colors"            >              {{ showFaq() ? \'Ocultar preguntas\' : \'Preguntas frecuentes\' }}            </button>          </div>        </div>        <div class="rounded-2xl bg-white/10 backdrop-blur px-6 py-5 min-w-[240px]">          <p class="text-sm uppercase tracking-widest text-white/70 mb-1">Progreso</p>          <p class="text-4xl font-bold">{{ completionPercentage() }}%</p>          <p class="text-white/80 text-sm">            {{ completedDocs() }} de {{ totalRequiredDocs }} documentos listos          </p>        </div>      </div>    </div>  </section>  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">    @if (currentStatus(); as status) {      <section class="grid gap-4 md:grid-cols-3">        <div          class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"        >          <div class="flex items-start justify-between gap-4">            <div>              <p class="text-sm text-text-secondary dark:text-text-secondary/70">                Estado actual              </p>              <p class="text-2xl font-semibold text-text-primary dark:text-text-primary mt-1">                {{ getStatusLabel(status.status) }}              </p>              <p class="text-sm text-text-secondary dark:text-text-secondary/80">                Actualizado {{ formatDate(status.updated_at) }}              </p>            </div>            <span              class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"              [ngClass]="getStatusChipClasses(status.status)"            >              {{ getStatusEmoji(status.status) }}              {{ status.status.toLowerCase() }}            </span>          </div>          <p class="mt-4 text-sm text-text-secondary dark:text-text-secondary/80">            {{ getStatusDescription(status.status) }}          </p>          @if (status.notes) {            <div              class="mt-4 rounded-xl border border-error-border/60 bg-error-bg/60 dark:bg-error-900/30 px-4 py-3 text-sm text-error-strong"            >              {{ status.notes }}            </div>          }        </div>        <div          class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"        >          <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">            Revisión y progreso          </h3>          <ul class="mt-4 space-y-3 text-sm text-text-secondary dark:text-text-secondary/80">            <li class="flex items-center justify-between gap-4">              <span>Documentos listos</span>              <span class="font-semibold text-text-primary dark:text-text-primary">{{                completedDocs()              }}</span>            </li>            <li class="flex items-center justify-between gap-4">              <span>Pendientes</span>              <span class="font-semibold text-warning-600">{{ missingDocs().length }}</span>            </li>            <li class="flex items-center justify-between gap-4">              <span>Solicitud creada</span>              <span>{{ formatDate(status.created_at || status.updated_at) }}</span>            </li>          </ul>        </div>        <div          class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm flex flex-col gap-4"        >          <div>            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">              Acciones inmediatas            </h3>            <p class="text-sm text-text-secondary dark:text-text-secondary/80">              Completa los documentos marcados como pendientes y solicitaremos una revisión              automática.            </p>          </div>          <button            (click)="triggerVerification()"            [disabled]="isVerifying()"            class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-2 font-semibold text-text-inverse transition-colors disabled:bg-gray-400"          >            {{ isVerifying() ? \'Revisando...\' : \'Solicitar revisión ahora\' }}          </button>          <p class="text-xs text-text-secondary dark:text-text-secondary/70">            {{              autoTriggered()                ? \'Enviamos tu verificación automáticamente porque ya completaste todo.\'                : \'Cuando completes todos los pasos enviamos la verificación por vos.\'            }}          </p>        </div>      </section>      <section id="verification-docs" class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">        <div class="space-y-6">          @for (category of docCategories; track category.id) {            <div              class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"            >              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">                <div>                  <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">                    {{ category.title }}                  </h2>                  <p class="text-sm text-text-secondary dark:text-text-secondary/80">                    {{ category.description }}                  </p>                </div>                <div                  class="rounded-full bg-surface-base dark:bg-graphite-dark px-4 py-1 text-sm font-semibold text-text-secondary"                >                  {{ getCategoryStats(category.docs).completed }}/{{ category.docs.length }}                  completado                </div>              </div>              <div class="mt-5 space-y-4">                @for (doc of category.docs; track doc.id) {                  <div                    class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-white/70 dark:bg-graphite-dark/60 px-4 py-4 shadow-sm"                  >                    <div                      class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between"                    >                      <div>                        <p                          class="text-base font-semibold text-text-primary dark:text-text-primary"                        >                          {{ doc.emoji }} {{ doc.label }}                        </p>                        <p class="text-sm text-text-secondary dark:text-text-secondary/80">                          {{ doc.description }}                        </p>                        @if (getDocPrefillLabels(doc.id).length > 0) {                          <p class="mt-2 text-xs text-primary-600 dark:text-primary-300">                            Autocompletamos: {{ getDocPrefillLabels(doc.id).join(\', \') }}                          </p>                        }                        @if (getDocStatusHelperText(doc.id); as helperText) {                          <p class="mt-2 text-xs" [class]="getDocStatusHelperClasses(doc.id)">                            {{ helperText }}                          </p>                        }                      </div>                      <span                        class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"                        [ngClass]="getDocStatusClasses(doc.id)"                      >                        {{ getDocStatusLabel(doc.id) }}                      </span>                    </div>                    <div class="mt-4 flex flex-wrap gap-3">                      <a                        routerLink="/profile"                        [queryParams]="{ doc: doc.id }"                        class="inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"                      >                        {{ isDocCompleted(doc.id) ? \'Revisar documento\' : \'Subir documento\' }}                      </a>                      @if (getDocPrefillLabels(doc.id).length > 0) {                        <button                          type="button"                          (click)="prefillDoc(doc.id)"                          class="inline-flex items-center gap-2 rounded-xl bg-surface-base/60 dark:bg-graphite-dark px-3 py-1.5 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"                        >                          ✨ Autocompletar                        </button>                      }                    </div>                  </div>                }              </div>            </div>          }        </div>        <aside class="space-y-6">          <div            class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"          >            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">              Datos importados del perfil            </h3>            <p class="text-sm text-text-secondary dark:text-text-secondary/80">              Reutilizamos la información que ya completaste para evitar que escribas todo de              nuevo.            </p>            <ul class="mt-4 space-y-2 text-sm">              @if (prefilledFields().length > 0) {                @for (hint of prefilledFields(); track hint.label) {                  <li class="flex items-start gap-2">                    <span class="text-primary-500">•</span>                    <span>                      <span class="font-medium text-text-primary dark:text-text-primary">{{                        hint.label                      }}</span>                      <span class="ml-1 text-text-secondary dark:text-text-secondary/80">{{                        hint.value                      }}</span>                    </span>                  </li>                }              } @else {                <li class="text-text-secondary dark:text-text-secondary/70">                  Completa tu perfil para habilitar el autollenado automático.                </li>              }            </ul>            <a              routerLink="/profile"              class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700"            >              Actualizar perfil →            </a>          </div>          <div            class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"          >            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">              ¿Necesitas ayuda?            </h3>            <p class="text-sm text-text-secondary dark:text-text-secondary/80">              Nuestro equipo monitorea las verificaciones todos los días. Si detectamos un              problema te avisamos por WhatsApp.            </p>            <a              href="mailto:hola@autorenta.com"              class="mt-4 inline-flex items-center gap-2 rounded-xl border border-border-default px-3 py-1.5 text-sm font-medium text-text-primary hover:border-primary-500 hover:text-primary-600 transition-colors"            >              Escribir a soporte            </a>          </div>        </aside>      </section>      @if (showFaq()) {        <section class="mt-10">          <div            class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"          >            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">              Preguntas frecuentes            </h2>            <div class="divide-y divide-border-default dark:divide-neutral-800/60">              @for (faq of faqItems; track faq.question) {                <details class="group py-3">                  <summary                    class="flex cursor-pointer items-center justify-between text-base font-semibold text-text-primary dark:text-text-primary"                  >                    {{ faq.question }}                    <span class="text-lg transition-transform group-open:rotate-180">⌄</span>                  </summary>                  <p class="mt-2 text-sm text-text-secondary dark:text-text-secondary/80">                    {{ faq.answer }}                  </p>                </details>              }            </div>          </div>        </section>      }    } @else {      <div class="flex justify-center items-center py-12">        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">          <circle            class="opacity-25"            cx="12"            cy="12"            r="10"            stroke="currentColor"            stroke-width="4"          ></circle>          <path            class="opacity-75"            fill="currentColor"            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"          ></path>        </svg>      </div>    }  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'VerificationPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'VerificationPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

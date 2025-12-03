@@ -1,0 +1,1244 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  PricingRegion</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/dynamic-pricing.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#active" 
+>
+                                            active
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#base_price_per_hour" 
+>
+                                            base_price_per_hour
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#country_code" 
+>
+                                            country_code
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#currency" 
+>
+                                            currency
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#fuel_cost_multiplier" 
+>
+                                            fuel_cost_multiplier
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#id" 
+>
+                                            id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#inflation_rate" 
+>
+                                            inflation_rate
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#name" 
+>
+                                            name
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="active"></a>
+                                        <span class="name "><b>active</b>
+                                            <a href="#active">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>active:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="base_price_per_hour"></a>
+                                        <span class="name "><b>base_price_per_hour</b>
+                                            <a href="#base_price_per_hour">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>base_price_per_hour:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="country_code"></a>
+                                        <span class="name "><b>country_code</b>
+                                            <a href="#country_code">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>country_code:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="currency"></a>
+                                        <span class="name "><b>currency</b>
+                                            <a href="#currency">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>currency:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="fuel_cost_multiplier"></a>
+                                        <span class="name "><b>fuel_cost_multiplier</b>
+                                            <a href="#fuel_cost_multiplier">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>fuel_cost_multiplier:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="id"></a>
+                                        <span class="name "><b>id</b>
+                                            <a href="#id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="inflation_rate"></a>
+                                        <span class="name "><b>inflation_rate</b>
+                                            <a href="#inflation_rate">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>inflation_rate:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="name"></a>
+                                        <span class="name "><b>name</b>
+                                            <a href="#name">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, signal } from &#x27;@angular/core&#x27;;
+import type {
+  PriceLock,
+  LockPriceResult,
+  LockPriceRpcResponse,
+  LockPriceRpcParams,
+} from &#x27;../models/dynamic-pricing.model&#x27;;
+import { PriceLockErrorCode, rpcResponseToPriceLock } from &#x27;../models/dynamic-pricing.model&#x27;;
+import { injectSupabase } from &#x27;./supabase-client.service&#x27;;
+
+export interface PricingRequest {
+  region_id: string;
+  rental_start: string; // ISO 8601 timestamp
+  rental_hours: number;
+  car_id?: string;
+}
+
+export interface PricingBreakdown {
+  base_price: number;
+  day_factor: number;
+  hour_factor: number;
+  user_factor: number;
+  demand_factor: number;
+  event_factor: number;
+  total_multiplier: number;
+}
+
+export interface PricingDetails {
+  user_rentals: number;
+  day_of_week: number; // 0&#x3D;Sunday, 6&#x3D;Saturday
+  hour_of_day: number;
+}
+
+export interface DynamicPricingResponse {
+  region_id?: string; // Included in batch responses
+  price_per_hour: number;
+  total_price: number;
+  currency: string;
+  price_in_usd?: number; // USD equivalent using live exchange rate
+  breakdown: PricingBreakdown;
+  details: PricingDetails;
+  surge_active: boolean;
+  surge_message?: string;
+}
+
+export interface PricingRegion {
+  id: string;
+  name: string;
+  country_code: string;
+  currency: string;
+  base_price_per_hour: number;
+  fuel_cost_multiplier: number;
+  inflation_rate: number;
+  active: boolean;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class DynamicPricingService {
+  private readonly supabase &#x3D; injectSupabase();
+
+  // Cached regions
+  private readonly regionsCache &#x3D; signal&lt;PricingRegion[]&gt;([]);
+  private regionsCacheTimestamp &#x3D; 0;
+  private readonly CACHE_TTL &#x3D; 5 * 60 * 1000; // 5 minutes
+
+  /**
+   * Get all active pricing regions
+   */
+  async getRegions(): Promise&lt;PricingRegion[]&gt; {
+    const now &#x3D; Date.now();
+
+    // Return cached data if still valid
+    if (this.regionsCache().length &gt; 0 &amp;&amp; now - this.regionsCacheTimestamp &lt; this.CACHE_TTL) {
+      return this.regionsCache();
+    }
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;pricing_regions&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;active&#x27;, true)
+      .order(&#x27;name&#x27;);
+
+    if (error) {
+      throw new Error(&#x60;Failed to fetch pricing regions: ${error.message}&#x60;);
+    }
+
+    this.regionsCache.set(data as PricingRegion[]);
+    this.regionsCacheTimestamp &#x3D; now;
+
+    return data as PricingRegion[];
+  }
+
+  /**
+   * Get region by ID
+   */
+  async getRegionById(regionId: string): Promise&lt;PricingRegion | null&gt; {
+    const regions &#x3D; await this.getRegions();
+    return regions.find((r) &#x3D;&gt; r.id &#x3D;&#x3D;&#x3D; regionId) ?? null;
+  }
+
+  /**
+   * Calculate dynamic price for a rental
+   */
+  async calculatePrice(request: PricingRequest): Promise&lt;DynamicPricingResponse&gt; {
+    const { data, error } &#x3D; await this.supabase.functions.invoke(&#x27;calculate-dynamic-price&#x27;, {
+      body: request,
+    });
+
+    if (error) {
+      throw new Error(&#x60;Failed to calculate dynamic price: ${error.message}&#x60;);
+    }
+
+    return data as DynamicPricingResponse;
+  }
+
+  /**
+   * Calculate price using RPC function (fallback if Edge Function unavailable)
+   * NEW: Optionally accepts carId for vehicle-aware pricing
+   */
+  async calculatePriceRPC(
+    regionId: string,
+    userId: string,
+    rentalStart: string,
+    rentalHours: number,
+    carId?: string,
+  ): Promise&lt;DynamicPricingResponse&gt; {
+    const params: Record&lt;string, unknown&gt; &#x3D; {
+      p_region_id: regionId,
+      p_user_id: userId,
+      p_rental_start: rentalStart,
+      p_rental_hours: rentalHours,
+    };
+
+    // NEW: Pass car_id for vehicle-aware pricing if provided
+    if (carId) {
+      params[&#x27;p_car_id&#x27;] &#x3D; carId;
+    }
+
+    const { data, error } &#x3D; await this.supabase.rpc(&#x27;calculate_dynamic_price&#x27;, params);
+
+    if (error) {
+      throw new Error(&#x60;Failed to calculate price via RPC: ${error.message}&#x60;);
+    }
+
+    return data as DynamicPricingResponse;
+  }
+
+  /**
+   * Calculate prices for multiple regions in a single RPC call (batch optimization)
+   * Returns a map of region_id -&gt; pricing data for efficient lookup
+   */
+  async calculateBatchPricesRPC(
+    regionIds: string[],
+    userId: string,
+    rentalStart: string,
+    rentalHours: number,
+  ): Promise&lt;Map&lt;string, DynamicPricingResponse&gt;&gt; {
+    if (regionIds.length &#x3D;&#x3D;&#x3D; 0) {
+      return new Map();
+    }
+
+    const { data, error } &#x3D; await this.supabase.rpc(&#x27;calculate_batch_dynamic_prices&#x27;, {
+      p_region_ids: regionIds,
+      p_user_id: userId,
+      p_rental_start: rentalStart,
+      p_rental_hours: rentalHours,
+    });
+
+    if (error) {
+      throw new Error(&#x60;Failed to calculate batch prices via RPC: ${error.message}&#x60;);
+    }
+
+    // Convert array response to Map for O(1) lookups
+    const pricesMap &#x3D; new Map&lt;string, DynamicPricingResponse&gt;();
+    const results &#x3D; data as DynamicPricingResponse[];
+
+    for (const result of results) {
+      if (result.region_id) {
+        pricesMap.set(result.region_id, result);
+      }
+    }
+
+    return pricesMap;
+  }
+
+  /**
+   * Get latest demand snapshot for a region
+   */
+  async getLatestDemand(regionId: string): Promise&lt;{
+    available_cars: number;
+    active_bookings: number;
+    pending_requests: number;
+    demand_ratio: number;
+    surge_factor: number;
+    timestamp: string;
+  } | null&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;pricing_demand_snapshots&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;region_id&#x27;, regionId)
+      .order(&#x27;timestamp&#x27;, { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error) {
+      return null;
+    }
+
+    return data;
+  }
+
+  /**
+   * Get active special events for a region
+   */
+  async getActiveEvents(
+    regionId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise&lt;
+    Array&lt;{
+      id: string;
+      name: string;
+      start_date: string;
+      end_date: string;
+      factor: number;
+    }&gt;
+  &gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;pricing_special_events&#x27;)
+      .select(&#x27;id, name, start_date, end_date, factor&#x27;)
+      .eq(&#x27;region_id&#x27;, regionId)
+      .eq(&#x27;active&#x27;, true)
+      .lte(&#x27;start_date&#x27;, endDate.toISOString())
+      .gte(&#x27;end_date&#x27;, startDate.toISOString());
+
+    if (error) {
+      return [];
+    }
+
+    return data;
+  }
+
+  /**
+   * Get user&#x27;s pricing calculation history
+   */
+  async getUserPricingHistory(
+    userId: string,
+    limit &#x3D; 10,
+  ): Promise&lt;
+    Array&lt;{
+      id: string;
+      created_at: string;
+      base_price: number;
+      final_price: number;
+      calculation_details: DynamicPricingResponse;
+    }&gt;
+  &gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;pricing_calculations&#x27;)
+      .select(&#x27;id, created_at, base_price, final_price, calculation_details&#x27;)
+      .eq(&#x27;user_id&#x27;, userId)
+      .order(&#x27;created_at&#x27;, { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      return [];
+    }
+
+    return data;
+  }
+
+  /**
+   * Format price with currency
+   */
+  formatPrice(amount: number, currency: string): string {
+    const formatter &#x3D; new Intl.NumberFormat(&#x27;es-UY&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    return formatter.format(amount);
+  }
+
+  /**
+   * Get surge badge info
+   */
+  getSurgeBadge(response: DynamicPricingResponse): {
+    show: boolean;
+    text: string;
+    color: string;
+    icon: string;
+  } {
+    const multiplier &#x3D; response.breakdown.total_multiplier;
+
+    if (multiplier &gt; 1.15) {
+      return {
+        show: true,
+        text: response.surge_message || &#x27;Tarifa ajustada&#x27;,
+        color: &#x27;bg-warning-bg0 text-text-inverse&#x27;,
+        icon: &#x27;⚡&#x27;,
+      };
+    } else if (multiplier &lt; 0.95) {
+      return {
+        show: true,
+        text: response.surge_message || &#x27;Descuento disponible&#x27;,
+        color: &#x27;bg-success-bg0 text-text-inverse&#x27;,
+        icon: &#x27;💰&#x27;,
+      };
+    }
+
+    return {
+      show: false,
+      text: &#x27;&#x27;,
+      color: &#x27;&#x27;,
+      icon: &#x27;&#x27;,
+    };
+  }
+
+  /**
+   * Get human-readable breakdown labels
+   */
+  getBreakdownLabels(): {
+    day_factor: string;
+    hour_factor: string;
+    user_factor: string;
+    demand_factor: string;
+    event_factor: string;
+  } {
+    return {
+      day_factor: &#x27;Día de la semana&#x27;,
+      hour_factor: &#x27;Hora del día&#x27;,
+      user_factor: &#x27;Tipo de usuario&#x27;,
+      demand_factor: &#x27;Demanda&#x27;,
+      event_factor: &#x27;Eventos especiales&#x27;,
+    };
+  }
+
+  /**
+   * Format factor as percentage
+   */
+  formatFactor(factor: number): string {
+    const percent &#x3D; (factor * 100).toFixed(0);
+    return factor &gt;&#x3D; 0 ? &#x60;+${percent}%&#x60; : &#x60;${percent}%&#x60;;
+  }
+
+  /**
+   * Get day name from day_of_week number
+   */
+  getDayName(dayOfWeek: number): string {
+    const days &#x3D; [&#x27;Domingo&#x27;, &#x27;Lunes&#x27;, &#x27;Martes&#x27;, &#x27;Miércoles&#x27;, &#x27;Jueves&#x27;, &#x27;Viernes&#x27;, &#x27;Sábado&#x27;];
+    return days[dayOfWeek] || &#x27;Desconocido&#x27;;
+  }
+
+  /**
+   * Get hour range description
+   */
+  getHourDescription(hour: number): string {
+    if (hour &gt;&#x3D; 0 &amp;&amp; hour &lt; 6) return &#x27;Madrugada (descuento)&#x27;;
+    if (hour &gt;&#x3D; 6 &amp;&amp; hour &lt; 10) return &#x27;Mañana (pico)&#x27;;
+    if (hour &gt;&#x3D; 10 &amp;&amp; hour &lt; 17) return &#x27;Tarde (normal)&#x27;;
+    if (hour &gt;&#x3D; 17 &amp;&amp; hour &lt; 22) return &#x27;Noche (pico)&#x27;;
+    return &#x27;Noche tardía&#x27;;
+  }
+
+  /**
+   * Get quick price for a car (for map markers and search results)
+   * Uses current time and 24h rental by default
+   */
+  async getQuickPrice(
+    carId: string,
+    regionId: string,
+  ): Promise&lt;{
+    price_per_hour: number;
+    price_per_day: number;
+    currency: string;
+    price_usd_hour?: number;
+    price_usd_day?: number;
+    surge_active: boolean;
+    surge_icon?: string;
+  } | null&gt; {
+    try {
+      // Get current user ID (if logged in)
+      const {
+        data: { user },
+      } &#x3D; await this.supabase.auth.getUser();
+      const userId &#x3D; user?.id || &#x27;00000000-0000-0000-0000-000000000000&#x27;; // Anonymous user
+
+      const now &#x3D; new Date();
+      const response &#x3D; await this.calculatePriceRPC(
+        regionId,
+        userId,
+        now.toISOString(),
+        24, // Default 24 hours for &quot;per day&quot; pricing
+      );
+
+      const result &#x3D; {
+        price_per_hour: response.price_per_hour,
+        price_per_day: response.total_price,
+        currency: response.currency,
+        price_usd_hour: response.price_in_usd,
+        price_usd_day: response.price_in_usd ? response.price_in_usd * 24 : undefined,
+        surge_active: response.surge_active,
+        surge_icon: this.getSurgeBadge(response).icon,
+      };
+
+      return result;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Get batch prices for multiple cars (optimized for map view)
+   * Returns a map of car_id -&gt; pricing data
+   */
+  async getBatchPrices(cars: Array&lt;{ id: string; region_id: string }&gt;): Promise&lt;
+    Map&lt;
+      string,
+      {
+        price_per_hour: number;
+        price_per_day: number;
+        currency: string;
+        price_usd_hour?: number;
+        surge_active: boolean;
+      }
+    &gt;
+  &gt; {
+    const pricesMap &#x3D; new Map();
+
+    // Group cars by region for efficient processing
+    const carsByRegion &#x3D; cars.reduce((acc, car) &#x3D;&gt; {
+      if (!acc.has(car.region_id)) {
+        acc.set(car.region_id, []);
+      }
+      acc.get(car.region_id)!.push(car);
+      return acc;
+    }, new Map&lt;string, typeof cars&gt;());
+
+    // Process each region
+    for (const [regionId, regionCars] of carsByRegion) {
+      for (const car of regionCars) {
+        const price &#x3D; await this.getQuickPrice(car.id, regionId);
+        if (price) {
+          pricesMap.set(car.id, price);
+        }
+      }
+    }
+
+    return pricesMap;
+  }
+
+  /**
+   * Format quick price for display (e.g., &quot;$3.20/h&quot;)
+   */
+  formatQuickPrice(pricePerHour: number, currency: string, showUSD &#x3D; false): string {
+    if (showUSD &amp;&amp; currency !&#x3D;&#x3D; &#x27;USD&#x27;) {
+      // Try to convert to USD if exchange rate available
+      // For now, just show local currency
+      return &#x60;${this.formatPrice(pricePerHour, currency)}/h&#x60;;
+    }
+    return &#x60;${this.formatPrice(pricePerHour, currency)}/h&#x60;;
+  }
+
+  /**
+   * Get price trend indicator (↑ ↓ →)
+   */
+  getPriceTrend(currentMultiplier: number): string {
+    if (currentMultiplier &gt; 1.1) return &#x27;↑&#x27;;
+    if (currentMultiplier &lt; 0.9) return &#x27;↓&#x27;;
+    return &#x27;→&#x27;;
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  // PRICE LOCK METHODS (NEW - for dynamic pricing integration)
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Lock a price for 15 minutes before booking
+   * Calls lock_price_for_booking RPC and returns PriceLock
+   */
+  async lockPrice(
+    carId: string,
+    userId: string,
+    rentalStart: Date,
+    rentalHours: number,
+  ): Promise&lt;LockPriceResult&gt; {
+    try {
+      const params: LockPriceRpcParams &#x3D; {
+        p_car_id: carId,
+        p_user_id: userId,
+        p_rental_start: rentalStart.toISOString(),
+        p_rental_hours: rentalHours,
+      };
+
+      const { data, error } &#x3D; await this.supabase.rpc(&#x27;lock_price_for_booking&#x27;, params);
+
+      if (error) {
+        console.error(&#x27;[DynamicPricingService] Lock price RPC error:&#x27;, error);
+        return {
+          ok: false,
+          error: error.message,
+          errorCode: PriceLockErrorCode.NETWORK_ERROR,
+        };
+      }
+
+      const response &#x3D; data as LockPriceRpcResponse;
+
+      // Check if car uses fixed pricing (not an error, just different flow)
+      if (!response.uses_dynamic_pricing) {
+        return {
+          ok: true,
+          priceLock: undefined, // No lock needed for fixed pricing
+          error: response.message,
+        };
+      }
+
+      // Check for fallback error
+      if (response.fallback &amp;&amp; response.error) {
+        return {
+          ok: false,
+          error: response.error,
+          errorCode: PriceLockErrorCode.CALCULATION_FAILED,
+        };
+      }
+
+      // Convert RPC response to PriceLock model
+      const priceLock &#x3D; rpcResponseToPriceLock(response);
+
+      if (!priceLock) {
+        return {
+          ok: false,
+          error: &#x27;Failed to parse price lock response&#x27;,
+          errorCode: PriceLockErrorCode.CALCULATION_FAILED,
+        };
+      }
+
+      return {
+        ok: true,
+        priceLock,
+      };
+    } catch (err) {
+      console.error(&#x27;[DynamicPricingService] Lock price error:&#x27;, err);
+      return {
+        ok: false,
+        error: err instanceof Error ? err.message : &#x27;Unknown error&#x27;,
+        errorCode: PriceLockErrorCode.NETWORK_ERROR,
+      };
+    }
+  }
+
+  /**
+   * Check if a price lock is still valid
+   */
+  async isPriceLockValid(priceLock: PriceLock | null): Promise&lt;boolean&gt; {
+    if (!priceLock) {
+      return false;
+    }
+
+    const { isPriceLockExpired } &#x3D; await import(&#x27;../models/dynamic-pricing.model&#x27;);
+    return !isPriceLockExpired(priceLock);
+  }
+
+  /**
+   * Get seconds remaining until price lock expires
+   * Returns 0 if already expired or null
+   */
+  async getLockExpiresIn(priceLock: PriceLock | null): Promise&lt;number&gt; {
+    if (!priceLock) {
+      return 0;
+    }
+
+    const { calculateLockExpiresIn } &#x3D; await import(&#x27;../models/dynamic-pricing.model&#x27;);
+    return calculateLockExpiresIn(priceLock);
+  }
+
+  /**
+   * Refresh/renew a price lock by locking again
+   * Useful when user is about to complete checkout and lock is expiring
+   */
+  async refreshPriceLock(priceLock: PriceLock): Promise&lt;LockPriceResult&gt; {
+    return this.lockPrice(
+      priceLock.carId,
+      priceLock.userId,
+      priceLock.rentalStart,
+      priceLock.rentalHours,
+    );
+  }
+
+  /**
+   * Validate price lock for booking creation
+   * Returns null if valid, error message if invalid
+   */
+  async validatePriceLockForBooking(priceLock: PriceLock | null): Promise&lt;string | null&gt; {
+    const { validatePriceLock } &#x3D; await import(&#x27;../models/dynamic-pricing.model&#x27;);
+    return validatePriceLock(priceLock);
+  }
+
+  /**
+   * Get formatted countdown string (MM:SS) for price lock
+   */
+  async formatLockCountdown(priceLock: PriceLock | null): Promise&lt;string&gt; {
+    if (!priceLock) {
+      return &#x27;00:00&#x27;;
+    }
+
+    const { calculateLockExpiresIn, formatLockCountdown } &#x3D;
+      await import(&#x27;../models/dynamic-pricing.model&#x27;);
+    const seconds &#x3D; calculateLockExpiresIn(priceLock);
+    return formatLockCountdown(seconds);
+  }
+
+  /**
+   * Check if price lock is expiring soon (&lt; 2 minutes)
+   * Used to show warning to user
+   */
+  async isPriceLockExpiringSoon(priceLock: PriceLock | null): Promise&lt;boolean&gt; {
+    const seconds &#x3D; await this.getLockExpiresIn(priceLock);
+    return seconds &gt; 0 &amp;&amp; seconds &lt; 120; // Less than 2 minutes
+  }
+
+  /**
+   * Get price comparison between fixed and dynamic pricing
+   * Used to show savings/surcharge to user
+   */
+  async getPriceComparison(
+    fixedPrice: number,
+    priceLock: PriceLock | null,
+  ): Promise&lt;{
+    fixedPrice: number;
+    dynamicPrice: number;
+    difference: number;
+    percentageDiff: number;
+    isCheaper: boolean;
+    message: string;
+  } | null&gt; {
+    if (!priceLock) {
+      return null;
+    }
+
+    const { calculatePriceComparison, generatePriceComparisonMessage } &#x3D;
+      await import(&#x27;../models/dynamic-pricing.model&#x27;);
+
+    const comparison &#x3D; calculatePriceComparison(fixedPrice, priceLock.totalPrice);
+    const message &#x3D; generatePriceComparisonMessage(comparison);
+
+    return {
+      ...comparison,
+      message,
+    };
+  }
+
+  /**
+   * Get surge pricing info for display
+   */
+  async getSurgePricingInfo(priceLock: PriceLock | null): Promise&lt;{
+    isActive: boolean;
+    tier: string;
+    factor: number;
+    message: string;
+    icon: string;
+    badgeColor: string;
+  } | null&gt; {
+    if (!priceLock) {
+      return null;
+    }
+
+    const { generateSurgeInfo } &#x3D; await import(&#x27;../models/dynamic-pricing.model&#x27;);
+    return generateSurgeInfo(priceLock.priceSnapshot);
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'PricingRegion.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

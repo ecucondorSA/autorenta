@@ -603,6 +603,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   // Colores alineados a la paleta del sistema de diseño (sin hex legacy)
   colors = [
     { name: 'Celeste', hex: '#a7d8f4' }, // CTA default
+    { name: 'Negro Piano', hex: '#050505', metalness: 0.9, roughness: 0.1, envMapIntensity: 2.0 }, // PBR Fotorrealista
     { name: 'Celeste Hover', hex: '#8ec9ec' }, // CTA hover
     { name: 'Marfil', hex: '#f8f4ec' }, // Surface base
     { name: 'Beige', hex: '#dfd2bf' }, // Surface secondary
@@ -661,9 +662,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedColor'] && !changes['selectedColor'].firstChange) {
-      if (this.selectedColor) {
-        this.applyColor(this.selectedColor);
-      }
+      this.applyColor(this.selectedColor ?? 'Negro Piano'); // Aplica 'Negro Piano' por defecto si no se proporciona color
     }
   }
 
@@ -705,9 +704,9 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     // 2. Camera - Más cerca y FOV más estrecho para efecto inmersivo
     const width = this.rendererCanvas.nativeElement.clientWidth;
     const height = this.rendererCanvas.nativeElement.clientHeight;
-    this.camera = new this.THREE.PerspectiveCamera(35, width / height, 0.1, 1000);
+    this.camera = new this.THREE.PerspectiveCamera(45, width / height, 0.1, 1000); // FOV 45 (lente fotográfica ~50mm)
     // Posición de cámara más cercana y centrada
-    this.camera.position.set(4, 1.5, 6);
+    this.camera.position.set(4, 1.5, 4); // Encuadre dramático
     this.camera.lookAt(0, 0.8, 0);
 
     // 3. Renderer - alpha: true para fondo transparente (usa el fondo del HTML)
@@ -747,14 +746,14 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     // Configuración para experiencia inmersiva - entrar/salir del auto
     this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.08; // Movimiento más suave
+    this.controls.dampingFactor = 0.02; // Movimiento aún más suave y pesado
     this.controls.enableZoom = true;
     this.controls.enablePan = false; // Desactivar pan para mantener centrado
-    this.controls.minDistance = 0.1; // Permite entrar completamente dentro del auto
-    this.controls.maxDistance = 20; // Puede alejarse para vista completa
+    this.controls.minDistance = 5; // Ajustado a 5
+    this.controls.maxDistance = 7; // Ajustado a 7
     this.controls.minPolarAngle = 0; // Puede ver desde arriba
-    this.controls.maxPolarAngle = Math.PI / 1.8; // Casi hasta abajo
-    this.controls.target.set(0, 0.8, 0); // Mirar al centro del auto
+    this.controls.maxPolarAngle = this.THREE.MathUtils.degToRad(80); // Evita mirar por debajo del suelo
+    this.controls.target.set(0, 0.5, 0); // Mirar ligeramente arriba del suelo
     this.controls.autoRotate = true; // Rotación automática
     this.controls.autoRotateSpeed = 0.3; // Rotación más lenta
     this.controls.zoomSpeed = 1.2; // Zoom más rápido para transición suave
@@ -783,7 +782,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.scene.add(ambientLight);
 
     // Main Directional Light (Sun/Key Light) - INTENSIDAD AUMENTADA
-    this.mainLight = new this.THREE.DirectionalLight(0xffffff, 3.5);
+    this.mainLight = new this.THREE.DirectionalLight(0xffffff, 4.0); // Aumentado a 4.0
     this.mainLight.position.set(8, 12, 10);
     this.mainLight.castShadow = true;
     this.mainLight.shadow.mapSize.width = 2048;
@@ -791,7 +790,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.mainLight.shadow.camera.near = 0.1;
     this.mainLight.shadow.camera.far = 50;
     this.mainLight.shadow.bias = -0.0001;
-    this.mainLight.shadow.radius = 4;
+    this.mainLight.shadow.radius = 2; // Reducido a 2 para sombras más definidas
     this.scene.add(this.mainLight);
 
     // Fill Light (Cooler, from opposite side) - INTENSIDAD AUMENTADA
@@ -817,7 +816,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     // Shadow Catcher Plane
     const geometry = new this.THREE.PlaneGeometry(100, 100);
     const material = new this.THREE.ShadowMaterial({
-      opacity: 0.3, // Más sutil para fondo claro
+      opacity: 0.5, // AUMENTADO de 0.3 a 0.5 para sombras de contacto más negras
     });
 
     const plane = new this.THREE.Mesh(geometry, material);
@@ -844,18 +843,37 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     const envCtx = envCanvas.getContext('2d');
 
     if (envCtx) {
-      // Fondo uniforme basado en los tokens claros
-      envCtx.fillStyle = baseColor;
+      // 1. Base Gradient (Horizon to Zenith) - Suelo más oscuro, cielo más claro
+      const grd = envCtx.createLinearGradient(0, 128, 0, 0);
+      grd.addColorStop(0, '#d0d0d0'); // Suelo gris claro
+      grd.addColorStop(0.5, '#e8e8e8'); // Horizonte
+      grd.addColorStop(1, '#ffffff'); // Zenit blanco
+      envCtx.fillStyle = grd;
       envCtx.fillRect(0, 0, 256, 128);
 
-      // Destellos sutiles para simular ventanas sin recurrir a gradientes
-      envCtx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-      envCtx.fillRect(50, 10, 40, 30); // Left window
-      envCtx.fillRect(166, 10, 40, 30); // Right window
+      // 2. Overhead Softbox (Luz cenital principal) - Gran reflejo en techo/capó
+      const ceilingGrd = envCtx.createRadialGradient(128, 0, 10, 128, 0, 100);
+      ceilingGrd.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+      ceilingGrd.addColorStop(0.5, 'rgba(255, 255, 255, 0.8)');
+      ceilingGrd.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+      envCtx.fillStyle = ceilingGrd;
+      envCtx.fillRect(0, 0, 256, 64);
 
-      // Acento celeste (CTA) muy tenue
-      envCtx.fillStyle = 'rgba(167, 216, 244, 0.12)';
-      envCtx.fillRect(100, 5, 56, 40); // Center accent
+      // 3. Side Softboxes (Luces laterales) - Para definir las curvas laterales
+      // Luz izquierda
+      envCtx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+      envCtx.shadowBlur = 20;
+      envCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      envCtx.fillRect(20, 40, 40, 60);
+
+      // Luz derecha
+      envCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      envCtx.fillRect(196, 40, 40, 60);
+      envCtx.shadowBlur = 0; // Reset shadow
+
+      // 4. Highlight Accent (Toque sutil de color CTA)
+      envCtx.fillStyle = 'rgba(167, 216, 244, 0.3)'; // Celeste muy suave
+      envCtx.fillRect(100, 100, 56, 20); // Reflejo bajo
     }
 
     const envTexture = new this.THREE.CanvasTexture(envCanvas);
@@ -931,19 +949,19 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
               mesh.material.needsUpdate = true;
             }
 
-            // Add edge outlines to highlight parts - more visible
-            if (mesh.geometry) {
-              const edges = new this.THREE.EdgesGeometry(mesh.geometry, 25); // 25 degree threshold (more edges)
-              const lineMaterial = new this.THREE.LineBasicMaterial({
-                color: 0x2b5f72, // --text-secondary (azul celeste oscuro)
-                transparent: true,
-                opacity: 0.35, // Más visible
-                linewidth: 1,
-              });
-              const edgeLines = new this.THREE.LineSegments(edges, lineMaterial);
-              edgeLines.userData['isEdgeLine'] = true; // Mark for later identification
-              mesh.add(edgeLines);
-            }
+            // Remove edge outlines for photorealistic look
+            // if (mesh.geometry) {
+            //   const edges = new this.THREE.EdgesGeometry(mesh.geometry, 25);
+            //   const lineMaterial = new this.THREE.LineBasicMaterial({
+            //     color: 0x2b5f72,
+            //     transparent: true,
+            //     opacity: 0.35,
+            //     linewidth: 1,
+            //   });
+            //   const edgeLines = new this.THREE.LineSegments(edges, lineMaterial);
+            //   edgeLines.userData['isEdgeLine'] = true;
+            //   mesh.add(edgeLines);
+            // }
           }
         });
 
@@ -964,10 +982,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         this.isLoading = false;
         this.modelLoaded.emit();
 
-        // Apply initial color if set
-        if (this.selectedColor) {
-          this.applyColor(this.selectedColor);
-        }
+        // Apply initial color if set, or default to Negro Piano
+        this.applyColor(this.selectedColor ?? 'Negro Piano');
       },
       (_xhr) => {
         // Progress callback - could add progress indicator
@@ -1057,17 +1073,48 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     if (!hexColor.startsWith('#')) return;
 
+    // Get PBR properties from the predefined color, if available
+    const applyMetalness = predefined?.metalness;
+    const applyRoughness = predefined?.roughness;
+    const applyEnvMapIntensity = predefined?.envMapIntensity;
+
     this.carModel.traverse((child) => {
       if (!this.THREE) return;
       const mesh = child as import('three').Mesh;
       if (mesh.isMesh) {
         if (mesh.material instanceof this.THREE.MeshStandardMaterial) {
-          const color = mesh.material.color;
-          // If it's not very dark (tires) and not transparent (glass)
-          if (color.r > 0.1 || color.g > 0.1 || color.b > 0.1) {
-            if (mesh.material.opacity > 0.9) {
-              mesh.material.color.set(hexColor);
+          const partInfo = this.getPartInfoFromMesh(mesh);
+
+          // Apply color to main body parts
+          if (
+            partInfo.category === 'body' &&
+            mesh.material.opacity > 0.9 &&
+            (mesh.material.color.r > 0.1 || mesh.material.color.g > 0.1 || mesh.material.color.b > 0.1)
+          ) {
+            // UPGRADE to MeshPhysicalMaterial if needed for Clearcoat support
+            if (!(mesh.material instanceof this.THREE.MeshPhysicalMaterial)) {
+              const newMat = new this.THREE.MeshPhysicalMaterial();
+              this.THREE.MeshStandardMaterial.prototype.copy.call(newMat, mesh.material);
+              mesh.material = newMat;
             }
+
+            const physMat = mesh.material as import('three').MeshPhysicalMaterial;
+            physMat.color.set(hexColor);
+
+            // Apply PBR properties if defined
+            if (applyMetalness !== undefined) physMat.metalness = applyMetalness;
+            if (applyRoughness !== undefined) physMat.roughness = applyRoughness;
+            if (applyEnvMapIntensity !== undefined) physMat.envMapIntensity = applyEnvMapIntensity;
+
+            // Special handling for 'Negro Piano' or high-quality finishes: Enable Clearcoat
+            if (hexColor.toLowerCase() === '#050505' || hexColor.toLowerCase() === '#0a0a0a') {
+              physMat.clearcoat = 1.0; // Barniz completo
+              physMat.clearcoatRoughness = 0.03; // Barniz ultra pulido
+            } else {
+              physMat.clearcoat = 0.0;
+            }
+
+            mesh.material.needsUpdate = true;
           }
         }
       }

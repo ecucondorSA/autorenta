@@ -1,0 +1,3502 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  DriverProfileCardComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/driver-profile-card/driver-profile-card.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>DriverProfileCardComponent</p>
+<p>Tarjeta que muestra el perfil de riesgo del conductor.</p>
+<p>MUESTRA:</p>
+<ul>
+<li>Clase actual (0-10) con badge visual</li>
+<li>Score telemático (0-100)</li>
+<li>Estado de Bonus Protector activo (NUEVO)</li>
+<li>Beneficios (descuentos) o recargos</li>
+<li>Historial de siniestros</li>
+<li>Progreso hacia mejor clase</li>
+</ul>
+<p>DISEÑO:</p>
+<ul>
+<li>Badge de clase con color según riesgo</li>
+<li>Badge de protector activo con nivel y expiración (NUEVO)</li>
+<li>Barra de progreso para score telemático</li>
+<li>Iconos visuales (🏆, ⭐, ⚠️, 🔴, 🛡️)</li>
+<li>Información detallada expandible</li>
+</ul>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-driver-profile-card</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>IonicModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      ion-card {
+        margin: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      ion-card-header {
+        border-bottom: 1px solid var(--ion-color-light);
+      }
+
+      ion-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      /* Loading and Error States */
+      .loading-container,
+      .error-container,
+      .no-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        text-align: center;
+      }
+
+      .loading-container ion-spinner {
+        margin-bottom: 16px;
+      }
+
+      .error-container ion-icon,
+      .no-profile ion-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      /* Class Section */
+      .class-section {
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .class-badge-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+
+      .class-badge {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .class-icon {
+        font-size: 1.3rem;
+      }
+
+      .class-label {
+        font-weight: 600;
+      }
+
+      .class-description {
+        color: var(--ion-color-medium);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      /* Protector Section (NEW) */
+      .protector-section {
+        margin-bottom: 24px;
+      }
+
+      .protector-card {
+        margin: 0 0 16px 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .protector-card.warning {
+        background: var(--ion-color-light);
+      }
+
+      .protector-card ion-card-content {
+        padding: 16px;
+      }
+
+      .protector-active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .protector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .protector-badge {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .protector-badge ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .protector-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .protector-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-dark);
+      }
+
+      .protector-detail ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .manage-button {
+        align-self: flex-start;
+        margin: 0;
+        --padding-start: 0;
+      }
+
+      .protector-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .protector-warning &gt; ion-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      .warning-content {
+        flex: 1;
+      }
+
+      .warning-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin: 0 0 4px 0;
+      }
+
+      .warning-message {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      /* Score Section */
+      .score-section {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .score-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .score-label {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+      }
+
+      .score-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      ion-progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .score-message {
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        text-align: center;
+      }
+
+      /* Benefits Section */
+      .benefits-section {
+        margin-bottom: 24px;
+      }
+
+      .benefits-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+
+      .benefit-item ion-icon {
+        font-size: 24px;
+      }
+
+      .benefit-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .benefit-label {
+        font-size: 0.95rem;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      .benefit-value.discount {
+        color: var(--ion-color-success);
+      }
+
+      .benefit-value.surcharge {
+        color: var(--ion-color-danger);
+      }
+
+      /* Claims Section */
+      .claims-section {
+        margin-bottom: 24px;
+      }
+
+      .claims-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .claims-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .claim-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .claim-label {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        text-align: center;
+        margin-bottom: 4px;
+      }
+
+      .claim-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+
+      .last-claim {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+      }
+
+      /* Progress Section */
+      .progress-section {
+        margin-bottom: 16px;
+      }
+
+      .progress-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--ion-color-dark);
+      }
+
+      .progress-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-primary-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .max-class-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-success-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+        color: var(--ion-color-success-shade);
+      }
+
+      ion-button {
+        margin-top: 16px;
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;ion-card&gt;
+  &lt;ion-card-header&gt;
+    &lt;ion-card-title&gt;
+      &lt;ion-icon name&#x3D;&quot;person-circle-outline&quot;&gt;&lt;/ion-icon&gt;
+      Perfil de Conductor
+    &lt;/ion-card-title&gt;
+  &lt;/ion-card-header&gt;
+
+  &lt;ion-card-content&gt;
+    &lt;!-- Loading State --&gt;
+    &lt;div *ngIf&#x3D;&quot;driverProfileService.loading()&quot; class&#x3D;&quot;loading-container&quot;&gt;
+      &lt;ion-spinner name&#x3D;&quot;crescent&quot;&gt;&lt;/ion-spinner&gt;
+      &lt;p&gt;Cargando perfil...&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Error State --&gt;
+    &lt;div *ngIf&#x3D;&quot;driverProfileService.error()&quot; class&#x3D;&quot;error-container&quot;&gt;
+      &lt;ion-icon name&#x3D;&quot;alert-circle-outline&quot; color&#x3D;&quot;danger&quot;&gt;&lt;/ion-icon&gt;
+      &lt;p&gt;{{ driverProfileService.error() }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Profile Loaded --&gt;
+    &lt;div *ngIf&#x3D;&quot;!driverProfileService.loading() &amp;&amp; !driverProfileService.error() &amp;&amp; profile()&quot;&gt;
+      &lt;!-- Class Badge --&gt;
+      &lt;div class&#x3D;&quot;class-section&quot;&gt;
+        &lt;div class&#x3D;&quot;class-badge-container&quot;&gt;
+          &lt;ion-badge [color]&#x3D;&quot;classBadge().color&quot; class&#x3D;&quot;class-badge&quot;&gt;
+            &lt;span class&#x3D;&quot;class-icon&quot;&gt;{{ classBadge().icon }}&lt;/span&gt;
+            &lt;span class&#x3D;&quot;class-label&quot;&gt;Clase {{ driverClass() }}&lt;/span&gt;
+          &lt;/ion-badge&gt;
+        &lt;/div&gt;
+        &lt;p class&#x3D;&quot;class-description&quot;&gt;{{ classDescription() }}&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Bonus Protector Status (NEW) --&gt;
+      &lt;div class&#x3D;&quot;protector-section&quot; *ngIf&#x3D;&quot;!bonusProtectorService.loading()&quot;&gt;
+        &lt;!-- Active Protector --&gt;
+        &lt;ion-card class&#x3D;&quot;protector-card&quot; *ngIf&#x3D;&quot;hasActiveProtector() &amp;&amp; !isProtectorExpired()&quot;&gt;
+          &lt;ion-card-content&gt;
+            &lt;div class&#x3D;&quot;protector-active&quot;&gt;
+              &lt;div class&#x3D;&quot;protector-header&quot;&gt;
+                &lt;ion-badge [color]&#x3D;&quot;protectorBadgeColor()&quot; class&#x3D;&quot;protector-badge&quot;&gt;
+                  &lt;ion-icon [name]&#x3D;&quot;protectorIcon()&quot;&gt;&lt;/ion-icon&gt;
+                  &lt;span&gt;{{ protectorBadgeText() }}&lt;/span&gt;
+                &lt;/ion-badge&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;protector-info&quot;&gt;
+                &lt;div class&#x3D;&quot;protector-detail&quot;&gt;
+                  &lt;ion-icon name&#x3D;&quot;shield-checkmark-outline&quot; color&#x3D;&quot;success&quot;&gt;&lt;/ion-icon&gt;
+                  &lt;span
+                    &gt;{{ remainingClaims() }} uso{{
+                      remainingClaims() &#x3D;&#x3D;&#x3D; 1 ? &#x27;&#x27; : &#x27;s&#x27;
+                    }}
+                    restante{{ remainingClaims() &#x3D;&#x3D;&#x3D; 1 ? &#x27;&#x27; : &#x27;s&#x27; }}&lt;/span
+                  &gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;protector-detail&quot;&gt;
+                  &lt;ion-icon
+                    name&#x3D;&quot;calendar-outline&quot;
+                    [color]&#x3D;&quot;isNearExpiry() ? &#x27;warning&#x27; : &#x27;medium&#x27;&quot;
+                  &gt;&lt;/ion-icon&gt;
+                  &lt;span&gt;{{ expiryMessage() }}&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;ion-button
+                fill&#x3D;&quot;clear&quot;
+                size&#x3D;&quot;small&quot;
+                (click)&#x3D;&quot;onManageProtector()&quot;
+                class&#x3D;&quot;manage-button&quot;
+              &gt;
+                &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;settings-outline&quot;&gt;&lt;/ion-icon&gt;
+                Gestionar
+              &lt;/ion-button&gt;
+            &lt;/div&gt;
+          &lt;/ion-card-content&gt;
+        &lt;/ion-card&gt;
+
+        &lt;!-- Expired or No Protector --&gt;
+        &lt;ion-card
+          class&#x3D;&quot;protector-card warning&quot;
+          *ngIf&#x3D;&quot;!hasActiveProtector() || isProtectorExpired()&quot;
+        &gt;
+          &lt;ion-card-content&gt;
+            &lt;div class&#x3D;&quot;protector-warning&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;shield-outline&quot; color&#x3D;&quot;medium&quot;&gt;&lt;/ion-icon&gt;
+              &lt;div class&#x3D;&quot;warning-content&quot;&gt;
+                &lt;p class&#x3D;&quot;warning-title&quot;&gt;
+                  {{ isProtectorExpired() ? &#x27;Tu protección expiró&#x27; : &#x27;Sin protección activa&#x27; }}
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;warning-message&quot;&gt;
+                  {{
+                    isProtectorExpired()
+                      ? &#x27;Renueva tu Bonus Protector para seguir protegido&#x27;
+                      : &#x27;Protege tu clase de conductor de siniestros inesperados&#x27;
+                  }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;ion-button
+              expand&#x3D;&quot;block&quot;
+              size&#x3D;&quot;small&quot;
+              color&#x3D;&quot;primary&quot;
+              (click)&#x3D;&quot;onPurchaseProtector()&quot;
+            &gt;
+              &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;shield-checkmark-outline&quot;&gt;&lt;/ion-icon&gt;
+              {{ isProtectorExpired() ? &#x27;Renovar Protección&#x27; : &#x27;Comprar Protección&#x27; }}
+            &lt;/ion-button&gt;
+          &lt;/ion-card-content&gt;
+        &lt;/ion-card&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Score Section --&gt;
+      &lt;div class&#x3D;&quot;score-section&quot;&gt;
+        &lt;div class&#x3D;&quot;score-header&quot;&gt;
+          &lt;span class&#x3D;&quot;score-label&quot;&gt;Score Telemático&lt;/span&gt;
+          &lt;span class&#x3D;&quot;score-value&quot; [style.color]&#x3D;&quot;scoreColor()&quot;&gt;
+            {{ driverScore() }}/100
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;ion-progress-bar
+          [value]&#x3D;&quot;driverScore() / 100&quot;
+          [color]&#x3D;&quot;scoreBarColor()&quot;
+        &gt;&lt;/ion-progress-bar&gt;
+        &lt;p class&#x3D;&quot;score-message&quot;&gt;{{ scoreMessage() }}&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Benefits Section --&gt;
+      &lt;div class&#x3D;&quot;benefits-section&quot;&gt;
+        &lt;h3&gt;Beneficios Actuales&lt;/h3&gt;
+
+        &lt;!-- Fee Discount/Surcharge --&gt;
+        &lt;div class&#x3D;&quot;benefit-item&quot;&gt;
+          &lt;ion-icon
+            [name]&#x3D;&quot;hasDiscount() ? &#x27;trending-down-outline&#x27; : &#x27;trending-up-outline&#x27;&quot;
+            [color]&#x3D;&quot;hasDiscount() ? &#x27;success&#x27; : &#x27;danger&#x27;&quot;
+          &gt;&lt;/ion-icon&gt;
+          &lt;div class&#x3D;&quot;benefit-content&quot;&gt;
+            &lt;span class&#x3D;&quot;benefit-label&quot;&gt;Tarifa de Servicio&lt;/span&gt;
+            &lt;span
+              class&#x3D;&quot;benefit-value&quot;
+              [class.discount]&#x3D;&quot;hasDiscount()&quot;
+              [class.surcharge]&#x3D;&quot;hasSurcharge()&quot;
+            &gt;
+              {{ feeDiscountPct() &gt; 0 ? &#x27;-&#x27; : &#x27;+&#x27; }}{{ Math.abs(feeDiscountPct()) }}%
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Guarantee Discount/Surcharge --&gt;
+        &lt;div class&#x3D;&quot;benefit-item&quot;&gt;
+          &lt;ion-icon
+            [name]&#x3D;&quot;hasDiscount() ? &#x27;shield-checkmark-outline&#x27; : &#x27;shield-outline&#x27;&quot;
+            [color]&#x3D;&quot;hasDiscount() ? &#x27;success&#x27; : &#x27;danger&#x27;&quot;
+          &gt;&lt;/ion-icon&gt;
+          &lt;div class&#x3D;&quot;benefit-content&quot;&gt;
+            &lt;span class&#x3D;&quot;benefit-label&quot;&gt;Garantía&lt;/span&gt;
+            &lt;span
+              class&#x3D;&quot;benefit-value&quot;
+              [class.discount]&#x3D;&quot;hasDiscount()&quot;
+              [class.surcharge]&#x3D;&quot;hasSurcharge()&quot;
+            &gt;
+              {{ guaranteeDiscountPct() &gt; 0 ? &#x27;-&#x27; : &#x27;+&#x27;
+              }}{{ Math.abs(guaranteeDiscountPct()) }}%
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Claims History --&gt;
+      &lt;div class&#x3D;&quot;claims-section&quot; *ngIf&#x3D;&quot;profile()&quot;&gt;
+        &lt;h3&gt;Historial de Siniestros&lt;/h3&gt;
+        &lt;div class&#x3D;&quot;claims-stats&quot;&gt;
+          &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+            &lt;span class&#x3D;&quot;claim-label&quot;&gt;Total&lt;/span&gt;
+            &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.total_claims }}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+            &lt;span class&#x3D;&quot;claim-label&quot;&gt;Con Responsabilidad&lt;/span&gt;
+            &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.claims_with_fault }}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+            &lt;span class&#x3D;&quot;claim-label&quot;&gt;Años Buenos&lt;/span&gt;
+            &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.good_years }}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;p class&#x3D;&quot;last-claim&quot; *ngIf&#x3D;&quot;profile()!.last_claim_at&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;time-outline&quot;&gt;&lt;/ion-icon&gt;
+          Último siniestro: {{ formatDate(profile()!.last_claim_at) }}
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Progress to Next Class --&gt;
+      &lt;div class&#x3D;&quot;progress-section&quot; *ngIf&#x3D;&quot;progress().canImprove&quot;&gt;
+        &lt;h3&gt;Progreso hacia Clase {{ progress().nextClass }}&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;progress-message&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;trophy-outline&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+          Necesitas {{ progress().yearsNeeded }} año{{ progress().yearsNeeded &gt; 1 ? &#x27;s&#x27; : &#x27;&#x27; }}
+          sin siniestros con responsabilidad para mejorar tu clase.
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Maximum Class Reached --&gt;
+      &lt;div class&#x3D;&quot;progress-section&quot; *ngIf&#x3D;&quot;!progress().canImprove &amp;&amp; driverClass() &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+        &lt;p class&#x3D;&quot;max-class-message&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;star-outline&quot; color&#x3D;&quot;success&quot;&gt;&lt;/ion-icon&gt;
+          ¡Felicitaciones! Alcanzaste la clase máxima (0).
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- View Details Button --&gt;
+      &lt;ion-button expand&#x3D;&quot;block&quot; fill&#x3D;&quot;outline&quot; (click)&#x3D;&quot;onViewDetails()&quot;&gt;
+        &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;information-circle-outline&quot;&gt;&lt;/ion-icon&gt;
+        Ver Detalles del Sistema
+      &lt;/ion-button&gt;
+    &lt;/div&gt;
+
+    &lt;!-- No Profile Yet --&gt;
+    &lt;div *ngIf&#x3D;&quot;!driverProfileService.loading() &amp;&amp; !profile()&quot; class&#x3D;&quot;no-profile&quot;&gt;
+      &lt;ion-icon name&#x3D;&quot;person-add-outline&quot; color&#x3D;&quot;medium&quot;&gt;&lt;/ion-icon&gt;
+      &lt;p&gt;No tienes perfil de conductor aún.&lt;/p&gt;
+      &lt;ion-button (click)&#x3D;&quot;onInitializeProfile()&quot;&gt; Inicializar Perfil &lt;/ion-button&gt;
+    &lt;/div&gt;
+  &lt;/ion-card-content&gt;
+&lt;/ion-card&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#activeProtector" >activeProtector</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bonusProtectorService" >bonusProtectorService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#classBadge" >classBadge</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#classDescription" >classDescription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#driverClass" >driverClass</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#driverProfileService" >driverProfileService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#driverScore" >driverScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#expiryMessage" >expiryMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#feeDiscountPct" >feeDiscountPct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#guaranteeDiscountPct" >guaranteeDiscountPct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasActiveProtector" >hasActiveProtector</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasDiscount" >hasDiscount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasSurcharge" >hasSurcharge</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isNearExpiry" >isNearExpiry</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isProtectorExpired" >isProtectorExpired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#Math" >Math</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#modalController" >modalController</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#profile" >profile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#progress" >progress</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#protectionLevel" >protectionLevel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#protectorBadgeColor" >protectorBadgeColor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#protectorBadgeText" >protectorBadgeText</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#protectorIcon" >protectorIcon</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#remainingClaims" >remainingClaims</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#scoreBarColor" >scoreBarColor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#scoreColor" >scoreColor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#scoreMessage" >scoreMessage</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatDate" >formatDate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadActiveProtector" >loadActiveProtector</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadProfile" >loadProfile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onInitializeProfile" >onInitializeProfile</a>
+                            </li>
+                            <li>
+                                <a href="#onManageProtector" >onManageProtector</a>
+                            </li>
+                            <li>
+                                <a href="#onPurchaseProtector" >onPurchaseProtector</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onViewDetails" >onViewDetails</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDate"></a>
+                    <span class="name">
+                        <span ><b>formatDate</b></span>
+                        <a href="#formatDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatDate(dateString: string | null | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="742"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:742</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dateString</td>
+                                            <td>
+                                                        <code>string | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadActiveProtector"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadActiveProtector</b></span>
+                        <a href="#loadActiveProtector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadActiveProtector()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="704"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:704</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadProfile</b></span>
+                        <a href="#loadProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadProfile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="700"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:700</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="695"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:695</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onInitializeProfile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onInitializeProfile</b></span>
+                        <a href="#onInitializeProfile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onInitializeProfile()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="712"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:712</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onManageProtector"></a>
+                    <span class="name">
+                        <span ><b>onManageProtector</b></span>
+                        <a href="#onManageProtector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onManageProtector()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="720"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:720</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onPurchaseProtector"></a>
+                    <span class="name">
+                        <span ><b>onPurchaseProtector</b></span>
+                        <a href="#onPurchaseProtector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onPurchaseProtector()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="724"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:724</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onViewDetails"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onViewDetails</b></span>
+                        <a href="#onViewDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onViewDetails()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="728"
+                                    class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:728</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeProtector"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>activeProtector</b></span>
+                        <a href="#activeProtector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bonusProtectorService.activeProtector())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="655" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:655</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bonusProtectorService"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bonusProtectorService</b></span>
+                        <a href="#bonusProtectorService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(BonusProtectorService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="615" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:615</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="classBadge"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>classBadge</b></span>
+                        <a href="#classBadge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.getClassBadge())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="631" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:631</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="classDescription"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>classDescription</b></span>
+                        <a href="#classDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.getClassDescription())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="630" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:630</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="driverClass"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>driverClass</b></span>
+                        <a href="#driverClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.driverClass())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="624" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:624</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="driverProfileService"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>driverProfileService</b></span>
+                        <a href="#driverProfileService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(DriverProfileService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="614" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:614</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="driverScore"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>driverScore</b></span>
+                        <a href="#driverScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.driverScore())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="625" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:625</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expiryMessage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>expiryMessage</b></span>
+                        <a href="#expiryMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const protector &#x3D; this.activeProtector();
+    if (!protector) return &#x27;&#x27;;
+
+    const days &#x3D; protector.days_until_expiry ?? 0;
+    if (days &lt; 0) return &#x27;Expirado&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 0) return &#x27;Expira hoy&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 1) return &#x27;Expira mañana&#x27;;
+    if (days &lt;&#x3D; 7) return &#x60;Expira en ${days} días&#x60;;
+    if (days &lt;&#x3D; 30) return &#x60;Expira en ${Math.ceil(days / 7)} semanas&#x60;;
+    return &#x60;Expira en ${Math.ceil(days / 30)} meses&#x60;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="682" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:682</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="feeDiscountPct"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>feeDiscountPct</b></span>
+                        <a href="#feeDiscountPct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.feeDiscountPct())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="628" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:628</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="guaranteeDiscountPct"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>guaranteeDiscountPct</b></span>
+                        <a href="#guaranteeDiscountPct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.guaranteeDiscountPct())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="629" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:629</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasActiveProtector"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasActiveProtector</b></span>
+                        <a href="#hasActiveProtector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bonusProtectorService.hasActiveProtector())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="651" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:651</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasDiscount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasDiscount</b></span>
+                        <a href="#hasDiscount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.hasDiscount())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="626" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:626</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasSurcharge"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasSurcharge</b></span>
+                        <a href="#hasSurcharge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.hasSurcharge())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="627" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:627</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isNearExpiry"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isNearExpiry</b></span>
+                        <a href="#isNearExpiry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bonusProtectorService.isNearExpiry())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="653" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:653</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isProtectorExpired"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isProtectorExpired</b></span>
+                        <a href="#isProtectorExpired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bonusProtectorService.isExpired())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="652" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:652</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Math"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>Math</b></span>
+                        <a href="#Math"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Math</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="620" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:620</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modalController"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>modalController</b></span>
+                        <a href="#modalController"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ModalController)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="616" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:616</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profile"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>profile</b></span>
+                        <a href="#profile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.profile())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="623" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:623</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="progress"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>progress</b></span>
+                        <a href="#progress"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.driverProfileService.getProgressToNextClass())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="634" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:634</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="protectionLevel"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>protectionLevel</b></span>
+                        <a href="#protectionLevel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bonusProtectorService.protectionLevel())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="654" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:654</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="protectorBadgeColor"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>protectorBadgeColor</b></span>
+                        <a href="#protectorBadgeColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    if (this.isProtectorExpired()) return &#x27;danger&#x27;;
+    if (this.isNearExpiry()) return &#x27;warning&#x27;;
+    return &#x27;success&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="662" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:662</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="protectorBadgeText"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>protectorBadgeText</b></span>
+                        <a href="#protectorBadgeText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const level &#x3D; this.protectionLevel();
+    const icon &#x3D; level &#x3D;&#x3D;&#x3D; 1 ? &#x27;🛡️&#x27; : level &#x3D;&#x3D;&#x3D; 2 ? &#x27;🛡️🛡️&#x27; : &#x27;🛡️🛡️🛡️&#x27;;
+    return &#x60;${icon} Protegido Nivel ${level}&#x60;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="676" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:676</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="protectorIcon"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>protectorIcon</b></span>
+                        <a href="#protectorIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const level &#x3D; this.protectionLevel();
+    if (level &#x3D;&#x3D;&#x3D; 1) return &#x27;shield-outline&#x27;;
+    if (level &#x3D;&#x3D;&#x3D; 2) return &#x27;shield-half-outline&#x27;;
+    if (level &#x3D;&#x3D;&#x3D; 3) return &#x27;shield-checkmark-outline&#x27;;
+    return &#x27;shield-outline&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="668" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:668</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remainingClaims"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>remainingClaims</b></span>
+                        <a href="#remainingClaims"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const protector &#x3D; this.activeProtector();
+    return protector?.remaining_protected_claims ?? 0;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="657" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:657</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="617" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:617</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scoreBarColor"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>scoreBarColor</b></span>
+                        <a href="#scoreBarColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.driverProfileService.getScoreColor();
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="642" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:642</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scoreColor"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>scoreColor</b></span>
+                        <a href="#scoreColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const color &#x3D; this.driverProfileService.getScoreColor();
+    return &#x60;var(--ion-color-${color})&#x60;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="637" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:637</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scoreMessage"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>scoreMessage</b></span>
+                        <a href="#scoreMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.driverProfileService.getScoreMessage();
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="646" class="link-to-prism">src/app/shared/components/driver-profile-card/driver-profile-card.component.ts:646</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, computed, inject, OnInit } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { IonicModule, ModalController } from &#x27;@ionic/angular&#x27;;
+import { DriverProfileService } from &#x27;../../../core/services/driver-profile.service&#x27;;
+import { BonusProtectorService } from &#x27;../../../core/services/bonus-protector.service&#x27;;
+import { ClassBenefitsModalComponent } from &#x27;../class-benefits-modal/class-benefits-modal.component&#x27;;
+
+/**
+ * DriverProfileCardComponent
+ *
+ * Tarjeta que muestra el perfil de riesgo del conductor.
+ *
+ * MUESTRA:
+ * - Clase actual (0-10) con badge visual
+ * - Score telemático (0-100)
+ * - Estado de Bonus Protector activo (NUEVO)
+ * - Beneficios (descuentos) o recargos
+ * - Historial de siniestros
+ * - Progreso hacia mejor clase
+ *
+ * DISEÑO:
+ * - Badge de clase con color según riesgo
+ * - Badge de protector activo con nivel y expiración (NUEVO)
+ * - Barra de progreso para score telemático
+ * - Iconos visuales (🏆, ⭐, ⚠️, 🔴, 🛡️)
+ * - Información detallada expandible
+ */
+
+@Component({
+  selector: &#x27;app-driver-profile-card&#x27;,
+  standalone: true,
+  imports: [CommonModule, IonicModule],
+  template: &#x60;
+    &lt;ion-card&gt;
+      &lt;ion-card-header&gt;
+        &lt;ion-card-title&gt;
+          &lt;ion-icon name&#x3D;&quot;person-circle-outline&quot;&gt;&lt;/ion-icon&gt;
+          Perfil de Conductor
+        &lt;/ion-card-title&gt;
+      &lt;/ion-card-header&gt;
+
+      &lt;ion-card-content&gt;
+        &lt;!-- Loading State --&gt;
+        &lt;div *ngIf&#x3D;&quot;driverProfileService.loading()&quot; class&#x3D;&quot;loading-container&quot;&gt;
+          &lt;ion-spinner name&#x3D;&quot;crescent&quot;&gt;&lt;/ion-spinner&gt;
+          &lt;p&gt;Cargando perfil...&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Error State --&gt;
+        &lt;div *ngIf&#x3D;&quot;driverProfileService.error()&quot; class&#x3D;&quot;error-container&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;alert-circle-outline&quot; color&#x3D;&quot;danger&quot;&gt;&lt;/ion-icon&gt;
+          &lt;p&gt;{{ driverProfileService.error() }}&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Profile Loaded --&gt;
+        &lt;div *ngIf&#x3D;&quot;!driverProfileService.loading() &amp;&amp; !driverProfileService.error() &amp;&amp; profile()&quot;&gt;
+          &lt;!-- Class Badge --&gt;
+          &lt;div class&#x3D;&quot;class-section&quot;&gt;
+            &lt;div class&#x3D;&quot;class-badge-container&quot;&gt;
+              &lt;ion-badge [color]&#x3D;&quot;classBadge().color&quot; class&#x3D;&quot;class-badge&quot;&gt;
+                &lt;span class&#x3D;&quot;class-icon&quot;&gt;{{ classBadge().icon }}&lt;/span&gt;
+                &lt;span class&#x3D;&quot;class-label&quot;&gt;Clase {{ driverClass() }}&lt;/span&gt;
+              &lt;/ion-badge&gt;
+            &lt;/div&gt;
+            &lt;p class&#x3D;&quot;class-description&quot;&gt;{{ classDescription() }}&lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Bonus Protector Status (NEW) --&gt;
+          &lt;div class&#x3D;&quot;protector-section&quot; *ngIf&#x3D;&quot;!bonusProtectorService.loading()&quot;&gt;
+            &lt;!-- Active Protector --&gt;
+            &lt;ion-card class&#x3D;&quot;protector-card&quot; *ngIf&#x3D;&quot;hasActiveProtector() &amp;&amp; !isProtectorExpired()&quot;&gt;
+              &lt;ion-card-content&gt;
+                &lt;div class&#x3D;&quot;protector-active&quot;&gt;
+                  &lt;div class&#x3D;&quot;protector-header&quot;&gt;
+                    &lt;ion-badge [color]&#x3D;&quot;protectorBadgeColor()&quot; class&#x3D;&quot;protector-badge&quot;&gt;
+                      &lt;ion-icon [name]&#x3D;&quot;protectorIcon()&quot;&gt;&lt;/ion-icon&gt;
+                      &lt;span&gt;{{ protectorBadgeText() }}&lt;/span&gt;
+                    &lt;/ion-badge&gt;
+                  &lt;/div&gt;
+                  &lt;div class&#x3D;&quot;protector-info&quot;&gt;
+                    &lt;div class&#x3D;&quot;protector-detail&quot;&gt;
+                      &lt;ion-icon name&#x3D;&quot;shield-checkmark-outline&quot; color&#x3D;&quot;success&quot;&gt;&lt;/ion-icon&gt;
+                      &lt;span
+                        &gt;{{ remainingClaims() }} uso{{
+                          remainingClaims() &#x3D;&#x3D;&#x3D; 1 ? &#x27;&#x27; : &#x27;s&#x27;
+                        }}
+                        restante{{ remainingClaims() &#x3D;&#x3D;&#x3D; 1 ? &#x27;&#x27; : &#x27;s&#x27; }}&lt;/span
+                      &gt;
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;protector-detail&quot;&gt;
+                      &lt;ion-icon
+                        name&#x3D;&quot;calendar-outline&quot;
+                        [color]&#x3D;&quot;isNearExpiry() ? &#x27;warning&#x27; : &#x27;medium&#x27;&quot;
+                      &gt;&lt;/ion-icon&gt;
+                      &lt;span&gt;{{ expiryMessage() }}&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;ion-button
+                    fill&#x3D;&quot;clear&quot;
+                    size&#x3D;&quot;small&quot;
+                    (click)&#x3D;&quot;onManageProtector()&quot;
+                    class&#x3D;&quot;manage-button&quot;
+                  &gt;
+                    &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;settings-outline&quot;&gt;&lt;/ion-icon&gt;
+                    Gestionar
+                  &lt;/ion-button&gt;
+                &lt;/div&gt;
+              &lt;/ion-card-content&gt;
+            &lt;/ion-card&gt;
+
+            &lt;!-- Expired or No Protector --&gt;
+            &lt;ion-card
+              class&#x3D;&quot;protector-card warning&quot;
+              *ngIf&#x3D;&quot;!hasActiveProtector() || isProtectorExpired()&quot;
+            &gt;
+              &lt;ion-card-content&gt;
+                &lt;div class&#x3D;&quot;protector-warning&quot;&gt;
+                  &lt;ion-icon name&#x3D;&quot;shield-outline&quot; color&#x3D;&quot;medium&quot;&gt;&lt;/ion-icon&gt;
+                  &lt;div class&#x3D;&quot;warning-content&quot;&gt;
+                    &lt;p class&#x3D;&quot;warning-title&quot;&gt;
+                      {{ isProtectorExpired() ? &#x27;Tu protección expiró&#x27; : &#x27;Sin protección activa&#x27; }}
+                    &lt;/p&gt;
+                    &lt;p class&#x3D;&quot;warning-message&quot;&gt;
+                      {{
+                        isProtectorExpired()
+                          ? &#x27;Renueva tu Bonus Protector para seguir protegido&#x27;
+                          : &#x27;Protege tu clase de conductor de siniestros inesperados&#x27;
+                      }}
+                    &lt;/p&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;ion-button
+                  expand&#x3D;&quot;block&quot;
+                  size&#x3D;&quot;small&quot;
+                  color&#x3D;&quot;primary&quot;
+                  (click)&#x3D;&quot;onPurchaseProtector()&quot;
+                &gt;
+                  &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;shield-checkmark-outline&quot;&gt;&lt;/ion-icon&gt;
+                  {{ isProtectorExpired() ? &#x27;Renovar Protección&#x27; : &#x27;Comprar Protección&#x27; }}
+                &lt;/ion-button&gt;
+              &lt;/ion-card-content&gt;
+            &lt;/ion-card&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Score Section --&gt;
+          &lt;div class&#x3D;&quot;score-section&quot;&gt;
+            &lt;div class&#x3D;&quot;score-header&quot;&gt;
+              &lt;span class&#x3D;&quot;score-label&quot;&gt;Score Telemático&lt;/span&gt;
+              &lt;span class&#x3D;&quot;score-value&quot; [style.color]&#x3D;&quot;scoreColor()&quot;&gt;
+                {{ driverScore() }}/100
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;ion-progress-bar
+              [value]&#x3D;&quot;driverScore() / 100&quot;
+              [color]&#x3D;&quot;scoreBarColor()&quot;
+            &gt;&lt;/ion-progress-bar&gt;
+            &lt;p class&#x3D;&quot;score-message&quot;&gt;{{ scoreMessage() }}&lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Benefits Section --&gt;
+          &lt;div class&#x3D;&quot;benefits-section&quot;&gt;
+            &lt;h3&gt;Beneficios Actuales&lt;/h3&gt;
+
+            &lt;!-- Fee Discount/Surcharge --&gt;
+            &lt;div class&#x3D;&quot;benefit-item&quot;&gt;
+              &lt;ion-icon
+                [name]&#x3D;&quot;hasDiscount() ? &#x27;trending-down-outline&#x27; : &#x27;trending-up-outline&#x27;&quot;
+                [color]&#x3D;&quot;hasDiscount() ? &#x27;success&#x27; : &#x27;danger&#x27;&quot;
+              &gt;&lt;/ion-icon&gt;
+              &lt;div class&#x3D;&quot;benefit-content&quot;&gt;
+                &lt;span class&#x3D;&quot;benefit-label&quot;&gt;Tarifa de Servicio&lt;/span&gt;
+                &lt;span
+                  class&#x3D;&quot;benefit-value&quot;
+                  [class.discount]&#x3D;&quot;hasDiscount()&quot;
+                  [class.surcharge]&#x3D;&quot;hasSurcharge()&quot;
+                &gt;
+                  {{ feeDiscountPct() &gt; 0 ? &#x27;-&#x27; : &#x27;+&#x27; }}{{ Math.abs(feeDiscountPct()) }}%
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Guarantee Discount/Surcharge --&gt;
+            &lt;div class&#x3D;&quot;benefit-item&quot;&gt;
+              &lt;ion-icon
+                [name]&#x3D;&quot;hasDiscount() ? &#x27;shield-checkmark-outline&#x27; : &#x27;shield-outline&#x27;&quot;
+                [color]&#x3D;&quot;hasDiscount() ? &#x27;success&#x27; : &#x27;danger&#x27;&quot;
+              &gt;&lt;/ion-icon&gt;
+              &lt;div class&#x3D;&quot;benefit-content&quot;&gt;
+                &lt;span class&#x3D;&quot;benefit-label&quot;&gt;Garantía&lt;/span&gt;
+                &lt;span
+                  class&#x3D;&quot;benefit-value&quot;
+                  [class.discount]&#x3D;&quot;hasDiscount()&quot;
+                  [class.surcharge]&#x3D;&quot;hasSurcharge()&quot;
+                &gt;
+                  {{ guaranteeDiscountPct() &gt; 0 ? &#x27;-&#x27; : &#x27;+&#x27;
+                  }}{{ Math.abs(guaranteeDiscountPct()) }}%
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Claims History --&gt;
+          &lt;div class&#x3D;&quot;claims-section&quot; *ngIf&#x3D;&quot;profile()&quot;&gt;
+            &lt;h3&gt;Historial de Siniestros&lt;/h3&gt;
+            &lt;div class&#x3D;&quot;claims-stats&quot;&gt;
+              &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+                &lt;span class&#x3D;&quot;claim-label&quot;&gt;Total&lt;/span&gt;
+                &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.total_claims }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+                &lt;span class&#x3D;&quot;claim-label&quot;&gt;Con Responsabilidad&lt;/span&gt;
+                &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.claims_with_fault }}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;claim-stat&quot;&gt;
+                &lt;span class&#x3D;&quot;claim-label&quot;&gt;Años Buenos&lt;/span&gt;
+                &lt;span class&#x3D;&quot;claim-value&quot;&gt;{{ profile()!.good_years }}&lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;p class&#x3D;&quot;last-claim&quot; *ngIf&#x3D;&quot;profile()!.last_claim_at&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;time-outline&quot;&gt;&lt;/ion-icon&gt;
+              Último siniestro: {{ formatDate(profile()!.last_claim_at) }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Progress to Next Class --&gt;
+          &lt;div class&#x3D;&quot;progress-section&quot; *ngIf&#x3D;&quot;progress().canImprove&quot;&gt;
+            &lt;h3&gt;Progreso hacia Clase {{ progress().nextClass }}&lt;/h3&gt;
+            &lt;p class&#x3D;&quot;progress-message&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;trophy-outline&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+              Necesitas {{ progress().yearsNeeded }} año{{ progress().yearsNeeded &gt; 1 ? &#x27;s&#x27; : &#x27;&#x27; }}
+              sin siniestros con responsabilidad para mejorar tu clase.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Maximum Class Reached --&gt;
+          &lt;div class&#x3D;&quot;progress-section&quot; *ngIf&#x3D;&quot;!progress().canImprove &amp;&amp; driverClass() &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+            &lt;p class&#x3D;&quot;max-class-message&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;star-outline&quot; color&#x3D;&quot;success&quot;&gt;&lt;/ion-icon&gt;
+              ¡Felicitaciones! Alcanzaste la clase máxima (0).
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- View Details Button --&gt;
+          &lt;ion-button expand&#x3D;&quot;block&quot; fill&#x3D;&quot;outline&quot; (click)&#x3D;&quot;onViewDetails()&quot;&gt;
+            &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;information-circle-outline&quot;&gt;&lt;/ion-icon&gt;
+            Ver Detalles del Sistema
+          &lt;/ion-button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- No Profile Yet --&gt;
+        &lt;div *ngIf&#x3D;&quot;!driverProfileService.loading() &amp;&amp; !profile()&quot; class&#x3D;&quot;no-profile&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;person-add-outline&quot; color&#x3D;&quot;medium&quot;&gt;&lt;/ion-icon&gt;
+          &lt;p&gt;No tienes perfil de conductor aún.&lt;/p&gt;
+          &lt;ion-button (click)&#x3D;&quot;onInitializeProfile()&quot;&gt; Inicializar Perfil &lt;/ion-button&gt;
+        &lt;/div&gt;
+      &lt;/ion-card-content&gt;
+    &lt;/ion-card&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      ion-card {
+        margin: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      ion-card-header {
+        border-bottom: 1px solid var(--ion-color-light);
+      }
+
+      ion-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      /* Loading and Error States */
+      .loading-container,
+      .error-container,
+      .no-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        text-align: center;
+      }
+
+      .loading-container ion-spinner {
+        margin-bottom: 16px;
+      }
+
+      .error-container ion-icon,
+      .no-profile ion-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      /* Class Section */
+      .class-section {
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .class-badge-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+
+      .class-badge {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .class-icon {
+        font-size: 1.3rem;
+      }
+
+      .class-label {
+        font-weight: 600;
+      }
+
+      .class-description {
+        color: var(--ion-color-medium);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      /* Protector Section (NEW) */
+      .protector-section {
+        margin-bottom: 24px;
+      }
+
+      .protector-card {
+        margin: 0 0 16px 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .protector-card.warning {
+        background: var(--ion-color-light);
+      }
+
+      .protector-card ion-card-content {
+        padding: 16px;
+      }
+
+      .protector-active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .protector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .protector-badge {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .protector-badge ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .protector-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .protector-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-dark);
+      }
+
+      .protector-detail ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .manage-button {
+        align-self: flex-start;
+        margin: 0;
+        --padding-start: 0;
+      }
+
+      .protector-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .protector-warning &gt; ion-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      .warning-content {
+        flex: 1;
+      }
+
+      .warning-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin: 0 0 4px 0;
+      }
+
+      .warning-message {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      /* Score Section */
+      .score-section {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .score-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .score-label {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+      }
+
+      .score-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      ion-progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .score-message {
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        text-align: center;
+      }
+
+      /* Benefits Section */
+      .benefits-section {
+        margin-bottom: 24px;
+      }
+
+      .benefits-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+
+      .benefit-item ion-icon {
+        font-size: 24px;
+      }
+
+      .benefit-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .benefit-label {
+        font-size: 0.95rem;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      .benefit-value.discount {
+        color: var(--ion-color-success);
+      }
+
+      .benefit-value.surcharge {
+        color: var(--ion-color-danger);
+      }
+
+      /* Claims Section */
+      .claims-section {
+        margin-bottom: 24px;
+      }
+
+      .claims-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .claims-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .claim-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .claim-label {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        text-align: center;
+        margin-bottom: 4px;
+      }
+
+      .claim-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+
+      .last-claim {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+      }
+
+      /* Progress Section */
+      .progress-section {
+        margin-bottom: 16px;
+      }
+
+      .progress-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--ion-color-dark);
+      }
+
+      .progress-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-primary-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .max-class-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-success-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+        color: var(--ion-color-success-shade);
+      }
+
+      ion-button {
+        margin-top: 16px;
+      }
+    &#x60;,
+  ],
+})
+export class DriverProfileCardComponent implements OnInit {
+  readonly driverProfileService &#x3D; inject(DriverProfileService);
+  readonly bonusProtectorService &#x3D; inject(BonusProtectorService);
+  private readonly modalController &#x3D; inject(ModalController);
+  private readonly router &#x3D; inject(Router);
+
+  // Expose Math for template
+  readonly Math &#x3D; Math;
+
+  // Computed signals from service
+  readonly profile &#x3D; computed(() &#x3D;&gt; this.driverProfileService.profile());
+  readonly driverClass &#x3D; computed(() &#x3D;&gt; this.driverProfileService.driverClass());
+  readonly driverScore &#x3D; computed(() &#x3D;&gt; this.driverProfileService.driverScore());
+  readonly hasDiscount &#x3D; computed(() &#x3D;&gt; this.driverProfileService.hasDiscount());
+  readonly hasSurcharge &#x3D; computed(() &#x3D;&gt; this.driverProfileService.hasSurcharge());
+  readonly feeDiscountPct &#x3D; computed(() &#x3D;&gt; this.driverProfileService.feeDiscountPct());
+  readonly guaranteeDiscountPct &#x3D; computed(() &#x3D;&gt; this.driverProfileService.guaranteeDiscountPct());
+  readonly classDescription &#x3D; computed(() &#x3D;&gt; this.driverProfileService.getClassDescription());
+  readonly classBadge &#x3D; computed(() &#x3D;&gt; this.driverProfileService.getClassBadge());
+
+  // Progress
+  readonly progress &#x3D; computed(() &#x3D;&gt; this.driverProfileService.getProgressToNextClass());
+
+  // Score helpers
+  readonly scoreColor &#x3D; computed(() &#x3D;&gt; {
+    const color &#x3D; this.driverProfileService.getScoreColor();
+    return &#x60;var(--ion-color-${color})&#x60;;
+  });
+
+  readonly scoreBarColor &#x3D; computed(() &#x3D;&gt; {
+    return this.driverProfileService.getScoreColor();
+  });
+
+  readonly scoreMessage &#x3D; computed(() &#x3D;&gt; {
+    return this.driverProfileService.getScoreMessage();
+  });
+
+  // Bonus Protector signals (NEW)
+  readonly hasActiveProtector &#x3D; computed(() &#x3D;&gt; this.bonusProtectorService.hasActiveProtector());
+  readonly isProtectorExpired &#x3D; computed(() &#x3D;&gt; this.bonusProtectorService.isExpired());
+  readonly isNearExpiry &#x3D; computed(() &#x3D;&gt; this.bonusProtectorService.isNearExpiry());
+  readonly protectionLevel &#x3D; computed(() &#x3D;&gt; this.bonusProtectorService.protectionLevel());
+  readonly activeProtector &#x3D; computed(() &#x3D;&gt; this.bonusProtectorService.activeProtector());
+
+  readonly remainingClaims &#x3D; computed(() &#x3D;&gt; {
+    const protector &#x3D; this.activeProtector();
+    return protector?.remaining_protected_claims ?? 0;
+  });
+
+  readonly protectorBadgeColor &#x3D; computed(() &#x3D;&gt; {
+    if (this.isProtectorExpired()) return &#x27;danger&#x27;;
+    if (this.isNearExpiry()) return &#x27;warning&#x27;;
+    return &#x27;success&#x27;;
+  });
+
+  readonly protectorIcon &#x3D; computed(() &#x3D;&gt; {
+    const level &#x3D; this.protectionLevel();
+    if (level &#x3D;&#x3D;&#x3D; 1) return &#x27;shield-outline&#x27;;
+    if (level &#x3D;&#x3D;&#x3D; 2) return &#x27;shield-half-outline&#x27;;
+    if (level &#x3D;&#x3D;&#x3D; 3) return &#x27;shield-checkmark-outline&#x27;;
+    return &#x27;shield-outline&#x27;;
+  });
+
+  readonly protectorBadgeText &#x3D; computed(() &#x3D;&gt; {
+    const level &#x3D; this.protectionLevel();
+    const icon &#x3D; level &#x3D;&#x3D;&#x3D; 1 ? &#x27;🛡️&#x27; : level &#x3D;&#x3D;&#x3D; 2 ? &#x27;🛡️🛡️&#x27; : &#x27;🛡️🛡️🛡️&#x27;;
+    return &#x60;${icon} Protegido Nivel ${level}&#x60;;
+  });
+
+  readonly expiryMessage &#x3D; computed(() &#x3D;&gt; {
+    const protector &#x3D; this.activeProtector();
+    if (!protector) return &#x27;&#x27;;
+
+    const days &#x3D; protector.days_until_expiry ?? 0;
+    if (days &lt; 0) return &#x27;Expirado&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 0) return &#x27;Expira hoy&#x27;;
+    if (days &#x3D;&#x3D;&#x3D; 1) return &#x27;Expira mañana&#x27;;
+    if (days &lt;&#x3D; 7) return &#x60;Expira en ${days} días&#x60;;
+    if (days &lt;&#x3D; 30) return &#x60;Expira en ${Math.ceil(days / 7)} semanas&#x60;;
+    return &#x60;Expira en ${Math.ceil(days / 30)} meses&#x60;;
+  });
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadProfile();
+    await this.loadActiveProtector();
+  }
+
+  async loadProfile(): Promise&lt;void&gt; {
+    await this.driverProfileService.loadProfile();
+  }
+
+  async loadActiveProtector(): Promise&lt;void&gt; {
+    try {
+      await this.bonusProtectorService.loadActiveProtector();
+    } catch (error) {
+      console.error(&#x27;[DriverProfileCard] Error al cargar protector activo:&#x27;, error);
+    }
+  }
+
+  async onInitializeProfile(): Promise&lt;void&gt; {
+    try {
+      await this.driverProfileService.initializeProfile();
+    } catch (_error) {
+      console.error(&#x27;[DriverProfileCard] Error al inicializar perfil:&#x27;, _error);
+    }
+  }
+
+  onManageProtector(): void {
+    this.router.navigate([&#x27;/protections&#x27;]);
+  }
+
+  onPurchaseProtector(): void {
+    this.router.navigate([&#x27;/protections&#x27;]);
+  }
+
+  async onViewDetails(): Promise&lt;void&gt; {
+    try {
+      const modal &#x3D; await this.modalController.create({
+        component: ClassBenefitsModalComponent,
+        componentProps: {
+          currentClass: this.driverClass(),
+        },
+      });
+      await modal.present();
+    } catch (error) {
+      console.error(&#x27;[DriverProfileCard] Error al abrir modal de beneficios:&#x27;, error);
+    }
+  }
+
+  formatDate(dateString: string | null | undefined): string {
+    if (!dateString) return &#x27;&#x27;;
+    const date &#x3D; new Date(dateString);
+    return date.toLocaleDateString(&#x27;es-AR&#x27;, {
+      day: &#x27;numeric&#x27;,
+      month: &#x27;long&#x27;,
+      year: &#x27;numeric&#x27;,
+    });
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      ion-card {
+        margin: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      ion-card-header {
+        border-bottom: 1px solid var(--ion-color-light);
+      }
+
+      ion-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      /* Loading and Error States */
+      .loading-container,
+      .error-container,
+      .no-profile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+        text-align: center;
+      }
+
+      .loading-container ion-spinner {
+        margin-bottom: 16px;
+      }
+
+      .error-container ion-icon,
+      .no-profile ion-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+
+      /* Class Section */
+      .class-section {
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .class-badge-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+
+      .class-badge {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .class-icon {
+        font-size: 1.3rem;
+      }
+
+      .class-label {
+        font-weight: 600;
+      }
+
+      .class-description {
+        color: var(--ion-color-medium);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      /* Protector Section (NEW) */
+      .protector-section {
+        margin-bottom: 24px;
+      }
+
+      .protector-card {
+        margin: 0 0 16px 0;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .protector-card.warning {
+        background: var(--ion-color-light);
+      }
+
+      .protector-card ion-card-content {
+        padding: 16px;
+      }
+
+      .protector-active {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .protector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .protector-badge {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .protector-badge ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .protector-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .protector-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-dark);
+      }
+
+      .protector-detail ion-icon {
+        font-size: 1.1rem;
+      }
+
+      .manage-button {
+        align-self: flex-start;
+        margin: 0;
+        --padding-start: 0;
+      }
+
+      .protector-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .protector-warning &gt; ion-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+
+      .warning-content {
+        flex: 1;
+      }
+
+      .warning-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--ion-color-dark);
+        margin: 0 0 4px 0;
+      }
+
+      .warning-message {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      /* Score Section */
+      .score-section {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .score-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .score-label {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+      }
+
+      .score-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      ion-progress-bar {
+        height: 8px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .score-message {
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        text-align: center;
+      }
+
+      /* Benefits Section */
+      .benefits-section {
+        margin-bottom: 24px;
+      }
+
+      .benefits-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+        margin-bottom: 8px;
+      }
+
+      .benefit-item ion-icon {
+        font-size: 24px;
+      }
+
+      .benefit-content {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .benefit-label {
+        font-size: 0.95rem;
+        color: var(--ion-color-dark);
+      }
+
+      .benefit-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      .benefit-value.discount {
+        color: var(--ion-color-success);
+      }
+
+      .benefit-value.surcharge {
+        color: var(--ion-color-danger);
+      }
+
+      /* Claims Section */
+      .claims-section {
+        margin-bottom: 24px;
+      }
+
+      .claims-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--ion-color-dark);
+      }
+
+      .claims-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .claim-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .claim-label {
+        font-size: 0.85rem;
+        color: var(--ion-color-medium);
+        text-align: center;
+        margin-bottom: 4px;
+      }
+
+      .claim-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ion-color-dark);
+      }
+
+      .last-claim {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+      }
+
+      /* Progress Section */
+      .progress-section {
+        margin-bottom: 16px;
+      }
+
+      .progress-section h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--ion-color-dark);
+      }
+
+      .progress-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-primary-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .max-class-message {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--ion-color-success-tint);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        margin: 0;
+        color: var(--ion-color-success-shade);
+      }
+
+      ion-button {
+        margin-top: 16px;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><ion-card>  <ion-card-header>    <ion-card-title>      <ion-icon name="person-circle-outline"></ion-icon>      Perfil de Conductor    </ion-card-title>  </ion-card-header>  <ion-card-content>    <!-- Loading State -->    <div *ngIf="driverProfileService.loading()" class="loading-container">      <ion-spinner name="crescent"></ion-spinner>      <p>Cargando perfil...</p>    </div>    <!-- Error State -->    <div *ngIf="driverProfileService.error()" class="error-container">      <ion-icon name="alert-circle-outline" color="danger"></ion-icon>      <p>{{ driverProfileService.error() }}</p>    </div>    <!-- Profile Loaded -->    <div *ngIf="!driverProfileService.loading() && !driverProfileService.error() && profile()">      <!-- Class Badge -->      <div class="class-section">        <div class="class-badge-container">          <ion-badge [color]="classBadge().color" class="class-badge">            <span class="class-icon">{{ classBadge().icon }}</span>            <span class="class-label">Clase {{ driverClass() }}</span>          </ion-badge>        </div>        <p class="class-description">{{ classDescription() }}</p>      </div>      <!-- Bonus Protector Status (NEW) -->      <div class="protector-section" *ngIf="!bonusProtectorService.loading()">        <!-- Active Protector -->        <ion-card class="protector-card" *ngIf="hasActiveProtector() && !isProtectorExpired()">          <ion-card-content>            <div class="protector-active">              <div class="protector-header">                <ion-badge [color]="protectorBadgeColor()" class="protector-badge">                  <ion-icon [name]="protectorIcon()"></ion-icon>                  <span>{{ protectorBadgeText() }}</span>                </ion-badge>              </div>              <div class="protector-info">                <div class="protector-detail">                  <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>                  <span                    >{{ remainingClaims() }} uso{{                      remainingClaims() === 1 ? \'\' : \'s\'                    }}                    restante{{ remainingClaims() === 1 ? \'\' : \'s\' }}</span                  >                </div>                <div class="protector-detail">                  <ion-icon                    name="calendar-outline"                    [color]="isNearExpiry() ? \'warning\' : \'medium\'"                  ></ion-icon>                  <span>{{ expiryMessage() }}</span>                </div>              </div>              <ion-button                fill="clear"                size="small"                (click)="onManageProtector()"                class="manage-button"              >                <ion-icon slot="start" name="settings-outline"></ion-icon>                Gestionar              </ion-button>            </div>          </ion-card-content>        </ion-card>        <!-- Expired or No Protector -->        <ion-card          class="protector-card warning"          *ngIf="!hasActiveProtector() || isProtectorExpired()"        >          <ion-card-content>            <div class="protector-warning">              <ion-icon name="shield-outline" color="medium"></ion-icon>              <div class="warning-content">                <p class="warning-title">                  {{ isProtectorExpired() ? \'Tu protección expiró\' : \'Sin protección activa\' }}                </p>                <p class="warning-message">                  {{                    isProtectorExpired()                      ? \'Renueva tu Bonus Protector para seguir protegido\'                      : \'Protege tu clase de conductor de siniestros inesperados\'                  }}                </p>              </div>            </div>            <ion-button              expand="block"              size="small"              color="primary"              (click)="onPurchaseProtector()"            >              <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>              {{ isProtectorExpired() ? \'Renovar Protección\' : \'Comprar Protección\' }}            </ion-button>          </ion-card-content>        </ion-card>      </div>      <!-- Score Section -->      <div class="score-section">        <div class="score-header">          <span class="score-label">Score Telemático</span>          <span class="score-value" [style.color]="scoreColor()">            {{ driverScore() }}/100          </span>        </div>        <ion-progress-bar          [value]="driverScore() / 100"          [color]="scoreBarColor()"        ></ion-progress-bar>        <p class="score-message">{{ scoreMessage() }}</p>      </div>      <!-- Benefits Section -->      <div class="benefits-section">        <h3>Beneficios Actuales</h3>        <!-- Fee Discount/Surcharge -->        <div class="benefit-item">          <ion-icon            [name]="hasDiscount() ? \'trending-down-outline\' : \'trending-up-outline\'"            [color]="hasDiscount() ? \'success\' : \'danger\'"          ></ion-icon>          <div class="benefit-content">            <span class="benefit-label">Tarifa de Servicio</span>            <span              class="benefit-value"              [class.discount]="hasDiscount()"              [class.surcharge]="hasSurcharge()"            >              {{ feeDiscountPct() > 0 ? \'-\' : \'+\' }}{{ Math.abs(feeDiscountPct()) }}%            </span>          </div>        </div>        <!-- Guarantee Discount/Surcharge -->        <div class="benefit-item">          <ion-icon            [name]="hasDiscount() ? \'shield-checkmark-outline\' : \'shield-outline\'"            [color]="hasDiscount() ? \'success\' : \'danger\'"          ></ion-icon>          <div class="benefit-content">            <span class="benefit-label">Garantía</span>            <span              class="benefit-value"              [class.discount]="hasDiscount()"              [class.surcharge]="hasSurcharge()"            >              {{ guaranteeDiscountPct() > 0 ? \'-\' : \'+\'              }}{{ Math.abs(guaranteeDiscountPct()) }}%            </span>          </div>        </div>      </div>      <!-- Claims History -->      <div class="claims-section" *ngIf="profile()">        <h3>Historial de Siniestros</h3>        <div class="claims-stats">          <div class="claim-stat">            <span class="claim-label">Total</span>            <span class="claim-value">{{ profile()!.total_claims }}</span>          </div>          <div class="claim-stat">            <span class="claim-label">Con Responsabilidad</span>            <span class="claim-value">{{ profile()!.claims_with_fault }}</span>          </div>          <div class="claim-stat">            <span class="claim-label">Años Buenos</span>            <span class="claim-value">{{ profile()!.good_years }}</span>          </div>        </div>        <p class="last-claim" *ngIf="profile()!.last_claim_at">          <ion-icon name="time-outline"></ion-icon>          Último siniestro: {{ formatDate(profile()!.last_claim_at) }}        </p>      </div>      <!-- Progress to Next Class -->      <div class="progress-section" *ngIf="progress().canImprove">        <h3>Progreso hacia Clase {{ progress().nextClass }}</h3>        <p class="progress-message">          <ion-icon name="trophy-outline" color="primary"></ion-icon>          Necesitas {{ progress().yearsNeeded }} año{{ progress().yearsNeeded > 1 ? \'s\' : \'\' }}          sin siniestros con responsabilidad para mejorar tu clase.        </p>      </div>      <!-- Maximum Class Reached -->      <div class="progress-section" *ngIf="!progress().canImprove && driverClass() === 0">        <p class="max-class-message">          <ion-icon name="star-outline" color="success"></ion-icon>          ¡Felicitaciones! Alcanzaste la clase máxima (0).        </p>      </div>      <!-- View Details Button -->      <ion-button expand="block" fill="outline" (click)="onViewDetails()">        <ion-icon slot="start" name="information-circle-outline"></ion-icon>        Ver Detalles del Sistema      </ion-button>    </div>    <!-- No Profile Yet -->    <div *ngIf="!driverProfileService.loading() && !profile()" class="no-profile">      <ion-icon name="person-add-outline" color="medium"></ion-icon>      <p>No tienes perfil de conductor aún.</p>      <ion-button (click)="onInitializeProfile()"> Inicializar Perfil </ion-button>    </div>  </ion-card-content></ion-card></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'DriverProfileCardComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'DriverProfileCardComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

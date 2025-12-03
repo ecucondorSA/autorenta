@@ -1,0 +1,2003 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  NotificationPreferencesPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/notifications/preferences/notification-preferences.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>⚙️ Preferencias de notificaciones
+Permite al usuario habilitar/deshabilitar tipos de notificaciones</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-notification-preferences</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;min-h-screen bg-surface-base dark:bg-surface-raised&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base&quot;&gt;
+    &lt;div class&#x3D;&quot;mx-auto max-w-4xl px-4 py-4&quot;&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+        &lt;button
+          (click)&#x3D;&quot;goBack()&quot;
+          class&#x3D;&quot;rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-secondary dark:text-text-secondary&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M15 19l-7-7 7-7&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/button&gt;
+        &lt;div&gt;
+          &lt;h1 class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+            Preferencias de notificaciones
+          &lt;/h1&gt;
+          &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+            Personaliza qué notificaciones quieres recibir
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Content --&gt;
+  &lt;div class&#x3D;&quot;mx-auto max-w-4xl p-4&quot;&gt;
+    @if (loading()) {
+      &lt;div class&#x3D;&quot;flex h-96 items-center justify-center&quot;&gt;
+        &lt;div class&#x3D;&quot;text-center&quot;&gt;
+          &lt;div
+            class&#x3D;&quot;mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500&quot;
+          &gt;&lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-muted&quot;&gt;Cargando preferencias...&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    } @else {
+      &lt;!-- Browser notifications --&gt;
+      &lt;div class&#x3D;&quot;mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+            &lt;div
+              class&#x3D;&quot;flex h-12 w-12 items-center justify-center rounded-full bg-cta-default/20 text-2xl dark:bg-cta-default/30&quot;
+            &gt;
+              🔔
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                Notificaciones del navegador
+              &lt;/h3&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                Recibe notificaciones incluso cuando no estés en la app
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;button
+            (click)&#x3D;&quot;toggleBrowserNotifications()&quot;
+            [disabled]&#x3D;&quot;browserNotificationsPermission() &#x3D;&#x3D;&#x3D; &#x27;denied&#x27;&quot;
+            [class.bg-cta-default]&#x3D;&quot;browserNotificationsEnabled()&quot;
+            [class.bg-surface-pressed]&#x3D;&quot;!browserNotificationsEnabled()&quot;
+            class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50&quot;
+            type&#x3D;&quot;button&quot;
+          &gt;
+            &lt;span
+              [class.translate-x-5]&#x3D;&quot;browserNotificationsEnabled()&quot;
+              [class.translate-x-0]&#x3D;&quot;!browserNotificationsEnabled()&quot;
+              class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+            &gt;&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+        @if (browserNotificationsPermission() &#x3D;&#x3D;&#x3D; &#x27;denied&#x27;) {
+          &lt;div class&#x3D;&quot;mt-3 rounded-lg bg-warning-bg p-3 dark:bg-warning-900/20&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-warning-strong dark:text-warning-200&quot;&gt;
+              ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
+              configuración de tu navegador.
+            &lt;/p&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+
+      &lt;!-- Sound preferences --&gt;
+      &lt;div class&#x3D;&quot;mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+            &lt;div
+              class&#x3D;&quot;flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30&quot;
+            &gt;
+              🔊
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                Sonido de notificaciones
+              &lt;/h3&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                Reproducir un sonido cuando llegue una notificación
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;button
+            (click)&#x3D;&quot;toggleSound()&quot;
+            [class.bg-purple-600]&#x3D;&quot;soundEnabled()&quot;
+            [class.bg-surface-pressed]&#x3D;&quot;!soundEnabled()&quot;
+            class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2&quot;
+            type&#x3D;&quot;button&quot;
+          &gt;
+            &lt;span
+              [class.translate-x-5]&#x3D;&quot;soundEnabled()&quot;
+              [class.translate-x-0]&#x3D;&quot;!soundEnabled()&quot;
+              class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+            &gt;&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Notification types --&gt;
+      &lt;div class&#x3D;&quot;rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+        &lt;h2 class&#x3D;&quot;mb-4 text-lg font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+          Tipos de notificaciones
+        &lt;/h2&gt;
+        &lt;p class&#x3D;&quot;mb-6 text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+          Selecciona qué tipos de notificaciones quieres recibir
+        &lt;/p&gt;
+
+        &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+          @for (pref of preferences(); track pref.type) {
+            &lt;div
+              class&#x3D;&quot;flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-muted dark:hover:bg-gray-700/50&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+                &lt;div
+                  class&#x3D;&quot;flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-xl dark:bg-surface-base&quot;
+                &gt;
+                  {{ pref.icon }}
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+                  &lt;h3 class&#x3D;&quot;font-medium text-text-primary dark:text-text-inverse&quot;&gt;
+                    {{ pref.label }}
+                  &lt;/h3&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                    {{ pref.description }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;button
+                (click)&#x3D;&quot;togglePreference(pref)&quot;
+                [class.bg-cta-default]&#x3D;&quot;pref.enabled&quot;
+                [class.bg-surface-pressed]&#x3D;&quot;!pref.enabled&quot;
+                class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2&quot;
+                type&#x3D;&quot;button&quot;
+              &gt;
+                &lt;span
+                  [class.translate-x-5]&#x3D;&quot;pref.enabled&quot;
+                  [class.translate-x-0]&#x3D;&quot;!pref.enabled&quot;
+                  class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+                &gt;&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Save button --&gt;
+      &lt;div class&#x3D;&quot;mt-6 flex justify-end gap-3&quot;&gt;
+        &lt;button
+          (click)&#x3D;&quot;goBack()&quot;
+          class&#x3D;&quot;rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          Cancelar
+        &lt;/button&gt;
+        &lt;button
+          (click)&#x3D;&quot;savePreferences()&quot;
+          [disabled]&#x3D;&quot;saving()&quot;
+          class&#x3D;&quot;rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:cursor-not-allowed disabled:opacity-50&quot;
+          type&#x3D;&quot;button&quot;
+        &gt;
+          @if (saving()) {
+            Guardando...
+          } @else {
+            Guardar cambios
+          }
+        &lt;/button&gt;
+      &lt;/div&gt;
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#browserNotificationsEnabled" >browserNotificationsEnabled</a>
+                            </li>
+                            <li>
+                                <a href="#browserNotificationsPermission" >browserNotificationsPermission</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isBrowser" >isBrowser</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#notifications" >notifications</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#notificationSound" >notificationSound</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#platformId" >platformId</a>
+                            </li>
+                            <li>
+                                <a href="#preferences" >preferences</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                <a href="#saving" >saving</a>
+                            </li>
+                            <li>
+                                <a href="#soundEnabled" >soundEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#checkBrowserNotifications" >checkBrowserNotifications</a>
+                            </li>
+                            <li>
+                                <a href="#goBack" >goBack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#hydratePreferences" >hydratePreferences</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadPreferences" >loadPreferences</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#savePreferences" >savePreferences</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#toggleBrowserNotifications" >toggleBrowserNotifications</a>
+                            </li>
+                            <li>
+                                <a href="#togglePreference" >togglePreference</a>
+                            </li>
+                            <li>
+                                <a href="#toggleSound" >toggleSound</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:243</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkBrowserNotifications"></a>
+                    <span class="name">
+                        <span ><b>checkBrowserNotifications</b></span>
+                        <a href="#checkBrowserNotifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>checkBrowserNotifications()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="375"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:375</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goBack"></a>
+                    <span class="name">
+                        <span ><b>goBack</b></span>
+                        <a href="#goBack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goBack()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="472"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:472</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hydratePreferences"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>hydratePreferences</b></span>
+                        <a href="#hydratePreferences"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hydratePreferences(parsed: <a href="../interfaces/NotificationPreferencesPayload.html" target="_self">NotificationPreferencesPayload</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="353"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:353</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>parsed</td>
+                                            <td>
+                                                            <code><a href="../interfaces/NotificationPreferencesPayload.html" target="_self" >NotificationPreferencesPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadPreferences"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadPreferences</b></span>
+                        <a href="#loadPreferences"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadPreferences()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="317"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:317</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:312</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="savePreferences"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>savePreferences</b></span>
+                        <a href="#savePreferences"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>savePreferences()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="423"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:423</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleBrowserNotifications"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>toggleBrowserNotifications</b></span>
+                        <a href="#toggleBrowserNotifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toggleBrowserNotifications()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="382"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:382</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="togglePreference"></a>
+                    <span class="name">
+                        <span ><b>togglePreference</b></span>
+                        <a href="#togglePreference"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>togglePreference(pref: <a href="../interfaces/NotificationPreference.html" target="_self">NotificationPreference</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="417"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:417</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>pref</td>
+                                            <td>
+                                                            <code><a href="../interfaces/NotificationPreference.html" target="_self" >NotificationPreference</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleSound"></a>
+                    <span class="name">
+                        <span ><b>toggleSound</b></span>
+                        <a href="#toggleSound"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleSound()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="406"
+                                    class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:406</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="browserNotificationsEnabled"></a>
+                    <span class="name">
+                        <span ><b>browserNotificationsEnabled</b></span>
+                        <a href="#browserNotificationsEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="241" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:241</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="browserNotificationsPermission"></a>
+                    <span class="name">
+                        <span ><b>browserNotificationsPermission</b></span>
+                        <a href="#browserNotificationsPermission"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;NotificationPermission&gt;(&#x27;default&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="242" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:242</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isBrowser"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isBrowser</b></span>
+                        <a href="#isBrowser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>isPlatformBrowser(this.platformId)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="233" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:233</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="239" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:239</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notifications"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>notifications</b></span>
+                        <a href="#notifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationManagerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="237" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:237</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notificationSound"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>notificationSound</b></span>
+                        <a href="#notificationSound"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationSoundService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="236" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:236</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="platformId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>platformId</b></span>
+                        <a href="#platformId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(PLATFORM_ID)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="232" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:232</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="preferences"></a>
+                    <span class="name">
+                        <span ><b>preferences</b></span>
+                        <a href="#preferences"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;NotificationPreference[]&gt;([
+    {
+      type: &#x27;new_booking_for_owner&#x27;,
+      label: &#x27;Nuevas reservas&#x27;,
+      description: &#x27;Cuando alguien solicita reservar tu auto&#x27;,
+      enabled: true,
+      icon: &#x27;🚗&#x27;,
+    },
+    {
+      type: &#x27;booking_cancelled_for_owner&#x27;,
+      label: &#x27;Cancelaciones (propietario)&#x27;,
+      description: &#x27;Cuando un inquilino cancela una reserva de tu auto&#x27;,
+      enabled: true,
+      icon: &#x27;❌&#x27;,
+    },
+    {
+      type: &#x27;booking_cancelled_for_renter&#x27;,
+      label: &#x27;Cancelaciones (inquilino)&#x27;,
+      description: &#x27;Cuando un propietario cancela tu reserva&#x27;,
+      enabled: true,
+      icon: &#x27;❌&#x27;,
+    },
+    {
+      type: &#x27;new_chat_message&#x27;,
+      label: &#x27;Mensajes nuevos&#x27;,
+      description: &#x27;Cuando recibes un nuevo mensaje en el chat&#x27;,
+      enabled: true,
+      icon: &#x27;💬&#x27;,
+    },
+    {
+      type: &#x27;payment_successful&#x27;,
+      label: &#x27;Pagos exitosos&#x27;,
+      description: &#x27;Cuando se procesa un pago correctamente&#x27;,
+      enabled: true,
+      icon: &#x27;💳&#x27;,
+    },
+    {
+      type: &#x27;payout_successful&#x27;,
+      label: &#x27;Pagos recibidos&#x27;,
+      description: &#x27;Cuando recibes un pago en tu wallet&#x27;,
+      enabled: true,
+      icon: &#x27;💰&#x27;,
+    },
+    {
+      type: &#x27;inspection_reminder&#x27;,
+      label: &#x27;Recordatorios de inspección&#x27;,
+      description: &#x27;Recordatorios para realizar inspecciones de vehículos&#x27;,
+      enabled: true,
+      icon: &#x27;🔍&#x27;,
+    },
+    {
+      type: &#x27;generic_announcement&#x27;,
+      label: &#x27;Anuncios generales&#x27;,
+      description: &#x27;Actualizaciones y anuncios de la plataforma&#x27;,
+      enabled: true,
+      icon: &#x27;📢&#x27;,
+    },
+  ])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="253" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:253</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="235" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:235</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saving"></a>
+                    <span class="name">
+                        <span ><b>saving</b></span>
+                        <a href="#saving"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="240" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:240</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="soundEnabled"></a>
+                    <span class="name">
+                        <span ><b>soundEnabled</b></span>
+                        <a href="#soundEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:243</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>injectSupabase()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="234" class="link-to-prism">src/app/features/notifications/preferences/notification-preferences.page.ts:234</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, inject, signal, effect, PLATFORM_ID } from &#x27;@angular/core&#x27;;
+import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { injectSupabase } from &#x27;../../../core/services/supabase-client.service&#x27;;
+import { NotificationSoundService } from &#x27;../../../core/services/notification-sound.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../core/services/notification-manager.service&#x27;;
+
+interface NotificationPreference {
+  type: string;
+  label: string;
+  description: string;
+  enabled: boolean;
+  icon: string;
+}
+
+interface NotificationPreferencesPayload {
+  soundEnabled?: boolean;
+  browserNotificationsEnabled?: boolean;
+  types?: Record&lt;string, boolean&gt;;
+}
+
+/**
+ * ⚙️ Preferencias de notificaciones
+ * Permite al usuario habilitar/deshabilitar tipos de notificaciones
+ */
+@Component({
+  selector: &#x27;app-notification-preferences&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;min-h-screen bg-surface-base dark:bg-surface-raised&quot;&gt;
+      &lt;!-- Header --&gt;
+      &lt;div class&#x3D;&quot;sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base&quot;&gt;
+        &lt;div class&#x3D;&quot;mx-auto max-w-4xl px-4 py-4&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;goBack()&quot;
+              class&#x3D;&quot;rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              &lt;svg
+                class&#x3D;&quot;h-6 w-6 text-text-secondary dark:text-text-secondary&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+              &gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M15 19l-7-7 7-7&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/button&gt;
+            &lt;div&gt;
+              &lt;h1 class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+                Preferencias de notificaciones
+              &lt;/h1&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                Personaliza qué notificaciones quieres recibir
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Content --&gt;
+      &lt;div class&#x3D;&quot;mx-auto max-w-4xl p-4&quot;&gt;
+        @if (loading()) {
+          &lt;div class&#x3D;&quot;flex h-96 items-center justify-center&quot;&gt;
+            &lt;div class&#x3D;&quot;text-center&quot;&gt;
+              &lt;div
+                class&#x3D;&quot;mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500&quot;
+              &gt;&lt;/div&gt;
+              &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-muted&quot;&gt;Cargando preferencias...&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        } @else {
+          &lt;!-- Browser notifications --&gt;
+          &lt;div class&#x3D;&quot;mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+            &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+                &lt;div
+                  class&#x3D;&quot;flex h-12 w-12 items-center justify-center rounded-full bg-cta-default/20 text-2xl dark:bg-cta-default/30&quot;
+                &gt;
+                  🔔
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                    Notificaciones del navegador
+                  &lt;/h3&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                    Recibe notificaciones incluso cuando no estés en la app
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;button
+                (click)&#x3D;&quot;toggleBrowserNotifications()&quot;
+                [disabled]&#x3D;&quot;browserNotificationsPermission() &#x3D;&#x3D;&#x3D; &#x27;denied&#x27;&quot;
+                [class.bg-cta-default]&#x3D;&quot;browserNotificationsEnabled()&quot;
+                [class.bg-surface-pressed]&#x3D;&quot;!browserNotificationsEnabled()&quot;
+                class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50&quot;
+                type&#x3D;&quot;button&quot;
+              &gt;
+                &lt;span
+                  [class.translate-x-5]&#x3D;&quot;browserNotificationsEnabled()&quot;
+                  [class.translate-x-0]&#x3D;&quot;!browserNotificationsEnabled()&quot;
+                  class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+                &gt;&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+            @if (browserNotificationsPermission() &#x3D;&#x3D;&#x3D; &#x27;denied&#x27;) {
+              &lt;div class&#x3D;&quot;mt-3 rounded-lg bg-warning-bg p-3 dark:bg-warning-900/20&quot;&gt;
+                &lt;p class&#x3D;&quot;text-sm text-warning-strong dark:text-warning-200&quot;&gt;
+                  ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la
+                  configuración de tu navegador.
+                &lt;/p&gt;
+              &lt;/div&gt;
+            }
+          &lt;/div&gt;
+
+          &lt;!-- Sound preferences --&gt;
+          &lt;div class&#x3D;&quot;mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+            &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+                &lt;div
+                  class&#x3D;&quot;flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30&quot;
+                &gt;
+                  🔊
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                    Sonido de notificaciones
+                  &lt;/h3&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                    Reproducir un sonido cuando llegue una notificación
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;button
+                (click)&#x3D;&quot;toggleSound()&quot;
+                [class.bg-purple-600]&#x3D;&quot;soundEnabled()&quot;
+                [class.bg-surface-pressed]&#x3D;&quot;!soundEnabled()&quot;
+                class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2&quot;
+                type&#x3D;&quot;button&quot;
+              &gt;
+                &lt;span
+                  [class.translate-x-5]&#x3D;&quot;soundEnabled()&quot;
+                  [class.translate-x-0]&#x3D;&quot;!soundEnabled()&quot;
+                  class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+                &gt;&lt;/span&gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Notification types --&gt;
+          &lt;div class&#x3D;&quot;rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base&quot;&gt;
+            &lt;h2 class&#x3D;&quot;mb-4 text-lg font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+              Tipos de notificaciones
+            &lt;/h2&gt;
+            &lt;p class&#x3D;&quot;mb-6 text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+              Selecciona qué tipos de notificaciones quieres recibir
+            &lt;/p&gt;
+
+            &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+              @for (pref of preferences(); track pref.type) {
+                &lt;div
+                  class&#x3D;&quot;flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-muted dark:hover:bg-gray-700/50&quot;
+                &gt;
+                  &lt;div class&#x3D;&quot;flex items-center gap-4&quot;&gt;
+                    &lt;div
+                      class&#x3D;&quot;flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-xl dark:bg-surface-base&quot;
+                    &gt;
+                      {{ pref.icon }}
+                    &lt;/div&gt;
+                    &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+                      &lt;h3 class&#x3D;&quot;font-medium text-text-primary dark:text-text-inverse&quot;&gt;
+                        {{ pref.label }}
+                      &lt;/h3&gt;
+                      &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                        {{ pref.description }}
+                      &lt;/p&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                  &lt;button
+                    (click)&#x3D;&quot;togglePreference(pref)&quot;
+                    [class.bg-cta-default]&#x3D;&quot;pref.enabled&quot;
+                    [class.bg-surface-pressed]&#x3D;&quot;!pref.enabled&quot;
+                    class&#x3D;&quot;relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2&quot;
+                    type&#x3D;&quot;button&quot;
+                  &gt;
+                    &lt;span
+                      [class.translate-x-5]&#x3D;&quot;pref.enabled&quot;
+                      [class.translate-x-0]&#x3D;&quot;!pref.enabled&quot;
+                      class&#x3D;&quot;pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out&quot;
+                    &gt;&lt;/span&gt;
+                  &lt;/button&gt;
+                &lt;/div&gt;
+              }
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Save button --&gt;
+          &lt;div class&#x3D;&quot;mt-6 flex justify-end gap-3&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;goBack()&quot;
+              class&#x3D;&quot;rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              Cancelar
+            &lt;/button&gt;
+            &lt;button
+              (click)&#x3D;&quot;savePreferences()&quot;
+              [disabled]&#x3D;&quot;saving()&quot;
+              class&#x3D;&quot;rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:cursor-not-allowed disabled:opacity-50&quot;
+              type&#x3D;&quot;button&quot;
+            &gt;
+              @if (saving()) {
+                Guardando...
+              } @else {
+                Guardar cambios
+              }
+            &lt;/button&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+})
+export class NotificationPreferencesPage implements OnInit {
+  private readonly platformId &#x3D; inject(PLATFORM_ID);
+  private readonly isBrowser &#x3D; isPlatformBrowser(this.platformId);
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly router &#x3D; inject(Router);
+  private readonly notificationSound &#x3D; inject(NotificationSoundService);
+  private readonly notifications &#x3D; inject(NotificationManagerService);
+
+  loading &#x3D; signal(true);
+  saving &#x3D; signal(false);
+  browserNotificationsEnabled &#x3D; signal(false);
+  browserNotificationsPermission &#x3D; signal&lt;NotificationPermission&gt;(&#x27;default&#x27;);
+  soundEnabled &#x3D; signal(true);
+
+  constructor() {
+    // Sync with NotificationSoundService
+    effect(() &#x3D;&gt; {
+      const soundState &#x3D; this.notificationSound.isSoundEnabledSignal()();
+      this.soundEnabled.set(soundState);
+    });
+  }
+
+  preferences &#x3D; signal&lt;NotificationPreference[]&gt;([
+    {
+      type: &#x27;new_booking_for_owner&#x27;,
+      label: &#x27;Nuevas reservas&#x27;,
+      description: &#x27;Cuando alguien solicita reservar tu auto&#x27;,
+      enabled: true,
+      icon: &#x27;🚗&#x27;,
+    },
+    {
+      type: &#x27;booking_cancelled_for_owner&#x27;,
+      label: &#x27;Cancelaciones (propietario)&#x27;,
+      description: &#x27;Cuando un inquilino cancela una reserva de tu auto&#x27;,
+      enabled: true,
+      icon: &#x27;❌&#x27;,
+    },
+    {
+      type: &#x27;booking_cancelled_for_renter&#x27;,
+      label: &#x27;Cancelaciones (inquilino)&#x27;,
+      description: &#x27;Cuando un propietario cancela tu reserva&#x27;,
+      enabled: true,
+      icon: &#x27;❌&#x27;,
+    },
+    {
+      type: &#x27;new_chat_message&#x27;,
+      label: &#x27;Mensajes nuevos&#x27;,
+      description: &#x27;Cuando recibes un nuevo mensaje en el chat&#x27;,
+      enabled: true,
+      icon: &#x27;💬&#x27;,
+    },
+    {
+      type: &#x27;payment_successful&#x27;,
+      label: &#x27;Pagos exitosos&#x27;,
+      description: &#x27;Cuando se procesa un pago correctamente&#x27;,
+      enabled: true,
+      icon: &#x27;💳&#x27;,
+    },
+    {
+      type: &#x27;payout_successful&#x27;,
+      label: &#x27;Pagos recibidos&#x27;,
+      description: &#x27;Cuando recibes un pago en tu wallet&#x27;,
+      enabled: true,
+      icon: &#x27;💰&#x27;,
+    },
+    {
+      type: &#x27;inspection_reminder&#x27;,
+      label: &#x27;Recordatorios de inspección&#x27;,
+      description: &#x27;Recordatorios para realizar inspecciones de vehículos&#x27;,
+      enabled: true,
+      icon: &#x27;🔍&#x27;,
+    },
+    {
+      type: &#x27;generic_announcement&#x27;,
+      label: &#x27;Anuncios generales&#x27;,
+      description: &#x27;Actualizaciones y anuncios de la plataforma&#x27;,
+      enabled: true,
+      icon: &#x27;📢&#x27;,
+    },
+  ]);
+
+  async ngOnInit() {
+    await this.loadPreferences();
+    this.checkBrowserNotifications();
+  }
+
+  async loadPreferences() {
+    this.loading.set(true);
+    try {
+      const {
+        data: { user },
+      } &#x3D; await this.supabase.auth.getUser();
+      if (!user) return;
+
+      // Load sound state from NotificationSoundService
+      const soundState &#x3D; this.notificationSound.isSoundEnabledSignal()();
+      this.soundEnabled.set(soundState);
+
+      // 1) Intentar cargar desde Supabase (persistencia cross-device)
+      const { data, error } &#x3D; await this.supabase
+        .from(&#x27;notification_settings&#x27;)
+        .select(&#x27;preferences&#x27;)
+        .eq(&#x27;user_id&#x27;, user.id)
+        .maybeSingle();
+
+      if (!error &amp;&amp; data?.preferences) {
+        this.hydratePreferences(data.preferences as NotificationPreferencesPayload);
+      } else {
+        // 2) Fallback a localStorage para compatibilidad previa
+        if (!this.isBrowser) return;
+        const savedPrefs &#x3D; localStorage.getItem(&#x60;notification_prefs_${user.id}&#x60;);
+        if (savedPrefs) {
+          this.hydratePreferences(JSON.parse(savedPrefs));
+        }
+      }
+    } catch (error) {
+      console.error(&#x27;Error loading preferences:&#x27;, error);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  private hydratePreferences(parsed: NotificationPreferencesPayload) {
+    this.preferences.update((prefs) &#x3D;&gt;
+      prefs.map((p) &#x3D;&gt; ({
+        ...p,
+        enabled: parsed?.types?.[p.type] ?? p.enabled,
+      })),
+    );
+
+    if (parsed?.soundEnabled !&#x3D;&#x3D; undefined) {
+      if (parsed.soundEnabled) {
+        this.notificationSound.enableSound();
+      } else {
+        this.notificationSound.disableSound();
+      }
+      this.soundEnabled.set(!!parsed.soundEnabled);
+    }
+
+    if (parsed?.browserNotificationsEnabled !&#x3D;&#x3D; undefined) {
+      this.browserNotificationsEnabled.set(!!parsed.browserNotificationsEnabled);
+    }
+  }
+
+  checkBrowserNotifications() {
+    if (&#x27;Notification&#x27; in window) {
+      this.browserNotificationsPermission.set(Notification.permission);
+      this.browserNotificationsEnabled.set(Notification.permission &#x3D;&#x3D;&#x3D; &#x27;granted&#x27;);
+    }
+  }
+
+  async toggleBrowserNotifications() {
+    if (!(&#x27;Notification&#x27; in window)) {
+      this.notifications.warning(&#x27;Notificaciones&#x27;, &#x27;Tu navegador no soporta notificaciones&#x27;);
+      return;
+    }
+
+    if (Notification.permission &#x3D;&#x3D;&#x3D; &#x27;denied&#x27;) {
+      this.notifications.warning(
+        &#x27;Notificaciones bloqueadas&#x27;,
+        &#x27;Habilítalas en la configuración del navegador para recibir avisos.&#x27;,
+      );
+      return;
+    }
+
+    if (Notification.permission &#x3D;&#x3D;&#x3D; &#x27;default&#x27;) {
+      const permission &#x3D; await Notification.requestPermission();
+      this.browserNotificationsPermission.set(permission);
+      this.browserNotificationsEnabled.set(permission &#x3D;&#x3D;&#x3D; &#x27;granted&#x27;);
+    } else {
+      // Already granted, toggle the setting
+      this.browserNotificationsEnabled.update((v) &#x3D;&gt; !v);
+    }
+  }
+
+  toggleSound() {
+    const newState &#x3D; this.notificationSound.toggleSound();
+    this.soundEnabled.set(newState);
+    // Play test sound if enabling
+    if (newState) {
+      this.notificationSound.playNotificationSound().catch(() &#x3D;&gt; {
+        // Silently fail if can&#x27;t play
+      });
+    }
+  }
+
+  togglePreference(pref: NotificationPreference) {
+    this.preferences.update((prefs) &#x3D;&gt;
+      prefs.map((p) &#x3D;&gt; (p.type &#x3D;&#x3D;&#x3D; pref.type ? { ...p, enabled: !p.enabled } : p)),
+    );
+  }
+
+  async savePreferences() {
+    this.saving.set(true);
+    try {
+      const {
+        data: { user },
+      } &#x3D; await this.supabase.auth.getUser();
+      if (!user) return;
+
+      const prefsToSave &#x3D; {
+        soundEnabled: this.soundEnabled(), // Already synced with service
+        browserNotificationsEnabled: this.browserNotificationsEnabled(),
+        types: this.preferences().reduce(
+          (acc, p) &#x3D;&gt; {
+            acc[p.type] &#x3D; p.enabled;
+            return acc;
+          },
+          {} as Record&lt;string, boolean&gt;,
+        ),
+      };
+
+      // Persistencia en Supabase (si la tabla está disponible)
+      const { error } &#x3D; await this.supabase.from(&#x27;notification_settings&#x27;).upsert({
+        user_id: user.id,
+        preferences: prefsToSave,
+        updated_at: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.warn(
+          &#x27;Supabase notification_settings upsert failed, fallback to localStorage&#x27;,
+          error,
+        );
+      }
+
+      // Fallback localStorage para resiliencia offline
+      if (this.isBrowser) {
+        localStorage.setItem(&#x60;notification_prefs_${user.id}&#x60;, JSON.stringify(prefsToSave));
+      }
+
+      this.notifications.success(&#x27;Preferencias&#x27;, &#x27;Preferencias guardadas&#x27;);
+      this.goBack();
+    } catch (error) {
+      console.error(&#x27;Error saving preferences:&#x27;, error);
+      this.notifications.error(&#x27;Preferencias&#x27;, &#x27;No pudimos guardar tus preferencias.&#x27;);
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  goBack() {
+    void this.router.navigate([&#x27;/notifications&#x27;]);
+  }
+}
+</code></pre>
+    </div>
+
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="min-h-screen bg-surface-base dark:bg-surface-raised">  <!-- Header -->  <div class="sticky top-0 z-10 bg-surface-raised shadow dark:bg-surface-base">    <div class="mx-auto max-w-4xl px-4 py-4">      <div class="flex items-center gap-3">        <button          (click)="goBack()"          class="rounded-lg p-2 hover:bg-surface-raised dark:hover:bg-gray-700"          type="button"        >          <svg            class="h-6 w-6 text-text-secondary dark:text-text-secondary"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M15 19l-7-7 7-7"            />          </svg>        </button>        <div>          <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse">            Preferencias de notificaciones          </h1>          <p class="text-sm text-text-secondary dark:text-text-muted">            Personaliza qué notificaciones quieres recibir          </p>        </div>      </div>    </div>  </div>  <!-- Content -->  <div class="mx-auto max-w-4xl p-4">    @if (loading()) {      <div class="flex h-96 items-center justify-center">        <div class="text-center">          <div            class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"          ></div>          <p class="text-text-secondary dark:text-text-muted">Cargando preferencias...</p>        </div>      </div>    } @else {      <!-- Browser notifications -->      <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">        <div class="flex items-center justify-between">          <div class="flex items-center gap-4">            <div              class="flex h-12 w-12 items-center justify-center rounded-full bg-cta-default/20 text-2xl dark:bg-cta-default/30"            >              🔔            </div>            <div>              <h3 class="font-semibold text-text-primary dark:text-text-inverse">                Notificaciones del navegador              </h3>              <p class="text-sm text-text-secondary dark:text-text-muted">                Recibe notificaciones incluso cuando no estés en la app              </p>            </div>          </div>          <button            (click)="toggleBrowserNotifications()"            [disabled]="browserNotificationsPermission() === \'denied\'"            [class.bg-cta-default]="browserNotificationsEnabled()"            [class.bg-surface-pressed]="!browserNotificationsEnabled()"            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"            type="button"          >            <span              [class.translate-x-5]="browserNotificationsEnabled()"              [class.translate-x-0]="!browserNotificationsEnabled()"              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out"            ></span>          </button>        </div>        @if (browserNotificationsPermission() === \'denied\') {          <div class="mt-3 rounded-lg bg-warning-bg p-3 dark:bg-warning-900/20">            <p class="text-sm text-warning-strong dark:text-warning-200">              ⚠️ Has bloqueado las notificaciones del navegador. Para habilitarlas, ve a la              configuración de tu navegador.            </p>          </div>        }      </div>      <!-- Sound preferences -->      <div class="mb-6 rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">        <div class="flex items-center justify-between">          <div class="flex items-center gap-4">            <div              class="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-2xl dark:bg-purple-900/30"            >              🔊            </div>            <div>              <h3 class="font-semibold text-text-primary dark:text-text-inverse">                Sonido de notificaciones              </h3>              <p class="text-sm text-text-secondary dark:text-text-muted">                Reproducir un sonido cuando llegue una notificación              </p>            </div>          </div>          <button            (click)="toggleSound()"            [class.bg-purple-600]="soundEnabled()"            [class.bg-surface-pressed]="!soundEnabled()"            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"            type="button"          >            <span              [class.translate-x-5]="soundEnabled()"              [class.translate-x-0]="!soundEnabled()"              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out"            ></span>          </button>        </div>      </div>      <!-- Notification types -->      <div class="rounded-lg bg-surface-raised p-6 shadow dark:bg-surface-base">        <h2 class="mb-4 text-lg font-semibold text-text-primary dark:text-text-inverse">          Tipos de notificaciones        </h2>        <p class="mb-6 text-sm text-text-secondary dark:text-text-muted">          Selecciona qué tipos de notificaciones quieres recibir        </p>        <div class="space-y-4">          @for (pref of preferences(); track pref.type) {            <div              class="flex items-center justify-between rounded-lg border border-border-default p-4 transition-colors hover:bg-surface-base dark:border-border-muted dark:hover:bg-gray-700/50"            >              <div class="flex items-center gap-4">                <div                  class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-raised text-xl dark:bg-surface-base"                >                  {{ pref.icon }}                </div>                <div class="flex-1">                  <h3 class="font-medium text-text-primary dark:text-text-inverse">                    {{ pref.label }}                  </h3>                  <p class="text-sm text-text-secondary dark:text-text-muted">                    {{ pref.description }}                  </p>                </div>              </div>              <button                (click)="togglePreference(pref)"                [class.bg-cta-default]="pref.enabled"                [class.bg-surface-pressed]="!pref.enabled"                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cta-default focus:ring-offset-2"                type="button"              >                <span                  [class.translate-x-5]="pref.enabled"                  [class.translate-x-0]="!pref.enabled"                  class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-surface-raised shadow ring-0 transition duration-200 ease-in-out"                ></span>              </button>            </div>          }        </div>      </div>      <!-- Save button -->      <div class="mt-6 flex justify-end gap-3">        <button          (click)="goBack()"          class="rounded-lg border border-border-muted px-6 py-3 font-medium text-text-primary hover:bg-surface-base dark:border-border-default dark:text-text-secondary dark:hover:bg-gray-700"          type="button"        >          Cancelar        </button>        <button          (click)="savePreferences()"          [disabled]="saving()"          class="rounded-lg bg-cta-default text-cta-text hover:bg-cta-default disabled:cursor-not-allowed disabled:opacity-50"          type="button"        >          @if (saving()) {            Guardando...          } @else {            Guardar cambios          }        </button>      </div>    }  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'NotificationPreferencesPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'NotificationPreferencesPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

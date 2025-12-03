@@ -1,0 +1,3305 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ExplorePage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/explore/explore.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>AfterViewInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-explore</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                            <code>IonContent</code>
+                            <code>IonHeader</code>
+                            <code>IonToolbar</code>
+                            <code>IonIcon</code>
+                                <code><a href="../components/CarsMapComponent.html" target="_self" >CarsMapComponent</a></code>
+                                <code><a href="../components/WazeLiveMapComponent.html" target="_self" >WazeLiveMapComponent</a></code>
+                                <code><a href="../components/MapFiltersComponent.html" target="_self" >MapFiltersComponent</a></code>
+                                <code><a href="../components/MapDrawerComponent.html" target="_self" >MapDrawerComponent</a></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./explore.page.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./explore.page.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carMapLocations" >carMapLocations</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#carouselContainer" >carouselContainer</a>
+                            </li>
+                            <li>
+                                <a href="#cars" >cars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#carsMap" >carsMap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#currentFilters" >currentFilters</a>
+                            </li>
+                            <li>
+                                <a href="#filteredCars" >filteredCars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isDrawerOpen" >isDrawerOpen</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isMobileView" >isMobileView</a>
+                            </li>
+                            <li>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#mapContainer" >mapContainer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#mapProvider" >mapProvider</a>
+                            </li>
+                            <li>
+                                <a href="#searchQuery" >searchQuery</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedCar" >selectedCar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedCarId" >selectedCarId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sortOptions" >sortOptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sortOrder" >sortOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#userLocation" >userLocation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#viewMode" >viewMode</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#applyFiltersAndSort" >applyFiltersAndSort</a>
+                            </li>
+                            <li>
+                                <a href="#centerOnUser" >centerOnUser</a>
+                            </li>
+                            <li>
+                                <a href="#extractPhotoGallery" >extractPhotoGallery</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUserLocation" >getUserLocation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadCars" >loadCars</a>
+                            </li>
+                            <li>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCarouselCardSelected" >onCarouselCardSelected</a>
+                            </li>
+                            <li>
+                                <a href="#onChatClick" >onChatClick</a>
+                            </li>
+                            <li>
+                                <a href="#onCloseDrawer" >onCloseDrawer</a>
+                            </li>
+                            <li>
+                                <a href="#onFilterChange" >onFilterChange</a>
+                            </li>
+                            <li>
+                                <a href="#onMapCarSelected" >onMapCarSelected</a>
+                            </li>
+                            <li>
+                                <a href="#onReserveClick" >onReserveClick</a>
+                            </li>
+                            <li>
+                                <a href="#onSearch" >onSearch</a>
+                            </li>
+                            <li>
+                                <a href="#onSortChange" >onSortChange</a>
+                            </li>
+                            <li>
+                                <a href="#onStickyCtaClick" >onStickyCtaClick</a>
+                            </li>
+                            <li>
+                                <a href="#onUserLocationChange" >onUserLocationChange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#scrollToCarInCarousel" >scrollToCarInCarousel</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(carsService: <a href="../injectables/CarsService.html" target="_self">CarsService</a>, availabilityService: <a href="../injectables/CarAvailabilityService.html" target="_self">CarAvailabilityService</a>, router: <a href="../interfaces/Route.html" target="_self">Router</a>, breakpoint: <a href="../injectables/BreakpointService.html" target="_self">BreakpointService</a>, toastController: <a href="../interfaces/Toast.html" target="_self">ToastController</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/app/features/explore/explore.page.ts:111</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>carsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CarsService.html" target="_self" >CarsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>availabilityService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CarAvailabilityService.html" target="_self" >CarAvailabilityService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Route.html" target="_self" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>breakpoint</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/BreakpointService.html" target="_self" >BreakpointService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>toastController</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Toast.html" target="_self" >ToastController</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyFiltersAndSort"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>applyFiltersAndSort</b></span>
+                        <a href="#applyFiltersAndSort"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>applyFiltersAndSort()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="340"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:340</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="centerOnUser"></a>
+                    <span class="name">
+                        <span ><b>centerOnUser</b></span>
+                        <a href="#centerOnUser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>centerOnUser()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:312</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractPhotoGallery"></a>
+                    <span class="name">
+                        <span ><b>extractPhotoGallery</b></span>
+                        <a href="#extractPhotoGallery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>extractPhotoGallery(car: <a href="../interfaces/Car.html" target="_self">Car</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="330"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:330</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>car</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Car.html" target="_self" >Car</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUserLocation"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getUserLocation</b></span>
+                        <a href="#getUserLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUserLocation()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:154</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadCars"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadCars</b></span>
+                        <a href="#loadCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadCars()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:141</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="135"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:135</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:130</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCarouselCardSelected"></a>
+                    <span class="name">
+                        <span ><b>onCarouselCardSelected</b></span>
+                        <a href="#onCarouselCardSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCarouselCardSelected(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:199</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle carousel card click</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onChatClick"></a>
+                    <span class="name">
+                        <span ><b>onChatClick</b></span>
+                        <a href="#onChatClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onChatClick(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:250</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle chat click from drawer</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCloseDrawer"></a>
+                    <span class="name">
+                        <span ><b>onCloseDrawer</b></span>
+                        <a href="#onCloseDrawer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCloseDrawer()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:226</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Close drawer</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onFilterChange"></a>
+                    <span class="name">
+                        <span ><b>onFilterChange</b></span>
+                        <a href="#onFilterChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onFilterChange(filters: <a href="../interfaces/FilterState.html" target="_self">FilterState</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle filter change from map-filters</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../interfaces/FilterState.html" target="_self" >FilterState</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onMapCarSelected"></a>
+                    <span class="name">
+                        <span ><b>onMapCarSelected</b></span>
+                        <a href="#onMapCarSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onMapCarSelected(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:177</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle map marker click</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onReserveClick"></a>
+                    <span class="name">
+                        <span ><b>onReserveClick</b></span>
+                        <a href="#onReserveClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onReserveClick(data: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:233</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle reserve click from drawer</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSearch"></a>
+                    <span class="name">
+                        <span ><b>onSearch</b></span>
+                        <a href="#onSearch"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSearch()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="308"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:308</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSortChange"></a>
+                    <span class="name">
+                        <span ><b>onSortChange</b></span>
+                        <a href="#onSortChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onSortChange(sort: <a href="../undefineds/SortOption.html" target="_self">SortOption</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sort</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#SortOption" target="_self" >SortOption</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onStickyCtaClick"></a>
+                    <span class="name">
+                        <span ><b>onStickyCtaClick</b></span>
+                        <a href="#onStickyCtaClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onStickyCtaClick()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="258"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:258</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>🎯 Handle sticky CTA click on mobile</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onUserLocationChange"></a>
+                    <span class="name">
+                        <span ><b>onUserLocationChange</b></span>
+                        <a href="#onUserLocationChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onUserLocationChange(location: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:267</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>location</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scrollToCarInCarousel"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>scrollToCarInCarousel</b></span>
+                        <a href="#scrollToCarInCarousel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>scrollToCarInCarousel(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="271"
+                                    class="link-to-prism">src/app/features/explore/explore.page.ts:271</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carMapLocations"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carMapLocations</b></span>
+                        <a href="#carMapLocations"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.filteredCars.map((car) &#x3D;&gt; {
+      const gallery &#x3D; this.extractPhotoGallery(car);
+      return {
+        carId: car.id,
+        title: &#x60;${car.brand_text_backup || &#x27;&#x27;} ${car.model_text_backup || &#x27;&#x27;}&#x60;.trim(),
+        pricePerDay: car.price_per_day,
+        currency: car.currency || &#x27;ARS&#x27;,
+        regionId: car.region_id,
+        lat: car.location_lat || 0,
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || &#x27;Sin ubicación&#x27;,
+        photoUrl: gallery[0] ?? null,
+        photoGallery: gallery,
+        description: car.description,
+      };
+    });
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/app/features/explore/explore.page.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carouselContainer"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>carouselContainer</b></span>
+                        <a href="#carouselContainer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLDivElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;carouselContainer&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/features/explore/explore.page.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cars"></a>
+                    <span class="name">
+                        <span ><b>cars</b></span>
+                        <a href="#cars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Car[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/features/explore/explore.page.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carsMap"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>carsMap</b></span>
+                        <a href="#carsMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../components/CarsMapComponent.html" target="_self" >CarsMapComponent</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(CarsMapComponent)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/features/explore/explore.page.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentFilters"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>currentFilters</b></span>
+                        <a href="#currentFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;FilterState | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/features/explore/explore.page.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filteredCars"></a>
+                    <span class="name">
+                        <span ><b>filteredCars</b></span>
+                        <a href="#filteredCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Car[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/features/explore/explore.page.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDrawerOpen"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isDrawerOpen</b></span>
+                        <a href="#isDrawerOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/features/explore/explore.page.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isMobileView"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isMobileView</b></span>
+                        <a href="#isMobileView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/features/explore/explore.page.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/features/explore/explore.page.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mapContainer"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>mapContainer</b></span>
+                        <a href="#mapContainer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLDivElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;mapContainer&#x27;)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/features/explore/explore.page.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mapProvider"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>mapProvider</b></span>
+                        <a href="#mapProvider"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;mapbox&#x27; | &#x27;waze&#x27;&gt;(&#x27;mapbox&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/features/explore/explore.page.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchQuery"></a>
+                    <span class="name">
+                        <span ><b>searchQuery</b></span>
+                        <a href="#searchQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/features/explore/explore.page.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedCar"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedCar</b></span>
+                        <a href="#selectedCar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;CarMapLocation | undefined&gt;(() &#x3D;&gt; {
+    const id &#x3D; this.selectedCarId();
+    return id ? this.carMapLocations().find((c) &#x3D;&gt; c.carId &#x3D;&#x3D;&#x3D; id) : undefined;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/app/features/explore/explore.page.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedCarId"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedCarId</b></span>
+                        <a href="#selectedCarId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/features/explore/explore.page.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sortOptions"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sortOptions</b></span>
+                        <a href="#sortOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>SORT_OPTIONS</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/app/features/explore/explore.page.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sortOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sortOrder</b></span>
+                        <a href="#sortOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;SortOption&gt;(&#x27;distance&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/features/explore/explore.page.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userLocation"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>userLocation</b></span>
+                        <a href="#userLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;{ lat: number; lng: number } | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/features/explore/explore.page.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewMode"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>viewMode</b></span>
+                        <a href="#viewMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;map&#x27; | &#x27;grid&#x27; | &#x27;list&#x27;&gt;(&#x27;list&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/app/features/explore/explore.page.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+} from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { Geolocation } from &#x27;@capacitor/geolocation&#x27;;
+import {
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonToolbar,
+  ToastController,
+} from &#x27;@ionic/angular/standalone&#x27;;
+import { addIcons } from &#x27;ionicons&#x27;;
+import {
+  gridOutline,
+  listOutline,
+  locateOutline,
+  mapOutline,
+  optionsOutline,
+} from &#x27;ionicons/icons&#x27;;
+import { Car } from &#x27;../../core/models&#x27;;
+import { BreakpointService } from &#x27;../../core/services/breakpoint.service&#x27;;
+import type { CarMapLocation } from &#x27;../../core/services/car-locations.service&#x27;;
+import { CarsService } from &#x27;../../core/services/cars.service&#x27;;
+import { CarAvailabilityService } from &#x27;../../core/services/car-availability.service&#x27;;
+import { CarsMapComponent } from &#x27;../../shared/components/cars-map/cars-map.component&#x27;;
+import { MapDrawerComponent } from &#x27;../../shared/components/map-drawer/map-drawer.component&#x27;;
+import {
+  FilterState,
+  MapFiltersComponent,
+} from &#x27;../../shared/components/map-filters/map-filters.component&#x27;;
+import { SORT_OPTIONS, SortOption } from &#x27;../../core/models/marketplace.model&#x27;;
+import { WazeLiveMapComponent } from &#x27;../../shared/components/waze-live-map/waze-live-map.component&#x27;;
+
+@Component({
+  selector: &#x27;app-explore&#x27;,
+  templateUrl: &#x27;./explore.page.html&#x27;,
+  styleUrls: [&#x27;./explore.page.scss&#x27;],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonIcon,
+    CarsMapComponent,
+    WazeLiveMapComponent,
+    MapFiltersComponent,
+    MapDrawerComponent,
+  ],
+})
+export class ExplorePage implements OnInit, AfterViewInit {
+  @ViewChild(&#x27;mapContainer&#x27;) mapContainer?: ElementRef&lt;HTMLDivElement&gt;;
+  @ViewChild(&#x27;carouselContainer&#x27;) carouselContainer?: ElementRef&lt;HTMLDivElement&gt;;
+  @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
+
+  // Data
+  cars: Car[] &#x3D; [];
+  filteredCars: Car[] &#x3D; [];
+  loading &#x3D; true;
+  searchQuery &#x3D; &#x27;&#x27;;
+
+  // State signals
+  readonly selectedCarId &#x3D; signal&lt;string | null&gt;(null);
+  readonly isDrawerOpen &#x3D; signal(false);
+  readonly isMobileView;
+  readonly currentFilters &#x3D; signal&lt;FilterState | null&gt;(null);
+  readonly userLocation &#x3D; signal&lt;{ lat: number; lng: number } | null&gt;(null);
+  readonly viewMode &#x3D; signal&lt;&#x27;map&#x27; | &#x27;grid&#x27; | &#x27;list&#x27;&gt;(&#x27;list&#x27;); // Mobile-first: lista por defecto
+  readonly mapProvider &#x3D; signal&lt;&#x27;mapbox&#x27; | &#x27;waze&#x27;&gt;(&#x27;mapbox&#x27;); // Map provider toggle
+
+  readonly sortOptions &#x3D; SORT_OPTIONS;
+  readonly sortOrder &#x3D; signal&lt;SortOption&gt;(&#x27;distance&#x27;);
+
+  // Computed
+  readonly selectedCar &#x3D; computed&lt;CarMapLocation | undefined&gt;(() &#x3D;&gt; {
+    const id &#x3D; this.selectedCarId();
+    return id ? this.carMapLocations().find((c) &#x3D;&gt; c.carId &#x3D;&#x3D;&#x3D; id) : undefined;
+  });
+
+  readonly carMapLocations &#x3D; computed(() &#x3D;&gt; {
+    return this.filteredCars.map((car) &#x3D;&gt; {
+      const gallery &#x3D; this.extractPhotoGallery(car);
+      return {
+        carId: car.id,
+        title: &#x60;${car.brand_text_backup || &#x27;&#x27;} ${car.model_text_backup || &#x27;&#x27;}&#x60;.trim(),
+        pricePerDay: car.price_per_day,
+        currency: car.currency || &#x27;ARS&#x27;,
+        regionId: car.region_id,
+        lat: car.location_lat || 0,
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || &#x27;Sin ubicación&#x27;,
+        photoUrl: gallery[0] ?? null,
+        photoGallery: gallery,
+        description: car.description,
+      };
+    });
+  });
+
+  constructor(
+    private carsService: CarsService,
+    private availabilityService: CarAvailabilityService,
+    private router: Router,
+    private breakpoint: BreakpointService,
+    private toastController: ToastController,
+  ) {
+    addIcons({ optionsOutline, locateOutline, gridOutline, listOutline, mapOutline });
+    // Usar BreakpointService en lugar de window.innerWidth
+    this.isMobileView &#x3D; this.breakpoint.isMobile;
+
+    // Set default view mode based on device
+    if (!this.isMobileView()) {
+      this.viewMode.set(&#x27;grid&#x27;);
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadCars();
+    this.getUserLocation();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.mapContainer?.nativeElement) {
+      // Aquí podría inicializarse lógica adicional de mapa si se requiere.
+    }
+  }
+
+  async loadCars() {
+    this.loading &#x3D; true;
+    try {
+      const cars &#x3D; await this.carsService.listActiveCars({});
+      this.cars &#x3D; cars;
+      await this.applyFiltersAndSort();
+    } catch {
+      /* Silenced */
+    } finally {
+      this.loading &#x3D; false;
+    }
+  }
+
+  async getUserLocation() {
+    try {
+      const position &#x3D; await Geolocation.getCurrentPosition();
+      this.userLocation.set({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+    } catch (error) {
+      console.error(&#x27;Error getting location:&#x27;, error);
+      const toast &#x3D; await this.toastController.create({
+        message: &#x27;No pudimos obtener tu ubicación. Por favor verifica los permisos.&#x27;,
+        duration: 3000,
+        position: &#x27;bottom&#x27;,
+        color: &#x27;warning&#x27;,
+        icon: &#x27;location-outline&#x27;,
+      });
+      await toast.present();
+    }
+  }
+
+  /**
+   * 🎯 Handle map marker click
+   */
+  onMapCarSelected(carId: string) {
+    const previousCarId &#x3D; this.selectedCarId();
+    this.selectedCarId.set(carId);
+
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId &#x3D;&#x3D;&#x3D; carId) {
+      this.router.navigate([&#x27;/cars/detail&#x27;, carId]);
+      return;
+    }
+
+    // Abrir drawer en desktop/mobile
+    this.isDrawerOpen.set(true);
+
+    // Scroll carousel en desktop si aplica
+    if (!this.isMobileView()) {
+      this.scrollToCarInCarousel(carId);
+    }
+  }
+
+  /**
+   * 🎯 Handle carousel card click
+   */
+  onCarouselCardSelected(carId: string) {
+    const previousCarId &#x3D; this.selectedCarId();
+    this.selectedCarId.set(carId);
+
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId &#x3D;&#x3D;&#x3D; carId) {
+      this.router.navigate([&#x27;/cars/detail&#x27;, carId]);
+      return;
+    }
+
+    // Fly-to en mapa
+    if (this.carsMap) {
+      this.carsMap.flyToCarLocation(carId);
+    }
+  }
+
+  /**
+   * 🎯 Handle filter change from map-filters
+   */
+  onFilterChange(filters: FilterState) {
+    this.currentFilters.set(filters);
+    void this.applyFiltersAndSort();
+  }
+
+  /**
+   * 🎯 Close drawer
+   */
+  onCloseDrawer() {
+    this.isDrawerOpen.set(false);
+  }
+
+  /**
+   * 🎯 Handle reserve click from drawer
+   */
+  onReserveClick(data: {
+    carId: string;
+    paymentMethod: string;
+    dates?: { start: Date; end: Date };
+  }) {
+    // Navigate to booking checkout with car ID and payment method
+    this.router.navigate([&#x27;/bookings/checkout&#x27;], {
+      queryParams: {
+        carId: data.carId,
+        paymentMethod: data.paymentMethod,
+      },
+    });
+  }
+
+  /**
+   * 🎯 Handle chat click from drawer
+   */
+  onChatClick(carId: string) {
+    // TODO: Abrir chat con anfitrión
+    console.log(&#x27;Chat requested for car:&#x27;, carId);
+  }
+
+  /**
+   * 🎯 Handle sticky CTA click on mobile
+   */
+  onStickyCtaClick() {
+    this.isDrawerOpen.set(true);
+  }
+
+  onSortChange(sort: SortOption) {
+    this.sortOrder.set(sort);
+    this.applyFiltersAndSort();
+  }
+
+  onUserLocationChange(location: { lat: number; lng: number }) {
+    this.userLocation.set(location);
+  }
+
+  private scrollToCarInCarousel(carId: string) {
+    if (!this.carouselContainer) {
+      return;
+    }
+
+    const carousel &#x3D; this.carouselContainer.nativeElement;
+    const scrollContainer &#x3D; carousel.querySelector(&#x27;.map-carousel-scroll&#x27;) as HTMLElement;
+
+    if (!scrollContainer) {
+      return;
+    }
+
+    const card &#x3D; scrollContainer.querySelector(&#x60;[data-car-id&#x3D;&quot;${carId}&quot;]&#x60;) as HTMLElement;
+
+    if (!card) {
+      console.warn(&#x27;⚠️ Car card not found in carousel:&#x27;, carId);
+      return;
+    }
+
+    // Scroll horizontal suave al card
+    const cardLeft &#x3D; card.offsetLeft;
+    const cardWidth &#x3D; card.offsetWidth;
+    const scrollWidth &#x3D; scrollContainer.offsetWidth;
+    const scrollPosition &#x3D; cardLeft - scrollWidth / 2 + cardWidth / 2;
+
+    scrollContainer.scrollTo({
+      left: Math.max(0, scrollPosition),
+      behavior: &#x27;smooth&#x27;,
+    });
+
+    // Highlight temporal
+    card.classList.add(&#x27;pulse-highlight&#x27;);
+    setTimeout(() &#x3D;&gt; {
+      card.classList.remove(&#x27;pulse-highlight&#x27;);
+    }, 1500);
+  }
+
+  onSearch() {
+    void this.applyFiltersAndSort();
+  }
+
+  centerOnUser() {
+    const loc &#x3D; this.userLocation();
+    if (!loc) {
+      // Intentar obtener la ubicación nuevamente
+      this.getUserLocation().then(() &#x3D;&gt; {
+        const newLoc &#x3D; this.userLocation();
+        if (newLoc &amp;&amp; this.carsMap) {
+          this.carsMap.flyToLocation(newLoc.lat, newLoc.lng);
+        }
+      });
+      return;
+    }
+
+    if (this.carsMap) {
+      this.carsMap.flyToLocation(loc.lat, loc.lng);
+    }
+  }
+
+  extractPhotoGallery(car: Car): string[] {
+    const rawPhotos &#x3D; car.photos ?? car.car_photos ?? [];
+    if (!Array.isArray(rawPhotos)) {
+      return [];
+    }
+    return rawPhotos
+      .map((photo) &#x3D;&gt; (typeof photo &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? photo : (photo?.url ?? null)))
+      .filter((url): url is string &#x3D;&gt; typeof url &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; url.length &gt; 0);
+  }
+
+  private async applyFiltersAndSort() {
+    const filters &#x3D; this.currentFilters() ?? {
+      dateRange: null,
+      priceRange: null,
+      vehicleTypes: null,
+      immediateOnly: false,
+      transmission: null,
+    };
+
+    const query &#x3D; this.searchQuery?.toLowerCase().trim();
+
+    let result &#x3D; [...this.cars];
+
+    // Texto libre
+    if (query) {
+      result &#x3D; result.filter((car) &#x3D;&gt; {
+        const city &#x3D; car.location_city?.toLowerCase() || &#x27;&#x27;;
+        const brand &#x3D; car.brand?.toLowerCase() || car.brand_text_backup?.toLowerCase() || &#x27;&#x27;;
+        const model &#x3D; car.model?.toLowerCase() || car.model_text_backup?.toLowerCase() || &#x27;&#x27;;
+        return brand.includes(query) || model.includes(query) || city.includes(query);
+      });
+    }
+
+    // Rango de precio
+    if (filters.priceRange) {
+      result &#x3D; result.filter((car) &#x3D;&gt; {
+        const price &#x3D; car.price_per_day || 0;
+        return price &gt;&#x3D; filters.priceRange!.min &amp;&amp; price &lt;&#x3D; filters.priceRange!.max;
+      });
+    }
+
+    // Tipo de vehículo
+    if (filters.vehicleTypes &amp;&amp; filters.vehicleTypes.length &gt; 0) {
+      result &#x3D; result.filter((car) &#x3D;&gt;
+        filters.vehicleTypes!.includes((car.vehicle_type as string | undefined) ?? &#x27;&#x27;),
+      );
+    }
+
+    // Transmisión
+    if (filters.transmission &amp;&amp; filters.transmission.length &gt; 0) {
+      result &#x3D; result.filter((car) &#x3D;&gt;
+        filters.transmission!.includes((car.transmission as string | undefined) ?? &#x27;&#x27;),
+      );
+    }
+
+    // Entrega inmediata (instant booking flag)
+    if (filters.immediateOnly) {
+      result &#x3D; result.filter((car) &#x3D;&gt; {
+        const instant &#x3D; (car as { instant_booking?: boolean }).instant_booking;
+        return instant &#x3D;&#x3D;&#x3D; true;
+      });
+    }
+
+    // Fecha: filtrar por disponibilidad vía RPC (costoso pero necesario para consistencia)
+    if (filters.dateRange) {
+      const from &#x3D; filters.dateRange.start.toISOString().slice(0, 10);
+      const to &#x3D; filters.dateRange.end.toISOString().slice(0, 10);
+      const availabilityResults &#x3D; await Promise.all(
+        result.map(async (car) &#x3D;&gt; {
+          try {
+            const available &#x3D; await this.availabilityService.checkAvailability(car.id, from, to);
+            return available ? car : null;
+          } catch {
+            return null;
+          }
+        }),
+      );
+      result &#x3D; availabilityResults.filter((c): c is Car &#x3D;&gt; Boolean(c));
+    }
+
+    // Ordenamiento
+    const sortOrder &#x3D; this.sortOrder();
+    result.sort((a, b) &#x3D;&gt; {
+      const priceA &#x3D; a.price_per_day || 0;
+      const priceB &#x3D; b.price_per_day || 0;
+      const ratingA &#x3D; a.rating_avg || 0;
+      const ratingB &#x3D; b.rating_avg || 0;
+      switch (sortOrder) {
+        case &#x27;price_asc&#x27;:
+          return priceA - priceB;
+        case &#x27;price_desc&#x27;:
+          return priceB - priceA;
+        case &#x27;rating&#x27;:
+          return ratingB - ratingA;
+        default:
+          return 0; // relevance/distance keep API order
+      }
+    });
+
+    this.filteredCars &#x3D; result;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Desktop Header with View Toggles --&gt;
+&lt;ion-header
+  [translucent]&#x3D;&quot;true&quot;
+  class&#x3D;&quot;bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800&quot;
+&gt;
+  &lt;ion-toolbar class&#x3D;&quot;--background: transparent; --min-height: 80px;&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]&quot;
+    &gt;
+      &lt;!-- Search Bar (Expanded style) --&gt;
+      &lt;div class&#x3D;&quot;flex-1 max-w-2xl relative group&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-0.5&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none&quot;&gt;
+            &lt;svg
+              class&#x3D;&quot;w-5 h-5 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200&quot;
+              fill&#x3D;&quot;none&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+            &gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/div&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            [(ngModel)]&#x3D;&quot;searchQuery&quot;
+            (input)&#x3D;&quot;onSearch()&quot;
+            placeholder&#x3D;&quot;Buscar por marca, modelo o ciudad...&quot;
+            class&#x3D;&quot;w-full pl-11 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border border-transparent focus:bg-white dark:focus:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-900 dark:text-white placeholder:text-slate-500 transition-all duration-200 shadow-sm&quot;
+          /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- View Toggles &amp; Filters --&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+        &lt;!-- Map Provider Toggle (only visible in map view) --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+          class&#x3D;&quot;bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700&quot;
+        &gt;
+          &lt;button
+            [class.bg-white]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            [class.dark:bg-slate-700]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            [class.shadow-sm]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            [class.text-slate-900]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            [class.dark:text-white]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            [class.text-slate-500]&#x3D;&quot;mapProvider() !&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+            (click)&#x3D;&quot;mapProvider.set(&#x27;mapbox&#x27;)&quot;
+            class&#x3D;&quot;px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium&quot;
+            title&#x3D;&quot;Mapa Mapbox&quot;
+          &gt;
+            &lt;svg class&#x3D;&quot;w-4 h-4&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;currentColor&quot;&gt;
+              &lt;path
+                d&#x3D;&quot;M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z&quot;
+              /&gt;
+            &lt;/svg&gt;
+            &lt;span&gt;Mapbox&lt;/span&gt;
+          &lt;/button&gt;
+          &lt;button
+            [class.bg-white]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27;&quot;
+            [class.dark:bg-slate-700]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27;&quot;
+            [class.shadow-sm]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27;&quot;
+            [class.text-[#33CCFF]]&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27;&quot;
+            [class.text-slate-500]&#x3D;&quot;mapProvider() !&#x3D;&#x3D; &#x27;waze&#x27;&quot;
+            (click)&#x3D;&quot;mapProvider.set(&#x27;waze&#x27;)&quot;
+            class&#x3D;&quot;px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium&quot;
+            title&#x3D;&quot;Tráfico en tiempo real - Waze&quot;
+          &gt;
+            &lt;svg class&#x3D;&quot;w-4 h-4&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;currentColor&quot;&gt;
+              &lt;path
+                d&#x3D;&quot;M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z&quot;
+              /&gt;
+              &lt;path
+                d&#x3D;&quot;M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z&quot;
+              /&gt;
+            &lt;/svg&gt;
+            &lt;span&gt;Waze&lt;/span&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- View Toggle --&gt;
+        &lt;div
+          class&#x3D;&quot;bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700&quot;
+        &gt;
+          &lt;button
+            [class.bg-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            [class.dark:bg-slate-700]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            [class.shadow-sm]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            [class.text-slate-900]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            [class.dark:text-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            [class.text-slate-500]&#x3D;&quot;viewMode() !&#x3D;&#x3D; &#x27;map&#x27;&quot;
+            (click)&#x3D;&quot;viewMode.set(&#x27;map&#x27;)&quot;
+            class&#x3D;&quot;p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white&quot;
+            title&#x3D;&quot;Vista Mapa&quot;
+          &gt;
+            &lt;ion-icon name&#x3D;&quot;map-outline&quot; class&#x3D;&quot;text-xl&quot;&gt;&lt;/ion-icon&gt;
+          &lt;/button&gt;
+          &lt;button
+            [class.bg-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            [class.dark:bg-slate-700]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            [class.shadow-sm]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            [class.text-slate-900]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            [class.dark:text-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            [class.text-slate-500]&#x3D;&quot;viewMode() !&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+            (click)&#x3D;&quot;viewMode.set(&#x27;grid&#x27;)&quot;
+            class&#x3D;&quot;p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white&quot;
+            title&#x3D;&quot;Vista Cuadrícula&quot;
+          &gt;
+            &lt;ion-icon name&#x3D;&quot;grid-outline&quot; class&#x3D;&quot;text-xl&quot;&gt;&lt;/ion-icon&gt;
+          &lt;/button&gt;
+          &lt;button
+            [class.bg-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            [class.dark:bg-slate-700]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            [class.shadow-sm]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            [class.text-slate-900]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            [class.dark:text-white]&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            [class.text-slate-500]&#x3D;&quot;viewMode() !&#x3D;&#x3D; &#x27;list&#x27;&quot;
+            (click)&#x3D;&quot;viewMode.set(&#x27;list&#x27;)&quot;
+            class&#x3D;&quot;p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white&quot;
+            title&#x3D;&quot;Vista Lista&quot;
+          &gt;
+            &lt;ion-icon name&#x3D;&quot;list-outline&quot; class&#x3D;&quot;text-xl&quot;&gt;&lt;/ion-icon&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ion-toolbar&gt;
+&lt;/ion-header&gt;
+
+&lt;ion-content [fullscreen]&#x3D;&quot;true&quot; class&#x3D;&quot;bg-slate-50 dark:bg-slate-900&quot;&gt;
+  &lt;!-- 🗺️ MAP VIEW --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;map&#x27;&quot;
+    class&#x3D;&quot;h-full w-full relative flex flex-col md:flex-row overflow-hidden&quot;
+  &gt;
+    &lt;!-- Map Area --&gt;
+    &lt;div class&#x3D;&quot;flex-1 relative h-full&quot;&gt;
+      &lt;!-- Mapbox Map --&gt;
+      &lt;app-cars-map
+        *ngIf&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+        #carsMapRef
+        [cars]&#x3D;&quot;carMapLocations()&quot;
+        [selectedCarId]&#x3D;&quot;selectedCarId()&quot;
+        [userLocation]&#x3D;&quot;userLocation()&quot;
+        (carSelected)&#x3D;&quot;onMapCarSelected($event)&quot;
+        (userLocationChange)&#x3D;&quot;onUserLocationChange($event)&quot;
+      &gt;&lt;/app-cars-map&gt;
+
+      &lt;!-- Waze Live Map --&gt;
+      &lt;app-waze-live-map
+        *ngIf&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27; &amp;&amp; userLocation()&quot;
+        [lat]&#x3D;&quot;userLocation()!.lat&quot;
+        [lng]&#x3D;&quot;userLocation()!.lng&quot;
+        [zoom]&#x3D;&quot;14&quot;
+        [showPin]&#x3D;&quot;true&quot;
+        [showInfoBadge]&#x3D;&quot;true&quot;
+      &gt;&lt;/app-waze-live-map&gt;
+
+      &lt;!-- Fallback message if no user location for Waze --&gt;
+      &lt;div
+        *ngIf&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;waze&#x27; &amp;&amp; !userLocation()&quot;
+        class&#x3D;&quot;absolute inset-0 flex items-center justify-center bg-surface-base&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;text-center space-y-3 p-6&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;w-12 h-12 text-warning-light mx-auto&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z&quot;
+            /&gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M15 11a3 3 0 11-6 0 3 3 0 016 0z&quot;
+            /&gt;
+          &lt;/svg&gt;
+          &lt;p class&#x3D;&quot;text-text-primary font-medium&quot;&gt;Necesitamos tu ubicación&lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-text-secondary text-sm&quot;&gt;
+            Por favor, permite el acceso a tu ubicación para usar Waze
+          &lt;/p&gt;
+          &lt;button
+            (click)&#x3D;&quot;getUserLocation()&quot;
+            class&#x3D;&quot;mt-4 px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-hover transition-colors&quot;
+          &gt;
+            Permitir ubicación
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Floating Map Filters (only for Mapbox) --&gt;
+      &lt;app-map-filters
+        *ngIf&#x3D;&quot;mapProvider() &#x3D;&#x3D;&#x3D; &#x27;mapbox&#x27;&quot;
+        [availableCars]&#x3D;&quot;carMapLocations()&quot;
+        [userLocation]&#x3D;&quot;userLocation() || undefined&quot;
+        (filterChange)&#x3D;&quot;onFilterChange($event)&quot;
+      &gt;&lt;/app-map-filters&gt;
+
+      &lt;!-- Location FAB --&gt;
+      &lt;div
+        class&#x3D;&quot;absolute bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 md:bottom-8 md:right-8 z-[400]&quot;
+      &gt;
+        &lt;button
+          (click)&#x3D;&quot;centerOnUser()&quot;
+          class&#x3D;&quot;w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700&quot;
+        &gt;
+          &lt;ion-icon name&#x3D;&quot;locate-outline&quot; class&#x3D;&quot;text-xl&quot;&gt;&lt;/ion-icon&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Drawer / Sidebar --&gt;
+    &lt;app-map-drawer
+      [selectedCar]&#x3D;&quot;selectedCar()&quot;
+      [userLocation]&#x3D;&quot;userLocation() || undefined&quot;
+      [isOpen]&#x3D;&quot;isDrawerOpen()&quot;
+      [isMobile]&#x3D;&quot;isMobileView()&quot;
+      (closeDrawer)&#x3D;&quot;onCloseDrawer()&quot;
+      (reserveClick)&#x3D;&quot;onReserveClick($event)&quot;
+      (chatClick)&#x3D;&quot;onChatClick($event)&quot;
+    &gt;&lt;/app-map-drawer&gt;
+  &lt;/div&gt;
+
+  &lt;!-- 📦 GRID &amp; LIST VIEW CONTAINER --&gt;
+  &lt;div *ngIf&#x3D;&quot;viewMode() !&#x3D;&#x3D; &#x27;map&#x27;&quot; class&#x3D;&quot;max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+    &lt;!-- Results Header --&gt;
+    &lt;div class&#x3D;&quot;mb-8 flex items-center justify-between&quot;&gt;
+      &lt;h2 class&#x3D;&quot;text-2xl font-bold text-slate-900 dark:text-white&quot;&gt;
+        {{ filteredCars.length }} vehículos encontrados
+      &lt;/h2&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+        &lt;label class&#x3D;&quot;text-sm text-slate-500 dark:text-slate-400&quot; for&#x3D;&quot;sort-select&quot;&gt;
+          Ordenar por
+        &lt;/label&gt;
+        &lt;select
+          id&#x3D;&quot;sort-select&quot;
+          class&#x3D;&quot;rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 shadow-sm&quot;
+          (change)&#x3D;&quot;onSortChange($any($event.target).value)&quot;
+        &gt;
+          &lt;option
+            *ngFor&#x3D;&quot;let option of sortOptions&quot;
+            [value]&#x3D;&quot;option.value&quot;
+            [selected]&#x3D;&quot;sortOrder() &#x3D;&#x3D;&#x3D; option.value&quot;
+          &gt;
+            {{ option.label }}
+          &lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- GRID VIEW --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;grid&#x27;&quot;
+      class&#x3D;&quot;grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6&quot;
+    &gt;
+      &lt;div
+        *ngFor&#x3D;&quot;let car of filteredCars; let i &#x3D; index&quot;
+        class&#x3D;&quot;group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer&quot;
+        (click)&#x3D;&quot;onCarouselCardSelected(car.id)&quot;
+      &gt;
+        &lt;!-- Image --&gt;
+        &lt;div class&#x3D;&quot;aspect-[4/3] relative overflow-hidden bg-slate-100 dark:bg-slate-700&quot;&gt;
+          &lt;img
+            [src]&#x3D;&quot;extractPhotoGallery(car)[0] || &#x27;/assets/images/car-placeholder.svg&#x27;&quot;
+            [alt]&#x3D;&quot;car.brand_text_backup + &#x27; &#x27; + car.model_text_backup&quot;
+            class&#x3D;&quot;w-full h-full object-cover transition-transform duration-500 group-hover:scale-110&quot;
+            loading&#x3D;&quot;lazy&quot;
+          /&gt;
+          &lt;div
+            class&#x3D;&quot;absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-slate-900 dark:text-white shadow-sm&quot;
+          &gt;
+            ${{ car.price_per_day | number: &#x27;1.0-0&#x27; }}
+            &lt;span class&#x3D;&quot;text-xs font-normal text-slate-500&quot;&gt;/día&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Content --&gt;
+        &lt;div class&#x3D;&quot;p-4&quot;&gt;
+          &lt;h3 class&#x3D;&quot;text-lg font-bold text-slate-900 dark:text-white mb-1 truncate&quot;&gt;
+            {{ car.brand_text_backup }} {{ car.model_text_backup }}
+          &lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1&quot;&gt;
+            &lt;ion-icon name&#x3D;&quot;location-outline&quot;&gt;&lt;/ion-icon&gt;
+            {{ car.location_city || &#x27;Ubicación no disponible&#x27; }}
+          &lt;/p&gt;
+
+          &lt;div class&#x3D;&quot;flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300&quot;&gt;
+            &lt;span
+              class&#x3D;&quot;flex items-center gap-1 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-md&quot;
+            &gt;
+              ⚙️ {{ car.transmission || &#x27;Manual&#x27; }}
+            &lt;/span&gt;
+            &lt;span
+              class&#x3D;&quot;flex items-center gap-1 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-md&quot;
+            &gt;
+              👥 {{ car.seats || 5 }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- LIST VIEW --&gt;
+    &lt;div *ngIf&#x3D;&quot;viewMode() &#x3D;&#x3D;&#x3D; &#x27;list&#x27;&quot; class&#x3D;&quot;flex flex-col gap-4 max-w-5xl mx-auto&quot;&gt;
+      &lt;div
+        *ngFor&#x3D;&quot;let car of filteredCars&quot;
+        class&#x3D;&quot;bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row&quot;
+        (click)&#x3D;&quot;onCarouselCardSelected(car.id)&quot;
+      &gt;
+        &lt;!-- Image --&gt;
+        &lt;div class&#x3D;&quot;md:w-72 aspect-video md:aspect-auto relative bg-slate-100 dark:bg-slate-700&quot;&gt;
+          &lt;img
+            [src]&#x3D;&quot;extractPhotoGallery(car)[0] || &#x27;/assets/images/car-placeholder.svg&#x27;&quot;
+            [alt]&#x3D;&quot;car.brand_text_backup + &#x27; &#x27; + car.model_text_backup&quot;
+            class&#x3D;&quot;w-full h-full object-cover&quot;
+            loading&#x3D;&quot;lazy&quot;
+          /&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Content --&gt;
+        &lt;div class&#x3D;&quot;p-5 flex-1 flex flex-col justify-between&quot;&gt;
+          &lt;div&gt;
+            &lt;div class&#x3D;&quot;flex justify-between items-start mb-2&quot;&gt;
+              &lt;div&gt;
+                &lt;h3 class&#x3D;&quot;text-xl font-bold text-slate-900 dark:text-white&quot;&gt;
+                  {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                &lt;/h3&gt;
+                &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1&quot;&gt;
+                  📍 {{ car.location_city }}, {{ car.location_state }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;text-right&quot;&gt;
+                &lt;div class&#x3D;&quot;text-2xl font-bold text-cyan-600 dark:text-cyan-400&quot;&gt;
+                  ${{ car.price_per_day | number: &#x27;1.0-0&#x27; }}
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;text-xs text-slate-500&quot;&gt;por día&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;p
+              *ngIf&#x3D;&quot;car.description&quot;
+              class&#x3D;&quot;text-slate-600 dark:text-slate-300 text-sm line-clamp-2 mb-4&quot;
+            &gt;
+              {{ car.description }}
+            &lt;/p&gt;
+
+            &lt;div class&#x3D;&quot;flex flex-wrap gap-3&quot;&gt;
+              &lt;span
+                class&#x3D;&quot;px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1&quot;
+              &gt;
+                ⚙️ {{ car.transmission || &#x27;Manual&#x27; }}
+              &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1&quot;
+              &gt;
+                ⛽ {{ car.fuel_type || &#x27;Nafta&#x27; }}
+              &lt;/span&gt;
+              &lt;span
+                class&#x3D;&quot;px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1&quot;
+              &gt;
+                👥 {{ car.seats || 5 }} asientos
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Empty State --&gt;
+    &lt;div *ngIf&#x3D;&quot;filteredCars.length &#x3D;&#x3D;&#x3D; 0 &amp;&amp; !loading&quot; class&#x3D;&quot;text-center py-20&quot;&gt;
+      &lt;div
+        class&#x3D;&quot;w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl&quot;
+      &gt;
+        🔍
+      &lt;/div&gt;
+      &lt;h3 class&#x3D;&quot;text-xl font-bold text-slate-900 dark:text-white mb-2&quot;&gt;
+        No encontramos vehículos
+      &lt;/h3&gt;
+      &lt;p class&#x3D;&quot;text-slate-500 dark:text-slate-400&quot;&gt;Intenta ajustar tu búsqueda o filtros.&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ion-content&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./explore.page.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.explore-content {
+  --background: transparent;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+// 🎯 MAP CENTRIC LAYOUT
+.map-centric-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// Left: Map Section (70% desktop, 100% mobile)
+.map-section {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    width: 70%;
+  }
+}
+
+// Map Container (Fullscreen)
+.map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+// Toolbar Search
+.search-bar-toolbar {
+  padding: 4px 0;
+  --background: rgba(255, 255, 255, 0.95);
+  --border-radius: 8px;
+  margin: 0 8px;
+}
+
+// Filters Panel
+.filters-panel {
+  background: white;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// FAB Container
+.fab-container {
+  position: relative;
+  z-index: 10;
+}
+
+.fab-location {
+  top: 80px;
+  right: 16px;
+
+  ion-fab-button {
+    --background: white;
+    --color: #4f46e5;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &amp;:hover {
+      --background: #f9fafb;
+    }
+  }
+}
+
+// WhatsApp FAB on Map
+.whatsapp-fab-map {
+  position: fixed;
+  bottom: 100px;
+  right: 16px;
+  z-index: 30;
+
+  @media (max-width: 768px) {
+    bottom: 120px;
+  }
+}
+
+// 🎯 Bottom Carousel (Airbnb Premium Style)
+.map-carousel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 16px 0 max(16px, env(safe-area-inset-bottom));
+  background: transparent;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+  }
+}
+
+.map-carousel-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 20px 12px 20px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  pointer-events: auto;
+
+  &amp;::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 16px 10px 16px;
+    gap: 12px;
+  }
+}
+
+.map-carousel-card-wrapper {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  flex-shrink: 0;
+  width: 320px;
+  max-width: 85vw;
+  pointer-events: auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  app-car-card {
+    display: block;
+    height: 160px;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.12),
+      0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 2px solid transparent;
+
+    &amp;:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 6px 24px rgba(0, 0, 0, 0.18),
+        0 3px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &amp;:active {
+      transform: translateY(-2px);
+    }
+  }
+
+  // Selected state
+  &amp;.selected {
+    app-car-card {
+      border-color: #22c55e;
+      box-shadow:
+        0 4px 20px rgba(34, 197, 94, 0.3),
+        0 2px 8px rgba(34, 197, 94, 0.2);
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 290px;
+
+    app-car-card {
+      height: 140px;
+      border-radius: 14px;
+    }
+  }
+}
+
+// 🎯 Pulse highlight animation
+@keyframes pulseHighlight {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    transform: scale(1.03);
+  }
+}
+
+.map-carousel-card-wrapper.pulse-highlight {
+  animation: pulseHighlight 1.5s ease-in-out;
+
+  app-car-card {
+    border-color: #22c55e !important;
+    box-shadow: 0 6px 28px rgba(34, 197, 94, 0.4) !important;
+  }
+}
+
+// Mobile: Floating Search (Airbnb-style)
+.mobile-search {
+  --background: transparent;
+  --box-shadow: none;
+  --border-radius: 9999px;
+  padding: 0;
+  height: 48px;
+
+  ::ng-deep {
+    .searchbar-input-container {
+      height: 48px;
+    }
+
+    .searchbar-input {
+      padding-inline-start: 16px !important;
+      padding-inline-end: 16px !important;
+      font-size: 15px;
+    }
+  }
+}
+
+// Safe area for notched devices
+.top-safe-top {
+  top: max(12px, env(safe-area-inset-top));
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .search-bar-toolbar {
+    --background: rgba(31, 41, 55, 0.95);
+  }
+
+  .filters-panel {
+    background: #1f2937;
+  }
+
+  .fab-location ion-fab-button {
+    --background: #1f2937;
+    --color: #818cf8;
+  }
+
+  .map-carousel {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+  }
+
+  .map-carousel-card-wrapper {
+    app-car-card {
+      background: #1f2937;
+      box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    &amp;.selected app-car-card {
+      border-color: #22c55e;
+      box-shadow:
+        0 4px 20px rgba(34, 197, 94, 0.5),
+        0 2px 8px rgba(34, 197, 94, 0.3);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Desktop Header with View Toggles --><ion-header  [translucent]="true"  class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">  <ion-toolbar class="--background: transparent; --min-height: 80px;">    <div      class="max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]"    >      <!-- Search Bar (Expanded style) -->      <div class="flex-1 max-w-2xl relative group">        <div          class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-0.5"        >          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">            <svg              class="w-5 h-5 text-slate-400 group-focus-within:text-cyan-500 transition-colors duration-200"              fill="none"              stroke="currentColor"              viewBox="0 0 24 24"            >              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"              />            </svg>          </div>          <input            type="text"            [(ngModel)]="searchQuery"            (input)="onSearch()"            placeholder="Buscar por marca, modelo o ciudad..."            class="w-full pl-11 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border border-transparent focus:bg-white dark:focus:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-900 dark:text-white placeholder:text-slate-500 transition-all duration-200 shadow-sm"          />        </div>      </div>      <!-- View Toggles & Filters -->      <div class="flex items-center gap-3">        <!-- Map Provider Toggle (only visible in map view) -->        <div          *ngIf="viewMode() === \'map\'"          class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700"        >          <button            [class.bg-white]="mapProvider() === \'mapbox\'"            [class.dark:bg-slate-700]="mapProvider() === \'mapbox\'"            [class.shadow-sm]="mapProvider() === \'mapbox\'"            [class.text-slate-900]="mapProvider() === \'mapbox\'"            [class.dark:text-white]="mapProvider() === \'mapbox\'"            [class.text-slate-500]="mapProvider() !== \'mapbox\'"            (click)="mapProvider.set(\'mapbox\')"            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"            title="Mapa Mapbox"          >            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">              <path                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"              />            </svg>            <span>Mapbox</span>          </button>          <button            [class.bg-white]="mapProvider() === \'waze\'"            [class.dark:bg-slate-700]="mapProvider() === \'waze\'"            [class.shadow-sm]="mapProvider() === \'waze\'"            [class.text-[#33CCFF]]="mapProvider() === \'waze\'"            [class.text-slate-500]="mapProvider() !== \'waze\'"            (click)="mapProvider.set(\'waze\')"            class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"            title="Tráfico en tiempo real - Waze"          >            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">              <path                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"              />              <path                d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"              />            </svg>            <span>Waze</span>          </button>        </div>        <!-- View Toggle -->        <div          class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700"        >          <button            [class.bg-white]="viewMode() === \'map\'"            [class.dark:bg-slate-700]="viewMode() === \'map\'"            [class.shadow-sm]="viewMode() === \'map\'"            [class.text-slate-900]="viewMode() === \'map\'"            [class.dark:text-white]="viewMode() === \'map\'"            [class.text-slate-500]="viewMode() !== \'map\'"            (click)="viewMode.set(\'map\')"            class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"            title="Vista Mapa"          >            <ion-icon name="map-outline" class="text-xl"></ion-icon>          </button>          <button            [class.bg-white]="viewMode() === \'grid\'"            [class.dark:bg-slate-700]="viewMode() === \'grid\'"            [class.shadow-sm]="viewMode() === \'grid\'"            [class.text-slate-900]="viewMode() === \'grid\'"            [class.dark:text-white]="viewMode() === \'grid\'"            [class.text-slate-500]="viewMode() !== \'grid\'"            (click)="viewMode.set(\'grid\')"            class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"            title="Vista Cuadrícula"          >            <ion-icon name="grid-outline" class="text-xl"></ion-icon>          </button>          <button            [class.bg-white]="viewMode() === \'list\'"            [class.dark:bg-slate-700]="viewMode() === \'list\'"            [class.shadow-sm]="viewMode() === \'list\'"            [class.text-slate-900]="viewMode() === \'list\'"            [class.dark:text-white]="viewMode() === \'list\'"            [class.text-slate-500]="viewMode() !== \'list\'"            (click)="viewMode.set(\'list\')"            class="p-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white"            title="Vista Lista"          >            <ion-icon name="list-outline" class="text-xl"></ion-icon>          </button>        </div>      </div>    </div>  </ion-toolbar></ion-header><ion-content [fullscreen]="true" class="bg-slate-50 dark:bg-slate-900">  <!-- 🗺️ MAP VIEW -->  <div    *ngIf="viewMode() === \'map\'"    class="h-full w-full relative flex flex-col md:flex-row overflow-hidden"  >    <!-- Map Area -->    <div class="flex-1 relative h-full">      <!-- Mapbox Map -->      <app-cars-map        *ngIf="mapProvider() === \'mapbox\'"        #carsMapRef        [cars]="carMapLocations()"        [selectedCarId]="selectedCarId()"        [userLocation]="userLocation()"        (carSelected)="onMapCarSelected($event)"        (userLocationChange)="onUserLocationChange($event)"      ></app-cars-map>      <!-- Waze Live Map -->      <app-waze-live-map        *ngIf="mapProvider() === \'waze\' && userLocation()"        [lat]="userLocation()!.lat"        [lng]="userLocation()!.lng"        [zoom]="14"        [showPin]="true"        [showInfoBadge]="true"      ></app-waze-live-map>      <!-- Fallback message if no user location for Waze -->      <div        *ngIf="mapProvider() === \'waze\' && !userLocation()"        class="absolute inset-0 flex items-center justify-center bg-surface-base"      >        <div class="text-center space-y-3 p-6">          <svg            class="w-12 h-12 text-warning-light mx-auto"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"            />            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"            />          </svg>          <p class="text-text-primary font-medium">Necesitamos tu ubicación</p>          <p class="text-text-secondary text-sm">            Por favor, permite el acceso a tu ubicación para usar Waze          </p>          <button            (click)="getUserLocation()"            class="mt-4 px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-hover transition-colors"          >            Permitir ubicación          </button>        </div>      </div>      <!-- Floating Map Filters (only for Mapbox) -->      <app-map-filters        *ngIf="mapProvider() === \'mapbox\'"        [availableCars]="carMapLocations()"        [userLocation]="userLocation() || undefined"        (filterChange)="onFilterChange($event)"      ></app-map-filters>      <!-- Location FAB -->      <div        class="absolute bottom-[calc(6rem+env(safe-area-inset-bottom))] right-4 md:bottom-8 md:right-8 z-[400]"      >        <button          (click)="centerOnUser()"          class="w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-lg flex items-center justify-center text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"        >          <ion-icon name="locate-outline" class="text-xl"></ion-icon>        </button>      </div>    </div>    <!-- Drawer / Sidebar -->    <app-map-drawer      [selectedCar]="selectedCar()"      [userLocation]="userLocation() || undefined"      [isOpen]="isDrawerOpen()"      [isMobile]="isMobileView()"      (closeDrawer)="onCloseDrawer()"      (reserveClick)="onReserveClick($event)"      (chatClick)="onChatClick($event)"    ></app-map-drawer>  </div>  <!-- 📦 GRID & LIST VIEW CONTAINER -->  <div *ngIf="viewMode() !== \'map\'" class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">    <!-- Results Header -->    <div class="mb-8 flex items-center justify-between">      <h2 class="text-2xl font-bold text-slate-900 dark:text-white">        {{ filteredCars.length }} vehículos encontrados      </h2>      <div class="flex items-center gap-3">        <label class="text-sm text-slate-500 dark:text-slate-400" for="sort-select">          Ordenar por        </label>        <select          id="sort-select"          class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 shadow-sm"          (change)="onSortChange($any($event.target).value)"        >          <option            *ngFor="let option of sortOptions"            [value]="option.value"            [selected]="sortOrder() === option.value"          >            {{ option.label }}          </option>        </select>      </div>    </div>    <!-- GRID VIEW -->    <div      *ngIf="viewMode() === \'grid\'"      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"    >      <div        *ngFor="let car of filteredCars; let i = index"        class="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer"        (click)="onCarouselCardSelected(car.id)"      >        <!-- Image -->        <div class="aspect-[4/3] relative overflow-hidden bg-slate-100 dark:bg-slate-700">          <img            [src]="extractPhotoGallery(car)[0] || \'/assets/images/car-placeholder.svg\'"            [alt]="car.brand_text_backup + \' \' + car.model_text_backup"            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"            loading="lazy"          />          <div            class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-sm font-bold text-slate-900 dark:text-white shadow-sm"          >            ${{ car.price_per_day | number: \'1.0-0\' }}            <span class="text-xs font-normal text-slate-500">/día</span>          </div>        </div>        <!-- Content -->        <div class="p-4">          <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1 truncate">            {{ car.brand_text_backup }} {{ car.model_text_backup }}          </h3>          <p class="text-sm text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1">            <ion-icon name="location-outline"></ion-icon>            {{ car.location_city || \'Ubicación no disponible\' }}          </p>          <div class="flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300">            <span              class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-md"            >              ⚙️ {{ car.transmission || \'Manual\' }}            </span>            <span              class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700/50 px-2 py-1 rounded-md"            >              👥 {{ car.seats || 5 }}            </span>          </div>        </div>      </div>    </div>    <!-- LIST VIEW -->    <div *ngIf="viewMode() === \'list\'" class="flex flex-col gap-4 max-w-5xl mx-auto">      <div        *ngFor="let car of filteredCars"        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"        (click)="onCarouselCardSelected(car.id)"      >        <!-- Image -->        <div class="md:w-72 aspect-video md:aspect-auto relative bg-slate-100 dark:bg-slate-700">          <img            [src]="extractPhotoGallery(car)[0] || \'/assets/images/car-placeholder.svg\'"            [alt]="car.brand_text_backup + \' \' + car.model_text_backup"            class="w-full h-full object-cover"            loading="lazy"          />        </div>        <!-- Content -->        <div class="p-5 flex-1 flex flex-col justify-between">          <div>            <div class="flex justify-between items-start mb-2">              <div>                <h3 class="text-xl font-bold text-slate-900 dark:text-white">                  {{ car.brand_text_backup }} {{ car.model_text_backup }}                </h3>                <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1">                  📍 {{ car.location_city }}, {{ car.location_state }}                </p>              </div>              <div class="text-right">                <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400">                  ${{ car.price_per_day | number: \'1.0-0\' }}                </div>                <div class="text-xs text-slate-500">por día</div>              </div>            </div>            <p              *ngIf="car.description"              class="text-slate-600 dark:text-slate-300 text-sm line-clamp-2 mb-4"            >              {{ car.description }}            </p>            <div class="flex flex-wrap gap-3">              <span                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"              >                ⚙️ {{ car.transmission || \'Manual\' }}              </span>              <span                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"              >                ⛽ {{ car.fuel_type || \'Nafta\' }}              </span>              <span                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"              >                👥 {{ car.seats || 5 }} asientos              </span>            </div>          </div>        </div>      </div>    </div>    <!-- Empty State -->    <div *ngIf="filteredCars.length === 0 && !loading" class="text-center py-20">      <div        class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl"      >        🔍      </div>      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">        No encontramos vehículos      </h3>      <p class="text-slate-500 dark:text-slate-400">Intenta ajustar tu búsqueda o filtros.</p>    </div>  </div></ion-content></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'ExplorePage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExplorePage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

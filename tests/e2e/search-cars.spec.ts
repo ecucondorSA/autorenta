@@ -6,6 +6,7 @@ test.describe('Búsqueda y Filtros de Autos', () => {
     await page.goto('/cars/list');
     // Esperar a que carguen los resultados
     await page.waitForSelector('[data-testid="car-card"]', { timeout: 15000 });
+    await expect(page).toHaveScreenshot('cars-list-initial.png', { fullPage: true });
   });
 
   test('debe buscar autos por texto', async ({ page }) => {
@@ -16,6 +17,7 @@ test.describe('Búsqueda y Filtros de Autos', () => {
     await page.fill('[data-testid="search-input"]', 'Toyota');
     await page.press('[data-testid="search-input"]', 'Enter');
     await page.waitForTimeout(500);
+    await expect(page).toHaveScreenshot('cars-list-filtered-toyota.png', { fullPage: true });
 
     // Verificar que hay resultados (pueden ser menos o cero)
     const cards = page.locator('[data-testid="car-card"]');

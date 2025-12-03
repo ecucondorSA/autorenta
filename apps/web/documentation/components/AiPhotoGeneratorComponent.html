@@ -1,0 +1,1281 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AiPhotoGeneratorComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts</code>
+</p>
+
+
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-ai-photo-generator</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      .ai-photo-generator {
+        max-width: 100%;
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;ai-photo-generator&quot;&gt;
+  &lt;!-- Method Selector --&gt;
+  &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+    &lt;label class&#x3D;&quot;block text-sm font-medium text-text-primary mb-2&quot;
+      &gt;Método de generación:&lt;/label
+    &gt;
+    &lt;div class&#x3D;&quot;flex gap-2&quot;&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        (click)&#x3D;&quot;method.set(&#x27;stock-photos&#x27;)&quot;
+        [class]&#x3D;&quot;
+          method() &#x3D;&#x3D;&#x3D; &#x27;stock-photos&#x27;
+            ? &#x27;bg-cta-default text-cta-text&#x27;
+            : &#x27;bg-surface-hover text-text-primary&#x27;
+        &quot;
+        class&#x3D;&quot;flex-1 px-4 py-2 rounded-lg transition-colors&quot;
+      &gt;
+        📸 Stock Photos (Rápido)
+      &lt;/button&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        (click)&#x3D;&quot;method.set(&#x27;cloudflare-ai&#x27;)&quot;
+        [class]&#x3D;&quot;
+          method() &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27;
+            ? &#x27;bg-cta-default text-cta-text&#x27;
+            : &#x27;bg-surface-hover text-text-primary&#x27;
+        &quot;
+        class&#x3D;&quot;flex-1 px-4 py-2 rounded-lg transition-colors&quot;
+      &gt;
+        🤖 Cloudflare AI (Lento)
+      &lt;/button&gt;
+    &lt;/div&gt;
+    &lt;p class&#x3D;&quot;text-xs text-text-secondary mt-2&quot;&gt;
+      @if (method() &#x3D;&#x3D;&#x3D; &#x27;stock-photos&#x27;) {
+        Busca fotos reales de autos similares (más rápido, fotos reales)
+      } @else {
+        Genera fotos desde cero con IA FLUX.1 (más lento, generación real)
+      }
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Input Form --&gt;
+  &lt;div class&#x3D;&quot;mb-4 space-y-3&quot;&gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-2 gap-2&quot;&gt;
+      &lt;input
+        type&#x3D;&quot;text&quot;
+        [(ngModel)]&#x3D;&quot;brand&quot;
+        placeholder&#x3D;&quot;Marca&quot;
+        class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+      /&gt;
+      &lt;input
+        type&#x3D;&quot;text&quot;
+        [(ngModel)]&#x3D;&quot;model&quot;
+        placeholder&#x3D;&quot;Modelo&quot;
+        class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+      /&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-2 gap-2&quot;&gt;
+      &lt;input
+        type&#x3D;&quot;number&quot;
+        [(ngModel)]&#x3D;&quot;year&quot;
+        placeholder&#x3D;&quot;Año (opcional)&quot;
+        class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+      /&gt;
+      &lt;input
+        type&#x3D;&quot;text&quot;
+        [(ngModel)]&#x3D;&quot;color&quot;
+        placeholder&#x3D;&quot;Color (opcional)&quot;
+        class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+      /&gt;
+    &lt;/div&gt;
+    &lt;input
+      type&#x3D;&quot;number&quot;
+      [(ngModel)]&#x3D;&quot;count&quot;
+      placeholder&#x3D;&quot;Cantidad de fotos (1-5)&quot;
+      min&#x3D;&quot;1&quot;
+      max&#x3D;&quot;5&quot;
+      class&#x3D;&quot;w-full px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+    /&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Generate Button --&gt;
+  &lt;button
+    type&#x3D;&quot;button&quot;
+    (click)&#x3D;&quot;generatePhotos()&quot;
+    [disabled]&#x3D;&quot;generating() || !canGenerate()&quot;
+    class&#x3D;&quot;w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-text-inverse rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold&quot;
+  &gt;
+    @if (generating()) {
+      &lt;span class&#x3D;&quot;flex items-center justify-center gap-2&quot;&gt;
+        &lt;svg class&#x3D;&quot;animate-spin h-5 w-5&quot; fill&#x3D;&quot;none&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+          &lt;circle
+            class&#x3D;&quot;opacity-25&quot;
+            cx&#x3D;&quot;12&quot;
+            cy&#x3D;&quot;12&quot;
+            r&#x3D;&quot;10&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            stroke-width&#x3D;&quot;4&quot;
+          &gt;&lt;/circle&gt;
+          &lt;path
+            class&#x3D;&quot;opacity-75&quot;
+            fill&#x3D;&quot;currentColor&quot;
+            d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+        @if (method() &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27;) {
+          Generando con IA (esto puede tardar 30-60 segundos)...
+        } @else {
+          Buscando fotos de stock...
+        }
+      &lt;/span&gt;
+    } @else {
+      ✨ Generar Fotos con IA
+    }
+  &lt;/button&gt;
+
+  &lt;!-- Generated Photos Preview --&gt;
+  @if (generatedPhotos().length &gt; 0) {
+    &lt;div class&#x3D;&quot;mt-6&quot;&gt;
+      &lt;h3 class&#x3D;&quot;text-sm font-semibold text-text-primary mb-3&quot;&gt;
+        Fotos generadas ({{ generatedPhotos().length }}):
+      &lt;/h3&gt;
+      &lt;div class&#x3D;&quot;grid grid-cols-2 gap-3 mb-4&quot;&gt;
+        @for (photo of generatedPhotos(); track photo.preview) {
+          &lt;div class&#x3D;&quot;relative group&quot;&gt;
+            &lt;img
+              [src]&#x3D;&quot;photo.preview&quot;
+              alt&#x3D;&quot;Foto generada&quot;
+              class&#x3D;&quot;w-full h-32 object-cover rounded-lg border-2 border-border-default&quot;
+            /&gt;
+            &lt;div
+              class&#x3D;&quot;absolute top-2 right-2 bg-surface-overlay/70 text-text-inverse text-xs px-2 py-1 rounded&quot;
+            &gt;
+              {{ photo.source &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27; ? &#x27;🤖 IA&#x27; : &#x27;📸 Stock&#x27; }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        (click)&#x3D;&quot;useGeneratedPhotos()&quot;
+        class&#x3D;&quot;w-full px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light&quot;
+      &gt;
+        ✅ Usar estas fotos ({{ generatedPhotos().length }})
+      &lt;/button&gt;
+    &lt;/div&gt;
+  }
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#aiPhotoService" >aiPhotoService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#count" >count</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#generatedPhotos" >generatedPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#generating" >generating</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#method" >method</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#toastService" >toastService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#canGenerate" >canGenerate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#generatePhotos" >generatePhotos</a>
+                            </li>
+                            <li>
+                                <a href="#useGeneratedPhotos" >useGeneratedPhotos</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#brand" >brand</a>
+                            </li>
+                            <li>
+                                <a href="#color" >color</a>
+                            </li>
+                            <li>
+                                <a href="#model" >model</a>
+                            </li>
+                            <li>
+                                <a href="#year" >year</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#photosGenerated" >photosGenerated</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="brand"></a>
+                        <b>brand</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:174</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="color"></a>
+                        <b>color</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="177" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:177</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="model"></a>
+                        <b>model</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="175" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:175</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="year"></a>
+                        <b>year</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="176" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:176</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="photosGenerated"></a>
+                        <b>photosGenerated</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="178" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:178</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canGenerate"></a>
+                    <span class="name">
+                        <span ><b>canGenerate</b></span>
+                        <a href="#canGenerate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canGenerate()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generatePhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>generatePhotos</b></span>
+                        <a href="#generatePhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generatePhotos()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="192"
+                                    class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:192</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="useGeneratedPhotos"></a>
+                    <span class="name">
+                        <span ><b>useGeneratedPhotos</b></span>
+                        <a href="#useGeneratedPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>useGeneratedPhotos()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:226</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="aiPhotoService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>aiPhotoService</b></span>
+                        <a href="#aiPhotoService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AiPhotoEnhancerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="180" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="count"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>count</b></span>
+                        <a href="#count"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(3)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="184" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generatedPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>generatedPhotos</b></span>
+                        <a href="#generatedPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;EnhancedPhoto[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="186" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:186</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generating"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>generating</b></span>
+                        <a href="#generating"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="method"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>method</b></span>
+                        <a href="#method"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;GenerationMethod&gt;(&#x27;stock-photos&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="183" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toastService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>toastService</b></span>
+                        <a href="#toastService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationManagerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="181" class="link-to-prism">src/app/shared/components/ai-photo-generator/ai-photo-generator.component.ts:181</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, Output, EventEmitter, signal, inject } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import {
+  AiPhotoEnhancerService,
+  EnhancedPhoto,
+  GenerationMethod,
+} from &#x27;../../../core/services/ai-photo-enhancer.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../core/services/notification-manager.service&#x27;;
+
+@Component({
+  selector: &#x27;app-ai-photo-generator&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;ai-photo-generator&quot;&gt;
+      &lt;!-- Method Selector --&gt;
+      &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+        &lt;label class&#x3D;&quot;block text-sm font-medium text-text-primary mb-2&quot;
+          &gt;Método de generación:&lt;/label
+        &gt;
+        &lt;div class&#x3D;&quot;flex gap-2&quot;&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;method.set(&#x27;stock-photos&#x27;)&quot;
+            [class]&#x3D;&quot;
+              method() &#x3D;&#x3D;&#x3D; &#x27;stock-photos&#x27;
+                ? &#x27;bg-cta-default text-cta-text&#x27;
+                : &#x27;bg-surface-hover text-text-primary&#x27;
+            &quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 rounded-lg transition-colors&quot;
+          &gt;
+            📸 Stock Photos (Rápido)
+          &lt;/button&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;method.set(&#x27;cloudflare-ai&#x27;)&quot;
+            [class]&#x3D;&quot;
+              method() &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27;
+                ? &#x27;bg-cta-default text-cta-text&#x27;
+                : &#x27;bg-surface-hover text-text-primary&#x27;
+            &quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 rounded-lg transition-colors&quot;
+          &gt;
+            🤖 Cloudflare AI (Lento)
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;p class&#x3D;&quot;text-xs text-text-secondary mt-2&quot;&gt;
+          @if (method() &#x3D;&#x3D;&#x3D; &#x27;stock-photos&#x27;) {
+            Busca fotos reales de autos similares (más rápido, fotos reales)
+          } @else {
+            Genera fotos desde cero con IA FLUX.1 (más lento, generación real)
+          }
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Input Form --&gt;
+      &lt;div class&#x3D;&quot;mb-4 space-y-3&quot;&gt;
+        &lt;div class&#x3D;&quot;grid grid-cols-2 gap-2&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            [(ngModel)]&#x3D;&quot;brand&quot;
+            placeholder&#x3D;&quot;Marca&quot;
+            class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+          /&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            [(ngModel)]&#x3D;&quot;model&quot;
+            placeholder&#x3D;&quot;Modelo&quot;
+            class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+          /&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;grid grid-cols-2 gap-2&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;number&quot;
+            [(ngModel)]&#x3D;&quot;year&quot;
+            placeholder&#x3D;&quot;Año (opcional)&quot;
+            class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+          /&gt;
+          &lt;input
+            type&#x3D;&quot;text&quot;
+            [(ngModel)]&#x3D;&quot;color&quot;
+            placeholder&#x3D;&quot;Color (opcional)&quot;
+            class&#x3D;&quot;px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+          /&gt;
+        &lt;/div&gt;
+        &lt;input
+          type&#x3D;&quot;number&quot;
+          [(ngModel)]&#x3D;&quot;count&quot;
+          placeholder&#x3D;&quot;Cantidad de fotos (1-5)&quot;
+          min&#x3D;&quot;1&quot;
+          max&#x3D;&quot;5&quot;
+          class&#x3D;&quot;w-full px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default&quot;
+        /&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Generate Button --&gt;
+      &lt;button
+        type&#x3D;&quot;button&quot;
+        (click)&#x3D;&quot;generatePhotos()&quot;
+        [disabled]&#x3D;&quot;generating() || !canGenerate()&quot;
+        class&#x3D;&quot;w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-text-inverse rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold&quot;
+      &gt;
+        @if (generating()) {
+          &lt;span class&#x3D;&quot;flex items-center justify-center gap-2&quot;&gt;
+            &lt;svg class&#x3D;&quot;animate-spin h-5 w-5&quot; fill&#x3D;&quot;none&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+              &lt;circle
+                class&#x3D;&quot;opacity-25&quot;
+                cx&#x3D;&quot;12&quot;
+                cy&#x3D;&quot;12&quot;
+                r&#x3D;&quot;10&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                stroke-width&#x3D;&quot;4&quot;
+              &gt;&lt;/circle&gt;
+              &lt;path
+                class&#x3D;&quot;opacity-75&quot;
+                fill&#x3D;&quot;currentColor&quot;
+                d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+            @if (method() &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27;) {
+              Generando con IA (esto puede tardar 30-60 segundos)...
+            } @else {
+              Buscando fotos de stock...
+            }
+          &lt;/span&gt;
+        } @else {
+          ✨ Generar Fotos con IA
+        }
+      &lt;/button&gt;
+
+      &lt;!-- Generated Photos Preview --&gt;
+      @if (generatedPhotos().length &gt; 0) {
+        &lt;div class&#x3D;&quot;mt-6&quot;&gt;
+          &lt;h3 class&#x3D;&quot;text-sm font-semibold text-text-primary mb-3&quot;&gt;
+            Fotos generadas ({{ generatedPhotos().length }}):
+          &lt;/h3&gt;
+          &lt;div class&#x3D;&quot;grid grid-cols-2 gap-3 mb-4&quot;&gt;
+            @for (photo of generatedPhotos(); track photo.preview) {
+              &lt;div class&#x3D;&quot;relative group&quot;&gt;
+                &lt;img
+                  [src]&#x3D;&quot;photo.preview&quot;
+                  alt&#x3D;&quot;Foto generada&quot;
+                  class&#x3D;&quot;w-full h-32 object-cover rounded-lg border-2 border-border-default&quot;
+                /&gt;
+                &lt;div
+                  class&#x3D;&quot;absolute top-2 right-2 bg-surface-overlay/70 text-text-inverse text-xs px-2 py-1 rounded&quot;
+                &gt;
+                  {{ photo.source &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27; ? &#x27;🤖 IA&#x27; : &#x27;📸 Stock&#x27; }}
+                &lt;/div&gt;
+              &lt;/div&gt;
+            }
+          &lt;/div&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            (click)&#x3D;&quot;useGeneratedPhotos()&quot;
+            class&#x3D;&quot;w-full px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light&quot;
+          &gt;
+            ✅ Usar estas fotos ({{ generatedPhotos().length }})
+          &lt;/button&gt;
+        &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      .ai-photo-generator {
+        max-width: 100%;
+      }
+    &#x60;,
+  ],
+})
+export class AiPhotoGeneratorComponent {
+  @Input() brand &#x3D; &#x27;&#x27;;
+  @Input() model &#x3D; &#x27;&#x27;;
+  @Input() year?: number;
+  @Input() color?: string;
+  @Output() photosGenerated &#x3D; new EventEmitter&lt;File[]&gt;();
+
+  private readonly aiPhotoService &#x3D; inject(AiPhotoEnhancerService);
+  private readonly toastService &#x3D; inject(NotificationManagerService);
+
+  readonly method &#x3D; signal&lt;GenerationMethod&gt;(&#x27;stock-photos&#x27;);
+  readonly count &#x3D; signal(3);
+  readonly generating &#x3D; signal(false);
+  readonly generatedPhotos &#x3D; signal&lt;EnhancedPhoto[]&gt;([]);
+
+  canGenerate(): boolean {
+    return !!(this.brand &amp;&amp; this.model);
+  }
+
+  async generatePhotos(): Promise&lt;void&gt; {
+    if (!this.canGenerate()) {
+      this.toastService.error(&#x27;Por favor ingresa marca y modelo&#x27;, &#x27;&#x27;);
+      return;
+    }
+
+    this.generating.set(true);
+    this.generatedPhotos.set([]);
+
+    try {
+      const photos &#x3D; await this.aiPhotoService.generateCarPhotos({
+        brand: this.brand,
+        model: this.model,
+        year: this.year,
+        color: this.color,
+        count: this.count(),
+        method: this.method(),
+      });
+
+      this.generatedPhotos.set(photos);
+
+      if (photos.length &#x3D;&#x3D;&#x3D; 0) {
+        this.toastService.info(&#x27;No se pudieron generar fotos. Intenta con otros parámetros.&#x27;, &#x27;&#x27;);
+      } else {
+        this.toastService.success(&#x60;✅ ${photos.length} foto(s) generada(s) exitosamente&#x60;, &#x27;&#x27;);
+      }
+    } catch (error) {
+      console.error(&#x27;Error generating photos:&#x27;, error);
+      this.toastService.error(&#x27;Error al generar fotos. Intenta nuevamente.&#x27;, &#x27;&#x27;);
+    } finally {
+      this.generating.set(false);
+    }
+  }
+
+  useGeneratedPhotos(): void {
+    const photos &#x3D; this.generatedPhotos();
+    if (photos.length &#x3D;&#x3D;&#x3D; 0) return;
+
+    // Convert EnhancedPhoto to File[]
+    const files &#x3D; photos.map((photo) &#x3D;&gt; photo.original);
+    this.photosGenerated.emit(files);
+
+    // Cleanup previews
+    this.aiPhotoService.cleanupPreviews(photos);
+    this.generatedPhotos.set([]);
+    this.toastService.success(&#x27;Fotos agregadas al formulario&#x27;, &#x27;&#x27;);
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      .ai-photo-generator {
+        max-width: 100%;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="ai-photo-generator">  <!-- Method Selector -->  <div class="mb-4">    <label class="block text-sm font-medium text-text-primary mb-2"      >Método de generación:</label    >    <div class="flex gap-2">      <button        type="button"        (click)="method.set(\'stock-photos\')"        [class]="          method() === \'stock-photos\'            ? \'bg-cta-default text-cta-text\'            : \'bg-surface-hover text-text-primary\'        "        class="flex-1 px-4 py-2 rounded-lg transition-colors"      >        📸 Stock Photos (Rápido)      </button>      <button        type="button"        (click)="method.set(\'cloudflare-ai\')"        [class]="          method() === \'cloudflare-ai\'            ? \'bg-cta-default text-cta-text\'            : \'bg-surface-hover text-text-primary\'        "        class="flex-1 px-4 py-2 rounded-lg transition-colors"      >        🤖 Cloudflare AI (Lento)      </button>    </div>    <p class="text-xs text-text-secondary mt-2">      @if (method() === \'stock-photos\') {        Busca fotos reales de autos similares (más rápido, fotos reales)      } @else {        Genera fotos desde cero con IA FLUX.1 (más lento, generación real)      }    </p>  </div>  <!-- Input Form -->  <div class="mb-4 space-y-3">    <div class="grid grid-cols-2 gap-2">      <input        type="text"        [(ngModel)]="brand"        placeholder="Marca"        class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"      />      <input        type="text"        [(ngModel)]="model"        placeholder="Modelo"        class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"      />    </div>    <div class="grid grid-cols-2 gap-2">      <input        type="number"        [(ngModel)]="year"        placeholder="Año (opcional)"        class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"      />      <input        type="text"        [(ngModel)]="color"        placeholder="Color (opcional)"        class="px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"      />    </div>    <input      type="number"      [(ngModel)]="count"      placeholder="Cantidad de fotos (1-5)"      min="1"      max="5"      class="w-full px-3 py-2 border border-border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"    />  </div>  <!-- Generate Button -->  <button    type="button"    (click)="generatePhotos()"    [disabled]="generating() || !canGenerate()"    class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-text-inverse rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"  >    @if (generating()) {      <span class="flex items-center justify-center gap-2">        <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">          <circle            class="opacity-25"            cx="12"            cy="12"            r="10"            stroke="currentColor"            stroke-width="4"          ></circle>          <path            class="opacity-75"            fill="currentColor"            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"          ></path>        </svg>        @if (method() === \'cloudflare-ai\') {          Generando con IA (esto puede tardar 30-60 segundos)...        } @else {          Buscando fotos de stock...        }      </span>    } @else {      ✨ Generar Fotos con IA    }  </button>  <!-- Generated Photos Preview -->  @if (generatedPhotos().length > 0) {    <div class="mt-6">      <h3 class="text-sm font-semibold text-text-primary mb-3">        Fotos generadas ({{ generatedPhotos().length }}):      </h3>      <div class="grid grid-cols-2 gap-3 mb-4">        @for (photo of generatedPhotos(); track photo.preview) {          <div class="relative group">            <img              [src]="photo.preview"              alt="Foto generada"              class="w-full h-32 object-cover rounded-lg border-2 border-border-default"            />            <div              class="absolute top-2 right-2 bg-surface-overlay/70 text-text-inverse text-xs px-2 py-1 rounded"            >              {{ photo.source === \'cloudflare-ai\' ? \'🤖 IA\' : \'📸 Stock\' }}            </div>          </div>        }      </div>      <button        type="button"        (click)="useGeneratedPhotos()"        class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light"      >        ✅ Usar estas fotos ({{ generatedPhotos().length }})      </button>    </div>  }</div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'AiPhotoGeneratorComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AiPhotoGeneratorComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

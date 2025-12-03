@@ -1,0 +1,967 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  BookingDatesLocation</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/bookings/components/booking-dates-location-step/booking-dates-location-step.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#dropoffLocation" 
+>
+                                            dropoffLocation
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#dropoffTime" 
+>
+                                            dropoffTime
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#endDate" 
+>
+                                            endDate
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#pickupLocation" 
+>
+                                            pickupLocation
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#pickupTime" 
+>
+                                            pickupTime
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#startDate" 
+>
+                                            startDate
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="dropoffLocation"></a>
+                                        <span class="name "><b>dropoffLocation</b>
+                                            <a href="#dropoffLocation">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>dropoffLocation:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="dropoffTime"></a>
+                                        <span class="name "><b>dropoffTime</b>
+                                            <a href="#dropoffTime">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>dropoffTime:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="endDate"></a>
+                                        <span class="name "><b>endDate</b>
+                                            <a href="#endDate">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>endDate:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="pickupLocation"></a>
+                                        <span class="name "><b>pickupLocation</b>
+                                            <a href="#pickupLocation">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>pickupLocation:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="pickupTime"></a>
+                                        <span class="name "><b>pickupTime</b>
+                                            <a href="#pickupTime">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>pickupTime:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="startDate"></a>
+                                        <span class="name "><b>startDate</b>
+                                            <a href="#startDate">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>startDate:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, computed, effect, input, output } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { WizardStepComponent } from &#x27;../../../../shared/components/wizard-step/wizard-step.component&#x27;;
+
+export interface BookingDatesLocation {
+  startDate: string;
+  endDate: string;
+  pickupLocation: string;
+  dropoffLocation: string;
+  pickupTime: string;
+  dropoffTime: string;
+}
+
+/**
+ * BookingDatesLocationStepComponent - Step 1 of booking checkout wizard
+ *
+ * Allows user to review and edit:
+ * - Start and end dates
+ * - Pickup and dropoff locations
+ * - Pickup and dropoff times
+ */
+@Component({
+  selector: &#x27;app-booking-dates-location-step&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, WizardStepComponent],
+  template: &#x60;
+    &lt;app-wizard-step
+      title&#x3D;&quot;Fechas y Ubicación&quot;
+      subtitle&#x3D;&quot;Revisa y confirma las fechas y ubicaciones de tu reserva&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;dates-location-form&quot;&gt;
+        &lt;!-- Dates Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Fechas de la Reserva&lt;/h3&gt;
+
+          &lt;div class&#x3D;&quot;form-grid&quot;&gt;
+            &lt;!-- Start Date --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;startDate&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Fecha de Inicio
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;date&quot;
+                id&#x3D;&quot;search-start&quot;
+                class&#x3D;&quot;field-input&quot;
+                [(ngModel)]&#x3D;&quot;localData.startDate&quot;
+                [min]&#x3D;&quot;minStartDate&quot;
+                (change)&#x3D;&quot;handleDateChange()&quot;
+                required
+              /&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Start Time --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;startTime&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Hora de Retiro
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;select
+                id&#x3D;&quot;startTime&quot;
+                class&#x3D;&quot;field-input&quot;
+                [(ngModel)]&#x3D;&quot;localData.pickupTime&quot;
+                required
+              &gt;
+                @for (time of availableTimes; track time) {
+                  &lt;option [value]&#x3D;&quot;time&quot;&gt;{{ time }}&lt;/option&gt;
+                }
+              &lt;/select&gt;
+            &lt;/div&gt;
+
+            &lt;!-- End Date --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;endDate&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Fecha de Devolución
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;date&quot;
+                id&#x3D;&quot;search-end&quot;
+                class&#x3D;&quot;field-input&quot;
+                [(ngModel)]&#x3D;&quot;localData.endDate&quot;
+                [min]&#x3D;&quot;minEndDate()&quot;
+                (change)&#x3D;&quot;handleDateChange()&quot;
+                required
+              /&gt;
+            &lt;/div&gt;
+
+            &lt;!-- End Time --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;endTime&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Hora de Devolución
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;select id&#x3D;&quot;endTime&quot; class&#x3D;&quot;field-input&quot; [(ngModel)]&#x3D;&quot;localData.dropoffTime&quot; required&gt;
+                @for (time of availableTimes; track time) {
+                  &lt;option [value]&#x3D;&quot;time&quot;&gt;{{ time }}&lt;/option&gt;
+                }
+              &lt;/select&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Duration Info --&gt;
+          @if (durationDays() &gt; 0) {
+            &lt;div class&#x3D;&quot;duration-info&quot;&gt;
+              &lt;svg class&#x3D;&quot;info-icon&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span
+                &gt;Duración total: {{ durationDays() }} día{{ durationDays() &gt; 1 ? &#x27;s&#x27; : &#x27;&#x27; }}&lt;/span
+              &gt;
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+
+        &lt;!-- Locations Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Ubicaciones&lt;/h3&gt;
+
+          &lt;div class&#x3D;&quot;form-grid&quot;&gt;
+            &lt;!-- Pickup Location --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;pickupLocation&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Lugar de Retiro
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                id&#x3D;&quot;pickupLocation&quot;
+                class&#x3D;&quot;field-input&quot;
+                [(ngModel)]&#x3D;&quot;localData.pickupLocation&quot;
+                placeholder&#x3D;&quot;Ej: Aeropuerto Internacional&quot;
+                required
+              /&gt;
+              &lt;p class&#x3D;&quot;field-hint&quot;&gt;Dirección donde retirarás el vehículo&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Dropoff Location --&gt;
+            &lt;div class&#x3D;&quot;form-field&quot;&gt;
+              &lt;label for&#x3D;&quot;dropoffLocation&quot; class&#x3D;&quot;field-label&quot;&gt;
+                Lugar de Devolución
+                &lt;span class&#x3D;&quot;required&quot;&gt;*&lt;/span&gt;
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;text&quot;
+                id&#x3D;&quot;dropoffLocation&quot;
+                class&#x3D;&quot;field-input&quot;
+                [(ngModel)]&#x3D;&quot;localData.dropoffLocation&quot;
+                placeholder&#x3D;&quot;Ej: Centro de la ciudad&quot;
+                required
+              /&gt;
+              &lt;p class&#x3D;&quot;field-hint&quot;&gt;Dirección donde devolverás el vehículo&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Different Location Warning --&gt;
+          @if (isDifferentLocation()) {
+            &lt;div class&#x3D;&quot;location-warning&quot;&gt;
+              &lt;svg class&#x3D;&quot;warning-icon&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+                &lt;path
+                  fill-rule&#x3D;&quot;evenodd&quot;
+                  d&#x3D;&quot;M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z&quot;
+                  clip-rule&#x3D;&quot;evenodd&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;div&gt;
+                &lt;p class&#x3D;&quot;warning-title&quot;&gt;Ubicaciones diferentes detectadas&lt;/p&gt;
+                &lt;p class&#x3D;&quot;warning-text&quot;&gt;
+                  Ten en cuenta que podrían aplicarse cargos adicionales por devolución en ubicación
+                  diferente.
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/app-wizard-step&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      .dates-location-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+
+      .field-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .required {
+        color: var(--error-600);
+      }
+
+      .field-input {
+        padding: 0.625rem 0.875rem;
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        background: var(--surface-base);
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .field-input:focus {
+        outline: none;
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px var(--border-focus) / 20;
+      }
+
+      .field-input::placeholder {
+        color: var(--text-placeholder);
+      }
+
+      .field-hint {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .duration-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: var(--info-50);
+        border: 1px solid var(--info-200);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        color: var(--info-700);
+      }
+
+      .info-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .location-warning {
+        display: flex;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--warning-50);
+        border: 1px solid var(--warning-200);
+        border-radius: var(--radius-md);
+      }
+
+      .warning-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--warning-700);
+        flex-shrink: 0;
+      }
+
+      .warning-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--warning-900);
+        margin: 0 0 0.25rem 0;
+      }
+
+      .warning-text {
+        font-size: 0.8125rem;
+        color: var(--warning-700);
+        margin: 0;
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    &#x60;,
+  ],
+})
+export class BookingDatesLocationStepComponent {
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; INPUTS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Initial data
+   */
+  data &#x3D; input&lt;BookingDatesLocation&gt;({
+    startDate: &#x27;&#x27;,
+    endDate: &#x27;&#x27;,
+    pickupLocation: &#x27;&#x27;,
+    dropoffLocation: &#x27;&#x27;,
+    pickupTime: &#x27;10:00&#x27;,
+    dropoffTime: &#x27;10:00&#x27;,
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; OUTPUTS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Emitted when data changes
+   */
+  dataChange &#x3D; output&lt;BookingDatesLocation&gt;();
+
+  /**
+   * Emitted when validation state changes
+   */
+  validChange &#x3D; output&lt;boolean&gt;();
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; STATE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Local editable data
+   */
+  localData: BookingDatesLocation &#x3D; {
+    startDate: &#x27;&#x27;,
+    endDate: &#x27;&#x27;,
+    pickupLocation: &#x27;&#x27;,
+    dropoffLocation: &#x27;&#x27;,
+    pickupTime: &#x27;10:00&#x27;,
+    dropoffTime: &#x27;10:00&#x27;,
+  };
+
+  /**
+   * Available times for pickup/dropoff
+   */
+  availableTimes &#x3D; [
+    &#x27;08:00&#x27;,
+    &#x27;08:30&#x27;,
+    &#x27;09:00&#x27;,
+    &#x27;09:30&#x27;,
+    &#x27;10:00&#x27;,
+    &#x27;10:30&#x27;,
+    &#x27;11:00&#x27;,
+    &#x27;11:30&#x27;,
+    &#x27;12:00&#x27;,
+    &#x27;12:30&#x27;,
+    &#x27;13:00&#x27;,
+    &#x27;13:30&#x27;,
+    &#x27;14:00&#x27;,
+    &#x27;14:30&#x27;,
+    &#x27;15:00&#x27;,
+    &#x27;15:30&#x27;,
+    &#x27;16:00&#x27;,
+    &#x27;16:30&#x27;,
+    &#x27;17:00&#x27;,
+    &#x27;17:30&#x27;,
+    &#x27;18:00&#x27;,
+    &#x27;18:30&#x27;,
+    &#x27;19:00&#x27;,
+    &#x27;19:30&#x27;,
+    &#x27;20:00&#x27;,
+  ];
+
+  /**
+   * Minimum start date (today)
+   */
+  minStartDate &#x3D; new Date().toISOString().split(&#x27;T&#x27;)[0];
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; COMPUTED &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Minimum end date (start date + 1 day)
+   */
+  readonly minEndDate &#x3D; computed(() &#x3D;&gt; {
+    if (!this.localData.startDate) return this.minStartDate;
+
+    const start &#x3D; new Date(this.localData.startDate);
+    start.setDate(start.getDate() + 1);
+    return start.toISOString().split(&#x27;T&#x27;)[0];
+  });
+
+  /**
+   * Duration in days
+   */
+  readonly durationDays &#x3D; computed(() &#x3D;&gt; {
+    if (!this.localData.startDate || !this.localData.endDate) return 0;
+
+    const start &#x3D; new Date(this.localData.startDate);
+    const end &#x3D; new Date(this.localData.endDate);
+    const diff &#x3D; end.getTime() - start.getTime();
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  });
+
+  /**
+   * Is pickup and dropoff location different?
+   */
+  readonly isDifferentLocation &#x3D; computed(() &#x3D;&gt; {
+    return (
+      this.localData.pickupLocation.trim() !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.dropoffLocation.trim() !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.pickupLocation !&#x3D;&#x3D; this.localData.dropoffLocation
+    );
+  });
+
+  /**
+   * Is form valid?
+   */
+  readonly isValid &#x3D; computed(() &#x3D;&gt; {
+    return (
+      this.localData.startDate !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.endDate !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.pickupLocation.trim() !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.dropoffLocation.trim() !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.pickupTime !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.localData.dropoffTime !&#x3D;&#x3D; &#x27;&#x27; &amp;&amp;
+      this.durationDays() &gt; 0
+    );
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; LIFECYCLE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  constructor() {
+    // Initialize local data from input
+    effect(() &#x3D;&gt; {
+      this.localData &#x3D; { ...this.data() };
+    });
+
+    // Emit changes when local data changes
+    effect(() &#x3D;&gt; {
+      const valid &#x3D; this.isValid();
+      this.validChange.emit(valid);
+
+      if (valid) {
+        this.dataChange.emit({ ...this.localData });
+      }
+    });
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Handle date change
+   */
+  handleDateChange(): void {
+    // Ensure end date is after start date
+    if (this.localData.startDate &amp;&amp; this.localData.endDate) {
+      const start &#x3D; new Date(this.localData.startDate);
+      const end &#x3D; new Date(this.localData.endDate);
+
+      if (end &lt;&#x3D; start) {
+        const newEnd &#x3D; new Date(start);
+        newEnd.setDate(newEnd.getDate() + 1);
+        this.localData.endDate &#x3D; newEnd.toISOString().split(&#x27;T&#x27;)[0];
+      }
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'BookingDatesLocation.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1287 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AdminDashboardPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/admin/dashboard/admin-dashboard.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>autorenta-admin-dashboard-page</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLinkActive</a></code>
+                            <code>MoneyPipe</code>
+                            <code>TranslateModule</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./admin-dashboard.page.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./admin-dashboard.page.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#adminService" >adminService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookings" >bookings</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookingsSignal" >bookingsSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loadingSignal" >loadingSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pendingCars" >pendingCars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pendingCarsSignal" >pendingCarsSignal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#verificationStats" >verificationStats</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#verificationStatsSignal" >verificationStatsSignal</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#approveCar" >approveCar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadData" >loadData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="approveCar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>approveCar</b></span>
+                        <a href="#approveCar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>approveCar(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadData"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>loadData</b></span>
+                        <a href="#loadData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="38"
+                                    class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="adminService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>adminService</b></span>
+                        <a href="#adminService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AdminService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookings"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookings</b></span>
+                        <a href="#bookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bookingsSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingsSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookingsSignal</b></span>
+                        <a href="#bookingsSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Booking[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.loadingSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loadingSignal</b></span>
+                        <a href="#loadingSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pendingCars"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pendingCars</b></span>
+                        <a href="#pendingCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.pendingCarsSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pendingCarsSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pendingCarsSignal</b></span>
+                        <a href="#pendingCarsSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Car[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verificationStats"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>verificationStats</b></span>
+                        <a href="#verificationStats"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.verificationStatsSignal())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verificationStatsSignal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>verificationStatsSignal</b></span>
+                        <a href="#verificationStatsSignal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;VerificationStats | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/features/admin/dashboard/admin-dashboard.page.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { RouterLink, RouterLinkActive } from &#x27;@angular/router&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from &#x27;@angular/core&#x27;;
+
+import { AdminService, VerificationStats } from &#x27;@core/services/admin.service&#x27;;
+import { Car, Booking } from &#x27;@core/models&#x27;;
+import { MoneyPipe } from &#x27;@shared/pipes/money.pipe&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+
+@Component({
+  selector: &#x27;autorenta-admin-dashboard-page&#x27;,
+  standalone: true,
+  imports: [CommonModule, RouterLink, RouterLinkActive, MoneyPipe, TranslateModule],
+  templateUrl: &#x27;./admin-dashboard.page.html&#x27;,
+  styleUrl: &#x27;./admin-dashboard.page.css&#x27;,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AdminDashboardPage implements OnInit {
+  private readonly adminService &#x3D; inject(AdminService);
+
+  private readonly pendingCarsSignal &#x3D; signal&lt;Car[]&gt;([]);
+  private readonly bookingsSignal &#x3D; signal&lt;Booking[]&gt;([]);
+  private readonly verificationStatsSignal &#x3D; signal&lt;VerificationStats | null&gt;(null);
+  private readonly loadingSignal &#x3D; signal&lt;boolean&gt;(true);
+
+  readonly pendingCars &#x3D; computed(() &#x3D;&gt; this.pendingCarsSignal());
+  readonly bookings &#x3D; computed(() &#x3D;&gt; this.bookingsSignal());
+  readonly verificationStats &#x3D; computed(() &#x3D;&gt; this.verificationStatsSignal());
+  readonly loading &#x3D; computed(() &#x3D;&gt; this.loadingSignal());
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadData();
+  }
+
+  async approveCar(carId: string): Promise&lt;void&gt; {
+    try {
+      await this.adminService.approveCar(carId);
+      await this.loadData();
+    } catch {
+      /* Silenced */
+    }
+  }
+
+  private async loadData(): Promise&lt;void&gt; {
+    this.loadingSignal.set(true);
+    try {
+      const [cars, bookings, verificationStats] &#x3D; await Promise.all([
+        this.adminService.listPendingCars(),
+        this.adminService.listRecentBookings(),
+        this.adminService.getVerificationStats(),
+      ]);
+      this.pendingCarsSignal.set(cars);
+      this.bookingsSignal.set(bookings);
+      this.verificationStatsSignal.set(verificationStats);
+    } catch {
+      this.pendingCarsSignal.set([]);
+      this.bookingsSignal.set([]);
+      this.verificationStatsSignal.set(null);
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;section
+  class&#x3D;&quot;space-y-6 text-text-primary dark:text-text-secondary transition-colors duration-300&quot;
+&gt;
+  &lt;header&gt;
+    &lt;h1 class&#x3D;&quot;text-3xl font-semibold text-slate-900 dark:text-text-primary&quot;&gt;
+      Panel de administración
+    &lt;/h1&gt;
+    &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+      Aprobá vehículos y controlá las reservas recientes.
+    &lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;!-- Admin Navigation --&gt;
+  &lt;nav
+    class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl border border-slate-200 dark:border-slate-deep shadow-sm dark:shadow-card p-4 transition-colors&quot;
+  &gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-3 gap-4&quot;&gt;
+      &lt;a
+        routerLink&#x3D;&quot;/admin&quot;
+        routerLinkActive&#x3D;&quot;bg-cta-default/10 border-cta-default&quot;
+        [routerLinkActiveOptions]&#x3D;&quot;{ exact: true }&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-dashboard-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-cta-default rounded-md p-3 shadow-sm shadow-blue-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Dashboard&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;Resumen general&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/withdrawals&quot;
+        routerLinkActive&#x3D;&quot;bg-success-light/10 border-success-light&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-withdrawals-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-success-light rounded-md p-3 shadow-sm shadow-success-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Retiros&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            Gestionar retiros de fondos
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/exchange-rates&quot;
+        routerLinkActive&#x3D;&quot;bg-purple-50 border-purple-500&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-exchange-rates-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Tipos de Cambio&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;Monitor de tasas&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/claims&quot;
+        routerLinkActive&#x3D;&quot;bg-error-bg border-error-border&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-claims-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-error-bg0 rounded-md p-3 shadow-sm shadow-red-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Siniestros&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            Gestionar claims reportados
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/reviews&quot;
+        routerLinkActive&#x3D;&quot;bg-purple-50 border-purple-500&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-reviews-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Reseñas&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            Moderar reseñas reportadas
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/accounting&quot;
+        routerLinkActive&#x3D;&quot;bg-teal-50 border-teal-500&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-accounting-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-teal-500 rounded-md p-3 shadow-sm shadow-teal-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Contabilidad&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            Estados financieros y reportes
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+
+      &lt;a
+        routerLink&#x3D;&quot;/admin/verifications&quot;
+        routerLinkActive&#x3D;&quot;bg-blue-50 border-blue-500&quot;
+        class&#x3D;&quot;flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors&quot;
+        data-testid&#x3D;&quot;admin-verifications-link&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;flex-shrink-0 bg-blue-500 rounded-md p-3 shadow-sm shadow-blue-500/40&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;h-6 w-6 text-text-inverse&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;h3 class&#x3D;&quot;font-semibold text-slate-900 dark:text-text-primary&quot;&gt;Verificaciones&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            Aprobar documentos de usuarios
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/nav&gt;
+
+  &lt;div
+    *ngIf&#x3D;&quot;loading()&quot;
+    class&#x3D;&quot;rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 text-sm text-slate-500 dark:text-text-secondary/70 shadow-sm dark:shadow-card&quot;
+  &gt;
+    Cargando datos…
+  &lt;/div&gt;
+
+  &lt;section
+    class&#x3D;&quot;space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors&quot;
+  &gt;
+    &lt;header class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+      &lt;div&gt;
+        &lt;h2 class&#x3D;&quot;text-xl font-semibold text-slate-900 dark:text-text-primary&quot;&gt;
+          Autos pendientes
+        &lt;/h2&gt;
+        &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+          Revisá y aprobá nuevos vehículos antes de que salgan al aire.
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;div
+      *ngIf&#x3D;&quot;pendingCars().length &#x3D;&#x3D;&#x3D; 0&quot;
+      class&#x3D;&quot;rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70&quot;
+    &gt;
+      No hay autos pendientes de aprobación.
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;grid gap-4 md:grid-cols-2&quot;&gt;
+      @for (car of pendingCars(); track car.id) {
+        &lt;article
+          class&#x3D;&quot;space-y-2 rounded-xl border border-slate-200 dark:border-slate-deep p-4 shadow-sm dark:shadow-card bg-surface-raised dark:bg-surface-secondary/90 transition-colors&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+            &lt;h3 class&#x3D;&quot;text-lg font-semibold text-slate-900 dark:text-text-primary&quot;&gt;
+              {{ car.title }}
+            &lt;/h3&gt;
+            &lt;span class&#x3D;&quot;text-sm font-semibold text-primary-600 dark:text-cta-default/80&quot;&gt;{{
+              car.price_per_day | money
+            }}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            {{ car.brand }} • {{ car.model }} • {{ car.year }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-sm text-slate-500 dark:text-text-secondary/70&quot;&gt;
+            {{ car.location_city }}, {{ car.location_province }}
+          &lt;/p&gt;
+          &lt;button
+            type&#x3D;&quot;button&quot;
+            class&#x3D;&quot;rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 dark:hover:bg-primary-500/90 transition&quot;
+            (click)&#x3D;&quot;approveCar(car.id)&quot;
+          &gt;
+            Aprobar auto
+          &lt;/button&gt;
+        &lt;/article&gt;
+      }
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section
+    class&#x3D;&quot;space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors&quot;
+  &gt;
+    &lt;header&gt;
+      &lt;h2 class&#x3D;&quot;text-xl font-semibold text-slate-900 dark:text-text-primary&quot;&gt;
+        Reservas recientes
+      &lt;/h2&gt;
+    &lt;/header&gt;
+
+    &lt;div
+      *ngIf&#x3D;&quot;bookings().length &#x3D;&#x3D;&#x3D; 0&quot;
+      class&#x3D;&quot;rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70&quot;
+    &gt;
+      No hay reservas registradas aún.
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;space-y-3&quot;&gt;
+      @for (booking of bookings(); track booking.id) {
+        &lt;article
+          class&#x3D;&quot;rounded-xl border border-slate-200 dark:border-slate-deep p-4 bg-surface-raised dark:bg-surface-secondary/90 shadow-sm dark:shadow-card transition-colors&quot;
+        &gt;
+          &lt;div
+            class&#x3D;&quot;flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-text-secondary/70&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;font-semibold text-slate-700 dark:text-text-primary&quot;
+              &gt;Reserva #{{ booking.id }}&lt;/span
+            &gt;
+            &lt;span
+              class&#x3D;&quot;rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500 dark:bg-surface-secondary/80 dark:text-text-secondary/70&quot;
+            &gt;
+              {{ booking.status }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div
+            class&#x3D;&quot;mt-2 grid gap-2 text-xs text-slate-500 dark:text-text-secondary/60 md:grid-cols-3&quot;
+          &gt;
+            &lt;div&gt;Inicio: {{ booking.start_at | date: &#x27;dd/MM/yyyy&#x27; }}&lt;/div&gt;
+            &lt;div&gt;Fin: {{ booking.end_at | date: &#x27;dd/MM/yyyy&#x27; }}&lt;/div&gt;
+            &lt;div&gt;Total: {{ booking.total_amount | money: booking.currency }}&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/article&gt;
+      }
+    &lt;/div&gt;
+  &lt;/section&gt;
+&lt;/section&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><section  class="space-y-6 text-text-primary dark:text-text-secondary transition-colors duration-300">  <header>    <h1 class="text-3xl font-semibold text-slate-900 dark:text-text-primary">      Panel de administración    </h1>    <p class="text-sm text-slate-500 dark:text-text-secondary/70">      Aprobá vehículos y controlá las reservas recientes.    </p>  </header>  <!-- Admin Navigation -->  <nav    class="bg-surface-raised dark:bg-surface-raised rounded-xl border border-slate-200 dark:border-slate-deep shadow-sm dark:shadow-card p-4 transition-colors"  >    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">      <a        routerLink="/admin"        routerLinkActive="bg-cta-default/10 border-cta-default"        [routerLinkActiveOptions]="{ exact: true }"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-dashboard-link"      >        <div class="flex-shrink-0 bg-cta-default rounded-md p-3 shadow-sm shadow-blue-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Dashboard</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Resumen general</p>        </div>      </a>      <a        routerLink="/admin/withdrawals"        routerLinkActive="bg-success-light/10 border-success-light"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-withdrawals-link"      >        <div class="flex-shrink-0 bg-success-light rounded-md p-3 shadow-sm shadow-success-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Retiros</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            Gestionar retiros de fondos          </p>        </div>      </a>      <a        routerLink="/admin/exchange-rates"        routerLinkActive="bg-purple-50 border-purple-500"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-exchange-rates-link"      >        <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Tipos de Cambio</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">Monitor de tasas</p>        </div>      </a>      <a        routerLink="/admin/claims"        routerLinkActive="bg-error-bg border-error-border"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-claims-link"      >        <div class="flex-shrink-0 bg-error-bg0 rounded-md p-3 shadow-sm shadow-red-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Siniestros</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            Gestionar claims reportados          </p>        </div>      </a>      <a        routerLink="/admin/reviews"        routerLinkActive="bg-purple-50 border-purple-500"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-reviews-link"      >        <div class="flex-shrink-0 bg-purple-500 rounded-md p-3 shadow-sm shadow-purple-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Reseñas</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            Moderar reseñas reportadas          </p>        </div>      </a>      <a        routerLink="/admin/accounting"        routerLinkActive="bg-teal-50 border-teal-500"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-accounting-link"      >        <div class="flex-shrink-0 bg-teal-500 rounded-md p-3 shadow-sm shadow-teal-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Contabilidad</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            Estados financieros y reportes          </p>        </div>      </a>      <a        routerLink="/admin/verifications"        routerLinkActive="bg-blue-50 border-blue-500"        class="flex items-center gap-3 p-4 rounded-lg border border-slate-200 dark:border-slate-deep hover:bg-slate-50 dark:hover:bg-slate-deep transition-colors"        data-testid="admin-verifications-link"      >        <div class="flex-shrink-0 bg-blue-500 rounded-md p-3 shadow-sm shadow-blue-500/40">          <svg            class="h-6 w-6 text-text-inverse"            fill="none"            stroke="currentColor"            viewBox="0 0 24 24"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"            />          </svg>        </div>        <div>          <h3 class="font-semibold text-slate-900 dark:text-text-primary">Verificaciones</h3>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            Aprobar documentos de usuarios          </p>        </div>      </a>    </div>  </nav>  <div    *ngIf="loading()"    class="rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 text-sm text-slate-500 dark:text-text-secondary/70 shadow-sm dark:shadow-card"  >    Cargando datos…  </div>  <section    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"  >    <header class="flex items-center justify-between">      <div>        <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary">          Autos pendientes        </h2>        <p class="text-sm text-slate-500 dark:text-text-secondary/70">          Revisá y aprobá nuevos vehículos antes de que salgan al aire.        </p>      </div>    </header>    <div      *ngIf="pendingCars().length === 0"      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"    >      No hay autos pendientes de aprobación.    </div>    <div class="grid gap-4 md:grid-cols-2">      @for (car of pendingCars(); track car.id) {        <article          class="space-y-2 rounded-xl border border-slate-200 dark:border-slate-deep p-4 shadow-sm dark:shadow-card bg-surface-raised dark:bg-surface-secondary/90 transition-colors"        >          <div class="flex items-center justify-between">            <h3 class="text-lg font-semibold text-slate-900 dark:text-text-primary">              {{ car.title }}            </h3>            <span class="text-sm font-semibold text-primary-600 dark:text-cta-default/80">{{              car.price_per_day | money            }}</span>          </div>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            {{ car.brand }} • {{ car.model }} • {{ car.year }}          </p>          <p class="text-sm text-slate-500 dark:text-text-secondary/70">            {{ car.location_city }}, {{ car.location_province }}          </p>          <button            type="button"            class="rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-text-inverse hover:bg-primary-700 dark:hover:bg-primary-500/90 transition"            (click)="approveCar(car.id)"          >            Aprobar auto          </button>        </article>      }    </div>  </section>  <section    class="space-y-4 rounded-xl border border-slate-200 dark:border-slate-deep bg-surface-raised dark:bg-surface-raised p-5 shadow-sm dark:shadow-card transition-colors"  >    <header>      <h2 class="text-xl font-semibold text-slate-900 dark:text-text-primary">        Reservas recientes      </h2>    </header>    <div      *ngIf="bookings().length === 0"      class="rounded-lg border border-dashed border-slate-200 dark:border-slate-deep/70 p-4 text-sm text-slate-500 dark:text-text-secondary/70"    >      No hay reservas registradas aún.    </div>    <div class="space-y-3">      @for (booking of bookings(); track booking.id) {        <article          class="rounded-xl border border-slate-200 dark:border-slate-deep p-4 bg-surface-raised dark:bg-surface-secondary/90 shadow-sm dark:shadow-card transition-colors"        >          <div            class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600 dark:text-text-secondary/70"          >            <span class="font-semibold text-slate-700 dark:text-text-primary"              >Reserva #{{ booking.id }}</span            >            <span              class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-500 dark:bg-surface-secondary/80 dark:text-text-secondary/70"            >              {{ booking.status }}            </span>          </div>          <div            class="mt-2 grid gap-2 text-xs text-slate-500 dark:text-text-secondary/60 md:grid-cols-3"          >            <div>Inicio: {{ booking.start_at | date: \'dd/MM/yyyy\' }}</div>            <div>Fin: {{ booking.end_at | date: \'dd/MM/yyyy\' }}</div>            <div>Total: {{ booking.total_amount | money: booking.currency }}</div>          </div>        </article>      }    </div>  </section></section></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'AdminDashboardPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AdminDashboardPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

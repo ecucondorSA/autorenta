@@ -1,0 +1,876 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  UploadDocumentParams</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/vehicle-documents.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#car_id" 
+>
+                                            car_id
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#expiry_date" 
+>
+                                            expiry_date
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#file" 
+>
+                                            file
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#kind" 
+>
+                                            kind
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#notes" 
+>
+                                            notes
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="car_id"></a>
+                                        <span class="name "><b>car_id</b>
+                                            <a href="#car_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>car_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="expiry_date"></a>
+                                        <span class="name "><b>expiry_date</b>
+                                            <a href="#expiry_date">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>expiry_date:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="file"></a>
+                                        <span class="name "><b>file</b>
+                                            <a href="#file">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>file:     <code>File</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>File</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="kind"></a>
+                                        <span class="name "><b>kind</b>
+                                            <a href="#kind">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>kind:         <code><a href="../miscellaneous/typealiases.html#VehicleDocumentKind" target="_self" >VehicleDocumentKind</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#VehicleDocumentKind" target="_self" >VehicleDocumentKind</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="notes"></a>
+                                        <span class="name "><b>notes</b>
+                                            <a href="#notes">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>notes:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { Observable, from, map, catchError, of } from &#x27;rxjs&#x27;;
+import { injectSupabase } from &#x27;./supabase-client.service&#x27;;
+import { CarOwnerNotificationsService } from &#x27;./car-owner-notifications.service&#x27;;
+import { CarsService } from &#x27;./cars.service&#x27;;
+
+/**
+ * VehicleDocumentsService
+ *
+ * Servicio para gestión de documentos del vehículo.
+ *
+ * Documentos soportados:
+ * - registration: Cédula verde/título de propiedad
+ * - insurance: Póliza de seguro
+ * - technical_inspection: Revisión técnica (VTV)
+ * - circulation_permit: Permiso de circulación
+ * - ownership_proof: Comprobante de titularidad
+ *
+ * Estados:
+ * - pending: Subido, esperando verificación
+ * - verified: Verificado por admin
+ * - rejected: Rechazado por admin
+ *
+ * Storage:
+ * - Bucket: &#x27;vehicle-documents&#x27;
+ * - Path: {car_id}/{document_kind}_{timestamp}.{ext}
+ */
+
+export type VehicleDocumentKind &#x3D;
+  | &#x27;registration&#x27;
+  | &#x27;insurance&#x27;
+  | &#x27;technical_inspection&#x27;
+  | &#x27;circulation_permit&#x27;
+  | &#x27;ownership_proof&#x27;;
+
+export type VehicleDocumentStatus &#x3D; &#x27;pending&#x27; | &#x27;verified&#x27; | &#x27;rejected&#x27;;
+
+export interface VehicleDocument {
+  id: string;
+  car_id: string;
+  kind: VehicleDocumentKind;
+  storage_path: string;
+  status: VehicleDocumentStatus;
+  expiry_date?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  verified_by?: string;
+  verified_at?: string;
+}
+
+export interface UploadDocumentParams {
+  car_id: string;
+  kind: VehicleDocumentKind;
+  file: File;
+  expiry_date?: string;
+  notes?: string;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class VehicleDocumentsService {
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly BUCKET_NAME &#x3D; &#x27;vehicle-documents&#x27;;
+  private readonly carOwnerNotifications &#x3D; inject(CarOwnerNotificationsService);
+  private readonly carsService &#x3D; inject(CarsService);
+
+  /**
+   * Obtener todos los documentos de un vehículo
+   */
+  getCarDocuments(carId: string): Observable&lt;VehicleDocument[]&gt; {
+    return from(
+      this.supabase
+        .from(&#x27;vehicle_documents&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .order(&#x27;created_at&#x27;, { ascending: false }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        return (data as VehicleDocument[]) || [];
+      }),
+      catchError((error) &#x3D;&gt; {
+        console.error(&#x27;Error fetching car documents:&#x27;, error);
+        return of([]);
+      }),
+    );
+  }
+
+  /**
+   * Obtener un documento específico
+   */
+  getDocument(documentId: string): Observable&lt;VehicleDocument | null&gt; {
+    return from(
+      this.supabase.from(&#x27;vehicle_documents&#x27;).select(&#x27;*&#x27;).eq(&#x27;id&#x27;, documentId).single(),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) {
+          if (error.code &#x3D;&#x3D;&#x3D; &#x27;PGRST116&#x27;) return null;
+          throw error;
+        }
+        return data as VehicleDocument;
+      }),
+      catchError(() &#x3D;&gt; of(null)),
+    );
+  }
+
+  /**
+   * Subir un documento
+   */
+  async uploadDocument(params: UploadDocumentParams): Promise&lt;VehicleDocument&gt; {
+    const { car_id, kind, file, expiry_date, notes } &#x3D; params;
+
+    // 1. Upload file to storage
+    const timestamp &#x3D; Date.now();
+    const ext &#x3D; file.name.split(&#x27;.&#x27;).pop();
+    const fileName &#x3D; &#x60;${kind}_${timestamp}.${ext}&#x60;;
+    const storagePath &#x3D; &#x60;${car_id}/${fileName}&#x60;;
+
+    const { error: uploadError } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .upload(storagePath, file, {
+        cacheControl: &#x27;3600&#x27;,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw new Error(&#x60;Error uploading file: ${uploadError.message}&#x60;);
+    }
+
+    // 2. Create database record
+    const { data, error: dbError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .insert({
+        car_id,
+        kind,
+        storage_path: storagePath,
+        status: &#x27;pending&#x27;,
+        expiry_date,
+        notes,
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      // Rollback: delete uploaded file
+      await this.supabase.storage.from(this.BUCKET_NAME).remove([storagePath]);
+      throw new Error(&#x60;Error creating document record: ${dbError.message}&#x60;);
+    }
+
+    const document &#x3D; data as VehicleDocument;
+
+    // ✅ NUEVO: Notificar al usuario que el documento fue subido
+    this.notifyDocumentUploaded(document).catch(() &#x3D;&gt; {
+      // Silently fail - notification is optional
+    });
+
+    return document;
+  }
+
+  /**
+   * Notifica al usuario cuando se sube un documento
+   */
+  private async notifyDocumentUploaded(document: VehicleDocument): Promise&lt;void&gt; {
+    try {
+      const car &#x3D; await this.carsService.getCarById(document.car_id);
+      if (!car) return;
+
+      const carName &#x3D; car.title || &#x60;${car.brand || &#x27;&#x27;} ${car.model || &#x27;&#x27;}&#x60;.trim() || &#x27;tu auto&#x27;;
+      const documentType &#x3D; this.getDocumentKindLabel(document.kind);
+      const documentsUrl &#x3D; &#x60;/cars/${document.car_id}/documents&#x60;;
+
+      this.carOwnerNotifications.notifyDocumentStatusChanged(
+        documentType,
+        carName,
+        &#x27;verified&#x27;,
+        undefined,
+        documentsUrl,
+      );
+    } catch {
+      // Silently fail
+    }
+  }
+
+  /**
+   * Actualizar un documento (solo si está pending)
+   */
+  async updateDocument(
+    documentId: string,
+    updates: { expiry_date?: string; notes?: string },
+  ): Promise&lt;void&gt; {
+    const { error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .update(updates)
+      .eq(&#x27;id&#x27;, documentId)
+      .eq(&#x27;status&#x27;, &#x27;pending&#x27;); // Solo se puede actualizar si está pending
+
+    if (error) {
+      throw new Error(&#x60;Error updating document: ${error.message}&#x60;);
+    }
+  }
+
+  /**
+   * Eliminar un documento (solo si está pending)
+   */
+  async deleteDocument(documentId: string): Promise&lt;void&gt; {
+    // 1. Get document to get storage path
+    const { data: doc, error: fetchError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;storage_path, status&#x27;)
+      .eq(&#x27;id&#x27;, documentId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(&#x60;Error fetching document: ${fetchError.message}&#x60;);
+    }
+
+    if (doc.status !&#x3D;&#x3D; &#x27;pending&#x27;) {
+      throw new Error(&#x27;Cannot delete verified or rejected documents&#x27;);
+    }
+
+    // 2. Delete from storage
+    const { error: storageError } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .remove([doc.storage_path]);
+
+    if (storageError) {
+      console.warn(&#x27;Error deleting file from storage:&#x27;, storageError);
+      // Continue anyway - mejor borrar el registro aunque falle el storage
+    }
+
+    // 3. Delete from database
+    const { error: deleteError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .delete()
+      .eq(&#x27;id&#x27;, documentId)
+      .eq(&#x27;status&#x27;, &#x27;pending&#x27;);
+
+    if (deleteError) {
+      throw new Error(&#x60;Error deleting document: ${deleteError.message}&#x60;);
+    }
+  }
+
+  /**
+   * Obtener URL pública de un documento
+   */
+  async getDocumentUrl(storagePath: string): Promise&lt;string&gt; {
+    const { data } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .createSignedUrl(storagePath, 3600); // 1 hour
+
+    if (!data?.signedUrl) {
+      throw new Error(&#x27;Could not generate signed URL&#x27;);
+    }
+
+    return data.signedUrl;
+  }
+
+  /**
+   * Verificar si un auto tiene todos los documentos requeridos
+   */
+  async hasRequiredDocuments(carId: string): Promise&lt;boolean&gt; {
+    const requiredKinds: VehicleDocumentKind[] &#x3D; [
+      &#x27;registration&#x27;,
+      &#x27;insurance&#x27;,
+      &#x27;technical_inspection&#x27;,
+    ];
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;kind, status&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .in(&#x27;kind&#x27;, requiredKinds)
+      .eq(&#x27;status&#x27;, &#x27;verified&#x27;);
+
+    if (error) {
+      console.error(&#x27;Error checking required documents:&#x27;, error);
+      return false;
+    }
+
+    const verifiedKinds &#x3D; new Set((data || []).map((d) &#x3D;&gt; d.kind));
+    return requiredKinds.every((kind) &#x3D;&gt; verifiedKinds.has(kind));
+  }
+
+  /**
+   * Obtener lista de documentos faltantes para un auto
+   */
+  async getMissingDocuments(carId: string): Promise&lt;VehicleDocumentKind[]&gt; {
+    const requiredKinds: VehicleDocumentKind[] &#x3D; [
+      &#x27;registration&#x27;,
+      &#x27;insurance&#x27;,
+      &#x27;technical_inspection&#x27;,
+    ];
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;kind, status&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .in(&#x27;kind&#x27;, requiredKinds)
+      .eq(&#x27;status&#x27;, &#x27;verified&#x27;);
+
+    if (error) {
+      console.error(&#x27;Error checking documents:&#x27;, error);
+      return requiredKinds; // Si hay error, asumir que faltan todos
+    }
+
+    const verifiedKinds &#x3D; new Set((data || []).map((d) &#x3D;&gt; d.kind));
+    return requiredKinds.filter((kind) &#x3D;&gt; !verifiedKinds.has(kind));
+  }
+
+  /**
+   * Suscribirse a cambios de estado de documentos para notificar al usuario
+   *
+   * @param carId - ID del auto
+   * @param callback - Callback cuando cambia el estado
+   */
+  subscribeToDocumentStatusChanges(
+    carId: string,
+    callback: (document: VehicleDocument) &#x3D;&gt; void,
+  ): () &#x3D;&gt; void {
+    const channel &#x3D; this.supabase
+      .channel(&#x60;vehicle-documents-${carId}&#x60;)
+      .on(
+        &#x27;postgres_changes&#x27;,
+        {
+          event: &#x27;UPDATE&#x27;,
+          schema: &#x27;public&#x27;,
+          table: &#x27;vehicle_documents&#x27;,
+          filter: &#x60;car_id&#x3D;eq.${carId}&#x60;,
+        },
+        async (payload) &#x3D;&gt; {
+          const document &#x3D; payload.new as VehicleDocument;
+
+          // Solo notificar si cambió el status a verified o rejected
+          if (document.status &#x3D;&#x3D;&#x3D; &#x27;verified&#x27; || document.status &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;) {
+            callback(document);
+          }
+        },
+      )
+      .subscribe();
+
+    return () &#x3D;&gt; {
+      this.supabase.removeChannel(channel);
+    };
+  }
+
+  /**
+   * Obtener documentos próximos a vencer (30 días)
+   */
+  getExpiringDocuments(carId: string): Observable&lt;VehicleDocument[]&gt; {
+    const thirtyDaysFromNow &#x3D; new Date();
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+    return from(
+      this.supabase
+        .from(&#x27;vehicle_documents&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .eq(&#x27;status&#x27;, &#x27;verified&#x27;)
+        .not(&#x27;expiry_date&#x27;, &#x27;is&#x27;, null)
+        .lte(&#x27;expiry_date&#x27;, thirtyDaysFromNow.toISOString().split(&#x27;T&#x27;)[0]),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        return (data as VehicleDocument[]) || [];
+      }),
+      catchError(() &#x3D;&gt; of([])),
+    );
+  }
+
+  /**
+   * Labels para tipos de documentos
+   */
+  getDocumentKindLabel(kind: VehicleDocumentKind): string {
+    const labels: Record&lt;VehicleDocumentKind, string&gt; &#x3D; {
+      registration: &#x27;Cédula Verde / Título&#x27;,
+      insurance: &#x27;Póliza de Seguro&#x27;,
+      technical_inspection: &#x27;Revisión Técnica (VTV)&#x27;,
+      circulation_permit: &#x27;Permiso de Circulación&#x27;,
+      ownership_proof: &#x27;Comprobante de Titularidad&#x27;,
+    };
+    return labels[kind];
+  }
+
+  /**
+   * Labels para estados
+   */
+  getStatusLabel(status: VehicleDocumentStatus): string {
+    const labels: Record&lt;VehicleDocumentStatus, string&gt; &#x3D; {
+      pending: &#x27;Pendiente de Verificación&#x27;,
+      verified: &#x27;Verificado&#x27;,
+      rejected: &#x27;Rechazado&#x27;,
+    };
+    return labels[status];
+  }
+
+  /**
+   * Iconos para tipos de documentos
+   */
+  getDocumentKindIcon(kind: VehicleDocumentKind): string {
+    const icons: Record&lt;VehicleDocumentKind, string&gt; &#x3D; {
+      registration: &#x27;📋&#x27;,
+      insurance: &#x27;🛡️&#x27;,
+      technical_inspection: &#x27;🔧&#x27;,
+      circulation_permit: &#x27;🚦&#x27;,
+      ownership_proof: &#x27;📄&#x27;,
+    };
+    return icons[kind];
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'UploadDocumentParams.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

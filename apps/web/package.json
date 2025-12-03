@@ -28,7 +28,10 @@
     "validate": "npm run lint && npm run build",
     "analyze": "node_modules/.bin/ng build --stats-json && npx -y webpack-bundle-analyzer dist/web/stats.json -m static -r dist/web/report.html",
     "preview": "npm run build && npx -y wrangler pages dev dist/web/browser",
-    "serve:ssr:web": "node dist/web/server/server.mjs"
+    "serve:ssr:web": "node dist/web/server/server.mjs",
+    "docs:build": "compodoc -p tsconfig.json",
+    "docs:serve": "compodoc -s",
+    "docs:clean": "rm -rf documentation"
   },
   "lint-staged": {
     "src/**/*.{ts,js,html,css,scss}": [
@@ -99,7 +102,9 @@
     "@angular/cli": "^20.3.12",
     "@angular/compiler-cli": "~20.3.7",
     "@angular/ssr": "^20.3.7",
+    "@axe-core/playwright": "^4.11.0",
     "@cloudflare/workers-types": "^4.20251119.0",
+    "@compodoc/compodoc": "^1.1.32",
     "@sentry/cli": "^2.58.0",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",

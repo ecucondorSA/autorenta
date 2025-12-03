@@ -1,0 +1,1263 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  PaginatedResult</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/accounting.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#data" 
+>
+                                            data
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#page" 
+>
+                                            page
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#pageSize" 
+>
+                                            pageSize
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#total" 
+>
+                                            total
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#totalPages" 
+>
+                                            totalPages
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="data"></a>
+                                        <span class="name "><b>data</b>
+                                            <a href="#data">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>data:     <code>T[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>T[]</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="page"></a>
+                                        <span class="name "><b>page</b>
+                                            <a href="#page">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>page:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="pageSize"></a>
+                                        <span class="name "><b>pageSize</b>
+                                            <a href="#pageSize">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>pageSize:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="total"></a>
+                                        <span class="name "><b>total</b>
+                                            <a href="#total">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>total:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="totalPages"></a>
+                                        <span class="name "><b>totalPages</b>
+                                            <a href="#totalPages">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>totalPages:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { inject, Injectable } from &#x27;@angular/core&#x27;;
+import { SupabaseClient } from &#x27;@supabase/supabase-js&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+export interface AccountingAccount {
+  id: string;
+  code: string;
+  name: string;
+  account_type: &#x27;ASSET&#x27; | &#x27;LIABILITY&#x27; | &#x27;EQUITY&#x27; | &#x27;INCOME&#x27; | &#x27;EXPENSE&#x27;;
+  sub_type: string;
+  balance?: number;
+}
+
+export interface JournalEntry {
+  id: string;
+  entry_number: string;
+  entry_date: string;
+  transaction_type: string;
+  reference_id?: string;
+  reference_table?: string;
+  description: string;
+  total_debit: number;
+  total_credit: number;
+  is_balanced: boolean;
+  status: &#x27;DRAFT&#x27; | &#x27;POSTED&#x27; | &#x27;VOIDED&#x27;;
+}
+
+export interface Provision {
+  id: string;
+  provision_type: &#x27;FGO_RESERVE&#x27; | &#x27;SECURITY_DEPOSIT&#x27; | &#x27;CLAIMS_RESERVE&#x27;;
+  reference_id?: string;
+  provision_amount: number;
+  utilized_amount: number;
+  released_amount: number;
+  current_balance: number;
+  status: &#x27;ACTIVE&#x27; | &#x27;UTILIZED&#x27; | &#x27;RELEASED&#x27; | &#x27;EXPIRED&#x27;;
+  provision_date: string;
+}
+
+export interface AccountingDashboard {
+  total_assets: number;
+  total_liabilities: number;
+  total_equity: number;
+  monthly_income: number;
+  monthly_expenses: number;
+  monthly_profit: number;
+  wallet_liability: number;
+  fgo_provision: number;
+  active_security_deposits: number;
+}
+
+export interface BalanceSheet {
+  code: string;
+  name: string;
+  account_type: string;
+  sub_type: string;
+  balance: number;
+}
+
+export interface IncomeStatement {
+  code: string;
+  name: string;
+  account_type: &#x27;INCOME&#x27; | &#x27;EXPENSE&#x27;;
+  amount: number;
+  period: string;
+}
+
+export interface WalletReconciliation {
+  source: string;
+  amount: number;
+}
+
+export interface FinancialHealth {
+  walletReconciled: boolean;
+  fgoAdequate: boolean;
+  profitability: &#x27;GOOD&#x27; | &#x27;WARNING&#x27; | &#x27;CRITICAL&#x27;;
+  alerts: string[];
+}
+
+export interface CommissionReport {
+  period: string;
+  total_bookings: number;
+  total_commissions: number;
+  avg_commission: number;
+}
+
+export interface LedgerEntry {
+  id: string;
+  entry_date: string;
+  account_code: string;
+  debit: number;
+  credit: number;
+  description: string;
+  reference_type?: string;
+  reference_id?: string;
+  user_id?: string;
+  batch_id?: string;
+  fiscal_period?: string;
+  is_closing_entry: boolean;
+  is_reversed: boolean;
+  created_by?: string;
+  created_at: string;
+  accounting_chart_of_accounts?: {
+    code: string;
+    name: string;
+    account_type: string;
+  };
+}
+
+export interface CashFlowEntry {
+  id: string;
+  date?: string;
+  created_at?: string;
+  type?: string;
+  transaction_type?: string;
+  description?: string;
+  inflow?: number;
+  debit?: number;
+  outflow?: number;
+  credit?: number;
+  balance?: number;
+}
+
+export interface PaginatedResult&lt;T&gt; {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+export interface ProvisionDetail {
+  id: string;
+  provision_type: string;
+  amount: number;
+  currency: string;
+  probability?: string;
+  measurement_basis?: string;
+  booking_id?: string;
+  user_id?: string;
+  status: string;
+  created_date: string;
+  review_date?: string;
+  utilization_date?: string;
+  notes?: string;
+}
+
+export interface PeriodClosure {
+  id: string;
+  period_type: string;
+  period_code: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  total_debits: number;
+  total_credits: number;
+  balance_check: boolean;
+  closing_entries_batch_id?: string;
+  closed_by?: string;
+  closed_at?: string;
+  notes?: string;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  audit_type: string;
+  severity: string;
+  description: string;
+  affected_period?: string;
+  affected_account?: string;
+  expected_value?: number;
+  actual_value?: number;
+  variance?: number;
+  resolution_status: string;
+  resolved_by?: string;
+  resolved_at?: string;
+  created_at: string;
+}
+
+export interface RevenueRecognition {
+  id: string;
+  booking_id: string;
+  revenue_type: string;
+  gross_amount: number;
+  commission_amount: number;
+  owner_amount: number;
+  recognition_date: string;
+  performance_obligation_met: boolean;
+  is_recognized: boolean;
+  ledger_batch_id?: string;
+  created_at: string;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class AccountingService {
+  private readonly supabase: SupabaseClient;
+
+  constructor() {
+    this.supabase &#x3D; inject(SupabaseClientService).getClient();
+  }
+
+  /**
+   * Obtener dashboard ejecutivo con KPIs financieros
+   */
+  async getDashboard(): Promise&lt;AccountingDashboard | null&gt; {
+    const { data, error } &#x3D; await this.supabase.from(&#x27;accounting_dashboard&#x27;).select(&#x27;*&#x27;).single();
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting dashboard:&#x27;, error.message);
+      return null;
+    }
+
+    return data;
+  }
+
+  /**
+   * Obtener Balance General (Estado de Situación Financiera)
+   */
+  async getBalanceSheet(): Promise&lt;BalanceSheet[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_balance_sheet&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;code&#x27;);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting balance sheet:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener Estado de Resultados (P&amp;L)
+   * @param period - Período en formato YYYY-MM (ej: &#x27;2025-10&#x27;)
+   */
+  async getIncomeStatement(period?: string): Promise&lt;IncomeStatement[]&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_income_statement&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;period&#x27;, { ascending: false })
+      .order(&#x27;code&#x27;);
+
+    if (period) {
+      query &#x3D; query.eq(&#x27;period&#x27;, period);
+    }
+
+    const { data, error } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting income statement:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener provisiones activas (FGO, depósitos de garantía)
+   */
+  async getActiveProvisions(): Promise&lt;Provision[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_provisions_report&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;status&#x27;, &#x27;ACTIVE&#x27;);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting provisions:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener conciliación wallet vs contabilidad
+   */
+  async getWalletReconciliation(): Promise&lt;WalletReconciliation[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_wallet_reconciliation&#x27;)
+      .select(&#x27;*&#x27;);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting reconciliation:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener reporte de comisiones por período
+   */
+  async getCommissionsReport(): Promise&lt;CommissionReport[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_commissions_report&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;period&#x27;, { ascending: false })
+      .limit(12); // Últimos 12 meses
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting commissions report:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener plan de cuentas
+   */
+  async getChartOfAccounts(): Promise&lt;AccountingAccount[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_chart_of_accounts&#x27;)
+      .select(&#x27;*&#x27;)
+      .eq(&#x27;is_active&#x27;, true)
+      .order(&#x27;code&#x27;);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting chart of accounts:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener libro mayor (ledger) con filtros opcionales
+   */
+  async getLedger(filters?: {
+    startDate?: string;
+    endDate?: string;
+    accountCode?: string;
+    transactionType?: string;
+    limit?: number;
+  }): Promise&lt;unknown[]&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_ledger&#x27;)
+      .select(
+        &#x60;
+        *,
+        accounting_accounts (
+          code,
+          name,
+          account_type
+        )
+      &#x60;,
+      )
+      .order(&#x27;entry_date&#x27;, { ascending: false });
+
+    if (filters?.startDate) {
+      query &#x3D; query.gte(&#x27;entry_date&#x27;, filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query &#x3D; query.lte(&#x27;entry_date&#x27;, filters.endDate);
+    }
+
+    if (filters?.transactionType) {
+      query &#x3D; query.eq(&#x27;transaction_type&#x27;, filters.transactionType);
+    }
+
+    if (filters?.limit) {
+      query &#x3D; query.limit(filters.limit);
+    }
+
+    const { data, error } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting ledger:&#x27;, error.message);
+      return [];
+    }
+
+    return data || [];
+  }
+
+  /**
+   * Obtener flujo de caja
+   */
+  async getCashFlow(limit: number &#x3D; 100): Promise&lt;CashFlowEntry[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;accounting_cash_flow&#x27;)
+      .select(&#x27;*&#x27;)
+      .limit(limit);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting cash flow:&#x27;, error.message);
+      return [];
+    }
+
+    return (data as CashFlowEntry[]) || [];
+  }
+
+  /**
+   * Refrescar balances (materializar vista)
+   */
+  async refreshBalances(): Promise&lt;boolean&gt; {
+    const { error } &#x3D; await this.supabase.rpc(&#x27;refresh_accounting_balances&#x27;);
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error refreshing balances:&#x27;, error.message);
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Crear asiento contable manual (para ajustes)
+   */
+  async createManualJournalEntry(
+    transactionType: string,
+    description: string,
+    entries: Array&lt;{
+      account_code: string;
+      debit?: number;
+      credit?: number;
+      description?: string;
+    }&gt;,
+  ): Promise&lt;string | null&gt; {
+    const { data, error } &#x3D; await this.supabase.rpc(&#x27;create_journal_entry&#x27;, {
+      p_transaction_type: transactionType,
+      p_reference_id: null,
+      p_reference_table: &#x27;manual_entry&#x27;,
+      p_description: description,
+      p_entries: entries,
+    });
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error creating journal entry:&#x27;, error.message);
+      return null;
+    }
+
+    return data;
+  }
+
+  /**
+   * Obtener resumen financiero para un período
+   */
+  async getFinancialSummary(period: string): Promise&lt;{
+    income: number;
+    expenses: number;
+    profit: number;
+    profitMargin: number;
+  }&gt; {
+    const incomeStatement &#x3D; await this.getIncomeStatement(period);
+
+    const income &#x3D; incomeStatement
+      .filter((item) &#x3D;&gt; item.account_type &#x3D;&#x3D;&#x3D; &#x27;INCOME&#x27;)
+      .reduce((sum, item) &#x3D;&gt; sum + item.amount, 0);
+
+    const expenses &#x3D; incomeStatement
+      .filter((item) &#x3D;&gt; item.account_type &#x3D;&#x3D;&#x3D; &#x27;EXPENSE&#x27;)
+      .reduce((sum, item) &#x3D;&gt; sum + item.amount, 0);
+
+    const profit &#x3D; income - expenses;
+    const profitMargin &#x3D; income &gt; 0 ? (profit / income) * 100 : 0;
+
+    return {
+      income,
+      expenses,
+      profit,
+      profitMargin,
+    };
+  }
+
+  /**
+   * Obtener libro mayor con paginación
+   */
+  async getLedgerPaginated(
+    page: number &#x3D; 1,
+    pageSize: number &#x3D; 50,
+    filters?: {
+      startDate?: string;
+      endDate?: string;
+      accountCode?: string;
+      referenceType?: string;
+      searchTerm?: string;
+    },
+  ): Promise&lt;PaginatedResult&lt;LedgerEntry&gt;&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_ledger&#x27;)
+      .select(
+        &#x60;
+        *,
+        accounting_chart_of_accounts!accounting_ledger_account_code_fkey (
+          code,
+          name,
+          account_type
+        )
+      &#x60;,
+        { count: &#x27;exact&#x27; },
+      )
+      .order(&#x27;entry_date&#x27;, { ascending: false })
+      .order(&#x27;created_at&#x27;, { ascending: false });
+
+    // Apply filters
+    if (filters?.startDate) {
+      query &#x3D; query.gte(&#x27;entry_date&#x27;, filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query &#x3D; query.lte(&#x27;entry_date&#x27;, filters.endDate);
+    }
+
+    if (filters?.accountCode) {
+      query &#x3D; query.eq(&#x27;account_code&#x27;, filters.accountCode);
+    }
+
+    if (filters?.referenceType) {
+      query &#x3D; query.eq(&#x27;reference_type&#x27;, filters.referenceType);
+    }
+
+    if (filters?.searchTerm) {
+      query &#x3D; query.ilike(&#x27;description&#x27;, &#x60;%${filters.searchTerm}%&#x60;);
+    }
+
+    // Apply pagination
+    const from &#x3D; (page - 1) * pageSize;
+    const to &#x3D; from + pageSize - 1;
+    query &#x3D; query.range(from, to);
+
+    const { data, error, count } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting ledger paginated:&#x27;, error.message);
+      return {
+        data: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      };
+    }
+
+    const total &#x3D; count || 0;
+    const totalPages &#x3D; Math.ceil(total / pageSize);
+
+    return {
+      data: (data as LedgerEntry[]) || [],
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }
+
+  /**
+   * Obtener provisiones con filtros
+   */
+  async getProvisions(filters?: {
+    status?: string;
+    provisionType?: string;
+  }): Promise&lt;ProvisionDetail[]&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_provisions&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;created_date&#x27;, { ascending: false });
+
+    if (filters?.status) {
+      query &#x3D; query.eq(&#x27;status&#x27;, filters.status);
+    }
+
+    if (filters?.provisionType) {
+      query &#x3D; query.eq(&#x27;provision_type&#x27;, filters.provisionType);
+    }
+
+    const { data, error } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting provisions:&#x27;, error.message);
+      return [];
+    }
+
+    return (data as ProvisionDetail[]) || [];
+  }
+
+  /**
+   * Obtener cierres de período con filtros
+   */
+  async getPeriodClosures(filters?: {
+    periodType?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise&lt;PeriodClosure[]&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_period_closures&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;end_date&#x27;, { ascending: false });
+
+    if (filters?.periodType) {
+      query &#x3D; query.eq(&#x27;period_type&#x27;, filters.periodType);
+    }
+
+    if (filters?.status) {
+      query &#x3D; query.eq(&#x27;status&#x27;, filters.status);
+    }
+
+    if (filters?.startDate) {
+      query &#x3D; query.gte(&#x27;start_date&#x27;, filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query &#x3D; query.lte(&#x27;end_date&#x27;, filters.endDate);
+    }
+
+    const { data, error } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting period closures:&#x27;, error.message);
+      return [];
+    }
+
+    return (data as PeriodClosure[]) || [];
+  }
+
+  /**
+   * Obtener logs de auditoría con filtros
+   */
+  async getAuditLogs(
+    page: number &#x3D; 1,
+    pageSize: number &#x3D; 50,
+    filters?: {
+      severity?: string;
+      auditType?: string;
+      resolutionStatus?: string;
+      startDate?: string;
+      endDate?: string;
+    },
+  ): Promise&lt;PaginatedResult&lt;AuditLog&gt;&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_audit_log&#x27;)
+      .select(&#x27;*&#x27;, { count: &#x27;exact&#x27; })
+      .order(&#x27;created_at&#x27;, { ascending: false });
+
+    // Apply filters
+    if (filters?.severity) {
+      query &#x3D; query.eq(&#x27;severity&#x27;, filters.severity);
+    }
+
+    if (filters?.auditType) {
+      query &#x3D; query.eq(&#x27;audit_type&#x27;, filters.auditType);
+    }
+
+    if (filters?.resolutionStatus) {
+      query &#x3D; query.eq(&#x27;resolution_status&#x27;, filters.resolutionStatus);
+    }
+
+    if (filters?.startDate) {
+      query &#x3D; query.gte(&#x27;created_at&#x27;, filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query &#x3D; query.lte(&#x27;created_at&#x27;, filters.endDate);
+    }
+
+    // Apply pagination
+    const from &#x3D; (page - 1) * pageSize;
+    const to &#x3D; from + pageSize - 1;
+    query &#x3D; query.range(from, to);
+
+    const { data, error, count } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting audit logs:&#x27;, error.message);
+      return {
+        data: [],
+        total: 0,
+        page,
+        pageSize,
+        totalPages: 0,
+      };
+    }
+
+    const total &#x3D; count || 0;
+    const totalPages &#x3D; Math.ceil(total / pageSize);
+
+    return {
+      data: (data as AuditLog[]) || [],
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  }
+
+  /**
+   * Obtener reconocimiento de ingresos por booking
+   */
+  async getRevenueRecognition(filters?: {
+    bookingId?: string;
+    isRecognized?: boolean;
+    startDate?: string;
+    endDate?: string;
+  }): Promise&lt;RevenueRecognition[]&gt; {
+    let query &#x3D; this.supabase
+      .from(&#x27;accounting_revenue_recognition&#x27;)
+      .select(&#x27;*&#x27;)
+      .order(&#x27;recognition_date&#x27;, { ascending: false });
+
+    if (filters?.bookingId) {
+      query &#x3D; query.eq(&#x27;booking_id&#x27;, filters.bookingId);
+    }
+
+    if (filters?.isRecognized !&#x3D;&#x3D; undefined) {
+      query &#x3D; query.eq(&#x27;is_recognized&#x27;, filters.isRecognized);
+    }
+
+    if (filters?.startDate) {
+      query &#x3D; query.gte(&#x27;recognition_date&#x27;, filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      query &#x3D; query.lte(&#x27;recognition_date&#x27;, filters.endDate);
+    }
+
+    const { data, error } &#x3D; await query;
+
+    if (error) {
+      console.warn(&#x27;[AccountingService] Error getting revenue recognition:&#x27;, error.message);
+      return [];
+    }
+
+    return (data as RevenueRecognition[]) || [];
+  }
+
+  /**
+   * Ejecutar cierre de período
+   */
+  async executePeriodClosure(
+    periodType: &#x27;daily&#x27; | &#x27;monthly&#x27; | &#x27;yearly&#x27;,
+    periodCode: string,
+  ): Promise&lt;{ success: boolean; message: string; closureId?: string }&gt; {
+    const { data, error } &#x3D; await this.supabase.rpc(&#x27;execute_period_closure&#x27;, {
+      p_period_type: periodType,
+      p_period_code: periodCode,
+    });
+
+    if (error) {
+      return {
+        success: false,
+        message: error.message || &#x27;Error al ejecutar cierre de período&#x27;,
+      };
+    }
+
+    return {
+      success: true,
+      message: &#x27;Cierre de período ejecutado exitosamente&#x27;,
+      closureId: data,
+    };
+  }
+
+  /**
+   * Verificar salud financiera
+   */
+  async checkFinancialHealth(): Promise&lt;FinancialHealth&gt; {
+    const dashboard &#x3D; await this.getDashboard();
+    const reconciliation &#x3D; await this.getWalletReconciliation();
+    const alerts: string[] &#x3D; [];
+
+    if (!dashboard) {
+      return {
+        walletReconciled: false,
+        fgoAdequate: false,
+        profitability: &#x27;CRITICAL&#x27;,
+        alerts: [&#x27;No se pudo obtener dashboard financiero&#x27;],
+      };
+    }
+
+    // Verificar conciliación wallet
+    const walletDiff &#x3D; reconciliation.find((r) &#x3D;&gt; r.source.includes(&#x27;Diferencia&#x27;));
+    const walletReconciled &#x3D; walletDiff ? Math.abs(walletDiff.amount) &lt; 0.01 : false;
+
+    if (!walletReconciled) {
+      alerts.push(&#x60;Diferencia en conciliación wallet: $${walletDiff?.amount.toFixed(2)}&#x60;);
+    }
+
+    // Verificar FGO adecuado (debe ser al menos 5% del total de pasivos activos)
+    const minFGO &#x3D; dashboard.active_security_deposits * 0.05;
+    const fgoAdequate &#x3D; dashboard.fgo_provision &gt;&#x3D; minFGO;
+
+    if (!fgoAdequate) {
+      alerts.push(
+        &#x60;FGO insuficiente: $${dashboard.fgo_provision.toFixed(2)} (mínimo recomendado: $${minFGO.toFixed(2)})&#x60;,
+      );
+    }
+
+    // Evaluar rentabilidad
+    let profitability: &#x27;GOOD&#x27; | &#x27;WARNING&#x27; | &#x27;CRITICAL&#x27; &#x3D; &#x27;GOOD&#x27;;
+
+    if (dashboard.monthly_profit &lt; 0) {
+      profitability &#x3D; &#x27;CRITICAL&#x27;;
+      alerts.push(&#x27;Pérdidas en el mes actual&#x27;);
+    } else if (dashboard.monthly_profit &lt; dashboard.monthly_income * 0.05) {
+      profitability &#x3D; &#x27;WARNING&#x27;;
+      alerts.push(&#x27;Margen de utilidad bajo (&lt;5%)&#x27;);
+    }
+
+    return {
+      walletReconciled,
+      fgoAdequate,
+      profitability,
+      alerts,
+    };
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'PaginatedResult.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

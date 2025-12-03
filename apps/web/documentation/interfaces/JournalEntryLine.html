@@ -1,0 +1,660 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  JournalEntryLine</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/admin/accounting/pages/manual-journal-entry.page.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#account_code" 
+>
+                                            account_code
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#account_name" 
+>
+                                            account_name
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#credit" 
+>
+                                            credit
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#debit" 
+>
+                                            debit
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#description" 
+>
+                                            description
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="account_code"></a>
+                                        <span class="name "><b>account_code</b>
+                                            <a href="#account_code">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>account_code:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="account_name"></a>
+                                        <span class="name "><b>account_name</b>
+                                            <a href="#account_name">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>account_name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="credit"></a>
+                                        <span class="name "><b>credit</b>
+                                            <a href="#credit">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>credit:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="debit"></a>
+                                        <span class="name "><b>debit</b>
+                                            <a href="#debit">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>debit:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="description"></a>
+                                        <span class="name "><b>description</b>
+                                            <a href="#description">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>description:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, signal, inject } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { IonicModule } from &#x27;@ionic/angular&#x27;;
+import { AccountingService, AccountingAccount } from &#x27;../../../../core/services/accounting.service&#x27;;
+
+interface JournalEntryLine {
+  account_code: string;
+  account_name?: string;
+  debit?: number;
+  credit?: number;
+  description: string;
+}
+
+@Component({
+  selector: &#x27;app-manual-journal-entry&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule],
+  templateUrl: &#x27;./manual-journal-entry.page.html&#x27;,
+  styleUrls: [&#x27;./manual-journal-entry.page.scss&#x27;],
+})
+export class ManualJournalEntryPage implements OnInit {
+  private readonly accountingService &#x3D; inject(AccountingService);
+
+  readonly loading &#x3D; signal(false);
+  readonly accounts &#x3D; signal&lt;AccountingAccount[]&gt;([]);
+  readonly entryLines &#x3D; signal&lt;JournalEntryLine[]&gt;([
+    { account_code: &#x27;&#x27;, debit: undefined, credit: undefined, description: &#x27;&#x27; },
+    { account_code: &#x27;&#x27;, debit: undefined, credit: undefined, description: &#x27;&#x27; },
+  ]);
+  readonly transactionType &#x3D; signal(&#x27;&#x27;);
+  readonly description &#x3D; signal(&#x27;&#x27;);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly success &#x3D; signal&lt;string | null&gt;(null);
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadAccounts();
+  }
+
+  async loadAccounts(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    try {
+      const accounts &#x3D; await this.accountingService.getChartOfAccounts();
+      this.accounts.set(accounts);
+    } catch (error) {
+      console.error(&#x27;Error loading accounts:&#x27;, error);
+      this.error.set(&#x27;Error al cargar plan de cuentas&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  addEntryLine(): void {
+    this.entryLines.update((lines) &#x3D;&gt; [
+      ...lines,
+      { account_code: &#x27;&#x27;, debit: undefined, credit: undefined, description: &#x27;&#x27; },
+    ]);
+  }
+
+  removeEntryLine(index: number): void {
+    this.entryLines.update((lines) &#x3D;&gt; lines.filter((_, i) &#x3D;&gt; i !&#x3D;&#x3D; index));
+  }
+
+  getAccountName(code: string): string {
+    const account &#x3D; this.accounts().find((a) &#x3D;&gt; a.code &#x3D;&#x3D;&#x3D; code);
+    return account?.name || &#x27;&#x27;;
+  }
+
+  validateEntry(): { valid: boolean; errors: string[] } {
+    const errors: string[] &#x3D; [];
+    const lines &#x3D; this.entryLines();
+
+    if (!this.transactionType()) {
+      errors.push(&#x27;Tipo de transacción es requerido&#x27;);
+    }
+
+    if (!this.description()) {
+      errors.push(&#x27;Descripción es requerida&#x27;);
+    }
+
+    if (lines.length &lt; 2) {
+      errors.push(&#x27;Debe haber al menos 2 líneas de asiento&#x27;);
+    }
+
+    let totalDebit &#x3D; 0;
+    let totalCredit &#x3D; 0;
+
+    lines.forEach((line, index) &#x3D;&gt; {
+      if (!line.account_code) {
+        errors.push(&#x60;Línea ${index + 1}: Cuenta es requerida&#x60;);
+      }
+
+      if (!line.debit &amp;&amp; !line.credit) {
+        errors.push(&#x60;Línea ${index + 1}: Debe tener débito o crédito&#x60;);
+      }
+
+      if (line.debit &amp;&amp; line.credit) {
+        errors.push(&#x60;Línea ${index + 1}: No puede tener débito y crédito simultáneamente&#x60;);
+      }
+
+      if (line.debit &amp;&amp; line.debit &lt; 0) {
+        errors.push(&#x60;Línea ${index + 1}: Débito no puede ser negativo&#x60;);
+      }
+
+      if (line.credit &amp;&amp; line.credit &lt; 0) {
+        errors.push(&#x60;Línea ${index + 1}: Crédito no puede ser negativo&#x60;);
+      }
+
+      totalDebit +&#x3D; line.debit || 0;
+      totalCredit +&#x3D; line.credit || 0;
+    });
+
+    if (Math.abs(totalDebit - totalCredit) &gt; 0.01) {
+      errors.push(
+        &#x60;Asiento desbalanceado: Débito $${totalDebit.toFixed(2)} ≠ Crédito $${totalCredit.toFixed(2)}&#x60;,
+      );
+    }
+
+    return {
+      valid: errors.length &#x3D;&#x3D;&#x3D; 0,
+      errors,
+    };
+  }
+
+  async createEntry(): Promise&lt;void&gt; {
+    this.error.set(null);
+    this.success.set(null);
+
+    const validation &#x3D; this.validateEntry();
+    if (!validation.valid) {
+      this.error.set(validation.errors.join(&#x27;\n&#x27;));
+      return;
+    }
+
+    this.loading.set(true);
+
+    try {
+      const lines &#x3D; this.entryLines().map((line) &#x3D;&gt; ({
+        account_code: line.account_code,
+        debit: line.debit,
+        credit: line.credit,
+        description: line.description || undefined,
+      }));
+
+      const entryId &#x3D; await this.accountingService.createManualJournalEntry(
+        this.transactionType(),
+        this.description(),
+        lines,
+      );
+
+      if (entryId) {
+        this.success.set(&#x60;Asiento contable creado exitosamente: ${entryId}&#x60;);
+        this.resetForm();
+      } else {
+        this.error.set(&#x27;Error al crear el asiento contable&#x27;);
+      }
+    } catch (err) {
+      console.error(&#x27;Error creating journal entry:&#x27;, err);
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al crear asiento&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  resetForm(): void {
+    this.transactionType.set(&#x27;&#x27;);
+    this.description.set(&#x27;&#x27;);
+    this.entryLines.set([
+      { account_code: &#x27;&#x27;, debit: undefined, credit: undefined, description: &#x27;&#x27; },
+      { account_code: &#x27;&#x27;, debit: undefined, credit: undefined, description: &#x27;&#x27; },
+    ]);
+  }
+
+  getTotalDebit(): number {
+    return this.entryLines().reduce((sum, line) &#x3D;&gt; sum + (line.debit || 0), 0);
+  }
+
+  getTotalCredit(): number {
+    return this.entryLines().reduce((sum, line) &#x3D;&gt; sum + (line.credit || 0), 0);
+  }
+
+  isBalanced(): boolean {
+    return Math.abs(this.getTotalDebit() - this.getTotalCredit()) &lt; 0.01;
+  }
+
+  getDifference(): number {
+    return Math.abs(this.getTotalDebit() - this.getTotalCredit());
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'JournalEntryLine.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

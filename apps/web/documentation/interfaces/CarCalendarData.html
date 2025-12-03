@@ -1,0 +1,789 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  CarCalendarData</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/dashboard/components/multi-car-calendar/multi-car-calendar.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#blockedRanges" 
+>
+                                            blockedRanges
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#carId" 
+>
+                                            carId
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#carTitle" 
+>
+                                            carTitle
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#imageUrl" 
+>
+                                            imageUrl
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#loading" 
+>
+                                            loading
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#selected" 
+>
+                                            selected
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="blockedRanges"></a>
+                                        <span class="name "><b>blockedRanges</b>
+                                            <a href="#blockedRanges">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>blockedRanges:         <code><a href="../interfaces/DetailedBlockedRange.html" target="_self" >DetailedBlockedRange[]</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../interfaces/DetailedBlockedRange.html" target="_self" >DetailedBlockedRange[]</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="carId"></a>
+                                        <span class="name "><b>carId</b>
+                                            <a href="#carId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>carId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="carTitle"></a>
+                                        <span class="name "><b>carTitle</b>
+                                            <a href="#carTitle">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>carTitle:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="imageUrl"></a>
+                                        <span class="name "><b>imageUrl</b>
+                                            <a href="#imageUrl">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>imageUrl:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="loading"></a>
+                                        <span class="name "><b>loading</b>
+                                            <a href="#loading">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>loading:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="selected"></a>
+                                        <span class="name "><b>selected</b>
+                                            <a href="#selected">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>selected:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, computed, inject, OnInit, signal } from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { addMonths, eachDayOfInterval, endOfMonth, format, startOfMonth } from &#x27;date-fns&#x27;;
+import { es } from &#x27;date-fns/locale&#x27;;
+import { Car } from &#x27;../../../../core/models&#x27;;
+import { AuthService } from &#x27;../../../../core/services/auth.service&#x27;;
+import {
+  CarAvailabilityService,
+  DetailedBlockedRange,
+} from &#x27;../../../../core/services/car-availability.service&#x27;;
+import { CarBlockingService } from &#x27;../../../../core/services/car-blocking.service&#x27;;
+import { CarsService } from &#x27;../../../../core/services/cars.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../../core/services/notification-manager.service&#x27;;
+import { SupabaseClientService } from &#x27;../../../../core/services/supabase-client.service&#x27;;
+import {
+  BlockDateModalComponent,
+  BlockDateRequest,
+} from &#x27;../../../../shared/components/block-date-modal/block-date-modal.component&#x27;;
+
+interface CarCalendarData {
+  carId: string;
+  carTitle: string;
+  imageUrl?: string;
+  blockedRanges: DetailedBlockedRange[];
+  selected: boolean;
+  loading: boolean;
+}
+
+@Component({
+  selector: &#x27;app-multi-car-calendar&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, BlockDateModalComponent],
+  templateUrl: &#x27;./multi-car-calendar.component.html&#x27;,
+  styleUrls: [&#x27;./multi-car-calendar.component.css&#x27;],
+})
+export class MultiCarCalendarComponent implements OnInit {
+  private readonly router &#x3D; inject(Router);
+  private readonly carsService &#x3D; inject(CarsService);
+  private readonly availabilityService &#x3D; inject(CarAvailabilityService);
+  private readonly blockingService &#x3D; inject(CarBlockingService);
+  private readonly toastService &#x3D; inject(NotificationManagerService);
+  private readonly authService &#x3D; inject(AuthService);
+  private readonly supabase &#x3D; inject(SupabaseClientService).getClient();
+
+  readonly cars &#x3D; signal&lt;CarCalendarData[]&gt;([]);
+  readonly loading &#x3D; signal(true);
+  readonly currentMonth &#x3D; signal(new Date());
+  readonly showBlockModal &#x3D; signal(false);
+
+  readonly monthDays &#x3D; computed(() &#x3D;&gt; {
+    const month &#x3D; this.currentMonth();
+    return eachDayOfInterval({
+      start: startOfMonth(month),
+      end: endOfMonth(month),
+    });
+  });
+
+  readonly monthName &#x3D; computed(() &#x3D;&gt; {
+    return format(this.currentMonth(), &#x27;MMMM yyyy&#x27;, { locale: es });
+  });
+
+  readonly selectedCars &#x3D; computed(() &#x3D;&gt; {
+    return this.cars().filter((car) &#x3D;&gt; car.selected);
+  });
+
+  readonly stats &#x3D; computed(() &#x3D;&gt; {
+    const allCars &#x3D; this.cars();
+    const total &#x3D; allCars.length;
+    const withBookings &#x3D; allCars.filter((car) &#x3D;&gt;
+      car.blockedRanges.some((r) &#x3D;&gt; r.type &#x3D;&#x3D;&#x3D; &#x27;booking&#x27;),
+    ).length;
+    const withBlocks &#x3D; allCars.filter((car) &#x3D;&gt;
+      car.blockedRanges.some((r) &#x3D;&gt; r.type &#x3D;&#x3D;&#x3D; &#x27;manual_block&#x27;),
+    ).length;
+
+    return {
+      total,
+      withBookings,
+      withBlocks,
+      fullyAvailable: total - withBookings - withBlocks,
+    };
+  });
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    await this.loadOwnerCars();
+  }
+
+  private async loadOwnerCars(): Promise&lt;void&gt; {
+    this.loading.set(true);
+
+    try {
+      // Get owner&#x27;s active cars
+      const user &#x3D; await this.authService.getCurrentUser();
+      if (!user) {
+        throw new Error(&#x27;Usuario no autenticado&#x27;);
+      }
+      const ownerCars &#x3D; await this.carsService.getCarsByOwner(user.id);
+      const activeCars &#x3D; ownerCars.filter((car: Car) &#x3D;&gt; car.status &#x3D;&#x3D;&#x3D; &#x27;active&#x27;);
+
+      if (activeCars.length &#x3D;&#x3D;&#x3D; 0) {
+        this.toastService.info(&#x27;Sin autos&#x27;, &#x27;No tienes autos activos para mostrar&#x27;);
+        this.loading.set(false);
+        return;
+      }
+
+      // Initialize car calendar data
+      const carData: CarCalendarData[] &#x3D; activeCars.map((car: Car) &#x3D;&gt; {
+        // ✅ FIX: Use photos array instead of thumbnail_url/image_urls
+        const firstPhoto &#x3D; car.photos?.[0] || car.car_photos?.[0];
+        const imageUrl &#x3D; firstPhoto?.url || null;
+
+        return {
+          carId: car.id,
+          carTitle:
+            &#x60;${car.brand_text_backup || car.brand || &#x27;&#x27;} ${car.model_text_backup || car.model || &#x27;&#x27;} (${car.year})&#x60;.trim(),
+          imageUrl: imageUrl ?? undefined,
+          blockedRanges: [],
+          selected: false,
+          loading: true,
+        };
+      });
+
+      this.cars.set(carData);
+
+      // Load blocked dates for each car
+      await this.loadAllCalendarData();
+    } catch (error) {
+      console.error(&#x27;Error loading owner cars:&#x27;, error);
+      this.toastService.error(&#x27;Error&#x27;, &#x27;No se pudieron cargar tus autos&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  private async loadAllCalendarData(): Promise&lt;void&gt; {
+    const cars &#x3D; this.cars();
+    const startDate &#x3D; format(startOfMonth(this.currentMonth()), &#x27;yyyy-MM-dd&#x27;);
+    const endDate &#x3D; format(endOfMonth(addMonths(this.currentMonth(), 2)), &#x27;yyyy-MM-dd&#x27;);
+
+    // Load in parallel
+    await Promise.all(
+      cars.map(async (car) &#x3D;&gt; {
+        try {
+          const ranges &#x3D; await this.availabilityService.getBlockedRangesWithDetails(
+            car.carId,
+            startDate,
+            endDate,
+          );
+
+          this.updateCarData(car.carId, { blockedRanges: ranges, loading: false });
+        } catch (error) {
+          console.error(&#x60;Error loading calendar for car ${car.carId}:&#x60;, error);
+          this.updateCarData(car.carId, { loading: false });
+        }
+      }),
+    );
+  }
+
+  private updateCarData(carId: string, updates: Partial&lt;CarCalendarData&gt;): void {
+    const currentCars &#x3D; this.cars();
+    const updatedCars &#x3D; currentCars.map((car) &#x3D;&gt;
+      car.carId &#x3D;&#x3D;&#x3D; carId ? { ...car, ...updates } : car,
+    );
+
+    this.cars.set(updatedCars);
+  }
+
+  toggleCarSelection(carId: string): void {
+    const currentCars &#x3D; this.cars();
+    const updatedCars &#x3D; currentCars.map((car) &#x3D;&gt;
+      car.carId &#x3D;&#x3D;&#x3D; carId ? { ...car, selected: !car.selected } : car,
+    );
+
+    this.cars.set(updatedCars);
+  }
+
+  selectAllCars(): void {
+    const updatedCars &#x3D; this.cars().map((car) &#x3D;&gt; ({ ...car, selected: true }));
+    this.cars.set(updatedCars);
+  }
+
+  deselectAllCars(): void {
+    const updatedCars &#x3D; this.cars().map((car) &#x3D;&gt; ({ ...car, selected: false }));
+    this.cars.set(updatedCars);
+  }
+
+  async handleBulkBlockDates(request: BlockDateRequest): Promise&lt;void&gt; {
+    const selectedCars &#x3D; this.selectedCars();
+
+    if (selectedCars.length &#x3D;&#x3D;&#x3D; 0) {
+      this.toastService.error(&#x27;Error&#x27;, &#x27;Selecciona al menos un auto&#x27;);
+      return;
+    }
+
+    this.showBlockModal.set(false);
+    this.loading.set(true);
+
+    try {
+      const carIds &#x3D; selectedCars.map((car) &#x3D;&gt; car.carId);
+
+      const result &#x3D; await this.blockingService.bulkBlockDates(
+        carIds,
+        request.startDate,
+        request.endDate,
+        request.reason,
+        request.notes,
+      );
+
+      if (result.success &gt; 0) {
+        this.toastService.success(
+          &#x27;Éxito&#x27;,
+          &#x60;Fechas bloqueadas en ${result.success} auto(s)${result.failed &gt; 0 ? &#x60;, ${result.failed} falló(s)&#x60; : &#x27;&#x27;}&#x60;,
+        );
+        await this.loadAllCalendarData();
+      } else {
+        this.toastService.error(
+          &#x27;Error&#x27;,
+          &#x60;No se pudieron bloquear las fechas: ${result.errors.join(&#x27;, &#x27;)}&#x60;,
+        );
+      }
+    } catch (error) {
+      console.error(&#x27;Error bulk blocking dates:&#x27;, error);
+      this.toastService.error(&#x27;Error&#x27;, &#x27;Ocurrió un error al bloquear las fechas&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  previousMonth(): void {
+    this.currentMonth.set(
+      new Date(this.currentMonth().getFullYear(), this.currentMonth().getMonth() - 1, 1),
+    );
+    void this.loadAllCalendarData();
+  }
+
+  nextMonth(): void {
+    this.currentMonth.set(
+      new Date(this.currentMonth().getFullYear(), this.currentMonth().getMonth() + 1, 1),
+    );
+    void this.loadAllCalendarData();
+  }
+
+  goToToday(): void {
+    this.currentMonth.set(new Date());
+    void this.loadAllCalendarData();
+  }
+
+  getDayStatus(car: CarCalendarData, day: Date): &#x27;available&#x27; | &#x27;booked&#x27; | &#x27;blocked&#x27; | &#x27;past&#x27; {
+    const today &#x3D; new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (day &lt; today) {
+      return &#x27;past&#x27;;
+    }
+
+    const dayStr &#x3D; format(day, &#x27;yyyy-MM-dd&#x27;);
+
+    const hasBooking &#x3D; car.blockedRanges.some(
+      (range) &#x3D;&gt; range.type &#x3D;&#x3D;&#x3D; &#x27;booking&#x27; &amp;&amp; dayStr &gt;&#x3D; range.from &amp;&amp; dayStr &lt;&#x3D; range.to,
+    );
+
+    if (hasBooking) {
+      return &#x27;booked&#x27;;
+    }
+
+    const hasBlock &#x3D; car.blockedRanges.some(
+      (range) &#x3D;&gt; range.type &#x3D;&#x3D;&#x3D; &#x27;manual_block&#x27; &amp;&amp; dayStr &gt;&#x3D; range.from &amp;&amp; dayStr &lt;&#x3D; range.to,
+    );
+
+    if (hasBlock) {
+      return &#x27;blocked&#x27;;
+    }
+
+    return &#x27;available&#x27;;
+  }
+
+  // Helper methods for template
+  getBookingsCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) &#x3D;&gt; r.type &#x3D;&#x3D;&#x3D; &#x27;booking&#x27;).length;
+  }
+
+  getManualBlocksCount(car: CarCalendarData): number {
+    return car.blockedRanges.filter((r) &#x3D;&gt; r.type &#x3D;&#x3D;&#x3D; &#x27;manual_block&#x27;).length;
+  }
+
+  goToCarCalendar(carId: string): void {
+    void this.router.navigate([&#x27;/cars&#x27;, carId, &#x27;availability&#x27;]);
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'CarCalendarData.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

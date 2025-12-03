@@ -1,0 +1,651 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  MapboxFeature</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/geocoding.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#center" 
+>
+                                            center
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#place_name" 
+>
+                                            place_name
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#text" 
+>
+                                            text
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="center"></a>
+                                        <span class="name "><b>center</b>
+                                            <a href="#center">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>center:     <code>[number, number]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>[number, number]</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="place_name"></a>
+                                        <span class="name "><b>place_name</b>
+                                            <a href="#place_name">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>place_name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="text"></a>
+                                        <span class="name "><b>text</b>
+                                            <a href="#text">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>text:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { environment } from &#x27;../../../environments/environment&#x27;;
+
+interface MapboxFeature {
+  center: [number, number];
+  place_name: string;
+  text: string;
+}
+
+export interface GeocodingResult {
+  latitude: number;
+  longitude: number;
+  fullAddress: string;
+  placeName: string;
+}
+
+export interface ReverseGeocodingResult {
+  street?: string;
+  streetNumber?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  countryCode?: string;
+  fullAddress: string;
+  postalCode?: string;
+}
+
+interface MapboxContextItem {
+  id: string;
+  text: string;
+  short_code?: string;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class GeocodingService {
+  private readonly MAPBOX_BASE_URL &#x3D; &#x27;https://api.mapbox.com/geocoding/v5/mapbox.places&#x27;;
+
+  constructor() {}
+
+  /**
+   * Geocode an address string to latitude/longitude coordinates using Mapbox API
+   * @param address Full address string (e.g., &quot;Av. 18 de Julio 1234, Montevideo, Uruguay&quot;)
+   * @param countryCode Optional ISO 3166-1 alpha-2 country code to bias results (e.g., &#x27;AR&#x27;, &#x27;UY&#x27;)
+   * @returns Promise with geocoding result containing lat/lng
+   */
+  async geocodeAddress(address: string, countryCode?: string): Promise&lt;GeocodingResult&gt; {
+    if (!address || address.trim().length &#x3D;&#x3D;&#x3D; 0) {
+      throw new Error(&#x27;Address is required&#x27;);
+    }
+
+    const encodedAddress &#x3D; encodeURIComponent(address);
+
+    // Build URL with Mapbox best practices
+    let url &#x3D; &#x60;${this.MAPBOX_BASE_URL}/${encodedAddress}.json?access_token&#x3D;${environment.mapboxAccessToken}&amp;limit&#x3D;1&#x60;;
+
+    // Add country parameter to limit results (Mapbox best practice)
+    if (countryCode) {
+      url +&#x3D; &#x60;&amp;country&#x3D;${countryCode.toUpperCase()}&#x60;;
+    }
+
+    // Add language parameter for Spanish results
+    url +&#x3D; &#x27;&amp;language&#x3D;es&#x27;;
+
+    try {
+      const response &#x3D; await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(&#x60;Mapbox API error: ${response.status} ${response.statusText}&#x60;);
+      }
+
+      const data &#x3D; await response.json();
+
+      if (!data.features || data.features.length &#x3D;&#x3D;&#x3D; 0) {
+        throw new Error(&#x27;No se encontraron resultados para la dirección proporcionada&#x27;);
+      }
+
+      const feature &#x3D; data.features[0];
+      const [longitude, latitude] &#x3D; feature.center; // Mapbox returns [lng, lat]
+
+      return {
+        latitude,
+        longitude,
+        fullAddress: feature.place_name,
+        placeName: feature.text,
+      };
+    } catch (_error) {
+      if (_error instanceof Error) {
+        throw _error;
+      }
+
+      throw new Error(&#x27;Error al geocodificar la dirección. Por favor intenta nuevamente.&#x27;);
+    }
+  }
+
+  /**
+   * Geocode a structured address to coordinates
+   * Following Mapbox best practices: pass country as parameter, not in search text
+   * @param street Street name
+   * @param streetNumber Street number
+   * @param city City name
+   * @param state State/Province
+   * @param country Country code (ISO 3166-1 alpha-2: &#x27;AR&#x27;, &#x27;UY&#x27;, &#x27;BR&#x27;, etc.)
+   * @returns Promise with geocoding result
+   */
+  async geocodeStructuredAddress(
+    street: string,
+    streetNumber: string,
+    city: string,
+    state: string,
+    country: string,
+  ): Promise&lt;GeocodingResult&gt; {
+    // Build address string WITHOUT country (Mapbox best practice)
+    // Format: {street number} {street}, {city}
+    const addressParts: string[] &#x3D; [];
+
+    if (streetNumber &amp;&amp; streetNumber.trim()) {
+      addressParts.push(streetNumber.trim());
+    }
+
+    if (street &amp;&amp; street.trim()) {
+      addressParts.push(street.trim());
+    }
+
+    if (city &amp;&amp; city.trim()) {
+      addressParts.push(city.trim());
+    }
+
+    const fullAddress &#x3D; addressParts.join(&#x27; &#x27;);
+
+    // Pass country as separate parameter for better accuracy
+    return this.geocodeAddress(fullAddress, country);
+  }
+
+  /**
+   * Get fallback coordinates for a city when exact address geocoding fails
+   * Useful for handling geocoding errors gracefully
+   * @param city City name
+   * @param country Country code (ISO 3166-1 alpha-2: &#x27;AR&#x27;, &#x27;UY&#x27;, &#x27;BR&#x27;, etc.)
+   * @returns Promise with geocoding result
+   */
+  async getCityCoordinates(city: string, country: string): Promise&lt;GeocodingResult&gt; {
+    // Pass country as parameter, not in search text (Mapbox best practice)
+    return this.geocodeAddress(city, country);
+  }
+
+  /**
+   * Reverse geocode coordinates to address using Mapbox API
+   * @param latitude Latitude coordinate
+   * @param longitude Longitude coordinate
+   * @returns Promise with reverse geocoding result containing address components
+   */
+  /**
+   * Get autocomplete suggestions for a location query
+   * Returns multiple results for autocomplete dropdowns
+   * @param query Search query (e.g., &quot;Buenos Aires&quot;, &quot;Córdoba&quot;)
+   * @param countryCode Optional ISO 3166-1 alpha-2 country code to bias results (e.g., &#x27;AR&#x27;, &#x27;UY&#x27;)
+   * @param limit Maximum number of results to return (default: 5)
+   * @returns Promise with array of geocoding results
+   */
+  async getLocationSuggestions(
+    query: string,
+    countryCode?: string,
+    limit: number &#x3D; 5,
+  ): Promise&lt;GeocodingResult[]&gt; {
+    if (!query || query.trim().length &lt; 2) {
+      return [];
+    }
+
+    const encodedQuery &#x3D; encodeURIComponent(query.trim());
+
+    // Build URL with Mapbox autocomplete endpoint
+    let url &#x3D; &#x60;${this.MAPBOX_BASE_URL}/${encodedQuery}.json?access_token&#x3D;${environment.mapboxAccessToken}&amp;limit&#x3D;${limit}&amp;language&#x3D;es&#x60;;
+
+    // Add country parameter to limit results
+    if (countryCode) {
+      url +&#x3D; &#x60;&amp;country&#x3D;${countryCode.toUpperCase()}&#x60;;
+    }
+
+    // Filter to show mainly places (cities) and addresses
+    url +&#x3D; &#x27;&amp;types&#x3D;place,locality,neighborhood,address&#x27;;
+
+    try {
+      const response &#x3D; await fetch(url);
+
+      if (!response.ok) {
+        console.warn(&#x60;Mapbox API error: ${response.status}&#x60;);
+        return [];
+      }
+
+      const data &#x3D; await response.json();
+
+      if (!data.features || data.features.length &#x3D;&#x3D;&#x3D; 0) {
+        return [];
+      }
+
+      // Map features to GeocodingResult array
+      return data.features.map((feature: MapboxFeature) &#x3D;&gt; {
+        const [longitude, latitude] &#x3D; feature.center;
+        return {
+          latitude,
+          longitude,
+          fullAddress: feature.place_name,
+          placeName: feature.text,
+        };
+      });
+    } catch (error) {
+      console.warn(&#x27;Error getting location suggestions:&#x27;, error);
+      return [];
+    }
+  }
+
+  async reverseGeocode(latitude: number, longitude: number): Promise&lt;ReverseGeocodingResult&gt; {
+    // Mapbox reverse geocoding: {longitude},{latitude}.json
+    const url &#x3D; &#x60;${this.MAPBOX_BASE_URL}/${longitude},${latitude}.json?access_token&#x3D;${environment.mapboxAccessToken}&amp;language&#x3D;es&amp;types&#x3D;address,place&#x60;;
+
+    try {
+      const response &#x3D; await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(&#x60;Mapbox API error: ${response.status} ${response.statusText}&#x60;);
+      }
+
+      const data &#x3D; await response.json();
+
+      if (!data.features || data.features.length &#x3D;&#x3D;&#x3D; 0) {
+        throw new Error(&#x27;No se encontró dirección para estas coordenadas&#x27;);
+      }
+
+      const feature &#x3D; data.features[0];
+      const context &#x3D; feature.context || [];
+
+      // Parse address components from Mapbox response
+      const result: ReverseGeocodingResult &#x3D; {
+        fullAddress: feature.place_name,
+      };
+
+      // Extract street number from address (if available)
+      if (feature.address) {
+        result.streetNumber &#x3D; feature.address;
+      }
+
+      // Extract street name
+      if (feature.text) {
+        result.street &#x3D; feature.text;
+      }
+
+      // Parse context array for city, state, country, postal code
+      context.forEach((item: MapboxContextItem) &#x3D;&gt; {
+        const id &#x3D; item.id || &#x27;&#x27;;
+
+        if (id.startsWith(&#x27;place.&#x27;)) {
+          result.city &#x3D; item.text;
+        } else if (id.startsWith(&#x27;region.&#x27;)) {
+          result.state &#x3D; item.text;
+        } else if (id.startsWith(&#x27;country.&#x27;)) {
+          result.country &#x3D; item.text;
+          result.countryCode &#x3D; item.short_code?.toUpperCase();
+        } else if (id.startsWith(&#x27;postcode.&#x27;)) {
+          result.postalCode &#x3D; item.text;
+        }
+      });
+
+      return result;
+    } catch (_error) {
+      if (_error instanceof Error) {
+        throw _error;
+      }
+
+      throw new Error(
+        &#x27;Error al obtener la dirección desde las coordenadas. Por favor intenta nuevamente.&#x27;,
+      );
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'MapboxFeature.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

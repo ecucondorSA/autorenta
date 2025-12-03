@@ -1,0 +1,763 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  NetworkInformation</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/performance-monitoring.service.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code>EventTarget</code>
+            </p>
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#downlink" 
+>
+                                            downlink
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#effectiveType" 
+>
+                                            effectiveType
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#onchange" 
+>
+                                            onchange
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#rtt" 
+>
+                                            rtt
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#saveData" 
+>
+                                            saveData
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="downlink"></a>
+                                        <span class="name "><b>downlink</b>
+                                            <a href="#downlink">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>downlink:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="effectiveType"></a>
+                                        <span class="name "><b>effectiveType</b>
+                                            <a href="#effectiveType">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>effectiveType:     <code>&quot;slow-2g&quot; | &quot;2g&quot; | &quot;3g&quot; | &quot;4g&quot;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;slow-2g&quot; | &quot;2g&quot; | &quot;3g&quot; | &quot;4g&quot;</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="onchange"></a>
+                                        <span class="name "><b>onchange</b>
+                                            <a href="#onchange">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>onchange:     <code>unknown | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>unknown | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="rtt"></a>
+                                        <span class="name "><b>rtt</b>
+                                            <a href="#rtt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>rtt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="saveData"></a>
+                                        <span class="name "><b>saveData</b>
+                                            <a href="#saveData">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>saveData:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import * as Sentry from &#x27;@sentry/angular&#x27;;
+import { environment } from &#x27;../../../environments/environment&#x27;;
+
+type LargestContentfulPaintEntry &#x3D; PerformanceEntry &amp; {
+  renderTime?: number;
+  loadTime?: number;
+};
+
+type FirstInputDelayEntry &#x3D; PerformanceEntry &amp; {
+  processingStart: number;
+  startTime: number;
+};
+
+type LayoutShiftEntry &#x3D; PerformanceEntry &amp; {
+  value: number;
+  hadRecentInput: boolean;
+};
+
+type PerformanceWithMemory &#x3D; Performance &amp; {
+  memory?: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+};
+
+// Network Information API types (not in standard lib)
+interface NetworkInformation extends EventTarget {
+  readonly effectiveType: &#x27;slow-2g&#x27; | &#x27;2g&#x27; | &#x27;3g&#x27; | &#x27;4g&#x27;;
+  readonly downlink: number;
+  readonly rtt: number;
+  readonly saveData: boolean;
+  onchange: ((this: NetworkInformation, ev: Event) &#x3D;&gt; unknown) | null;
+}
+
+type NavigatorWithOptionalConnection &#x3D; Navigator &amp; {
+  connection?: NetworkInformation;
+};
+
+/**
+ * 📊 Performance Monitoring Service
+ *
+ * Monitorea métricas clave de performance en móvil:
+ * - FPS (Frames per second)
+ * - Memory usage
+ * - Load times
+ * - Core Web Vitals
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class PerformanceMonitoringService {
+  private fpsCounter &#x3D; 0;
+  private lastFrameTime &#x3D; performance.now();
+
+  constructor() {
+    if (typeof window !&#x3D;&#x3D; &#x27;undefined&#x27;) {
+      this.initMonitoring();
+    }
+  }
+
+  /**
+   * Inicializa el monitoreo de performance
+   */
+  private initMonitoring(): void {
+    // Monitorear FPS
+    this.monitorFPS();
+
+    // Monitorear Core Web Vitals
+    this.monitorWebVitals();
+
+    // Log inicial de device info
+    this.logDeviceInfo();
+  }
+
+  /**
+   * Monitorea FPS en tiempo real
+   */
+  private monitorFPS(): void {
+    const measureFPS &#x3D; (currentTime: number) &#x3D;&gt; {
+      const delta &#x3D; currentTime - this.lastFrameTime;
+      const fps &#x3D; Math.round(1000 / delta);
+
+      this.lastFrameTime &#x3D; currentTime;
+      this.fpsCounter++;
+
+      // Log cada 60 frames (aprox 1 segundo a 60fps)
+      if (this.fpsCounter &gt;&#x3D; 60) {
+        if (fps &lt; 50) {
+          console.warn(&#x60;⚠️ Low FPS detected: ${fps}fps&#x60;);
+        }
+        this.fpsCounter &#x3D; 0;
+      }
+
+      requestAnimationFrame(measureFPS);
+    };
+
+    requestAnimationFrame(measureFPS);
+  }
+
+  /**
+   * Monitorea Core Web Vitals
+   */
+  private monitorWebVitals(): void {
+    // LCP (Largest Contentful Paint)
+    if (&#x27;PerformanceObserver&#x27; in window) {
+      try {
+        const lcpObserver &#x3D; new PerformanceObserver((list) &#x3D;&gt; {
+          const entries &#x3D; list.getEntries() as LargestContentfulPaintEntry[];
+          const lastEntry &#x3D; entries[entries.length - 1];
+
+          const lcp &#x3D; lastEntry?.renderTime ?? lastEntry?.loadTime ?? 0;
+          console.log(&#x60;📊 LCP: ${lcp.toFixed(2)}ms&#x60;);
+
+          // Send to Sentry as measurement
+          if (environment.sentryDsn) {
+            Sentry.getCurrentScope().setContext(&#x27;performance&#x27;, {
+              lcp: lcp,
+            });
+          }
+
+          if (lcp &gt; 2500) {
+            console.warn(&#x60;⚠️ LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s&#x60;);
+
+            // Send warning to Sentry
+            if (environment.sentryDsn &amp;&amp; environment.production) {
+              Sentry.captureMessage(&#x60;Poor LCP: ${(lcp / 1000).toFixed(2)}s&#x60;, {
+                level: &#x27;warning&#x27;,
+                tags: { metric: &#x27;lcp&#x27; },
+              });
+            }
+          }
+        });
+
+        lcpObserver.observe({ entryTypes: [&#x27;largest-contentful-paint&#x27;] });
+      } catch {
+        // Browser doesn&#x27;t support LCP
+      }
+
+      // FID (First Input Delay)
+      try {
+        const fidObserver &#x3D; new PerformanceObserver((list) &#x3D;&gt; {
+          list.getEntries().forEach((entry) &#x3D;&gt; {
+            const fidEntry &#x3D; entry as FirstInputDelayEntry;
+            const fid &#x3D; fidEntry.processingStart - fidEntry.startTime;
+            console.log(&#x60;📊 FID: ${fid.toFixed(2)}ms&#x60;);
+
+            // Send to Sentry as measurement
+            if (environment.sentryDsn) {
+              Sentry.getCurrentScope().setContext(&#x27;performance&#x27;, {
+                fid: fid,
+              });
+            }
+
+            if (fid &gt; 100) {
+              console.warn(&#x60;⚠️ FID is above target (100ms): ${fid.toFixed(2)}ms&#x60;);
+
+              // Send warning to Sentry
+              if (environment.sentryDsn &amp;&amp; environment.production) {
+                Sentry.captureMessage(&#x60;Poor FID: ${fid.toFixed(2)}ms&#x60;, {
+                  level: &#x27;warning&#x27;,
+                  tags: { metric: &#x27;fid&#x27; },
+                });
+              }
+            }
+          });
+        });
+
+        fidObserver.observe({ entryTypes: [&#x27;first-input&#x27;] });
+      } catch {
+        // Browser doesn&#x27;t support FID
+      }
+
+      // CLS (Cumulative Layout Shift)
+      try {
+        let clsScore &#x3D; 0;
+        const clsObserver &#x3D; new PerformanceObserver((list) &#x3D;&gt; {
+          list.getEntries().forEach((entry) &#x3D;&gt; {
+            const clsEntry &#x3D; entry as LayoutShiftEntry;
+            if (!clsEntry.hadRecentInput) {
+              clsScore +&#x3D; clsEntry.value;
+              console.log(&#x60;📊 CLS: ${clsScore.toFixed(4)}&#x60;);
+
+              // Send to Sentry as measurement
+              if (environment.sentryDsn) {
+                Sentry.getCurrentScope().setContext(&#x27;performance&#x27;, {
+                  cls: clsScore,
+                });
+              }
+
+              if (clsScore &gt; 0.1) {
+                console.warn(&#x60;⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}&#x60;);
+
+                // Send warning to Sentry
+                if (environment.sentryDsn &amp;&amp; environment.production) {
+                  Sentry.captureMessage(&#x60;Poor CLS: ${clsScore.toFixed(4)}&#x60;, {
+                    level: &#x27;warning&#x27;,
+                    tags: { metric: &#x27;cls&#x27; },
+                  });
+                }
+              }
+            }
+          });
+        });
+
+        clsObserver.observe({ entryTypes: [&#x27;layout-shift&#x27;] });
+      } catch {
+        // Browser doesn&#x27;t support CLS
+      }
+    }
+  }
+
+  /**
+   * Log información del dispositivo
+   */
+  private logDeviceInfo(): void {
+    const performanceMemory &#x3D; (performance as PerformanceWithMemory).memory;
+    const networkConnection &#x3D; (navigator as NavigatorWithOptionalConnection).connection;
+
+    const info &#x3D; {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      memory: performanceMemory
+        ? {
+            used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + &#x27; MB&#x27;,
+            total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + &#x27; MB&#x27;,
+            limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + &#x27; MB&#x27;,
+          }
+        : &#x27;Not available&#x27;,
+      connection: networkConnection
+        ? {
+            effectiveType: networkConnection.effectiveType,
+            downlink: &#x60;${networkConnection.downlink} Mbps&#x60;,
+            rtt: &#x60;${networkConnection.rtt} ms&#x60;,
+          }
+        : &#x27;Not available&#x27;,
+      screen: {
+        width: window.screen.width,
+        height: window.screen.height,
+        pixelRatio: window.devicePixelRatio,
+      },
+    };
+
+    console.log(&#x27;📱 Device Info:&#x27;, info);
+  }
+
+  /**
+   * Mide el tiempo de una operación
+   */
+  measureOperation(name: string, operation: () &#x3D;&gt; void | Promise&lt;void&gt;): void {
+    const start &#x3D; performance.now();
+
+    const finish &#x3D; () &#x3D;&gt; {
+      const duration &#x3D; performance.now() - start;
+      console.log(&#x60;⏱️ ${name}: ${duration.toFixed(2)}ms&#x60;);
+
+      // Send to Sentry as measurement
+      if (environment.sentryDsn) {
+        Sentry.getCurrentScope().setContext(&#x27;performance&#x27;, {
+          [name.toLowerCase().replace(/\s+/g, &#x27;_&#x27;)]: duration,
+        });
+      }
+
+      if (duration &gt; 100) {
+        console.warn(&#x60;⚠️ Slow operation detected: ${name} took ${duration.toFixed(2)}ms&#x60;);
+
+        // Send warning to Sentry
+        if (environment.sentryDsn &amp;&amp; environment.production) {
+          Sentry.captureMessage(&#x60;Slow operation: ${name} took ${duration.toFixed(2)}ms&#x60;, {
+            level: &#x27;warning&#x27;,
+            tags: {
+              metric: &#x27;operation_duration&#x27;,
+              operation: name,
+            },
+          });
+        }
+      }
+    };
+
+    const result &#x3D; operation();
+
+    if (result instanceof Promise) {
+      result.then(finish).catch(finish);
+    } else {
+      finish();
+    }
+  }
+
+  /**
+   * Obtiene el uso actual de memoria (si está disponible)
+   */
+  getMemoryUsage(): { used: string; total: string; limit: string } | null {
+    const perfWithMemory &#x3D; performance as PerformanceWithMemory;
+    if (perfWithMemory.memory) {
+      return {
+        used: (perfWithMemory.memory.usedJSHeapSize / 1048576).toFixed(2) + &#x27; MB&#x27;,
+        total: (perfWithMemory.memory.totalJSHeapSize / 1048576).toFixed(2) + &#x27; MB&#x27;,
+        limit: (perfWithMemory.memory.jsHeapSizeLimit / 1048576).toFixed(2) + &#x27; MB&#x27;,
+      };
+    }
+    return null;
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'NetworkInformation.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -35,6 +35,8 @@ import { BookingOpsTimelineComponent } from '../../../shared/components/booking-
 import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
 import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
 import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
+import { SettlementSimulatorComponent } from '../../../shared/components/settlement-simulator/settlement-simulator.component';
+import { DamageComparisonComponent } from '../../../shared/components/damage-comparison/damage-comparison.component';
 import {
   BookingCancellationRow,
   BookingConfirmationRow,
@@ -83,6 +85,8 @@ import { ReviewManagementComponent } from './review-management.component';
     BookingTrackingComponent,
     BookingPricingBreakdownComponent,
     BookingInsuranceSummaryComponent,
+    SettlementSimulatorComponent,
+    DamageComparisonComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',

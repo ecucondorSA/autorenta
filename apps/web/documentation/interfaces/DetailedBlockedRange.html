@@ -1,0 +1,947 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  DetailedBlockedRange</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/car-availability.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#block_id" 
+>
+                                            block_id
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#from" 
+>
+                                            from
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#notes" 
+>
+                                            notes
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#reason" 
+>
+                                            reason
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#to" 
+>
+                                            to
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#type" 
+>
+                                            type
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="block_id"></a>
+                                        <span class="name "><b>block_id</b>
+                                            <a href="#block_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>block_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="from"></a>
+                                        <span class="name "><b>from</b>
+                                            <a href="#from">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>from:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="notes"></a>
+                                        <span class="name "><b>notes</b>
+                                            <a href="#notes">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>notes:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="reason"></a>
+                                        <span class="name "><b>reason</b>
+                                            <a href="#reason">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>reason:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="to"></a>
+                                        <span class="name "><b>to</b>
+                                            <a href="#to">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>to:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="type"></a>
+                                        <span class="name "><b>type</b>
+                                            <a href="#type">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>type:     <code>&quot;booking&quot; | &quot;blackout&quot; | &quot;manual_block&quot;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;booking&quot; | &quot;blackout&quot; | &quot;manual_block&quot;</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import type { Car } from &#x27;../models&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+export interface CarBlackout {
+  starts_at: string;
+  ends_at: string;
+  reason: string | null;
+}
+
+export interface CarHandoverPoint {
+  id: string;
+  kind: string;
+  lat: number;
+  lng: number;
+  radius_m: number | null;
+}
+
+export interface DetailedBlockedRange {
+  from: string; // YYYY-MM-DD
+  to: string; // YYYY-MM-DD
+  type: &#x27;booking&#x27; | &#x27;blackout&#x27; | &#x27;manual_block&#x27;;
+  reason?: string | null;
+  notes?: string | null;
+  block_id?: string;
+}
+
+export interface AvailabilityRange {
+  from: string;
+  to: string;
+}
+
+@Injectable({ providedIn: &#x27;root&#x27; })
+export class CarAvailabilityService {
+  private readonly supabase &#x3D; inject(SupabaseClientService).getClient();
+
+  async getBlackouts(carId: string): Promise&lt;CarBlackout[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;car_blackouts&#x27;)
+      .select(&#x27;starts_at, ends_at, reason&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .order(&#x27;starts_at&#x27;, { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data || []) as CarBlackout[];
+  }
+
+  async getHandoverPoints(carId: string): Promise&lt;CarHandoverPoint[]&gt; {
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;car_handover_points&#x27;)
+      .select(&#x27;id, kind, lat, lng, radius_m&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .order(&#x27;created_at&#x27;, { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return (data || []) as CarHandoverPoint[];
+  }
+
+  async getBlockedRangesWithDetails(
+    carId: string,
+    fromDate: string,
+    toDate: string,
+  ): Promise&lt;DetailedBlockedRange[]&gt; {
+    type ManualBlockRow &#x3D; {
+      id: string;
+      blocked_from: string;
+      blocked_to: string;
+      reason: string;
+      notes?: string | null;
+    };
+
+    // Execute all queries in parallel for better performance
+    // Overlap logic: range1 overlaps range2 when start1 &lt;&#x3D; end2 AND end1 &gt;&#x3D; start2
+    const [bookingsResult, blackoutsResult, manualBlocksResult] &#x3D; await Promise.all([
+      this.supabase
+        .from(&#x27;bookings&#x27;)
+        .select(&#x27;start_at, end_at&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .in(&#x27;status&#x27;, [&#x27;confirmed&#x27;, &#x27;active&#x27;])
+        .lte(&#x27;start_at&#x27;, toDate)
+        .gte(&#x27;end_at&#x27;, fromDate),
+      this.supabase
+        .from(&#x27;car_blackouts&#x27;)
+        .select(&#x27;starts_at, ends_at, reason&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .lte(&#x27;starts_at&#x27;, toDate)
+        .gte(&#x27;ends_at&#x27;, fromDate),
+      this.supabase
+        .from(&#x27;car_blocked_dates&#x27;)
+        .select(&#x27;id, blocked_from, blocked_to, reason, notes&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .lte(&#x27;blocked_from&#x27;, toDate)
+        .gte(&#x27;blocked_to&#x27;, fromDate),
+    ]);
+
+    const bookings &#x3D; bookingsResult.data;
+    const blackouts &#x3D; blackoutsResult.data;
+    const manualRows &#x3D; (manualBlocksResult.data || []) as ManualBlockRow[];
+
+    const ranges: DetailedBlockedRange[] &#x3D; [];
+
+    if (bookings) {
+      ranges.push(
+        ...bookings.map((b) &#x3D;&gt; ({
+          from: this.toDateString(b.start_at),
+          to: this.toDateString(b.end_at),
+          type: &#x27;booking&#x27; as const,
+          reason: &#x27;Reserva&#x27;,
+        })),
+      );
+    }
+
+    if (blackouts) {
+      ranges.push(
+        ...blackouts.map((b) &#x3D;&gt; ({
+          from: this.toDateString(b.starts_at),
+          to: this.toDateString(b.ends_at),
+          type: &#x27;blackout&#x27; as const,
+          reason: b.reason,
+        })),
+      );
+    }
+
+    if (manualRows.length) {
+      ranges.push(
+        ...manualRows.map(
+          (b) &#x3D;&gt;
+            ({
+              from: b.blocked_from,
+              to: b.blocked_to,
+              type: &#x27;manual_block&#x27; as const,
+              reason: b.reason,
+              notes: b.notes || null,
+              block_id: b.id,
+            }) as DetailedBlockedRange,
+        ),
+      );
+    }
+
+    return ranges;
+  }
+
+  async checkAvailability(
+    carId: string,
+    start: Date | string,
+    end: Date | string,
+  ): Promise&lt;boolean&gt; {
+    const fromIso &#x3D; this.normalizeToDate(start).toISOString();
+    const toIso &#x3D; this.normalizeToDate(end).toISOString();
+    const ranges &#x3D; await this.getBlockedRangesWithDetails(carId, fromIso, toIso);
+    return ranges.length &#x3D;&#x3D;&#x3D; 0;
+  }
+
+  async getBlockedDates(
+    carId: string,
+    start?: Date | string,
+    end?: Date | string,
+  ): Promise&lt;DetailedBlockedRange[]&gt; {
+    const startDate &#x3D; this.normalizeToDate(start ?? new Date());
+    const endDate &#x3D; this.normalizeToDate(end ?? this.addDays(new Date(), 90));
+    const fromIso &#x3D; startDate.toISOString();
+    const toIso &#x3D; endDate.toISOString();
+    const ranges &#x3D; await this.getBlockedRangesWithDetails(carId, fromIso, toIso);
+
+    return ranges.map((r) &#x3D;&gt; ({ ...r }));
+  }
+
+  async getNextAvailableDate(carId: string, from: Date | string): Promise&lt;string | null&gt; {
+    const startDate &#x3D; this.normalizeToDate(from);
+    const searchHorizon &#x3D; this.addDays(startDate, 90);
+    const blocked &#x3D; await this.getBlockedDates(carId, startDate, searchHorizon);
+
+    // Build occupied day set
+    const occupied &#x3D; new Set&lt;string&gt;();
+    for (const range of blocked) {
+      let cursor &#x3D; new Date(range.from);
+      const to &#x3D; new Date(range.to);
+      while (cursor &lt;&#x3D; to) {
+        occupied.add(this.toDateString(cursor));
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    }
+
+    const cursor &#x3D; new Date(startDate);
+    while (cursor &lt;&#x3D; searchHorizon) {
+      const key &#x3D; this.toDateString(cursor);
+      if (!occupied.has(key)) {
+        return key;
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    return null;
+  }
+
+  async getNextAvailableRange(
+    carId: string,
+    start: Date | string,
+    end?: Date | string,
+    maxOptions &#x3D; 3,
+  ): Promise&lt;Array&lt;{ startDate: string; endDate: string; daysCount: number }&gt;&gt; {
+    const startDate &#x3D; this.normalizeToDate(start);
+    const searchEnd &#x3D; this.normalizeToDate(end ?? this.addDays(startDate, 60));
+    const blocked &#x3D; await this.getBlockedDates(carId, startDate, searchEnd);
+
+    const ranges &#x3D; blocked.sort((a, b) &#x3D;&gt; (a.from &lt; b.from ? -1 : 1));
+    let cursor &#x3D; new Date(startDate);
+    const available: Array&lt;{ startDate: string; endDate: string; daysCount: number }&gt; &#x3D; [];
+
+    for (const range of ranges) {
+      const rangeStart &#x3D; new Date(range.from);
+      const rangeEnd &#x3D; new Date(range.to);
+      if (cursor &lt; rangeStart) {
+        const startIso &#x3D; this.toDateString(cursor);
+        const endIso &#x3D; this.toDateString(this.addDays(rangeStart, -1));
+        const daysCount &#x3D; Math.max(1, this.differenceInCalendarDays(rangeStart, cursor));
+        available.push({ startDate: startIso, endDate: endIso, daysCount });
+        if (available.length &gt;&#x3D; maxOptions) return available;
+      }
+      if (cursor &lt;&#x3D; rangeEnd) {
+        cursor &#x3D; this.addDays(rangeEnd, 1);
+      }
+    }
+
+    if (cursor &lt;&#x3D; searchEnd &amp;&amp; available.length &lt; maxOptions) {
+      const startIso &#x3D; this.toDateString(cursor);
+      const endIso &#x3D; this.toDateString(searchEnd);
+      const daysCount &#x3D; Math.max(1, this.differenceInCalendarDays(searchEnd, cursor) + 1);
+      available.push({ startDate: startIso, endDate: endIso, daysCount });
+    }
+
+    return available;
+  }
+
+  /**
+   * Filters cars by availability using batch queries instead of N+1 queries.
+   * Executes only 3 queries total regardless of the number of cars.
+   */
+  async filterByAvailability&lt;T extends { id: string }&gt;(
+    cars: T[],
+    start: Date | string,
+    end: Date | string,
+    excludedCarIds: string[] &#x3D; [],
+  ): Promise&lt;T[]&gt; {
+    if (cars.length &#x3D;&#x3D;&#x3D; 0) return [];
+
+    const fromIso &#x3D; this.normalizeToDate(start).toISOString();
+    const toIso &#x3D; this.normalizeToDate(end).toISOString();
+    const carIds &#x3D; cars.map((c) &#x3D;&gt; c.id).filter((id) &#x3D;&gt; !excludedCarIds.includes(id));
+
+    if (carIds.length &#x3D;&#x3D;&#x3D; 0) return [];
+
+    // Batch query: get all blocked car IDs in a single set of queries
+    const blockedByConflict &#x3D; await this.getBlockedCarIds(fromIso, toIso, carIds);
+
+    return cars.filter((car) &#x3D;&gt; !excludedCarIds.includes(car.id) &amp;&amp; !blockedByConflict.has(car.id));
+  }
+
+  /**
+   * Returns a Set of car IDs that have conflicts in the given date range.
+   * Uses batch queries (3 total) instead of per-car queries.
+   * @param carIds - Optional list of car IDs to filter. If not provided, checks all cars.
+   */
+  private async getBlockedCarIds(
+    fromDate: string,
+    toDate: string,
+    carIds?: string[],
+  ): Promise&lt;Set&lt;string&gt;&gt; {
+    // Build queries with optional car_id filter
+    const buildBookingsQuery &#x3D; () &#x3D;&gt; {
+      let q &#x3D; this.supabase
+        .from(&#x27;bookings&#x27;)
+        .select(&#x27;car_id&#x27;)
+        .in(&#x27;status&#x27;, [&#x27;confirmed&#x27;, &#x27;active&#x27;])
+        .lte(&#x27;start_at&#x27;, toDate)
+        .gte(&#x27;end_at&#x27;, fromDate);
+      if (carIds?.length) q &#x3D; q.in(&#x27;car_id&#x27;, carIds);
+      return q;
+    };
+
+    const buildBlackoutsQuery &#x3D; () &#x3D;&gt; {
+      let q &#x3D; this.supabase
+        .from(&#x27;car_blackouts&#x27;)
+        .select(&#x27;car_id&#x27;)
+        .lte(&#x27;starts_at&#x27;, toDate)
+        .gte(&#x27;ends_at&#x27;, fromDate);
+      if (carIds?.length) q &#x3D; q.in(&#x27;car_id&#x27;, carIds);
+      return q;
+    };
+
+    const buildBlockedDatesQuery &#x3D; () &#x3D;&gt; {
+      let q &#x3D; this.supabase
+        .from(&#x27;car_blocked_dates&#x27;)
+        .select(&#x27;car_id&#x27;)
+        .lte(&#x27;blocked_from&#x27;, toDate)
+        .gte(&#x27;blocked_to&#x27;, fromDate);
+      if (carIds?.length) q &#x3D; q.in(&#x27;car_id&#x27;, carIds);
+      return q;
+    };
+
+    const [bookingsResult, blackoutsResult, manualBlocksResult] &#x3D; await Promise.all([
+      buildBookingsQuery(),
+      buildBlackoutsQuery(),
+      buildBlockedDatesQuery(),
+    ]);
+
+    const blockedIds &#x3D; new Set&lt;string&gt;();
+
+    for (const row of bookingsResult.data || []) {
+      blockedIds.add(row.car_id);
+    }
+    for (const row of blackoutsResult.data || []) {
+      blockedIds.add(row.car_id);
+    }
+    for (const row of manualBlocksResult.data || []) {
+      blockedIds.add(row.car_id);
+    }
+
+    return blockedIds;
+  }
+
+  /**
+   * Gets available cars with proper pagination.
+   * First fetches all blocked car IDs, then paginates excluding them.
+   * This ensures consistent pagination results.
+   */
+  async getAvailableCars(
+    start: Date | string,
+    end: Date | string,
+    options: { limit?: number; offset?: number; city?: string; carIds?: string[] } &#x3D; {},
+  ): Promise&lt;Car[]&gt; {
+    const { limit &#x3D; 50, offset &#x3D; 0, city, carIds } &#x3D; options;
+    const fromIso &#x3D; this.normalizeToDate(start).toISOString();
+    const toIso &#x3D; this.normalizeToDate(end).toISOString();
+
+    // First, get all car IDs that are blocked in this date range
+    const blockedCarIds &#x3D; await this.getBlockedCarIds(fromIso, toIso);
+
+    // Build query excluding blocked cars
+    let query &#x3D; this.supabase.from(&#x27;cars&#x27;).select(&#x27;*&#x27;).eq(&#x27;status&#x27;, &#x27;active&#x27;);
+    if (city) query &#x3D; query.eq(&#x27;location_city&#x27;, city);
+    if (carIds?.length) query &#x3D; query.in(&#x27;id&#x27;, carIds);
+
+    // Exclude blocked cars from pagination (if any)
+    if (blockedCarIds.size &gt; 0) {
+      const blockedArray &#x3D; Array.from(blockedCarIds);
+      // Use Supabase SDK&#x27;s native array support for NOT IN
+      query &#x3D; query.not(&#x27;id&#x27;, &#x27;in&#x27;, blockedArray);
+    }
+
+    const { data, error } &#x3D; await query.range(offset, offset + limit - 1);
+    if (error) throw error;
+
+    return (data || []) as Car[];
+  }
+
+  async hasActiveBookings(carId: string): Promise&lt;{
+    hasActive: boolean;
+    count: number;
+    bookings?: Array&lt;{ id: string; status: string; start_date: string; end_date: string }&gt;;
+  }&gt; {
+    type BookingRow &#x3D; { id: string; status: string; start_at: string; end_at: string };
+    const { data, error, count } &#x3D; await this.supabase
+      .from(&#x27;bookings&#x27;)
+      .select(&#x27;id, status, start_at, end_at&#x27;, { count: &#x27;exact&#x27; })
+      .eq(&#x27;car_id&#x27;, carId)
+      .in(&#x27;status&#x27;, [&#x27;confirmed&#x27;, &#x27;active&#x27;])
+      .order(&#x27;start_at&#x27;, { ascending: true })
+      .limit(10);
+
+    if (error) {
+      console.warn(&#x27;hasActiveBookings error&#x27;, error);
+      return { hasActive: false, count: 0 };
+    }
+
+    const bookings &#x3D; (data || []) as BookingRow[];
+    return {
+      hasActive: (count ?? 0) &gt; 0,
+      count: count ?? 0,
+      bookings: bookings.map((b) &#x3D;&gt; ({
+        id: b.id,
+        status: b.status,
+        start_date: b.start_at,
+        end_date: b.end_at,
+      })),
+    };
+  }
+
+  private normalizeToDate(value: Date | string): Date {
+    if (value instanceof Date) return new Date(value);
+    const parsed &#x3D; new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new Error(&#x60;Invalid date value: ${value}&#x60;);
+    }
+    return parsed;
+  }
+
+  private addDays(date: Date, days: number): Date {
+    const d &#x3D; new Date(date);
+    d.setDate(d.getDate() + days);
+    return d;
+  }
+
+  /**
+   * Safely extracts YYYY-MM-DD from a date string or Date object.
+   * Handles both ISO strings and date objects without timezone issues.
+   */
+  private toDateString(value: Date | string): string {
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      // If already YYYY-MM-DD format, return as-is
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+      // Extract date part from ISO string
+      const match &#x3D; value.match(/^(\d{4}-\d{2}-\d{2})/);
+      if (match) return match[1];
+    }
+    // For Date objects, use UTC to avoid timezone shifts
+    const d &#x3D; value instanceof Date ? value : new Date(value);
+    return d.toISOString().slice(0, 10);
+  }
+
+  /**
+   * Calculates the difference in calendar days between two dates.
+   * Uses UTC to avoid DST issues (days with 23 or 25 hours).
+   */
+  private differenceInCalendarDays(later: Date, earlier: Date): number {
+    // Normalize both dates to UTC midnight to avoid DST issues
+    const utcLater &#x3D; Date.UTC(later.getFullYear(), later.getMonth(), later.getDate());
+    const utcEarlier &#x3D; Date.UTC(earlier.getFullYear(), earlier.getMonth(), earlier.getDate());
+    return Math.round((utcLater - utcEarlier) / 86400000);
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'DetailedBlockedRange.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

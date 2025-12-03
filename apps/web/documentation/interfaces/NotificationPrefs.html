@@ -1,0 +1,1333 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  NotificationPrefs</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/models/index.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#email" 
+>
+                                            email
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#push" 
+>
+                                            push
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#whatsapp" 
+>
+                                            whatsapp
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="email"></a>
+                                        <span class="name "><b>email</b>
+                                            <a href="#email">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>email:         <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="push"></a>
+                                        <span class="name "><b>push</b>
+                                            <a href="#push">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>push:         <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="whatsapp"></a>
+                                        <span class="name "><b>whatsapp</b>
+                                            <a href="#whatsapp">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>whatsapp:         <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../interfaces/NotificationChannelPrefs.html" target="_self" >NotificationChannelPrefs</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type {
+  BookingStatus,
+  CancelPolicy,
+  CarStatus,
+  FuelType,
+  PaymentProvider,
+  PaymentStatus,
+  Transmission,
+  UserRole,
+} from &#x27;../types/database.types&#x27;;
+
+// Re-export Supabase types for use throughout the app
+export type {
+  BankAccount as BankAccountDB,
+  Booking as BookingDB,
+  Car as CarDB,
+  PaymentAuthorization,
+  Payment as PaymentDB,
+  Profile,
+  Review as ReviewDB,
+  WalletBalance,
+  WalletLedger,
+  WalletTransaction as WalletTransactionDB,
+} from &#x27;../types/supabase-types&#x27;;
+export type {
+  BookingStatus,
+  CancelPolicy,
+  CarStatus,
+  FuelType,
+  PaymentProvider,
+  PaymentStatus,
+  Transmission,
+};
+
+// Re-export for backward compatibility
+export type Role &#x3D; UserRole;
+
+// Export FGO models
+export * from &#x27;./fgo.model&#x27;;
+
+// Export Insurance models
+export * from &#x27;./insurance.model&#x27;;
+
+// Export Dashboard models
+export * from &#x27;./dashboard.model&#x27;;
+
+// Export Organization models
+export * from &#x27;./organization.model&#x27;;
+
+// Export Dynamic Pricing models
+export * from &#x27;./dynamic-pricing.model&#x27;;
+
+// Export Marketplace models
+export * from &#x27;./marketplace.model&#x27;;
+
+// Export ProfileService types
+export type { UpdateProfileData } from &#x27;../services/profile.service&#x27;;
+
+// Nuevos tipos para perfil expandido
+export type KycStatus &#x3D; &#x27;not_started&#x27; | &#x27;pending&#x27; | &#x27;verified&#x27; | &#x27;rejected&#x27;;
+export type OnboardingStatus &#x3D; &#x27;incomplete&#x27; | &#x27;complete&#x27;;
+export type DocumentKind &#x3D;
+  | &#x27;gov_id_front&#x27;
+  | &#x27;gov_id_back&#x27;
+  | &#x27;driver_license&#x27;
+  | &#x27;vehicle_registration&#x27;
+  | &#x27;vehicle_insurance&#x27;
+  | &#x27;utility_bill&#x27;
+  | &#x27;selfie&#x27;;
+
+export interface NotificationChannelPrefs {
+  bookings: boolean;
+  promotions: boolean;
+}
+
+export interface NotificationPrefs {
+  email: NotificationChannelPrefs;
+  push: NotificationChannelPrefs;
+  whatsapp: NotificationChannelPrefs;
+}
+
+export interface UserProfile {
+  id: string;
+  full_name: string;
+  avatar_url?: string | null;
+  role: Role;
+
+  // Wallet
+  wallet_account_number?: string | null;
+
+  // Información de contacto
+  phone?: string | null;
+  whatsapp?: string | null;
+
+  // Documentos de identidad
+  gov_id_type?: string | null;
+  gov_id_number?: string | null;
+  driver_license_number?: string | null;
+  driver_license_country?: string | null;
+  driver_license_expiry?: string | null;
+
+  // Fecha de nacimiento (para cálculo de edad en seguros)
+  date_of_birth?: string | null; // ISO date string YYYY-MM-DD
+
+  // Dirección
+  address_line1?: string | null;
+  address_line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postal_code?: string | null;
+  country?: string | null;
+
+  // Ubicación GPS (para pricing por distancia)
+  home_latitude?: number | null;
+  home_longitude?: number | null;
+  location_verified_at?: string | null;
+  preferred_search_radius_km?: number | null;
+
+  // Preferencias
+  timezone: string;
+  locale: string;
+  currency: string;
+  default_currency?: string; // Backward compatibility
+
+  // Estados
+  kyc: KycStatus;
+  onboarding: OnboardingStatus;
+
+  // Términos y marketing
+  tos_accepted_at?: string | null;
+  marketing_opt_in: boolean;
+
+  // Notificaciones
+  notif_prefs: NotificationPrefs;
+
+  // Métricas
+  rating_avg: number;
+  rating_count: number;
+
+  // Verificaciones
+  is_email_verified: boolean;
+  is_phone_verified: boolean;
+  is_driver_verified: boolean;
+  is_admin?: boolean;
+
+  // Permisos derivados (de la vista me_profile)
+  can_publish_cars?: boolean;
+  can_book_cars?: boolean;
+
+  // MercadoPago OAuth fields
+  mercadopago_collector_id?: string | null;
+  mercadopago_connected?: boolean;
+  mercadopago_connected_at?: string | null;
+  mercadopago_access_token?: string | null;
+  mercadopago_refresh_token?: string | null;
+  mercadopago_access_token_expires_at?: string | null;
+  mercadopago_public_key?: string | null;
+  mercadopago_account_type?: string | null;
+  mercadopago_country?: string | null;
+  mercadopago_site_id?: string | null;
+  mercadopago_oauth_state?: string | null;
+
+  // Timestamps
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface UserDocument {
+  id: string;
+  user_id: string;
+  kind: DocumentKind;
+  storage_path: string;
+  status: KycStatus;
+  notes?: string | null;
+  created_at: string;
+  reviewed_by?: string | null;
+  reviewed_at?: string | null;
+  analyzed_at?: string | null;
+}
+
+export type VerificationRole &#x3D; &#x27;driver&#x27; | &#x27;owner&#x27;;
+export type VerificationStatus &#x3D; &#x27;VERIFICADO&#x27; | &#x27;PENDIENTE&#x27; | &#x27;RECHAZADO&#x27;;
+
+export interface UserVerificationStatus {
+  user_id: string;
+  role: VerificationRole;
+  status: VerificationStatus;
+  missing_docs: string[];
+  notes?: string | null;
+  metadata?: Record&lt;string, unknown&gt; | null;
+  created_at?: string;
+  updated_at: string;
+}
+
+export interface ProfileAudit {
+  id: string;
+  user_id: string;
+  changed_by: string;
+  changes: Record&lt;string, unknown&gt;;
+  created_at: string;
+}
+
+export interface CarOwner {
+  id: string;
+  full_name: string;
+  avatar_url?: string | null;
+  rating_avg: number;
+  rating_count: number;
+  created_at: string;
+  is_email_verified: boolean;
+  is_phone_verified: boolean;
+}
+
+export interface CarBrand {
+  id: string;
+  name: string;
+  logo_url?: string | null;
+  country?: string | null;
+  created_at: string;
+}
+
+export interface CarModel {
+  id: string;
+  brand_id: string;
+  name: string;
+  category?: string | null;
+  seats: number;
+  doors: number;
+  created_at: string;
+}
+
+export type VehicleDocumentKind &#x3D;
+  | &#x27;registration&#x27; // Cédula verde/título de propiedad
+  | &#x27;insurance&#x27; // Póliza de seguro
+  | &#x27;technical_inspection&#x27; // Revisión técnica
+  | &#x27;circulation_permit&#x27; // Permiso de circulación
+  | &#x27;ownership_proof&#x27;; // Comprobante de titularidad
+
+export interface VehicleDocument {
+  id: string;
+  car_id: string;
+  kind: VehicleDocumentKind;
+  storage_path: string;
+  url?: string;
+  status: &#x27;pending&#x27; | &#x27;verified&#x27; | &#x27;rejected&#x27;;
+  expiry_date?: string | null;
+  notes?: string | null;
+  created_at: string;
+  verified_by?: string | null;
+  verified_at?: string | null;
+}
+
+export interface Car {
+  id: string;
+  owner_id: string;
+  title: string;
+  description: string;
+
+  // Foreign Keys to normalized tables
+  brand_id: string;
+  model_id: string;
+  region_id?: string | null; // For dynamic pricing
+  organization_id?: string | null; // ✅ Fleet Management
+
+  // Backward compatibility fields (required in database)
+  brand_text_backup: string;
+  model_text_backup: string;
+
+  // Additional backward compatibility (populated via JOIN in views)
+  brand?: string;
+  model?: string;
+  brand_name?: string; // From JOIN
+  model_name?: string; // From JOIN
+
+  year: number;
+  plate?: string | null;
+  vin?: string | null;
+  transmission: Transmission;
+  fuel: FuelType;
+  fuel_type: FuelType; // Alias for fuel
+  seats: number;
+  doors: number;
+  color: string;
+  features: Record&lt;string, boolean&gt;; // {ac: true, abs: true, airbag: true}
+  status: CarStatus;
+  price_per_day: number;
+  currency: string;
+  value_usd?: number; // ✅ NUEVO: Valor real del vehículo en USD (para cálculos de riesgo/seguro)
+  security_deposit_usd?: number; // ✅ NUEVO: Depósito de garantía en USD
+  uses_dynamic_pricing?: boolean; // ✅ DYNAMIC PRICING: Si el auto usa pricing dinámico
+  rating_avg: number;
+  rating_count: number;
+
+  // Location fields
+  location_city: string;
+  location_state: string;
+  location_province: string;
+  location_country: string;
+  location_lat?: number | null;
+  location_lng?: number | null;
+
+  // Address fields (new)
+  location_street?: string | null;
+  location_street_number?: string | null;
+  location_neighborhood?: string | null;
+  location_postal_code?: string | null;
+  location_formatted_address?: string | null;
+
+  // Rental terms (new)
+  payment_methods?: string[];
+  deposit_required?: boolean;
+  deposit_amount?: number;
+  insurance_included?: boolean;
+  auto_approval?: boolean; // ✅ NUEVO: Auto-aprobación de reservas
+  min_rental_days?: number;
+  max_rental_days?: number;
+  terms_and_conditions?: string;
+  delivery_options?: string[];
+
+  mileage: number;
+  cancel_policy: CancelPolicy;
+  photos?: CarPhoto[];
+  car_photos?: CarPhoto[];
+  images?: string[]; // Simple array of image URLs (for backward compatibility)
+  owner?: CarOwner; // Owner profile information
+  created_at: string;
+  updated_at: string;
+  vehicle_type?: string | null;
+}
+
+export interface CarPhoto {
+  id: string;
+  car_id: string;
+  url: string;
+  stored_path: string;
+  position: number;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface VehicleCategory {
+  id: string;
+  code: string; // &#x27;economy&#x27; | &#x27;standard&#x27; | &#x27;premium&#x27; | &#x27;luxury&#x27;
+  name: string;
+  name_es: string;
+  base_daily_rate_pct: number; // 0.0030 &#x3D; 0.30%
+  depreciation_rate_annual: number; // 0.050 &#x3D; 5% per year
+  surge_sensitivity: number; // 1.00 &#x3D; standard
+  description: string;
+  display_order: number;
+  active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CarFilters {
+  city?: string;
+  from?: string;
+  to?: string;
+  blockedCarIds?: string[];
+  bounds?: {
+    north: number;
+    south: number;
+    east: number;
+    west: number;
+  };
+}
+
+export interface BookingBreakdown {
+  days: number;
+  nightly_rate_cents: number;
+  subtotal_cents: number;
+  insurance_cents?: number;
+  fees_cents?: number;
+  discounts_cents?: number;
+  deposit_cents?: number; // Depósito de garantía (se devuelve al finalizar)
+  total_cents: number;
+  currency: string;
+  lines?: Array&lt;{ label: string; amount_cents: number }&gt;;
+}
+
+/**
+ * Estado del depósito de garantía en el sistema dual
+ */
+export type BookingDepositStatus &#x3D; &#x27;none&#x27; | &#x27;locked&#x27; | &#x27;released&#x27; | &#x27;charged&#x27;;
+
+/**
+ * Estado del proceso de confirmación bilateral
+ */
+export type BookingCompletionStatus &#x3D;
+  | &#x27;active&#x27; // Booking activo, alquiler en progreso
+  | &#x27;returned&#x27; // Auto devuelto, esperando confirmaciones
+  | &#x27;pending_owner&#x27; // Esperando confirmación del propietario
+  | &#x27;pending_renter&#x27; // Esperando confirmación del locatario
+  | &#x27;pending_both&#x27; // Esperando confirmación de ambas partes
+  | &#x27;funds_released&#x27;; // Fondos liberados exitosamente
+
+export interface Booking {
+  id: string;
+  car_id: string;
+  user_id: string; // Alias for renter_id (backward compatibility)
+  renter_id: string;
+  owner_id?: string; // Car owner ID
+  start_at: string;
+  end_at: string;
+  status: BookingStatus;
+  total_amount: number;
+  currency: string;
+  created_at: string;
+  updated_at?: string;
+
+  // Pricing breakdown fields
+  days_count?: number;
+  nightly_rate_cents?: number;
+  subtotal_cents?: number;
+  insurance_cents?: number;
+  fees_cents?: number;
+  discounts_cents?: number;
+  total_cents?: number;
+  breakdown?: BookingBreakdown;
+
+  // Payment management
+  payment_intent_id?: string;
+  expires_at?: string;
+  paid_at?: string;
+  payment_method?: &#x27;credit_card&#x27; | &#x27;wallet&#x27; | &#x27;partial_wallet&#x27; | null;
+  payment_mode?: &#x27;card&#x27; | &#x27;wallet&#x27; | null; // NEW: Payment mode for detail-payment flow
+  authorized_payment_id?: string | null; // NEW: For card hold authorization
+  wallet_lock_id?: string | null; // NEW: For wallet lock ID
+  coverage_upgrade?: &#x27;standard&#x27; | &#x27;premium&#x27; | &#x27;zero_franchise&#x27; | null; // NEW: Coverage upgrade
+  risk_snapshot_booking_id?: string | null; // NEW: FK to booking_risk_snapshot
+  risk_snapshot_date?: string | null; // NEW: When risk snapshot was created
+  wallet_amount_cents?: number | null;
+  wallet_lock_transaction_id?: string | null;
+  wallet_status?: &#x27;none&#x27; | &#x27;locked&#x27; | &#x27;charged&#x27; | &#x27;refunded&#x27; | &#x27;partially_charged&#x27; | null;
+  wallet_charged_at?: string | null;
+  wallet_refunded_at?: string | null;
+  mp_security_deposit_order_id?: string | null; // NUEVO: ID de la pre-autorización de MP para el depósito
+
+  // Dual payment system (rental + deposit)
+  rental_amount_cents?: number | null;
+  deposit_amount_cents?: number | null;
+  rental_lock_transaction_id?: string | null;
+  deposit_lock_transaction_id?: string | null;
+  rental_payment_transaction_id?: string | null;
+  deposit_release_transaction_id?: string | null;
+  deposit_status?: BookingDepositStatus | null;
+
+  // Bilateral confirmation system
+  returned_at?: string | null;
+  owner_confirmed_delivery?: boolean | null;
+  owner_confirmation_at?: string | null;
+  owner_reported_damages?: boolean | null;
+  owner_damage_amount?: number | null;
+  owner_damage_description?: string | null;
+  renter_confirmed_payment?: boolean | null;
+  renter_confirmation_at?: string | null;
+  funds_released_at?: string | null;
+  completion_status?: BookingCompletionStatus | null;
+
+  // NEW: Dispute management fields
+  dispute_open_at?: string | null;
+  dispute_status?: &#x27;open&#x27; | &#x27;resolved&#x27; | &#x27;rejected&#x27; | null; // open, resolved (owner wins), rejected (renter wins)
+
+  // Cancellation management
+  cancellation_policy_id?: number;
+  cancellation_fee_cents?: number;
+  cancelled_at?: string;
+  cancellation_reason?: string;
+
+  // ✅ DISTANCE-BASED PRICING: Campos de ubicación y distancia
+  pickup_location_lat?: number | null;
+  pickup_location_lng?: number | null;
+  dropoff_location_lat?: number | null;
+  dropoff_location_lng?: number | null;
+  delivery_required?: boolean | null;
+  delivery_distance_km?: number | null;
+  delivery_fee_cents?: number | null;
+  distance_risk_tier?: &#x27;local&#x27; | &#x27;regional&#x27; | &#x27;long_distance&#x27; | null;
+
+  // Metadata
+  metadata?: Record&lt;string, unknown&gt; | null;
+
+  // ✅ DYNAMIC PRICING: Campos de pricing dinámico
+  has_dynamic_pricing?: boolean | null;
+  dynamic_price_snapshot?: Record&lt;string, unknown&gt; | null; // JSONB stored as object
+  price_locked_until?: string | null; // ISO timestamp
+  price_lock_token?: string | null; // UUID
+
+  // Extended fields from views (my_bookings, owner_bookings)
+  car_title?: string;
+  car_brand?: string;
+  car_model?: string;
+  car_year?: number;
+  car_city?: string;
+  car_province?: string;
+  main_photo_url?: string;
+  payment_status?: PaymentStatus;
+  payment_provider?: PaymentProvider;
+
+  // Owner bookings view fields
+  renter_name?: string;
+  renter_avatar?: string;
+
+  // ✅ INSURANCE SYSTEM: Campos de seguro P2P
+  insurance_coverage_id?: string | null;
+  insurance_premium_total?: number | null; // Total prima de seguro en centavos
+  security_deposit_amount?: number | null; // Monto de depósito/franquicia en centavos
+  deposit_held?: boolean | null; // Si el depósito está retenido
+  deposit_released_at?: string | null; // Cuándo se liberó el depósito
+  has_active_claim?: boolean | null; // Si tiene un siniestro activo
+
+  // Relación con cobertura (populated via JOIN)
+  insurance_coverage?: Record&lt;string, unknown&gt;; // BookingInsuranceCoverage
+
+  // Relación con car (populated dinamically in some queries)
+  car?: Partial&lt;Car&gt;;
+}
+
+export interface PaymentIntent {
+  id: string;
+  booking_id?: string | null; // booking_id puede ser nulo para depósitos de seguridad
+  user_id?: string; // ID del usuario para el intent (por ejemplo, para depósitos de seguridad)
+  provider: string; // &#x27;mercadopago&#x27; o &#x27;wallet&#x27;
+  status: string; // &#x27;pending&#x27;, &#x27;authorized&#x27;, &#x27;captured&#x27;, &#x27;cancelled&#x27;, &#x27;failed&#x27;, &#x27;completed&#x27;
+  created_at: string;
+  updated_at?: string;
+  amount_usd?: number;
+  amount_ars?: number;
+  fx_rate?: number;
+  description?: string;
+  intent_type?: &#x27;booking&#x27; | &#x27;security_deposit&#x27; | &#x27;fine&#x27;; // Nuevo: tipo de intent
+  is_preauth?: boolean; // Nuevo: si es una pre-autorización
+  mp_order_id?: string | null; // Nuevo: ID de la orden de MercadoPago para pre-autorizaciones
+  mp_order_status?: string | null; // Nuevo: Estado de la orden de MercadoPago
+}
+
+export interface Payment {
+  id: string;
+  booking_id: string;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  provider: PaymentProvider;
+  provider_payment_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// REVIEWS SYSTEM (Airbnb-style)
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+export type ReviewType &#x3D; &#x27;renter_to_owner&#x27; | &#x27;owner_to_renter&#x27;;
+export type ReviewStatus &#x3D; &#x27;pending&#x27; | &#x27;published&#x27; | &#x27;hidden&#x27;;
+export type ModerationStatus &#x3D; &#x27;pending&#x27; | &#x27;approved&#x27; | &#x27;rejected&#x27;;
+
+export interface Review {
+  id: string;
+  booking_id: string;
+  reviewer_id: string;
+  reviewee_id: string;
+  car_id: string;
+  review_type: ReviewType;
+
+  // Category ratings (1-5)
+  rating_cleanliness: number;
+  rating_communication: number;
+  rating_accuracy: number;
+  rating_location: number;
+  rating_checkin: number;
+  rating_value: number;
+
+  // Overall rating (calculated)
+  rating_overall?: number;
+
+  // Comments
+  comment_public?: string | null;
+  comment_private?: string | null;
+
+  // Status
+  status: ReviewStatus;
+  is_visible: boolean;
+  published_at?: string | null;
+
+  // Moderation
+  is_flagged: boolean;
+  flag_reason?: string | null;
+  flagged_by?: string | null;
+  flagged_at?: string | null;
+  flagged_by_name?: string | null;
+  moderation_status: ModerationStatus;
+  moderated_by?: string | null;
+  moderated_at?: string | null;
+  moderation_notes?: string | null;
+  moderated_by_name?: string | null;
+  flag_status?: &#x27;pending&#x27; | &#x27;approved&#x27; | &#x27;rejected&#x27;;
+
+  // Timestamps
+  created_at: string;
+
+  // Extended fields (from joins)
+  reviewer_name?: string;
+  reviewer_avatar?: string;
+  reviewee_name?: string;
+  car_title?: string;
+}
+
+export interface CreateReviewParams {
+  booking_id: string;
+  reviewee_id: string;
+  car_id: string;
+  review_type: ReviewType;
+  rating_cleanliness: number;
+  rating_communication: number;
+  rating_accuracy: number;
+  rating_location: number;
+  rating_checkin: number;
+  rating_value: number;
+  comment_public?: string;
+  comment_private?: string;
+}
+
+export interface UserStats {
+  user_id: string;
+
+  // Owner stats
+  owner_reviews_count: number;
+  owner_rating_avg: number;
+  owner_rating_cleanliness_avg: number;
+  owner_rating_communication_avg: number;
+  owner_rating_accuracy_avg: number;
+  owner_rating_location_avg: number;
+  owner_rating_checkin_avg: number;
+  owner_rating_value_avg: number;
+
+  // Renter stats
+  renter_reviews_count: number;
+  renter_rating_avg: number;
+  renter_rating_cleanliness_avg: number;
+  renter_rating_communication_avg: number;
+  renter_rating_accuracy_avg: number;
+  renter_rating_checkin_avg: number;
+
+  // Bookings
+  total_bookings_as_owner: number;
+  total_bookings_as_renter: number;
+  cancellation_count: number;
+  cancellation_rate: number;
+
+  // Badges
+  is_top_host: boolean;
+  is_super_host: boolean;
+  is_verified_renter: boolean;
+  badges: Badge[];
+
+  // Timestamps
+  last_review_received_at?: string | null;
+  updated_at: string;
+}
+
+export interface CarStats {
+  car_id: string;
+  reviews_count: number;
+  rating_avg: number;
+  rating_cleanliness_avg: number;
+  rating_communication_avg: number;
+  rating_accuracy_avg: number;
+  rating_location_avg: number;
+  rating_checkin_avg: number;
+  rating_value_avg: number;
+  total_bookings: number;
+  completed_bookings: number;
+  cancelled_bookings: number;
+  cancellation_rate: number;
+  last_review_at?: string | null;
+  updated_at: string;
+}
+
+export interface Badge {
+  type: &#x27;top_host&#x27; | &#x27;super_host&#x27; | &#x27;verified_renter&#x27; | &#x27;trusted_driver&#x27;;
+  label: string;
+  description: string;
+  earned_at: string;
+}
+
+export interface ReviewSummary {
+  total_count: number;
+  average_rating: number;
+  rating_distribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+  category_averages: {
+    cleanliness: number;
+    communication: number;
+    accuracy: number;
+    location: number;
+    checkin: number;
+    value: number;
+  };
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// CARS COMPARISON SYSTEM
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+export interface CarComparison {
+  carIds: string[];
+  timestamp: string;
+}
+
+export interface ComparisonRow {
+  label: string;
+  category: &#x27;basic&#x27; | &#x27;specs&#x27; | &#x27;pricing&#x27; | &#x27;location&#x27; | &#x27;owner&#x27;;
+  values: (string | number | boolean | null)[];
+  highlightBest?: boolean; // Para resaltar el mejor valor en la comparación
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// WALLET &amp; WITHDRAWALS SYSTEM
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+export type AccountType &#x3D; &#x27;cbu&#x27; | &#x27;cvu&#x27; | &#x27;alias&#x27;;
+
+export interface BankAccount {
+  id: string;
+  user_id: string;
+  account_type: AccountType;
+  account_number: string;
+  account_holder_name: string;
+  // DEPRECATED: Use gov_id_number from UserProfile instead
+  account_holder_document?: string;
+  bank_name?: string | null;
+  is_verified: boolean;
+  verified_at?: string | null;
+  verification_method?: string | null;
+  is_active: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export type WithdrawalStatus &#x3D;
+  | &#x27;pending&#x27;
+  | &#x27;approved&#x27;
+  | &#x27;processing&#x27;
+  | &#x27;completed&#x27;
+  | &#x27;failed&#x27;
+  | &#x27;rejected&#x27;
+  | &#x27;cancelled&#x27;;
+
+export interface WithdrawalRequest {
+  id: string;
+  user_id: string;
+  bank_account_id: string;
+  amount: number;
+  currency: string;
+  fee_amount: number;
+  net_amount: number;
+  status: WithdrawalStatus;
+  provider: string;
+  provider_transaction_id?: string | null;
+  provider_metadata?: Record&lt;string, unknown&gt; | null;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  rejection_reason?: string | null;
+  processed_at?: string | null;
+  completed_at?: string | null;
+  failed_at?: string | null;
+  failure_reason?: string | null;
+  wallet_transaction_id?: string | null;
+  user_notes?: string | null;
+  admin_notes?: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // Extended fields from views/joins
+  user_name?: string;
+  user_email?: string;
+  bank_account?: BankAccount;
+}
+
+export interface WalletTransaction {
+  id: string;
+  user_id: string;
+  type: &#x27;deposit&#x27; | &#x27;withdrawal&#x27; | &#x27;payment&#x27; | &#x27;refund&#x27; | &#x27;lock&#x27; | &#x27;unlock&#x27;;
+  amount: number;
+  currency: string;
+  status: &#x27;pending&#x27; | &#x27;completed&#x27; | &#x27;failed&#x27; | &#x27;cancelled&#x27;;
+  description?: string | null;
+  reference_type?: string | null;
+  reference_id?: string | null;
+  provider?: string | null;
+  provider_transaction_id?: string | null;
+  provider_metadata?: Record&lt;string, unknown&gt; | null;
+  created_at: string;
+}
+
+export interface UserWallet {
+  user_id: string;
+  available_balance: number;
+  locked_balance: number;
+  currency: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// BONUS-MALUS SYSTEM
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+export type BonusMalusType &#x3D; &#x27;BONUS&#x27; | &#x27;MALUS&#x27; | &#x27;NEUTRAL&#x27;;
+
+export interface UserBonusMalus {
+  user_id: string;
+  total_factor: number; // -0.15 a +0.20 (negativo &#x3D; bonus/descuento, positivo &#x3D; malus/recargo)
+  rating_factor: number;
+  cancellation_factor: number;
+  completion_factor: number;
+  verification_factor: number;
+  metrics: BonusMalusMetrics;
+  last_calculated_at: string;
+  next_recalculation_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BonusMalusMetrics {
+  average_rating: number;
+  owner_rating: number;
+  renter_rating: number;
+  cancellation_rate: number;
+  total_rentals: number;
+  completed_rentals: number;
+  is_verified: boolean;
+  owner_reviews_count: number;
+  renter_reviews_count: number;
+  factors: {
+    rating_factor: number;
+    cancellation_factor: number;
+    completion_factor: number;
+    verification_factor: number;
+  };
+}
+
+export interface BonusMalusCalculation {
+  user_id: string;
+  total_factor: number;
+  discount_or_surcharge: string;
+  percentage: string;
+  breakdown: {
+    rating_factor: number;
+    cancellation_factor: number;
+    completion_factor: number;
+    verification_factor: number;
+  };
+  metrics: BonusMalusMetrics;
+}
+
+export interface BonusMalusDisplay {
+  type: BonusMalusType;
+  percentage: number; // Valor absoluto para mostrar
+  message: string;
+  icon: string;
+  color: string;
+  tips?: string[]; // Consejos para mejorar el factor
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// REFUND MANAGEMENT SYSTEM
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+export type RefundStatus &#x3D;
+  | &#x27;pending&#x27;
+  | &#x27;approved&#x27;
+  | &#x27;processing&#x27;
+  | &#x27;completed&#x27;
+  | &#x27;failed&#x27;
+  | &#x27;rejected&#x27;;
+export type RefundDestination &#x3D; &#x27;wallet&#x27; | &#x27;original_payment_method&#x27;;
+
+export interface RefundRequest {
+  id: string;
+  booking_id: string;
+  user_id: string;
+  refund_amount: number;
+  currency: string;
+  destination: RefundDestination;
+  status: RefundStatus;
+
+  // Admin actions
+  approved_by?: string | null;
+  approved_at?: string | null;
+  processed_by?: string | null;
+  processed_at?: string | null;
+  rejected_by?: string | null;
+  rejected_at?: string | null;
+
+  // Reasons and notes
+  request_reason?: string | null;
+  rejection_reason?: string | null;
+  admin_notes?: string | null;
+
+  // Provider tracking
+  provider?: string | null;
+  provider_refund_id?: string | null;
+  provider_metadata?: Record&lt;string, unknown&gt; | null;
+
+  // Wallet transaction
+  wallet_transaction_id?: string | null;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+  completed_at?: string | null;
+  failed_at?: string | null;
+
+  // Extended fields (from joins)
+  user_name?: string;
+  user_email?: string;
+  booking_total?: number;
+  car_title?: string;
+}
+
+export interface AdminAuditLog {
+  id: string;
+  admin_id: string;
+  action_type: string;
+  target_type: string;
+  target_id: string;
+  amount?: number | null;
+  currency?: string | null;
+  reason?: string | null;
+  metadata?: Record&lt;string, unknown&gt; | null;
+  created_at: string;
+}
+
+export interface ProcessRefundParams {
+  booking_id: string;
+  refund_amount: number;
+  destination: RefundDestination;
+  reason?: string;
+}
+
+export interface ProcessRefundResult {
+  success: boolean;
+  refund_request_id: string;
+  booking_id: string;
+  amount: number;
+  destination: RefundDestination;
+  status: RefundStatus;
+  wallet_transaction_id?: string | null;
+  message: string;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'NotificationPrefs.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

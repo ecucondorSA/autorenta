@@ -1,0 +1,1814 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ProfileValidators</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/profile/components/shared/field-validators/profile-validators.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#bothOrNeither" >bothOrNeither</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#conditionallyRequired" >conditionallyRequired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#currency" >currency</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#fullName" >fullName</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#govIdNumber" >govIdNumber</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#latitude" >latitude</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#locale" >locale</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#longitude" >longitude</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#maxAge" >maxAge</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#minAge" >minAge</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#phone" >phone</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#postalCode" >postalCode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#searchRadius" >searchRadius</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#timezone" >timezone</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bothOrNeither"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>bothOrNeither</b></span>
+                        <a href="#bothOrNeither"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>bothOrNeither(fieldA: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fieldB: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:332</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Both or neither validator for FormGroups
+Validates that both fields have values or both are empty
+Useful for lat/lng pairs</p>
+<p>Usage:</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-typescript">this.form = this.fb.group({
+  home_latitude: [&#39;&#39;],
+  home_longitude: [&#39;&#39;]
+}, {
+  validators: [ProfileValidators.bothOrNeither(&#39;home_latitude&#39;, &#39;home_longitude&#39;)]
+});</code></pre></div></div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>fieldA</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>First field name</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>fieldB</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Second field name</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function for FormGroup</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="conditionallyRequired"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>conditionallyRequired</b></span>
+                        <a href="#conditionallyRequired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>conditionallyRequired(condition: () => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="293"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Conditional required validator
+Field is required only if condition function returns true</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>condition</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Function that returns true if field should be required</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currency"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>currency</b></span>
+                        <a href="#currency"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>currency()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:480</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates currency code (ISO 4217)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fullName"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>fullName</b></span>
+                        <a href="#fullName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fullName(minLength: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="388"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:388</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates full name format
+Must contain at least first name and last name</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>minLength</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>3</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Minimum length (default: 3)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="govIdNumber"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>govIdNumber</b></span>
+                        <a href="#govIdNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>govIdNumber(idType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="507"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:507</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates government ID number format</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>idType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Type of ID (&#39;DNI&#39;, &#39;Passport&#39;, etc.)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="latitude"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>latitude</b></span>
+                        <a href="#latitude"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>latitude()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates latitude coordinate (-90 to 90)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="locale"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>locale</b></span>
+                        <a href="#locale"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>locale()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="455"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:455</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates locale format (e.g., es-AR, en-US)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="longitude"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>longitude</b></span>
+                        <a href="#longitude"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>longitude()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:168</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates longitude coordinate (-180 to 180)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxAge"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>maxAge</b></span>
+                        <a href="#maxAge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>maxAge(maxAge: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates maximum age based on date of birth</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>maxAge</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>100</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Maximum allowed age (default: 100)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="minAge"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>minAge</b></span>
+                        <a href="#minAge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>minAge(minAge: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates minimum age based on date of birth</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>minAge</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>18</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Minimum required age (default: 18)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="phone"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>phone</b></span>
+                        <a href="#phone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>phone()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates phone number in E.164 format (international format)
+Examples: +5491112345678, +12125551234</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="postalCode"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>postalCode</b></span>
+                        <a href="#postalCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>postalCode(country?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:241</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates postal code based on country</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>country</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Country code (ISO 3166-1 alpha-2)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchRadius"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>searchRadius</b></span>
+                        <a href="#searchRadius"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>searchRadius(min: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, max: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="205"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:205</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates search radius (5-100 km)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>min</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>5</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Minimum radius in km (default: 5)</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>max</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>100</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Maximum radius in km (default: 100)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="timezone"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>timezone</b></span>
+                        <a href="#timezone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>timezone()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="431"
+                                    class="link-to-prism">src/app/features/profile/components/shared/field-validators/profile-validators.ts:431</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validates timezone format</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ValidatorFn</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Validator function</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AbstractControl, ValidationErrors, ValidatorFn } from &#x27;@angular/forms&#x27;;
+
+export class ProfileValidators {
+  /**
+   * Validates minimum age based on date of birth
+   * @param minAge Minimum required age (default: 18)
+   * @returns Validator function
+   */
+  static minAge(minAge: number &#x3D; 18): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) {
+        return null; // Don&#x27;t validate empty values (use Validators.required separately)
+      }
+
+      try {
+        const birthDate &#x3D; new Date(control.value);
+        const today &#x3D; new Date();
+
+        // Calculate age
+        let age &#x3D; today.getFullYear() - birthDate.getFullYear();
+        const monthDiff &#x3D; today.getMonth() - birthDate.getMonth();
+
+        // Adjust age if birthday hasn&#x27;t occurred yet this year
+        if (monthDiff &lt; 0 || (monthDiff &#x3D;&#x3D;&#x3D; 0 &amp;&amp; today.getDate() &lt; birthDate.getDate())) {
+          age--;
+        }
+
+        // Check if age meets minimum requirement
+        if (age &lt; minAge) {
+          return {
+            minAge: {
+              required: minAge,
+              actual: age,
+              message: &#x60;Debes tener al menos ${minAge} años para usar AutoRenta&#x60;,
+            },
+          };
+        }
+
+        return null;
+      } catch {
+        return {
+          invalidDate: {
+            message: &#x27;Fecha de nacimiento inválida&#x27;,
+          },
+        };
+      }
+    };
+  }
+
+  /**
+   * Validates maximum age based on date of birth
+   * @param maxAge Maximum allowed age (default: 100)
+   * @returns Validator function
+   */
+  static maxAge(maxAge: number &#x3D; 100): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      try {
+        const birthDate &#x3D; new Date(control.value);
+        const today &#x3D; new Date();
+
+        let age &#x3D; today.getFullYear() - birthDate.getFullYear();
+        const monthDiff &#x3D; today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff &lt; 0 || (monthDiff &#x3D;&#x3D;&#x3D; 0 &amp;&amp; today.getDate() &lt; birthDate.getDate())) {
+          age--;
+        }
+
+        if (age &gt; maxAge) {
+          return {
+            maxAge: {
+              required: maxAge,
+              actual: age,
+              message: &#x60;La edad máxima permitida es ${maxAge} años&#x60;,
+            },
+          };
+        }
+
+        return null;
+      } catch {
+        return { invalidDate: { message: &#x27;Fecha de nacimiento inválida&#x27; } };
+      }
+    };
+  }
+
+  /**
+   * Validates phone number in E.164 format (international format)
+   * Examples: +5491112345678, +12125551234
+   * @returns Validator function
+   */
+  static phone(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const phoneStr &#x3D; String(control.value).trim();
+
+      // E.164 format: +[country code][number] (1-15 digits total)
+      const e164Regex &#x3D; /^\+?[1-9]\d{1,14}$/;
+
+      if (!e164Regex.test(phoneStr)) {
+        return {
+          phone: {
+            message: &#x27;Número de teléfono inválido. Debe incluir código de país (ej: +549111234567)&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates latitude coordinate (-90 to 90)
+   * @returns Validator function
+   */
+  static latitude(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (control.value &#x3D;&#x3D;&#x3D; null || control.value &#x3D;&#x3D;&#x3D; undefined || control.value &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+        return null;
+      }
+
+      const lat &#x3D; Number(control.value);
+
+      if (isNaN(lat)) {
+        return {
+          latitude: {
+            message: &#x27;Latitud debe ser un número&#x27;,
+          },
+        };
+      }
+
+      if (lat &lt; -90 || lat &gt; 90) {
+        return {
+          latitude: {
+            min: -90,
+            max: 90,
+            actual: lat,
+            message: &#x27;Latitud debe estar entre -90 y 90 grados&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates longitude coordinate (-180 to 180)
+   * @returns Validator function
+   */
+  static longitude(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (control.value &#x3D;&#x3D;&#x3D; null || control.value &#x3D;&#x3D;&#x3D; undefined || control.value &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+        return null;
+      }
+
+      const lng &#x3D; Number(control.value);
+
+      if (isNaN(lng)) {
+        return {
+          longitude: {
+            message: &#x27;Longitud debe ser un número&#x27;,
+          },
+        };
+      }
+
+      if (lng &lt; -180 || lng &gt; 180) {
+        return {
+          longitude: {
+            min: -180,
+            max: 180,
+            actual: lng,
+            message: &#x27;Longitud debe estar entre -180 y 180 grados&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates search radius (5-100 km)
+   * @param min Minimum radius in km (default: 5)
+   * @param max Maximum radius in km (default: 100)
+   * @returns Validator function
+   */
+  static searchRadius(min: number &#x3D; 5, max: number &#x3D; 100): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (control.value &#x3D;&#x3D;&#x3D; null || control.value &#x3D;&#x3D;&#x3D; undefined || control.value &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+        return null;
+      }
+
+      const radius &#x3D; Number(control.value);
+
+      if (isNaN(radius)) {
+        return {
+          searchRadius: {
+            message: &#x27;Radio de búsqueda debe ser un número&#x27;,
+          },
+        };
+      }
+
+      if (radius &lt; min || radius &gt; max) {
+        return {
+          searchRadius: {
+            min,
+            max,
+            actual: radius,
+            message: &#x60;Radio de búsqueda debe estar entre ${min} y ${max} km&#x60;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates postal code based on country
+   * @param country Country code (ISO 3166-1 alpha-2)
+   * @returns Validator function
+   */
+  static postalCode(country?: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const postalCode &#x3D; String(control.value).trim();
+
+      // Basic patterns for supported countries
+      const patterns: Record&lt;string, RegExp&gt; &#x3D; {
+        AR: /^[A-Z]?\d{4}$/, // Argentina: 1234 or C1234
+        UY: /^\d{5}$/, // Uruguay: 12345
+        CL: /^\d{7}$/, // Chile: 1234567
+        US: /^\d{5}(-\d{4})?$/, // USA: 12345 or 12345-6789
+      };
+
+      // If no country specified, accept any alphanumeric postal code
+      if (!country) {
+        // Matches 3-10 alphanumeric characters (case-insensitive)
+        const genericPattern &#x3D; /^[A-Z0-9]{3,10}$/i;
+        if (!genericPattern.test(postalCode)) {
+          return {
+            postalCode: {
+              message: &#x27;Código postal inválido&#x27;,
+            },
+          };
+        }
+        return null;
+      }
+
+      const pattern &#x3D; patterns[country.toUpperCase()];
+      if (!pattern) {
+        // Country not supported, accept any format
+        return null;
+      }
+
+      if (!pattern.test(postalCode)) {
+        return {
+          postalCode: {
+            message: &#x60;Código postal inválido para ${country}&#x60;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Conditional required validator
+   * Field is required only if condition function returns true
+   * @param condition Function that returns true if field should be required
+   * @returns Validator function
+   */
+  static conditionallyRequired(condition: () &#x3D;&gt; boolean): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!condition()) {
+        return null; // Not required, skip validation
+      }
+
+      // Check if value is empty
+      const value &#x3D; control.value;
+      if (value &#x3D;&#x3D;&#x3D; null || value &#x3D;&#x3D;&#x3D; undefined || value &#x3D;&#x3D;&#x3D; &#x27;&#x27;) {
+        return {
+          required: {
+            message: &#x27;Este campo es requerido&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Both or neither validator for FormGroups
+   * Validates that both fields have values or both are empty
+   * Useful for lat/lng pairs
+   *
+   * Usage:
+   * &#x60;&#x60;&#x60;typescript
+   * this.form &#x3D; this.fb.group({
+   *   home_latitude: [&#x27;&#x27;],
+   *   home_longitude: [&#x27;&#x27;]
+   * }, {
+   *   validators: [ProfileValidators.bothOrNeither(&#x27;home_latitude&#x27;, &#x27;home_longitude&#x27;)]
+   * });
+   * &#x60;&#x60;&#x60;
+   *
+   * @param fieldA First field name
+   * @param fieldB Second field name
+   * @returns Validator function for FormGroup
+   */
+  static bothOrNeither(fieldA: string, fieldB: string): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      const controlA &#x3D; group.get(fieldA);
+      const controlB &#x3D; group.get(fieldB);
+
+      if (!controlA || !controlB) {
+        return null; // Controls don&#x27;t exist
+      }
+
+      const valueA &#x3D; controlA.value;
+      const valueB &#x3D; controlB.value;
+
+      const hasA &#x3D; valueA !&#x3D;&#x3D; null &amp;&amp; valueA !&#x3D;&#x3D; undefined &amp;&amp; valueA !&#x3D;&#x3D; &#x27;&#x27;;
+      const hasB &#x3D; valueB !&#x3D;&#x3D; null &amp;&amp; valueB !&#x3D;&#x3D; undefined &amp;&amp; valueB !&#x3D;&#x3D; &#x27;&#x27;;
+
+      // Both present or both absent &#x3D; OK
+      if ((hasA &amp;&amp; hasB) || (!hasA &amp;&amp; !hasB)) {
+        // Clear any previous errors from this validator
+        if (controlA.hasError(&#x27;requiredWith&#x27;)) {
+          const errors &#x3D; { ...controlA.errors };
+          delete errors[&#x27;requiredWith&#x27;];
+          controlA.setErrors(Object.keys(errors).length &gt; 0 ? errors : null);
+        }
+        if (controlB.hasError(&#x27;requiredWith&#x27;)) {
+          const errors &#x3D; { ...controlB.errors };
+          delete errors[&#x27;requiredWith&#x27;];
+          controlB.setErrors(Object.keys(errors).length &gt; 0 ? errors : null);
+        }
+        return null;
+      }
+
+      // One present, one absent &#x3D; ERROR
+      const error &#x3D; {
+        requiredWith: {
+          field: hasA ? fieldB : fieldA,
+          message: &#x60;Ambos ${fieldA} y ${fieldB} deben estar presentes o ambos vacíos&#x60;,
+        },
+      };
+
+      // Set error on the empty field
+      if (hasA &amp;&amp; !hasB) {
+        controlB.setErrors({ ...controlB.errors, ...error });
+      } else if (hasB &amp;&amp; !hasA) {
+        controlA.setErrors({ ...controlA.errors, ...error });
+      }
+
+      return error;
+    };
+  }
+
+  /**
+   * Validates full name format
+   * Must contain at least first name and last name
+   * @param minLength Minimum length (default: 3)
+   * @returns Validator function
+   */
+  static fullName(minLength: number &#x3D; 3): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const name &#x3D; String(control.value).trim();
+
+      if (name.length &lt; minLength) {
+        return {
+          fullName: {
+            message: &#x60;El nombre debe tener al menos ${minLength} caracteres&#x60;,
+          },
+        };
+      }
+
+      // Check for at least two words (first name + last name)
+      const words &#x3D; name.split(/\s+/).filter((w) &#x3D;&gt; w.length &gt; 0);
+      if (words.length &lt; 2) {
+        return {
+          fullName: {
+            message: &#x27;Debes ingresar nombre y apellido completos&#x27;,
+          },
+        };
+      }
+
+      // Check for valid characters (letters, spaces, hyphens, apostrophes)
+      // Matches: letters (including accented), spaces, hyphens, and apostrophes
+      const validPattern &#x3D; /^[a-zA-ZÀ-ÿ\s&#x27;-]+$/;
+      if (!validPattern.test(name)) {
+        return {
+          fullName: {
+            message: &#x27;El nombre solo puede contener letras, espacios, guiones y apóstrofes&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates timezone format
+   * @returns Validator function
+   */
+  static timezone(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const timezone &#x3D; String(control.value);
+
+      // Check if timezone is valid using Intl API
+      try {
+        Intl.DateTimeFormat(undefined, { timeZone: timezone });
+        return null;
+      } catch {
+        return {
+          timezone: {
+            message: &#x27;Zona horaria inválida&#x27;,
+          },
+        };
+      }
+    };
+  }
+
+  /**
+   * Validates locale format (e.g., es-AR, en-US)
+   * @returns Validator function
+   */
+  static locale(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const locale &#x3D; String(control.value);
+
+      // Basic locale format: language-COUNTRY (e.g., es-AR, en-US)
+      // Matches: 2 lowercase letters, hyphen, 2 uppercase letters
+      const localePattern &#x3D; /^[a-z]{2}-[A-Z]{2}$/;
+      if (!localePattern.test(locale)) {
+        return {
+          locale: {
+            message: &#x27;Formato de locale inválido (ej: es-AR, en-US)&#x27;,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates currency code (ISO 4217)
+   * @returns Validator function
+   */
+  static currency(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const currency &#x3D; String(control.value).toUpperCase();
+
+      // Common currencies for AutoRenta
+      const validCurrencies &#x3D; [&#x27;ARS&#x27;, &#x27;UYU&#x27;, &#x27;CLP&#x27;, &#x27;USD&#x27;, &#x27;EUR&#x27;];
+
+      if (!validCurrencies.includes(currency)) {
+        return {
+          currency: {
+            message: &#x27;Código de moneda inválido&#x27;,
+            valid: validCurrencies,
+          },
+        };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+   * Validates government ID number format
+   * @param idType Type of ID (&#x27;DNI&#x27;, &#x27;Passport&#x27;, etc.)
+   * @returns Validator function
+   */
+  static govIdNumber(idType?: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null &#x3D;&gt; {
+      if (!control.value) return null;
+
+      const idNumber &#x3D; String(control.value).trim();
+
+      // If no type specified, just check it&#x27;s not empty and has reasonable length
+      if (!idType) {
+        if (idNumber.length &lt; 6 || idNumber.length &gt; 20) {
+          return {
+            govIdNumber: {
+              message: &#x27;Número de documento inválido (debe tener entre 6 y 20 caracteres)&#x27;,
+            },
+          };
+        }
+        return null;
+      }
+
+      // Type-specific validation
+      switch (idType.toUpperCase()) {
+        case &#x27;DNI&#x27;:
+          // Argentina DNI: 7-8 digits
+          if (!/^\d{7,8}$/.test(idNumber)) {
+            return {
+              govIdNumber: {
+                message: &#x27;DNI inválido (debe tener 7-8 dígitos)&#x27;,
+              },
+            };
+          }
+          break;
+
+        case &#x27;PASSPORT&#x27;:
+        case &#x27;PASAPORTE&#x27;:
+          // Passport: alphanumeric, 6-12 chars
+          if (!/^[A-Z0-9]{6,12}$/i.test(idNumber)) {
+            return {
+              govIdNumber: {
+                message: &#x27;Número de pasaporte inválido (6-12 caracteres alfanuméricos)&#x27;,
+              },
+            };
+          }
+          break;
+      }
+
+      return null;
+    };
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProfileValidators.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

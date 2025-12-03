@@ -1,0 +1,2602 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  BookingPaymentPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/booking-payment/booking-payment.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-booking-payment</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>TranslateModule</code>
+                                <code><a href="../components/MercadopagoCardFormComponent.html" target="_self" >MercadopagoCardFormComponent</a></code>
+                                <code><a href="../components/WalletBalanceCardComponent.html" target="_self" >WalletBalanceCardComponent</a></code>
+                                <code><a href="../components/LoadingStateComponent.html" target="_self" >LoadingStateComponent</a></code>
+                                <code><a href="../components/ButtonComponent.html" target="_self" >ButtonComponent</a></code>
+                            <code>MoneyPipe</code>
+                            <code>DatePipe</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./booking-payment.page.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./booking-payment.page.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authService" >authService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#booking" >booking</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookingService" >bookingService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#car" >car</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#deliveryFee" >deliveryFee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#depositAmount" >depositAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasSufficientFunds" >hasSufficientFunds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#insuranceFee" >insuranceFee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#mercadoPagoScriptService" >mercadoPagoScriptService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#mercadopagoService" >mercadopagoService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#paymentMethod" >paymentMethod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#paymentOptions" >paymentOptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#platformFee" >platformFee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#processing" >processing</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#rentalBaseAmount" >rentalBaseAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedOption" >selectedOption</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#showPaymentOptions" >showPaymentOptions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#toastService" >toastService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#totalAmount" >totalAmount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#walletBalance" >walletBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#walletService" >walletService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#goBack" >goBack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadBookingData" >loadBookingData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadWalletBalance" >loadWalletBalance</a>
+                            </li>
+                            <li>
+                                <a href="#navigateToDeposit" >navigateToDeposit</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onCardPaymentError" >onCardPaymentError</a>
+                            </li>
+                            <li>
+                                <a href="#onCardTokenGenerated" >onCardTokenGenerated</a>
+                            </li>
+                            <li>
+                                <a href="#processWalletPayment" >processWalletPayment</a>
+                            </li>
+                            <li>
+                                <a href="#selectPaymentOption" >selectPaymentOption</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="152" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:152</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goBack"></a>
+                    <span class="name">
+                        <span ><b>goBack</b></span>
+                        <a href="#goBack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goBack()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="346"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:346</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBookingData"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadBookingData</b></span>
+                        <a href="#loadBookingData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBookingData(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="202"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:202</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadWalletBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadWalletBalance</b></span>
+                        <a href="#loadWalletBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadWalletBalance()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:236</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="navigateToDeposit"></a>
+                    <span class="name">
+                        <span ><b>navigateToDeposit</b></span>
+                        <a href="#navigateToDeposit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>navigateToDeposit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="330"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:330</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:169</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCardPaymentError"></a>
+                    <span class="name">
+                        <span ><b>onCardPaymentError</b></span>
+                        <a href="#onCardPaymentError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCardPaymentError(error: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="325"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:325</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCardTokenGenerated"></a>
+                    <span class="name">
+                        <span ><b>onCardTokenGenerated</b></span>
+                        <a href="#onCardTokenGenerated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onCardTokenGenerated(tokenData: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:289</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tokenData</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processWalletPayment"></a>
+                    <span class="name">
+                        <span ><b>processWalletPayment</b></span>
+                        <a href="#processWalletPayment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>processWalletPayment()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="261"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:261</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectPaymentOption"></a>
+                    <span class="name">
+                        <span ><b>selectPaymentOption</b></span>
+                        <a href="#selectPaymentOption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>selectPaymentOption(optionId: <a href="../interfaces/PaymentOption.html" target="_self">PaymentOption</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="244"
+                                    class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:244</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>optionId</td>
+                                            <td>
+                                                            <code><a href="../interfaces/PaymentOption.html" target="_self" >PaymentOption</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authService</b></span>
+                        <a href="#authService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="booking"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>booking</b></span>
+                        <a href="#booking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Booking | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookingService</b></span>
+                        <a href="#bookingService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(BookingsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="car"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>car</b></span>
+                        <a href="#car"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Car | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deliveryFee"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>deliveryFee</b></span>
+                        <a href="#deliveryFee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.delivery_fee_cents || 0) / 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="depositAmount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>depositAmount</b></span>
+                        <a href="#depositAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    return (bookingData.deposit_amount_cents || 0) / 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasSufficientFunds"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasSufficientFunds</b></span>
+                        <a href="#hasSufficientFunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const balance &#x3D; this.walletBalance();
+    const required &#x3D; this.totalAmount();
+    return balance &gt;&#x3D; required;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insuranceFee"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>insuranceFee</b></span>
+                        <a href="#insuranceFee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.insurance_cents || 0) / 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mercadoPagoScriptService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>mercadoPagoScriptService</b></span>
+                        <a href="#mercadoPagoScriptService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(MercadoPagoScriptService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:68</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mercadopagoService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>mercadopagoService</b></span>
+                        <a href="#mercadopagoService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(MercadoPagoPaymentService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paymentMethod"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>paymentMethod</b></span>
+                        <a href="#paymentMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;wallet&#x27; | &#x27;credit_card&#x27;&gt;(&#x27;credit_card&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="paymentOptions"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>paymentOptions</b></span>
+                        <a href="#paymentOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;PaymentOption[]&gt;(() &#x3D;&gt; {
+    const balance &#x3D; this.walletBalance();
+
+    return [
+      {
+        id: &#x27;wallet&#x27;,
+        label: &#x27;Usar saldo actual&#x27;,
+        description: &#x60;Balance disponible: $${balance.toFixed(2)}&#x60;,
+        icon: &#x27;🏦&#x27;,
+        available: this.hasSufficientFunds(),
+      },
+      {
+        id: &#x27;deposit&#x27;,
+        label: &#x27;Depositar fondos en wallet&#x27;,
+        description: &#x27;Carga tu wallet con MercadoPago&#x27;,
+        icon: &#x27;💰&#x27;,
+        available: true,
+      },
+      {
+        id: &#x27;card&#x27;,
+        label: &#x27;Pagar con tarjeta&#x27;,
+        description: &#x27;Pago directo con tarjeta de crédito/débito&#x27;,
+        icon: &#x27;💳&#x27;,
+        available: true,
+      },
+    ];
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:126</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="platformFee"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>platformFee</b></span>
+                        <a href="#platformFee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.fees_cents || 0) / 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processing"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>processing</b></span>
+                        <a href="#processing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rentalBaseAmount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>rentalBaseAmount</b></span>
+                        <a href="#rentalBaseAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    // El total incluye todo, así que restamos los extras para obtener el base
+    const total &#x3D; bookingData.total_amount || 0;
+    const extras &#x3D; this.deliveryFee() + this.insuranceFee() + this.platformFee();
+    return total - extras;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:105</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedOption"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedOption</b></span>
+                        <a href="#selectedOption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;PaymentOption[&#x27;id&#x27;] | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showPaymentOptions"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>showPaymentOptions</b></span>
+                        <a href="#showPaymentOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toastService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>toastService</b></span>
+                        <a href="#toastService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ToastService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="totalAmount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>totalAmount</b></span>
+                        <a href="#totalAmount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    return (bookingData.total_amount || 0) + this.depositAmount();
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:114</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>walletBalance</b></span>
+                        <a href="#walletBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.walletService.availableBalance</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>walletService</b></span>
+                        <a href="#walletService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(WalletService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/features/bookings/booking-payment/booking-payment.page.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  effect,
+  inject,
+  signal,
+} from &#x27;@angular/core&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import { from } from &#x27;rxjs&#x27;;
+import { finalize } from &#x27;rxjs/operators&#x27;;
+
+// Core imports
+import { DatePipe } from &#x27;@angular/common&#x27;;
+import { AuthService } from &#x27;../../../core/services/auth.service&#x27;;
+import { BookingsService } from &#x27;../../../core/services/bookings.service&#x27;;
+import { MercadoPagoScriptService } from &#x27;../../../core/services/mercado-pago-script.service&#x27;;
+import { MercadoPagoPaymentService } from &#x27;../../../core/services/mercadopago-payment.service&#x27;;
+import { ToastService } from &#x27;../../../core/services/toast.service&#x27;;
+import { WalletService } from &#x27;../../../core/services/wallet.service&#x27;;
+import { ButtonComponent } from &#x27;../../../shared/components/button/button.component&#x27;;
+import { LoadingStateComponent } from &#x27;../../../shared/components/loading-state/loading-state.component&#x27;;
+import { MercadopagoCardFormComponent } from &#x27;../../../shared/components/mercadopago-card-form/mercadopago-card-form.component&#x27;;
+import { WalletBalanceCardComponent } from &#x27;../../../shared/components/wallet-balance-card/wallet-balance-card.component&#x27;;
+import { MoneyPipe } from &#x27;../../../shared/pipes/money.pipe&#x27;;
+
+// Types
+import { Booking, Car } from &#x27;../../../core/models&#x27;;
+// import type { Database } from &#x27;../../../../types/supabase.types&#x27;;
+// type Booking &#x3D; Database[&#x27;public&#x27;][&#x27;Views&#x27;][&#x27;my_bookings&#x27;][&#x27;Row&#x27;];
+// type Car &#x3D; Database[&#x27;public&#x27;][&#x27;Tables&#x27;][&#x27;cars&#x27;][&#x27;Row&#x27;];
+
+interface PaymentOption {
+  id: &#x27;wallet&#x27; | &#x27;deposit&#x27; | &#x27;card&#x27;;
+  label: string;
+  description: string;
+  icon: string;
+  available: boolean;
+}
+
+@Component({
+  selector: &#x27;app-booking-payment&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MercadopagoCardFormComponent,
+    WalletBalanceCardComponent,
+    LoadingStateComponent,
+    ButtonComponent,
+    MoneyPipe,
+    DatePipe,
+  ],
+  templateUrl: &#x27;./booking-payment.page.html&#x27;,
+  styleUrls: [&#x27;./booking-payment.page.css&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class BookingPaymentPage implements OnInit {
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly router &#x3D; inject(Router);
+  private readonly authService &#x3D; inject(AuthService);
+  private readonly bookingService &#x3D; inject(BookingsService);
+  private readonly walletService &#x3D; inject(WalletService);
+  private readonly mercadopagoService &#x3D; inject(MercadoPagoPaymentService);
+  private readonly mercadoPagoScriptService &#x3D; inject(MercadoPagoScriptService);
+  private readonly toastService &#x3D; inject(ToastService);
+
+  // State
+  readonly loading &#x3D; signal(true);
+  readonly processing &#x3D; signal(false);
+  readonly booking &#x3D; signal&lt;Booking | null&gt;(null);
+  readonly car &#x3D; signal&lt;Car | null&gt;(null);
+  readonly paymentMethod &#x3D; signal&lt;&#x27;wallet&#x27; | &#x27;credit_card&#x27;&gt;(&#x27;credit_card&#x27;);
+  readonly showPaymentOptions &#x3D; signal(false);
+  readonly selectedOption &#x3D; signal&lt;PaymentOption[&#x27;id&#x27;] | null&gt;(null);
+
+  // Computed values
+  readonly walletBalance &#x3D; this.walletService.availableBalance;
+
+  readonly depositAmount &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    return (bookingData.deposit_amount_cents || 0) / 100;
+  });
+
+  // Desglose de costos para transparencia
+  readonly deliveryFee &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.delivery_fee_cents || 0) / 100;
+  });
+
+  readonly insuranceFee &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.insurance_cents || 0) / 100;
+  });
+
+  readonly platformFee &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    return (bookingData?.fees_cents || 0) / 100;
+  });
+
+  readonly rentalBaseAmount &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    // El total incluye todo, así que restamos los extras para obtener el base
+    const total &#x3D; bookingData.total_amount || 0;
+    const extras &#x3D; this.deliveryFee() + this.insuranceFee() + this.platformFee();
+    return total - extras;
+  });
+
+  readonly totalAmount &#x3D; computed(() &#x3D;&gt; {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return 0;
+    return (bookingData.total_amount || 0) + this.depositAmount();
+  });
+
+  readonly hasSufficientFunds &#x3D; computed(() &#x3D;&gt; {
+    const balance &#x3D; this.walletBalance();
+    const required &#x3D; this.totalAmount();
+    return balance &gt;&#x3D; required;
+  });
+
+  readonly paymentOptions &#x3D; computed&lt;PaymentOption[]&gt;(() &#x3D;&gt; {
+    const balance &#x3D; this.walletBalance();
+
+    return [
+      {
+        id: &#x27;wallet&#x27;,
+        label: &#x27;Usar saldo actual&#x27;,
+        description: &#x60;Balance disponible: $${balance.toFixed(2)}&#x60;,
+        icon: &#x27;🏦&#x27;,
+        available: this.hasSufficientFunds(),
+      },
+      {
+        id: &#x27;deposit&#x27;,
+        label: &#x27;Depositar fondos en wallet&#x27;,
+        description: &#x27;Carga tu wallet con MercadoPago&#x27;,
+        icon: &#x27;💰&#x27;,
+        available: true,
+      },
+      {
+        id: &#x27;card&#x27;,
+        label: &#x27;Pagar con tarjeta&#x27;,
+        description: &#x27;Pago directo con tarjeta de crédito/débito&#x27;,
+        icon: &#x27;💳&#x27;,
+        available: true,
+      },
+    ];
+  });
+
+  constructor() {
+    // Effect to handle payment method changes
+    effect(() &#x3D;&gt; {
+      const method &#x3D; this.paymentMethod();
+      const hasFunds &#x3D; this.hasSufficientFunds();
+
+      // If wallet selected but no funds, show options
+      if (method &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; &amp;&amp; !hasFunds) {
+        this.showPaymentOptions.set(true);
+      } else {
+        this.showPaymentOptions.set(false);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    const bookingId &#x3D; this.route.snapshot.paramMap.get(&#x27;bookingId&#x27;);
+    const queryMethod &#x3D; this.route.snapshot.queryParamMap.get(&#x27;paymentMethod&#x27;) as
+      | &#x27;wallet&#x27;
+      | &#x27;credit_card&#x27;;
+
+    if (!bookingId) {
+      this.toastService.error(&#x27;Error de reserva&#x27;, &#x27;ID de reserva no válido&#x27;);
+      this.router.navigate([&#x27;/&#x27;]);
+      return;
+    }
+
+    // Set payment method from query params or session
+    if (queryMethod) {
+      this.paymentMethod.set(queryMethod);
+    } else {
+      const sessionMethod &#x3D; sessionStorage.getItem(&#x27;payment_method&#x27;) as &#x27;wallet&#x27; | &#x27;credit_card&#x27;;
+      if (sessionMethod) {
+        this.paymentMethod.set(sessionMethod);
+      }
+    }
+
+    this.loadBookingData(bookingId);
+    this.loadWalletBalance();
+
+    // Preload MercadoPago SDK if using credit card
+    if (this.paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27;) {
+      this.mercadoPagoScriptService.preloadSDK().catch((error) &#x3D;&gt; {
+        console.warn(&#x27;[BookingPayment] Failed to preload MercadoPago SDK:&#x27;, error);
+      });
+    }
+  }
+
+  private loadBookingData(bookingId: string): void {
+    this.loading.set(true);
+
+    from(this.bookingService.getBookingById(bookingId))
+      .pipe(finalize(() &#x3D;&gt; this.loading.set(false)))
+      .subscribe({
+        next: (booking) &#x3D;&gt; {
+          if (!booking) {
+            this.toastService.error(
+              &#x27;Reserva no encontrada&#x27;,
+              &#x27;No se pudo encontrar la reserva solicitada&#x27;,
+            );
+            this.router.navigate([&#x27;/&#x27;]);
+            return;
+          }
+
+          this.booking.set(booking as unknown as Booking);
+
+          // Load car data if available
+          if (booking.car) {
+            this.car.set(booking.car as Car);
+          }
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;[BookingPayment] Error loading booking:&#x27;, error);
+          this.toastService.error(
+            &#x27;Error de carga&#x27;,
+            &#x27;No se pudo cargar la información de la reserva&#x27;,
+          );
+          this.router.navigate([&#x27;/&#x27;]);
+        },
+      });
+  }
+
+  private loadWalletBalance(): void {
+    this.walletService.getBalance().subscribe({
+      error: (error) &#x3D;&gt; {
+        console.error(&#x27;[BookingPayment] Error loading wallet balance:&#x27;, error);
+      },
+    });
+  }
+
+  selectPaymentOption(optionId: PaymentOption[&#x27;id&#x27;]): void {
+    this.selectedOption.set(optionId);
+
+    switch (optionId) {
+      case &#x27;wallet&#x27;:
+        this.processWalletPayment();
+        break;
+      case &#x27;deposit&#x27;:
+        this.navigateToDeposit();
+        break;
+      case &#x27;card&#x27;:
+        this.paymentMethod.set(&#x27;credit_card&#x27;);
+        this.showPaymentOptions.set(false);
+        break;
+    }
+  }
+
+  processWalletPayment(): void {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return;
+
+    if (!this.hasSufficientFunds()) {
+      this.toastService.error(&#x27;Fondos insuficientes&#x27;, &#x27;No tienes saldo suficiente en tu wallet&#x27;);
+      return;
+    }
+
+    this.processing.set(true);
+
+    // Lock funds for the booking
+    const depositUsd &#x3D; (bookingData.deposit_amount_cents || 0) / 100;
+    this.walletService
+      .lockRentalAndDeposit(bookingData.id, bookingData.total_amount || 0, depositUsd)
+      .pipe(finalize(() &#x3D;&gt; this.processing.set(false)))
+      .subscribe({
+        next: () &#x3D;&gt; {
+          this.toastService.success(&#x27;Pago procesado&#x27;, &#x27;Tu pago ha sido procesado exitosamente&#x27;);
+          this.router.navigate([&#x27;/bookings&#x27;, bookingData.id, &#x27;success&#x27;]);
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;[BookingPayment] Wallet payment error:&#x27;, error);
+          this.toastService.error(&#x27;Error de pago&#x27;, &#x27;No se pudo procesar el pago con wallet&#x27;);
+        },
+      });
+  }
+
+  onCardTokenGenerated(tokenData: { cardToken: string; last4: string }): void {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return;
+
+    this.processing.set(true);
+
+    // Process card payment with the generated token
+    from(
+      this.mercadopagoService.processBookingPayment({
+        booking_id: bookingData.id,
+        card_token: tokenData.cardToken,
+        issuer_id: &#x27;&#x27;,
+        installments: 1,
+      }),
+    )
+      .pipe(finalize(() &#x3D;&gt; this.processing.set(false)))
+      .subscribe({
+        next: (result) &#x3D;&gt; {
+          if (result.status &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;) {
+            this.toastService.success(&#x27;Pago aprobado&#x27;, &#x27;Tu pago ha sido procesado exitosamente&#x27;);
+            this.router.navigate([&#x27;/bookings&#x27;, bookingData.id, &#x27;success&#x27;]);
+          } else if (result.status &#x3D;&#x3D;&#x3D; &#x27;in_process&#x27;) {
+            this.toastService.info(&#x27;Pago en proceso&#x27;, &#x27;Tu pago está siendo verificado&#x27;);
+            this.router.navigate([&#x27;/bookings&#x27;, bookingData.id, &#x27;pending&#x27;]);
+          } else {
+            this.toastService.error(&#x27;Pago rechazado&#x27;, &#x27;El pago fue rechazado por el procesador&#x27;);
+          }
+        },
+        error: (error) &#x3D;&gt; {
+          console.error(&#x27;[BookingPayment] Card payment error:&#x27;, error);
+          this.toastService.error(&#x27;Error de pago&#x27;, &#x27;No se pudo procesar el pago con tarjeta&#x27;);
+        },
+      });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onCardPaymentError(error: any): void {
+    console.error(&#x27;[BookingPayment] Card form error:&#x27;, error);
+    this.toastService.error(&#x27;Error de tarjeta&#x27;, error.message || &#x27;Error al procesar la tarjeta&#x27;);
+  }
+
+  navigateToDeposit(): void {
+    const bookingData &#x3D; this.booking();
+    if (!bookingData) return;
+
+    // Save booking ID to return after deposit
+    sessionStorage.setItem(&#x27;pending_booking_payment&#x27;, bookingData.id);
+
+    // Navigate to wallet deposit page
+    this.router.navigate([&#x27;/wallet/deposit&#x27;], {
+      queryParams: {
+        amount: this.totalAmount(),
+        returnUrl: &#x60;/bookings/${bookingData.id}/payment&#x60;,
+      },
+    });
+  }
+
+  goBack(): void {
+    const bookingData &#x3D; this.booking();
+    if (bookingData?.car_id) {
+      this.router.navigate([&#x27;/cars&#x27;, bookingData.car_id]);
+    } else {
+      this.router.navigate([&#x27;/&#x27;]);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;min-h-screen bg-surface-default dark:bg-surface-default&quot;&gt;
+  &lt;!-- Loading State --&gt;
+  &lt;app-loading-state *ngIf&#x3D;&quot;loading()&quot; /&gt;
+
+  &lt;!-- Main Content --&gt;
+  &lt;div *ngIf&#x3D;&quot;!loading()&quot; class&#x3D;&quot;container mx-auto px-4 py-6 max-w-6xl&quot;&gt;
+    &lt;!-- Header --&gt;
+    &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+      &lt;button
+        (click)&#x3D;&quot;goBack()&quot;
+        class&#x3D;&quot;flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors&quot;
+      &gt;
+        &lt;svg class&#x3D;&quot;w-5 h-5&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+          &lt;path
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            d&#x3D;&quot;M15 19l-7-7 7-7&quot;
+          /&gt;
+        &lt;/svg&gt;
+        &lt;span&gt;Volver&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;grid grid-cols-1 lg:grid-cols-3 gap-6&quot;&gt;
+      &lt;!-- Left Column: Payment Form --&gt;
+      &lt;div class&#x3D;&quot;lg:col-span-2 space-y-6&quot;&gt;
+        &lt;!-- Payment Method Header --&gt;
+        &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl p-6&quot;&gt;
+          &lt;h1 class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-secondary mb-2&quot;&gt;
+            Completar Pago
+          &lt;/h1&gt;
+          &lt;p class&#x3D;&quot;text-text-secondary&quot;&gt;Confirma el pago para tu reserva&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Payment Options (when wallet has insufficient funds) --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;showPaymentOptions()&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl p-6&quot;
+        &gt;
+          &lt;h2 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-secondary mb-4&quot;&gt;
+            Opciones de Pago Disponibles
+          &lt;/h2&gt;
+
+          &lt;div class&#x3D;&quot;bg-warning-light/10 border border-warning-light/20 rounded-lg p-4 mb-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-warning-strong&quot;&gt;
+              &lt;svg
+                class&#x3D;&quot;inline w-4 h-4 mr-1&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+              &gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              Tu wallet no tiene fondos suficientes. Necesitas
+              &lt;strong&gt;{{ totalAmount() | money }}&lt;/strong&gt; para completar esta reserva.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;space-y-3&quot;&gt;
+            &lt;button
+              *ngFor&#x3D;&quot;let option of paymentOptions()&quot;
+              (click)&#x3D;&quot;selectPaymentOption(option.id)&quot;
+              [disabled]&#x3D;&quot;!option.available || processing()&quot;
+              class&#x3D;&quot;w-full p-4 rounded-lg border-2 text-left transition-all group&quot;
+              [class.border-cta-default]&#x3D;&quot;selectedOption() &#x3D;&#x3D;&#x3D; option.id&quot;
+              [class.bg-cta-default/5]&#x3D;&quot;selectedOption() &#x3D;&#x3D;&#x3D; option.id&quot;
+              [class.border-border-default]&#x3D;&quot;selectedOption() !&#x3D;&#x3D; option.id&quot;
+              [class.hover:border-cta-default/50]&#x3D;&quot;
+                option.available &amp;&amp; selectedOption() !&#x3D;&#x3D; option.id
+              &quot;
+              [class.opacity-50]&#x3D;&quot;!option.available&quot;
+              [class.cursor-not-allowed]&#x3D;&quot;!option.available&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+                &lt;span class&#x3D;&quot;text-2xl&quot;&gt;{{ option.icon }}&lt;/span&gt;
+                &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+                  &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;
+                    {{ option.label }}
+                  &lt;/h3&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary&quot;&gt;
+                    {{ option.description }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div
+                  class&#x3D;&quot;w-6 h-6 rounded-full border-2 flex items-center justify-center&quot;
+                  [class.border-cta-default]&#x3D;&quot;selectedOption() &#x3D;&#x3D;&#x3D; option.id&quot;
+                  [class.bg-cta-default]&#x3D;&quot;selectedOption() &#x3D;&#x3D;&#x3D; option.id&quot;
+                  [class.border-border-default]&#x3D;&quot;selectedOption() !&#x3D;&#x3D; option.id&quot;
+                &gt;
+                  &lt;div
+                    *ngIf&#x3D;&quot;selectedOption() &#x3D;&#x3D;&#x3D; option.id&quot;
+                    class&#x3D;&quot;w-3 h-3 bg-surface-raised rounded-full&quot;
+                  &gt;&lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Wallet Payment (when sufficient funds) --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; &amp;&amp; hasSufficientFunds() &amp;&amp; !showPaymentOptions()&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl p-6&quot;
+        &gt;
+          &lt;h2 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-secondary mb-4&quot;&gt;
+            Pagar con Wallet AutoRenta
+          &lt;/h2&gt;
+
+          &lt;!-- Wallet Balance Card --&gt;
+          &lt;app-wallet-balance-card class&#x3D;&quot;mb-6&quot; /&gt;
+
+          &lt;!-- Payment Breakdown --&gt;
+          &lt;div class&#x3D;&quot;space-y-2 mb-6&quot;&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Alquiler del vehículo:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ booking()?.total_amount | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Depósito de garantía:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ depositAmount() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;pt-2 mt-2 border-t border-border-default&quot;&gt;
+              &lt;div class&#x3D;&quot;flex justify-between&quot;&gt;
+                &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;
+                  &gt;Total a bloquear:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;font-bold text-xl text-cta-default&quot;&gt;
+                  {{ totalAmount() | money }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Success Message --&gt;
+          &lt;div class&#x3D;&quot;bg-success-light/10 border border-success-light/20 rounded-lg p-4 mb-6&quot;&gt;
+            &lt;div class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+              &lt;svg
+                class&#x3D;&quot;w-5 h-5 text-success-light mt-0.5&quot;
+                fill&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 20 20&quot;
+              &gt;
+                &lt;path
+                  fill-rule&#x3D;&quot;evenodd&quot;
+                  d&#x3D;&quot;M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z&quot;
+                  clip-rule&#x3D;&quot;evenodd&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;div class&#x3D;&quot;text-sm text-success-strong&quot;&gt;
+                &lt;p class&#x3D;&quot;font-semibold mb-1&quot;&gt;Fondos disponibles confirmados&lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-success-text&quot;&gt;
+                  Los fondos se bloquearán hasta que completes el check-in. Si cancelas la reserva,
+                  se liberarán automáticamente.
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Confirm Button --&gt;
+          &lt;app-button
+            [fullWidth]&#x3D;&quot;true&quot;
+            [loading]&#x3D;&quot;processing()&quot;
+            [disabled]&#x3D;&quot;processing()&quot;
+            (onClick)&#x3D;&quot;processWalletPayment()&quot;
+          &gt;
+            &lt;svg class&#x3D;&quot;w-5 h-5 mr-2&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+              &lt;path
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                d&#x3D;&quot;M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z&quot;
+              /&gt;
+            &lt;/svg&gt;
+            Confirmar y Bloquear Fondos
+          &lt;/app-button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Credit Card Payment --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27; &amp;&amp; !showPaymentOptions()&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl p-6&quot;
+        &gt;
+          &lt;h2 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-secondary mb-4&quot;&gt;
+            Pagar con Tarjeta de Crédito/Débito
+          &lt;/h2&gt;
+
+          &lt;!-- MercadoPago Card Form --&gt;
+          &lt;app-mercadopago-card-form
+            [amountArs]&#x3D;&quot;totalAmount()&quot;
+            (cardTokenGenerated)&#x3D;&quot;onCardTokenGenerated($event)&quot;
+            (cardError)&#x3D;&quot;onCardPaymentError($event)&quot;
+          /&gt;
+
+          &lt;!-- Security Info --&gt;
+          &lt;div class&#x3D;&quot;mt-6 flex items-start gap-2 text-xs text-text-secondary&quot;&gt;
+            &lt;svg class&#x3D;&quot;w-4 h-4 mt-0.5 text-success-light&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+              &lt;path
+                fill-rule&#x3D;&quot;evenodd&quot;
+                d&#x3D;&quot;M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z&quot;
+                clip-rule&#x3D;&quot;evenodd&quot;
+              /&gt;
+            &lt;/svg&gt;
+            &lt;p&gt;
+              Pago seguro procesado por MercadoPago. Tus datos están protegidos con encriptación
+              SSL.
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Right Column: Booking Summary --&gt;
+      &lt;div class&#x3D;&quot;lg:col-span-1&quot;&gt;
+        &lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-xl p-6 sticky top-6&quot;&gt;
+          &lt;h2 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-secondary mb-4&quot;&gt;
+            Resumen de Reserva
+          &lt;/h2&gt;
+
+          &lt;!-- Car Info --&gt;
+          &lt;div *ngIf&#x3D;&quot;car()&quot; class&#x3D;&quot;mb-4 pb-4 border-b border-border-default&quot;&gt;
+            &lt;div class&#x3D;&quot;flex gap-3&quot;&gt;
+              &lt;img
+                src&#x3D;&quot;/assets/car-placeholder.jpg&quot;
+                [alt]&#x3D;&quot;car()!.title&quot;
+                class&#x3D;&quot;w-20 h-16 object-cover rounded-lg&quot;
+              /&gt;
+              &lt;div&gt;
+                &lt;h3 class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;
+                  {{ car()!.title }}
+                &lt;/h3&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-secondary&quot;&gt;
+                  {{ car()!.brand }} {{ car()!.model }} {{ car()!.year }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Dates --&gt;
+          &lt;div class&#x3D;&quot;space-y-2 mb-4 pb-4 border-b border-border-default&quot;&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Check-in:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ booking()?.start_at | date: &#x27;dd/MM/yyyy&#x27; }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Check-out:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ booking()?.end_at | date: &#x27;dd/MM/yyyy&#x27; }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Amounts --&gt;
+          &lt;div class&#x3D;&quot;space-y-2 mb-4&quot;&gt;
+            &lt;!-- Base Rental Cost --&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Alquiler del vehículo:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ rentalBaseAmount() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Delivery Fee (if applicable) --&gt;
+            &lt;div *ngIf&#x3D;&quot;deliveryFee() &gt; 0&quot; class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Envío a domicilio:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ deliveryFee() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Insurance Fee (if applicable) --&gt;
+            &lt;div *ngIf&#x3D;&quot;insuranceFee() &gt; 0&quot; class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Cobertura de seguro:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ insuranceFee() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Platform Fee --&gt;
+            &lt;div *ngIf&#x3D;&quot;platformFee() &gt; 0&quot; class&#x3D;&quot;flex justify-between text-sm&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Tarifa de servicio:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ platformFee() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Security Deposit --&gt;
+            &lt;div class&#x3D;&quot;flex justify-between text-sm pt-2 border-t border-border-default/50&quot;&gt;
+              &lt;span class&#x3D;&quot;text-text-secondary&quot;&gt;Depósito de garantía (Reembolsable):&lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{ depositAmount() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Total --&gt;
+          &lt;div class&#x3D;&quot;pt-4 border-t border-border-default&quot;&gt;
+            &lt;div class&#x3D;&quot;flex justify-between items-end&quot;&gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;Total:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;text-2xl font-bold text-cta-default&quot;&gt;
+                {{ totalAmount() | money }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Payment Method Display --&gt;
+          &lt;div class&#x3D;&quot;mt-4 pt-4 border-t border-border-default&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary mb-2&quot;&gt;Método de pago:&lt;/p&gt;
+            &lt;div
+              class&#x3D;&quot;flex items-center gap-2 px-3 py-2 bg-surface-default dark:bg-surface-pressed rounded-lg&quot;
+            &gt;
+              &lt;span class&#x3D;&quot;text-lg&quot;&gt;
+                {{ paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; ? &#x27;🏦&#x27; : &#x27;💳&#x27; }}
+              &lt;/span&gt;
+              &lt;span class&#x3D;&quot;font-medium text-text-primary dark:text-text-secondary&quot;&gt;
+                {{
+                  paymentMethod() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; ? &#x27;Wallet AutoRenta&#x27; : &#x27;Tarjeta de Crédito/Débito&#x27;
+                }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Processing Overlay --&gt;
+  &lt;div *ngIf&#x3D;&quot;processing()&quot; class&#x3D;&quot;fixed inset-0 bg-black/50 z-50 flex items-center justify-center&quot;&gt;
+    &lt;div class&#x3D;&quot;bg-surface-raised rounded-xl p-8 max-w-sm mx-4 text-center&quot;&gt;
+      &lt;app-loading-state type&#x3D;&quot;spinner&quot; class&#x3D;&quot;mb-4&quot; /&gt;
+      &lt;p class&#x3D;&quot;text-text-primary dark:text-text-secondary font-semibold&quot;&gt;Procesando tu pago...&lt;/p&gt;
+      &lt;p class&#x3D;&quot;text-sm text-text-secondary mt-2&quot;&gt;Por favor, no cierres esta ventana&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./booking-payment.page.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/* Booking Payment Page Styles */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Payment option cards hover effect */
+.payment-option-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.payment-option-card:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card form container */
+:host ::ng-deep .mercadopago-card-form {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Smooth transitions for loading states */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  :host ::ng-deep .sticky {
+    position: relative !important;
+    top: 0 !important;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .payment-option-card:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="min-h-screen bg-surface-default dark:bg-surface-default">  <!-- Loading State -->  <app-loading-state *ngIf="loading()" />  <!-- Main Content -->  <div *ngIf="!loading()" class="container mx-auto px-4 py-6 max-w-6xl">    <!-- Header -->    <div class="mb-6">      <button        (click)="goBack()"        class="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors"      >        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">          <path            stroke-linecap="round"            stroke-linejoin="round"            stroke-width="2"            d="M15 19l-7-7 7-7"          />        </svg>        <span>Volver</span>      </button>    </div>    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">      <!-- Left Column: Payment Form -->      <div class="lg:col-span-2 space-y-6">        <!-- Payment Method Header -->        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6">          <h1 class="text-2xl font-bold text-text-primary dark:text-text-secondary mb-2">            Completar Pago          </h1>          <p class="text-text-secondary">Confirma el pago para tu reserva</p>        </div>        <!-- Payment Options (when wallet has insufficient funds) -->        <div          *ngIf="showPaymentOptions()"          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6"        >          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">            Opciones de Pago Disponibles          </h2>          <div class="bg-warning-light/10 border border-warning-light/20 rounded-lg p-4 mb-4">            <p class="text-sm text-warning-strong">              <svg                class="inline w-4 h-4 mr-1"                fill="none"                stroke="currentColor"                viewBox="0 0 24 24"              >                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"                />              </svg>              Tu wallet no tiene fondos suficientes. Necesitas              <strong>{{ totalAmount() | money }}</strong> para completar esta reserva.            </p>          </div>          <div class="space-y-3">            <button              *ngFor="let option of paymentOptions()"              (click)="selectPaymentOption(option.id)"              [disabled]="!option.available || processing()"              class="w-full p-4 rounded-lg border-2 text-left transition-all group"              [class.border-cta-default]="selectedOption() === option.id"              [class.bg-cta-default/5]="selectedOption() === option.id"              [class.border-border-default]="selectedOption() !== option.id"              [class.hover:border-cta-default/50]="                option.available && selectedOption() !== option.id              "              [class.opacity-50]="!option.available"              [class.cursor-not-allowed]="!option.available"            >              <div class="flex items-start gap-3">                <span class="text-2xl">{{ option.icon }}</span>                <div class="flex-1">                  <h3 class="font-semibold text-text-primary dark:text-text-secondary">                    {{ option.label }}                  </h3>                  <p class="text-sm text-text-secondary">                    {{ option.description }}                  </p>                </div>                <div                  class="w-6 h-6 rounded-full border-2 flex items-center justify-center"                  [class.border-cta-default]="selectedOption() === option.id"                  [class.bg-cta-default]="selectedOption() === option.id"                  [class.border-border-default]="selectedOption() !== option.id"                >                  <div                    *ngIf="selectedOption() === option.id"                    class="w-3 h-3 bg-surface-raised rounded-full"                  ></div>                </div>              </div>            </button>          </div>        </div>        <!-- Wallet Payment (when sufficient funds) -->        <div          *ngIf="paymentMethod() === \'wallet\' && hasSufficientFunds() && !showPaymentOptions()"          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6"        >          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">            Pagar con Wallet AutoRenta          </h2>          <!-- Wallet Balance Card -->          <app-wallet-balance-card class="mb-6" />          <!-- Payment Breakdown -->          <div class="space-y-2 mb-6">            <div class="flex justify-between text-sm">              <span class="text-text-secondary">Alquiler del vehículo:</span>              <span class="font-semibold text-text-primary dark:text-text-secondary">                {{ booking()?.total_amount | money }}              </span>            </div>            <div class="flex justify-between text-sm">              <span class="text-text-secondary">Depósito de garantía:</span>              <span class="font-semibold text-text-primary dark:text-text-secondary">                {{ depositAmount() | money }}              </span>            </div>            <div class="pt-2 mt-2 border-t border-border-default">              <div class="flex justify-between">                <span class="font-semibold text-text-primary dark:text-text-secondary"                  >Total a bloquear:</span                >                <span class="font-bold text-xl text-cta-default">                  {{ totalAmount() | money }}                </span>              </div>            </div>          </div>          <!-- Success Message -->          <div class="bg-success-light/10 border border-success-light/20 rounded-lg p-4 mb-6">            <div class="flex items-start gap-2">              <svg                class="w-5 h-5 text-success-light mt-0.5"                fill="currentColor"                viewBox="0 0 20 20"              >                <path                  fill-rule="evenodd"                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"                  clip-rule="evenodd"                />              </svg>              <div class="text-sm text-success-strong">                <p class="font-semibold mb-1">Fondos disponibles confirmados</p>                <p class="text-success-text">                  Los fondos se bloquearán hasta que completes el check-in. Si cancelas la reserva,                  se liberarán automáticamente.                </p>              </div>            </div>          </div>          <!-- Confirm Button -->          <app-button            [fullWidth]="true"            [loading]="processing()"            [disabled]="processing()"            (onClick)="processWalletPayment()"          >            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">              <path                stroke-linecap="round"                stroke-linejoin="round"                stroke-width="2"                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"              />            </svg>            Confirmar y Bloquear Fondos          </app-button>        </div>        <!-- Credit Card Payment -->        <div          *ngIf="paymentMethod() === \'credit_card\' && !showPaymentOptions()"          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6"        >          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">            Pagar con Tarjeta de Crédito/Débito          </h2>          <!-- MercadoPago Card Form -->          <app-mercadopago-card-form            [amountArs]="totalAmount()"            (cardTokenGenerated)="onCardTokenGenerated($event)"            (cardError)="onCardPaymentError($event)"          />          <!-- Security Info -->          <div class="mt-6 flex items-start gap-2 text-xs text-text-secondary">            <svg class="w-4 h-4 mt-0.5 text-success-light" fill="currentColor" viewBox="0 0 20 20">              <path                fill-rule="evenodd"                d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"                clip-rule="evenodd"              />            </svg>            <p>              Pago seguro procesado por MercadoPago. Tus datos están protegidos con encriptación              SSL.            </p>          </div>        </div>      </div>      <!-- Right Column: Booking Summary -->      <div class="lg:col-span-1">        <div class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6 sticky top-6">          <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">            Resumen de Reserva          </h2>          <!-- Car Info -->          <div *ngIf="car()" class="mb-4 pb-4 border-b border-border-default">            <div class="flex gap-3">              <img                src="/assets/car-placeholder.jpg"                [alt]="car()!.title"                class="w-20 h-16 object-cover rounded-lg"              />              <div>                <h3 class="font-semibold text-text-primary dark:text-text-secondary">                  {{ car()!.title }}                </h3>                <p class="text-sm text-text-secondary">                  {{ car()!.brand }} {{ car()!.model }} {{ car()!.year }}                </p>              </div>            </div>          </div>          <!-- Dates -->          <div class="space-y-2 mb-4 pb-4 border-b border-border-default">            <div class="flex justify-between text-sm">              <span class="text-text-secondary">Check-in:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ booking()?.start_at | date: \'dd/MM/yyyy\' }}              </span>            </div>            <div class="flex justify-between text-sm">              <span class="text-text-secondary">Check-out:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ booking()?.end_at | date: \'dd/MM/yyyy\' }}              </span>            </div>          </div>          <!-- Amounts -->          <div class="space-y-2 mb-4">            <!-- Base Rental Cost -->            <div class="flex justify-between text-sm">              <span class="text-text-secondary">Alquiler del vehículo:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ rentalBaseAmount() | money }}              </span>            </div>            <!-- Delivery Fee (if applicable) -->            <div *ngIf="deliveryFee() > 0" class="flex justify-between text-sm">              <span class="text-text-secondary">Envío a domicilio:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ deliveryFee() | money }}              </span>            </div>            <!-- Insurance Fee (if applicable) -->            <div *ngIf="insuranceFee() > 0" class="flex justify-between text-sm">              <span class="text-text-secondary">Cobertura de seguro:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ insuranceFee() | money }}              </span>            </div>            <!-- Platform Fee -->            <div *ngIf="platformFee() > 0" class="flex justify-between text-sm">              <span class="text-text-secondary">Tarifa de servicio:</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ platformFee() | money }}              </span>            </div>            <!-- Security Deposit -->            <div class="flex justify-between text-sm pt-2 border-t border-border-default/50">              <span class="text-text-secondary">Depósito de garantía (Reembolsable):</span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{ depositAmount() | money }}              </span>            </div>          </div>          <!-- Total -->          <div class="pt-4 border-t border-border-default">            <div class="flex justify-between items-end">              <span class="font-semibold text-text-primary dark:text-text-secondary">Total:</span>              <span class="text-2xl font-bold text-cta-default">                {{ totalAmount() | money }}              </span>            </div>          </div>          <!-- Payment Method Display -->          <div class="mt-4 pt-4 border-t border-border-default">            <p class="text-sm text-text-secondary mb-2">Método de pago:</p>            <div              class="flex items-center gap-2 px-3 py-2 bg-surface-default dark:bg-surface-pressed rounded-lg"            >              <span class="text-lg">                {{ paymentMethod() === \'wallet\' ? \'🏦\' : \'💳\' }}              </span>              <span class="font-medium text-text-primary dark:text-text-secondary">                {{                  paymentMethod() === \'wallet\' ? \'Wallet AutoRenta\' : \'Tarjeta de Crédito/Débito\'                }}              </span>            </div>          </div>        </div>      </div>    </div>  </div>  <!-- Processing Overlay -->  <div *ngIf="processing()" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">    <div class="bg-surface-raised rounded-xl p-8 max-w-sm mx-4 text-center">      <app-loading-state type="spinner" class="mb-4" />      <p class="text-text-primary dark:text-text-secondary font-semibold">Procesando tu pago...</p>      <p class="text-sm text-text-secondary mt-2">Por favor, no cierres esta ventana</p>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'BookingPaymentPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'BookingPaymentPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

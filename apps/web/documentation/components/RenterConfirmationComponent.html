@@ -1,0 +1,1451 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  RenterConfirmationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/shared/components/renter-confirmation/renter-confirmation.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Componente de confirmación del locatario (renter)</p>
+<p>Permite al locatario:</p>
+<ul>
+<li>Confirmar liberar el pago al propietario</li>
+<li>Ver el estado de confirmación del propietario</li>
+<li>Ver información sobre daños reportados (si aplica)</li>
+</ul>
+<p>Cuando AMBOS confirman → se liberan fondos automáticamente:</p>
+<ul>
+<li>Rental payment → al propietario</li>
+<li>Deposit (o deposit - daños) → de vuelta al wallet del locatario</li>
+</ul>
+
+    </p>
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-renter-confirmation</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>TranslateModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      :host {
+        display: block;
+      }
+    </code></td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./renter-confirmation.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#auth" >auth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#confirmationResult" >confirmationResult</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#confirmationService" >confirmationService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#message" >message</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#confirm" >confirm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#bookingId" >bookingId</a>
+                            </li>
+                            <li>
+                                <a href="#damageAmount" >damageAmount</a>
+                            </li>
+                            <li>
+                                <a href="#damageDescription" >damageDescription</a>
+                            </li>
+                            <li>
+                                <a href="#depositAmount" >depositAmount</a>
+                            </li>
+                            <li>
+                                <a href="#ownerConfirmed" >ownerConfirmed</a>
+                            </li>
+                            <li>
+                                <a href="#renterConfirmed" >renterConfirmed</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#confirmed" >confirmed</a>
+                            </li>
+                            <li>
+                                <a href="#errorOccurred" >errorOccurred</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#amountToReturn" >amountToReturn</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="bookingId"></a>
+                        <b>bookingId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Required : </i>&nbsp;<b>true</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:42</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>ID del booking a confirmar</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="damageAmount"></a>
+                        <b>damageAmount</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:57</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Monto de daños reportados por el propietario (si aplica)</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="damageDescription"></a>
+                        <b>damageDescription</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:62</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Descripción de daños reportados por el propietario (si aplica)</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="depositAmount"></a>
+                        <b>depositAmount</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>250</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:67</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Monto del depósito (usualmente $250)</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ownerConfirmed"></a>
+                        <b>ownerConfirmed</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:47</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Indica si el propietario ya confirmó</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="renterConfirmed"></a>
+                        <b>renterConfirmed</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:52</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Indica si el locatario ya confirmó</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="confirmed"></a>
+                        <b>confirmed</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:72</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emite cuando la confirmación se completó exitosamente</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="errorOccurred"></a>
+                        <b>errorOccurred</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:77</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emite cuando ocurre un error</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirm"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>confirm</b></span>
+                        <a href="#confirm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>confirm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="107"
+                                    class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:107</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Procesa la confirmación del locatario</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="auth"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>auth</b></span>
+                        <a href="#auth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmationResult"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>confirmationResult</b></span>
+                        <a href="#confirmationResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;ConfirmAndReleaseResponse | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:82</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Estado de la confirmación</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmationService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>confirmationService</b></span>
+                        <a href="#confirmationService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(BookingConfirmationService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.confirmationService.loading</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:92</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Shortcut para el loading state del servicio</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="message"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>message</b></span>
+                        <a href="#message"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:87</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Mensaje de éxito/error</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="amountToReturn"></a>
+                        <span class="name"><b>amountToReturn</b><a href="#amountToReturn"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>amountToReturn()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/app/shared/components/renter-confirmation/renter-confirmation.component.ts:97</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Calcula cuánto dinero recibirá el locatario de vuelta en su wallet</p>
+</div>
+
+                                <div class="io-description">
+                                    <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                </div>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, Output, EventEmitter, signal, inject } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import {
+  BookingConfirmationService,
+  ConfirmAndReleaseResponse,
+} from &#x27;../../../core/services/booking-confirmation.service&#x27;;
+import { AuthService } from &#x27;../../../core/services/auth.service&#x27;;
+
+/**
+ * Componente de confirmación del locatario (renter)
+ *
+ * Permite al locatario:
+ * - Confirmar liberar el pago al propietario
+ * - Ver el estado de confirmación del propietario
+ * - Ver información sobre daños reportados (si aplica)
+ *
+ * Cuando AMBOS confirman → se liberan fondos automáticamente:
+ * - Rental payment → al propietario
+ * - Deposit (o deposit - daños) → de vuelta al wallet del locatario
+ */
+@Component({
+  selector: &#x27;app-renter-confirmation&#x27;,
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
+  templateUrl: &#x27;./renter-confirmation.component.html&#x27;,
+  styles: [
+    &#x60;
+      :host {
+        display: block;
+      }
+    &#x60;,
+  ],
+})
+export class RenterConfirmationComponent {
+  private readonly confirmationService &#x3D; inject(BookingConfirmationService);
+  private readonly auth &#x3D; inject(AuthService);
+
+  /**
+   * ID del booking a confirmar
+   */
+  @Input({ required: true }) bookingId!: string;
+
+  /**
+   * Indica si el propietario ya confirmó
+   */
+  @Input() ownerConfirmed &#x3D; false;
+
+  /**
+   * Indica si el locatario ya confirmó
+   */
+  @Input() renterConfirmed &#x3D; false;
+
+  /**
+   * Monto de daños reportados por el propietario (si aplica)
+   */
+  @Input() damageAmount: number | null &#x3D; null;
+
+  /**
+   * Descripción de daños reportados por el propietario (si aplica)
+   */
+  @Input() damageDescription: string | null &#x3D; null;
+
+  /**
+   * Monto del depósito (usualmente $250)
+   */
+  @Input() depositAmount &#x3D; 250;
+
+  /**
+   * Emite cuando la confirmación se completó exitosamente
+   */
+  @Output() confirmed &#x3D; new EventEmitter&lt;ConfirmAndReleaseResponse&gt;();
+
+  /**
+   * Emite cuando ocurre un error
+   */
+  @Output() errorOccurred &#x3D; new EventEmitter&lt;string&gt;();
+
+  /**
+   * Estado de la confirmación
+   */
+  readonly confirmationResult &#x3D; signal&lt;ConfirmAndReleaseResponse | null&gt;(null);
+
+  /**
+   * Mensaje de éxito/error
+   */
+  readonly message &#x3D; signal&lt;string | null&gt;(null);
+
+  /**
+   * Shortcut para el loading state del servicio
+   */
+  readonly loading &#x3D; this.confirmationService.loading;
+
+  /**
+   * Calcula cuánto dinero recibirá el locatario de vuelta en su wallet
+   */
+  get amountToReturn(): number {
+    if (this.damageAmount &amp;&amp; this.damageAmount &gt; 0) {
+      return Math.max(0, this.depositAmount - this.damageAmount);
+    }
+    return this.depositAmount;
+  }
+
+  /**
+   * Procesa la confirmación del locatario
+   */
+  async confirm(): Promise&lt;void&gt; {
+    const userId &#x3D; this.auth.sessionSignal()?.user?.id;
+    if (!userId) {
+      this.message.set(&#x27;Error: Usuario no autenticado&#x27;);
+      this.errorOccurred.emit(&#x27;Usuario no autenticado&#x27;);
+      return;
+    }
+
+    try {
+      const result &#x3D; await this.confirmationService.confirmRenter({
+        booking_id: this.bookingId,
+        confirming_user_id: userId,
+      });
+
+      this.confirmationResult.set(result);
+      this.message.set(result.message);
+      this.confirmed.emit(result);
+    } catch (err) {
+      const errorMessage &#x3D; err instanceof Error ? err.message : &#x27;Error al confirmar&#x27;;
+      this.message.set(&#x60;Error: ${errorMessage}&#x60;);
+      this.errorOccurred.emit(errorMessage);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+    &lt;h3 class&#x3D;&quot;text-xl font-semibold text-slate-900 dark:text-text-inverse mb-2&quot;&gt;
+      Confirmación del Locatario
+    &lt;/h3&gt;
+    &lt;p class&#x3D;&quot;text-sm text-slate-600 dark:text-slate-400&quot;&gt;
+      Confirma liberar el pago al propietario y recibir tu garantía de vuelta en tu wallet.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Estado de confirmaciones --&gt;
+  &lt;div class&#x3D;&quot;mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg&quot;&gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-2 gap-4&quot;&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-2&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;w-3 h-3 rounded-full&quot;
+          [class.bg-success-light]&#x3D;&quot;ownerConfirmed&quot;
+          [class.bg-slate-300]&#x3D;&quot;!ownerConfirmed&quot;
+        &gt;&lt;/div&gt;
+        &lt;span
+          class&#x3D;&quot;text-sm&quot;
+          [class.text-success-light]&#x3D;&quot;ownerConfirmed&quot;
+          [class.text-slate-500]&#x3D;&quot;!ownerConfirmed&quot;
+        &gt;
+          Propietario
+          &lt;span class&#x3D;&quot;font-medium&quot;&gt;{{ ownerConfirmed ? &#x27;confirmó&#x27; : &#x27;pendiente&#x27; }}&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;flex items-center gap-2&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;w-3 h-3 rounded-full&quot;
+          [class.bg-success-light]&#x3D;&quot;renterConfirmed&quot;
+          [class.bg-slate-300]&#x3D;&quot;!renterConfirmed&quot;
+        &gt;&lt;/div&gt;
+        &lt;span
+          class&#x3D;&quot;text-sm&quot;
+          [class.text-success-light]&#x3D;&quot;renterConfirmed&quot;
+          [class.text-slate-500]&#x3D;&quot;!renterConfirmed&quot;
+        &gt;
+          Locatario
+          &lt;span class&#x3D;&quot;font-medium&quot;&gt;{{ renterConfirmed ? &#x27;confirmó&#x27; : &#x27;pendiente&#x27; }}&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Mensaje explicativo --&gt;
+    &lt;p class&#x3D;&quot;mt-3 text-xs text-slate-600 dark:text-slate-400&quot;&gt;
+      Cuando AMBOS confirmen, los fondos se liberarán automáticamente. El pago irá al propietario, y
+      tu garantía{{ damageAmount ? &#x27; (menos daños)&#x27; : &#x27;&#x27; }} volverá a tu wallet.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Información de daños (si aplica) --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;ownerConfirmed &amp;&amp; damageAmount &amp;&amp; damageAmount &gt; 0&quot;
+    class&#x3D;&quot;mb-6 p-4 bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800 rounded-lg&quot;
+  &gt;
+    &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+      &lt;svg
+        class&#x3D;&quot;w-5 h-5 text-warning-text dark:text-warning-400 mt-0.5 flex-shrink-0&quot;
+        fill&#x3D;&quot;currentColor&quot;
+        viewBox&#x3D;&quot;0 0 20 20&quot;
+      &gt;
+        &lt;path
+          fill-rule&#x3D;&quot;evenodd&quot;
+          d&#x3D;&quot;M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z&quot;
+          clip-rule&#x3D;&quot;evenodd&quot;
+        /&gt;
+      &lt;/svg&gt;
+      &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+        &lt;h4 class&#x3D;&quot;text-sm font-semibold text-warning-strong dark:text-warning-200 mb-2&quot;&gt;
+          El propietario reportó daños al vehículo
+        &lt;/h4&gt;
+        &lt;div class&#x3D;&quot;space-y-2 text-sm text-warning-strong dark:text-warning-300&quot;&gt;
+          &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+            &lt;span&gt;Monto de daños:&lt;/span&gt;
+            &lt;span class&#x3D;&quot;font-semibold&quot;&gt;${{ damageAmount }} USD&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+            &lt;span&gt;Depósito original:&lt;/span&gt;
+            &lt;span&gt;${{ depositAmount }} USD&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div
+            class&#x3D;&quot;flex justify-between items-center pt-2 border-t border-warning-border dark:border-warning-800&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;font-semibold&quot;&gt;Devolveremos a tu wallet:&lt;/span&gt;
+            &lt;span class&#x3D;&quot;font-bold text-lg text-warning-strong dark:text-warning-100&quot;&gt;
+              ${{ amountToReturn }} USD
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Descripción de daños --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;damageDescription&quot;
+          class&#x3D;&quot;mt-3 pt-3 border-t border-warning-border dark:border-warning-800&quot;
+        &gt;
+          &lt;p class&#x3D;&quot;text-xs font-semibold text-warning-strong dark:text-warning-200 mb-1&quot;&gt;
+            Descripción de daños:
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;text-xs text-warning-strong dark:text-warning-300 whitespace-pre-wrap&quot;&gt;
+            {{ damageDescription }}
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Resumen de devolución (sin daños) --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;!renterConfirmed &amp;&amp; (!damageAmount || damageAmount &#x3D;&#x3D;&#x3D; 0)&quot;
+    class&#x3D;&quot;mb-6 p-4 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light rounded-lg&quot;
+  &gt;
+    &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+      &lt;svg
+        class&#x3D;&quot;w-5 h-5 text-success-light dark:text-success-light mt-0.5 flex-shrink-0&quot;
+        fill&#x3D;&quot;currentColor&quot;
+        viewBox&#x3D;&quot;0 0 20 20&quot;
+      &gt;
+        &lt;path
+          fill-rule&#x3D;&quot;evenodd&quot;
+          d&#x3D;&quot;M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z&quot;
+          clip-rule&#x3D;&quot;evenodd&quot;
+        /&gt;
+      &lt;/svg&gt;
+      &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+        &lt;h4 class&#x3D;&quot;text-sm font-semibold text-success-light dark:text-success-light mb-2&quot;&gt;
+          Sin daños reportados
+        &lt;/h4&gt;
+        &lt;p class&#x3D;&quot;text-sm text-success-light dark:text-success-light&quot;&gt;
+          Recibirás el depósito completo de vuelta:
+          &lt;span class&#x3D;&quot;font-bold&quot;&gt;${{ depositAmount }} USD&lt;/span&gt;
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Información importante --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;!renterConfirmed&quot;
+    class&#x3D;&quot;mb-6 p-4 bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg&quot;
+  &gt;
+    &lt;h4
+      class&#x3D;&quot;text-sm font-semibold text-cta-default dark:text-cta-default mb-2 flex items-center gap-2&quot;
+    &gt;
+      &lt;svg class&#x3D;&quot;w-4 h-4&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+        &lt;path
+          fill-rule&#x3D;&quot;evenodd&quot;
+          d&#x3D;&quot;M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z&quot;
+          clip-rule&#x3D;&quot;evenodd&quot;
+        /&gt;
+      &lt;/svg&gt;
+      Importante
+    &lt;/h4&gt;
+    &lt;ul class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default space-y-2&quot;&gt;
+      &lt;li class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+        &lt;span class&#x3D;&quot;text-cta-default dark:text-cta-default&quot;&gt;•&lt;/span&gt;
+        &lt;span&gt;Al confirmar, autorizas la transferencia del pago del alquiler al propietario&lt;/span&gt;
+      &lt;/li&gt;
+      &lt;li class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+        &lt;span class&#x3D;&quot;text-cta-default dark:text-cta-default&quot;&gt;•&lt;/span&gt;
+        &lt;span
+          &gt;Tu garantía{{ damageAmount ? &#x27; (menos daños)&#x27; : &#x27;&#x27; }} se devolverá a tu
+          &lt;strong&gt;wallet&lt;/strong&gt;, no a tu cuenta bancaria&lt;/span
+        &gt;
+      &lt;/li&gt;
+      &lt;li class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+        &lt;span class&#x3D;&quot;text-cta-default dark:text-cta-default&quot;&gt;•&lt;/span&gt;
+        &lt;span&gt;Podrás usar los fondos del wallet para futuros alquileres&lt;/span&gt;
+      &lt;/li&gt;
+      &lt;li *ngIf&#x3D;&quot;ownerConfirmed&quot; class&#x3D;&quot;flex items-start gap-2&quot;&gt;
+        &lt;span class&#x3D;&quot;text-success-light dark:text-success-light&quot;&gt;✓&lt;/span&gt;
+        &lt;span
+          &gt;El propietario ya confirmó. Al confirmar tú, los fondos se liberarán
+          &lt;strong&gt;inmediatamente&lt;/strong&gt;&lt;/span
+        &gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Botón de confirmación --&gt;
+  &lt;div *ngIf&#x3D;&quot;!renterConfirmed&quot; class&#x3D;&quot;flex justify-end&quot;&gt;
+    &lt;button
+      type&#x3D;&quot;button&quot;
+      (click)&#x3D;&quot;confirm()&quot;
+      class&#x3D;&quot;px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm&quot;
+      [disabled]&#x3D;&quot;loading().confirmingRenter&quot;
+    &gt;
+      &lt;svg
+        *ngIf&#x3D;&quot;loading().confirmingRenter&quot;
+        class&#x3D;&quot;animate-spin h-4 w-4 text-text-inverse&quot;
+        xmlns&#x3D;&quot;http://www.w3.org/2000/svg&quot;
+        fill&#x3D;&quot;none&quot;
+        viewBox&#x3D;&quot;0 0 24 24&quot;
+      &gt;
+        &lt;circle
+          class&#x3D;&quot;opacity-25&quot;
+          cx&#x3D;&quot;12&quot;
+          cy&#x3D;&quot;12&quot;
+          r&#x3D;&quot;10&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          stroke-width&#x3D;&quot;4&quot;
+        &gt;&lt;/circle&gt;
+        &lt;path
+          class&#x3D;&quot;opacity-75&quot;
+          fill&#x3D;&quot;currentColor&quot;
+          d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+        &gt;&lt;/path&gt;
+      &lt;/svg&gt;
+      &lt;svg
+        *ngIf&#x3D;&quot;!loading().confirmingRenter&quot;
+        class&#x3D;&quot;w-5 h-5&quot;
+        fill&#x3D;&quot;none&quot;
+        stroke&#x3D;&quot;currentColor&quot;
+        viewBox&#x3D;&quot;0 0 24 24&quot;
+      &gt;
+        &lt;path
+          stroke-linecap&#x3D;&quot;round&quot;
+          stroke-linejoin&#x3D;&quot;round&quot;
+          stroke-width&#x3D;&quot;2&quot;
+          d&#x3D;&quot;M5 13l4 4L19 7&quot;
+        &gt;&lt;/path&gt;
+      &lt;/svg&gt;
+      &lt;span&gt;{{ loading().confirmingRenter ? &#x27;Confirmando...&#x27; : &#x27;Confirmar y liberar pago&#x27; }}&lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Estado ya confirmado --&gt;
+  &lt;div *ngIf&#x3D;&quot;renterConfirmed&quot; class&#x3D;&quot;text-center py-8&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;inline-flex items-center justify-center w-16 h-16 bg-success-light/20 dark:bg-success-light/30 rounded-full mb-4&quot;
+    &gt;
+      &lt;svg
+        class&#x3D;&quot;w-8 h-8 text-success-light dark:text-success-light&quot;
+        fill&#x3D;&quot;none&quot;
+        stroke&#x3D;&quot;currentColor&quot;
+        viewBox&#x3D;&quot;0 0 24 24&quot;
+      &gt;
+        &lt;path
+          stroke-linecap&#x3D;&quot;round&quot;
+          stroke-linejoin&#x3D;&quot;round&quot;
+          stroke-width&#x3D;&quot;2&quot;
+          d&#x3D;&quot;M5 13l4 4L19 7&quot;
+        &gt;&lt;/path&gt;
+      &lt;/svg&gt;
+    &lt;/div&gt;
+    &lt;h4 class&#x3D;&quot;text-lg font-semibold text-slate-900 dark:text-text-inverse mb-2&quot;&gt;
+      Ya confirmaste liberar el pago
+    &lt;/h4&gt;
+    &lt;p class&#x3D;&quot;text-sm text-slate-600 dark:text-slate-400 mb-4&quot;&gt;
+      &lt;span *ngIf&#x3D;&quot;!ownerConfirmed&quot;&gt;
+        Esperando confirmación del propietario para liberar fondos.
+      &lt;/span&gt;
+      &lt;span *ngIf&#x3D;&quot;ownerConfirmed&quot;&gt;
+        El propietario también confirmó. Los fondos se liberaron automáticamente.
+      &lt;/span&gt;
+    &lt;/p&gt;
+
+    &lt;!-- Resumen de fondos devueltos --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;ownerConfirmed&quot;
+      class&#x3D;&quot;mt-4 p-4 bg-success-light/10 dark:bg-success-light/20 rounded-lg inline-block&quot;
+    &gt;
+      &lt;p class&#x3D;&quot;text-xs text-success-light dark:text-success-light mb-2&quot;&gt;
+        Fondos devueltos a tu wallet:
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;h4 text-success-light dark:text-success-light&quot;&gt;${{ amountToReturn }} USD&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Mensaje de resultado --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;message()&quot;
+    class&#x3D;&quot;mt-4 p-4 rounded-lg&quot;
+    [class.bg-success-light/10]&#x3D;&quot;confirmationResult()?.success&quot;
+    [class.dark:bg-success-light/20]&#x3D;&quot;confirmationResult()?.success&quot;
+    [class.bg-error-bg]&#x3D;&quot;!confirmationResult()?.success&quot;
+    [class.dark:bg-error-900/20]&#x3D;&quot;!confirmationResult()?.success&quot;
+  &gt;
+    &lt;p
+      class&#x3D;&quot;text-sm&quot;
+      [class.text-success-light]&#x3D;&quot;confirmationResult()?.success&quot;
+      [class.dark:text-success-light]&#x3D;&quot;confirmationResult()?.success&quot;
+      [class.text-error-strong]&#x3D;&quot;!confirmationResult()?.success&quot;
+      [class.dark:text-error-300]&#x3D;&quot;!confirmationResult()?.success&quot;
+    &gt;
+      {{ message() }}
+    &lt;/p&gt;
+
+    &lt;!-- Detalles de liberación de fondos --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;confirmationResult()?.funds_released&quot;
+      class&#x3D;&quot;mt-3 pt-3 border-t border-success-light/40 dark:border-success-light&quot;
+    &gt;
+      &lt;p class&#x3D;&quot;text-xs font-semibold text-success-light dark:text-success-light mb-2&quot;&gt;
+        Fondos liberados automáticamente:
+      &lt;/p&gt;
+      &lt;ul class&#x3D;&quot;text-xs text-success-light dark:text-success-light space-y-1&quot;&gt;
+        &lt;li&gt;✓ Pago del alquiler transferido al propietario&lt;/li&gt;
+        &lt;li&gt;✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet&lt;/li&gt;
+        &lt;li *ngIf&#x3D;&quot;damageAmount &amp;&amp; damageAmount &gt; 0&quot;&gt;ℹ Cargo por daños: ${{ damageAmount }} USD&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      :host {
+        display: block;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="bg-surface-raised dark:bg-surface-raised rounded-lg shadow-lg p-6">  <!-- Header -->  <div class="mb-6">    <h3 class="text-xl font-semibold text-slate-900 dark:text-text-inverse mb-2">      Confirmación del Locatario    </h3>    <p class="text-sm text-slate-600 dark:text-slate-400">      Confirma liberar el pago al propietario y recibir tu garantía de vuelta en tu wallet.    </p>  </div>  <!-- Estado de confirmaciones -->  <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">    <div class="grid grid-cols-2 gap-4">      <div class="flex items-center gap-2">        <div          class="w-3 h-3 rounded-full"          [class.bg-success-light]="ownerConfirmed"          [class.bg-slate-300]="!ownerConfirmed"        ></div>        <span          class="text-sm"          [class.text-success-light]="ownerConfirmed"          [class.text-slate-500]="!ownerConfirmed"        >          Propietario          <span class="font-medium">{{ ownerConfirmed ? \'confirmó\' : \'pendiente\' }}</span>        </span>      </div>      <div class="flex items-center gap-2">        <div          class="w-3 h-3 rounded-full"          [class.bg-success-light]="renterConfirmed"          [class.bg-slate-300]="!renterConfirmed"        ></div>        <span          class="text-sm"          [class.text-success-light]="renterConfirmed"          [class.text-slate-500]="!renterConfirmed"        >          Locatario          <span class="font-medium">{{ renterConfirmed ? \'confirmó\' : \'pendiente\' }}</span>        </span>      </div>    </div>    <!-- Mensaje explicativo -->    <p class="mt-3 text-xs text-slate-600 dark:text-slate-400">      Cuando AMBOS confirmen, los fondos se liberarán automáticamente. El pago irá al propietario, y      tu garantía{{ damageAmount ? \' (menos daños)\' : \'\' }} volverá a tu wallet.    </p>  </div>  <!-- Información de daños (si aplica) -->  <div    *ngIf="ownerConfirmed && damageAmount && damageAmount > 0"    class="mb-6 p-4 bg-warning-bg dark:bg-warning-900/20 border border-warning-border dark:border-warning-800 rounded-lg"  >    <div class="flex items-start gap-3">      <svg        class="w-5 h-5 text-warning-text dark:text-warning-400 mt-0.5 flex-shrink-0"        fill="currentColor"        viewBox="0 0 20 20"      >        <path          fill-rule="evenodd"          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"          clip-rule="evenodd"        />      </svg>      <div class="flex-1">        <h4 class="text-sm font-semibold text-warning-strong dark:text-warning-200 mb-2">          El propietario reportó daños al vehículo        </h4>        <div class="space-y-2 text-sm text-warning-strong dark:text-warning-300">          <div class="flex justify-between items-center">            <span>Monto de daños:</span>            <span class="font-semibold">${{ damageAmount }} USD</span>          </div>          <div class="flex justify-between items-center">            <span>Depósito original:</span>            <span>${{ depositAmount }} USD</span>          </div>          <div            class="flex justify-between items-center pt-2 border-t border-warning-border dark:border-warning-800"          >            <span class="font-semibold">Devolveremos a tu wallet:</span>            <span class="font-bold text-lg text-warning-strong dark:text-warning-100">              ${{ amountToReturn }} USD            </span>          </div>        </div>        <!-- Descripción de daños -->        <div          *ngIf="damageDescription"          class="mt-3 pt-3 border-t border-warning-border dark:border-warning-800"        >          <p class="text-xs font-semibold text-warning-strong dark:text-warning-200 mb-1">            Descripción de daños:          </p>          <p class="text-xs text-warning-strong dark:text-warning-300 whitespace-pre-wrap">            {{ damageDescription }}          </p>        </div>      </div>    </div>  </div>  <!-- Resumen de devolución (sin daños) -->  <div    *ngIf="!renterConfirmed && (!damageAmount || damageAmount === 0)"    class="mb-6 p-4 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light rounded-lg"  >    <div class="flex items-start gap-3">      <svg        class="w-5 h-5 text-success-light dark:text-success-light mt-0.5 flex-shrink-0"        fill="currentColor"        viewBox="0 0 20 20"      >        <path          fill-rule="evenodd"          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"          clip-rule="evenodd"        />      </svg>      <div class="flex-1">        <h4 class="text-sm font-semibold text-success-light dark:text-success-light mb-2">          Sin daños reportados        </h4>        <p class="text-sm text-success-light dark:text-success-light">          Recibirás el depósito completo de vuelta:          <span class="font-bold">${{ depositAmount }} USD</span>        </p>      </div>    </div>  </div>  <!-- Información importante -->  <div    *ngIf="!renterConfirmed"    class="mb-6 p-4 bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg"  >    <h4      class="text-sm font-semibold text-cta-default dark:text-cta-default mb-2 flex items-center gap-2"    >      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">        <path          fill-rule="evenodd"          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"          clip-rule="evenodd"        />      </svg>      Importante    </h4>    <ul class="text-xs text-cta-default dark:text-cta-default space-y-2">      <li class="flex items-start gap-2">        <span class="text-cta-default dark:text-cta-default">•</span>        <span>Al confirmar, autorizas la transferencia del pago del alquiler al propietario</span>      </li>      <li class="flex items-start gap-2">        <span class="text-cta-default dark:text-cta-default">•</span>        <span          >Tu garantía{{ damageAmount ? \' (menos daños)\' : \'\' }} se devolverá a tu          <strong>wallet</strong>, no a tu cuenta bancaria</span        >      </li>      <li class="flex items-start gap-2">        <span class="text-cta-default dark:text-cta-default">•</span>        <span>Podrás usar los fondos del wallet para futuros alquileres</span>      </li>      <li *ngIf="ownerConfirmed" class="flex items-start gap-2">        <span class="text-success-light dark:text-success-light">✓</span>        <span          >El propietario ya confirmó. Al confirmar tú, los fondos se liberarán          <strong>inmediatamente</strong></span        >      </li>    </ul>  </div>  <!-- Botón de confirmación -->  <div *ngIf="!renterConfirmed" class="flex justify-end">    <button      type="button"      (click)="confirm()"      class="px-6 py-3 text-sm font-medium text-text-primary bg-success-light hover:bg-success-light rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"      [disabled]="loading().confirmingRenter"    >      <svg        *ngIf="loading().confirmingRenter"        class="animate-spin h-4 w-4 text-text-inverse"        xmlns="http://www.w3.org/2000/svg"        fill="none"        viewBox="0 0 24 24"      >        <circle          class="opacity-25"          cx="12"          cy="12"          r="10"          stroke="currentColor"          stroke-width="4"        ></circle>        <path          class="opacity-75"          fill="currentColor"          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"        ></path>      </svg>      <svg        *ngIf="!loading().confirmingRenter"        class="w-5 h-5"        fill="none"        stroke="currentColor"        viewBox="0 0 24 24"      >        <path          stroke-linecap="round"          stroke-linejoin="round"          stroke-width="2"          d="M5 13l4 4L19 7"        ></path>      </svg>      <span>{{ loading().confirmingRenter ? \'Confirmando...\' : \'Confirmar y liberar pago\' }}</span>    </button>  </div>  <!-- Estado ya confirmado -->  <div *ngIf="renterConfirmed" class="text-center py-8">    <div      class="inline-flex items-center justify-center w-16 h-16 bg-success-light/20 dark:bg-success-light/30 rounded-full mb-4"    >      <svg        class="w-8 h-8 text-success-light dark:text-success-light"        fill="none"        stroke="currentColor"        viewBox="0 0 24 24"      >        <path          stroke-linecap="round"          stroke-linejoin="round"          stroke-width="2"          d="M5 13l4 4L19 7"        ></path>      </svg>    </div>    <h4 class="text-lg font-semibold text-slate-900 dark:text-text-inverse mb-2">      Ya confirmaste liberar el pago    </h4>    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">      <span *ngIf="!ownerConfirmed">        Esperando confirmación del propietario para liberar fondos.      </span>      <span *ngIf="ownerConfirmed">        El propietario también confirmó. Los fondos se liberaron automáticamente.      </span>    </p>    <!-- Resumen de fondos devueltos -->    <div      *ngIf="ownerConfirmed"      class="mt-4 p-4 bg-success-light/10 dark:bg-success-light/20 rounded-lg inline-block"    >      <p class="text-xs text-success-light dark:text-success-light mb-2">        Fondos devueltos a tu wallet:      </p>      <p class="h4 text-success-light dark:text-success-light">${{ amountToReturn }} USD</p>    </div>  </div>  <!-- Mensaje de resultado -->  <div    *ngIf="message()"    class="mt-4 p-4 rounded-lg"    [class.bg-success-light/10]="confirmationResult()?.success"    [class.dark:bg-success-light/20]="confirmationResult()?.success"    [class.bg-error-bg]="!confirmationResult()?.success"    [class.dark:bg-error-900/20]="!confirmationResult()?.success"  >    <p      class="text-sm"      [class.text-success-light]="confirmationResult()?.success"      [class.dark:text-success-light]="confirmationResult()?.success"      [class.text-error-strong]="!confirmationResult()?.success"      [class.dark:text-error-300]="!confirmationResult()?.success"    >      {{ message() }}    </p>    <!-- Detalles de liberación de fondos -->    <div      *ngIf="confirmationResult()?.funds_released"      class="mt-3 pt-3 border-t border-success-light/40 dark:border-success-light"    >      <p class="text-xs font-semibold text-success-light dark:text-success-light mb-2">        Fondos liberados automáticamente:      </p>      <ul class="text-xs text-success-light dark:text-success-light space-y-1">        <li>✓ Pago del alquiler transferido al propietario</li>        <li>✓ Garantía de ${{ amountToReturn }} USD devuelta a tu wallet</li>        <li *ngIf="damageAmount && damageAmount > 0">ℹ Cargo por daños: ${{ damageAmount }} USD</li>      </ul>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'RenterConfirmationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'RenterConfirmationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

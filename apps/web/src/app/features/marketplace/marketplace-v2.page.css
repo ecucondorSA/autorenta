@@ -1504,11 +1504,16 @@
    ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
-  /* Hero Section */
+  /* Hero Section - Reduced height on mobile */
   .hero-immersive {
-    min-height: 100svh;
-    padding-bottom: clamp(4rem, 10vh, 6rem);
+    min-height: 60svh;
+    padding-bottom: clamp(2rem, 5vh, 4rem);
     overflow-x: hidden; /* Critical for preventing horizontal scroll */
+  }
+
+  /* 3D Model Container - Constrained height on mobile */
+  .model-3d-container {
+    max-height: 45vh;
   }
 
   .hero-immersive .max-w-2xl {
@@ -2001,6 +2006,34 @@
 
 .pagination-controls {
   @apply bg-slate-900/50 backdrop-blur-sm rounded-xl;
+}
+
+/* ===========================================
+   PARTNER LOGOS - MINIMALISTA
+   =========================================== */
+.partner-logo {
+  height: 28px;
+  width: auto;
+  opacity: 0.45;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.partner-logo:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+@media (min-width: 768px) {
+  .partner-logo {
+    height: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .partner-logo {
+    height: 40px;
+  }
 }
 
 /* ===========================================

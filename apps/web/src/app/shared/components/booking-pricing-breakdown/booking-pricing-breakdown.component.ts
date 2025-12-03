@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject, signal, OnInit } from '@angular/core';
+import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import type { BonusMalusDisplay } from '../../../core/models';
 
 export interface PricingBreakdownInput {
   nightlyRate: number;
@@ -9,6 +11,7 @@ export interface PricingBreakdownInput {
   insurance?: number;
   total: number;
   currency?: 'ARS' | 'USD';
+  bonusMalusFactor?: number; // Optional: If provided, will show bonus-malus info
 }
 
 @Component({
@@ -45,6 +48,34 @@ export interface PricingBreakdownInput {
           <span class="font-medium text-success-light">-{{ format(abs(data.discounts)) }}</span>
         </div>
 
+        <!-- Bonus-Malus Display -->
+        <div *ngIf="bonusMalusDisplay()" class="flex items-center justify-between py-1 px-2 rounded-lg"
+             [ngClass]="{
+               'bg-success-light/10': bonusMalusDisplay()?.type === 'BONUS',
+               'bg-warning-light/10': bonusMalusDisplay()?.type === 'MALUS',
+               'bg-surface-base': bonusMalusDisplay()?.type === 'NEUTRAL'
+             }">
+          <span class="flex items-center gap-1.5 text-sm">
+            <span>{{ bonusMalusDisplay()?.icon }}</span>
+            <span [ngClass]="bonusMalusDisplay()?.color">{{ bonusMalusDisplay()?.message }}</span>
+          </span>
+          <button
+            type="button"
+            class="text-xs text-cta-default hover:underline"
+            (click)="showBonusMalusTips = !showBonusMalusTips">
+            {{ showBonusMalusTips ? 'Ocultar' : 'Info' }}
+          </button>
+        </div>
+
+        <!-- Bonus-Malus Tips (expandible) -->
+        <div *ngIf="showBonusMalusTips && bonusMalusDisplay()?.tips?.length"
+             class="text-xs text-text-secondary space-y-1 p-2 bg-surface-base rounded-lg">
+          <p *ngFor="let tip of bonusMalusDisplay()!.tips" class="flex items-start gap-1">
+            <span class="text-cta-default">•</span>
+            <span>{{ tip }}</span>
+          </p>
+        </div>
+
         <div class="h-px bg-border-default/60 dark:bg-neutral-700 my-2"></div>
 
         <div class="flex justify-between text-base font-semibold">
@@ -55,8 +86,37 @@ export interface PricingBreakdownInput {
     </div>
   `,
 })
-export class BookingPricingBreakdownComponent {
+export class BookingPricingBreakdownComponent implements OnInit {
   @Input({ required: true }) data!: PricingBreakdownInput;
+
+  private readonly bonusMalusService = inject(BonusMalusService);
+
+  readonly bonusMalusDisplay = signal<BonusMalusDisplay | null>(null);
+  showBonusMalusTips = false;
+
+  ngOnInit(): void {
+    // Load bonus-malus display if factor is provided or load from service
+    this.loadBonusMalus();
+  }
+
+  private async loadBonusMalus(): Promise<void> {
+    try {
+      if (this.data?.bonusMalusFactor !== undefined) {
+        // Use provided factor
+        const display = this.bonusMalusService.getBonusMalusDisplay(this.data.bonusMalusFactor);
+        this.bonusMalusDisplay.set(display);
+      } else {
+        // Load from service for current user
+        const factor = await this.bonusMalusService.getBonusMalusFactor();
+        if (factor !== 0) {
+          const display = this.bonusMalusService.getBonusMalusDisplay(factor);
+          this.bonusMalusDisplay.set(display);
+        }
+      }
+    } catch {
+      // Silent fail - bonus-malus is optional
+    }
+  }
 
   abs(value: number): number {
     return Math.abs(value);

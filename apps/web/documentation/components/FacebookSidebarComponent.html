@@ -1,0 +1,3175 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FacebookSidebarComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/marketplace/components/layout/facebook-sidebar.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Facebook-style Sidebar Component
+Mobile-first sidebar with 6 main buttons + dashboard button</p>
+<p>Features:</p>
+<ul>
+<li>iOS-style slide animation</li>
+<li>Avatar + user info at top</li>
+<li>6 main navigation buttons</li>
+<li>Dashboard button with modal</li>
+<li>Backdrop overlay</li>
+<li>Gesture close support</li>
+</ul>
+
+    </p>
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-facebook-sidebar</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      /* Backdrop */
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.7);
+        z-index: 998;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Sidebar Panel */
+      .sidebar-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 340px;
+        max-width: 85vw;
+        background: white;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .sidebar-panel.open {
+        transform: translateX(0);
+      }
+
+      /* Header */
+      .sidebar-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 16px;
+        background: var(--cta-default, #a7d8f4);
+      }
+
+      .user-profile {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid white;
+        flex-shrink: 0;
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .user-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0 0 4px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .user-email {
+        font-size: 0.875rem;
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .close-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+
+      .close-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: #e3e3e3;
+        margin: 8px 0;
+      }
+
+      /* Menu */
+      .sidebar-menu {
+        padding: 8px 0;
+        flex: 1;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        text-align: left;
+      }
+
+      .menu-item:hover {
+        background: #f5f5f5;
+      }
+
+      .menu-item:active {
+        background: #e3e3e3;
+      }
+
+      .menu-item.active {
+        background: #f0f9fd;
+      }
+
+      .menu-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+
+      .icon-emoji {
+        font-size: 1.5rem;
+      }
+
+      .menu-label {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .menu-badge {
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .menu-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Dashboard Button */
+      .dashboard-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px;
+        background: #f8f4ec;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 8px 0;
+      }
+
+      .dashboard-btn:hover {
+        background: #dfd2bf;
+      }
+
+      .dashboard-btn:active {
+        transform: scale(0.98);
+      }
+
+      .dashboard-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        color: #a7d8f4;
+        flex-shrink: 0;
+      }
+
+      .dashboard-text {
+        flex: 1;
+        text-align: left;
+      }
+
+      .dashboard-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin-bottom: 2px;
+      }
+
+      .dashboard-subtitle {
+        display: block;
+        font-size: 0.75rem;
+        color: #4e4e4e;
+      }
+
+      .dashboard-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Footer */
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid #e3e3e3;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #4e4e4e;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+      }
+
+      .footer-btn:hover {
+        background: #f5f5f5;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .footer-btn:active {
+        background: #e3e3e3;
+      }
+
+      /* Dashboard Modal */
+      .dashboard-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: flex-end;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .dashboard-content {
+        width: 100%;
+        max-height: 80vh;
+        background: white;
+        border-radius: 24px 24px 0 0;
+        padding: 24px 20px;
+        animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0;
+      }
+
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .modal-close:hover {
+        background: #e3e3e3;
+      }
+
+      .modal-close:active {
+        transform: scale(0.9);
+      }
+
+      /* Dashboard Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .dashboard-item {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px 8px;
+        background: #f8f4ec;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .dashboard-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-item:active {
+        transform: translateY(-2px);
+      }
+
+      .dashboard-item-icon {
+        font-size: 2rem;
+      }
+
+      .dashboard-item-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        text-align: center;
+      }
+
+      .dashboard-item-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 50%;
+      }
+
+      /* Responsive */
+      @media (min-width: 768px) {
+        .sidebar-panel {
+          width: 380px;
+        }
+
+        .dashboard-content {
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: 24px;
+        }
+
+        .dashboard-modal {
+          align-items: center;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;!-- Backdrop --&gt;
+@if (isOpen()) {
+  &lt;div class&#x3D;&quot;sidebar-backdrop&quot; (click)&#x3D;&quot;close()&quot; [@fadeIn]&gt;&lt;/div&gt;
+}
+
+&lt;!-- Sidebar Panel --&gt;
+&lt;aside
+  class&#x3D;&quot;sidebar-panel&quot;
+  [class.open]&#x3D;&quot;isOpen()&quot;
+  role&#x3D;&quot;navigation&quot;
+  aria-label&#x3D;&quot;Main navigation&quot;
+&gt;
+  &lt;!-- Header con Avatar --&gt;
+  &lt;div class&#x3D;&quot;sidebar-header&quot;&gt;
+    &lt;div class&#x3D;&quot;user-profile&quot;&gt;
+      &lt;div class&#x3D;&quot;avatar&quot;&gt;
+        &lt;img [src]&#x3D;&quot;userAvatar()&quot; [alt]&#x3D;&quot;userName()&quot; (error)&#x3D;&quot;onImageError($event)&quot; /&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;user-info&quot;&gt;
+        &lt;h3 class&#x3D;&quot;user-name&quot;&gt;{{ userName() }}&lt;/h3&gt;
+        &lt;p class&#x3D;&quot;user-email&quot;&gt;{{ userEmail() }}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;button class&#x3D;&quot;close-btn&quot; (click)&#x3D;&quot;close()&quot; aria-label&#x3D;&quot;Cerrar menú&quot;&gt;
+      &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+        &lt;path
+          d&#x3D;&quot;M18 6L6 18M6 6L18 18&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          stroke-width&#x3D;&quot;2&quot;
+          stroke-linecap&#x3D;&quot;round&quot;
+        /&gt;
+      &lt;/svg&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Divider --&gt;
+  &lt;div class&#x3D;&quot;divider&quot;&gt;&lt;/div&gt;
+
+  &lt;!-- Main Menu - 6 Buttons --&gt;
+  &lt;nav class&#x3D;&quot;sidebar-menu&quot;&gt;
+    @for (item of menuItems; track item.id) {
+      &lt;button
+        class&#x3D;&quot;menu-item&quot;
+        (click)&#x3D;&quot;handleMenuClick(item)&quot;
+        [class.active]&#x3D;&quot;activeItem() &#x3D;&#x3D;&#x3D; item.id&quot;
+      &gt;
+        &lt;div class&#x3D;&quot;menu-icon&quot; [style.background]&#x3D;&quot;item.color || &#x27;#A7D8F4&#x27;&quot;&gt;
+          &lt;span class&#x3D;&quot;icon-emoji&quot;&gt;{{ item.icon }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;span class&#x3D;&quot;menu-label&quot;&gt;{{ item.label }}&lt;/span&gt;
+        @if (item.badge) {
+          &lt;span class&#x3D;&quot;menu-badge&quot;&gt;{{ item.badge }}&lt;/span&gt;
+        }
+        &lt;svg class&#x3D;&quot;menu-arrow&quot; width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+          &lt;path
+            d&#x3D;&quot;M7 5L12 10L7 15&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+          /&gt;
+        &lt;/svg&gt;
+      &lt;/button&gt;
+    }
+  &lt;/nav&gt;
+
+  &lt;!-- Divider --&gt;
+  &lt;div class&#x3D;&quot;divider&quot;&gt;&lt;/div&gt;
+
+  &lt;!-- Dashboard Button --&gt;
+  &lt;button class&#x3D;&quot;dashboard-btn&quot; (click)&#x3D;&quot;openDashboard()&quot;&gt;
+    &lt;div class&#x3D;&quot;dashboard-icon&quot;&gt;
+      &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+        &lt;rect x&#x3D;&quot;3&quot; y&#x3D;&quot;3&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+        &lt;rect x&#x3D;&quot;3&quot; y&#x3D;&quot;13&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+        &lt;rect x&#x3D;&quot;13&quot; y&#x3D;&quot;3&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+        &lt;rect
+          x&#x3D;&quot;13&quot;
+          y&#x3D;&quot;13&quot;
+          width&#x3D;&quot;8&quot;
+          height&#x3D;&quot;8&quot;
+          rx&#x3D;&quot;2&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          stroke-width&#x3D;&quot;2&quot;
+        /&gt;
+      &lt;/svg&gt;
+    &lt;/div&gt;
+    &lt;div class&#x3D;&quot;dashboard-text&quot;&gt;
+      &lt;span class&#x3D;&quot;dashboard-label&quot;&gt;Ver más&lt;/span&gt;
+      &lt;span class&#x3D;&quot;dashboard-subtitle&quot;&gt;Dashboard completo&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;svg class&#x3D;&quot;dashboard-arrow&quot; width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+      &lt;path
+        d&#x3D;&quot;M7 5L12 10L7 15&quot;
+        stroke&#x3D;&quot;currentColor&quot;
+        stroke-width&#x3D;&quot;2&quot;
+        stroke-linecap&#x3D;&quot;round&quot;
+        stroke-linejoin&#x3D;&quot;round&quot;
+      /&gt;
+    &lt;/svg&gt;
+  &lt;/button&gt;
+
+  &lt;!-- Footer --&gt;
+  &lt;div class&#x3D;&quot;sidebar-footer&quot;&gt;
+    &lt;button class&#x3D;&quot;footer-btn&quot; (click)&#x3D;&quot;handleSettings()&quot;&gt;
+      &lt;svg width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+        &lt;circle cx&#x3D;&quot;10&quot; cy&#x3D;&quot;10&quot; r&#x3D;&quot;3&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;1.5&quot; /&gt;
+        &lt;path
+          d&#x3D;&quot;M10 1V3M10 17V19M19 10H17M3 10H1M16.07 3.93L14.66 5.34M5.34 14.66L3.93 16.07M16.07 16.07L14.66 14.66M5.34 5.34L3.93 3.93&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          stroke-width&#x3D;&quot;1.5&quot;
+          stroke-linecap&#x3D;&quot;round&quot;
+        /&gt;
+      &lt;/svg&gt;
+      Configuración
+    &lt;/button&gt;
+    &lt;button class&#x3D;&quot;footer-btn&quot; (click)&#x3D;&quot;handleLogout()&quot;&gt;
+      &lt;svg width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+        &lt;path
+          d&#x3D;&quot;M13 16L18 11M18 11L13 6M18 11H6M11 16C11 16.93 11 17.395 10.8978 17.7765C10.6204 18.8117 9.81173 19.6204 8.77646 19.8978C8.39496 20 7.92997 20 7 20H6.5C5.10218 20 4.40326 20 3.85195 19.7716C3.11687 19.4672 2.53284 18.8831 2.22836 18.1481C2 17.5967 2 16.8978 2 15.5V4.5C2 3.10217 2 2.40326 2.22836 1.85195C2.53284 1.11687 3.11687 0.532841 3.85195 0.228361C4.40326 0 5.10218 0 6.5 0H7C7.92997 0 8.39496 0 8.77646 0.102165C9.81173 0.37962 10.6204 1.18827 10.8978 2.22354C11 2.60504 11 3.07003 11 4&quot;
+          stroke&#x3D;&quot;currentColor&quot;
+          stroke-width&#x3D;&quot;1.5&quot;
+          stroke-linecap&#x3D;&quot;round&quot;
+          stroke-linejoin&#x3D;&quot;round&quot;
+        /&gt;
+      &lt;/svg&gt;
+      Cerrar sesión
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/aside&gt;
+
+&lt;!-- Dashboard Modal --&gt;
+@if (showDashboard()) {
+  &lt;div class&#x3D;&quot;dashboard-modal&quot; (click)&#x3D;&quot;closeDashboard()&quot;&gt;
+    &lt;div class&#x3D;&quot;dashboard-content&quot; (click)&#x3D;&quot;$event.stopPropagation()&quot;&gt;
+      &lt;!-- Modal Header --&gt;
+      &lt;div class&#x3D;&quot;modal-header&quot;&gt;
+        &lt;h2 class&#x3D;&quot;modal-title&quot;&gt;Dashboard&lt;/h2&gt;
+        &lt;button class&#x3D;&quot;modal-close&quot; (click)&#x3D;&quot;closeDashboard()&quot;&gt;
+          &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M18 6L6 18M6 6L18 18&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              stroke-linecap&#x3D;&quot;round&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Dashboard Grid --&gt;
+      &lt;div class&#x3D;&quot;dashboard-grid&quot;&gt;
+        @for (item of dashboardItems; track item.id) {
+          &lt;button
+            class&#x3D;&quot;dashboard-item&quot;
+            (click)&#x3D;&quot;handleDashboardClick(item)&quot;
+            [style.background]&#x3D;&quot;item.color&quot;
+          &gt;
+            &lt;span class&#x3D;&quot;dashboard-item-icon&quot;&gt;{{ item.icon }}&lt;/span&gt;
+            &lt;span class&#x3D;&quot;dashboard-item-label&quot;&gt;{{ item.label }}&lt;/span&gt;
+            @if (item.badge) {
+              &lt;span class&#x3D;&quot;dashboard-item-badge&quot;&gt;{{ item.badge }}&lt;/span&gt;
+            }
+          &lt;/button&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+}
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#activeItem" >activeItem</a>
+                            </li>
+                            <li>
+                                <a href="#dashboardItems" >dashboardItems</a>
+                            </li>
+                            <li>
+                                <a href="#isOpen" >isOpen</a>
+                            </li>
+                            <li>
+                                <a href="#menuItems" >menuItems</a>
+                            </li>
+                            <li>
+                                <a href="#showDashboard" >showDashboard</a>
+                            </li>
+                            <li>
+                                <a href="#userAvatar" >userAvatar</a>
+                            </li>
+                            <li>
+                                <a href="#userEmail" >userEmail</a>
+                            </li>
+                            <li>
+                                <a href="#userName" >userName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#close" >close</a>
+                            </li>
+                            <li>
+                                <a href="#closeDashboard" >closeDashboard</a>
+                            </li>
+                            <li>
+                                <a href="#handleDashboardClick" >handleDashboardClick</a>
+                            </li>
+                            <li>
+                                <a href="#handleLogout" >handleLogout</a>
+                            </li>
+                            <li>
+                                <a href="#handleMenuClick" >handleMenuClick</a>
+                            </li>
+                            <li>
+                                <a href="#handleSettings" >handleSettings</a>
+                            </li>
+                            <li>
+                                <a href="#onImageError" >onImageError</a>
+                            </li>
+                            <li>
+                                <a href="#open" >open</a>
+                            </li>
+                            <li>
+                                <a href="#openDashboard" >openDashboard</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#dashboardItemClick" >dashboardItemClick</a>
+                            </li>
+                            <li>
+                                <a href="#logoutClick" >logoutClick</a>
+                            </li>
+                            <li>
+                                <a href="#menuItemClick" >menuItemClick</a>
+                            </li>
+                            <li>
+                                <a href="#settingsClick" >settingsClick</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(router: <a href="../interfaces/Route.html" target="_self">Router</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="721" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:721</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Route.html" target="_self" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dashboardItemClick"></a>
+                        <b>dashboardItemClick</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="654" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:654</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="logoutClick"></a>
+                        <b>logoutClick</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="656" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:656</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="menuItemClick"></a>
+                        <b>menuItemClick</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="653" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:653</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="settingsClick"></a>
+                        <b>settingsClick</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="655" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:655</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="close"></a>
+                    <span class="name">
+                        <span ><b>close</b></span>
+                        <a href="#close"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>close()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="730"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:730</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeDashboard"></a>
+                    <span class="name">
+                        <span ><b>closeDashboard</b></span>
+                        <a href="#closeDashboard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeDashboard()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="767"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:767</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleDashboardClick"></a>
+                    <span class="name">
+                        <span ><b>handleDashboardClick</b></span>
+                        <a href="#handleDashboardClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleDashboardClick(item: <a href="../interfaces/SidebarMenuItem.html" target="_self">SidebarMenuItem</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="771"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:771</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>item</td>
+                                            <td>
+                                                            <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleLogout"></a>
+                    <span class="name">
+                        <span ><b>handleLogout</b></span>
+                        <a href="#handleLogout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleLogout()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="792"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:792</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleMenuClick"></a>
+                    <span class="name">
+                        <span ><b>handleMenuClick</b></span>
+                        <a href="#handleMenuClick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleMenuClick(item: <a href="../interfaces/SidebarMenuItem.html" target="_self">SidebarMenuItem</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="735"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:735</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>item</td>
+                                            <td>
+                                                            <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleSettings"></a>
+                    <span class="name">
+                        <span ><b>handleSettings</b></span>
+                        <a href="#handleSettings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>handleSettings()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="786"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:786</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onImageError"></a>
+                    <span class="name">
+                        <span ><b>onImageError</b></span>
+                        <a href="#onImageError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onImageError(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="753"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:753</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="open"></a>
+                    <span class="name">
+                        <span ><b>open</b></span>
+                        <a href="#open"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>open()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="725"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:725</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openDashboard"></a>
+                    <span class="name">
+                        <span ><b>openDashboard</b></span>
+                        <a href="#openDashboard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openDashboard()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="759"
+                                    class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:759</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeItem"></a>
+                    <span class="name">
+                        <span ><b>activeItem</b></span>
+                        <a href="#activeItem"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="645" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:645</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dashboardItems"></a>
+                    <span class="name">
+                        <span ><b>dashboardItems</b></span>
+                        <a href="#dashboardItems"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { id: &#x27;stats&#x27;, label: &#x27;Estadísticas&#x27;, icon: &#x27;📊&#x27;, route: &#x27;/dashboard/stats&#x27; },
+    { id: &#x27;earnings&#x27;, label: &#x27;Ganancias&#x27;, icon: &#x27;💵&#x27;, route: &#x27;/dashboard/earnings&#x27; },
+    { id: &#x27;calendar&#x27;, label: &#x27;Calendario&#x27;, icon: &#x27;📆&#x27;, route: &#x27;/dashboard/calendar&#x27; },
+    { id: &#x27;reviews&#x27;, label: &#x27;Reseñas&#x27;, icon: &#x27;⭐&#x27;, route: &#x27;/dashboard/reviews&#x27;, badge: 3 },
+    { id: &#x27;insurance&#x27;, label: &#x27;Seguros&#x27;, icon: &#x27;🛡️&#x27;, route: &#x27;/dashboard/insurance&#x27; },
+    { id: &#x27;documents&#x27;, label: &#x27;Documentos&#x27;, icon: &#x27;📄&#x27;, route: &#x27;/dashboard/documents&#x27; },
+    { id: &#x27;support&#x27;, label: &#x27;Soporte&#x27;, icon: &#x27;🎧&#x27;, route: &#x27;/dashboard/support&#x27; },
+    { id: &#x27;referrals&#x27;, label: &#x27;Referidos&#x27;, icon: &#x27;🎁&#x27;, route: &#x27;/referrals&#x27; },
+    { id: &#x27;settings&#x27;, label: &#x27;Ajustes&#x27;, icon: &#x27;⚙️&#x27;, route: &#x27;/settings&#x27; },
+    { id: &#x27;help&#x27;, label: &#x27;Ayuda&#x27;, icon: &#x27;❓&#x27;, route: &#x27;/help&#x27; },
+    { id: &#x27;about&#x27;, label: &#x27;Acerca de&#x27;, icon: &#x27;ℹ️&#x27;, route: &#x27;/about&#x27; },
+    { id: &#x27;legal&#x27;, label: &#x27;Legal&#x27;, icon: &#x27;⚖️&#x27;, route: &#x27;/legal&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="708" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:708</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isOpen"></a>
+                    <span class="name">
+                        <span ><b>isOpen</b></span>
+                        <a href="#isOpen"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="643" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:643</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="menuItems"></a>
+                    <span class="name">
+                        <span ><b>menuItems</b></span>
+                        <a href="#menuItems"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SidebarMenuItem.html" target="_self" >SidebarMenuItem[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      id: &#x27;home&#x27;,
+      label: &#x27;Inicio&#x27;,
+      icon: &#x27;🏠&#x27;,
+      route: &#x27;/&#x27;,
+      color: &#x27;var(--cta-default)&#x27;, // Reemplazado gradiente con token semántico
+    },
+    {
+      id: &#x27;cars&#x27;,
+      label: &#x27;Mis Autos&#x27;,
+      icon: &#x27;🚗&#x27;,
+      route: &#x27;/cars&#x27;,
+      badge: 3,
+      color: &#x27;var(--surface-secondary)&#x27;, // Reemplazado gradiente con token semántico
+    },
+    {
+      id: &#x27;bookings&#x27;,
+      label: &#x27;Reservas&#x27;,
+      icon: &#x27;📅&#x27;,
+      route: &#x27;/bookings&#x27;,
+      badge: 2,
+      color: &#x27;var(--surface-info-light, #E0F3FB)&#x27;,
+    },
+    {
+      id: &#x27;wallet&#x27;,
+      label: &#x27;Billetera&#x27;,
+      icon: &#x27;💰&#x27;,
+      route: &#x27;/wallet&#x27;,
+      color: &#x27;var(--success-default, #9DB38B)&#x27;,
+    },
+    {
+      id: &#x27;messages&#x27;,
+      label: &#x27;Mensajes&#x27;,
+      icon: &#x27;💬&#x27;,
+      route: &#x27;/messages&#x27;,
+      badge: 5,
+      color: &#x27;var(--surface-raised, #F8F4EC)&#x27;,
+    },
+    {
+      id: &#x27;profile&#x27;,
+      label: &#x27;Mi Perfil&#x27;,
+      icon: &#x27;👤&#x27;,
+      route: &#x27;/profile&#x27;,
+      color: &#x27;var(--border-default)&#x27;, // Reemplazado gradiente con token semántico
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="659" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:659</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showDashboard"></a>
+                    <span class="name">
+                        <span ><b>showDashboard</b></span>
+                        <a href="#showDashboard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="644" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:644</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userAvatar"></a>
+                    <span class="name">
+                        <span ><b>userAvatar</b></span>
+                        <a href="#userAvatar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="650" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:650</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userEmail"></a>
+                    <span class="name">
+                        <span ><b>userEmail</b></span>
+                        <a href="#userEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(&#x27;eduardo@autorenta.com&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="649" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:649</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userName"></a>
+                    <span class="name">
+                        <span ><b>userName</b></span>
+                        <a href="#userName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(&#x27;Eduardo Usuario&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="648" class="link-to-prism">src/app/features/marketplace/components/layout/facebook-sidebar.component.ts:648</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, signal, output } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+
+export interface SidebarMenuItem {
+  id: string;
+  label: string;
+  icon: string;
+  route?: string;
+  action?: () &#x3D;&gt; void;
+  badge?: number;
+  color?: string;
+}
+
+/**
+ * Facebook-style Sidebar Component
+ * Mobile-first sidebar with 6 main buttons + dashboard button
+ *
+ * Features:
+ * - iOS-style slide animation
+ * - Avatar + user info at top
+ * - 6 main navigation buttons
+ * - Dashboard button with modal
+ * - Backdrop overlay
+ * - Gesture close support
+ */
+@Component({
+  selector: &#x27;app-facebook-sidebar&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  template: &#x60;
+    &lt;!-- Backdrop --&gt;
+    @if (isOpen()) {
+      &lt;div class&#x3D;&quot;sidebar-backdrop&quot; (click)&#x3D;&quot;close()&quot; [@fadeIn]&gt;&lt;/div&gt;
+    }
+
+    &lt;!-- Sidebar Panel --&gt;
+    &lt;aside
+      class&#x3D;&quot;sidebar-panel&quot;
+      [class.open]&#x3D;&quot;isOpen()&quot;
+      role&#x3D;&quot;navigation&quot;
+      aria-label&#x3D;&quot;Main navigation&quot;
+    &gt;
+      &lt;!-- Header con Avatar --&gt;
+      &lt;div class&#x3D;&quot;sidebar-header&quot;&gt;
+        &lt;div class&#x3D;&quot;user-profile&quot;&gt;
+          &lt;div class&#x3D;&quot;avatar&quot;&gt;
+            &lt;img [src]&#x3D;&quot;userAvatar()&quot; [alt]&#x3D;&quot;userName()&quot; (error)&#x3D;&quot;onImageError($event)&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;user-info&quot;&gt;
+            &lt;h3 class&#x3D;&quot;user-name&quot;&gt;{{ userName() }}&lt;/h3&gt;
+            &lt;p class&#x3D;&quot;user-email&quot;&gt;{{ userEmail() }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;button class&#x3D;&quot;close-btn&quot; (click)&#x3D;&quot;close()&quot; aria-label&#x3D;&quot;Cerrar menú&quot;&gt;
+          &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M18 6L6 18M6 6L18 18&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              stroke-linecap&#x3D;&quot;round&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Divider --&gt;
+      &lt;div class&#x3D;&quot;divider&quot;&gt;&lt;/div&gt;
+
+      &lt;!-- Main Menu - 6 Buttons --&gt;
+      &lt;nav class&#x3D;&quot;sidebar-menu&quot;&gt;
+        @for (item of menuItems; track item.id) {
+          &lt;button
+            class&#x3D;&quot;menu-item&quot;
+            (click)&#x3D;&quot;handleMenuClick(item)&quot;
+            [class.active]&#x3D;&quot;activeItem() &#x3D;&#x3D;&#x3D; item.id&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;menu-icon&quot; [style.background]&#x3D;&quot;item.color || &#x27;#A7D8F4&#x27;&quot;&gt;
+              &lt;span class&#x3D;&quot;icon-emoji&quot;&gt;{{ item.icon }}&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class&#x3D;&quot;menu-label&quot;&gt;{{ item.label }}&lt;/span&gt;
+            @if (item.badge) {
+              &lt;span class&#x3D;&quot;menu-badge&quot;&gt;{{ item.badge }}&lt;/span&gt;
+            }
+            &lt;svg class&#x3D;&quot;menu-arrow&quot; width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+              &lt;path
+                d&#x3D;&quot;M7 5L12 10L7 15&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                stroke-width&#x3D;&quot;2&quot;
+                stroke-linecap&#x3D;&quot;round&quot;
+                stroke-linejoin&#x3D;&quot;round&quot;
+              /&gt;
+            &lt;/svg&gt;
+          &lt;/button&gt;
+        }
+      &lt;/nav&gt;
+
+      &lt;!-- Divider --&gt;
+      &lt;div class&#x3D;&quot;divider&quot;&gt;&lt;/div&gt;
+
+      &lt;!-- Dashboard Button --&gt;
+      &lt;button class&#x3D;&quot;dashboard-btn&quot; (click)&#x3D;&quot;openDashboard()&quot;&gt;
+        &lt;div class&#x3D;&quot;dashboard-icon&quot;&gt;
+          &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+            &lt;rect x&#x3D;&quot;3&quot; y&#x3D;&quot;3&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+            &lt;rect x&#x3D;&quot;3&quot; y&#x3D;&quot;13&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+            &lt;rect x&#x3D;&quot;13&quot; y&#x3D;&quot;3&quot; width&#x3D;&quot;8&quot; height&#x3D;&quot;8&quot; rx&#x3D;&quot;2&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;2&quot; /&gt;
+            &lt;rect
+              x&#x3D;&quot;13&quot;
+              y&#x3D;&quot;13&quot;
+              width&#x3D;&quot;8&quot;
+              height&#x3D;&quot;8&quot;
+              rx&#x3D;&quot;2&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;2&quot;
+            /&gt;
+          &lt;/svg&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;dashboard-text&quot;&gt;
+          &lt;span class&#x3D;&quot;dashboard-label&quot;&gt;Ver más&lt;/span&gt;
+          &lt;span class&#x3D;&quot;dashboard-subtitle&quot;&gt;Dashboard completo&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;svg class&#x3D;&quot;dashboard-arrow&quot; width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+          &lt;path
+            d&#x3D;&quot;M7 5L12 10L7 15&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+          /&gt;
+        &lt;/svg&gt;
+      &lt;/button&gt;
+
+      &lt;!-- Footer --&gt;
+      &lt;div class&#x3D;&quot;sidebar-footer&quot;&gt;
+        &lt;button class&#x3D;&quot;footer-btn&quot; (click)&#x3D;&quot;handleSettings()&quot;&gt;
+          &lt;svg width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+            &lt;circle cx&#x3D;&quot;10&quot; cy&#x3D;&quot;10&quot; r&#x3D;&quot;3&quot; stroke&#x3D;&quot;currentColor&quot; stroke-width&#x3D;&quot;1.5&quot; /&gt;
+            &lt;path
+              d&#x3D;&quot;M10 1V3M10 17V19M19 10H17M3 10H1M16.07 3.93L14.66 5.34M5.34 14.66L3.93 16.07M16.07 16.07L14.66 14.66M5.34 5.34L3.93 3.93&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;1.5&quot;
+              stroke-linecap&#x3D;&quot;round&quot;
+            /&gt;
+          &lt;/svg&gt;
+          Configuración
+        &lt;/button&gt;
+        &lt;button class&#x3D;&quot;footer-btn&quot; (click)&#x3D;&quot;handleLogout()&quot;&gt;
+          &lt;svg width&#x3D;&quot;20&quot; height&#x3D;&quot;20&quot; viewBox&#x3D;&quot;0 0 20 20&quot; fill&#x3D;&quot;none&quot;&gt;
+            &lt;path
+              d&#x3D;&quot;M13 16L18 11M18 11L13 6M18 11H6M11 16C11 16.93 11 17.395 10.8978 17.7765C10.6204 18.8117 9.81173 19.6204 8.77646 19.8978C8.39496 20 7.92997 20 7 20H6.5C5.10218 20 4.40326 20 3.85195 19.7716C3.11687 19.4672 2.53284 18.8831 2.22836 18.1481C2 17.5967 2 16.8978 2 15.5V4.5C2 3.10217 2 2.40326 2.22836 1.85195C2.53284 1.11687 3.11687 0.532841 3.85195 0.228361C4.40326 0 5.10218 0 6.5 0H7C7.92997 0 8.39496 0 8.77646 0.102165C9.81173 0.37962 10.6204 1.18827 10.8978 2.22354C11 2.60504 11 3.07003 11 4&quot;
+              stroke&#x3D;&quot;currentColor&quot;
+              stroke-width&#x3D;&quot;1.5&quot;
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+            /&gt;
+          &lt;/svg&gt;
+          Cerrar sesión
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/aside&gt;
+
+    &lt;!-- Dashboard Modal --&gt;
+    @if (showDashboard()) {
+      &lt;div class&#x3D;&quot;dashboard-modal&quot; (click)&#x3D;&quot;closeDashboard()&quot;&gt;
+        &lt;div class&#x3D;&quot;dashboard-content&quot; (click)&#x3D;&quot;$event.stopPropagation()&quot;&gt;
+          &lt;!-- Modal Header --&gt;
+          &lt;div class&#x3D;&quot;modal-header&quot;&gt;
+            &lt;h2 class&#x3D;&quot;modal-title&quot;&gt;Dashboard&lt;/h2&gt;
+            &lt;button class&#x3D;&quot;modal-close&quot; (click)&#x3D;&quot;closeDashboard()&quot;&gt;
+              &lt;svg width&#x3D;&quot;24&quot; height&#x3D;&quot;24&quot; viewBox&#x3D;&quot;0 0 24 24&quot; fill&#x3D;&quot;none&quot;&gt;
+                &lt;path
+                  d&#x3D;&quot;M18 6L6 18M6 6L18 18&quot;
+                  stroke&#x3D;&quot;currentColor&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  stroke-linecap&#x3D;&quot;round&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Dashboard Grid --&gt;
+          &lt;div class&#x3D;&quot;dashboard-grid&quot;&gt;
+            @for (item of dashboardItems; track item.id) {
+              &lt;button
+                class&#x3D;&quot;dashboard-item&quot;
+                (click)&#x3D;&quot;handleDashboardClick(item)&quot;
+                [style.background]&#x3D;&quot;item.color&quot;
+              &gt;
+                &lt;span class&#x3D;&quot;dashboard-item-icon&quot;&gt;{{ item.icon }}&lt;/span&gt;
+                &lt;span class&#x3D;&quot;dashboard-item-label&quot;&gt;{{ item.label }}&lt;/span&gt;
+                @if (item.badge) {
+                  &lt;span class&#x3D;&quot;dashboard-item-badge&quot;&gt;{{ item.badge }}&lt;/span&gt;
+                }
+              &lt;/button&gt;
+            }
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    }
+  &#x60;,
+  styles: [
+    &#x60;
+      /* Backdrop */
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.7);
+        z-index: 998;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Sidebar Panel */
+      .sidebar-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 340px;
+        max-width: 85vw;
+        background: white;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .sidebar-panel.open {
+        transform: translateX(0);
+      }
+
+      /* Header */
+      .sidebar-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 16px;
+        background: var(--cta-default, #a7d8f4);
+      }
+
+      .user-profile {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid white;
+        flex-shrink: 0;
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .user-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0 0 4px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .user-email {
+        font-size: 0.875rem;
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .close-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+
+      .close-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: #e3e3e3;
+        margin: 8px 0;
+      }
+
+      /* Menu */
+      .sidebar-menu {
+        padding: 8px 0;
+        flex: 1;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        text-align: left;
+      }
+
+      .menu-item:hover {
+        background: #f5f5f5;
+      }
+
+      .menu-item:active {
+        background: #e3e3e3;
+      }
+
+      .menu-item.active {
+        background: #f0f9fd;
+      }
+
+      .menu-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+
+      .icon-emoji {
+        font-size: 1.5rem;
+      }
+
+      .menu-label {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .menu-badge {
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .menu-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Dashboard Button */
+      .dashboard-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px;
+        background: #f8f4ec;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 8px 0;
+      }
+
+      .dashboard-btn:hover {
+        background: #dfd2bf;
+      }
+
+      .dashboard-btn:active {
+        transform: scale(0.98);
+      }
+
+      .dashboard-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        color: #a7d8f4;
+        flex-shrink: 0;
+      }
+
+      .dashboard-text {
+        flex: 1;
+        text-align: left;
+      }
+
+      .dashboard-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin-bottom: 2px;
+      }
+
+      .dashboard-subtitle {
+        display: block;
+        font-size: 0.75rem;
+        color: #4e4e4e;
+      }
+
+      .dashboard-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Footer */
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid #e3e3e3;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #4e4e4e;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+      }
+
+      .footer-btn:hover {
+        background: #f5f5f5;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .footer-btn:active {
+        background: #e3e3e3;
+      }
+
+      /* Dashboard Modal */
+      .dashboard-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: flex-end;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .dashboard-content {
+        width: 100%;
+        max-height: 80vh;
+        background: white;
+        border-radius: 24px 24px 0 0;
+        padding: 24px 20px;
+        animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0;
+      }
+
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .modal-close:hover {
+        background: #e3e3e3;
+      }
+
+      .modal-close:active {
+        transform: scale(0.9);
+      }
+
+      /* Dashboard Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .dashboard-item {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px 8px;
+        background: #f8f4ec;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .dashboard-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-item:active {
+        transform: translateY(-2px);
+      }
+
+      .dashboard-item-icon {
+        font-size: 2rem;
+      }
+
+      .dashboard-item-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        text-align: center;
+      }
+
+      .dashboard-item-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 50%;
+      }
+
+      /* Responsive */
+      @media (min-width: 768px) {
+        .sidebar-panel {
+          width: 380px;
+        }
+
+        .dashboard-content {
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: 24px;
+        }
+
+        .dashboard-modal {
+          align-items: center;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    &#x60;,
+  ],
+})
+export class FacebookSidebarComponent {
+  // State
+  isOpen &#x3D; signal(false);
+  showDashboard &#x3D; signal(false);
+  activeItem &#x3D; signal&lt;string | null&gt;(null);
+
+  // User data (conectar con AuthService en producción)
+  userName &#x3D; signal(&#x27;Eduardo Usuario&#x27;);
+  userEmail &#x3D; signal(&#x27;eduardo@autorenta.com&#x27;);
+  userAvatar &#x3D; signal(&#x27;&#x27;);
+
+  // Outputs
+  menuItemClick &#x3D; output&lt;SidebarMenuItem&gt;();
+  dashboardItemClick &#x3D; output&lt;SidebarMenuItem&gt;();
+  settingsClick &#x3D; output&lt;void&gt;();
+  logoutClick &#x3D; output&lt;void&gt;();
+
+  // 6 Main Menu Items
+  menuItems: SidebarMenuItem[] &#x3D; [
+    {
+      id: &#x27;home&#x27;,
+      label: &#x27;Inicio&#x27;,
+      icon: &#x27;🏠&#x27;,
+      route: &#x27;/&#x27;,
+      color: &#x27;var(--cta-default)&#x27;, // Reemplazado gradiente con token semántico
+    },
+    {
+      id: &#x27;cars&#x27;,
+      label: &#x27;Mis Autos&#x27;,
+      icon: &#x27;🚗&#x27;,
+      route: &#x27;/cars&#x27;,
+      badge: 3,
+      color: &#x27;var(--surface-secondary)&#x27;, // Reemplazado gradiente con token semántico
+    },
+    {
+      id: &#x27;bookings&#x27;,
+      label: &#x27;Reservas&#x27;,
+      icon: &#x27;📅&#x27;,
+      route: &#x27;/bookings&#x27;,
+      badge: 2,
+      color: &#x27;var(--surface-info-light, #E0F3FB)&#x27;,
+    },
+    {
+      id: &#x27;wallet&#x27;,
+      label: &#x27;Billetera&#x27;,
+      icon: &#x27;💰&#x27;,
+      route: &#x27;/wallet&#x27;,
+      color: &#x27;var(--success-default, #9DB38B)&#x27;,
+    },
+    {
+      id: &#x27;messages&#x27;,
+      label: &#x27;Mensajes&#x27;,
+      icon: &#x27;💬&#x27;,
+      route: &#x27;/messages&#x27;,
+      badge: 5,
+      color: &#x27;var(--surface-raised, #F8F4EC)&#x27;,
+    },
+    {
+      id: &#x27;profile&#x27;,
+      label: &#x27;Mi Perfil&#x27;,
+      icon: &#x27;👤&#x27;,
+      route: &#x27;/profile&#x27;,
+      color: &#x27;var(--border-default)&#x27;, // Reemplazado gradiente con token semántico
+    },
+  ];
+
+  // Dashboard Items (12 items en grid 3x4)
+  dashboardItems: SidebarMenuItem[] &#x3D; [
+    { id: &#x27;stats&#x27;, label: &#x27;Estadísticas&#x27;, icon: &#x27;📊&#x27;, route: &#x27;/dashboard/stats&#x27; },
+    { id: &#x27;earnings&#x27;, label: &#x27;Ganancias&#x27;, icon: &#x27;💵&#x27;, route: &#x27;/dashboard/earnings&#x27; },
+    { id: &#x27;calendar&#x27;, label: &#x27;Calendario&#x27;, icon: &#x27;📆&#x27;, route: &#x27;/dashboard/calendar&#x27; },
+    { id: &#x27;reviews&#x27;, label: &#x27;Reseñas&#x27;, icon: &#x27;⭐&#x27;, route: &#x27;/dashboard/reviews&#x27;, badge: 3 },
+    { id: &#x27;insurance&#x27;, label: &#x27;Seguros&#x27;, icon: &#x27;🛡️&#x27;, route: &#x27;/dashboard/insurance&#x27; },
+    { id: &#x27;documents&#x27;, label: &#x27;Documentos&#x27;, icon: &#x27;📄&#x27;, route: &#x27;/dashboard/documents&#x27; },
+    { id: &#x27;support&#x27;, label: &#x27;Soporte&#x27;, icon: &#x27;🎧&#x27;, route: &#x27;/dashboard/support&#x27; },
+    { id: &#x27;referrals&#x27;, label: &#x27;Referidos&#x27;, icon: &#x27;🎁&#x27;, route: &#x27;/referrals&#x27; },
+    { id: &#x27;settings&#x27;, label: &#x27;Ajustes&#x27;, icon: &#x27;⚙️&#x27;, route: &#x27;/settings&#x27; },
+    { id: &#x27;help&#x27;, label: &#x27;Ayuda&#x27;, icon: &#x27;❓&#x27;, route: &#x27;/help&#x27; },
+    { id: &#x27;about&#x27;, label: &#x27;Acerca de&#x27;, icon: &#x27;ℹ️&#x27;, route: &#x27;/about&#x27; },
+    { id: &#x27;legal&#x27;, label: &#x27;Legal&#x27;, icon: &#x27;⚖️&#x27;, route: &#x27;/legal&#x27; },
+  ];
+
+  constructor(private router: Router) {}
+
+  open(): void {
+    this.isOpen.set(true);
+    document.body.style.overflow &#x3D; &#x27;hidden&#x27;;
+  }
+
+  close(): void {
+    this.isOpen.set(false);
+    document.body.style.overflow &#x3D; &#x27;&#x27;;
+  }
+
+  handleMenuClick(item: SidebarMenuItem): void {
+    this.activeItem.set(item.id);
+
+    if (item.action) {
+      item.action();
+    } else if (item.route) {
+      this.router.navigate([item.route]);
+    }
+
+    this.menuItemClick.emit(item);
+    this.close();
+
+    // Haptic feedback
+    if (&#x27;vibrate&#x27; in navigator) {
+      navigator.vibrate(10);
+    }
+  }
+
+  onImageError(event: Event): void {
+    const img &#x3D; event.target as HTMLImageElement;
+    const name &#x3D; encodeURIComponent(this.userName());
+    img.src &#x3D; &#x60;https://ui-avatars.com/api/?name&#x3D;${name}&amp;background&#x3D;A7D8F4&amp;color&#x3D;050505&amp;size&#x3D;128&#x60;;
+  }
+
+  openDashboard(): void {
+    this.showDashboard.set(true);
+    // Haptic feedback
+    if (&#x27;vibrate&#x27; in navigator) {
+      navigator.vibrate(10);
+    }
+  }
+
+  closeDashboard(): void {
+    this.showDashboard.set(false);
+  }
+
+  handleDashboardClick(item: SidebarMenuItem): void {
+    if (item.route) {
+      this.router.navigate([item.route]);
+    }
+
+    this.dashboardItemClick.emit(item);
+    this.closeDashboard();
+    this.close();
+
+    // Haptic feedback
+    if (&#x27;vibrate&#x27; in navigator) {
+      navigator.vibrate(10);
+    }
+  }
+
+  handleSettings(): void {
+    this.settingsClick.emit();
+    this.router.navigate([&#x27;/settings&#x27;]);
+    this.close();
+  }
+
+  handleLogout(): void {
+    this.logoutClick.emit();
+    this.close();
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      /* Backdrop */
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.7);
+        z-index: 998;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Sidebar Panel */
+      .sidebar-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 340px;
+        max-width: 85vw;
+        background: white;
+        z-index: 999;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .sidebar-panel.open {
+        transform: translateX(0);
+      }
+
+      /* Header */
+      .sidebar-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 16px;
+        background: var(--cta-default, #a7d8f4);
+      }
+
+      .user-profile {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid white;
+        flex-shrink: 0;
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .user-info {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .user-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0 0 4px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .user-email {
+        font-size: 0.875rem;
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .close-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+
+      .close-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: #e3e3e3;
+        margin: 8px 0;
+      }
+
+      /* Menu */
+      .sidebar-menu {
+        padding: 8px 0;
+        flex: 1;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        text-align: left;
+      }
+
+      .menu-item:hover {
+        background: #f5f5f5;
+      }
+
+      .menu-item:active {
+        background: #e3e3e3;
+      }
+
+      .menu-item.active {
+        background: #f0f9fd;
+      }
+
+      .menu-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+
+      .icon-emoji {
+        font-size: 1.5rem;
+      }
+
+      .menu-label {
+        flex: 1;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .menu-badge {
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 12px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .menu-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Dashboard Button */
+      .dashboard-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 16px;
+        background: #f8f4ec;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 8px 0;
+      }
+
+      .dashboard-btn:hover {
+        background: #dfd2bf;
+      }
+
+      .dashboard-btn:active {
+        transform: scale(0.98);
+      }
+
+      .dashboard-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 12px;
+        color: #a7d8f4;
+        flex-shrink: 0;
+      }
+
+      .dashboard-text {
+        flex: 1;
+        text-align: left;
+      }
+
+      .dashboard-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin-bottom: 2px;
+      }
+
+      .dashboard-subtitle {
+        display: block;
+        font-size: 0.75rem;
+        color: #4e4e4e;
+      }
+
+      .dashboard-arrow {
+        color: #bcbcbc;
+        flex-shrink: 0;
+      }
+
+      /* Footer */
+      .sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid #e3e3e3;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: #4e4e4e;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+      }
+
+      .footer-btn:hover {
+        background: #f5f5f5;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+      }
+
+      .footer-btn:active {
+        background: #e3e3e3;
+      }
+
+      /* Dashboard Modal */
+      .dashboard-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.8);
+        z-index: 1000;
+        display: flex;
+        align-items: flex-end;
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .dashboard-content {
+        width: 100%;
+        max-height: 80vh;
+        background: white;
+        border-radius: 24px 24px 0 0;
+        padding: 24px 20px;
+        animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        margin: 0;
+      }
+
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 50%;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .modal-close:hover {
+        background: #e3e3e3;
+      }
+
+      .modal-close:active {
+        transform: scale(0.9);
+      }
+
+      /* Dashboard Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .dashboard-item {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px 8px;
+        background: #f8f4ec;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .dashboard-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-item:active {
+        transform: translateY(-2px);
+      }
+
+      .dashboard-item-icon {
+        font-size: 2rem;
+      }
+
+      .dashboard-item-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
+        text-align: center;
+      }
+
+      .dashboard-item-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: white;
+        background: #b25e5e;
+        border-radius: 50%;
+      }
+
+      /* Responsive */
+      @media (min-width: 768px) {
+        .sidebar-panel {
+          width: 380px;
+        }
+
+        .dashboard-content {
+          max-width: 600px;
+          margin: 0 auto;
+          border-radius: 24px;
+        }
+
+        .dashboard-modal {
+          align-items: center;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Backdrop -->@if (isOpen()) {  <div class="sidebar-backdrop" (click)="close()" [@fadeIn]></div>}<!-- Sidebar Panel --><aside  class="sidebar-panel"  [class.open]="isOpen()"  role="navigation"  aria-label="Main navigation">  <!-- Header con Avatar -->  <div class="sidebar-header">    <div class="user-profile">      <div class="avatar">        <img [src]="userAvatar()" [alt]="userName()" (error)="onImageError($event)" />      </div>      <div class="user-info">        <h3 class="user-name">{{ userName() }}</h3>        <p class="user-email">{{ userEmail() }}</p>      </div>    </div>    <button class="close-btn" (click)="close()" aria-label="Cerrar menú">      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">        <path          d="M18 6L6 18M6 6L18 18"          stroke="currentColor"          stroke-width="2"          stroke-linecap="round"        />      </svg>    </button>  </div>  <!-- Divider -->  <div class="divider"></div>  <!-- Main Menu - 6 Buttons -->  <nav class="sidebar-menu">    @for (item of menuItems; track item.id) {      <button        class="menu-item"        (click)="handleMenuClick(item)"        [class.active]="activeItem() === item.id"      >        <div class="menu-icon" [style.background]="item.color || \'#A7D8F4\'">          <span class="icon-emoji">{{ item.icon }}</span>        </div>        <span class="menu-label">{{ item.label }}</span>        @if (item.badge) {          <span class="menu-badge">{{ item.badge }}</span>        }        <svg class="menu-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">          <path            d="M7 5L12 10L7 15"            stroke="currentColor"            stroke-width="2"            stroke-linecap="round"            stroke-linejoin="round"          />        </svg>      </button>    }  </nav>  <!-- Divider -->  <div class="divider"></div>  <!-- Dashboard Button -->  <button class="dashboard-btn" (click)="openDashboard()">    <div class="dashboard-icon">      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">        <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2" />        <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2" />        <rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="2" />        <rect          x="13"          y="13"          width="8"          height="8"          rx="2"          stroke="currentColor"          stroke-width="2"        />      </svg>    </div>    <div class="dashboard-text">      <span class="dashboard-label">Ver más</span>      <span class="dashboard-subtitle">Dashboard completo</span>    </div>    <svg class="dashboard-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">      <path        d="M7 5L12 10L7 15"        stroke="currentColor"        stroke-width="2"        stroke-linecap="round"        stroke-linejoin="round"      />    </svg>  </button>  <!-- Footer -->  <div class="sidebar-footer">    <button class="footer-btn" (click)="handleSettings()">      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">        <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5" />        <path          d="M10 1V3M10 17V19M19 10H17M3 10H1M16.07 3.93L14.66 5.34M5.34 14.66L3.93 16.07M16.07 16.07L14.66 14.66M5.34 5.34L3.93 3.93"          stroke="currentColor"          stroke-width="1.5"          stroke-linecap="round"        />      </svg>      Configuración    </button>    <button class="footer-btn" (click)="handleLogout()">      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">        <path          d="M13 16L18 11M18 11L13 6M18 11H6M11 16C11 16.93 11 17.395 10.8978 17.7765C10.6204 18.8117 9.81173 19.6204 8.77646 19.8978C8.39496 20 7.92997 20 7 20H6.5C5.10218 20 4.40326 20 3.85195 19.7716C3.11687 19.4672 2.53284 18.8831 2.22836 18.1481C2 17.5967 2 16.8978 2 15.5V4.5C2 3.10217 2 2.40326 2.22836 1.85195C2.53284 1.11687 3.11687 0.532841 3.85195 0.228361C4.40326 0 5.10218 0 6.5 0H7C7.92997 0 8.39496 0 8.77646 0.102165C9.81173 0.37962 10.6204 1.18827 10.8978 2.22354C11 2.60504 11 3.07003 11 4"          stroke="currentColor"          stroke-width="1.5"          stroke-linecap="round"          stroke-linejoin="round"        />      </svg>      Cerrar sesión    </button>  </div></aside><!-- Dashboard Modal -->@if (showDashboard()) {  <div class="dashboard-modal" (click)="closeDashboard()">    <div class="dashboard-content" (click)="$event.stopPropagation()">      <!-- Modal Header -->      <div class="modal-header">        <h2 class="modal-title">Dashboard</h2>        <button class="modal-close" (click)="closeDashboard()">          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">            <path              d="M18 6L6 18M6 6L18 18"              stroke="currentColor"              stroke-width="2"              stroke-linecap="round"            />          </svg>        </button>      </div>      <!-- Dashboard Grid -->      <div class="dashboard-grid">        @for (item of dashboardItems; track item.id) {          <button            class="dashboard-item"            (click)="handleDashboardClick(item)"            [style.background]="item.color"          >            <span class="dashboard-item-icon">{{ item.icon }}</span>            <span class="dashboard-item-label">{{ item.label }}</span>            @if (item.badge) {              <span class="dashboard-item-badge">{{ item.badge }}</span>            }          </button>        }      </div>    </div>  </div>}</div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'FacebookSidebarComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FacebookSidebarComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

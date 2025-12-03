@@ -1,0 +1,2455 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  MyBookingsPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/my-bookings/my-bookings.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-my-bookings-page</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>MoneyPipe</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                            <code>TranslateModule</code>
+                                <code><a href="../components/DepositStatusBadgeComponent.html" target="_self" >DepositStatusBadgeComponent</a></code>
+                                <code><a href="../components/IconComponent.html" target="_self" >IconComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./my-bookings.page.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./my-bookings.page.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookings" >bookings</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filteredBookings" >filteredBookings</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#statusCounts" >statusCounts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#statusFilter" >statusFilter</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#statusFilters" >statusFilters</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#cancelBooking" >cancelBooking</a>
+                            </li>
+                            <li>
+                                <a href="#completePay" >completePay</a>
+                            </li>
+                            <li>
+                                <a href="#getFilterLabel" >getFilterLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadBookings" >loadBookings</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#openChat" >openChat</a>
+                            </li>
+                            <li>
+                                <a href="#rangeLabel" >rangeLabel</a>
+                            </li>
+                            <li>
+                                <a href="#setStatusFilter" >setStatusFilter</a>
+                            </li>
+                            <li>
+                                <a href="#showInstructions" >showInstructions</a>
+                            </li>
+                            <li>
+                                <a href="#showMap" >showMap</a>
+                            </li>
+                            <li>
+                                <a href="#statusBadgeClass" >statusBadgeClass</a>
+                            </li>
+                            <li>
+                                <a href="#statusBannerClass" >statusBannerClass</a>
+                            </li>
+                            <li>
+                                <a href="#statusCardClass" >statusCardClass</a>
+                            </li>
+                            <li>
+                                <a href="#statusHint" >statusHint</a>
+                            </li>
+                            <li>
+                                <a href="#statusIcon" >statusIcon</a>
+                            </li>
+                            <li>
+                                <a href="#statusLabel" >statusLabel</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(bookingsService: <a href="../injectables/BookingsService.html" target="_self">BookingsService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:74</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>bookingsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/BookingsService.html" target="_self" >BookingsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelBooking"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>cancelBooking</b></span>
+                        <a href="#cancelBooking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>cancelBooking(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>✅ SPRINT 3: Cancelar reserva con validación</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completePay"></a>
+                    <span class="name">
+                        <span ><b>completePay</b></span>
+                        <a href="#completePay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>completePay(_bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="203"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:203</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>_bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFilterLabel"></a>
+                    <span class="name">
+                        <span ><b>getFilterLabel</b></span>
+                        <a href="#getFilterLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getFilterLabel(filter: <a href="../undefineds/BookingStatusFilter.html" target="_self">BookingStatusFilter</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:316</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene la etiqueta del filtro</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filter</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#BookingStatusFilter" target="_self" >BookingStatusFilter</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBookings"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadBookings</b></span>
+                        <a href="#loadBookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBookings()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openChat"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>openChat</b></span>
+                        <a href="#openChat"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openChat(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="251"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:251</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>✅ SPRINT 3: Abrir chat/contacto con propietario
+Opción A: WhatsApp redirect (implementado)
+Opción B: Chat in-app (TODO futuro)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rangeLabel"></a>
+                    <span class="name">
+                        <span ><b>rangeLabel</b></span>
+                        <a href="#rangeLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>rangeLabel(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:95</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setStatusFilter"></a>
+                    <span class="name">
+                        <span ><b>setStatusFilter</b></span>
+                        <a href="#setStatusFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setStatusFilter(filter: <a href="../undefineds/BookingStatusFilter.html" target="_self">BookingStatusFilter</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="309"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:309</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Cambia el filtro de estado</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filter</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#BookingStatusFilter" target="_self" >BookingStatusFilter</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showInstructions"></a>
+                    <span class="name">
+                        <span ><b>showInstructions</b></span>
+                        <a href="#showInstructions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>showInstructions(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:235</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showMap"></a>
+                    <span class="name">
+                        <span ><b>showMap</b></span>
+                        <a href="#showMap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>showMap(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="292"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:292</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>✅ SPRINT 3: Mostrar mapa de ubicación
+Usa Google Maps con la ubicación del auto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusBadgeClass"></a>
+                    <span class="name">
+                        <span ><b>statusBadgeClass</b></span>
+                        <a href="#statusBadgeClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusBadgeClass(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusBannerClass"></a>
+                    <span class="name">
+                        <span ><b>statusBannerClass</b></span>
+                        <a href="#statusBannerClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusBannerClass(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusCardClass"></a>
+                    <span class="name">
+                        <span ><b>statusCardClass</b></span>
+                        <a href="#statusCardClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusCardClass(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:168</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusHint"></a>
+                    <span class="name">
+                        <span ><b>statusHint</b></span>
+                        <a href="#statusHint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusHint(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:118</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusIcon"></a>
+                    <span class="name">
+                        <span ><b>statusIcon</b></span>
+                        <a href="#statusIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusIcon(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusLabel"></a>
+                    <span class="name">
+                        <span ><b>statusLabel</b></span>
+                        <a href="#statusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusLabel(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookings"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookings</b></span>
+                        <a href="#bookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Booking[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filteredBookings"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filteredBookings</b></span>
+                        <a href="#filteredBookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const allBookings &#x3D; this.bookings();
+    const filter &#x3D; this.statusFilter();
+
+    if (filter &#x3D;&#x3D;&#x3D; &#x27;all&#x27;) {
+      return allBookings;
+    }
+
+    return allBookings.filter((booking) &#x3D;&gt; booking.status &#x3D;&#x3D;&#x3D; filter);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusCounts"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>statusCounts</b></span>
+                        <a href="#statusCounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const bookings &#x3D; this.bookings();
+    return {
+      all: bookings.length,
+      pending: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length,
+      confirmed: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;).length,
+      in_progress: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;).length,
+      completed: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;).length,
+      cancelled: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;cancelled&#x27; || b.status &#x3D;&#x3D;&#x3D; &#x27;expired&#x27;).length,
+    };
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusFilter"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>statusFilter</b></span>
+                        <a href="#statusFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BookingStatusFilter&gt;(&#x27;all&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusFilters"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>statusFilters</b></span>
+                        <a href="#statusFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &#x27;all&#x27;,
+    &#x27;pending&#x27;,
+    &#x27;confirmed&#x27;,
+    &#x27;in_progress&#x27;,
+    &#x27;completed&#x27;,
+    &#x27;cancelled&#x27;,
+  ] as const</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/bookings/my-bookings/my-bookings.page.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from &#x27;@angular/core&#x27;;
+import { RouterLink } from &#x27;@angular/router&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import { Booking } from &#x27;../../../core/models&#x27;;
+import { BookingsService } from &#x27;../../../core/services/bookings.service&#x27;;
+import { DepositStatusBadgeComponent } from &#x27;../../../shared/components/deposit-status-badge/deposit-status-badge.component&#x27;;
+import { IconComponent } from &#x27;../../../shared/components/icon/icon.component&#x27;;
+import { MoneyPipe } from &#x27;../../../shared/pipes/money.pipe&#x27;;
+import { formatDateRange } from &#x27;../../../shared/utils/date.utils&#x27;;
+
+type BookingStatusFilter &#x3D;
+  | &#x27;all&#x27;
+  | &#x27;pending&#x27;
+  | &#x27;confirmed&#x27;
+  | &#x27;in_progress&#x27;
+  | &#x27;completed&#x27;
+  | &#x27;cancelled&#x27;;
+
+@Component({
+  standalone: true,
+  selector: &#x27;app-my-bookings-page&#x27;,
+  imports: [
+    CommonModule,
+    MoneyPipe,
+    RouterLink,
+    TranslateModule,
+    DepositStatusBadgeComponent,
+    IconComponent,
+  ],
+  templateUrl: &#x27;./my-bookings.page.html&#x27;,
+  styleUrl: &#x27;./my-bookings.page.css&#x27;,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MyBookingsPage implements OnInit {
+  readonly bookings &#x3D; signal&lt;Booking[]&gt;([]);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly statusFilter &#x3D; signal&lt;BookingStatusFilter&gt;(&#x27;all&#x27;);
+
+  // Array tipado de filtros disponibles
+  readonly statusFilters: readonly BookingStatusFilter[] &#x3D; [
+    &#x27;all&#x27;,
+    &#x27;pending&#x27;,
+    &#x27;confirmed&#x27;,
+    &#x27;in_progress&#x27;,
+    &#x27;completed&#x27;,
+    &#x27;cancelled&#x27;,
+  ] as const;
+
+  // Computed: Filtered bookings based on selected status
+  readonly filteredBookings &#x3D; computed(() &#x3D;&gt; {
+    const allBookings &#x3D; this.bookings();
+    const filter &#x3D; this.statusFilter();
+
+    if (filter &#x3D;&#x3D;&#x3D; &#x27;all&#x27;) {
+      return allBookings;
+    }
+
+    return allBookings.filter((booking) &#x3D;&gt; booking.status &#x3D;&#x3D;&#x3D; filter);
+  });
+
+  // Computed: Count of bookings per status
+  readonly statusCounts &#x3D; computed(() &#x3D;&gt; {
+    const bookings &#x3D; this.bookings();
+    return {
+      all: bookings.length,
+      pending: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length,
+      confirmed: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;).length,
+      in_progress: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;).length,
+      completed: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;).length,
+      cancelled: bookings.filter((b) &#x3D;&gt; b.status &#x3D;&#x3D;&#x3D; &#x27;cancelled&#x27; || b.status &#x3D;&#x3D;&#x3D; &#x27;expired&#x27;).length,
+    };
+  });
+
+  constructor(private readonly bookingsService: BookingsService) {}
+
+  ngOnInit(): void {
+    void this.loadBookings();
+  }
+
+  async loadBookings(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const { bookings } &#x3D; await this.bookingsService.getMyBookings();
+      this.bookings.set(bookings);
+    } catch {
+      this.error.set(&#x27;No pudimos cargar tus reservas. Por favor intentá de nuevo más tarde.&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  rangeLabel(booking: Booking): string {
+    return formatDateRange(booking.start_at, booking.end_at);
+  }
+
+  statusLabel(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;Pendiente de pago&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Pagada&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;En uso&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Finalizada&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Cancelada&#x27;;
+      case &#x27;expired&#x27;:
+        return &#x27;Vencida&#x27;;
+      default:
+        return booking.status;
+    }
+  }
+
+  statusHint(booking: Booking): string | null {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;Completá el checkout para confirmar tu reserva.&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Todo listo. Coordiná el retiro con el anfitrión.&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Gracias por viajar con nosotros.&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Se canceló esta reserva. Podés generar una nueva cuando quieras.&#x27;;
+      default:
+        return null;
+    }
+  }
+
+  statusBannerClass(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;status-banner--pending&#x27;;
+      case &#x27;confirmed&#x27;:
+      case &#x27;in_progress&#x27;:
+        return &#x27;status-banner--success&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;status-banner--neutral&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;status-banner--danger&#x27;;
+      default:
+        return &#x27;&#x27;;
+    }
+  }
+
+  statusBadgeClass(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;badge-warning&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;badge-success&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;badge-info&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;badge-neutral&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;badge-danger&#x27;;
+      default:
+        return &#x27;badge-neutral&#x27;;
+    }
+  }
+
+  statusCardClass(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;booking-card--pending&#x27;;
+      case &#x27;confirmed&#x27;:
+      case &#x27;in_progress&#x27;:
+        return &#x27;booking-card--success&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;booking-card--neutral&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;booking-card--danger&#x27;;
+      default:
+        return &#x27;booking-card--neutral&#x27;;
+    }
+  }
+
+  statusIcon(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;⏳&#x27;;
+      case &#x27;confirmed&#x27;:
+      case &#x27;in_progress&#x27;:
+        return &#x27;✅&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;🚗&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;⚠️&#x27;;
+      default:
+        return &#x27;ℹ️&#x27;;
+    }
+  }
+
+  // Actions
+  completePay(_bookingId: string): void {
+    // RouterLink handles navigation
+  }
+
+  /**
+   * ✅ SPRINT 3: Cancelar reserva con validación
+   */
+  async cancelBooking(bookingId: string): Promise&lt;void&gt; {
+    const confirmed &#x3D; confirm(
+      &#x27;¿Estás seguro de cancelar esta reserva?\n\n&#x27; + &#x27;Esta acción no se puede deshacer.&#x27;,
+    );
+
+    if (!confirmed) return;
+
+    this.loading.set(true);
+    try {
+      const result &#x3D; await this.bookingsService.cancelBooking(bookingId);
+
+      if (!result.success) {
+        alert(&#x60;❌ Error: ${result.error}&#x60;);
+        return;
+      }
+
+      alert(&#x27;✅ Reserva cancelada exitosamente&#x27;);
+      await this.loadBookings(); // Recargar lista
+    } catch {
+      alert(&#x27;❌ Error inesperado al cancelar la reserva&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  showInstructions(booking: Booking): void {
+    const location &#x3D;
+      booking.car_city &amp;&amp; booking.car_province
+        ? &#x60;${booking.car_city}, ${booking.car_province}&#x60;
+        : &#x27;Ver en detalle&#x27;;
+    // FIXME: Replace alert with modal component for check-in instructions
+    alert(
+      &#x60;📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]&#x60;,
+    );
+  }
+
+  /**
+   * ✅ SPRINT 3: Abrir chat/contacto con propietario
+   * Opción A: WhatsApp redirect (implementado)
+   * Opción B: Chat in-app (TODO futuro)
+   */
+  async openChat(booking: Booking): Promise&lt;void&gt; {
+    if (!booking.owner_id) {
+      alert(&#x27;❌ No se pudo obtener información del propietario&#x27;);
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      const contact &#x3D; await this.bookingsService.getOwnerContact(booking.owner_id);
+
+      if (!contact.success || !contact.phone) {
+        // Fallback: mostrar email
+        alert(
+          &#x60;📧 Contacto del propietario:\n\n&#x60; +
+            &#x60;${contact.name || &#x27;Propietario&#x27;}\n&#x60; +
+            &#x60;Email: ${contact.email || &#x27;No disponible&#x27;}\n\n&#x60; +
+            &#x60;Puedes contactarlo por email para coordinar el retiro.&#x60;,
+        );
+        return;
+      }
+
+      // Si tiene teléfono, abrir WhatsApp
+      const carInfo &#x3D; &#x60;${booking.car_title || &#x27;auto&#x27;}&#x60;;
+      const dates &#x3D; this.rangeLabel(booking);
+      const message &#x3D; encodeURIComponent(
+        &#x60;Hola! Te contacto por la reserva del ${carInfo} para ${dates}.&#x60;,
+      );
+
+      const whatsappUrl &#x3D; &#x60;https://wa.me/${contact.phone}?text&#x3D;${message}&#x60;;
+      window.open(whatsappUrl, &#x27;_blank&#x27;);
+    } catch {
+      alert(&#x27;❌ Error al obtener información de contacto&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  /**
+   * ✅ SPRINT 3: Mostrar mapa de ubicación
+   * Usa Google Maps con la ubicación del auto
+   */
+  showMap(booking: Booking): void {
+    const { car_city, car_province } &#x3D; booking;
+
+    // Show location based on available data
+    if (car_city &amp;&amp; car_province) {
+      // Open Google Maps search with city/province
+      const location &#x3D; &#x60;${car_city}, ${car_province}&#x60;;
+      const mapsUrl &#x3D; &#x60;https://www.google.com/maps/search/?api&#x3D;1&amp;query&#x3D;${encodeURIComponent(location)}&#x60;;
+      window.open(mapsUrl, &#x27;_blank&#x27;);
+    } else {
+      alert(&#x27;🗺️ Ubicación no disponible para esta reserva.&#x27;);
+    }
+  }
+
+  /**
+   * Cambia el filtro de estado
+   */
+  setStatusFilter(filter: BookingStatusFilter): void {
+    this.statusFilter.set(filter);
+  }
+
+  /**
+   * Obtiene la etiqueta del filtro
+   */
+  getFilterLabel(filter: BookingStatusFilter): string {
+    switch (filter) {
+      case &#x27;all&#x27;:
+        return &#x27;Todas&#x27;;
+      case &#x27;pending&#x27;:
+        return &#x27;Pendientes&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Confirmadas&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;En curso&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Finalizadas&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Canceladas&#x27;;
+      default:
+        return filter;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;section class&#x3D;&quot;space-y-6&quot;&gt;
+  &lt;header&gt;
+    &lt;h1 class&#x3D;&quot;h2&quot;&gt;Mis reservas&lt;/h1&gt;
+    &lt;p class&#x3D;&quot;text-body text-text-secondary dark:text-text-secondary/80&quot;&gt;
+      Seguimiento de tus pedidos y su estado actual.
+    &lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;!-- Status Filters --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;!loading() &amp;&amp; !error() &amp;&amp; bookings().length &gt; 0&quot;
+    class&#x3D;&quot;flex flex-wrap gap-2 items-center&quot;
+  &gt;
+    &lt;button
+      *ngFor&#x3D;&quot;let filter of statusFilters&quot;
+      (click)&#x3D;&quot;setStatusFilter(filter)&quot;
+      [class.bg-cta-default]&#x3D;&quot;statusFilter() &#x3D;&#x3D;&#x3D; filter&quot;
+      [class.text-text-inverse]&#x3D;&quot;statusFilter() &#x3D;&#x3D;&#x3D; filter&quot;
+      [class.bg-surface-raised
+      dark:bg-surface-secondary]&#x3D;&quot;statusFilter() !&#x3D;&#x3D; filter&quot;
+      [class.text-cta-default]&#x3D;&quot;statusFilter() !&#x3D;&#x3D; filter&quot;
+      [class.dark:bg-surface-secondary]&#x3D;&quot;statusFilter() !&#x3D;&#x3D; filter&quot;
+      [class.dark:text-warning-light]&#x3D;&quot;statusFilter() !&#x3D;&#x3D; filter&quot;
+      class&#x3D;&quot;px-4 py-2 rounded-lg border-2 border-cta-default/30 dark:border-cta-default/50 font-medium text-sm transition-colors hover:bg-cta-default/10 dark:hover:bg-cta-default/20&quot;
+    &gt;
+      {{ getFilterLabel(filter) }}
+      &lt;span
+        *ngIf&#x3D;&quot;statusCounts()[filter] &gt; 0&quot;
+        class&#x3D;&quot;ml-2 px-2 py-0.5 rounded-full text-xs&quot;
+        [ngClass]&#x3D;&quot;{
+          &#x27;bg-surface-raised dark:bg-surface-secondary/20&#x27;: statusFilter() &#x3D;&#x3D;&#x3D; filter,
+          &#x27;bg-cta-default/10&#x27;: statusFilter() !&#x3D;&#x3D; filter,
+        }&quot;
+      &gt;
+        {{ statusCounts()[filter] }}
+      &lt;/span&gt;
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Error message --&gt;
+  &lt;div *ngIf&#x3D;&quot;error()&quot; class&#x3D;&quot;info-card-warm&quot;&gt;
+    &lt;p class&#x3D;&quot;font-semibold text-text-primary dark:text-text-secondary&quot;&gt;Error al cargar reservas&lt;/p&gt;
+    &lt;p class&#x3D;&quot;mt-1 text-text-secondary dark:text-text-secondary/80&quot;&gt;{{ error() }}&lt;/p&gt;
+    &lt;button
+      (click)&#x3D;&quot;loadBookings()&quot;
+      class&#x3D;&quot;mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base&quot;
+    &gt;
+      Reintentar
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Loading state --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;loading() &amp;&amp; !error()&quot;
+    class&#x3D;&quot;text-center text-sm text-text-secondary dark:text-text-secondary/70&quot;
+  &gt;
+    Cargando reservas...
+  &lt;/div&gt;
+
+  &lt;!-- Bookings list --&gt;
+  &lt;div class&#x3D;&quot;bookings-grid&quot; *ngIf&#x3D;&quot;!loading() &amp;&amp; !error()&quot;&gt;
+    &lt;article
+      *ngFor&#x3D;&quot;let booking of filteredBookings()&quot;
+      class&#x3D;&quot;card-premium overflow-hidden hover-lift shadow-soft booking-card&quot;
+      [ngClass]&#x3D;&quot;statusCardClass(booking)&quot;
+      data-testid&#x3D;&quot;booking-card&quot;
+    &gt;
+      &lt;a [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id]&quot; class&#x3D;&quot;block&quot;&gt;
+        &lt;!-- Hero Section with Car Photo Background --&gt;
+        &lt;div class&#x3D;&quot;relative h-32 sm:h-40 md:h-48 overflow-hidden&quot;&gt;
+          &lt;!-- Car Image Background --&gt;
+          &lt;div *ngIf&#x3D;&quot;booking.main_photo_url; else defaultBookingHero&quot; class&#x3D;&quot;absolute inset-0&quot;&gt;
+            &lt;img
+              [src]&#x3D;&quot;booking.main_photo_url&quot;
+              [alt]&#x3D;&quot;booking.car_title&quot;
+              loading&#x3D;&quot;lazy&quot;
+              decoding&#x3D;&quot;async&quot;
+              width&#x3D;&quot;400&quot;
+              height&#x3D;&quot;256&quot;
+              class&#x3D;&quot;w-full h-full object-cover&quot;
+            /&gt;
+            &lt;!-- Dark Overlay --&gt;
+            &lt;div
+              class&#x3D;&quot;absolute inset-0 bg-gradient-to-b from-smoke-black/60 via-smoke-black/40 to-smoke-black/70&quot;
+            &gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Default Hero (no image) --&gt;
+          &lt;ng-template #defaultBookingHero&gt;
+            &lt;div
+              class&#x3D;&quot;absolute inset-0 bg-gradient-to-br from-cta-default via-cta-default/90 to-warning-light&quot;
+            &gt;
+              &lt;!-- Decorative Pattern --&gt;
+              &lt;div
+                class&#x3D;&quot;absolute inset-0 opacity-10&quot;
+                style&#x3D;&quot;
+                  background-image: radial-gradient(circle, white 1px, transparent 1px);
+                  background-size: 40px 40px;
+                &quot;
+              &gt;&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/ng-template&gt;
+
+          &lt;!-- Content Overlay --&gt;
+          &lt;div class&#x3D;&quot;relative h-full flex flex-col justify-between p-4 sm:p-6&quot;&gt;
+            &lt;!-- Top: Status Badge --&gt;
+            &lt;div class&#x3D;&quot;flex justify-between items-start gap-2 flex-wrap&quot;&gt;
+              &lt;span
+                class&#x3D;&quot;badge-status text-text-inverse border-white/30 backdrop-blur-sm&quot;
+                [ngClass]&#x3D;&quot;statusBadgeClass(booking)&quot;
+              &gt;
+                {{ statusLabel(booking) }}
+              &lt;/span&gt;
+              &lt;app-deposit-status-badge
+                *ngIf&#x3D;&quot;booking.deposit_status&quot;
+                [status]&#x3D;&quot;booking.deposit_status&quot;
+              &gt;&lt;/app-deposit-status-badge&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Bottom: Car Info --&gt;
+            &lt;div class&#x3D;&quot;text-text-inverse&quot;&gt;
+              &lt;h3 class&#x3D;&quot;text-xl sm:text-2xl font-bold mb-1 tracking-tight&quot;&gt;
+                {{ booking.car_title || &#x27;Auto&#x27; }}
+              &lt;/h3&gt;
+              &lt;p
+                class&#x3D;&quot;text-sm sm:text-base text-text-inverse/90 mb-2&quot;
+                *ngIf&#x3D;&quot;booking.car_brand || booking.car_model&quot;
+              &gt;
+                {{ booking.car_brand }} {{ booking.car_model }}
+              &lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-xs sm:text-sm text-text-inverse/80&quot;&gt;
+                {{ rangeLabel(booking) }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;status-banner&quot; [ngClass]&#x3D;&quot;statusBannerClass(booking)&quot;&gt;
+          &lt;div class&#x3D;&quot;status-banner__icon&quot; aria-hidden&#x3D;&quot;true&quot;&gt;{{ statusIcon(booking) }}&lt;/div&gt;
+          &lt;div&gt;
+            &lt;p class&#x3D;&quot;status-banner__title&quot;&gt;{{ statusLabel(booking) }}&lt;/p&gt;
+            &lt;p *ngIf&#x3D;&quot;statusHint(booking)&quot; class&#x3D;&quot;status-banner__hint&quot;&gt;{{ statusHint(booking) }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Action Buttons by Status --&gt;
+        &lt;div
+          class&#x3D;&quot;p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 transition-base&quot;
+          *ngIf&#x3D;&quot;booking.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27; || booking.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;&quot;
+          [attr.data-tour-step]&#x3D;&quot;&#x27;booking-actions-&#x27; + booking.status&quot;
+        &gt;
+          &lt;!-- Pending: Needs Payment --&gt;
+          &lt;div *ngIf&#x3D;&quot;booking.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot; class&#x3D;&quot;space-y-3&quot;&gt;
+            &lt;div
+              class&#x3D;&quot;flex items-center gap-2 text-warning-text dark:text-warning-400 text-sm font-medium&quot;
+            &gt;
+              &lt;svg class&#x3D;&quot;w-5 h-5&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+                &lt;path
+                  fill-rule&#x3D;&quot;evenodd&quot;
+                  d&#x3D;&quot;M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z&quot;
+                  clip-rule&#x3D;&quot;evenodd&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span&gt;
+                {{
+                  booking.payment_mode
+                    ? &#x27;Acción requerida: Falta completar el pago&#x27;
+                    : &#x27;Acción requerida: Completa los detalles de pago&#x27;
+                }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Action Buttons - Responsive: vertical on mobile, horizontal on desktop --&gt;
+            &lt;div class&#x3D;&quot;flex flex-col sm:flex-row gap-2&quot;&gt;
+              &lt;!-- Completar Pago --&gt;
+              &lt;button
+                [routerLink]&#x3D;&quot;[&#x27;/bookings/detail-payment&#x27;]&quot;
+                [queryParams]&#x3D;&quot;{ bookingId: booking.id }&quot;
+                (click)&#x3D;&quot;$event.stopPropagation()&quot;
+                data-tour-step&#x3D;&quot;complete-payment-btn&quot;
+                class&#x3D;&quot;flex-1 px-4 py-3 bg-gradient-to-r from-cta-default to-warning-light text-text-inverse rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;credit-card&quot; [size]&#x3D;&quot;20&quot; cssClass&#x3D;&quot;inline-block mr-1&quot; /&gt; Completar
+                Pago
+              &lt;/button&gt;
+
+              &lt;!-- Ver Detalle (secundario) --&gt;
+              &lt;button
+                [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id]&quot;
+                (click)&#x3D;&quot;$event.stopPropagation()&quot;
+                data-tour-step&#x3D;&quot;view-detail-btn&quot;
+                class&#x3D;&quot;px-4 py-3 border-2 border-cta-default/30 dark:border-cta-default/50 text-cta-default dark:text-warning-light rounded-xl font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base order-2 sm:flex-none sm:w-auto&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;clipboard&quot; [size]&#x3D;&quot;20&quot; cssClass&#x3D;&quot;inline-block mr-1&quot; /&gt; Ver Detalle
+              &lt;/button&gt;
+
+              &lt;!-- Cancelar (siempre visible) --&gt;
+              &lt;button
+                (click)&#x3D;&quot;$event.preventDefault(); cancelBooking(booking.id)&quot;
+                class&#x3D;&quot;px-4 py-3 border-2 border-border-default dark:border-border-default/60 dark:border-neutral-700 text-text-secondary dark:text-text-secondary rounded-xl font-semibold hover:bg-border-default/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;close-circle&quot; [size]&#x3D;&quot;20&quot; cssClass&#x3D;&quot;inline-block mr-1&quot; /&gt; Cancelar
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Confirmed: Show Next Steps --&gt;
+          &lt;div *ngIf&#x3D;&quot;booking.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;&quot; class&#x3D;&quot;space-y-3&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-primary mb-2&quot;&gt;
+              &lt;app-icon name&#x3D;&quot;clipboard&quot; [size]&#x3D;&quot;18&quot; cssClass&#x3D;&quot;inline-block mr-1&quot; /&gt; Próximos pasos:
+            &lt;/p&gt;
+
+            &lt;!-- Main actions grid --&gt;
+            &lt;div class&#x3D;&quot;grid grid-cols-2 sm:grid-cols-4 gap-2&quot;&gt;
+              &lt;!-- Ver Detalle - Primary action for confirmed bookings --&gt;
+              &lt;button
+                [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id]&quot;
+                data-tour-step&#x3D;&quot;view-detail-confirmed-btn&quot;
+                class&#x3D;&quot;flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-cta-default/30 dark:border-cta-default/50 bg-cta-default/5 dark:bg-cta-default/10 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;clipboard&quot; [size]&#x3D;&quot;32&quot; cssClass&#x3D;&quot;inline-block&quot; /&gt;
+                &lt;span class&#x3D;&quot;text-xs font-medium text-cta-default dark:text-warning-light&quot;
+                  &gt;Ver Detalle&lt;/span
+                &gt;
+              &lt;/button&gt;
+
+              &lt;button
+                (click)&#x3D;&quot;$event.preventDefault(); showInstructions(booking)&quot;
+                data-tour-step&#x3D;&quot;view-instructions-btn&quot;
+                class&#x3D;&quot;flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;clipboard&quot; [size]&#x3D;&quot;32&quot; cssClass&#x3D;&quot;inline-block&quot; /&gt;
+                &lt;span class&#x3D;&quot;text-xs font-medium text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Instrucciones&lt;/span
+                &gt;
+              &lt;/button&gt;
+              &lt;button
+                (click)&#x3D;&quot;$event.preventDefault(); openChat(booking)&quot;
+                data-tour-step&#x3D;&quot;chat-btn&quot;
+                class&#x3D;&quot;flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;message&quot; [size]&#x3D;&quot;32&quot; cssClass&#x3D;&quot;inline-block&quot; /&gt;
+                &lt;span class&#x3D;&quot;text-xs font-medium text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Chat&lt;/span
+                &gt;
+              &lt;/button&gt;
+              &lt;button
+                (click)&#x3D;&quot;$event.preventDefault(); showMap(booking)&quot;
+                data-tour-step&#x3D;&quot;map-btn&quot;
+                class&#x3D;&quot;flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base&quot;
+              &gt;
+                &lt;app-icon name&#x3D;&quot;location&quot; [size]&#x3D;&quot;32&quot; cssClass&#x3D;&quot;inline-block&quot; /&gt;
+                &lt;span class&#x3D;&quot;text-xs font-medium text-text-secondary dark:text-text-secondary&quot;
+                  &gt;Mapa&lt;/span
+                &gt;
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Card Footer with Price and Action --&gt;
+        &lt;div
+          class&#x3D;&quot;p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 border-t border-border-default dark:border-border-default/40 dark:border-slate-deep/60 transition-base&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+            &lt;div&gt;
+              &lt;p class&#x3D;&quot;text-xs text-text-muted dark:text-text-secondary/70 mb-1&quot;&gt;Total&lt;/p&gt;
+              &lt;p class&#x3D;&quot;text-lg sm:text-xl font-bold text-text-primary dark:text-text-primary&quot;&gt;
+                {{ booking.total_amount | money }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div
+              class&#x3D;&quot;flex items-center gap-2 text-cta-default dark:text-text-primary font-semibold text-sm hover:text-warning-light dark:hover:text-warning-200 transition-base&quot;
+            &gt;
+              Ver detalle
+              &lt;svg class&#x3D;&quot;w-4 h-4&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M9 5l7 7-7 7&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/a&gt;
+    &lt;/article&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Empty state --&gt;
+  &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; !error() &amp;&amp; bookings().length &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+    &lt;p class&#x3D;&quot;text-caption text-center py-8 text-text-secondary dark:text-text-secondary/70&quot;&gt;
+      No tenés reservas todavía.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Empty state for filtered results --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;!loading() &amp;&amp; !error() &amp;&amp; bookings().length &gt; 0 &amp;&amp; filteredBookings().length &#x3D;&#x3D;&#x3D; 0&quot;
+    class&#x3D;&quot;text-center py-12&quot;
+  &gt;
+    &lt;p class&#x3D;&quot;text-lg font-medium text-text-secondary dark:text-text-secondary/80 mb-2&quot;&gt;
+      No hay reservas con el estado &quot;{{ getFilterLabel(statusFilter()) }}&quot;
+    &lt;/p&gt;
+    &lt;button
+      (click)&#x3D;&quot;setStatusFilter(&#x27;all&#x27;)&quot;
+      class&#x3D;&quot;px-4 py-2 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-warning-light transition-colors&quot;
+    &gt;
+      Ver todas las reservas
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><section class="space-y-6">  <header>    <h1 class="h2">Mis reservas</h1>    <p class="text-body text-text-secondary dark:text-text-secondary/80">      Seguimiento de tus pedidos y su estado actual.    </p>  </header>  <!-- Status Filters -->  <div    *ngIf="!loading() && !error() && bookings().length > 0"    class="flex flex-wrap gap-2 items-center"  >    <button      *ngFor="let filter of statusFilters"      (click)="setStatusFilter(filter)"      [class.bg-cta-default]="statusFilter() === filter"      [class.text-text-inverse]="statusFilter() === filter"      [class.bg-surface-raised      dark:bg-surface-secondary]="statusFilter() !== filter"      [class.text-cta-default]="statusFilter() !== filter"      [class.dark:bg-surface-secondary]="statusFilter() !== filter"      [class.dark:text-warning-light]="statusFilter() !== filter"      class="px-4 py-2 rounded-lg border-2 border-cta-default/30 dark:border-cta-default/50 font-medium text-sm transition-colors hover:bg-cta-default/10 dark:hover:bg-cta-default/20"    >      {{ getFilterLabel(filter) }}      <span        *ngIf="statusCounts()[filter] > 0"        class="ml-2 px-2 py-0.5 rounded-full text-xs"        [ngClass]="{          \'bg-surface-raised dark:bg-surface-secondary/20\': statusFilter() === filter,          \'bg-cta-default/10\': statusFilter() !== filter,        }"      >        {{ statusCounts()[filter] }}      </span>    </button>  </div>  <!-- Error message -->  <div *ngIf="error()" class="info-card-warm">    <p class="font-semibold text-text-primary dark:text-text-secondary">Error al cargar reservas</p>    <p class="mt-1 text-text-secondary dark:text-text-secondary/80">{{ error() }}</p>    <button      (click)="loadBookings()"      class="mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base"    >      Reintentar    </button>  </div>  <!-- Loading state -->  <div    *ngIf="loading() && !error()"    class="text-center text-sm text-text-secondary dark:text-text-secondary/70"  >    Cargando reservas...  </div>  <!-- Bookings list -->  <div class="bookings-grid" *ngIf="!loading() && !error()">    <article      *ngFor="let booking of filteredBookings()"      class="card-premium overflow-hidden hover-lift shadow-soft booking-card"      [ngClass]="statusCardClass(booking)"      data-testid="booking-card"    >      <a [routerLink]="[\'/bookings\', booking.id]" class="block">        <!-- Hero Section with Car Photo Background -->        <div class="relative h-32 sm:h-40 md:h-48 overflow-hidden">          <!-- Car Image Background -->          <div *ngIf="booking.main_photo_url; else defaultBookingHero" class="absolute inset-0">            <img              [src]="booking.main_photo_url"              [alt]="booking.car_title"              loading="lazy"              decoding="async"              width="400"              height="256"              class="w-full h-full object-cover"            />            <!-- Dark Overlay -->            <div              class="absolute inset-0 bg-gradient-to-b from-smoke-black/60 via-smoke-black/40 to-smoke-black/70"            ></div>          </div>          <!-- Default Hero (no image) -->          <ng-template #defaultBookingHero>            <div              class="absolute inset-0 bg-gradient-to-br from-cta-default via-cta-default/90 to-warning-light"            >              <!-- Decorative Pattern -->              <div                class="absolute inset-0 opacity-10"                style="                  background-image: radial-gradient(circle, white 1px, transparent 1px);                  background-size: 40px 40px;                "              ></div>            </div>          </ng-template>          <!-- Content Overlay -->          <div class="relative h-full flex flex-col justify-between p-4 sm:p-6">            <!-- Top: Status Badge -->            <div class="flex justify-between items-start gap-2 flex-wrap">              <span                class="badge-status text-text-inverse border-white/30 backdrop-blur-sm"                [ngClass]="statusBadgeClass(booking)"              >                {{ statusLabel(booking) }}              </span>              <app-deposit-status-badge                *ngIf="booking.deposit_status"                [status]="booking.deposit_status"              ></app-deposit-status-badge>            </div>            <!-- Bottom: Car Info -->            <div class="text-text-inverse">              <h3 class="text-xl sm:text-2xl font-bold mb-1 tracking-tight">                {{ booking.car_title || \'Auto\' }}              </h3>              <p                class="text-sm sm:text-base text-text-inverse/90 mb-2"                *ngIf="booking.car_brand || booking.car_model"              >                {{ booking.car_brand }} {{ booking.car_model }}              </p>              <p class="text-xs sm:text-sm text-text-inverse/80">                {{ rangeLabel(booking) }}              </p>            </div>          </div>        </div>        <div class="status-banner" [ngClass]="statusBannerClass(booking)">          <div class="status-banner__icon" aria-hidden="true">{{ statusIcon(booking) }}</div>          <div>            <p class="status-banner__title">{{ statusLabel(booking) }}</p>            <p *ngIf="statusHint(booking)" class="status-banner__hint">{{ statusHint(booking) }}</p>          </div>        </div>        <!-- Action Buttons by Status -->        <div          class="p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 transition-base"          *ngIf="booking.status === \'pending\' || booking.status === \'confirmed\'"          [attr.data-tour-step]="\'booking-actions-\' + booking.status"        >          <!-- Pending: Needs Payment -->          <div *ngIf="booking.status === \'pending\'" class="space-y-3">            <div              class="flex items-center gap-2 text-warning-text dark:text-warning-400 text-sm font-medium"            >              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">                <path                  fill-rule="evenodd"                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"                  clip-rule="evenodd"                />              </svg>              <span>                {{                  booking.payment_mode                    ? \'Acción requerida: Falta completar el pago\'                    : \'Acción requerida: Completa los detalles de pago\'                }}              </span>            </div>            <!-- Action Buttons - Responsive: vertical on mobile, horizontal on desktop -->            <div class="flex flex-col sm:flex-row gap-2">              <!-- Completar Pago -->              <button                [routerLink]="[\'/bookings/detail-payment\']"                [queryParams]="{ bookingId: booking.id }"                (click)="$event.stopPropagation()"                data-tour-step="complete-payment-btn"                class="flex-1 px-4 py-3 bg-gradient-to-r from-cta-default to-warning-light text-text-inverse rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1"              >                <app-icon name="credit-card" [size]="20" cssClass="inline-block mr-1" /> Completar                Pago              </button>              <!-- Ver Detalle (secundario) -->              <button                [routerLink]="[\'/bookings\', booking.id]"                (click)="$event.stopPropagation()"                data-tour-step="view-detail-btn"                class="px-4 py-3 border-2 border-cta-default/30 dark:border-cta-default/50 text-cta-default dark:text-warning-light rounded-xl font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base order-2 sm:flex-none sm:w-auto"              >                <app-icon name="clipboard" [size]="20" cssClass="inline-block mr-1" /> Ver Detalle              </button>              <!-- Cancelar (siempre visible) -->              <button                (click)="$event.preventDefault(); cancelBooking(booking.id)"                class="px-4 py-3 border-2 border-border-default dark:border-border-default/60 dark:border-neutral-700 text-text-secondary dark:text-text-secondary rounded-xl font-semibold hover:bg-border-default/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"              >                <app-icon name="close-circle" [size]="20" cssClass="inline-block mr-1" /> Cancelar              </button>            </div>          </div>          <!-- Confirmed: Show Next Steps -->          <div *ngIf="booking.status === \'confirmed\'" class="space-y-3">            <p class="text-sm font-medium text-text-primary dark:text-text-primary mb-2">              <app-icon name="clipboard" [size]="18" cssClass="inline-block mr-1" /> Próximos pasos:            </p>            <!-- Main actions grid -->            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">              <!-- Ver Detalle - Primary action for confirmed bookings -->              <button                [routerLink]="[\'/bookings\', booking.id]"                data-tour-step="view-detail-confirmed-btn"                class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-cta-default/30 dark:border-cta-default/50 bg-cta-default/5 dark:bg-cta-default/10 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"              >                <app-icon name="clipboard" [size]="32" cssClass="inline-block" />                <span class="text-xs font-medium text-cta-default dark:text-warning-light"                  >Ver Detalle</span                >              </button>              <button                (click)="$event.preventDefault(); showInstructions(booking)"                data-tour-step="view-instructions-btn"                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"              >                <app-icon name="clipboard" [size]="32" cssClass="inline-block" />                <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"                  >Instrucciones</span                >              </button>              <button                (click)="$event.preventDefault(); openChat(booking)"                data-tour-step="chat-btn"                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"              >                <app-icon name="message" [size]="32" cssClass="inline-block" />                <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"                  >Chat</span                >              </button>              <button                (click)="$event.preventDefault(); showMap(booking)"                data-tour-step="map-btn"                class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"              >                <app-icon name="location" [size]="32" cssClass="inline-block" />                <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"                  >Mapa</span                >              </button>            </div>          </div>        </div>        <!-- Card Footer with Price and Action -->        <div          class="p-4 sm:p-5 bg-surface-raised dark:bg-surface-raised dark:bg-surface-secondary/90 border-t border-border-default dark:border-border-default/40 dark:border-slate-deep/60 transition-base"        >          <div class="flex items-center justify-between">            <div>              <p class="text-xs text-text-muted dark:text-text-secondary/70 mb-1">Total</p>              <p class="text-lg sm:text-xl font-bold text-text-primary dark:text-text-primary">                {{ booking.total_amount | money }}              </p>            </div>            <div              class="flex items-center gap-2 text-cta-default dark:text-text-primary font-semibold text-sm hover:text-warning-light dark:hover:text-warning-200 transition-base"            >              Ver detalle              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M9 5l7 7-7 7"                />              </svg>            </div>          </div>        </div>      </a>    </article>  </div>  <!-- Empty state -->  <div *ngIf="!loading() && !error() && bookings().length === 0">    <p class="text-caption text-center py-8 text-text-secondary dark:text-text-secondary/70">      No tenés reservas todavía.    </p>  </div>  <!-- Empty state for filtered results -->  <div    *ngIf="!loading() && !error() && bookings().length > 0 && filteredBookings().length === 0"    class="text-center py-12"  >    <p class="text-lg font-medium text-text-secondary dark:text-text-secondary/80 mb-2">      No hay reservas con el estado "{{ getFilterLabel(statusFilter()) }}"    </p>    <button      (click)="setStatusFilter(\'all\')"      class="px-4 py-2 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-warning-light transition-colors"    >      Ver todas las reservas    </button>  </div></section></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'MyBookingsPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'MyBookingsPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

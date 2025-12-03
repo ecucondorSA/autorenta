@@ -1,0 +1,2604 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  DrivingStatsPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/profile/driving-stats/driving-stats.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>DrivingStatsPage</p>
+<p>Dashboard de estadísticas de conducción con telemetría GPS.</p>
+<p>Características:</p>
+<ul>
+<li>Score de conducción actual (0-100)</li>
+<li>Métricas detalladas: hard brakes, speed violations, night driving, risk zones</li>
+<li>Historial de viajes con scores individuales</li>
+<li>Comparativa con promedios</li>
+<li>Insights y recomendaciones</li>
+<li>Tendencia del score (improving, declining, stable)</li>
+</ul>
+<p>Ruta: /profile/driving-stats</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-driving-stats</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./driving-stats.page.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./driving-stats.page.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#currentScore" >currentScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasData" >hasData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#history" >history</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#insights" >insights</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#scoreColor" >scoreColor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#scoreLabel" >scoreLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#summary" >summary</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#telemetryService" >telemetryService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#toastService" >toastService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#trendColor" >trendColor</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#trendIcon" >trendIcon</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#trendLabel" >trendLabel</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatDate" >formatDate</a>
+                            </li>
+                            <li>
+                                <a href="#formatMetricValue" >formatMetricValue</a>
+                            </li>
+                            <li>
+                                <a href="#getMainIssueIcon" >getMainIssueIcon</a>
+                            </li>
+                            <li>
+                                <a href="#getMetricIcon" >getMetricIcon</a>
+                            </li>
+                            <li>
+                                <a href="#getMetricLabel" >getMetricLabel</a>
+                            </li>
+                            <li>
+                                <a href="#getScorePercentage" >getScorePercentage</a>
+                            </li>
+                            <li>
+                                <a href="#getTripScoreColor" >getTripScoreColor</a>
+                            </li>
+                            <li>
+                                <a href="#goBack" >goBack</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadDrivingData" >loadDrivingData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#viewTripDetails" >viewTripDetails</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDate"></a>
+                    <span class="name">
+                        <span ><b>formatDate</b></span>
+                        <a href="#formatDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatDate(date: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="168"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:168</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>date</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatMetricValue"></a>
+                    <span class="name">
+                        <span ><b>formatMetricValue</b></span>
+                        <a href="#formatMetricValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatMetricValue(metric: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:158</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>metric</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMainIssueIcon"></a>
+                    <span class="name">
+                        <span ><b>getMainIssueIcon</b></span>
+                        <a href="#getMainIssueIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getMainIssueIcon(issue: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>issue</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMetricIcon"></a>
+                    <span class="name">
+                        <span ><b>getMetricIcon</b></span>
+                        <a href="#getMetricIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getMetricIcon(metric: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>metric</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMetricLabel"></a>
+                    <span class="name">
+                        <span ><b>getMetricLabel</b></span>
+                        <a href="#getMetricLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getMetricLabel(metric: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:146</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>metric</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getScorePercentage"></a>
+                    <span class="name">
+                        <span ><b>getScorePercentage</b></span>
+                        <a href="#getScorePercentage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getScorePercentage(score: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:130</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>score</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTripScoreColor"></a>
+                    <span class="name">
+                        <span ><b>getTripScoreColor</b></span>
+                        <a href="#getTripScoreColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTripScoreColor(score: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>score</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goBack"></a>
+                    <span class="name">
+                        <span ><b>goBack</b></span>
+                        <a href="#goBack"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goBack()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="126"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:126</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadDrivingData"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadDrivingData</b></span>
+                        <a href="#loadDrivingData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadDrivingData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewTripDetails"></a>
+                    <span class="name">
+                        <span ><b>viewTripDetails</b></span>
+                        <a href="#viewTripDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>viewTripDetails(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="176"
+                                    class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:176</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentScore"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>currentScore</b></span>
+                        <a href="#currentScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(
+    () &#x3D;&gt; this.summary()?.avg_score ?? this.summary()?.avg_driver_score ?? 0,
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasData"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasData</b></span>
+                        <a href="#hasData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const avg &#x3D; this.summary();
+    return avg &amp;&amp; (avg.total_trips ?? 0) &gt; 0;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="history"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>history</b></span>
+                        <a href="#history"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TelemetryHistory[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insights"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>insights</b></span>
+                        <a href="#insights"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TelemetryInsights | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(true)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scoreColor"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>scoreColor</b></span>
+                        <a href="#scoreColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const score &#x3D; this.currentScore();
+    if (score &gt;&#x3D; 90) return &#x27;score-excellent&#x27;;
+    if (score &gt;&#x3D; 75) return &#x27;score-good&#x27;;
+    if (score &gt;&#x3D; 60) return &#x27;score-average&#x27;;
+    return &#x27;score-poor&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scoreLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>scoreLabel</b></span>
+                        <a href="#scoreLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const score &#x3D; this.currentScore();
+    if (score &gt;&#x3D; 90) return &#x27;Excelente&#x27;;
+    if (score &gt;&#x3D; 75) return &#x27;Bueno&#x27;;
+    if (score &gt;&#x3D; 60) return &#x27;Regular&#x27;;
+    return &#x27;Necesita Mejorar&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="summary"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>summary</b></span>
+                        <a href="#summary"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;TelemetryAverage | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="telemetryService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>telemetryService</b></span>
+                        <a href="#telemetryService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(TelemetryService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toastService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>toastService</b></span>
+                        <a href="#toastService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(NotificationManagerService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trendColor"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>trendColor</b></span>
+                        <a href="#trendColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;trend-up&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;trend-down&#x27;;
+    return &#x27;trend-stable&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:85</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trendIcon"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>trendIcon</b></span>
+                        <a href="#trendIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;📈&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;📉&#x27;;
+    return &#x27;➡️&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trendLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>trendLabel</b></span>
+                        <a href="#trendLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;Mejorando&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;Disminuyendo&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;stable&#x27;) return &#x27;Estable&#x27;;
+    return &#x27;Sin datos suficientes&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/app/features/profile/driving-stats/driving-stats.page.ts:77</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, inject, signal, computed, OnInit } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { TelemetryService } from &#x27;../../../core/services/telemetry.service&#x27;;
+import type {
+  TelemetryHistory,
+  TelemetryAverage,
+  TelemetryInsights,
+} from &#x27;../../../core/services/telemetry.service&#x27;;
+import { NotificationManagerService } from &#x27;../../../core/services/notification-manager.service&#x27;;
+
+/**
+ * DrivingStatsPage
+ *
+ * Dashboard de estadísticas de conducción con telemetría GPS.
+ *
+ * Características:
+ * - Score de conducción actual (0-100)
+ * - Métricas detalladas: hard brakes, speed violations, night driving, risk zones
+ * - Historial de viajes con scores individuales
+ * - Comparativa con promedios
+ * - Insights y recomendaciones
+ * - Tendencia del score (improving, declining, stable)
+ *
+ * Ruta: /profile/driving-stats
+ */
+@Component({
+  selector: &#x27;app-driving-stats&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: &#x27;./driving-stats.page.html&#x27;,
+  styleUrls: [&#x27;./driving-stats.page.css&#x27;],
+})
+export class DrivingStatsPage implements OnInit {
+  private readonly router &#x3D; inject(Router);
+  private readonly telemetryService &#x3D; inject(TelemetryService);
+  private readonly toastService &#x3D; inject(NotificationManagerService);
+
+  readonly loading &#x3D; signal(true);
+  readonly summary &#x3D; signal&lt;TelemetryAverage | null&gt;(null);
+  readonly history &#x3D; signal&lt;TelemetryHistory[]&gt;([]);
+  readonly insights &#x3D; signal&lt;TelemetryInsights | null&gt;(null);
+
+  // Computed properties
+  readonly hasData &#x3D; computed(() &#x3D;&gt; {
+    const avg &#x3D; this.summary();
+    return avg &amp;&amp; (avg.total_trips ?? 0) &gt; 0;
+  });
+
+  readonly currentScore &#x3D; computed(
+    () &#x3D;&gt; this.summary()?.avg_score ?? this.summary()?.avg_driver_score ?? 0,
+  );
+
+  readonly scoreColor &#x3D; computed(() &#x3D;&gt; {
+    const score &#x3D; this.currentScore();
+    if (score &gt;&#x3D; 90) return &#x27;score-excellent&#x27;;
+    if (score &gt;&#x3D; 75) return &#x27;score-good&#x27;;
+    if (score &gt;&#x3D; 60) return &#x27;score-average&#x27;;
+    return &#x27;score-poor&#x27;;
+  });
+
+  readonly scoreLabel &#x3D; computed(() &#x3D;&gt; {
+    const score &#x3D; this.currentScore();
+    if (score &gt;&#x3D; 90) return &#x27;Excelente&#x27;;
+    if (score &gt;&#x3D; 75) return &#x27;Bueno&#x27;;
+    if (score &gt;&#x3D; 60) return &#x27;Regular&#x27;;
+    return &#x27;Necesita Mejorar&#x27;;
+  });
+
+  readonly trendIcon &#x3D; computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;📈&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;📉&#x27;;
+    return &#x27;➡️&#x27;;
+  });
+
+  readonly trendLabel &#x3D; computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;Mejorando&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;Disminuyendo&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;stable&#x27;) return &#x27;Estable&#x27;;
+    return &#x27;Sin datos suficientes&#x27;;
+  });
+
+  readonly trendColor &#x3D; computed(() &#x3D;&gt; {
+    const trend &#x3D; this.insights()?.score_trend;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;improving&#x27;) return &#x27;trend-up&#x27;;
+    if (trend &#x3D;&#x3D;&#x3D; &#x27;declining&#x27;) return &#x27;trend-down&#x27;;
+    return &#x27;trend-stable&#x27;;
+  });
+
+  async ngOnInit() {
+    await this.loadDrivingData();
+  }
+
+  async loadDrivingData() {
+    this.loading.set(true);
+
+    try {
+      // Load in parallel
+      const [avgResult, historyResult, insightsResult] &#x3D; await Promise.allSettled([
+        this.telemetryService.getAverage(3),
+        this.telemetryService.getHistory(10),
+        this.telemetryService.getInsights(),
+      ]);
+
+      if (avgResult.status &#x3D;&#x3D;&#x3D; &#x27;fulfilled&#x27;) {
+        this.summary.set(avgResult.value);
+      }
+
+      if (historyResult.status &#x3D;&#x3D;&#x3D; &#x27;fulfilled&#x27;) {
+        this.history.set(historyResult.value);
+      }
+
+      if (insightsResult.status &#x3D;&#x3D;&#x3D; &#x27;fulfilled&#x27;) {
+        this.insights.set(insightsResult.value);
+      }
+    } catch (error) {
+      console.error(&#x27;Error loading driving data:&#x27;, error);
+      this.toastService.error(&#x27;Error al cargar estadísticas de conducción&#x27;, &#x27;&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  goBack() {
+    this.router.navigate([&#x27;/profile&#x27;]);
+  }
+
+  getScorePercentage(score: number): number {
+    return Math.round(score);
+  }
+
+  getMetricIcon(metric: string): string {
+    const icons: Record&lt;string, string&gt; &#x3D; {
+      hard_brakes: &#x27;🛑&#x27;,
+      speed_violations: &#x27;⚡&#x27;,
+      night_driving: &#x27;🌙&#x27;,
+      risk_zones: &#x27;⚠️&#x27;,
+      total_km: &#x27;📏&#x27;,
+      total_trips: &#x27;🚗&#x27;,
+    };
+    return icons[metric] || &#x27;📊&#x27;;
+  }
+
+  getMetricLabel(metric: string): string {
+    const labels: Record&lt;string, string&gt; &#x3D; {
+      hard_brakes: &#x27;Frenadas Bruscas&#x27;,
+      speed_violations: &#x27;Excesos de Velocidad&#x27;,
+      night_driving: &#x27;Conducción Nocturna&#x27;,
+      risk_zones: &#x27;Zonas de Riesgo&#x27;,
+      total_km: &#x27;Kilómetros Totales&#x27;,
+      total_trips: &#x27;Viajes Totales&#x27;,
+    };
+    return labels[metric] || metric;
+  }
+
+  formatMetricValue(metric: string, value: number): string {
+    if (metric &#x3D;&#x3D;&#x3D; &#x27;total_km&#x27;) {
+      return &#x60;${value.toFixed(1)} km&#x60;;
+    }
+    if (metric &#x3D;&#x3D;&#x3D; &#x27;night_driving&#x27;) {
+      return &#x60;${value.toFixed(1)} h&#x60;;
+    }
+    return value.toString();
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString(&#x27;es-AR&#x27;, {
+      day: &#x27;2-digit&#x27;,
+      month: &#x27;short&#x27;,
+      year: &#x27;numeric&#x27;,
+    });
+  }
+
+  viewTripDetails(bookingId: string) {
+    this.router.navigate([&#x27;/bookings&#x27;, bookingId]);
+  }
+
+  getTripScoreColor(score: number): string {
+    if (score &gt;&#x3D; 90) return &#x27;score-excellent&#x27;;
+    if (score &gt;&#x3D; 75) return &#x27;score-good&#x27;;
+    if (score &gt;&#x3D; 60) return &#x27;score-average&#x27;;
+    return &#x27;score-poor&#x27;;
+  }
+
+  getMainIssueIcon(issue: string): string {
+    if (issue.toLowerCase().includes(&#x27;frenad&#x27;)) return &#x27;🛑&#x27;;
+    if (issue.toLowerCase().includes(&#x27;velocidad&#x27;)) return &#x27;⚡&#x27;;
+    if (issue.toLowerCase().includes(&#x27;noctur&#x27;)) return &#x27;🌙&#x27;;
+    if (issue.toLowerCase().includes(&#x27;zona&#x27;)) return &#x27;⚠️&#x27;;
+    return &#x27;📋&#x27;;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;driving-stats-page&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;page-header&quot;&gt;
+    &lt;button class&#x3D;&quot;back-button&quot; (click)&#x3D;&quot;goBack()&quot;&gt;
+      &lt;svg fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+        &lt;path stroke-linecap&#x3D;&quot;round&quot; stroke-linejoin&#x3D;&quot;round&quot; stroke-width&#x3D;&quot;2&quot; d&#x3D;&quot;M15 19l-7-7 7-7&quot; /&gt;
+      &lt;/svg&gt;
+    &lt;/button&gt;
+    &lt;div&gt;
+      &lt;h1 class&#x3D;&quot;page-title&quot;&gt;Estadísticas de Conducción&lt;/h1&gt;
+      &lt;p class&#x3D;&quot;page-subtitle&quot;&gt;Tu score y métricas de manejo&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Loading State --&gt;
+  &lt;div *ngIf&#x3D;&quot;loading()&quot; class&#x3D;&quot;loading-container&quot;&gt;
+    &lt;div class&#x3D;&quot;loading-spinner&quot;&gt;&lt;/div&gt;
+    &lt;p class&#x3D;&quot;loading-text&quot;&gt;Cargando estadísticas...&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Empty State --&gt;
+  &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; !hasData()&quot; class&#x3D;&quot;empty-state&quot;&gt;
+    &lt;svg class&#x3D;&quot;empty-icon&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+      &lt;path
+        stroke-linecap&#x3D;&quot;round&quot;
+        stroke-linejoin&#x3D;&quot;round&quot;
+        stroke-width&#x3D;&quot;2&quot;
+        d&#x3D;&quot;M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z&quot;
+      /&gt;
+    &lt;/svg&gt;
+    &lt;h3 class&#x3D;&quot;empty-title&quot;&gt;Sin datos de telemetría&lt;/h3&gt;
+    &lt;p class&#x3D;&quot;empty-description&quot;&gt;
+      Realiza tu primer viaje para empezar a recopilar estadísticas de conducción
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Main Content --&gt;
+  &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; hasData()&quot; class&#x3D;&quot;stats-content&quot;&gt;
+    &lt;!-- Score Card --&gt;
+    &lt;div class&#x3D;&quot;score-section&quot;&gt;
+      &lt;div class&#x3D;&quot;score-card&quot; [ngClass]&#x3D;&quot;scoreColor()&quot;&gt;
+        &lt;div class&#x3D;&quot;score-header&quot;&gt;
+          &lt;h2 class&#x3D;&quot;score-title&quot;&gt;Tu Score de Conducción&lt;/h2&gt;
+          &lt;div class&#x3D;&quot;score-trend&quot; [ngClass]&#x3D;&quot;trendColor()&quot;&gt;
+            &lt;span class&#x3D;&quot;trend-icon&quot;&gt;{{ trendIcon() }}&lt;/span&gt;
+            &lt;span class&#x3D;&quot;trend-label&quot;&gt;{{ trendLabel() }}&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;score-display&quot;&gt;
+          &lt;div class&#x3D;&quot;score-circle&quot;&gt;
+            &lt;svg class&#x3D;&quot;score-ring&quot; viewBox&#x3D;&quot;0 0 120 120&quot;&gt;
+              &lt;circle
+                class&#x3D;&quot;score-ring-bg&quot;
+                cx&#x3D;&quot;60&quot;
+                cy&#x3D;&quot;60&quot;
+                r&#x3D;&quot;54&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke-width&#x3D;&quot;8&quot;
+              &gt;&lt;/circle&gt;
+              &lt;circle
+                class&#x3D;&quot;score-ring-fill&quot;
+                cx&#x3D;&quot;60&quot;
+                cy&#x3D;&quot;60&quot;
+                r&#x3D;&quot;54&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke-width&#x3D;&quot;8&quot;
+                [attr.stroke-dasharray]&#x3D;&quot;339.292&quot;
+                [attr.stroke-dashoffset]&#x3D;&quot;339.292 - (339.292 * currentScore()) / 100&quot;
+              &gt;&lt;/circle&gt;
+            &lt;/svg&gt;
+            &lt;div class&#x3D;&quot;score-value&quot;&gt;
+              &lt;span class&#x3D;&quot;score-number&quot;&gt;{{ currentScore() }}&lt;/span&gt;
+              &lt;span class&#x3D;&quot;score-max&quot;&gt;/100&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;score-info&quot;&gt;
+            &lt;div class&#x3D;&quot;score-label-large&quot;&gt;{{ scoreLabel() }}&lt;/div&gt;
+            &lt;p class&#x3D;&quot;score-description&quot;&gt;
+              Basado en {{ summary()?.total_trips || 0 }} viajes en los últimos 3 meses
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Metrics Grid --&gt;
+    &lt;div class&#x3D;&quot;metrics-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Métricas Detalladas&lt;/h3&gt;
+
+      &lt;div class&#x3D;&quot;metrics-grid&quot;&gt;
+        &lt;!-- Total KM --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;📏&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_km?.toFixed(0) || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Kilómetros&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Hard Brakes --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;🛑&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_hard_brakes || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Frenadas Bruscas&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Speed Violations --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;⚡&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_speed_violations || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Excesos de Velocidad&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Night Driving --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;🌙&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_night_hours?.toFixed(1) || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Horas Nocturnas&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Risk Zones --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;⚠️&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_risk_zones || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Zonas de Riesgo&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Total Trips --&gt;
+        &lt;div class&#x3D;&quot;metric-card&quot;&gt;
+          &lt;div class&#x3D;&quot;metric-icon&quot;&gt;🚗&lt;/div&gt;
+          &lt;div class&#x3D;&quot;metric-content&quot;&gt;
+            &lt;div class&#x3D;&quot;metric-value&quot;&gt;{{ summary()?.total_trips || 0 }}&lt;/div&gt;
+            &lt;div class&#x3D;&quot;metric-label&quot;&gt;Viajes Totales&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Insights Section --&gt;
+    &lt;div *ngIf&#x3D;&quot;insights()&quot; class&#x3D;&quot;insights-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Recomendaciones&lt;/h3&gt;
+
+      &lt;div class&#x3D;&quot;insights-card&quot;&gt;
+        &lt;div class&#x3D;&quot;insight-item&quot;&gt;
+          &lt;div class&#x3D;&quot;insight-icon&quot;&gt;{{ getMainIssueIcon(insights()?.main_issue || &#x27;&#x27;) }}&lt;/div&gt;
+          &lt;div class&#x3D;&quot;insight-content&quot;&gt;
+            &lt;div class&#x3D;&quot;insight-label&quot;&gt;Principal área de mejora&lt;/div&gt;
+            &lt;div class&#x3D;&quot;insight-value&quot;&gt;{{ insights()?.main_issue || &#x27;N/A&#x27; }}&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;insight-item&quot;&gt;
+          &lt;div class&#x3D;&quot;insight-icon&quot;&gt;💡&lt;/div&gt;
+          &lt;div class&#x3D;&quot;insight-content&quot;&gt;
+            &lt;div class&#x3D;&quot;insight-label&quot;&gt;Recomendación&lt;/div&gt;
+            &lt;div class&#x3D;&quot;insight-value&quot;&gt;{{ insights()!.recommendation }}&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Trip History --&gt;
+    &lt;div class&#x3D;&quot;history-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Historial de Viajes&lt;/h3&gt;
+
+      &lt;div *ngIf&#x3D;&quot;history().length &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;empty-history&quot;&gt;
+        &lt;p&gt;No hay historial de viajes disponible&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;history-list&quot; *ngIf&#x3D;&quot;history().length &gt; 0&quot;&gt;
+        &lt;div
+          *ngFor&#x3D;&quot;let trip of history()&quot;
+          class&#x3D;&quot;trip-card&quot;
+          (click)&#x3D;&quot;viewTripDetails(trip.booking_id)&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;trip-header&quot;&gt;
+            &lt;div class&#x3D;&quot;trip-info&quot;&gt;
+              &lt;div class&#x3D;&quot;trip-car&quot;&gt;{{ trip.car_brand }} {{ trip.car_model }}&lt;/div&gt;
+              &lt;div class&#x3D;&quot;trip-date&quot;&gt;{{ formatDate(trip.trip_date) }}&lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class&#x3D;&quot;trip-score&quot; [ngClass]&#x3D;&quot;getTripScoreColor(trip.driver_score)&quot;&gt;
+              {{ trip.driver_score }}/100
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;trip-metrics&quot;&gt;
+            &lt;div class&#x3D;&quot;trip-metric&quot;&gt;
+              &lt;span class&#x3D;&quot;metric-icon-small&quot;&gt;📏&lt;/span&gt;
+              {{ trip.total_km.toFixed(1) }} km
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;trip-metric&quot; *ngIf&#x3D;&quot;trip.hard_brakes &gt; 0&quot;&gt;
+              &lt;span class&#x3D;&quot;metric-icon-small&quot;&gt;🛑&lt;/span&gt;
+              {{ trip.hard_brakes }} frenadas
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;trip-metric&quot; *ngIf&#x3D;&quot;trip.speed_violations &gt; 0&quot;&gt;
+              &lt;span class&#x3D;&quot;metric-icon-small&quot;&gt;⚡&lt;/span&gt;
+              {{ trip.speed_violations }} excesos
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;trip-metric&quot; *ngIf&#x3D;&quot;trip.night_driving_hours &gt; 0&quot;&gt;
+              &lt;span class&#x3D;&quot;metric-icon-small&quot;&gt;🌙&lt;/span&gt;
+              {{ trip.night_driving_hours.toFixed(1) }} h
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./driving-stats.page.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.driving-stats-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+/* Header */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.back-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.back-button:hover {
+  background: #f9fafb;
+  border-color: #3b82f6;
+}
+
+.back-button svg {
+  width: 20px;
+  height: 20px;
+  color: #374151;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Empty State */
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  color: #d1d5db;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.empty-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Stats Content */
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Score Section */
+.score-section {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.score-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.score-trend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.trend-up {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.trend-down {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.trend-stable {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.trend-icon {
+  font-size: 16px;
+}
+
+.score-display {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.score-circle {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.score-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.score-ring-bg {
+  stroke: #f3f4f6;
+}
+
+.score-ring-fill {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.score-card.score-excellent .score-ring-fill {
+  stroke: #10b981;
+}
+
+.score-card.score-good .score-ring-fill {
+  stroke: #3b82f6;
+}
+
+.score-card.score-average .score-ring-fill {
+  stroke: #f59e0b;
+}
+
+.score-card.score-poor .score-ring-fill {
+  stroke: #ef4444;
+}
+
+.score-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-number {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.score-card.score-excellent .score-number {
+  color: #10b981;
+}
+
+.score-card.score-good .score-number {
+  color: #3b82f6;
+}
+
+.score-card.score-average .score-number {
+  color: #f59e0b;
+}
+
+.score-card.score-poor .score-number {
+  color: #ef4444;
+}
+
+.score-max {
+  font-size: 18px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.score-info {
+  flex: 1;
+}
+
+.score-label-large {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.score-card.score-excellent .score-label-large {
+  color: #10b981;
+}
+
+.score-card.score-good .score-label-large {
+  color: #3b82f6;
+}
+
+.score-card.score-average .score-label-large {
+  color: #f59e0b;
+}
+
+.score-card.score-poor .score-label-large {
+  color: #ef4444;
+}
+
+.score-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Metrics Section */
+.metrics-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 16px 0;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.metric-card {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.metric-icon {
+  font-size: 28px;
+}
+
+.metric-content {
+  flex: 1;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Insights Section */
+.insights-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.insights-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.insight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.insight-content {
+  flex: 1;
+}
+
+.insight-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.insight-value {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* History Section */
+.history-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-history {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trip-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trip-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.trip-info {
+  flex: 1;
+}
+
+.trip-car {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.trip-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.trip-score {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.trip-score.score-excellent {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.trip-score.score-good {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.trip-score.score-average {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.trip-score.score-poor {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.trip-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.trip-metric {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.metric-icon-small {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .driving-stats-page {
+    padding: 16px;
+  }
+
+  .score-section {
+    padding: 20px;
+  }
+
+  .score-display {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .score-circle {
+    width: 140px;
+    height: 140px;
+  }
+
+  .score-number {
+    font-size: 40px;
+  }
+
+  .score-label-large {
+    font-size: 24px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trip-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .trip-score {
+    align-self: flex-start;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="driving-stats-page">  <!-- Header -->  <div class="page-header">    <button class="back-button" (click)="goBack()">      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />      </svg>    </button>    <div>      <h1 class="page-title">Estadísticas de Conducción</h1>      <p class="page-subtitle">Tu score y métricas de manejo</p>    </div>  </div>  <!-- Loading State -->  <div *ngIf="loading()" class="loading-container">    <div class="loading-spinner"></div>    <p class="loading-text">Cargando estadísticas...</p>  </div>  <!-- Empty State -->  <div *ngIf="!loading() && !hasData()" class="empty-state">    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">      <path        stroke-linecap="round"        stroke-linejoin="round"        stroke-width="2"        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"      />    </svg>    <h3 class="empty-title">Sin datos de telemetría</h3>    <p class="empty-description">      Realiza tu primer viaje para empezar a recopilar estadísticas de conducción    </p>  </div>  <!-- Main Content -->  <div *ngIf="!loading() && hasData()" class="stats-content">    <!-- Score Card -->    <div class="score-section">      <div class="score-card" [ngClass]="scoreColor()">        <div class="score-header">          <h2 class="score-title">Tu Score de Conducción</h2>          <div class="score-trend" [ngClass]="trendColor()">            <span class="trend-icon">{{ trendIcon() }}</span>            <span class="trend-label">{{ trendLabel() }}</span>          </div>        </div>        <div class="score-display">          <div class="score-circle">            <svg class="score-ring" viewBox="0 0 120 120">              <circle                class="score-ring-bg"                cx="60"                cy="60"                r="54"                fill="none"                stroke-width="8"              ></circle>              <circle                class="score-ring-fill"                cx="60"                cy="60"                r="54"                fill="none"                stroke-width="8"                [attr.stroke-dasharray]="339.292"                [attr.stroke-dashoffset]="339.292 - (339.292 * currentScore()) / 100"              ></circle>            </svg>            <div class="score-value">              <span class="score-number">{{ currentScore() }}</span>              <span class="score-max">/100</span>            </div>          </div>          <div class="score-info">            <div class="score-label-large">{{ scoreLabel() }}</div>            <p class="score-description">              Basado en {{ summary()?.total_trips || 0 }} viajes en los últimos 3 meses            </p>          </div>        </div>      </div>    </div>    <!-- Metrics Grid -->    <div class="metrics-section">      <h3 class="section-title">Métricas Detalladas</h3>      <div class="metrics-grid">        <!-- Total KM -->        <div class="metric-card">          <div class="metric-icon">📏</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_km?.toFixed(0) || 0 }}</div>            <div class="metric-label">Kilómetros</div>          </div>        </div>        <!-- Hard Brakes -->        <div class="metric-card">          <div class="metric-icon">🛑</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_hard_brakes || 0 }}</div>            <div class="metric-label">Frenadas Bruscas</div>          </div>        </div>        <!-- Speed Violations -->        <div class="metric-card">          <div class="metric-icon">⚡</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_speed_violations || 0 }}</div>            <div class="metric-label">Excesos de Velocidad</div>          </div>        </div>        <!-- Night Driving -->        <div class="metric-card">          <div class="metric-icon">🌙</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_night_hours?.toFixed(1) || 0 }}</div>            <div class="metric-label">Horas Nocturnas</div>          </div>        </div>        <!-- Risk Zones -->        <div class="metric-card">          <div class="metric-icon">⚠️</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_risk_zones || 0 }}</div>            <div class="metric-label">Zonas de Riesgo</div>          </div>        </div>        <!-- Total Trips -->        <div class="metric-card">          <div class="metric-icon">🚗</div>          <div class="metric-content">            <div class="metric-value">{{ summary()?.total_trips || 0 }}</div>            <div class="metric-label">Viajes Totales</div>          </div>        </div>      </div>    </div>    <!-- Insights Section -->    <div *ngIf="insights()" class="insights-section">      <h3 class="section-title">Recomendaciones</h3>      <div class="insights-card">        <div class="insight-item">          <div class="insight-icon">{{ getMainIssueIcon(insights()?.main_issue || \'\') }}</div>          <div class="insight-content">            <div class="insight-label">Principal área de mejora</div>            <div class="insight-value">{{ insights()?.main_issue || \'N/A\' }}</div>          </div>        </div>        <div class="insight-item">          <div class="insight-icon">💡</div>          <div class="insight-content">            <div class="insight-label">Recomendación</div>            <div class="insight-value">{{ insights()!.recommendation }}</div>          </div>        </div>      </div>    </div>    <!-- Trip History -->    <div class="history-section">      <h3 class="section-title">Historial de Viajes</h3>      <div *ngIf="history().length === 0" class="empty-history">        <p>No hay historial de viajes disponible</p>      </div>      <div class="history-list" *ngIf="history().length > 0">        <div          *ngFor="let trip of history()"          class="trip-card"          (click)="viewTripDetails(trip.booking_id)"        >          <div class="trip-header">            <div class="trip-info">              <div class="trip-car">{{ trip.car_brand }} {{ trip.car_model }}</div>              <div class="trip-date">{{ formatDate(trip.trip_date) }}</div>            </div>            <div class="trip-score" [ngClass]="getTripScoreColor(trip.driver_score)">              {{ trip.driver_score }}/100            </div>          </div>          <div class="trip-metrics">            <div class="trip-metric">              <span class="metric-icon-small">📏</span>              {{ trip.total_km.toFixed(1) }} km            </div>            <div class="trip-metric" *ngIf="trip.hard_brakes > 0">              <span class="metric-icon-small">🛑</span>              {{ trip.hard_brakes }} frenadas            </div>            <div class="trip-metric" *ngIf="trip.speed_violations > 0">              <span class="metric-icon-small">⚡</span>              {{ trip.speed_violations }} excesos            </div>            <div class="trip-metric" *ngIf="trip.night_driving_hours > 0">              <span class="metric-icon-small">🌙</span>              {{ trip.night_driving_hours.toFixed(1) }} h            </div>          </div>        </div>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'DrivingStatsPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'DrivingStatsPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1316 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >AnalyticsService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/analytics.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authService" >authService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#ga4MeasurementId" >ga4MeasurementId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isEnabled" >isEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getCurrentUserId" >getCurrentUserId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#hasConsentForTracking" >hasConsentForTracking</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#mapToGA4EventName" >mapToGA4EventName</a>
+                            </li>
+                            <li>
+                                <a href="#setUserProperties" >setUserProperties</a>
+                            </li>
+                            <li>
+                                <a href="#trackEvent" >trackEvent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#trackGA4Event" >trackGA4Event</a>
+                            </li>
+                            <li>
+                                <a href="#trackPageView" >trackPageView</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#trackSupabaseEvent" >trackSupabaseEvent</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCurrentUserId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getCurrentUserId</b></span>
+                        <a href="#getCurrentUserId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCurrentUserId()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="252"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:252</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene el ID del usuario actual</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string | null&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasConsentForTracking"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>hasConsentForTracking</b></span>
+                        <a href="#hasConsentForTracking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasConsentForTracking()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:109</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>P0-033 FIX: Check if user has given consent for analytics tracking
+Reads from localStorage[&#39;cookies_consent&#39;]</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mapToGA4EventName"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>mapToGA4EventName</b></span>
+                        <a href="#mapToGA4EventName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mapToGA4EventName(eventType: <a href="../undefineds/ConversionEventType.html" target="_self">ConversionEventType</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mapea nuestros eventos custom a eventos GA4 estándar o custom</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>eventType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConversionEventType" target="_self" >ConversionEventType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setUserProperties"></a>
+                    <span class="name">
+                        <span ><b>setUserProperties</b></span>
+                        <a href="#setUserProperties"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setUserProperties(properties: Record<string | unknown>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="280"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:280</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Set user properties en GA4</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>properties</td>
+                                            <td>
+                                                        <code>Record&lt;string | unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackEvent"></a>
+                    <span class="name">
+                        <span ><b>trackEvent</b></span>
+                        <a href="#trackEvent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>trackEvent(eventType: <a href="../undefineds/ConversionEventType.html" target="_self">ConversionEventType</a>, data: <a href="../interfaces/ConversionEventData.html" target="_self">ConversionEventData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="89"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:89</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Track de evento principal - envía a GA4 y Supabase
+P0-033 FIX: Only track if user has accepted cookies</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>eventType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConversionEventType" target="_self" >ConversionEventType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConversionEventData.html" target="_self" >ConversionEventData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>{}</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackGA4Event"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>trackGA4Event</b></span>
+                        <a href="#trackGA4Event"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>trackGA4Event(eventType: <a href="../undefineds/ConversionEventType.html" target="_self">ConversionEventType</a>, data: <a href="../interfaces/ConversionEventData.html" target="_self">ConversionEventData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="132"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Track de evento en Google Analytics 4</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>eventType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConversionEventType" target="_self" >ConversionEventType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConversionEventData.html" target="_self" >ConversionEventData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackPageView"></a>
+                    <span class="name">
+                        <span ><b>trackPageView</b></span>
+                        <a href="#trackPageView"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>trackPageView(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, title?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:264</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Track de pageview (para Single Page Applications)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>title</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trackSupabaseEvent"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>trackSupabaseEvent</b></span>
+                        <a href="#trackSupabaseEvent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>trackSupabaseEvent(eventType: <a href="../undefineds/ConversionEventType.html" target="_self">ConversionEventType</a>, data: <a href="../interfaces/ConversionEventData.html" target="_self">ConversionEventData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/app/core/services/analytics.service.ts:159</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Track de evento en Supabase</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>eventType</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConversionEventType" target="_self" >ConversionEventType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConversionEventData.html" target="_self" >ConversionEventData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authService</b></span>
+                        <a href="#authService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/app/core/services/analytics.service.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ga4MeasurementId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>ga4MeasurementId</b></span>
+                        <a href="#ga4MeasurementId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>environment.googleAnalyticsMeasurementId</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/app/core/services/analytics.service.ts:83</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isEnabled"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isEnabled</b></span>
+                        <a href="#isEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>environment.enableAnalytics</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/app/core/services/analytics.service.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SupabaseClientService).getClient()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/app/core/services/analytics.service.ts:80</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { environment } from &#x27;../../../environments/environment&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+import { AuthService } from &#x27;./auth.service&#x27;;
+
+/**
+ * Tipos de eventos de conversión que trackeamos
+ */
+export type ConversionEventType &#x3D;
+  | &#x27;search_performed&#x27;
+  | &#x27;car_viewed&#x27;
+  | &#x27;checkout_started&#x27;
+  | &#x27;checkout_completed&#x27;
+  | &#x27;sign_up&#x27;
+  | &#x27;login&#x27;
+  | &#x27;deposit_page_viewed&#x27;
+  | &#x27;deposit_mercadopago_preference_created&#x27;
+  | &#x27;deposit_error&#x27;
+  | &#x27;deposit_cancelled&#x27;
+  | string; // Allow any string for flexibility
+
+export interface ConversionEventData {
+  // Common fields
+  car_id?: string;
+  user_id?: string | null;
+
+  // Date picker specific
+  preset_type?: &#x27;weekend&#x27; | &#x27;1week&#x27; | &#x27;2weeks&#x27; | &#x27;1month&#x27;;
+  days_count?: number;
+  total_price?: number;
+  is_available?: boolean;
+  from_date?: string;
+  to_date?: string;
+  source?: string;
+
+  // CTA specific
+  has_dates?: boolean;
+  express_mode?: boolean;
+
+  // Booking specific
+  payment_method?: string;
+  total_amount?: number;
+
+  // Social proof specific
+  indicator_type?: &#x27;viewers&#x27; | &#x27;bookings&#x27; | &#x27;availability&#x27; | &#x27;badge&#x27;;
+  badge_type?: &#x27;popular&#x27; | &#x27;high_demand&#x27; | &#x27;superhost&#x27;;
+
+  // Wallet specific
+  deposit_amount?: number;
+  deposit_type?: &#x27;protected_credit&#x27; | &#x27;withdrawable&#x27;;
+  deposit_provider?: &#x27;mercadopago&#x27; | &#x27;stripe&#x27; | &#x27;bank_transfer&#x27;;
+  protected_credit_balance?: number;
+  protected_credit_progress?: number;
+  milestone_percentage?: number;
+  transaction_filter?: string;
+  cta_type?: string;
+  error_message?: string;
+  failure_reason?: string;
+
+  // Price Transparency specific
+  context?: string;
+  timestamp?: string;
+
+  // Additional metadata
+  [key: string]: unknown;
+}
+
+// Declaración global para gtag (Google Analytics)
+declare global {
+  interface Window {
+    gtag?: (command: string, eventName: string | Date, params?: Record&lt;string, unknown&gt;) &#x3D;&gt; void;
+    dataLayer?: unknown[];
+  }
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class AnalyticsService {
+  private readonly supabase &#x3D; inject(SupabaseClientService).getClient();
+  private readonly authService &#x3D; inject(AuthService);
+  private readonly isEnabled &#x3D; environment.enableAnalytics;
+  private readonly ga4MeasurementId &#x3D; environment.googleAnalyticsMeasurementId;
+
+  /**
+   * Track de evento principal - envía a GA4 y Supabase
+   * P0-033 FIX: Only track if user has accepted cookies
+   */
+  trackEvent(eventType: ConversionEventType, data: ConversionEventData &#x3D; {}): void {
+    if (!this.isEnabled) return;
+
+    // P0-033 FIX: Check for cookie consent before tracking
+    if (!this.hasConsentForTracking()) {
+      console.log(&#x27;[Analytics] Tracking blocked - no cookie consent&#x27;);
+      return;
+    }
+
+    // Track en GA4
+    this.trackGA4Event(eventType, data);
+
+    // Track en Supabase (async, no bloqueante)
+    void this.trackSupabaseEvent(eventType, data);
+  }
+
+  /**
+   * P0-033 FIX: Check if user has given consent for analytics tracking
+   * Reads from localStorage[&#x27;cookies_consent&#x27;]
+   */
+  private hasConsentForTracking(): boolean {
+    if (typeof window &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27; || typeof localStorage &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
+      return false; // No consent in SSR or environments without localStorage
+    }
+
+    try {
+      const consent &#x3D; localStorage.getItem(&#x27;cookies_consent&#x27;);
+      if (!consent) {
+        return false; // No consent given yet
+      }
+
+      const consentData &#x3D; JSON.parse(consent);
+      // Check if analytics cookies are accepted
+      return consentData.analytics &#x3D;&#x3D;&#x3D; true || consentData.all &#x3D;&#x3D;&#x3D; true;
+    } catch {
+      // If parsing fails, assume no consent
+      return false;
+    }
+  }
+
+  /**
+   * Track de evento en Google Analytics 4
+   */
+  private trackGA4Event(eventType: ConversionEventType, data: ConversionEventData): void {
+    if (!this.ga4MeasurementId || typeof window &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27; || !window.gtag) {
+      return;
+    }
+
+    try {
+      // Mapear nuestros eventos a eventos GA4 estándar o custom
+      const ga4EventName &#x3D; this.mapToGA4EventName(eventType);
+
+      // Preparar parámetros para GA4
+      const params: Record&lt;string, unknown&gt; &#x3D; {
+        ...data,
+        // Agregar metadata adicional
+        timestamp: new Date().toISOString(),
+        user_authenticated: this.authService.isAuthenticated(),
+      };
+
+      // Enviar a GA4
+      window.gtag!(&#x27;event&#x27;, ga4EventName, params);
+    } catch (error) {
+      console.error(&#x27;Error tracking GA4 event:&#x27;, error);
+    }
+  }
+
+  /**
+   * Track de evento en Supabase
+   */
+  private async trackSupabaseEvent(
+    eventType: ConversionEventType,
+    data: ConversionEventData,
+  ): Promise&lt;void&gt; {
+    try {
+      const userId &#x3D; data.user_id ?? (await this.getCurrentUserId());
+
+      const { error } &#x3D; await this.supabase.from(&#x27;conversion_events&#x27;).insert({
+        event_type: eventType,
+        car_id: data.car_id ?? null,
+        user_id: userId,
+        event_data: data,
+        created_at: new Date().toISOString(),
+      });
+
+      if (error) {
+        console.error(&#x27;Error tracking Supabase event:&#x27;, error);
+      }
+    } catch (error) {
+      console.error(&#x27;Error in trackSupabaseEvent:&#x27;, error);
+    }
+  }
+
+  /**
+   * Mapea nuestros eventos custom a eventos GA4 estándar o custom
+   */
+  private mapToGA4EventName(eventType: ConversionEventType): string {
+    const mapping: Record&lt;ConversionEventType, string&gt; &#x3D; {
+      // Date Picker
+      date_preset_clicked: &#x27;select_content&#x27;,
+      date_range_selected: &#x27;begin_checkout&#x27;,
+      date_availability_checked: &#x27;view_item&#x27;,
+      date_unavailable_error: &#x27;exception&#x27;,
+      date_autosuggest_applied: &#x27;select_content&#x27;,
+      alternative_dates_suggested: &#x27;select_content&#x27;,
+      alternative_date_applied: &#x27;select_content&#x27;,
+
+      // Social Proof
+      social_proof_viewed: &#x27;view_promotion&#x27;,
+      urgency_indicator_viewed: &#x27;view_promotion&#x27;,
+
+      // CTA
+      cta_clicked: &#x27;add_to_cart&#x27;,
+      cta_hovered: &#x27;select_promotion&#x27;,
+
+      // Booking
+      booking_initiated: &#x27;begin_checkout&#x27;,
+      booking_completed: &#x27;purchase&#x27;,
+      booking_failed: &#x27;exception&#x27;,
+
+      // Owner
+      owner_profile_viewed: &#x27;view_item_list&#x27;,
+      owner_contact_clicked: &#x27;generate_lead&#x27;,
+
+      // Reviews
+      review_viewed: &#x27;view_item&#x27;,
+      review_section_clicked: &#x27;select_content&#x27;,
+
+      // Marketplace
+      filters_opened: &#x27;view_search_results&#x27;,
+      car_details_clicked: &#x27;select_item&#x27;,
+
+      // Wallet
+      wallet_page_viewed: &#x27;page_view&#x27;,
+      wallet_onboarding_banner_viewed: &#x27;view_promotion&#x27;,
+      wallet_onboarding_cta_clicked: &#x27;select_promotion&#x27;,
+      wallet_deposit_modal_opened: &#x27;begin_checkout&#x27;,
+      wallet_deposit_initiated: &#x27;add_payment_info&#x27;,
+      wallet_deposit_completed: &#x27;purchase&#x27;,
+      wallet_deposit_failed: &#x27;exception&#x27;,
+      wallet_protected_credit_milestone: &#x27;level_up&#x27;,
+      wallet_cta_clicked: &#x27;select_content&#x27;,
+      wallet_benefits_section_expanded: &#x27;view_item&#x27;,
+      wallet_transaction_filter_applied: &#x27;search&#x27;,
+      wallet_retry_deposit_clicked: &#x27;refund&#x27;,
+
+      // Onboarding
+      onboarding_modal_shown: &#x27;view_promotion&#x27;,
+      onboarding_goal_selected: &#x27;select_content&#x27;,
+      onboarding_step_clicked: &#x27;select_content&#x27;,
+      onboarding_step_completed: &#x27;tutorial_complete&#x27;,
+      onboarding_modal_dismissed: &#x27;refund&#x27;,
+
+      // Price Transparency
+      price_transparency_modal_viewed: &#x27;view_promotion&#x27;,
+    };
+
+    return mapping[eventType] || eventType;
+  }
+
+  /**
+   * Obtiene el ID del usuario actual
+   */
+  private async getCurrentUserId(): Promise&lt;string | null&gt; {
+    try {
+      const { data } &#x3D; await this.supabase.auth.getUser();
+      return data.user?.id ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Track de pageview (para Single Page Applications)
+   */
+  trackPageView(path: string, title?: string): void {
+    if (!this.isEnabled || !this.ga4MeasurementId || !window.gtag) return;
+
+    try {
+      window.gtag(&#x27;event&#x27;, &#x27;page_view&#x27;, {
+        page_path: path,
+        page_title: title,
+      });
+    } catch (error) {
+      console.error(&#x27;Error tracking pageview:&#x27;, error);
+    }
+  }
+
+  /**
+   * Set user properties en GA4
+   */
+  setUserProperties(properties: Record&lt;string, unknown&gt;): void {
+    if (!this.isEnabled || !this.ga4MeasurementId || !window.gtag) return;
+
+    try {
+      window.gtag(&#x27;set&#x27;, &#x27;user_properties&#x27;, properties);
+    } catch (error) {
+      console.error(&#x27;Error setting user properties:&#x27;, error);
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'AnalyticsService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,997 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  FleetOccupancyDay</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/shared/components/map-filters/map-filters.component.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#date" 
+>
+                                            date
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#occupied" 
+>
+                                            occupied
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#ratio" 
+>
+                                            ratio
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#total" 
+>
+                                            total
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="date"></a>
+                                        <span class="name "><b>date</b>
+                                            <a href="#date">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>date:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="occupied"></a>
+                                        <span class="name "><b>occupied</b>
+                                            <a href="#occupied">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>occupied:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="ratio"></a>
+                                        <span class="name "><b>ratio</b>
+                                            <a href="#ratio">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>ratio:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="total"></a>
+                                        <span class="name "><b>total</b>
+                                            <a href="#total">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>total:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  computed,
+  inject,
+  signal,
+} from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { CarAvailabilityService } from &#x27;../../../core/services/car-availability.service&#x27;;
+import type { CarMapLocation } from &#x27;../../../core/services/car-locations.service&#x27;;
+import type { FilterState } from &#x27;../../../core/models/marketplace.model&#x27;;
+import {
+  BlockedDateRange,
+  DateRangePickerComponent,
+} from &#x27;../date-range-picker/date-range-picker.component&#x27;;
+import { IconComponent } from &#x27;../icon/icon.component&#x27;;
+
+// Re-export FilterState for backwards compatibility with existing imports
+export type { FilterState } from &#x27;../../../core/models/marketplace.model&#x27;;
+
+/**
+ * Map Filters Component
+ *
+ * Floating filters panel for map view with:
+ * - Date range picker
+ * - Price range slider
+ * - Vehicle type selector
+ * - Immediate availability toggle
+ *
+ * Desktop: Top-left chips with popover
+ * Mobile: Under searchbar with inline content
+ */
+@Component({
+  selector: &#x27;app-map-filters&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, DateRangePickerComponent, IconComponent],
+  templateUrl: &#x27;./map-filters.component.html&#x27;,
+  styleUrls: [&#x27;./map-filters.component.css&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MapFiltersComponent implements OnInit, OnDestroy {
+  private readonly availabilityService &#x3D; inject(CarAvailabilityService);
+  private readonly platformId &#x3D; inject(PLATFORM_ID);
+
+  private readonly availableCarsSignal &#x3D; signal&lt;CarMapLocation[]&gt;([]);
+  private occupancyLoadTimeout: ReturnType&lt;typeof setTimeout&gt; | null &#x3D; null;
+  private occupancyRefreshPromise: Promise&lt;void&gt; | null &#x3D; null;
+
+  // Expose Math for template
+  readonly Math &#x3D; Math;
+
+  @Input()
+  set availableCars(value: CarMapLocation[]) {
+    this.availableCarsSignal.set(value ?? []);
+    if (!this.priceRange() &amp;&amp; value?.length) {
+      this.priceRange.set({
+        min: this.priceMin(),
+        max: this.priceMax(),
+      });
+    }
+    this.scheduleOccupancyRefresh();
+  }
+
+  get availableCars(): CarMapLocation[] {
+    return this.availableCarsSignal();
+  }
+  @Input() userLocation?: { lat: number; lng: number };
+
+  @Output() readonly filterChange &#x3D; new EventEmitter&lt;FilterState&gt;();
+
+  // Filter state signals
+  readonly dateRange &#x3D; signal&lt;{ start: Date; end: Date } | null&gt;(null);
+  readonly priceRange &#x3D; signal&lt;{ min: number; max: number } | null&gt;(null);
+  readonly vehicleTypes &#x3D; signal&lt;string[]&gt;([]);
+  readonly immediateOnly &#x3D; signal(false);
+  readonly transmission &#x3D; signal&lt;string[]&gt;([]);
+
+  // UI state
+  readonly openPanel &#x3D; signal&lt;&#x27;dates&#x27; | &#x27;price&#x27; | &#x27;type&#x27; | &#x27;transmission&#x27; | null&gt;(null);
+  readonly isMobile &#x3D; signal(false);
+  readonly occupancyLoading &#x3D; signal(false);
+  readonly fleetOccupancyDays &#x3D; signal&lt;FleetOccupancyDay[]&gt;([]);
+  readonly occupancySampleSize &#x3D; signal(0);
+
+  // Computed values
+  readonly priceMin &#x3D; computed(() &#x3D;&gt; {
+    const prices &#x3D; this.availableCarsSignal()
+      .map((c) &#x3D;&gt; c.pricePerDay)
+      .filter((p) &#x3D;&gt; p &gt; 0);
+    return prices.length &gt; 0 ? Math.min(...prices) : 0;
+  });
+
+  readonly priceMax &#x3D; computed(() &#x3D;&gt; {
+    const prices &#x3D; this.availableCarsSignal()
+      .map((c) &#x3D;&gt; c.pricePerDay)
+      .filter((p) &#x3D;&gt; p &gt; 0);
+    return prices.length &gt; 0 ? Math.max(...prices) : 1000;
+  });
+
+  readonly availableTransmissions &#x3D; computed(() &#x3D;&gt; {
+    const types &#x3D; new Set&lt;string&gt;();
+    this.availableCarsSignal().forEach((_car) &#x3D;&gt; {
+      // Placeholder: agregar transmisión desde car object cuando esté disponible
+      // Por ahora retorna set vacío
+    });
+    return Array.from(types).sort();
+  });
+
+  readonly vehicleTypeOptions &#x3D; [
+    { id: &#x27;sedan&#x27;, label: &#x27;Sedán&#x27; },
+    { id: &#x27;suv&#x27;, label: &#x27;SUV&#x27; },
+    { id: &#x27;hatchback&#x27;, label: &#x27;Hatchback&#x27; },
+    { id: &#x27;pickup&#x27;, label: &#x27;Pick-up&#x27; },
+    { id: &#x27;van&#x27;, label: &#x27;Van&#x27; },
+  ];
+
+  readonly transmissionOptions &#x3D; [
+    { id: &#x27;manual&#x27;, label: &#x27;Manual&#x27; },
+    { id: &#x27;automatic&#x27;, label: &#x27;Automático&#x27; },
+  ];
+
+  readonly activeFilterCount &#x3D; computed(() &#x3D;&gt; {
+    let count &#x3D; 0;
+    if (this.dateRange()) count++;
+    if (this.priceRange()) count++;
+    if (this.vehicleTypes().length &gt; 0) count++;
+    if (this.immediateOnly()) count++;
+    if (this.transmission().length &gt; 0) count++;
+    return count;
+  });
+
+  readonly currentFilter &#x3D; computed&lt;FilterState&gt;(() &#x3D;&gt; ({
+    dateRange: this.dateRange(),
+    priceRange: this.priceRange(),
+    vehicleTypes: this.vehicleTypes().length &gt; 0 ? this.vehicleTypes() : null,
+    immediateOnly: this.immediateOnly(),
+    transmission: this.transmission().length &gt; 0 ? this.transmission() : null,
+  }));
+
+  readonly priceRangeVisual &#x3D; computed(() &#x3D;&gt; {
+    const min &#x3D; this.priceMin();
+    const max &#x3D; this.priceMax();
+    const span &#x3D; Math.max(max - min, 1);
+    const current &#x3D; this.priceRange() ?? { min, max };
+    const left &#x3D; ((current.min - min) / span) * 100;
+    const width &#x3D; ((current.max - current.min) / span) * 100;
+    return {
+      left: Number.isFinite(left) ? Math.max(0, Math.min(left, 100)) : 0,
+      width: Number.isFinite(width) ? Math.max(0, Math.min(width, 100)) : 100,
+    };
+  });
+
+  readonly priceHistogram &#x3D; computed(() &#x3D;&gt; {
+    const cars &#x3D; this.availableCarsSignal();
+    const min &#x3D; this.priceMin();
+    const max &#x3D; this.priceMax();
+    if (cars.length &#x3D;&#x3D;&#x3D; 0 || max &lt;&#x3D; min) {
+      return [];
+    }
+
+    const bins &#x3D; Math.min(30, Math.max(10, Math.round(cars.length / 4)));
+    const binSize &#x3D; (max - min) / bins;
+    if (binSize &lt;&#x3D; 0) {
+      return [];
+    }
+
+    const counts &#x3D; new Array(bins).fill(0);
+    for (const car of cars) {
+      const price &#x3D; Math.max(min, Math.min(car.pricePerDay, max));
+      const index &#x3D; Math.min(bins - 1, Math.floor((price - min) / binSize));
+      counts[index] +&#x3D; 1;
+    }
+
+    const maxCount &#x3D; Math.max(...counts, 1);
+    const currentRange &#x3D; this.priceRange() ?? { min, max };
+
+    return counts.map((count, index) &#x3D;&gt; {
+      const start &#x3D; min + index * binSize;
+      const end &#x3D; start + binSize;
+      const active &#x3D; currentRange.min &lt;&#x3D; end &amp;&amp; currentRange.max &gt;&#x3D; start;
+      return {
+        count,
+        start,
+        end,
+        height: Math.max(6, (count / maxCount) * 100),
+        active,
+      };
+    });
+  });
+
+  readonly hasHighDemand &#x3D; computed(() &#x3D;&gt;
+    this.fleetOccupancyDays().some((day) &#x3D;&gt; day.ratio &gt;&#x3D; 0.75),
+  );
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.detectMobile();
+      window.addEventListener(&#x27;resize&#x27;, this.resizeHandler);
+    }
+
+    // Initialize price range with available cars&#x27; min/max
+    if (this.availableCarsSignal().length &gt; 0) {
+      this.priceRange.set({
+        min: this.priceMin(),
+        max: this.priceMax(),
+      });
+    }
+
+    // Load filters from sessionStorage if available
+    this.loadFiltersFromStorage();
+  }
+
+  private readonly resizeHandler &#x3D; (): void &#x3D;&gt; {
+    this.detectMobile();
+  };
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener(&#x27;resize&#x27;, this.resizeHandler);
+    }
+    if (this.occupancyLoadTimeout) {
+      clearTimeout(this.occupancyLoadTimeout);
+    }
+  }
+
+  /**
+   * Detect mobile screen size
+   */
+  private detectMobile(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobile.set(window.innerWidth &lt; 640);
+    }
+  }
+
+  /**
+   * Toggle filter panel
+   */
+  togglePanel(panel: &#x27;dates&#x27; | &#x27;price&#x27; | &#x27;type&#x27; | &#x27;transmission&#x27;): void {
+    const current &#x3D; this.openPanel();
+    this.openPanel.set(current &#x3D;&#x3D;&#x3D; panel ? null : panel);
+  }
+
+  /**
+   * Close all panels
+   */
+  closePanel(): void {
+    this.openPanel.set(null);
+  }
+
+  /**
+   * Update date range filter (from DateRangePickerComponent)
+   * DateRangePickerComponent emits DateRange { from, to } which are ISO strings
+   */
+  onDateRangePickerChange(range: { from: string | null; to: string | null }): void {
+    if (range.from &amp;&amp; range.to) {
+      this.dateRange.set({
+        start: new Date(range.from),
+        end: new Date(range.to),
+      });
+    } else {
+      this.dateRange.set(null);
+    }
+    this.emitFilterChange();
+  }
+
+  /**
+   * Legacy: Update date range filter (for backwards compatibility)
+   */
+  onDateRangeChange(dates: { start: Date; end: Date } | null): void {
+    this.dateRange.set(dates);
+    this.emitFilterChange();
+  }
+
+  /**
+   * Update price range
+   */
+  onPriceRangeChange(range: { min: number; max: number }): void {
+    this.priceRange.set(range);
+    this.emitFilterChange();
+  }
+
+  /**
+   * Toggle vehicle type selection
+   */
+  toggleVehicleType(typeId: string): void {
+    const current &#x3D; this.vehicleTypes();
+    const updated &#x3D; current.includes(typeId)
+      ? current.filter((t) &#x3D;&gt; t !&#x3D;&#x3D; typeId)
+      : [...current, typeId];
+    this.vehicleTypes.set(updated);
+    this.emitFilterChange();
+  }
+
+  /**
+   * Toggle transmission selection
+   */
+  toggleTransmission(transmissionId: string): void {
+    const current &#x3D; this.transmission();
+    const updated &#x3D; current.includes(transmissionId)
+      ? current.filter((t) &#x3D;&gt; t !&#x3D;&#x3D; transmissionId)
+      : [...current, transmissionId];
+    this.transmission.set(updated);
+    this.emitFilterChange();
+  }
+
+  /**
+   * Toggle immediate availability filter
+   */
+  toggleImmediate(): void {
+    this.immediateOnly.set(!this.immediateOnly());
+    this.emitFilterChange();
+  }
+
+  /**
+   * Clear all filters
+   */
+  clearAllFilters(): void {
+    this.dateRange.set(null);
+    this.vehicleTypes.set([]);
+    this.immediateOnly.set(false);
+    this.transmission.set([]);
+    if (this.availableCars.length &gt; 0) {
+      this.priceRange.set({
+        min: this.priceMin(),
+        max: this.priceMax(),
+      });
+    }
+    this.emitFilterChange();
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.removeItem(&#x27;mapFilters&#x27;);
+    }
+  }
+
+  /**
+   * Format price for display
+   */
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;ARS&#x27;,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  }
+
+  /**
+   * Handle slider input for price range values
+   */
+  onPriceSliderInput(handle: &#x27;min&#x27; | &#x27;max&#x27;, rawValue: number): void {
+    const min &#x3D; this.priceMin();
+    const max &#x3D; this.priceMax();
+    const step &#x3D; this.getPriceStep();
+    const current &#x3D; this.priceRange() ?? { min, max };
+
+    if (handle &#x3D;&#x3D;&#x3D; &#x27;min&#x27;) {
+      const nextMin &#x3D; Math.min(Math.max(rawValue, min), current.max - step);
+      this.priceRange.set({
+        min: Number.isFinite(nextMin) ? nextMin : min,
+        max: current.max,
+      });
+    } else {
+      const nextMax &#x3D; Math.max(Math.min(rawValue, max), current.min + step);
+      this.priceRange.set({
+        min: current.min,
+        max: Number.isFinite(nextMax) ? nextMax : max,
+      });
+    }
+
+    this.emitFilterChange();
+  }
+
+  getOccupancyClass(ratio: number): string {
+    if (ratio &gt;&#x3D; 0.85) return &#x27;occupancy-day occupancy-day--critical&#x27;;
+    if (ratio &gt;&#x3D; 0.65) return &#x27;occupancy-day occupancy-day--high&#x27;;
+    if (ratio &gt;&#x3D; 0.35) return &#x27;occupancy-day occupancy-day--medium&#x27;;
+    if (ratio &gt; 0) return &#x27;occupancy-day occupancy-day--low&#x27;;
+    return &#x27;occupancy-day occupancy-day--free&#x27;;
+  }
+
+  getOccupancyTooltip(day: FleetOccupancyDay): string {
+    const percent &#x3D; Math.round(day.ratio * 100);
+    return &#x60;${this.formatDate(day.date)} • ${percent}% de la flota reservada&#x60;;
+  }
+
+  formatDate(date: string): string {
+    return new Intl.DateTimeFormat(&#x27;es-AR&#x27;, {
+      day: &#x27;2-digit&#x27;,
+      month: &#x27;short&#x27;,
+    }).format(new Date(date));
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  trackByDate(_index: number, day: FleetOccupancyDay): string {
+    return day.date;
+  }
+
+  /**
+   * Emit filter change event and save to storage
+   */
+  private emitFilterChange(): void {
+    const filter &#x3D; this.currentFilter();
+    this.filterChange.emit(filter);
+    this.saveFiltersToStorage(filter);
+  }
+
+  /**
+   * Save filter state to sessionStorage
+   */
+  private saveFiltersToStorage(filter: FilterState): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    try {
+      const serialized &#x3D; {
+        ...filter,
+        dateRange: filter.dateRange
+          ? {
+              start: filter.dateRange.start.toISOString(),
+              end: filter.dateRange.end.toISOString(),
+            }
+          : null,
+      };
+      sessionStorage.setItem(&#x27;mapFilters&#x27;, JSON.stringify(serialized));
+    } catch (e) {
+      console.warn(&#x27;Failed to save filters to storage:&#x27;, e);
+    }
+  }
+
+  /**
+   * Load filter state from sessionStorage
+   */
+  private loadFiltersFromStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    try {
+      const stored &#x3D; sessionStorage.getItem(&#x27;mapFilters&#x27;);
+      if (stored) {
+        const filter &#x3D; JSON.parse(stored);
+        if (filter.dateRange) {
+          this.dateRange.set({
+            start: new Date(filter.dateRange.start),
+            end: new Date(filter.dateRange.end),
+          });
+        }
+        if (filter.vehicleTypes) {
+          this.vehicleTypes.set(filter.vehicleTypes);
+        }
+        if (filter.transmission) {
+          this.transmission.set(filter.transmission);
+        }
+        if (filter.immediateOnly) {
+          this.immediateOnly.set(filter.immediateOnly);
+        }
+        if (filter.priceRange) {
+          this.priceRange.set(filter.priceRange);
+        }
+      }
+    } catch (e) {
+      console.warn(&#x27;Failed to load filters from storage:&#x27;, e);
+    }
+  }
+
+  private scheduleOccupancyRefresh(): void {
+    if (this.occupancyLoadTimeout) {
+      clearTimeout(this.occupancyLoadTimeout);
+    }
+    this.occupancyLoadTimeout &#x3D; setTimeout(() &#x3D;&gt; {
+      void this.refreshFleetOccupancy();
+    }, 300);
+  }
+
+  private async refreshFleetOccupancy(): Promise&lt;void&gt; {
+    if (this.occupancyRefreshPromise) {
+      return;
+    }
+
+    const cars &#x3D; this.availableCarsSignal();
+    if (cars.length &#x3D;&#x3D;&#x3D; 0) {
+      this.fleetOccupancyDays.set([]);
+      this.occupancySampleSize.set(0);
+      return;
+    }
+
+    const limitedCars &#x3D; cars.slice(0, 24);
+    const sampleSize &#x3D; limitedCars.length;
+    const today &#x3D; new Date();
+    today.setHours(0, 0, 0, 0);
+    const end &#x3D; new Date(today);
+    end.setDate(end.getDate() + 35);
+
+    const startIso &#x3D; today.toISOString().split(&#x27;T&#x27;)[0];
+    const endIso &#x3D; end.toISOString().split(&#x27;T&#x27;)[0];
+
+    this.occupancyLoading.set(true);
+    this.occupancySampleSize.set(sampleSize);
+
+    const dayMap &#x3D; new Map&lt;string, number&gt;();
+
+    this.occupancyRefreshPromise &#x3D; (async () &#x3D;&gt; {
+      try {
+        await Promise.all(
+          limitedCars.map(async (car) &#x3D;&gt; {
+            try {
+              const blocked &#x3D; await this.availabilityService.getBlockedDates(
+                car.carId,
+                startIso,
+                endIso,
+              );
+              this.incrementBlockedRanges(dayMap, blocked);
+            } catch (error) {
+              console.warn(&#x27;[MapFilters] Failed to load blocked dates for car&#x27;, car.carId, error);
+            }
+          }),
+        );
+
+        const result: FleetOccupancyDay[] &#x3D; [];
+        const cursor &#x3D; new Date(today);
+        while (cursor &lt;&#x3D; end) {
+          const key &#x3D; cursor.toISOString().split(&#x27;T&#x27;)[0];
+          const occupied &#x3D; dayMap.get(key) ?? 0;
+          result.push({
+            date: key,
+            occupied,
+            total: sampleSize,
+            ratio: sampleSize &gt; 0 ? occupied / sampleSize : 0,
+          });
+          cursor.setDate(cursor.getDate() + 1);
+        }
+
+        this.fleetOccupancyDays.set(result);
+      } finally {
+        this.occupancyLoading.set(false);
+        this.occupancyRefreshPromise &#x3D; null;
+      }
+    })();
+  }
+
+  private incrementBlockedRanges(
+    accumulator: Map&lt;string, number&gt;,
+    ranges: BlockedDateRange[],
+  ): void {
+    for (const range of ranges) {
+      const start &#x3D; new Date(range.from);
+      const end &#x3D; new Date(range.to);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
+
+      const cursor &#x3D; new Date(start);
+      while (cursor &lt;&#x3D; end) {
+        const key &#x3D; cursor.toISOString().split(&#x27;T&#x27;)[0];
+        accumulator.set(key, (accumulator.get(key) ?? 0) + 1);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    }
+  }
+
+  getPriceStep(): number {
+    const span &#x3D; this.priceMax() - this.priceMin();
+    if (span &gt; 20000) return 250;
+    if (span &gt; 10000) return 200;
+    if (span &gt; 5000) return 100;
+    if (span &gt; 2000) return 50;
+    return 10;
+  }
+}
+
+interface FleetOccupancyDay {
+  date: string;
+  occupied: number;
+  total: number;
+  ratio: number;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'FleetOccupancyDay.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

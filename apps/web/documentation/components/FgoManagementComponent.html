@@ -1,0 +1,2930 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FgoManagementComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/booking-detail/fgo-management.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>FgoManagementComponent</p>
+<p>This component encapsulates all logic related to the FGO (Fondo de Garantía Operativa).
+It is responsible for displaying FGO-related information, such as guarantees, coverage, and waterfall steps.
+It also handles FGO-related actions, such as uploading inspections and processing claims.
+It receives a <code>Booking</code> object and the current exchange rate as inputs.</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-fgo-management</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;!-- Pricing Breakdown Card --&gt;
+&lt;section class&#x3D;&quot;card-premium rounded-2xl p-4 sm:p-6 shadow-soft fgo-card&quot;&gt;
+  &lt;div class&#x3D;&quot;fgo-card__header&quot;&gt;
+    &lt;h3 class&#x3D;&quot;h5&quot;&gt;🛡️ Garantías y cobertura FGO&lt;/h3&gt;
+    &lt;span class&#x3D;&quot;fgo-card__badge&quot;&gt;{{ fgoEventCapUsdDisplay() }}&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;!-- 🇦🇷 Argentina Franchise Matrix Info --&gt;
+  &lt;div
+    class&#x3D;&quot;fgo-card__hint&quot;
+    style&#x3D;&quot;margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);&quot;
+  &gt;
+    &lt;strong&gt;Categoría del vehículo:&lt;/strong&gt; {{ franchiseMatrix().bucket | uppercase }} ({{
+      franchiseMatrix().carValueRange
+    }})&lt;br /&gt;
+    &lt;strong&gt;Franquicia estándar:&lt;/strong&gt; {{ formatUsd(franchiseMatrix().standardFranchiseUsd)
+    }}&lt;br /&gt;
+    &lt;strong&gt;Franquicia por vuelco:&lt;/strong&gt;
+    {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;fgo-card__stat-grid&quot;&gt;
+    &lt;!-- Security Source (Card/Wallet) --&gt;
+    &lt;div class&#x3D;&quot;fgo-card__stat&quot;&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-label&quot;&gt;{{ securitySourceLabel() }}&lt;/p&gt;
+
+      &lt;!-- For Credit Card: Show hold amount --&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-value&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27;&quot;&gt;
+        {{ formatUsd(holdAmountCard().usd) }}
+      &lt;/p&gt;
+      &lt;p
+        class&#x3D;&quot;fgo-card__stat-hint&quot;
+        *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27; &amp;&amp; holdAmountCard().local !&#x3D;&#x3D; null &amp;&amp; exchangeRate&quot;
+      &gt;
+        Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27;&quot;&gt;
+        Hold calculado: 35% × franquicia vuelco × FX snapshot
+      &lt;/p&gt;
+
+      &lt;!-- For Wallet: Show security credit amount --&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-value&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;&gt;
+        {{ formatUsd(walletSecurityCreditUsd()) }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; &amp;&amp; exchangeRate&quot;&gt;
+        Equivalente:
+        {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;&gt;
+        Crédito de seguridad bloqueado en tu wallet
+      &lt;/p&gt;
+
+      &lt;!-- For Mixed or None --&gt;
+      &lt;p
+        class&#x3D;&quot;fgo-card__stat-value&quot;
+        *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;mixed&#x27; || securitySource() &#x3D;&#x3D;&#x3D; &#x27;none&#x27;&quot;
+      &gt;
+        {{ depositAmountUsdDisplay() ?? &#x27;—&#x27; }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;depositAmountLocalDisplay()&quot;&gt;
+        Equivalente: {{ depositAmountLocalDisplay() }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot;&gt;{{ securitySourceDescription() }}&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- FGO Maximum Coverage --&gt;
+    &lt;div class&#x3D;&quot;fgo-card__stat&quot;&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-label&quot;&gt;Cobertura máxima FGO&lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-value&quot;&gt;{{ fgoEventCapUsdDisplay() }}&lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;fgoEventCapLocalDisplay()&quot;&gt;
+        Equivalente: {{ fgoEventCapLocalDisplay() }}
+      &lt;/p&gt;
+      &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot;&gt;
+        Cubre daños hasta USD 800 por evento cuando la documentación está completa y RC ≥ 1.0.
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- 🇦🇷 Waterfall Payment Logic --&gt;
+  &lt;div class&#x3D;&quot;fgo-waterfall&quot;&gt;
+    &lt;div class&#x3D;&quot;fgo-step&quot; *ngFor&#x3D;&quot;let step of guaranteeWaterfallSteps(); let idx &#x3D; index&quot;&gt;
+      &lt;span class&#x3D;&quot;fgo-step__marker&quot;&gt;{{ idx + 1 }}&lt;/span&gt;
+      &lt;div&gt;
+        &lt;p class&#x3D;&quot;fgo-step__title&quot;&gt;{{ step.label }}&lt;/p&gt;
+        &lt;p class&#x3D;&quot;fgo-step__description&quot;&gt;{{ step.description }}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;fgo-card__hint&quot;&gt;
+    ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo
+    mantiene RC (Reserve Coverage) ≥ 1.0.
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#canUploadInspection" >canUploadInspection</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#claimProcessing" >claimProcessing</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#depositAmountLocalDisplay" >depositAmountLocalDisplay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#depositAmountUsd" >depositAmountUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#depositAmountUsdDisplay" >depositAmountUsdDisplay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#eligibility" >eligibility</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#estimatedCarValueUsd" >estimatedCarValueUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoEventCapLocalDisplay" >fgoEventCapLocalDisplay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoEventCapUsd" >fgoEventCapUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoEventCapUsdDisplay" >fgoEventCapUsdDisplay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoLoading" >fgoLoading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoParams" >fgoParams</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoService" >fgoService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fgoServiceV2" >fgoServiceV2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#franchiseMatrix" >franchiseMatrix</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#guaranteeWaterfallSteps" >guaranteeWaterfallSteps</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasCheckIn" >hasCheckIn</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasCheckOut" >hasCheckOut</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasClaim" >hasClaim</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#holdAmountCard" >holdAmountCard</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#inspections" >inspections</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#minWalletSecurityUsd" >minWalletSecurityUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#recoveryWindowHours" >recoveryWindowHours</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#riskMatrixService" >riskMatrixService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#riskPolicy" >riskPolicy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#riskSnapshot" >riskSnapshot</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#securitySource" >securitySource</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#securitySourceDescription" >securitySourceDescription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#securitySourceLabel" >securitySourceLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#settlementService" >settlementService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#walletSecurityCreditUsd" >walletSecurityCreditUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#waterfallResult" >waterfallResult</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#confirmWaterfall" >confirmWaterfall</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#determineBucket" >determineBucket</a>
+                            </li>
+                            <li>
+                                <a href="#formatCurrency" >formatCurrency</a>
+                            </li>
+                            <li>
+                                <a href="#formatUsd" >formatUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadFgoData" >loadFgoData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#openClaimForm" >openClaimForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#processClaimWithWaterfall" >processClaimWithWaterfall</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadCheckIn" >uploadCheckIn</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadCheckOut" >uploadCheckOut</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#booking" >booking</a>
+                            </li>
+                            <li>
+                                <a href="#exchangeRate" >exchangeRate</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="booking"></a>
+                        <b>booking</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Required : </i>&nbsp;<b>true</b>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:128</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="exchangeRate"></a>
+                        <b>exchangeRate</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:129</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmWaterfall"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>confirmWaterfall</b></span>
+                        <a href="#confirmWaterfall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>confirmWaterfall(eligibility: <a href="../interfaces/EligibilityResult.html" target="_self">EligibilityResult</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="433"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:433</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>eligibility</td>
+                                            <td>
+                                                            <code><a href="../interfaces/EligibilityResult.html" target="_self" >EligibilityResult</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="determineBucket"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>determineBucket</b></span>
+                        <a href="#determineBucket"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>determineBucket(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="378"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:378</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#BucketType" target="_self" >BucketType</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatCurrency"></a>
+                    <span class="name">
+                        <span ><b>formatCurrency</b></span>
+                        <a href="#formatCurrency"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatCurrency(cents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, currency: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="457"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:457</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>currency</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatUsd"></a>
+                    <span class="name">
+                        <span ><b>formatUsd</b></span>
+                        <a href="#formatUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatUsd(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="447"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:447</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadFgoData"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>loadFgoData</b></span>
+                        <a href="#loadFgoData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadFgoData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="356"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:356</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="345"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:345</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openClaimForm"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>openClaimForm</b></span>
+                        <a href="#openClaimForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openClaimForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="398"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:398</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processClaimWithWaterfall"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>processClaimWithWaterfall</b></span>
+                        <a href="#processClaimWithWaterfall"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>processClaimWithWaterfall(claim: <a href="../interfaces/Claim.html" target="_self">Claim</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="402"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:402</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>claim</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Claim.html" target="_self" >Claim</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadCheckIn"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadCheckIn</b></span>
+                        <a href="#uploadCheckIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadCheckIn()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="390"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:390</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadCheckOut"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadCheckOut</b></span>
+                        <a href="#uploadCheckOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadCheckOut()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="394"
+                                    class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:394</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canUploadInspection"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>canUploadInspection</b></span>
+                        <a href="#canUploadInspection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.booking?.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27; || this.booking?.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="329" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:329</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="claimProcessing"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>claimProcessing</b></span>
+                        <a href="#claimProcessing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="142" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:142</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="depositAmountLocalDisplay"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>depositAmountLocalDisplay</b></span>
+                        <a href="#depositAmountLocalDisplay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const amount &#x3D; this.depositAmountUsd();
+    const rate &#x3D; this.exchangeRate;
+    if (!amount || !rate || !this.booking || this.booking.currency &#x3D;&#x3D;&#x3D; &#x27;USD&#x27;) return null;
+    const localCents &#x3D; Math.round(amount * rate * 100);
+    return this.formatCurrency(localCents, this.booking.currency);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="276" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:276</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="depositAmountUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>depositAmountUsd</b></span>
+                        <a href="#depositAmountUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;number | null&gt;(() &#x3D;&gt; {
+    if (!this.booking) return null;
+
+    const baseUsd &#x3D; this.booking.deposit_amount_cents ? this.booking.deposit_amount_cents / 100 : 0;
+
+    const walletFloor &#x3D;
+      this.securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; || this.securitySource() &#x3D;&#x3D;&#x3D; &#x27;mixed&#x27;
+        ? this.minWalletSecurityUsd()
+        : 0;
+
+    const effective &#x3D; Math.max(baseUsd, walletFloor);
+    return effective &gt; 0 ? effective : null;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="256" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:256</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="depositAmountUsdDisplay"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>depositAmountUsdDisplay</b></span>
+                        <a href="#depositAmountUsdDisplay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const amount &#x3D; this.depositAmountUsd();
+    if (!amount) return null;
+    return this.formatUsd(amount);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="270" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:270</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="eligibility"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>eligibility</b></span>
+                        <a href="#eligibility"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;EligibilityResult | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="140" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:140</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="estimatedCarValueUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>estimatedCarValueUsd</b></span>
+                        <a href="#estimatedCarValueUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;number&gt;(() &#x3D;&gt; {
+    const booking &#x3D; this.booking;
+    if (!booking) return 0;
+
+    const nightlyRateCents &#x3D;
+      booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
+    const nightlyRateUsd &#x3D; nightlyRateCents / 100;
+    return nightlyRateUsd * 125;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="150" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoEventCapLocalDisplay"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoEventCapLocalDisplay</b></span>
+                        <a href="#fgoEventCapLocalDisplay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const rate &#x3D; this.exchangeRate;
+    if (!rate || !this.booking || this.booking.currency &#x3D;&#x3D;&#x3D; &#x27;USD&#x27;) return null;
+    const localCents &#x3D; Math.round(this.fgoEventCapUsd() * rate * 100);
+    return this.formatCurrency(localCents, this.booking.currency);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="286" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:286</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoEventCapUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoEventCapUsd</b></span>
+                        <a href="#fgoEventCapUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.fgoParams()?.eventCapUsd ?? 800)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="145" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:145</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoEventCapUsdDisplay"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoEventCapUsdDisplay</b></span>
+                        <a href="#fgoEventCapUsdDisplay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.formatUsd(this.fgoEventCapUsd()))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="284" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoLoading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoLoading</b></span>
+                        <a href="#fgoLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoParams"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoParams</b></span>
+                        <a href="#fgoParams"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;FgoParameters | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:136</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoService</b></span>
+                        <a href="#fgoService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FgoV1_1Service)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="131" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:131</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoServiceV2"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fgoServiceV2</b></span>
+                        <a href="#fgoServiceV2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FgoService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="134" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="franchiseMatrix"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>franchiseMatrix</b></span>
+                        <a href="#franchiseMatrix"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;{
+    bucket: &#x27;economy&#x27; | &#x27;standard&#x27; | &#x27;premium&#x27; | &#x27;luxury&#x27;;
+    carValueRange: string;
+    standardFranchiseUsd: number;
+    rolloverFranchiseUsd: number;
+  }&gt;(() &#x3D;&gt; {
+    const policy &#x3D; this.riskPolicy();
+    if (!policy) {
+      return {
+        bucket: &#x27;economy&#x27;,
+        carValueRange: &#x27;≤ USD 10,000&#x27;,
+        standardFranchiseUsd: 500,
+        rolloverFranchiseUsd: 1000,
+      };
+    }
+
+    const franchise &#x3D; this.riskMatrixService.calculateFranchise(policy);
+
+    return {
+      bucket: policy.bucket &#x3D;&#x3D;&#x3D; &#x27;standard&#x27; ? &#x27;standard&#x27; : policy.bucket,
+      carValueRange: Number.isFinite(policy.car_value_max)
+        ? &#x60;$${policy.car_value_min.toLocaleString()} - $${policy.car_value_max.toLocaleString()}&#x60;
+        : &#x60;≥ $${policy.car_value_min.toLocaleString()}&#x60;,
+      standardFranchiseUsd: franchise.standard,
+      rolloverFranchiseUsd: franchise.rollover,
+    };
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="163" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="guaranteeWaterfallSteps"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>guaranteeWaterfallSteps</b></span>
+                        <a href="#guaranteeWaterfallSteps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const source &#x3D; this.securitySource();
+    const steps: Array&lt;{ label: string; description: string }&gt; &#x3D; [];
+
+    if (source &#x3D;&#x3D;&#x3D; &#x27;card&#x27;) {
+      const holdUsd &#x3D; this.holdAmountCard().usd;
+      steps.push({
+        label: &#x27;1. Hold en tarjeta&#x27;,
+        description: &#x60;Se pre-autoriza un hold de ${this.formatUsd(holdUsd)} en tu tarjeta. Si hay daños, se captura el monto necesario.&#x60;,
+      });
+    } else {
+      const creditUsd &#x3D; this.walletSecurityCreditUsd();
+      steps.push({
+        label: &#x27;1. Crédito de Seguridad (Wallet)&#x27;,
+        description: &#x60;Se utiliza tu crédito de seguridad de ${this.formatUsd(creditUsd)} en wallet como garantía.&#x60;,
+      });
+    }
+
+    steps.push({
+      label: &#x27;2. Cobro adicional&#x27;,
+      description: &#x60;Si la garantía inicial no cubre los costos, se intentará un cobro adicional hasta el monto de la franquicia.&#x60;,
+    });
+
+    steps.push({
+      label: &#x27;3. Cobertura FGO&#x27;,
+      description: &#x60;Si aún hay un saldo pendiente, el FGO cubre hasta ${this.formatUsd(this.fgoEventCapUsd())} si se cumplen las condiciones.&#x60;,
+    });
+
+    steps.push({
+      label: &#x27;4. Proceso de Recupero&#x27;,
+      description: &#x60;AutoRenta iniciará un proceso de recupero por cualquier saldo restante.&#x60;,
+    });
+
+    return steps;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="293" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasCheckIn"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasCheckIn</b></span>
+                        <a href="#hasCheckIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.inspections().some((i) &#x3D;&gt; i.stage &#x3D;&#x3D;&#x3D; &#x27;check_in&#x27; &amp;&amp; i.signedAt);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="333" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:333</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasCheckOut"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasCheckOut</b></span>
+                        <a href="#hasCheckOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.inspections().some((i) &#x3D;&gt; i.stage &#x3D;&#x3D;&#x3D; &#x27;check_out&#x27; &amp;&amp; i.signedAt);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="337" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:337</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasClaim"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasClaim</b></span>
+                        <a href="#hasClaim"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return false;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="341" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:341</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="holdAmountCard"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>holdAmountCard</b></span>
+                        <a href="#holdAmountCard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;{ usd: number; local: number | null }&gt;(() &#x3D;&gt; {
+    const policy &#x3D; this.riskPolicy();
+    if (!policy) return { usd: 0, local: null };
+
+    const rollover &#x3D; this.franchiseMatrix().rolloverFranchiseUsd;
+    const holdUsd &#x3D; 0.35 * rollover;
+
+    const rate &#x3D; this.exchangeRate;
+    const localAmount &#x3D; rate ? Math.round(holdUsd * rate * 100) : null;
+
+    return {
+      usd: holdUsd,
+      local: localAmount,
+    };
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="192" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:192</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inspections"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>inspections</b></span>
+                        <a href="#inspections"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BookingInspection[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:138</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="minWalletSecurityUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>minWalletSecurityUsd</b></span>
+                        <a href="#minWalletSecurityUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; 300)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:146</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="recoveryWindowHours"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>recoveryWindowHours</b></span>
+                        <a href="#recoveryWindowHours"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; 72)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:147</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="riskMatrixService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>riskMatrixService</b></span>
+                        <a href="#riskMatrixService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(RiskMatrixService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="riskPolicy"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>riskPolicy</b></span>
+                        <a href="#riskPolicy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;RiskPolicy | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="161" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:161</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="riskSnapshot"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>riskSnapshot</b></span>
+                        <a href="#riskSnapshot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BookingRiskSnapshot | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="139" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:139</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="securitySource"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>securitySource</b></span>
+                        <a href="#securitySource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;&#x27;card&#x27; | &#x27;wallet&#x27; | &#x27;mixed&#x27; | &#x27;none&#x27;&gt;(() &#x3D;&gt; {
+    if (!this.booking) {
+      return &#x27;none&#x27;;
+    }
+
+    switch (this.booking.payment_method) {
+      case &#x27;credit_card&#x27;:
+        return &#x27;card&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;wallet&#x27;;
+      case &#x27;partial_wallet&#x27;:
+        return &#x27;mixed&#x27;;
+      default:
+        return (this.booking.deposit_amount_cents ?? 0) &gt; 0 ? &#x27;wallet&#x27; : &#x27;none&#x27;;
+    }
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="213" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="securitySourceDescription"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>securitySourceDescription</b></span>
+                        <a href="#securitySourceDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    switch (this.securitySource()) {
+      case &#x27;card&#x27;:
+        return &#x27;Se captura el hold cuando hay daños o ajustes pendientes.&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;Los fondos se bloquean en tu wallet como crédito no reembolsable.&#x27;;
+      case &#x27;mixed&#x27;:
+        return &#x27;Primero se usa el hold disponible y luego el crédito de seguridad.&#x27;;
+      default:
+        return &#x27;Asignamos la mejor combinación disponible para cubrir la franquicia.&#x27;;
+    }
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:243</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="securitySourceLabel"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>securitySourceLabel</b></span>
+                        <a href="#securitySourceLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    switch (this.securitySource()) {
+      case &#x27;card&#x27;:
+        return &#x27;Hold en tarjeta&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;Crédito de seguridad&#x27;;
+      case &#x27;mixed&#x27;:
+        return &#x27;Hold + Wallet&#x27;;
+      default:
+        return &#x27;Garantía configurada&#x27;;
+    }
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="230" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:230</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="settlementService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>settlementService</b></span>
+                        <a href="#settlementService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SettlementService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:132</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletSecurityCreditUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>walletSecurityCreditUsd</b></span>
+                        <a href="#walletSecurityCreditUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;number&gt;(
+    () &#x3D;&gt; this.riskPolicy()?.security_credit_usd ?? 0,
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="209" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:209</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="waterfallResult"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>waterfallResult</b></span>
+                        <a href="#waterfallResult"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WaterfallResult | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/app/features/bookings/booking-detail/fgo-management.component.ts:141</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Input, OnInit, computed, inject, signal } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { firstValueFrom } from &#x27;rxjs&#x27;;
+import { Booking } from &#x27;../../../core/models&#x27;;
+import { FgoV1_1Service } from &#x27;../../../core/services/fgo-v1-1.service&#x27;;
+import { SettlementService, Claim } from &#x27;../../../core/services/settlement.service&#x27;;
+import {
+  BookingInspection,
+  BookingRiskSnapshot,
+  EligibilityResult,
+  WaterfallResult,
+  FgoParameters,
+  BucketType,
+} from &#x27;../../../core/models/fgo-v1-1.model&#x27;;
+import { RiskMatrixService, RiskPolicy } from &#x27;../../../core/services/risk-matrix.service&#x27;;
+import { FgoService } from &#x27;../../../core/services/fgo.service&#x27;;
+
+/**
+ * FgoManagementComponent
+ *
+ * This component encapsulates all logic related to the FGO (Fondo de Garantía Operativa).
+ * It is responsible for displaying FGO-related information, such as guarantees, coverage, and waterfall steps.
+ * It also handles FGO-related actions, such as uploading inspections and processing claims.
+ * It receives a &#x60;Booking&#x60; object and the current exchange rate as inputs.
+ */
+@Component({
+  selector: &#x27;app-fgo-management&#x27;,
+  standalone: true,
+  imports: [CommonModule],
+  template: &#x60;
+    &lt;!-- Pricing Breakdown Card --&gt;
+    &lt;section class&#x3D;&quot;card-premium rounded-2xl p-4 sm:p-6 shadow-soft fgo-card&quot;&gt;
+      &lt;div class&#x3D;&quot;fgo-card__header&quot;&gt;
+        &lt;h3 class&#x3D;&quot;h5&quot;&gt;🛡️ Garantías y cobertura FGO&lt;/h3&gt;
+        &lt;span class&#x3D;&quot;fgo-card__badge&quot;&gt;{{ fgoEventCapUsdDisplay() }}&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;!-- 🇦🇷 Argentina Franchise Matrix Info --&gt;
+      &lt;div
+        class&#x3D;&quot;fgo-card__hint&quot;
+        style&#x3D;&quot;margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);&quot;
+      &gt;
+        &lt;strong&gt;Categoría del vehículo:&lt;/strong&gt; {{ franchiseMatrix().bucket | uppercase }} ({{
+          franchiseMatrix().carValueRange
+        }})&lt;br /&gt;
+        &lt;strong&gt;Franquicia estándar:&lt;/strong&gt; {{ formatUsd(franchiseMatrix().standardFranchiseUsd)
+        }}&lt;br /&gt;
+        &lt;strong&gt;Franquicia por vuelco:&lt;/strong&gt;
+        {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;fgo-card__stat-grid&quot;&gt;
+        &lt;!-- Security Source (Card/Wallet) --&gt;
+        &lt;div class&#x3D;&quot;fgo-card__stat&quot;&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-label&quot;&gt;{{ securitySourceLabel() }}&lt;/p&gt;
+
+          &lt;!-- For Credit Card: Show hold amount --&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-value&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27;&quot;&gt;
+            {{ formatUsd(holdAmountCard().usd) }}
+          &lt;/p&gt;
+          &lt;p
+            class&#x3D;&quot;fgo-card__stat-hint&quot;
+            *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27; &amp;&amp; holdAmountCard().local !&#x3D;&#x3D; null &amp;&amp; exchangeRate&quot;
+          &gt;
+            Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;card&#x27;&quot;&gt;
+            Hold calculado: 35% × franquicia vuelco × FX snapshot
+          &lt;/p&gt;
+
+          &lt;!-- For Wallet: Show security credit amount --&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-value&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;&gt;
+            {{ formatUsd(walletSecurityCreditUsd()) }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; &amp;&amp; exchangeRate&quot;&gt;
+            Equivalente:
+            {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27;&quot;&gt;
+            Crédito de seguridad bloqueado en tu wallet
+          &lt;/p&gt;
+
+          &lt;!-- For Mixed or None --&gt;
+          &lt;p
+            class&#x3D;&quot;fgo-card__stat-value&quot;
+            *ngIf&#x3D;&quot;securitySource() &#x3D;&#x3D;&#x3D; &#x27;mixed&#x27; || securitySource() &#x3D;&#x3D;&#x3D; &#x27;none&#x27;&quot;
+          &gt;
+            {{ depositAmountUsdDisplay() ?? &#x27;—&#x27; }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;depositAmountLocalDisplay()&quot;&gt;
+            Equivalente: {{ depositAmountLocalDisplay() }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot;&gt;{{ securitySourceDescription() }}&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- FGO Maximum Coverage --&gt;
+        &lt;div class&#x3D;&quot;fgo-card__stat&quot;&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-label&quot;&gt;Cobertura máxima FGO&lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-value&quot;&gt;{{ fgoEventCapUsdDisplay() }}&lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot; *ngIf&#x3D;&quot;fgoEventCapLocalDisplay()&quot;&gt;
+            Equivalente: {{ fgoEventCapLocalDisplay() }}
+          &lt;/p&gt;
+          &lt;p class&#x3D;&quot;fgo-card__stat-hint&quot;&gt;
+            Cubre daños hasta USD 800 por evento cuando la documentación está completa y RC ≥ 1.0.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- 🇦🇷 Waterfall Payment Logic --&gt;
+      &lt;div class&#x3D;&quot;fgo-waterfall&quot;&gt;
+        &lt;div class&#x3D;&quot;fgo-step&quot; *ngFor&#x3D;&quot;let step of guaranteeWaterfallSteps(); let idx &#x3D; index&quot;&gt;
+          &lt;span class&#x3D;&quot;fgo-step__marker&quot;&gt;{{ idx + 1 }}&lt;/span&gt;
+          &lt;div&gt;
+            &lt;p class&#x3D;&quot;fgo-step__title&quot;&gt;{{ step.label }}&lt;/p&gt;
+            &lt;p class&#x3D;&quot;fgo-step__description&quot;&gt;{{ step.description }}&lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;fgo-card__hint&quot;&gt;
+        ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo
+        mantiene RC (Reserve Coverage) ≥ 1.0.
+      &lt;/div&gt;
+    &lt;/section&gt;
+  &#x60;,
+})
+export class FgoManagementComponent implements OnInit {
+  @Input({ required: true }) booking!: Booking;
+  @Input() exchangeRate: number | null &#x3D; null;
+
+  private readonly fgoService &#x3D; inject(FgoV1_1Service);
+  private readonly settlementService &#x3D; inject(SettlementService);
+  private readonly riskMatrixService &#x3D; inject(RiskMatrixService);
+  private readonly fgoServiceV2 &#x3D; inject(FgoService);
+
+  readonly fgoParams &#x3D; signal&lt;FgoParameters | null&gt;(null);
+  readonly fgoLoading &#x3D; signal(false);
+  readonly inspections &#x3D; signal&lt;BookingInspection[]&gt;([]);
+  readonly riskSnapshot &#x3D; signal&lt;BookingRiskSnapshot | null&gt;(null);
+  readonly eligibility &#x3D; signal&lt;EligibilityResult | null&gt;(null);
+  readonly waterfallResult &#x3D; signal&lt;WaterfallResult | null&gt;(null);
+  readonly claimProcessing &#x3D; signal(false);
+
+  // 🇦🇷 Argentina FGO Constants
+  readonly fgoEventCapUsd &#x3D; computed(() &#x3D;&gt; this.fgoParams()?.eventCapUsd ?? 800);
+  readonly minWalletSecurityUsd &#x3D; computed(() &#x3D;&gt; 300);
+  readonly recoveryWindowHours &#x3D; computed(() &#x3D;&gt; 72);
+
+  // 🇦🇷 Car value estimation (nightly_rate × 125)
+  readonly estimatedCarValueUsd &#x3D; computed&lt;number&gt;(() &#x3D;&gt; {
+    const booking &#x3D; this.booking;
+    if (!booking) return 0;
+
+    const nightlyRateCents &#x3D;
+      booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
+    const nightlyRateUsd &#x3D; nightlyRateCents / 100;
+    return nightlyRateUsd * 125;
+  });
+
+  // 🇦🇷 Franchise matrix based on car value (AR specific)
+  readonly riskPolicy &#x3D; signal&lt;RiskPolicy | null&gt;(null);
+
+  readonly franchiseMatrix &#x3D; computed&lt;{
+    bucket: &#x27;economy&#x27; | &#x27;standard&#x27; | &#x27;premium&#x27; | &#x27;luxury&#x27;;
+    carValueRange: string;
+    standardFranchiseUsd: number;
+    rolloverFranchiseUsd: number;
+  }&gt;(() &#x3D;&gt; {
+    const policy &#x3D; this.riskPolicy();
+    if (!policy) {
+      return {
+        bucket: &#x27;economy&#x27;,
+        carValueRange: &#x27;≤ USD 10,000&#x27;,
+        standardFranchiseUsd: 500,
+        rolloverFranchiseUsd: 1000,
+      };
+    }
+
+    const franchise &#x3D; this.riskMatrixService.calculateFranchise(policy);
+
+    return {
+      bucket: policy.bucket &#x3D;&#x3D;&#x3D; &#x27;standard&#x27; ? &#x27;standard&#x27; : policy.bucket,
+      carValueRange: Number.isFinite(policy.car_value_max)
+        ? &#x60;$${policy.car_value_min.toLocaleString()} - $${policy.car_value_max.toLocaleString()}&#x60;
+        : &#x60;≥ $${policy.car_value_min.toLocaleString()}&#x60;,
+      standardFranchiseUsd: franchise.standard,
+      rolloverFranchiseUsd: franchise.rollover,
+    };
+  });
+
+  // 🇦🇷 Hold calculation for credit card (0.35 × rollover × FX)
+  readonly holdAmountCard &#x3D; computed&lt;{ usd: number; local: number | null }&gt;(() &#x3D;&gt; {
+    const policy &#x3D; this.riskPolicy();
+    if (!policy) return { usd: 0, local: null };
+
+    const rollover &#x3D; this.franchiseMatrix().rolloverFranchiseUsd;
+    const holdUsd &#x3D; 0.35 * rollover;
+
+    const rate &#x3D; this.exchangeRate;
+    const localAmount &#x3D; rate ? Math.round(holdUsd * rate * 100) : null;
+
+    return {
+      usd: holdUsd,
+      local: localAmount,
+    };
+  });
+
+  // 🇦🇷 Wallet security credit amount (USD 300 for ≤20k, USD 500 for &gt;20k)
+  readonly walletSecurityCreditUsd &#x3D; computed&lt;number&gt;(
+    () &#x3D;&gt; this.riskPolicy()?.security_credit_usd ?? 0,
+  );
+
+  readonly securitySource &#x3D; computed&lt;&#x27;card&#x27; | &#x27;wallet&#x27; | &#x27;mixed&#x27; | &#x27;none&#x27;&gt;(() &#x3D;&gt; {
+    if (!this.booking) {
+      return &#x27;none&#x27;;
+    }
+
+    switch (this.booking.payment_method) {
+      case &#x27;credit_card&#x27;:
+        return &#x27;card&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;wallet&#x27;;
+      case &#x27;partial_wallet&#x27;:
+        return &#x27;mixed&#x27;;
+      default:
+        return (this.booking.deposit_amount_cents ?? 0) &gt; 0 ? &#x27;wallet&#x27; : &#x27;none&#x27;;
+    }
+  });
+
+  readonly securitySourceLabel &#x3D; computed(() &#x3D;&gt; {
+    switch (this.securitySource()) {
+      case &#x27;card&#x27;:
+        return &#x27;Hold en tarjeta&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;Crédito de seguridad&#x27;;
+      case &#x27;mixed&#x27;:
+        return &#x27;Hold + Wallet&#x27;;
+      default:
+        return &#x27;Garantía configurada&#x27;;
+    }
+  });
+
+  readonly securitySourceDescription &#x3D; computed(() &#x3D;&gt; {
+    switch (this.securitySource()) {
+      case &#x27;card&#x27;:
+        return &#x27;Se captura el hold cuando hay daños o ajustes pendientes.&#x27;;
+      case &#x27;wallet&#x27;:
+        return &#x27;Los fondos se bloquean en tu wallet como crédito no reembolsable.&#x27;;
+      case &#x27;mixed&#x27;:
+        return &#x27;Primero se usa el hold disponible y luego el crédito de seguridad.&#x27;;
+      default:
+        return &#x27;Asignamos la mejor combinación disponible para cubrir la franquicia.&#x27;;
+    }
+  });
+
+  readonly depositAmountUsd &#x3D; computed&lt;number | null&gt;(() &#x3D;&gt; {
+    if (!this.booking) return null;
+
+    const baseUsd &#x3D; this.booking.deposit_amount_cents ? this.booking.deposit_amount_cents / 100 : 0;
+
+    const walletFloor &#x3D;
+      this.securitySource() &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; || this.securitySource() &#x3D;&#x3D;&#x3D; &#x27;mixed&#x27;
+        ? this.minWalletSecurityUsd()
+        : 0;
+
+    const effective &#x3D; Math.max(baseUsd, walletFloor);
+    return effective &gt; 0 ? effective : null;
+  });
+
+  readonly depositAmountUsdDisplay &#x3D; computed(() &#x3D;&gt; {
+    const amount &#x3D; this.depositAmountUsd();
+    if (!amount) return null;
+    return this.formatUsd(amount);
+  });
+
+  readonly depositAmountLocalDisplay &#x3D; computed(() &#x3D;&gt; {
+    const amount &#x3D; this.depositAmountUsd();
+    const rate &#x3D; this.exchangeRate;
+    if (!amount || !rate || !this.booking || this.booking.currency &#x3D;&#x3D;&#x3D; &#x27;USD&#x27;) return null;
+    const localCents &#x3D; Math.round(amount * rate * 100);
+    return this.formatCurrency(localCents, this.booking.currency);
+  });
+
+  readonly fgoEventCapUsdDisplay &#x3D; computed(() &#x3D;&gt; this.formatUsd(this.fgoEventCapUsd()));
+
+  readonly fgoEventCapLocalDisplay &#x3D; computed(() &#x3D;&gt; {
+    const rate &#x3D; this.exchangeRate;
+    if (!rate || !this.booking || this.booking.currency &#x3D;&#x3D;&#x3D; &#x27;USD&#x27;) return null;
+    const localCents &#x3D; Math.round(this.fgoEventCapUsd() * rate * 100);
+    return this.formatCurrency(localCents, this.booking.currency);
+  });
+
+  readonly guaranteeWaterfallSteps &#x3D; computed(() &#x3D;&gt; {
+    const source &#x3D; this.securitySource();
+    const steps: Array&lt;{ label: string; description: string }&gt; &#x3D; [];
+
+    if (source &#x3D;&#x3D;&#x3D; &#x27;card&#x27;) {
+      const holdUsd &#x3D; this.holdAmountCard().usd;
+      steps.push({
+        label: &#x27;1. Hold en tarjeta&#x27;,
+        description: &#x60;Se pre-autoriza un hold de ${this.formatUsd(holdUsd)} en tu tarjeta. Si hay daños, se captura el monto necesario.&#x60;,
+      });
+    } else {
+      const creditUsd &#x3D; this.walletSecurityCreditUsd();
+      steps.push({
+        label: &#x27;1. Crédito de Seguridad (Wallet)&#x27;,
+        description: &#x60;Se utiliza tu crédito de seguridad de ${this.formatUsd(creditUsd)} en wallet como garantía.&#x60;,
+      });
+    }
+
+    steps.push({
+      label: &#x27;2. Cobro adicional&#x27;,
+      description: &#x60;Si la garantía inicial no cubre los costos, se intentará un cobro adicional hasta el monto de la franquicia.&#x60;,
+    });
+
+    steps.push({
+      label: &#x27;3. Cobertura FGO&#x27;,
+      description: &#x60;Si aún hay un saldo pendiente, el FGO cubre hasta ${this.formatUsd(this.fgoEventCapUsd())} si se cumplen las condiciones.&#x60;,
+    });
+
+    steps.push({
+      label: &#x27;4. Proceso de Recupero&#x27;,
+      description: &#x60;AutoRenta iniciará un proceso de recupero por cualquier saldo restante.&#x60;,
+    });
+
+    return steps;
+  });
+
+  readonly canUploadInspection &#x3D; computed(() &#x3D;&gt; {
+    return this.booking?.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27; || this.booking?.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;;
+  });
+
+  readonly hasCheckIn &#x3D; computed(() &#x3D;&gt; {
+    return this.inspections().some((i) &#x3D;&gt; i.stage &#x3D;&#x3D;&#x3D; &#x27;check_in&#x27; &amp;&amp; i.signedAt);
+  });
+
+  readonly hasCheckOut &#x3D; computed(() &#x3D;&gt; {
+    return this.inspections().some((i) &#x3D;&gt; i.stage &#x3D;&#x3D;&#x3D; &#x27;check_out&#x27; &amp;&amp; i.signedAt);
+  });
+
+  readonly hasClaim &#x3D; computed(() &#x3D;&gt; {
+    return false;
+  });
+
+  async ngOnInit() {
+    await this.loadFgoData();
+    const carValue &#x3D; this.estimatedCarValueUsd();
+    try {
+      const policy &#x3D; await this.riskMatrixService.getRiskPolicy(carValue);
+      this.riskPolicy.set(policy);
+    } catch {
+      /* Silenced */
+    }
+  }
+
+  private async loadFgoData(): Promise&lt;void&gt; {
+    if (!this.booking) return;
+
+    try {
+      this.fgoLoading.set(true);
+
+      const bucket &#x3D; this.determineBucket(this.booking);
+      const params &#x3D; await firstValueFrom(this.fgoService.getParameters(&#x27;AR&#x27;, bucket));
+      this.fgoParams.set(params);
+
+      const snapshot &#x3D; await firstValueFrom(this.fgoService.getRiskSnapshot(this.booking.id));
+      this.riskSnapshot.set(snapshot);
+
+      const inspections &#x3D; await firstValueFrom(this.fgoService.getInspections(this.booking.id));
+      this.inspections.set(inspections);
+    } catch {
+      /* Silenced */
+    } finally {
+      this.fgoLoading.set(false);
+    }
+  }
+
+  private determineBucket(booking: Booking): BucketType {
+    const nightlyRateCents &#x3D;
+      booking.nightly_rate_cents ?? booking.breakdown?.nightly_rate_cents ?? 0;
+    const nightlyRateUsd &#x3D; nightlyRateCents / 100;
+    const estimatedCarValueUsd &#x3D; nightlyRateUsd * 125;
+
+    if (estimatedCarValueUsd &lt; 10000) return &#x27;economy&#x27;;
+    if (estimatedCarValueUsd &lt; 30000) return &#x27;default&#x27;;
+    if (estimatedCarValueUsd &lt; 60000) return &#x27;premium&#x27;;
+    return &#x27;luxury&#x27;;
+  }
+
+  async uploadCheckIn(): Promise&lt;void&gt; {
+    alert(&#x27;Funcionalidad en desarrollo&#x27;);
+  }
+
+  async uploadCheckOut(): Promise&lt;void&gt; {
+    alert(&#x27;Funcionalidad en desarrollo&#x27;);
+  }
+
+  async openClaimForm(): Promise&lt;void&gt; {
+    alert(&#x27;Funcionalidad en desarrollo&#x27;);
+  }
+
+  private async processClaimWithWaterfall(claim: Claim): Promise&lt;void&gt; {
+    this.claimProcessing.set(true);
+
+    try {
+      const eligibility &#x3D; await this.settlementService.evaluateClaim(claim);
+      this.eligibility.set(eligibility);
+
+      if (!eligibility?.eligible) {
+        alert(&#x60;Claim no elegible: ${eligibility?.reasons.join(&#x27;, &#x27;)}&#x60;);
+        return;
+      }
+
+      const confirmed &#x3D; await this.confirmWaterfall(eligibility);
+      if (!confirmed) return;
+
+      const result &#x3D; await this.settlementService.processClaim(claim);
+      this.waterfallResult.set(result.waterfall ?? null);
+
+      if (result.ok) {
+        alert(&#x27;Claim procesado exitosamente&#x27;);
+        await this.loadFgoData();
+      } else {
+        alert(&#x60;Error al procesar claim: ${result.error}&#x60;);
+      }
+    } catch {
+      alert(&#x27;Error al procesar claim&#x27;);
+    } finally {
+      this.claimProcessing.set(false);
+    }
+  }
+
+  private async confirmWaterfall(eligibility: EligibilityResult): Promise&lt;boolean&gt; {
+    const message &#x3D; &#x60;
+      Cobertura FGO
+      Monto máximo cubierto: USD ${eligibility.maxCoverUsd?.toFixed(2) ?? 0}
+      Franquicia aplicada: ${eligibility.franchisePercentage}%
+      RC actual: ${eligibility.rc?.toFixed(2) ?? &#x27;N/A&#x27;}
+      Estado FGO: ${eligibility.rcStatus ?? &#x27;N/A&#x27;}
+
+      ¿Proceder con el waterfall de cobros?
+    &#x60;.trim();
+
+    return confirm(message);
+  }
+
+  formatUsd(amount: number): string {
+    const fractionDigits &#x3D; Number.isInteger(amount) ? 0 : 2;
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;USD&#x27;,
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    }).format(amount);
+  }
+
+  formatCurrency(cents: number, currency: string): string {
+    const amount &#x3D; cents / 100;
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
+}
+</code></pre>
+    </div>
+
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Pricing Breakdown Card --><section class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft fgo-card">  <div class="fgo-card__header">    <h3 class="h5">🛡️ Garantías y cobertura FGO</h3>    <span class="fgo-card__badge">{{ fgoEventCapUsdDisplay() }}</span>  </div>  <!-- 🇦🇷 Argentina Franchise Matrix Info -->  <div    class="fgo-card__hint"    style="margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);"  >    <strong>Categoría del vehículo:</strong> {{ franchiseMatrix().bucket | uppercase }} ({{      franchiseMatrix().carValueRange    }})<br />    <strong>Franquicia estándar:</strong> {{ formatUsd(franchiseMatrix().standardFranchiseUsd)    }}<br />    <strong>Franquicia por vuelco:</strong>    {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}  </div>  <div class="fgo-card__stat-grid">    <!-- Security Source (Card/Wallet) -->    <div class="fgo-card__stat">      <p class="fgo-card__stat-label">{{ securitySourceLabel() }}</p>      <!-- For Credit Card: Show hold amount -->      <p class="fgo-card__stat-value" *ngIf="securitySource() === \'card\'">        {{ formatUsd(holdAmountCard().usd) }}      </p>      <p        class="fgo-card__stat-hint"        *ngIf="securitySource() === \'card\' && holdAmountCard().local !== null && exchangeRate"      >        Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}      </p>      <p class="fgo-card__stat-hint" *ngIf="securitySource() === \'card\'">        Hold calculado: 35% × franquicia vuelco × FX snapshot      </p>      <!-- For Wallet: Show security credit amount -->      <p class="fgo-card__stat-value" *ngIf="securitySource() === \'wallet\'">        {{ formatUsd(walletSecurityCreditUsd()) }}      </p>      <p class="fgo-card__stat-hint" *ngIf="securitySource() === \'wallet\' && exchangeRate">        Equivalente:        {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}      </p>      <p class="fgo-card__stat-hint" *ngIf="securitySource() === \'wallet\'">        Crédito de seguridad bloqueado en tu wallet      </p>      <!-- For Mixed or None -->      <p        class="fgo-card__stat-value"        *ngIf="securitySource() === \'mixed\' || securitySource() === \'none\'"      >        {{ depositAmountUsdDisplay() ?? \'—\' }}      </p>      <p class="fgo-card__stat-hint" *ngIf="depositAmountLocalDisplay()">        Equivalente: {{ depositAmountLocalDisplay() }}      </p>      <p class="fgo-card__stat-hint">{{ securitySourceDescription() }}</p>    </div>    <!-- FGO Maximum Coverage -->    <div class="fgo-card__stat">      <p class="fgo-card__stat-label">Cobertura máxima FGO</p>      <p class="fgo-card__stat-value">{{ fgoEventCapUsdDisplay() }}</p>      <p class="fgo-card__stat-hint" *ngIf="fgoEventCapLocalDisplay()">        Equivalente: {{ fgoEventCapLocalDisplay() }}      </p>      <p class="fgo-card__stat-hint">        Cubre daños hasta USD 800 por evento cuando la documentación está completa y RC ≥ 1.0.      </p>    </div>  </div>  <!-- 🇦🇷 Waterfall Payment Logic -->  <div class="fgo-waterfall">    <div class="fgo-step" *ngFor="let step of guaranteeWaterfallSteps(); let idx = index">      <span class="fgo-step__marker">{{ idx + 1 }}</span>      <div>        <p class="fgo-step__title">{{ step.label }}</p>        <p class="fgo-step__description">{{ step.description }}</p>      </div>    </div>  </div>  <div class="fgo-card__hint">    ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo    mantiene RC (Reserve Coverage) ≥ 1.0.  </div></section></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'FgoManagementComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FgoManagementComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

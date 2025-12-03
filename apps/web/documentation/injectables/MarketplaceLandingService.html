@@ -1,0 +1,2571 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >MarketplaceLandingService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/marketplace-landing.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>MarketplaceLandingService - State management for landing page</p>
+<p>Manages:</p>
+<ul>
+<li>Search state (query, location, date range)</li>
+<li>Filter state (price, transmission, vehicle type, quick filters)</li>
+<li>View preferences (grid/list/map, sort order)</li>
+<li>User location</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#activeFilterCount" >activeFilterCount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#activeQuickFilters" >activeQuickFilters</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cars" >cars</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carsWithDistance" >carsWithDistance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#dateRange" >dateRange</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#distanceCalculator" >distanceCalculator</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filters" >filters</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hasActiveFilters" >hasActiveFilters</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isBrowser" >isBrowser</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#lastLocationUpdate" >lastLocationUpdate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#locationAccuracy" >locationAccuracy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#platformId" >platformId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#searchQuery" >searchQuery</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedLocation" >selectedLocation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sortOrder" >sortOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#statsData" >statsData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#userLocation" >userLocation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#viewMode" >viewMode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#visibleCars" >visibleCars</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#calculateAveragePrice" >calculateAveragePrice</a>
+                            </li>
+                            <li>
+                                <a href="#clearAllFilters" >clearAllFilters</a>
+                            </li>
+                            <li>
+                                <a href="#isQuickFilterActive" >isQuickFilterActive</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadViewMode" >loadViewMode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#saveViewMode" >saveViewMode</a>
+                            </li>
+                            <li>
+                                <a href="#setCars" >setCars</a>
+                            </li>
+                            <li>
+                                <a href="#setDateRange" >setDateRange</a>
+                            </li>
+                            <li>
+                                <a href="#setError" >setError</a>
+                            </li>
+                            <li>
+                                <a href="#setLoading" >setLoading</a>
+                            </li>
+                            <li>
+                                <a href="#setLocation" >setLocation</a>
+                            </li>
+                            <li>
+                                <a href="#setSearchQuery" >setSearchQuery</a>
+                            </li>
+                            <li>
+                                <a href="#setSortOrder" >setSortOrder</a>
+                            </li>
+                            <li>
+                                <a href="#setUserLocation" >setUserLocation</a>
+                            </li>
+                            <li>
+                                <a href="#setViewMode" >setViewMode</a>
+                            </li>
+                            <li>
+                                <a href="#toggleQuickFilter" >toggleQuickFilter</a>
+                            </li>
+                            <li>
+                                <a href="#updateFilters" >updateFilters</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateAveragePrice"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>calculateAveragePrice</b></span>
+                        <a href="#calculateAveragePrice"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateAveragePrice(cars: CarWithDistance[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:288</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cars</td>
+                                            <td>
+                                                        <code>CarWithDistance[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearAllFilters"></a>
+                    <span class="name">
+                        <span ><b>clearAllFilters</b></span>
+                        <a href="#clearAllFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearAllFilters()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:247</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isQuickFilterActive"></a>
+                    <span class="name">
+                        <span ><b>isQuickFilterActive</b></span>
+                        <a href="#isQuickFilterActive"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isQuickFilterActive(filterId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:243</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filterId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadViewMode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadViewMode</b></span>
+                        <a href="#loadViewMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadViewMode()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="294"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:294</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ViewMode" target="_self" >ViewMode</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveViewMode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>saveViewMode</b></span>
+                        <a href="#saveViewMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveViewMode(mode: <a href="../undefineds/ViewMode.html" target="_self">ViewMode</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="303"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:303</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>mode</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ViewMode" target="_self" >ViewMode</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setCars"></a>
+                    <span class="name">
+                        <span ><b>setCars</b></span>
+                        <a href="#setCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setCars(cars: Car[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="275"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:275</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cars</td>
+                                            <td>
+                                                        <code>Car[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDateRange"></a>
+                    <span class="name">
+                        <span ><b>setDateRange</b></span>
+                        <a href="#setDateRange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setDateRange(range: <a href="../interfaces/DateRange.html" target="_self">DateRange</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="214"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:214</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>range</td>
+                                            <td>
+                                                            <code><a href="../interfaces/DateRange.html" target="_self" >DateRange</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setError"></a>
+                    <span class="name">
+                        <span ><b>setError</b></span>
+                        <a href="#setError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setError(error: string | null)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="283"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:283</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                        <code>string | null</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setLoading"></a>
+                    <span class="name">
+                        <span ><b>setLoading</b></span>
+                        <a href="#setLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setLoading(loading: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:279</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>loading</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setLocation"></a>
+                    <span class="name">
+                        <span ><b>setLocation</b></span>
+                        <a href="#setLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setLocation(location: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>location</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSearchQuery"></a>
+                    <span class="name">
+                        <span ><b>setSearchQuery</b></span>
+                        <a href="#setSearchQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setSearchQuery(query: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSortOrder"></a>
+                    <span class="name">
+                        <span ><b>setSortOrder</b></span>
+                        <a href="#setSortOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setSortOrder(order: <a href="../undefineds/SortOption.html" target="_self">SortOption</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:264</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>order</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#SortOption" target="_self" >SortOption</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setUserLocation"></a>
+                    <span class="name">
+                        <span ><b>setUserLocation</b></span>
+                        <a href="#setUserLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setUserLocation(coords: <a href="../interfaces/LocationCoords.html" target="_self">LocationCoords</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="269"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:269</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>coords</td>
+                                            <td>
+                                                            <code><a href="../interfaces/LocationCoords.html" target="_self" >LocationCoords</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setViewMode"></a>
+                    <span class="name">
+                        <span ><b>setViewMode</b></span>
+                        <a href="#setViewMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>setViewMode(mode: <a href="../undefineds/ViewMode.html" target="_self">ViewMode</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="259"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:259</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>mode</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ViewMode" target="_self" >ViewMode</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleQuickFilter"></a>
+                    <span class="name">
+                        <span ><b>toggleQuickFilter</b></span>
+                        <a href="#toggleQuickFilter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleQuickFilter(filterId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="223"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:223</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filterId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateFilters"></a>
+                    <span class="name">
+                        <span ><b>updateFilters</b></span>
+                        <a href="#updateFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>updateFilters(filters: Partial<FilterState>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="219"
+                                    class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:219</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                        <code>Partial&lt;FilterState&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeFilterCount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>activeFilterCount</b></span>
+                        <a href="#activeFilterCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    let count &#x3D; 0;
+    const f &#x3D; this.filters();
+
+    if (f.priceRange) count++;
+    if (f.vehicleTypes &amp;&amp; f.vehicleTypes.length &gt; 0) count++;
+    if (f.immediateOnly) count++;
+    if (f.transmission &amp;&amp; f.transmission.length &gt; 0) count++;
+    count +&#x3D; this.activeQuickFilters().size;
+
+    return count;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeQuickFilters"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>activeQuickFilters</b></span>
+                        <a href="#activeQuickFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Set&lt;string&gt;&gt;(new Set())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cars"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cars</b></span>
+                        <a href="#cars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Car[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carsWithDistance"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carsWithDistance</b></span>
+                        <a href="#carsWithDistance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    const carsList &#x3D; this.cars();
+    const userLoc &#x3D; this.userLocation();
+
+    if (!carsList.length || !userLoc) {
+      return carsList.map((car) &#x3D;&gt; ({ ...car }));
+    }
+
+    return carsList.map((car) &#x3D;&gt; {
+      if (!car.location_lat || !car.location_lng) {
+        return { ...car };
+      }
+
+      const distanceKm &#x3D; this.distanceCalculator.calculateDistance(
+        userLoc.lat,
+        userLoc.lng,
+        car.location_lat,
+        car.location_lng,
+      );
+
+      let distanceText: string;
+      if (distanceKm &lt; 1) {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm * 10) * 100}m&#x60;;
+      } else if (distanceKm &lt; 10) {
+        distanceText &#x3D; &#x60;${distanceKm.toFixed(1)}km&#x60;;
+      } else {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm)}km&#x60;;
+      }
+
+      return {
+        ...car,
+        distance: distanceKm,
+        distanceText,
+      };
+    });
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dateRange"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>dateRange</b></span>
+                        <a href="#dateRange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;DateRange&gt;({ from: null, to: null })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="distanceCalculator"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>distanceCalculator</b></span>
+                        <a href="#distanceCalculator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(DistanceCalculatorService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filters"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filters</b></span>
+                        <a href="#filters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;FilterState&gt;({
+    dateRange: null,
+    priceRange: null,
+    vehicleTypes: null,
+    immediateOnly: false,
+    transmission: null,
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasActiveFilters"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>hasActiveFilters</b></span>
+                        <a href="#hasActiveFilters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.activeFilterCount() &gt; 0)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isBrowser"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isBrowser</b></span>
+                        <a href="#isBrowser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>isPlatformBrowser(this.platformId)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="lastLocationUpdate"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>lastLocationUpdate</b></span>
+                        <a href="#lastLocationUpdate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Date | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="locationAccuracy"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>locationAccuracy</b></span>
+                        <a href="#locationAccuracy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;number | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="platformId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>platformId</b></span>
+                        <a href="#platformId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(PLATFORM_ID)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchQuery"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>searchQuery</b></span>
+                        <a href="#searchQuery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedLocation"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedLocation</b></span>
+                        <a href="#selectedLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sortOrder"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sortOrder</b></span>
+                        <a href="#sortOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;SortOption&gt;(&#x27;distance&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statsData"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>statsData</b></span>
+                        <a href="#statsData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const cars &#x3D; this.carsWithDistance();
+    const nearbyCars &#x3D; cars.filter((c) &#x3D;&gt; c.distance &amp;&amp; c.distance &lt; 5).length;
+    const avgPrice &#x3D; this.calculateAveragePrice(cars);
+
+    return {
+      totalCars: cars.length,
+      nearbyCars,
+      avgPrice,
+      minPrice: cars.length &gt; 0 ? Math.min(...cars.map((c) &#x3D;&gt; c.price_per_day)) : 0,
+    };
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="192" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:192</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="userLocation"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>userLocation</b></span>
+                        <a href="#userLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;LocationCoords | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="viewMode"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>viewMode</b></span>
+                        <a href="#viewMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;ViewMode&gt;(this.loadViewMode())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="visibleCars"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>visibleCars</b></span>
+                        <a href="#visibleCars"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    let cars &#x3D; [...this.carsWithDistance()];
+    const filters &#x3D; this.filters();
+    const quickFilters &#x3D; this.activeQuickFilters();
+
+    // Apply filters
+    if (filters.priceRange) {
+      cars &#x3D; cars.filter(
+        (c) &#x3D;&gt;
+          c.price_per_day &gt;&#x3D; filters.priceRange!.min &amp;&amp; c.price_per_day &lt;&#x3D; filters.priceRange!.max,
+      );
+    }
+
+    if (filters.transmission &amp;&amp; filters.transmission.length &gt; 0) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; filters.transmission!.includes(c.transmission));
+    }
+
+    if (filters.immediateOnly) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.auto_approval);
+    }
+
+    // Apply quick filters
+    if (quickFilters.has(&#x27;verified&#x27;)) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.owner?.is_email_verified &amp;&amp; c.owner?.is_phone_verified);
+    }
+
+    if (quickFilters.has(&#x27;electric&#x27;)) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.fuel_type &#x3D;&#x3D;&#x3D; &#x27;electric&#x27; || c.fuel &#x3D;&#x3D;&#x3D; &#x27;electric&#x27;);
+    }
+
+    if (quickFilters.has(&#x27;no-card&#x27;)) {
+      cars &#x3D; cars.filter(
+        (c) &#x3D;&gt;
+          c.payment_methods?.some((pm) &#x3D;&gt;
+            [&#x27;debit_card&#x27;, &#x27;cash&#x27;, &#x27;transfer&#x27;, &#x27;wallet&#x27;].includes(pm),
+          ) || !c.payment_methods?.includes(&#x27;credit_card&#x27;),
+      );
+    }
+
+    // Apply sorting
+    const sort &#x3D; this.sortOrder();
+    switch (sort) {
+      case &#x27;distance&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; {
+          const distA &#x3D; a.distance ?? Number.MAX_VALUE;
+          const distB &#x3D; b.distance ?? Number.MAX_VALUE;
+          return distA - distB;
+        });
+        break;
+
+      case &#x27;price_asc&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; a.price_per_day - b.price_per_day);
+        break;
+
+      case &#x27;price_desc&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; b.price_per_day - a.price_per_day);
+        break;
+
+      case &#x27;rating&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; {
+          const ratingA &#x3D; a.rating_avg ?? 0;
+          const ratingB &#x3D; b.rating_avg ?? 0;
+          return ratingB - ratingA;
+        });
+        break;
+
+      default:
+        // Keep default order
+        break;
+    }
+
+    return cars;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/app/core/services/marketplace-landing.service.ts:117</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import { computed, inject, Injectable, PLATFORM_ID, signal } from &#x27;@angular/core&#x27;;
+import type {
+  CarWithDistance,
+  DateRange,
+  FilterState,
+  LocationCoords,
+  SortOption,
+  ViewMode,
+} from &#x27;../models/marketplace.model&#x27;;
+import type { Car } from &#x27;../models&#x27;;
+import { DistanceCalculatorService } from &#x27;./distance-calculator.service&#x27;;
+
+/**
+ * MarketplaceLandingService - State management for landing page
+ *
+ * Manages:
+ * - Search state (query, location, date range)
+ * - Filter state (price, transmission, vehicle type, quick filters)
+ * - View preferences (grid/list/map, sort order)
+ * - User location
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class MarketplaceLandingService {
+  private readonly platformId &#x3D; inject(PLATFORM_ID);
+  private readonly isBrowser &#x3D; isPlatformBrowser(this.platformId);
+  private readonly distanceCalculator &#x3D; inject(DistanceCalculatorService);
+
+  // ─── Search State ───────────────────────────────────────────────────────
+  readonly searchQuery &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+  readonly selectedLocation &#x3D; signal&lt;string&gt;(&#x27;&#x27;);
+  readonly dateRange &#x3D; signal&lt;DateRange&gt;({ from: null, to: null });
+
+  // ─── Filter State ───────────────────────────────────────────────────────
+  readonly filters &#x3D; signal&lt;FilterState&gt;({
+    dateRange: null,
+    priceRange: null,
+    vehicleTypes: null,
+    immediateOnly: false,
+    transmission: null,
+  });
+
+  readonly activeQuickFilters &#x3D; signal&lt;Set&lt;string&gt;&gt;(new Set());
+
+  // ─── View State ─────────────────────────────────────────────────────────
+  readonly viewMode &#x3D; signal&lt;ViewMode&gt;(this.loadViewMode());
+  readonly sortOrder &#x3D; signal&lt;SortOption&gt;(&#x27;distance&#x27;);
+
+  // ─── Location State ─────────────────────────────────────────────────────
+  readonly userLocation &#x3D; signal&lt;LocationCoords | null&gt;(null);
+  readonly locationAccuracy &#x3D; signal&lt;number | null&gt;(null);
+  readonly lastLocationUpdate &#x3D; signal&lt;Date | null&gt;(null);
+
+  // ─── Cars Data ──────────────────────────────────────────────────────────
+  readonly cars &#x3D; signal&lt;Car[]&gt;([]);
+  readonly loading &#x3D; signal&lt;boolean&gt;(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+
+  // ─── Computed: Active Filter Count ──────────────────────────────────────
+  readonly activeFilterCount &#x3D; computed(() &#x3D;&gt; {
+    let count &#x3D; 0;
+    const f &#x3D; this.filters();
+
+    if (f.priceRange) count++;
+    if (f.vehicleTypes &amp;&amp; f.vehicleTypes.length &gt; 0) count++;
+    if (f.immediateOnly) count++;
+    if (f.transmission &amp;&amp; f.transmission.length &gt; 0) count++;
+    count +&#x3D; this.activeQuickFilters().size;
+
+    return count;
+  });
+
+  // ─── Computed: Has Active Filters ───────────────────────────────────────
+  readonly hasActiveFilters &#x3D; computed(() &#x3D;&gt; this.activeFilterCount() &gt; 0);
+
+  // ─── Computed: Cars with Distance ───────────────────────────────────────
+  readonly carsWithDistance &#x3D; computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    const carsList &#x3D; this.cars();
+    const userLoc &#x3D; this.userLocation();
+
+    if (!carsList.length || !userLoc) {
+      return carsList.map((car) &#x3D;&gt; ({ ...car }));
+    }
+
+    return carsList.map((car) &#x3D;&gt; {
+      if (!car.location_lat || !car.location_lng) {
+        return { ...car };
+      }
+
+      const distanceKm &#x3D; this.distanceCalculator.calculateDistance(
+        userLoc.lat,
+        userLoc.lng,
+        car.location_lat,
+        car.location_lng,
+      );
+
+      let distanceText: string;
+      if (distanceKm &lt; 1) {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm * 10) * 100}m&#x60;;
+      } else if (distanceKm &lt; 10) {
+        distanceText &#x3D; &#x60;${distanceKm.toFixed(1)}km&#x60;;
+      } else {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm)}km&#x60;;
+      }
+
+      return {
+        ...car,
+        distance: distanceKm,
+        distanceText,
+      };
+    });
+  });
+
+  // ─── Computed: Filtered &amp; Sorted Cars ───────────────────────────────────
+  readonly visibleCars &#x3D; computed(() &#x3D;&gt; {
+    let cars &#x3D; [...this.carsWithDistance()];
+    const filters &#x3D; this.filters();
+    const quickFilters &#x3D; this.activeQuickFilters();
+
+    // Apply filters
+    if (filters.priceRange) {
+      cars &#x3D; cars.filter(
+        (c) &#x3D;&gt;
+          c.price_per_day &gt;&#x3D; filters.priceRange!.min &amp;&amp; c.price_per_day &lt;&#x3D; filters.priceRange!.max,
+      );
+    }
+
+    if (filters.transmission &amp;&amp; filters.transmission.length &gt; 0) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; filters.transmission!.includes(c.transmission));
+    }
+
+    if (filters.immediateOnly) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.auto_approval);
+    }
+
+    // Apply quick filters
+    if (quickFilters.has(&#x27;verified&#x27;)) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.owner?.is_email_verified &amp;&amp; c.owner?.is_phone_verified);
+    }
+
+    if (quickFilters.has(&#x27;electric&#x27;)) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.fuel_type &#x3D;&#x3D;&#x3D; &#x27;electric&#x27; || c.fuel &#x3D;&#x3D;&#x3D; &#x27;electric&#x27;);
+    }
+
+    if (quickFilters.has(&#x27;no-card&#x27;)) {
+      cars &#x3D; cars.filter(
+        (c) &#x3D;&gt;
+          c.payment_methods?.some((pm) &#x3D;&gt;
+            [&#x27;debit_card&#x27;, &#x27;cash&#x27;, &#x27;transfer&#x27;, &#x27;wallet&#x27;].includes(pm),
+          ) || !c.payment_methods?.includes(&#x27;credit_card&#x27;),
+      );
+    }
+
+    // Apply sorting
+    const sort &#x3D; this.sortOrder();
+    switch (sort) {
+      case &#x27;distance&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; {
+          const distA &#x3D; a.distance ?? Number.MAX_VALUE;
+          const distB &#x3D; b.distance ?? Number.MAX_VALUE;
+          return distA - distB;
+        });
+        break;
+
+      case &#x27;price_asc&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; a.price_per_day - b.price_per_day);
+        break;
+
+      case &#x27;price_desc&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; b.price_per_day - a.price_per_day);
+        break;
+
+      case &#x27;rating&#x27;:
+        cars &#x3D; cars.sort((a, b) &#x3D;&gt; {
+          const ratingA &#x3D; a.rating_avg ?? 0;
+          const ratingB &#x3D; b.rating_avg ?? 0;
+          return ratingB - ratingA;
+        });
+        break;
+
+      default:
+        // Keep default order
+        break;
+    }
+
+    return cars;
+  });
+
+  // ─── Computed: Stats ────────────────────────────────────────────────────
+  readonly statsData &#x3D; computed(() &#x3D;&gt; {
+    const cars &#x3D; this.carsWithDistance();
+    const nearbyCars &#x3D; cars.filter((c) &#x3D;&gt; c.distance &amp;&amp; c.distance &lt; 5).length;
+    const avgPrice &#x3D; this.calculateAveragePrice(cars);
+
+    return {
+      totalCars: cars.length,
+      nearbyCars,
+      avgPrice,
+      minPrice: cars.length &gt; 0 ? Math.min(...cars.map((c) &#x3D;&gt; c.price_per_day)) : 0,
+    };
+  });
+
+  // ─── Methods: Search ────────────────────────────────────────────────────
+  setSearchQuery(query: string): void {
+    this.searchQuery.set(query);
+  }
+
+  setLocation(location: string): void {
+    this.selectedLocation.set(location);
+  }
+
+  setDateRange(range: DateRange): void {
+    this.dateRange.set(range);
+  }
+
+  // ─── Methods: Filters ───────────────────────────────────────────────────
+  updateFilters(filters: Partial&lt;FilterState&gt;): void {
+    this.filters.update((current) &#x3D;&gt; ({ ...current, ...filters }));
+  }
+
+  toggleQuickFilter(filterId: string): void {
+    this.activeQuickFilters.update((current) &#x3D;&gt; {
+      const newSet &#x3D; new Set(current);
+      if (newSet.has(filterId)) {
+        newSet.delete(filterId);
+      } else {
+        newSet.add(filterId);
+      }
+      return newSet;
+    });
+
+    // Sync with main filters if needed
+    if (filterId &#x3D;&#x3D;&#x3D; &#x27;immediate&#x27;) {
+      this.filters.update((f) &#x3D;&gt; ({
+        ...f,
+        immediateOnly: this.activeQuickFilters().has(&#x27;immediate&#x27;),
+      }));
+    }
+  }
+
+  isQuickFilterActive(filterId: string): boolean {
+    return this.activeQuickFilters().has(filterId);
+  }
+
+  clearAllFilters(): void {
+    this.filters.set({
+      dateRange: null,
+      priceRange: null,
+      vehicleTypes: null,
+      immediateOnly: false,
+      transmission: null,
+    });
+    this.activeQuickFilters.set(new Set());
+  }
+
+  // ─── Methods: View ──────────────────────────────────────────────────────
+  setViewMode(mode: ViewMode): void {
+    this.viewMode.set(mode);
+    this.saveViewMode(mode);
+  }
+
+  setSortOrder(order: SortOption): void {
+    this.sortOrder.set(order);
+  }
+
+  // ─── Methods: Location ──────────────────────────────────────────────────
+  setUserLocation(coords: LocationCoords): void {
+    this.userLocation.set(coords);
+    this.lastLocationUpdate.set(new Date());
+  }
+
+  // ─── Methods: Cars Data ─────────────────────────────────────────────────
+  setCars(cars: Car[]): void {
+    this.cars.set(cars);
+  }
+
+  setLoading(loading: boolean): void {
+    this.loading.set(loading);
+  }
+
+  setError(error: string | null): void {
+    this.error.set(error);
+  }
+
+  // ─── Private Helpers ────────────────────────────────────────────────────
+  private calculateAveragePrice(cars: CarWithDistance[]): number {
+    if (cars.length &#x3D;&#x3D;&#x3D; 0) return 0;
+    const sum &#x3D; cars.reduce((acc, car) &#x3D;&gt; acc + car.price_per_day, 0);
+    return Math.round(sum / cars.length);
+  }
+
+  private loadViewMode(): ViewMode {
+    if (!this.isBrowser) return &#x27;list&#x27;;
+    const stored &#x3D; localStorage.getItem(&#x27;autorenta-view-mode&#x27;);
+    if (stored &#x3D;&#x3D;&#x3D; &#x27;grid&#x27; || stored &#x3D;&#x3D;&#x3D; &#x27;list&#x27; || stored &#x3D;&#x3D;&#x3D; &#x27;map&#x27;) {
+      return stored;
+    }
+    return &#x27;list&#x27;;
+  }
+
+  private saveViewMode(mode: ViewMode): void {
+    if (!this.isBrowser) return;
+    localStorage.setItem(&#x27;autorenta-view-mode&#x27;, mode);
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'MarketplaceLandingService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

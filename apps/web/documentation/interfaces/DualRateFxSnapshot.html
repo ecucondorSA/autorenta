@@ -1,0 +1,904 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  DualRateFxSnapshot</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/bookings/booking-detail-payment/booking-detail-payment.page.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/FxSnapshot.html" target="_self" >FxSnapshot</a></code>
+            </p>
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#binanceRate" 
+>
+                                            binanceRate
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#platformRate" 
+>
+                                            platformRate
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="binanceRate"></a>
+                                        <span class="name "><b>binanceRate</b>
+                                            <a href="#binanceRate">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>binanceRate:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="platformRate"></a>
+                                        <span class="name "><b>platformRate</b>
+                                            <a href="#platformRate">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>platformRate:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, OnDestroy, OnInit, computed, inject, signal } from &#x27;@angular/core&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { Subject } from &#x27;rxjs&#x27;;
+
+// Services
+import { AuthService } from &#x27;../../../core/services/auth.service&#x27;;
+import { FxService } from &#x27;../../../core/services/fx.service&#x27;;
+import { PdfGeneratorService } from &#x27;../../../core/services/pdf-generator.service&#x27;;
+import { SupabaseClientService } from &#x27;../../../core/services/supabase-client.service&#x27;;
+import { LoggerService } from &#x27;../../../core/services/logger.service&#x27;;
+import { MercadoPagoBookingGateway } from &#x27;../checkout/support/mercadopago-booking.gateway&#x27;;
+
+// Components
+
+// Components
+import { MercadopagoCardFormComponent } from &#x27;../../../shared/components/mercadopago-card-form/mercadopago-card-form.component&#x27;;
+import { BookingPricingBreakdownComponent } from &#x27;../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component&#x27;;
+import { BookingInsuranceSummaryComponent } from &#x27;../../../shared/components/booking-insurance-summary/booking-insurance-summary.component&#x27;;
+
+// Models
+import { Car } from &#x27;../../../core/models&#x27;;
+import { FxSnapshot } from &#x27;../../../core/models/booking-detail-payment.model&#x27;;
+
+// Extended FxSnapshot with dual rates
+interface DualRateFxSnapshot extends FxSnapshot {
+  binanceRate: number; // Raw Binance rate (no margin) - for price conversions
+  platformRate: number; // Binance + 10% margin - for guarantees only
+}
+
+@Component({
+  selector: &#x27;app-booking-detail-payment&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MercadopagoCardFormComponent,
+    BookingPricingBreakdownComponent,
+    BookingInsuranceSummaryComponent,
+  ],
+  templateUrl: &#x27;./booking-detail-payment.page.html&#x27;,
+  styleUrls: [&#x27;./booking-detail-payment.page.css&#x27;],
+})
+export class BookingDetailPaymentPage implements OnInit, OnDestroy {
+  private destroy$ &#x3D; new Subject&lt;void&gt;();
+  private pollInterval?: ReturnType&lt;typeof setInterval&gt;;
+
+  // Injected services
+  private router &#x3D; inject(Router);
+  private route &#x3D; inject(ActivatedRoute);
+  private fxService &#x3D; inject(FxService);
+  private authService &#x3D; inject(AuthService);
+  private supabaseClient &#x3D; inject(SupabaseClientService).getClient();
+  private mpGateway &#x3D; inject(MercadoPagoBookingGateway);
+  private pdfGenerator &#x3D; inject(PdfGeneratorService);
+  private logger &#x3D; inject(LoggerService).createChildLogger(&#x27;BookingDetailPaymentPage&#x27;);
+
+  // State
+  readonly car &#x3D; signal&lt;Car | null&gt;(null);
+  readonly fxSnapshot &#x3D; signal&lt;DualRateFxSnapshot | null&gt;(null);
+  readonly loading &#x3D; signal(false);
+  readonly processingPayment &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+
+  // Payment flow state
+  readonly bookingCreated &#x3D; signal(false);
+  readonly bookingId &#x3D; signal&lt;string | null&gt;(null);
+  readonly paymentProcessing &#x3D; signal(false);
+
+  // Constants
+  readonly PRE_AUTH_AMOUNT_USD &#x3D; 600;
+
+  // Computed - Rental days
+  readonly rentalDays &#x3D; computed(() &#x3D;&gt; {
+    const input &#x3D; this.bookingInput();
+    if (!input) return 0;
+    const diffTime &#x3D; input.endDate.getTime() - input.startDate.getTime();
+    const diffDays &#x3D; Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return Math.max(1, diffDays); // At least 1 day
+  });
+
+  // Computed - Rental cost in USD (platform base currency)
+  readonly rentalCostUsd &#x3D; computed(() &#x3D;&gt; {
+    const car &#x3D; this.car();
+    const days &#x3D; this.rentalDays();
+
+    if (!car || days &#x3D;&#x3D;&#x3D; 0) return 0;
+
+    // All prices are now stored in USD
+    const dailyRate &#x3D; car.price_per_day;
+    return dailyRate * days;
+  });
+
+  // Computed - Rental cost in ARS (for MercadoPago payment)
+  readonly rentalCostArs &#x3D; computed(() &#x3D;&gt; {
+    const fx &#x3D; this.fxSnapshot();
+    const usdCost &#x3D; this.rentalCostUsd();
+
+    if (!fx || usdCost &#x3D;&#x3D;&#x3D; 0) return 0;
+
+    // Convert USD to ARS using Binance rate (NO margin for rental)
+    return usdCost * fx.binanceRate;
+  });
+
+  // Computed - Total guarantee + rental in ARS
+  readonly totalArs &#x3D; computed(() &#x3D;&gt; {
+    const fx &#x3D; this.fxSnapshot();
+    if (!fx) return 0;
+
+    // Guarantee uses platform_rate (with 10% margin for volatility protection)
+    const guaranteeArs &#x3D; this.PRE_AUTH_AMOUNT_USD * fx.platformRate;
+
+    // Rental cost already handles currency conversion correctly
+    // (uses binanceRate for USD cars, direct ARS for ARS cars)
+    const rentalArs &#x3D; this.rentalCostArs();
+
+    return guaranteeArs + rentalArs;
+  });
+
+  readonly bookingInput &#x3D; signal&lt;{
+    carId: string;
+    startDate: Date;
+    endDate: Date;
+  } | null&gt;(null);
+
+  /**
+   * Check if car has any features to display
+   */
+  hasCarFeatures(): boolean {
+    const features &#x3D; this.getCarFeatures();
+    return features.length &gt; 0;
+  }
+
+  /**
+   * Parse car features from JSONB to displayable array
+   */
+  getCarFeatures(): string[] {
+    const car &#x3D; this.car();
+    if (!car || !car.features) return [];
+
+    try {
+      const features &#x3D; typeof car.features &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? JSON.parse(car.features) : car.features;
+
+      if (typeof features !&#x3D;&#x3D; &#x27;object&#x27; || features &#x3D;&#x3D;&#x3D; null) return [];
+
+      // Convert object keys with true values to array
+      // Example: { &quot;air_conditioning&quot;: true, &quot;bluetooth&quot;: true } &#x3D;&gt; [&quot;Aire Acondicionado&quot;, &quot;Bluetooth&quot;]
+      const featureMap: Record&lt;string, string&gt; &#x3D; {
+        air_conditioning: &#x27;Aire Acondicionado&#x27;,
+        bluetooth: &#x27;Bluetooth&#x27;,
+        gps: &#x27;GPS&#x27;,
+        backup_camera: &#x27;Cámara de Retroceso&#x27;,
+        parking_sensors: &#x27;Sensores de Estacionamiento&#x27;,
+        cruise_control: &#x27;Control de Crucero&#x27;,
+        leather_seats: &#x27;Asientos de Cuero&#x27;,
+        sunroof: &#x27;Techo Solar&#x27;,
+        heated_seats: &#x27;Asientos Calefaccionados&#x27;,
+        usb_charger: &#x27;Cargador USB&#x27;,
+        aux_input: &#x27;Entrada Auxiliar&#x27;,
+        apple_carplay: &#x27;Apple CarPlay&#x27;,
+        android_auto: &#x27;Android Auto&#x27;,
+        abs: &#x27;ABS&#x27;,
+        airbags: &#x27;Airbags&#x27;,
+        alarm: &#x27;Alarma&#x27;,
+        central_locking: &#x27;Cierre Centralizado&#x27;,
+        power_windows: &#x27;Ventanas Eléctricas&#x27;,
+        power_mirrors: &#x27;Espejos Eléctricos&#x27;,
+        fog_lights: &#x27;Luces Antiniebla&#x27;,
+        alloy_wheels: &#x27;Llantas de Aleación&#x27;,
+      };
+
+      return Object.entries(features)
+        .filter(([_, value]) &#x3D;&gt; value &#x3D;&#x3D;&#x3D; true || value &#x3D;&#x3D;&#x3D; &#x27;true&#x27;)
+        .map(
+          ([key]) &#x3D;&gt;
+            featureMap[key] || key.replace(/_/g, &#x27; &#x27;).replace(/\b\w/g, (l) &#x3D;&gt; l.toUpperCase()),
+        )
+        .sort();
+    } catch (error) {
+      this.logger.error(&#x27;Error parsing car features&#x27;, { error });
+      return [];
+    }
+  }
+
+  async ngOnInit(): Promise&lt;void&gt; {
+    // 1. Auth check
+    const session &#x3D; await this.authService.ensureSession();
+    if (!session?.user) {
+      this.router.navigate([&#x27;/auth/login&#x27;], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
+
+    // 2. Load params
+    this.loadParams();
+
+    // 3. Load data
+    await Promise.all([this.loadCarInfo(), this.loadFxSnapshot()]);
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadParams(): void {
+    const queryParams &#x3D; this.route.snapshot.queryParamMap;
+    const carId &#x3D; queryParams.get(&#x27;carId&#x27;);
+    const startDate &#x3D; queryParams.get(&#x27;startDate&#x27;);
+    const endDate &#x3D; queryParams.get(&#x27;endDate&#x27;);
+
+    if (!carId || !startDate || !endDate) {
+      this.error.set(&#x27;Faltan parámetros de reserva.&#x27;);
+      return;
+    }
+
+    this.bookingInput.set({
+      carId,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    });
+  }
+
+  private async loadCarInfo(): Promise&lt;void&gt; {
+    const input &#x3D; this.bookingInput();
+    if (!input) return;
+
+    try {
+      const { data, error } &#x3D; await this.supabaseClient
+        .from(&#x27;cars&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;id&#x27;, input.carId)
+        .single();
+
+      if (error) throw error;
+      if (data) this.car.set(data as Car);
+    } catch (err) {
+      this.logger.error(&#x27;Error loading car&#x27;, { error: err });
+      this.error.set(&#x27;Error al cargar información del vehículo&#x27;);
+    }
+  }
+
+  private async loadFxSnapshot(): Promise&lt;void&gt; {
+    this.loading.set(true);
+
+    // Initial load
+    await this.fetchAndSetRate();
+    this.loading.set(false);
+
+    // Poll every 30 seconds
+    this.stopPolling(); // Ensure no duplicate intervals
+    this.pollInterval &#x3D; setInterval(() &#x3D;&gt; {
+      this.fetchAndSetRate();
+    }, 30000);
+  }
+
+  private stopPolling(): void {
+    if (this.pollInterval) {
+      clearInterval(this.pollInterval);
+      this.pollInterval &#x3D; undefined;
+    }
+  }
+
+  private async fetchAndSetRate(): Promise&lt;void&gt; {
+    try {
+      // Fetch BOTH rates from exchange service
+      const platformRate &#x3D; await this.fxService.getCurrentRateAsync(&#x27;USD&#x27;, &#x27;ARS&#x27;); // With 10% margin (for guarantees)
+      const binanceRate &#x3D; await this.fxService.getBinanceRateAsync(); // Raw Binance (for price conversions)
+
+      const snapshot: DualRateFxSnapshot &#x3D; {
+        rate: platformRate, // Keep &#x27;rate&#x27; as platform_rate for backward compatibility with template
+        binanceRate, // Raw Binance rate (no margin)
+        platformRate, // Binance + 10% margin (guarantees only)
+        timestamp: new Date(),
+        fromCurrency: &#x27;USD&#x27;,
+        toCurrency: &#x27;ARS&#x27;,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        isExpired: false,
+        variationThreshold: 0.1,
+      };
+
+      this.fxSnapshot.set(snapshot);
+      this.logger.info(&#x27;Exchange rates updated&#x27;, {
+        binanceRate: binanceRate.toFixed(2),
+        platformRate: platformRate.toFixed(2),
+      });
+    } catch (err) {
+      this.logger.error(&#x27;Error updating FX rate&#x27;, { error: err });
+      // Don&#x27;t clear error signal here to avoid flashing error on transient failures if we already have a rate
+      if (!this.fxSnapshot()) {
+        this.error.set(&#x27;No se pudo obtener la cotización actualizada.&#x27;);
+      }
+    }
+  }
+
+  async downloadPdf(): Promise&lt;void&gt; {
+    const input &#x3D; this.bookingInput();
+    const car &#x3D; this.car();
+
+    if (!input || !car) {
+      this.logger.error(&#x27;Cannot generate PDF: missing booking or car data&#x27;);
+      return;
+    }
+
+    try {
+      // Generate filename based on car and date
+      const carName &#x3D; &#x60;${car.brand}-${car.model}&#x60;.replace(/\s+/g, &#x27;-&#x27;);
+      const date &#x3D; new Date().toISOString().split(&#x27;T&#x27;)[0];
+      const filename &#x3D; &#x60;reserva-${carName}-${date}.pdf&#x60;;
+
+      // Generate PDF from the content element
+      await this.pdfGenerator.generateFromElement(&#x27;#pdf-content&#x27;, {
+        filename,
+        format: &#x27;a4&#x27;,
+        orientation: &#x27;portrait&#x27;,
+        scale: 2, // High quality
+        quality: 0.95,
+      });
+
+      this.logger.info(&#x27;PDF generated successfully&#x27;, { filename });
+    } catch (error) {
+      this.logger.error(&#x27;Error generating PDF&#x27;, { error });
+      this.error.set(&#x27;No se pudo generar el PDF. Por favor, intente nuevamente.&#x27;);
+    }
+  }
+
+  async payWithMercadoPago(): Promise&lt;void&gt; {
+    const input &#x3D; this.bookingInput();
+    if (!input) return;
+
+    this.processingPayment.set(true);
+    try {
+      // Create booking first (simplified for this flow)
+      // Note: In a real flow we might want to create the booking record first
+      // For now we assume we pass the carId/dates to the preference creation or use a temp ID
+      // But the gateway expects a bookingId.
+      // Let&#x27;s try to create a pending booking first.
+
+      const { data: booking, error: bookingError } &#x3D; await this.supabaseClient
+        .from(&#x27;bookings&#x27;)
+        .insert({
+          car_id: input.carId,
+          renter_id: (await this.authService.getCurrentUser())?.id,
+          start_at: input.startDate.toISOString(),
+          end_at: input.endDate.toISOString(),
+          status: &#x27;pending&#x27;,
+          total_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
+          total_amount: this.PRE_AUTH_AMOUNT_USD, // Store decimal amount
+          currency: &#x27;USD&#x27;,
+          payment_mode: &#x27;card&#x27;,
+        })
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      await this.upsertPricingAndInsurance(booking.id);
+
+      // Get MP Preference
+      const preference &#x3D; await this.mpGateway.createPreference(booking.id);
+
+      // Redirect to MP
+      if (preference.initPoint) {
+        window.location.href &#x3D; preference.initPoint;
+      } else {
+        throw new Error(&#x27;No se recibió link de pago&#x27;);
+      }
+    } catch (err) {
+      console.error(&#x27;Payment error:&#x27;, err);
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al iniciar el pago&#x27;);
+    } finally {
+      this.processingPayment.set(false);
+    }
+  }
+
+  /**
+   * Handle card token generated by MercadoPago CardForm
+   */
+  async onCardTokenGenerated(event: { cardToken: string; last4: string }): Promise&lt;void&gt; {
+    try {
+      this.paymentProcessing.set(true);
+      this.error.set(null);
+
+      // Create booking if not exists
+      if (!this.bookingId()) {
+        await this.createBooking();
+      }
+
+      const bId &#x3D; this.bookingId();
+      if (!bId) {
+        throw new Error(&#x27;No se pudo crear la reserva&#x27;);
+      }
+
+      // Call Supabase Edge Function to process payment
+      const { data: paymentResult, error: paymentError } &#x3D;
+        await this.supabaseClient.functions.invoke(&#x27;mercadopago-process-booking-payment&#x27;, {
+          body: {
+            booking_id: bId,
+            card_token: event.cardToken,
+            installments: 1,
+          },
+        });
+
+      if (paymentError) {
+        throw new Error(paymentError.message || &#x27;Error al procesar el pago&#x27;);
+      }
+
+      if (!paymentResult?.success) {
+        throw new Error(
+          paymentResult?.details?.message ||
+            paymentResult?.error ||
+            &#x27;El pago fue rechazado. Por favor, verifica los datos de tu tarjeta.&#x27;,
+        );
+      }
+
+      this.logger.info(&#x27;Payment processed successfully&#x27;, {
+        status: paymentResult.status,
+      });
+
+      // Refresh pricing/insurance after payment (in case backend recalculated)
+      if (bId) {
+        await this.upsertPricingAndInsurance(bId);
+      }
+
+      // If payment is approved, auto-approve the booking
+      if (paymentResult.status &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;) {
+        this.logger.info(&#x27;Payment approved, auto-approving booking&#x27;);
+
+        // Note: In production, this would be handled by the backend
+        // but for now we can update the booking status directly
+        const { error: approvalError } &#x3D; await this.supabaseClient
+          .from(&#x27;bookings&#x27;)
+          .update({
+            status: &#x27;approved&#x27;,
+            approved_at: new Date().toISOString(),
+          })
+          .eq(&#x27;id&#x27;, bId);
+
+        if (approvalError) {
+          this.logger.warn(&#x27;Could not auto-approve booking&#x27;);
+          // No fallar el flujo, el webhook lo hará
+        } else {
+          this.logger.info(&#x27;Booking auto-approved successfully&#x27;);
+        }
+      }
+
+      // Success! Redirect to confirmation page
+      this.router.navigate([&#x27;/bookings&#x27;, bId, &#x27;success&#x27;], {
+        queryParams: {
+          payment_id: paymentResult.payment_id,
+          status: paymentResult.status,
+        },
+      });
+    } catch (err) {
+      this.logger.error(&#x27;Error processing payment&#x27;, { error: err });
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al procesar el pago&#x27;);
+    } finally {
+      this.paymentProcessing.set(false);
+    }
+  }
+
+  /**
+   * Handle card form errors
+   */
+  onCardError(errorMessage: string): void {
+    this.logger.error(&#x27;Card form error&#x27;, { errorMessage });
+    this.error.set(errorMessage);
+    this.paymentProcessing.set(false);
+  }
+
+  /**
+   * Create a pending booking in the database
+   */
+  private async createBooking(): Promise&lt;void&gt; {
+    const input &#x3D; this.bookingInput();
+    const user &#x3D; await this.authService.getCurrentUser();
+
+    if (!input || !user?.id) {
+      throw new Error(&#x27;Faltan datos para crear la reserva&#x27;);
+    }
+
+    try {
+      const { data: booking, error: bookingError } &#x3D; await this.supabaseClient
+        .from(&#x27;bookings&#x27;)
+        .insert({
+          car_id: input.carId,
+          renter_id: user.id,
+          start_at: input.startDate.toISOString(),
+          end_at: input.endDate.toISOString(),
+          status: &#x27;pending&#x27;,
+          total_cents: Math.round(this.totalArs() * 100), // Store total in cents ARS
+          total_amount: this.totalArs(), // Store decimal amount
+          currency: &#x27;ARS&#x27;,
+          payment_mode: &#x27;card&#x27;,
+        })
+        .select()
+        .single();
+
+      if (bookingError) throw bookingError;
+
+      this.bookingId.set(booking.id);
+      this.bookingCreated.set(true);
+
+      await this.upsertPricingAndInsurance(booking.id);
+
+      this.logger.info(&#x27;Booking created successfully&#x27;, {
+        total: this.totalArs(),
+        currency: &#x27;ARS&#x27;,
+      });
+    } catch (err) {
+      this.logger.error(&#x27;Error creating booking&#x27;, { error: err });
+      throw err;
+    }
+  }
+
+  private async upsertPricingAndInsurance(bookingId: string): Promise&lt;void&gt; {
+    const car &#x3D; this.car();
+    const fx &#x3D; this.fxSnapshot();
+    const nights &#x3D; this.rentalDays();
+    if (!car || !fx || nights &#x3D;&#x3D;&#x3D; 0) return;
+
+    const nightlyRateArs &#x3D;
+      car.currency &#x3D;&#x3D;&#x3D; &#x27;USD&#x27; ? car.price_per_day * fx.binanceRate : car.price_per_day;
+    const base &#x3D; nightlyRateArs * nights;
+
+    const pricingPayload &#x3D; {
+      booking_id: bookingId,
+      nightly_rate_cents: Math.round(nightlyRateArs * 100),
+      days_count: nights,
+      fees_cents: 0,
+      discounts_cents: 0,
+      insurance_cents: 0,
+      subtotal_cents: Math.round(base * 100),
+      total_cents: Math.round(base * 100),
+      breakdown: {
+        nightly_rate: nightlyRateArs,
+        nights,
+        fees: 0,
+        discounts: 0,
+        insurance: 0,
+      },
+    };
+
+    const insurancePayload &#x3D; {
+      booking_id: bookingId,
+      insurance_coverage_id: null,
+      insurance_premium_total: 0,
+      guarantee_type: &#x27;hold&#x27;,
+      guarantee_amount_cents: Math.round(this.PRE_AUTH_AMOUNT_USD * fx.platformRate * 100),
+      coverage_upgrade: null,
+    };
+
+    await this.supabaseClient.from(&#x27;bookings_pricing&#x27;).upsert(pricingPayload, {
+      onConflict: &#x27;booking_id&#x27;,
+    });
+
+    await this.supabaseClient.from(&#x27;bookings_insurance&#x27;).upsert(insurancePayload, {
+      onConflict: &#x27;booking_id&#x27;,
+    });
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'DualRateFxSnapshot.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1458 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >AiPhotoEnhancerService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/ai-photo-enhancer.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Servicio para mejorar fotos de autos con IA
+Soporta 2 métodos:</p>
+<ol>
+<li>Stock Photos (rápido, fotos reales)</li>
+<li>Cloudflare AI FLUX.1 (lento, generación desde cero)</li>
+</ol>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cloudflareAi" >cloudflareAi</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#stockPhotos" >stockPhotos</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addPremiumBackground" >addPremiumBackground</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#addSoftShadow" >addSoftShadow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildGeminiPrompts" >buildGeminiPrompts</a>
+                            </li>
+                            <li>
+                                <a href="#cleanupPreviews" >cleanupPreviews</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#enhanceExistingPhoto" >enhanceExistingPhoto</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateCarPhotos" >generateCarPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateWithCloudflareAI" >generateWithCloudflareAI</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#generateWithStockPhotos" >generateWithStockPhotos</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadImageFromBlob" >loadImageFromBlob</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addPremiumBackground"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addPremiumBackground</b></span>
+                        <a href="#addPremiumBackground"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addPremiumBackground(photoWithoutBg: Blob, backgroundType: "showroom" | "street" | "white")</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Agrega fondo profesional a una foto sin fondo</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>photoWithoutBg</td>
+                                            <td>
+                                                        <code>Blob</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>backgroundType</td>
+                                            <td>
+                                                        <code>&quot;showroom&quot; | &quot;street&quot; | &quot;white&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;white&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Blob&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addSoftShadow"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>addSoftShadow</b></span>
+                        <a href="#addSoftShadow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addSoftShadow(ctx: CanvasRenderingContext2D, width: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, height: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:245</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Agrega sombra sutil al auto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ctx</td>
+                                            <td>
+                                                        <code>CanvasRenderingContext2D</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>width</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>height</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildGeminiPrompts"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildGeminiPrompts</b></span>
+                        <a href="#buildGeminiPrompts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildGeminiPrompts(brand: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, model: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, year: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="293"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>brand</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>model</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>year</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cleanupPreviews"></a>
+                    <span class="name">
+                        <span ><b>cleanupPreviews</b></span>
+                        <a href="#cleanupPreviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>cleanupPreviews(photos: EnhancedPhoto[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia URLs de preview para liberar memoria</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>photos</td>
+                                            <td>
+                                                        <code>EnhancedPhoto[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="enhanceExistingPhoto"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>enhanceExistingPhoto</b></span>
+                        <a href="#enhanceExistingPhoto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>enhanceExistingPhoto(photo: File)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:172</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mejora una foto existente (actualmente sin procesamiento adicional)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>photo</td>
+                                            <td>
+                                                        <code>File</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;EnhancedPhoto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateCarPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>generateCarPhotos</b></span>
+                        <a href="#generateCarPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateCarPhotos(params: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="32"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera fotos de un auto - soporta 2 métodos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;EnhancedPhoto[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateWithCloudflareAI"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>generateWithCloudflareAI</b></span>
+                        <a href="#generateWithCloudflareAI"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateWithCloudflareAI(params: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="117"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:117</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Método 2: Cloudflare AI FLUX.1 (LENTO pero GENERACIÓN REAL)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;EnhancedPhoto[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateWithStockPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>generateWithStockPhotos</b></span>
+                        <a href="#generateWithStockPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>generateWithStockPhotos(params: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Método 1: Stock Photos (RÁPIDO)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;EnhancedPhoto[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadImageFromBlob"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadImageFromBlob</b></span>
+                        <a href="#loadImageFromBlob"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadImageFromBlob(blob: Blob)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga imagen desde Blob</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>blob</td>
+                                            <td>
+                                                        <code>Blob</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;HTMLImageElement&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cloudflareAi"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cloudflareAi</b></span>
+                        <a href="#cloudflareAi"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CloudflareAiService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="stockPhotos"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>stockPhotos</b></span>
+                        <a href="#stockPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(StockPhotosService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/core/services/ai-photo-enhancer.service.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { StockPhotosService, StockPhoto } from &#x27;./stock-photos.service&#x27;;
+import { CloudflareAiService } from &#x27;./cloudflare-ai.service&#x27;;
+
+export interface EnhancedPhoto {
+  original: File;
+  enhanced: Blob;
+  stockPhoto?: StockPhoto;
+  preview: string; // Object URL
+  source: &#x27;stock&#x27; | &#x27;cloudflare-ai&#x27;; // Reverted: removed &#x27;google-ai&#x27;
+}
+
+export type GenerationMethod &#x3D; &#x27;stock-photos&#x27; | &#x27;cloudflare-ai&#x27;; // Reverted: removed &#x27;google-ai&#x27;
+
+/**
+ * Servicio para mejorar fotos de autos con IA
+ * Soporta 2 métodos:
+ * 1. Stock Photos (rápido, fotos reales)
+ * 2. Cloudflare AI FLUX.1 (lento, generación desde cero)
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class AiPhotoEnhancerService {
+  private readonly stockPhotos &#x3D; inject(StockPhotosService);
+  private readonly cloudflareAi &#x3D; inject(CloudflareAiService);
+
+  /**
+   * Genera fotos de un auto - soporta 2 métodos
+   * @param method &#x27;stock-photos&#x27; (default, rápido) o &#x27;cloudflare-ai&#x27; (lento, generación real)
+   */
+  async generateCarPhotos(params: {
+    brand: string;
+    model: string;
+    year?: number;
+    color?: string;
+    count?: number;
+    method?: GenerationMethod;
+  }): Promise&lt;EnhancedPhoto[]&gt; {
+    const method &#x3D; params.method || &#x27;stock-photos&#x27;;
+
+    // Reverted: Removed google-ai condition
+    // if (method &#x3D;&#x3D;&#x3D; &#x27;google-ai&#x27;) {
+    //   return this.generateWithGoogleAI(params);
+    // }
+
+    if (method &#x3D;&#x3D;&#x3D; &#x27;cloudflare-ai&#x27;) {
+      return this.generateWithCloudflareAI(params);
+    }
+
+    return this.generateWithStockPhotos(params);
+  }
+
+  // Reverted: Removed generateWithGoogleAI method
+  // private async generateWithGoogleAI(...) { ... }
+
+  // Reverted: Removed buildGeminiPrompts method
+  // private buildGeminiPrompts(...) { ... }
+
+  /**
+   * Método 1: Stock Photos (RÁPIDO)
+   */
+  private async generateWithStockPhotos(params: {
+    brand: string;
+    model: string;
+    year?: number;
+    color?: string;
+    count?: number;
+  }): Promise&lt;EnhancedPhoto[]&gt; {
+    const count &#x3D; params.count || 3;
+
+    // 1. Buscar fotos de stock
+    const stockPhotos &#x3D; await this.stockPhotos.searchCarPhotos(params);
+
+    if (stockPhotos.length &#x3D;&#x3D;&#x3D; 0) {
+      throw new Error(&#x27;No se encontraron fotos para este auto&#x27;);
+    }
+
+    // 2. Tomar las mejores N fotos
+    const selectedPhotos &#x3D; stockPhotos.slice(0, count);
+
+    // 3. Descargar cada foto
+    const enhanced: EnhancedPhoto[] &#x3D; [];
+
+    for (const stockPhoto of selectedPhotos) {
+      try {
+        // Descargar foto
+        const originalFile &#x3D; await this.stockPhotos.downloadPhoto(stockPhoto);
+
+        // Usar foto original sin modificaciones
+        const enhancedBlob &#x3D; new Blob([originalFile], { type: originalFile.type });
+
+        // Crear preview URL
+        const preview &#x3D; URL.createObjectURL(enhancedBlob);
+
+        enhanced.push({
+          original: originalFile,
+          enhanced: enhancedBlob,
+          stockPhoto,
+          preview,
+          source: &#x27;stock&#x27;,
+        });
+
+        // Track download (requerido por Unsplash)
+        await this.stockPhotos.trackDownload(stockPhoto.id);
+      } catch {
+        // Continuar con las demás fotos
+      }
+    }
+
+    return enhanced;
+  }
+
+  /**
+   * Método 2: Cloudflare AI FLUX.1 (LENTO pero GENERACIÓN REAL)
+   */
+  private async generateWithCloudflareAI(params: {
+    brand: string;
+    model: string;
+    year?: number;
+    color?: string;
+    count?: number;
+  }): Promise&lt;EnhancedPhoto[]&gt; {
+    const count &#x3D; params.count || 3;
+    const angles: Array&lt;&#x27;front&#x27; | &#x27;side&#x27; | &#x27;rear&#x27; | &#x27;3/4-front&#x27; | &#x27;interior&#x27;&gt; &#x3D;
+      count &#x3D;&#x3D;&#x3D; 1
+        ? [&#x27;3/4-front&#x27;]
+        : count &#x3D;&#x3D;&#x3D; 2
+          ? [&#x27;3/4-front&#x27;, &#x27;side&#x27;]
+          : [&#x27;3/4-front&#x27;, &#x27;side&#x27;, &#x27;interior&#x27;];
+
+    const enhanced: EnhancedPhoto[] &#x3D; [];
+
+    for (const angle of angles.slice(0, count)) {
+      try {
+        // Generar imagen con FLUX.1
+        const generatedBlob &#x3D; await this.cloudflareAi.generateCarImage({
+          brand: params.brand,
+          model: params.model,
+          year: params.year,
+          color: params.color,
+          angle,
+          style: &#x27;showroom&#x27;,
+          num_steps: 8, // Max quality for FLUX.1-schnell
+        });
+
+        // Crear File desde Blob
+        const file &#x3D; new File([generatedBlob], &#x60;ai-${params.brand}-${params.model}-${angle}.png&#x60;, {
+          type: &#x27;image/png&#x27;,
+        });
+
+        // Crear preview URL
+        const preview &#x3D; URL.createObjectURL(generatedBlob);
+
+        enhanced.push({
+          original: file,
+          enhanced: generatedBlob,
+          preview,
+          source: &#x27;cloudflare-ai&#x27;,
+        });
+      } catch {
+        // Continuar con las demás imágenes
+      }
+    }
+
+    return enhanced;
+  }
+
+  /**
+   * Mejora una foto existente (actualmente sin procesamiento adicional)
+   */
+  async enhanceExistingPhoto(photo: File): Promise&lt;EnhancedPhoto&gt; {
+    // Usar foto original sin modificaciones
+    const enhancedBlob &#x3D; new Blob([photo], { type: photo.type });
+    const preview &#x3D; URL.createObjectURL(enhancedBlob);
+
+    return {
+      original: photo,
+      enhanced: enhancedBlob,
+      preview,
+      source: &#x27;stock&#x27;, // User uploaded, treated as stock
+    };
+  }
+
+  /**
+   * Agrega fondo profesional a una foto sin fondo
+   */
+  async addPremiumBackground(
+    photoWithoutBg: Blob,
+    backgroundType: &#x27;showroom&#x27; | &#x27;street&#x27; | &#x27;white&#x27; &#x3D; &#x27;white&#x27;,
+  ): Promise&lt;Blob&gt; {
+    // Crear canvas
+    const canvas &#x3D; document.createElement(&#x27;canvas&#x27;);
+    const ctx &#x3D; canvas.getContext(&#x27;2d&#x27;)!;
+
+    // Cargar imagen sin fondo
+    const img &#x3D; await this.loadImageFromBlob(photoWithoutBg);
+
+    canvas.width &#x3D; img.width;
+    canvas.height &#x3D; img.height;
+
+    // 1. Dibujar fondo
+    switch (backgroundType) {
+      case &#x27;white&#x27;:
+        ctx.fillStyle &#x3D; &#x27;#FFFFFF&#x27;;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        break;
+
+      case &#x27;showroom&#x27;: {
+        ctx.fillStyle &#x3D; &#x27;#f5f5f5&#x27;;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        break;
+      }
+
+      case &#x27;street&#x27;:
+        // Fondo gris oscuro (simula asfalto)
+        ctx.fillStyle &#x3D; &#x27;#4A4A4A&#x27;;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        break;
+    }
+
+    // 2. Dibujar auto encima
+    ctx.drawImage(img, 0, 0);
+
+    // 3. Agregar sombra sutil (opcional)
+    if (backgroundType !&#x3D;&#x3D; &#x27;white&#x27;) {
+      this.addSoftShadow(ctx, canvas.width, canvas.height);
+    }
+
+    // 4. Convertir a blob
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      canvas.toBlob((blob) &#x3D;&gt; {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error(&#x27;Failed to create blob&#x27;));
+        }
+      }, &#x27;image/png&#x27;);
+    });
+  }
+
+  /**
+   * Agrega sombra sutil al auto
+   */
+  private addSoftShadow(ctx: CanvasRenderingContext2D, width: number, height: number): void {
+    const shadowHeight &#x3D; height * 0.1;
+    const shadowY &#x3D; height - shadowHeight;
+
+    const gradient &#x3D; ctx.createRadialGradient(width / 2, height, 0, width / 2, height, width / 2);
+
+    gradient.addColorStop(0, &#x27;rgba(0, 0, 0, 0.3)&#x27;);
+    gradient.addColorStop(0.5, &#x27;rgba(0, 0, 0, 0.1)&#x27;);
+    gradient.addColorStop(1, &#x27;rgba(0, 0, 0, 0)&#x27;);
+
+    ctx.fillStyle &#x3D; gradient;
+    ctx.fillRect(0, shadowY, width, shadowHeight);
+  }
+
+  /**
+   * Carga imagen desde Blob
+   */
+  private loadImageFromBlob(blob: Blob): Promise&lt;HTMLImageElement&gt; {
+    return new Promise((resolve, reject) &#x3D;&gt; {
+      const img &#x3D; new Image();
+      const url &#x3D; URL.createObjectURL(blob);
+
+      img.onload &#x3D; () &#x3D;&gt; {
+        URL.revokeObjectURL(url);
+        resolve(img);
+      };
+
+      img.onerror &#x3D; () &#x3D;&gt; {
+        URL.revokeObjectURL(url);
+        reject(new Error(&#x27;Failed to load image from blob&#x27;));
+      };
+
+      img.src &#x3D; url;
+    });
+  }
+
+  /**
+   * Limpia URLs de preview para liberar memoria
+   */
+  cleanupPreviews(photos: EnhancedPhoto[]): void {
+    photos.forEach((photo) &#x3D;&gt; {
+      if (photo.preview) {
+        URL.revokeObjectURL(photo.preview);
+      }
+    });
+  }
+
+  // Preserved logic for Gemini prompts (not currently used)
+  private buildGeminiPrompts(brand: string, model: string, year: number): string[] {
+    const pick &#x3D; &lt;T&gt;(list: T[]): T &#x3D;&gt; list[Math.floor(Math.random() * list.length)];
+
+    const weather &#x3D; pick([
+      &#x27;bright sunny day with soft shadows&#x27;,
+      &#x27;slightly overcast day with diffused light&#x27;,
+      &#x27;after-rain damp ground and cloudy sky&#x27;,
+      &#x27;golden hour warm light with long shadows&#x27;,
+      &#x27;early morning cool light with a bit of mist&#x27;,
+    ]);
+
+    const terrain &#x3D; pick([
+      &#x27;on a dirt road with light tire marks&#x27;,
+      &#x27;on a gravel turnout near trees&#x27;,
+      &#x27;on a rural roadside with dry grass&#x27;,
+      &#x27;on a damp compacted earth surface&#x27;,
+      &#x27;on a light muddy patch with puddles nearby&#x27;,
+    ]);
+
+    const background &#x3D; pick([
+      &#x27;trees and bushes behind the car&#x27;,
+      &#x27;a distant hill line&#x27;,
+      &#x27;light forest edge&#x27;,
+      &#x27;open countryside&#x27;,
+      &#x27;sparse shrubs and a cloudy horizon&#x27;,
+    ]);
+
+    const camera &#x3D; pick([
+      &#x27;handheld smartphone at eye level&#x27;,
+      &#x27;handheld smartphone slightly low angle&#x27;,
+      &#x27;handheld smartphone slightly high angle&#x27;,
+    ]);
+
+    const interiorLight &#x3D; pick([
+      &#x27;natural daylight entering through windows&#x27;,
+      &#x27;soft overcast light through windshield&#x27;,
+      &#x27;late afternoon warm light through side windows&#x27;,
+    ]);
+
+    const interiorWeather &#x3D; pick([
+      &#x27;windows slightly dusty&#x27;,
+      &#x27;light reflections from cloudy sky&#x27;,
+      &#x27;subtle streaks on glass from recent rain&#x27;,
+    ]);
+
+    const exteriorPrompt &#x3D; &#x60;Generate a realistic photo (not render, not showroom) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 front. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe. Vary the scene subtly each time so photos are not identical.&#x60;;
+
+    const interiorPrompt &#x3D; &#x60;Generate a realistic interior photo (not render) of a ${year} ${brand} ${model} car. Show front seats, dashboard and steering wheel from driver&#x27;s door perspective. Lighting: ${interiorLight}, ${interiorWeather}. Style: handheld smartphone photo, slight imperfections, realistic textures, no studio lighting, no advertising vibe. Vary small details so photos are not identical.&#x60;;
+
+    const rearPrompt &#x3D; &#x60;Generate a realistic photo (not render) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 rear view showing trunk and tail lights. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe.&#x60;;
+
+    return [exteriorPrompt, interiorPrompt, rearPrompt];
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'AiPhotoEnhancerService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

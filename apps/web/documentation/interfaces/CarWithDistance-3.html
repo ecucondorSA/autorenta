@@ -1,0 +1,1778 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  CarWithDistance</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/cars/list/cars-list.page.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/Car.html" target="_self" >Car</a></code>
+            </p>
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#body_type" 
+>
+                                            body_type
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#distance" 
+>
+                                            distance
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#distanceText" 
+>
+                                            distanceText
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#image_url" 
+>
+                                            image_url
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="body_type"></a>
+                                        <span class="name "><b>body_type</b>
+                                            <a href="#body_type">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>body_type:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="distance"></a>
+                                        <span class="name "><b>distance</b>
+                                            <a href="#distance">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>distance:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="distanceText"></a>
+                                        <span class="name "><b>distanceText</b>
+                                            <a href="#distanceText">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>distanceText:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="image_url"></a>
+                                        <span class="name "><b>image_url</b>
+                                            <a href="#image_url">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>image_url:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+  ViewChild,
+} from &#x27;@angular/core&#x27;;
+import { Router, RouterLink } from &#x27;@angular/router&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import { RealtimeChannel } from &#x27;@supabase/supabase-js&#x27;;
+import { Car } from &#x27;../../../core/models&#x27;;
+import { BreakpointService } from &#x27;../../../core/services/breakpoint.service&#x27;;
+import { CarsCompareService } from &#x27;../../../core/services/cars-compare.service&#x27;;
+import { CarsService } from &#x27;../../../core/services/cars.service&#x27;;
+import { DistanceCalculatorService } from &#x27;../../../core/services/distance-calculator.service&#x27;;
+import { LocationService } from &#x27;../../../core/services/location.service&#x27;;
+import { LoggerService } from &#x27;../../../core/services/logger.service&#x27;;
+import { MetaService } from &#x27;../../../core/services/meta.service&#x27;;
+import { injectSupabase } from &#x27;../../../core/services/supabase-client.service&#x27;;
+import { UrgentRentalService } from &#x27;../../../core/services/urgent-rental.service&#x27;;
+import { CarsMapComponent } from &#x27;../../../shared/components/cars-map/cars-map.component&#x27;;
+import { DateRange } from &#x27;../../../shared/components/date-range-picker/date-range-picker.component&#x27;;
+import { PullToRefreshComponent } from &#x27;../../../shared/components/pull-to-refresh/pull-to-refresh.component&#x27;;
+import { PwaTitlebarComponent } from &#x27;../../../shared/components/pwa-titlebar/pwa-titlebar.component&#x27;;
+import { StickyCtaMobileComponent } from &#x27;../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component&#x27;;
+import { UrgentRentalBannerComponent } from &#x27;../../../shared/components/urgent-rental-banner/urgent-rental-banner.component&#x27;;
+// import { CarCardV3Component } from &#x27;../../../shared/components/marketplace/car-card-v3/car-card-v3.component&#x27;;
+// import { FiltersDrawerComponent } from &#x27;../../../shared/components/marketplace/filters-drawer/filters-drawer.component&#x27;;
+// import { BreadcrumbsComponent, BreadcrumbItem } from &#x27;../../../shared/components/breadcrumbs/breadcrumbs.component&#x27;;
+import { getErrorMessage } from &#x27;../../../core/utils/type-guards&#x27;;
+import { IconComponent } from &#x27;../../../shared/components/icon/icon.component&#x27;;
+
+// Temporary BreadcrumbItem interface
+interface BreadcrumbItem {
+  label: string;
+  url?: string;
+  icon?: string;
+}
+
+// Interface para auto con distancia
+export interface CarWithDistance extends Car {
+  distance?: number;
+  distanceText?: string;
+  body_type?: string | null;
+  image_url?: string;
+}
+
+interface PremiumSegmentation {
+  threshold: number;
+  scores: Map&lt;string, number&gt;;
+}
+
+const SORT_STORAGE_KEY &#x3D; &#x27;autorenta:list-sort&#x27;;
+const ANALYTICS_EVENT &#x3D; &#x27;autorenta:analytics&#x27;;
+const ECONOMY_RADIUS_KM &#x3D; 50;
+const PREMIUM_SCORE_PRICE_WEIGHT &#x3D; 0.7;
+const PREMIUM_SCORE_RATING_WEIGHT &#x3D; 0.3;
+
+@Component({
+  standalone: true,
+  selector: &#x27;app-cars-list-page&#x27;,
+  imports: [
+    CommonModule,
+    RouterLink,
+    CarsMapComponent,
+    StickyCtaMobileComponent,
+    UrgentRentalBannerComponent,
+    PwaTitlebarComponent,
+    TranslateModule,
+    IconComponent,
+  ],
+  templateUrl: &#x27;./cars-list.page.html&#x27;,
+  styleUrls: [&#x27;./cars-list.page.css&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CarsListPage implements OnInit, OnDestroy {
+  @ViewChild(CarsMapComponent) carsMapComponent!: CarsMapComponent;
+  @ViewChild(&#x27;unifiedCarousel&#x27;, { read: ElementRef }) unifiedCarousel?: ElementRef&lt;HTMLDivElement&gt;;
+  @ViewChild(PullToRefreshComponent) pullToRefresh!: PullToRefreshComponent;
+
+  // Exponer parseFloat para el template
+  readonly parseFloat &#x3D; parseFloat;
+
+  private readonly router &#x3D; inject(Router);
+  private readonly carsService &#x3D; inject(CarsService);
+  private readonly compareService &#x3D; inject(CarsCompareService);
+  private readonly metaService &#x3D; inject(MetaService);
+  private readonly logger &#x3D; inject(LoggerService);
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly platformId &#x3D; inject(PLATFORM_ID);
+  private readonly isBrowser &#x3D; isPlatformBrowser(this.platformId);
+  private readonly distanceCalculator &#x3D; inject(DistanceCalculatorService);
+  private readonly locationService &#x3D; inject(LocationService);
+  private readonly urgentRentalService &#x3D; inject(UrgentRentalService);
+  private readonly breakpoint &#x3D; inject(BreakpointService);
+  private readonly economyRadiusKm &#x3D; ECONOMY_RADIUS_KM;
+  private sortInitialized &#x3D; false;
+  private analyticsLastKey: string | null &#x3D; null;
+  private realtimeChannel?: RealtimeChannel;
+  private carouselAutoScrollInterval?: ReturnType&lt;typeof setInterval&gt;;
+  private autoScrollKickoffTimeout?: ReturnType&lt;typeof setTimeout&gt;;
+  private carouselAutoScrollTimeout?: ReturnType&lt;typeof setTimeout&gt;;
+  private carouselAutoScrollResumeTimeout?: ReturnType&lt;typeof setTimeout&gt;;
+
+  readonly city &#x3D; signal&lt;string | null&gt;(null);
+  readonly dateRange &#x3D; signal&lt;DateRange&gt;({ from: null, to: null });
+  readonly loading &#x3D; signal(false);
+  readonly cars &#x3D; signal&lt;Car[]&gt;([]);
+  readonly carMapLocations &#x3D; computed(() &#x3D;&gt;
+    this.cars().map((car) &#x3D;&gt; {
+      const gallery &#x3D; this.extractPhotoGallery(car);
+      return {
+        carId: car.id,
+        title: &#x60;${car.brand_text_backup || &#x27;&#x27;} ${car.model_text_backup || &#x27;&#x27;}&#x60;.trim(),
+        pricePerDay: car.price_per_day,
+        currency: car.currency || &#x27;ARS&#x27;,
+        lat: car.location_lat || 0,
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || &#x27;Sin ubicación&#x27;,
+        photoUrl: gallery[0] ?? null,
+        photoGallery: gallery,
+        description: car.description,
+      };
+    }),
+  );
+  readonly userLocation &#x3D; signal&lt;{ lat: number; lng: number } | null&gt;(null);
+  readonly hasFilters &#x3D; computed(
+    () &#x3D;&gt;
+      !!this.city() ||
+      !!this.dateRange().from ||
+      !!this.searchQuery() ||
+      this.maxDistance() !&#x3D;&#x3D; null ||
+      this.minPrice() !&#x3D;&#x3D; null ||
+      this.maxPrice() !&#x3D;&#x3D; null ||
+      this.minRating() !&#x3D;&#x3D; null,
+  );
+  readonly selectedCarId &#x3D; signal&lt;string | null&gt;(null);
+  readonly hoveredCarId &#x3D; signal&lt;string | null&gt;(null); // For card ↔ map hover sync
+  readonly searchExpanded &#x3D; signal(false);
+  readonly inventoryReady &#x3D; signal(false);
+  readonly drawerOpen &#x3D; signal(false);
+  readonly urgentAvailability &#x3D; signal&lt;{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null&gt;(null);
+
+  // Active car for map highlight (hover takes priority over selection)
+  readonly activeMapCarId &#x3D; computed(() &#x3D;&gt; this.hoveredCarId() ?? this.selectedCarId());
+
+  // Airbnb-style favorites (stored in localStorage)
+  readonly favoriteCars &#x3D; signal&lt;Set&lt;string&gt;&gt;(new Set());
+  readonly expressModeSignal &#x3D; signal(true);
+  readonly isMobile &#x3D; this.breakpoint.isMobile;
+  readonly isDesktop &#x3D; this.breakpoint.isDesktop;
+
+  // View Mode (grid, list, map)
+  readonly viewMode &#x3D; signal&lt;&#x27;grid&#x27; | &#x27;list&#x27; | &#x27;map&#x27;&gt;(&#x27;grid&#x27;);
+
+  // Filtros y ordenamiento
+  readonly sortBy &#x3D; signal&lt;&#x27;distance&#x27; | &#x27;price_asc&#x27; | &#x27;price_desc&#x27; | &#x27;rating&#x27; | &#x27;newest&#x27;&gt;(&#x27;rating&#x27;);
+  readonly sortLabel &#x3D; computed(() &#x3D;&gt; this.getSortLabel(this.sortBy()));
+
+  // Filtros de búsqueda
+  readonly maxDistance &#x3D; signal&lt;number | null&gt;(null); // km
+  readonly minPrice &#x3D; signal&lt;number | null&gt;(null);
+  readonly maxPrice &#x3D; signal&lt;number | null&gt;(null);
+  readonly minRating &#x3D; signal&lt;number | null&gt;(null); // 0-5
+  readonly searchQuery &#x3D; signal&lt;string&gt;(&#x27;&#x27;); // Búsqueda por texto
+
+  // Contadores para badge de resultados
+  readonly totalCount &#x3D; computed(() &#x3D;&gt; this.cars().length);
+
+  // Breadcrumbs navigation
+  readonly breadcrumbItems &#x3D; computed&lt;BreadcrumbItem[]&gt;(() &#x3D;&gt; [
+    { label: &#x27;Inicio&#x27;, url: &#x27;/&#x27;, icon: &#x27;🏠&#x27; },
+    { label: &#x27;Explorar Autos&#x27;, url: &#x27;/cars&#x27;, icon: &#x27;🚗&#x27; },
+    { label: &#x60;${this.premiumCars().length} Autos Disponibles&#x60; },
+  ]);
+
+  private readonly persistSortEffect &#x3D; effect(() &#x3D;&gt; {
+    if (!this.isBrowser || !this.sortInitialized) {
+      return;
+    }
+    const sort &#x3D; this.sortBy();
+    localStorage.setItem(SORT_STORAGE_KEY, sort);
+  });
+
+  private readonly analyticsEffect &#x3D; effect(() &#x3D;&gt; {
+    if (!this.isBrowser) {
+      return;
+    }
+    const premiumCount &#x3D; this.premiumCars().length;
+    const recommendedCount &#x3D; this.recommendedCars().length;
+    const sort &#x3D; this.sortBy();
+    const key &#x3D; &#x60;${premiumCount}:${recommendedCount}:${sort}&#x60;;
+    if (key &#x3D;&#x3D;&#x3D; this.analyticsLastKey) {
+      return;
+    }
+    this.analyticsLastKey &#x3D; key;
+    this.trackAnalytics(&#x27;inventory_segments_updated&#x27;, {
+      premiumCount,
+      recommendedCount,
+      sort,
+    });
+  });
+
+  // Autos ordenados por distancia con información de distancia
+  private readonly filteredCarsWithDistance &#x3D; computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    let carsList &#x3D; this.cars();
+    const userLoc &#x3D; this.userLocation();
+    const maxDist &#x3D; this.maxDistance();
+    const minP &#x3D; this.minPrice();
+    const maxP &#x3D; this.maxPrice();
+    const minR &#x3D; this.minRating();
+    const query &#x3D; this.searchQuery().toLowerCase().trim();
+
+    if (!carsList.length) {
+      return [] as CarWithDistance[];
+    }
+
+    // Calcular distancias y aplicar filtros
+    const carsWithDistance &#x3D; carsList
+      .map((car) &#x3D;&gt; {
+        if (!userLoc || !car.location_lat || !car.location_lng) {
+          return { ...car, distance: undefined, distanceText: undefined };
+        }
+
+        const distanceKm &#x3D; this.calculateDistance(
+          userLoc.lat,
+          userLoc.lng,
+          car.location_lat,
+          car.location_lng,
+        );
+
+        // Formatear texto de distancia
+        let distanceText: string;
+        if (distanceKm &lt; 1) {
+          distanceText &#x3D; &#x60;${Math.round(distanceKm * 10) * 100}m&#x60;;
+        } else if (distanceKm &lt; 10) {
+          distanceText &#x3D; &#x60;${distanceKm.toFixed(1)}km&#x60;;
+        } else {
+          distanceText &#x3D; &#x60;${Math.round(distanceKm)}km&#x60;;
+        }
+
+        return {
+          ...car,
+          distance: distanceKm,
+          distanceText,
+          image_url: this.extractPhotoGallery(car)[0] || null,
+        };
+      })
+      .filter((car) &#x3D;&gt; {
+        // Filtro por distancia máxima
+        if (maxDist !&#x3D;&#x3D; null &amp;&amp; car.distance !&#x3D;&#x3D; undefined &amp;&amp; car.distance &gt; maxDist) {
+          return false;
+        }
+
+        // Filtro por precio mínimo
+        if (minP !&#x3D;&#x3D; null &amp;&amp; car.price_per_day &lt; minP) {
+          return false;
+        }
+
+        // Filtro por precio máximo
+        if (maxP !&#x3D;&#x3D; null &amp;&amp; car.price_per_day &gt; maxP) {
+          return false;
+        }
+
+        // Filtro por rating mínimo
+        if (minR !&#x3D;&#x3D; null) {
+          const rating &#x3D; car.owner?.rating_avg ?? 0;
+          if (rating &lt; minR) {
+            return false;
+          }
+        }
+
+        // Filtro por búsqueda de texto
+        if (query) {
+          const brand &#x3D; (car.brand_text_backup || car.brand || &#x27;&#x27;).toLowerCase();
+          const model &#x3D; (car.model_text_backup || car.model || &#x27;&#x27;).toLowerCase();
+          const city &#x3D; (car.location_city || &#x27;&#x27;).toLowerCase();
+          const title &#x3D; (car.title || &#x27;&#x27;).toLowerCase();
+
+          const matchesBrand &#x3D; brand.includes(query);
+          const matchesModel &#x3D; model.includes(query);
+          const matchesCity &#x3D; city.includes(query);
+          const matchesTitle &#x3D; title.includes(query);
+
+          if (!matchesBrand &amp;&amp; !matchesModel &amp;&amp; !matchesCity &amp;&amp; !matchesTitle) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+    return carsWithDistance;
+  });
+
+  private readonly premiumSegmentation &#x3D; computed&lt;PremiumSegmentation | null&gt;(() &#x3D;&gt; {
+    const cars &#x3D; this.filteredCarsWithDistance();
+    if (!cars.length) {
+      return null;
+    }
+
+    const prices &#x3D; cars
+      .map((car) &#x3D;&gt; car.price_per_day)
+      .filter((price) &#x3D;&gt; typeof price &#x3D;&#x3D;&#x3D; &#x27;number&#x27; &amp;&amp; !Number.isNaN(price));
+
+    if (!prices.length) {
+      return null;
+    }
+
+    const minPrice &#x3D; Math.min(...prices);
+    const maxPrice &#x3D; Math.max(...prices);
+    const priceRange &#x3D; Math.max(maxPrice - minPrice, 1);
+
+    const entries &#x3D; cars.map((car) &#x3D;&gt; {
+      const priceNormalized &#x3D; (car.price_per_day - minPrice) / priceRange;
+      const ratingNormalized &#x3D; Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
+      const score &#x3D;
+        priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
+        ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
+      return { id: car.id, score };
+    });
+
+    const sortedScores &#x3D; entries.map((entry) &#x3D;&gt; entry.score).sort((a, b) &#x3D;&gt; a - b);
+
+    const thresholdIndex &#x3D; Math.max(0, Math.floor(sortedScores.length * 0.6));
+    const threshold &#x3D; sortedScores[Math.min(thresholdIndex, sortedScores.length - 1)];
+
+    return {
+      threshold,
+      scores: new Map(entries.map((entry) &#x3D;&gt; [entry.id, entry.score])),
+    };
+  });
+
+  readonly premiumCars &#x3D; computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    const segmentation &#x3D; this.premiumSegmentation();
+    const cars &#x3D; this.filteredCarsWithDistance();
+
+    if (!cars.length) {
+      return [];
+    }
+
+    const list &#x3D; !segmentation
+      ? cars
+      : cars.filter((car) &#x3D;&gt; {
+          const score &#x3D; segmentation.scores.get(car.id) ?? 0;
+          return score &gt;&#x3D; segmentation.threshold;
+        });
+
+    const sorted &#x3D; list.slice();
+
+    switch (this.sortBy()) {
+      case &#x27;price_asc&#x27;:
+        sorted.sort((a, b) &#x3D;&gt; {
+          // 1. Por precio bajo → alto
+          if (a.price_per_day !&#x3D;&#x3D; b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+          // 2. Desempate por rating
+          const ratingA &#x3D; a.owner?.rating_avg ?? 0;
+          const ratingB &#x3D; b.owner?.rating_avg ?? 0;
+          if (ratingB !&#x3D;&#x3D; ratingA) {
+            return ratingB - ratingA;
+          }
+          // 3. Desempate por distancia
+          const distanceA &#x3D; a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB &#x3D; b.distance ?? Number.POSITIVE_INFINITY;
+          return distanceA - distanceB;
+        });
+        break;
+      case &#x27;price_desc&#x27;:
+        sorted.sort((a, b) &#x3D;&gt; {
+          // 1. Por precio alto → bajo
+          if (b.price_per_day !&#x3D;&#x3D; a.price_per_day) {
+            return b.price_per_day - a.price_per_day;
+          }
+          // 2. Desempate por rating
+          const ratingA &#x3D; a.owner?.rating_avg ?? 0;
+          const ratingB &#x3D; b.owner?.rating_avg ?? 0;
+          return ratingB - ratingA;
+        });
+        break;
+      case &#x27;rating&#x27;:
+        sorted.sort((a, b) &#x3D;&gt; {
+          // 1. Por rating (mejor → peor)
+          const ratingA &#x3D; a.owner?.rating_avg ?? 0;
+          const ratingB &#x3D; b.owner?.rating_avg ?? 0;
+          if (ratingB !&#x3D;&#x3D; ratingA) {
+            return ratingB - ratingA;
+          }
+          // 2. Desempate por distancia
+          const distanceA &#x3D; a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB &#x3D; b.distance ?? Number.POSITIVE_INFINITY;
+          if (distanceA !&#x3D;&#x3D; distanceB) {
+            return distanceA - distanceB;
+          }
+          // 3. Desempate por precio (más barato primero)
+          if (a.price_per_day !&#x3D;&#x3D; b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+          // 4. Desempate por más nuevo
+          const dateA &#x3D; new Date(a.created_at || 0).getTime();
+          const dateB &#x3D; new Date(b.created_at || 0).getTime();
+          return dateB - dateA;
+        });
+        break;
+      case &#x27;newest&#x27;:
+        sorted.sort((a, b) &#x3D;&gt; {
+          // 1. Por fecha (más nuevo → antiguo)
+          const dateA &#x3D; new Date(a.created_at || 0).getTime();
+          const dateB &#x3D; new Date(b.created_at || 0).getTime();
+          if (dateB !&#x3D;&#x3D; dateA) {
+            return dateB - dateA;
+          }
+          // 2. Desempate por rating
+          const ratingA &#x3D; a.owner?.rating_avg ?? 0;
+          const ratingB &#x3D; b.owner?.rating_avg ?? 0;
+          if (ratingB !&#x3D;&#x3D; ratingA) {
+            return ratingB - ratingA;
+          }
+          // 3. Desempate por precio
+          return a.price_per_day - b.price_per_day;
+        });
+        break;
+      case &#x27;distance&#x27;:
+      default:
+        sorted.sort((a, b) &#x3D;&gt; {
+          // 1. Por distancia (cerca → lejos)
+          const distanceA &#x3D; a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB &#x3D; b.distance ?? Number.POSITIVE_INFINITY;
+          if (distanceA !&#x3D;&#x3D; distanceB) {
+            return distanceA - distanceB;
+          }
+          // 2. Desempate por rating
+          const ratingA &#x3D; a.owner?.rating_avg ?? 0;
+          const ratingB &#x3D; b.owner?.rating_avg ?? 0;
+          if (ratingB !&#x3D;&#x3D; ratingA) {
+            return ratingB - ratingA;
+          }
+          // 3. Desempate por precio
+          return a.price_per_day - b.price_per_day;
+        });
+        break;
+    }
+
+    return sorted;
+  });
+
+  readonly recommendedCars &#x3D; computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    const cars &#x3D; this.filteredCarsWithDistance();
+    if (!cars.length) {
+      return [];
+    }
+
+    // Filtrar solo autos activos con al menos una reseña (o rating_avg &gt; 0)
+    const eligibleCars &#x3D; cars.filter(
+      (car) &#x3D;&gt; car.status &#x3D;&#x3D;&#x3D; &#x27;active&#x27; &amp;&amp; (car.rating_avg &gt; 0 || car.rating_count &gt; 0),
+    );
+
+    if (!eligibleCars.length) {
+      // Si no hay autos con reseñas, mostrar todos los activos
+      return cars
+        .filter((car) &#x3D;&gt; car.status &#x3D;&#x3D;&#x3D; &#x27;active&#x27;)
+        .sort((a, b) &#x3D;&gt; {
+          // Primero por distancia (si hay ubicación del usuario)
+          const distanceA &#x3D; a.distance ?? Number.POSITIVE_INFINITY;
+          const distanceB &#x3D; b.distance ?? Number.POSITIVE_INFINITY;
+
+          if (distanceA !&#x3D;&#x3D; distanceB) {
+            return distanceA - distanceB;
+          }
+
+          // Luego por precio (más barato primero)
+          if (a.price_per_day !&#x3D;&#x3D; b.price_per_day) {
+            return a.price_per_day - b.price_per_day;
+          }
+
+          // Finalmente por nombre
+          return (a.title || &#x27;&#x27;).localeCompare(b.title || &#x27;&#x27;);
+        })
+        .slice(0, 15);
+    }
+
+    // Ordenar por rating primero, luego distancia
+    return eligibleCars
+      .sort((a, b) &#x3D;&gt; {
+        // Primero: Rating promedio (mayor mejor)
+        const ratingA &#x3D; a.rating_avg || 0;
+        const ratingB &#x3D; b.rating_avg || 0;
+
+        if (ratingA !&#x3D;&#x3D; ratingB) {
+          return ratingB - ratingA; // Mayor rating primero
+        }
+
+        // Segundo: Cantidad de reseñas (más reseñas &#x3D; más confiable)
+        const reviewsA &#x3D; a.rating_count || 0;
+        const reviewsB &#x3D; b.rating_count || 0;
+
+        if (reviewsA !&#x3D;&#x3D; reviewsB) {
+          return reviewsB - reviewsA; // Más reseñas primero
+        }
+
+        // Tercero: Distancia (más cerca mejor, si hay ubicación)
+        const distanceA &#x3D; a.distance ?? Number.POSITIVE_INFINITY;
+        const distanceB &#x3D; b.distance ?? Number.POSITIVE_INFINITY;
+
+        if (distanceA !&#x3D;&#x3D; distanceB) {
+          return distanceA - distanceB;
+        }
+
+        // Cuarto: Precio (más barato primero)
+        if (a.price_per_day !&#x3D;&#x3D; b.price_per_day) {
+          return a.price_per_day - b.price_per_day;
+        }
+
+        // Finalmente: Nombre alfabético
+        return (a.title || &#x27;&#x27;).localeCompare(b.title || &#x27;&#x27;);
+      })
+      .slice(0, 15);
+  });
+
+  readonly showRecommendedCarousel &#x3D; computed(() &#x3D;&gt; {
+    const recommended &#x3D; this.recommendedCars();
+    if (!recommended.length) {
+      return false;
+    }
+
+    // Mostrar siempre si hay autos recomendados
+    // Esto asegura que el carousel aparezca cuando haya autos con reseñas
+    return recommended.length &gt;&#x3D; 3; // Mostrar mínimo 3 autos
+  });
+
+  // Helper para determinar si un auto es &quot;Top Rated&quot; (Superanfitrión)
+  isTopRated(car: CarWithDistance): boolean {
+    return (car.rating_avg || 0) &gt;&#x3D; 4.5 &amp;&amp; (car.rating_count || 0) &gt;&#x3D; 5;
+  }
+
+  // Helper para determinar si un auto es &quot;Popular&quot; (muchas reservas)
+  isPopular(car: CarWithDistance): boolean {
+    return (car.rating_count || 0) &gt;&#x3D; 10;
+  }
+
+  // Helper para &quot;Reserva inmediata&quot; - basado en datos reales cuando existan
+  // Por ahora usa umbral de rating como proxy (autos bien valorados &#x3D; confianza)
+  hasInstantBooking(car: CarWithDistance): boolean {
+    // TODO: Usar car.instant_booking_enabled cuando se agregue a la DB
+    return (car.rating_avg || 0) &gt;&#x3D; 4.0 &amp;&amp; (car.rating_count || 0) &gt;&#x3D; 3;
+  }
+
+  // Comparación
+  readonly compareCount &#x3D; this.compareService.count;
+  readonly maxCompareReached &#x3D; computed(() &#x3D;&gt; this.compareCount() &gt;&#x3D; 3);
+
+  ngOnInit(): void {
+    if (this.isBrowser) {
+      const storedSort &#x3D; localStorage.getItem(SORT_STORAGE_KEY);
+      if (storedSort &amp;&amp; this.isValidSort(storedSort)) {
+        this.sortBy.set(storedSort);
+      }
+
+      // Load saved favorites from localStorage
+      const storedFavorites &#x3D; localStorage.getItem(&#x27;autorenta:favorites&#x27;);
+      if (storedFavorites) {
+        try {
+          const parsed &#x3D; JSON.parse(storedFavorites) as string[];
+          this.favoriteCars.set(new Set(parsed));
+        } catch {
+          // Invalid JSON, ignore
+        }
+      }
+    }
+
+    this.sortInitialized &#x3D; true;
+    if (this.isBrowser) {
+      localStorage.setItem(SORT_STORAGE_KEY, this.sortBy());
+    }
+
+    // Update SEO meta tags
+    this.metaService.updateCarsListMeta({
+      city: this.city() || undefined,
+    });
+
+    // Initialize user location for distance-based pricing
+    void this.initializeUserLocation();
+
+    void this.loadCars();
+  }
+
+  /**
+   * Initialize user location from profile or GPS
+   */
+  private async initializeUserLocation(): Promise&lt;void&gt; {
+    try {
+      const locationData &#x3D; await this.locationService.getUserLocation();
+      if (locationData) {
+        this.userLocation.set({
+          lat: locationData.lat,
+          lng: locationData.lng,
+        });
+      }
+    } catch (_error) {
+      // Silently fail - user location is optional
+      console.warn(&#x27;Could not get user location:&#x27;, _error);
+    }
+  }
+
+  onUserLocationChange(location: { lat: number; lng: number }): void {
+    this.userLocation.set(location);
+    // Open drawer when user location is set and there are cars
+    if (this.cars().length &gt; 0 &amp;&amp; !this.drawerOpen()) {
+      this.drawerOpen.set(true);
+    }
+  }
+
+  centerOnUserLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) &#x3D;&gt; {
+          this.userLocation.set({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) &#x3D;&gt; {
+          console.warn(&#x27;Error getting user location:&#x27;, error);
+        },
+      );
+    }
+  }
+
+  async loadCars(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    try {
+      const dateRange &#x3D; this.dateRange();
+
+      // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
+      if (dateRange.from &amp;&amp; dateRange.to) {
+        const items &#x3D; await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
+          city: this.city() ?? undefined,
+          limit: 100,
+        });
+        this.cars.set(items);
+      } else {
+        // Si no hay fechas, usar método tradicional
+        const items &#x3D; await this.carsService.listActiveCars({
+          city: this.city() ?? undefined,
+          from: dateRange.from ?? undefined,
+          to: dateRange.to ?? undefined,
+        });
+        this.cars.set(items);
+      }
+
+      // Collapse search form on mobile after search
+      this.searchExpanded.set(false);
+
+      // Notificar que el inventario está listo
+      if (this.isBrowser &amp;&amp; !this.inventoryReady()) {
+        this.inventoryReady.set(true);
+      }
+
+      // Setup real-time subscription on first load
+      if (this.isBrowser &amp;&amp; !this.realtimeChannel) {
+        this.setupRealtimeSubscription();
+      }
+    } catch (err) {
+      this.logger.error(
+        &#x27;Error loading cars&#x27;,
+        &#x27;CarsListPage&#x27;,
+        err instanceof Error ? err : new Error(getErrorMessage(err)),
+      );
+      // Mostrar mensaje al usuario en caso de error crítico
+      if (err instanceof Error) {
+        console.error(&#x27;Error al cargar autos:&#x27;, err.message);
+      }
+    } finally {
+      this.loading.set(false);
+
+      // Iniciar auto-scroll del carousel después de cargar los autos
+      if (this.autoScrollKickoffTimeout) {
+        clearTimeout(this.autoScrollKickoffTimeout);
+        this.autoScrollKickoffTimeout &#x3D; undefined;
+      }
+
+      if (this.recommendedCars().length &gt;&#x3D; 3) {
+        this.autoScrollKickoffTimeout &#x3D; setTimeout(() &#x3D;&gt; this.startCarouselAutoScroll(), 1000);
+      } else {
+        this.stopCarouselAutoScroll();
+      }
+    }
+  }
+
+  /**
+   * 🔄 Handle pull-to-refresh
+   * Método para actualizar la lista de autos
+   */
+  async handleRefresh(): Promise&lt;void&gt; {
+    try {
+      await this.loadCars();
+
+      // Completar el refresh
+      if (this.pullToRefresh) {
+        this.pullToRefresh.completeRefresh();
+      }
+    } catch (_error) {
+      this.logger.error(
+        &#x27;Error al refrescar autos&#x27;,
+        &#x27;CarsListPage&#x27;,
+        _error instanceof Error ? _error : new Error(getErrorMessage(_error)),
+      );
+      if (this.pullToRefresh) {
+        this.pullToRefresh.completeRefresh();
+      }
+    }
+  }
+
+  private setupRealtimeSubscription(): void {
+    this.realtimeChannel &#x3D; this.supabase
+      .channel(&#x27;cars-realtime&#x27;)
+      .on(&#x27;postgres_changes&#x27;, { event: &#x27;*&#x27;, schema: &#x27;public&#x27;, table: &#x27;cars&#x27; }, (payload) &#x3D;&gt; {
+        this.handleRealtimeUpdate(payload);
+      })
+      .subscribe();
+  }
+
+  private async handleRealtimeUpdate(payload: {
+    eventType: string;
+    [key: string]: unknown;
+  }): Promise&lt;void&gt; {
+    const eventType &#x3D; payload.eventType;
+
+    if (eventType &#x3D;&#x3D;&#x3D; &#x27;INSERT&#x27;) {
+      await this.showNewCarToast();
+    } else if (eventType &#x3D;&#x3D;&#x3D; &#x27;UPDATE&#x27; || eventType &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;) {
+      // Silent refresh for updates/deletions
+      await this.loadCars();
+    }
+  }
+
+  private async showNewCarToast(): Promise&lt;void&gt; {
+    if (typeof window &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) return;
+
+    // Show simple notification banner (usando createElement para evitar XSS)
+    const banner &#x3D; document.createElement(&#x27;div&#x27;);
+    banner.className &#x3D;
+      &#x27;fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-success-light text-text-primary px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-slide-down&#x27;;
+
+    // Crear elementos de forma segura (sin innerHTML)
+    const messageSpan &#x3D; document.createElement(&#x27;span&#x27;);
+    messageSpan.textContent &#x3D; &#x27;¡Nuevos vehículos disponibles!&#x27;;
+
+    const refreshButton &#x3D; document.createElement(&#x27;button&#x27;);
+    refreshButton.className &#x3D; &#x27;underline font-medium&#x27;;
+    refreshButton.textContent &#x3D; &#x27;Ver ahora&#x27;;
+    refreshButton.addEventListener(&#x27;click&#x27;, () &#x3D;&gt; {
+      void this.loadCars();
+      banner.remove();
+    });
+
+    const closeButton &#x3D; document.createElement(&#x27;button&#x27;);
+    closeButton.className &#x3D; &#x27;ml-2&#x27;;
+    closeButton.textContent &#x3D; &#x27;✕&#x27;;
+    closeButton.setAttribute(&#x27;aria-label&#x27;, &#x27;Cerrar&#x27;);
+    closeButton.addEventListener(&#x27;click&#x27;, () &#x3D;&gt; {
+      banner.remove();
+    });
+
+    banner.appendChild(messageSpan);
+    banner.appendChild(refreshButton);
+    banner.appendChild(closeButton);
+
+    document.body.appendChild(banner);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() &#x3D;&gt; banner.remove(), 5000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
+    }
+    if (this.autoScrollKickoffTimeout) {
+      clearTimeout(this.autoScrollKickoffTimeout);
+      this.autoScrollKickoffTimeout &#x3D; undefined;
+    }
+    this.stopCarouselAutoScroll();
+  }
+
+  /**
+   * Inicia el auto-scroll del carousel
+   * Se mueve automáticamente cada 3 segundos
+   */
+  startCarouselAutoScroll(): void {
+    if (!this.isBrowser) return;
+
+    // Limpiar interval existente
+    this.stopCarouselAutoScroll();
+
+    // Iniciar auto-scroll después de 2 segundos (dar tiempo a que cargue)
+    if (this.carouselAutoScrollTimeout) {
+      clearTimeout(this.carouselAutoScrollTimeout);
+    }
+
+    this.carouselAutoScrollTimeout &#x3D; setTimeout(() &#x3D;&gt; {
+      this.carouselAutoScrollInterval &#x3D; setInterval(() &#x3D;&gt; {
+        this.scrollCarouselNext();
+      }, 3000); // Cada 3 segundos
+    }, 2000);
+  }
+
+  /**
+   * Detiene el auto-scroll del carousel
+   */
+  stopCarouselAutoScroll(): void {
+    if (this.carouselAutoScrollTimeout) {
+      clearTimeout(this.carouselAutoScrollTimeout);
+      this.carouselAutoScrollTimeout &#x3D; undefined;
+    }
+    if (this.carouselAutoScrollInterval) {
+      clearInterval(this.carouselAutoScrollInterval);
+      this.carouselAutoScrollInterval &#x3D; undefined;
+    }
+    // Limpiar también el timeout de reanudación si existe
+    if (this.carouselAutoScrollResumeTimeout) {
+      clearTimeout(this.carouselAutoScrollResumeTimeout);
+      this.carouselAutoScrollResumeTimeout &#x3D; undefined;
+    }
+  }
+
+  /**
+   * Scroll al siguiente item del carousel
+   */
+  private scrollCarouselNext(): void {
+    const carousel &#x3D; this.unifiedCarousel?.nativeElement;
+    if (!carousel) return;
+
+    const cardWidth &#x3D; 340 + 12; // min-width + gap
+    const currentScroll &#x3D; carousel.scrollLeft;
+    const maxScroll &#x3D; carousel.scrollWidth - carousel.clientWidth;
+
+    // Si llegó al final, volver al inicio
+    if (currentScroll &gt;&#x3D; maxScroll - 10) {
+      carousel.scrollTo({ left: 0, behavior: &#x27;smooth&#x27; });
+    } else {
+      // Scroll al siguiente item
+      carousel.scrollBy({ left: cardWidth, behavior: &#x27;smooth&#x27; });
+    }
+  }
+
+  /**
+   * Pausar auto-scroll cuando el usuario interactúa
+   */
+  onCarouselMouseEnter(): void {
+    this.stopCarouselAutoScroll();
+  }
+
+  /**
+   * Reanudar auto-scroll cuando el usuario deja de interactuar
+   */
+  onCarouselMouseLeave(): void {
+    // Si hay un timeout de reanudación programado, cancelarlo
+    // porque el usuario está interactuando activamente
+    if (this.carouselAutoScrollResumeTimeout) {
+      clearTimeout(this.carouselAutoScrollResumeTimeout);
+      this.carouselAutoScrollResumeTimeout &#x3D; undefined;
+    }
+    // Reanudar inmediatamente
+    this.startCarouselAutoScroll();
+  }
+
+  toggleSearch(): void {
+    this.searchExpanded.update((expanded) &#x3D;&gt; !expanded);
+  }
+
+  onCityChange(value: string): void {
+    this.city.set(value || null);
+    void this.loadCars();
+  }
+
+  onRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
+    void this.loadCars();
+  }
+
+  /**
+   * Limpiar todos los filtros
+   */
+  clearFilters(): void {
+    this.maxDistance.set(null);
+    this.minPrice.set(null);
+    this.maxPrice.set(null);
+    this.minRating.set(null);
+    this.searchQuery.set(&#x27;&#x27;);
+  }
+
+  /**
+   * Manejar input de búsqueda
+   */
+  onSearchInput(event: Event): void {
+    const value &#x3D; (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+  }
+
+  /**
+   * Ejecutar búsqueda (on Enter)
+   */
+  onSearchSubmit(): void {
+    // La búsqueda ya se aplica reactivamente via searchQuery signal
+    // Este método puede usarse para analytics o acciones adicionales
+  }
+
+  /**
+   * Limpiar búsqueda
+   */
+  clearSearch(): void {
+    this.searchQuery.set(&#x27;&#x27;);
+  }
+
+  // Card ↔ Map hover synchronization
+  onCardMouseEnter(carId: string): void {
+    this.hoveredCarId.set(carId);
+    // Smooth fly to car location on hover (desktop only)
+    if (this.isDesktop() &amp;&amp; this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
+    }
+  }
+
+  onCardMouseLeave(): void {
+    this.hoveredCarId.set(null);
+  }
+
+  /**
+   * Social proof: Get simulated viewing count for a car
+   * In production, this would come from WebSocket/real-time analytics
+   */
+  getViewingCount(carId: string): number {
+    // Simulate viewing count based on car ID hash
+    // Shows 0-5 viewers, with ~30% of cars having viewers
+    const hash &#x3D; carId.split(&#x27;&#x27;).reduce((acc, char) &#x3D;&gt; acc + char.charCodeAt(0), 0);
+    const seed &#x3D; hash % 100;
+    if (seed &lt; 30) return 0; // 30% have no viewers
+    if (seed &lt; 50) return 1;
+    if (seed &lt; 70) return 2;
+    if (seed &lt; 85) return 3;
+    if (seed &lt; 95) return 4;
+    return 5;
+  }
+
+  onCarSelected(carId: string): void {
+    const previousCarId &#x3D; this.selectedCarId();
+    this.selectedCarId.set(carId);
+
+    // Open drawer when car is selected
+    if (!this.drawerOpen()) {
+      this.drawerOpen.set(true);
+    }
+
+    // Pausar auto-scroll del carousel por 8 segundos
+    this.stopCarouselAutoScroll();
+
+    // Programar reanudación después de 8 segundos
+    this.carouselAutoScrollResumeTimeout &#x3D; setTimeout(() &#x3D;&gt; {
+      if (this.recommendedCars().length &gt;&#x3D; 3) {
+        this.startCarouselAutoScroll();
+      }
+      this.carouselAutoScrollResumeTimeout &#x3D; undefined;
+    }, 8000);
+
+    // Si es el mismo auto (doble click), navegar al detalle
+    if (previousCarId &#x3D;&#x3D;&#x3D; carId) {
+      this.router.navigate([&#x27;/cars/detail&#x27;, carId]);
+      return;
+    }
+
+    // Primera selección: fly to location en el mapa
+    if (this.carsMapComponent) {
+      this.carsMapComponent.flyToCarLocation(carId);
+    }
+
+    // Check urgent availability for selected car
+    void this.checkUrgentAvailability(carId);
+  }
+
+  /**
+   * Handle drawer close
+   */
+  onDrawerClose(): void {
+    this.drawerOpen.set(false);
+  }
+
+  /**
+   * Handle reserve click from drawer
+   */
+  onReserveClick(carId: string): void {
+    // Navigate to car detail page or open booking modal
+    this.router.navigate([&#x27;/cars&#x27;, carId]);
+  }
+
+  /**
+   * Get selected car for CTA
+   */
+  readonly selectedCar &#x3D; computed(() &#x3D;&gt; {
+    const carId &#x3D; this.selectedCarId();
+    if (!carId) return null;
+    return this.cars().find((c) &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; carId) || null;
+  });
+
+  /**
+   * Get selected car price for CTA
+   */
+  readonly selectedCarPrice &#x3D; computed(() &#x3D;&gt; {
+    const car &#x3D; this.selectedCar();
+    return car?.price_per_day ?? null;
+  });
+
+  /**
+   * Check urgent availability for a car
+   */
+  private async checkUrgentAvailability(carId: string): Promise&lt;void&gt; {
+    const car &#x3D; this.cars().find((c) &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; carId);
+    if (!car || !car.region_id) return;
+
+    try {
+      const availability &#x3D; await this.urgentRentalService.checkImmediateAvailability(carId);
+      this.urgentAvailability.set({
+        available: availability.available,
+        distance: availability.distance,
+        eta: availability.eta,
+      });
+    } catch (_error) {
+      console.warn(&#x27;Could not check urgent availability:&#x27;, _error);
+    }
+  }
+
+  onMapCarSelected(carId: string): void {
+    const previousCarId &#x3D; this.selectedCarId();
+    this.selectedCarId.set(carId);
+
+    // Pausar auto-scroll del carousel por 8 segundos
+    this.stopCarouselAutoScroll();
+
+    // Programar reanudación después de 8 segundos
+    this.carouselAutoScrollResumeTimeout &#x3D; setTimeout(() &#x3D;&gt; {
+      if (this.recommendedCars().length &gt;&#x3D; 3) {
+        this.startCarouselAutoScroll();
+      }
+      this.carouselAutoScrollResumeTimeout &#x3D; undefined;
+    }, 8000);
+
+    // Si es el mismo auto, navegar al detalle
+    if (previousCarId &#x3D;&#x3D;&#x3D; carId) {
+      this.router.navigate([&#x27;/cars/detail&#x27;, carId]);
+      return;
+    }
+
+    // Primera selección: scroll + highlight
+    this.scrollToCarInCarousel(carId);
+  }
+
+  isCarSelected(carId: string): boolean {
+    return this.selectedCarId() &#x3D;&#x3D;&#x3D; carId;
+  }
+
+  // Comparación
+  isCarComparing(carId: string): boolean {
+    return this.compareService.isComparing(carId);
+  }
+
+  onCompareToggle(carId: string): void {
+    if (this.compareService.isComparing(carId)) {
+      this.compareService.removeCar(carId);
+    } else {
+      const added &#x3D; this.compareService.addCar(carId);
+      if (!added) {
+        // Máximo alcanzado, se podría mostrar un mensaje
+        // TODO: surface feedback to user (toast/snackbar)
+      }
+    }
+  }
+
+  // Filters drawer management (mobile)
+  openFiltersDrawer(): void {
+    this.drawerOpen.set(true);
+  }
+
+  closeFiltersDrawer(): void {
+    this.drawerOpen.set(false);
+  }
+
+  toggleFiltersDrawer(): void {
+    this.drawerOpen.update((open) &#x3D;&gt; !open);
+  }
+
+  // Cálculo de distancia usando DistanceCalculatorService
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    return this.distanceCalculator.calculateDistance(lat1, lon1, lat2, lon2);
+  }
+
+  onSortChange(sortBy: &#x27;distance&#x27; | &#x27;price_asc&#x27; | &#x27;price_desc&#x27; | &#x27;rating&#x27; | &#x27;newest&#x27;): void {
+    this.sortBy.set(sortBy);
+  }
+
+  trackByCarId(_index: number, car: CarWithDistance): string {
+    return car.id;
+  }
+
+  /**
+   * TrackBy function for ngFor with proper naming
+   * Returns unique identifier for each car in the list
+   */
+  trackByCar(_index: number, car: CarWithDistance): string {
+    return car.id;
+  }
+
+  /**
+   * Airbnb-style favorite toggle
+   * Stores favorites in localStorage for persistence
+   */
+  toggleFavorite(event: Event, carId: string): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const favorites &#x3D; new Set(this.favoriteCars());
+    if (favorites.has(carId)) {
+      favorites.delete(carId);
+    } else {
+      favorites.add(carId);
+    }
+    this.favoriteCars.set(favorites);
+
+    // Persist to localStorage
+    if (this.isBrowser) {
+      localStorage.setItem(&#x27;autorenta:favorites&#x27;, JSON.stringify([...favorites]));
+    }
+  }
+
+  /**
+   * Check if a car is in favorites
+   */
+  isFavorite(carId: string): boolean {
+    return this.favoriteCars().has(carId);
+  }
+
+  /**
+   * Convierte CarWithDistance al formato esperado por CarCardV3Component
+   * Mapea los campos del modelo Car al formato simplificado de la card
+   */
+  carToCardFormat(car: CarWithDistance): {
+    id: string;
+    title: string;
+    brand: string;
+    model: string;
+    images: string[];
+    pricePerDay: number;
+    rating: number;
+    ratingCount: number;
+    location: string;
+    distanceKm?: number;
+    instantBook?: boolean;
+  } {
+    // Extraer brand y model del title si no están disponibles
+    const titleParts &#x3D; car.title.split(&#x27; &#x27;);
+    const brand &#x3D; titleParts[0] || &#x27;&#x27;;
+    const model &#x3D; titleParts.slice(1).join(&#x27; &#x27;) || &#x27;&#x27;;
+
+    return {
+      id: car.id,
+      title: car.title,
+      brand,
+      model,
+      images: car.photos?.map((photo) &#x3D;&gt; photo.url) || [],
+      pricePerDay: car.price_per_day,
+      rating: car.rating_avg || 0,
+      ratingCount: car.rating_count || 0,
+      location: &#x60;${car.location_city}, ${car.location_state}&#x60;,
+      distanceKm: car.distance,
+      instantBook: false, // FIXME: Add instant_booking field to Car model and database
+    };
+  }
+
+  /**
+   * Extract feature tags from car features object
+   * Converts feature flags to display-friendly strings
+   * @param features Feature flags object (e.g., { ac: true, gps: true })
+   * @returns Array of feature tag strings
+   */
+  getFeatureTags(features: Record&lt;string, boolean&gt; | undefined): string[] {
+    if (!features || typeof features !&#x3D;&#x3D; &#x27;object&#x27;) {
+      return [];
+    }
+
+    // Map feature keys to display labels
+    const featureLabels: Record&lt;string, string&gt; &#x3D; {
+      ac: &#x27;❄️ AC&#x27;,
+      air_conditioning: &#x27;❄️ AC&#x27;,
+      gps: &#x27;🗺️ GPS&#x27;,
+      navigation: &#x27;🗺️ GPS&#x27;,
+      bluetooth: &#x27;🔵 Bluetooth&#x27;,
+      leather_seats: &#x27;🪑 Cuero&#x27;,
+      sunroof: &#x27;☀️ Techo&#x27;,
+      roof: &#x27;☀️ Techo&#x27;,
+      backup_camera: &#x27;📷 Cámara&#x27;,
+      camera: &#x27;📷 Cámara&#x27;,
+      usb_charging: &#x27;🔌 USB&#x27;,
+      usb: &#x27;🔌 USB&#x27;,
+      apple_carplay: &#x27;🍎 CarPlay&#x27;,
+      android_auto: &#x27;🤖 Android&#x27;,
+      cruise_control: &#x27;⚙️ Cruise&#x27;,
+      automatic_transmission: &#x27;⚙️ Automático&#x27;,
+      transmission: &#x27;⚙️ Automático&#x27;,
+      wifi: &#x27;📡 WiFi&#x27;,
+      heated_seats: &#x27;🔥 Calefacción&#x27;,
+      parking_sensors: &#x27;📡 Sensores&#x27;,
+      sensors: &#x27;📡 Sensores&#x27;,
+      all_wheel_drive: &#x27;🏔️ AWD&#x27;,
+      four_wheel_drive: &#x27;🏔️ 4WD&#x27;,
+      traction_control: &#x27;🛡️ Control&#x27;,
+      lane_departure: &#x27;⚠️ LDW&#x27;,
+      adaptive_cruise: &#x27;🎯 Adaptive&#x27;,
+    };
+
+    return Object.entries(features)
+      .filter(([, value]) &#x3D;&gt; value &#x3D;&#x3D;&#x3D; true)
+      .map(([key]) &#x3D;&gt; featureLabels[key.toLowerCase()] || key)
+      .filter((label, index, array) &#x3D;&gt; array.indexOf(label) &#x3D;&#x3D;&#x3D; index); // Remove duplicates
+  }
+
+  private getSortLabel(
+    sort: &#x27;distance&#x27; | &#x27;price_asc&#x27; | &#x27;price_desc&#x27; | &#x27;rating&#x27; | &#x27;newest&#x27;,
+  ): string {
+    switch (sort) {
+      case &#x27;distance&#x27;:
+        return &#x27;distancia&#x27;;
+      case &#x27;price_asc&#x27;:
+        return &#x27;precio ascendente&#x27;;
+      case &#x27;price_desc&#x27;:
+        return &#x27;precio descendente&#x27;;
+      case &#x27;rating&#x27;:
+        return &#x27;mejor valoración&#x27;;
+      case &#x27;newest&#x27;:
+        return &#x27;más nuevos&#x27;;
+      default:
+        return &#x27;distancia&#x27;;
+    }
+  }
+
+  private scrollToCarCard(carId: string): void {
+    if (typeof window &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
+      return;
+    }
+
+    const card &#x3D; document.getElementById(&#x60;car-card-${carId}&#x60;);
+    if (card) {
+      card.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+    }
+  }
+
+  private scrollToCarInCarousel(carId: string): void {
+    if (!this.isBrowser || !this.unifiedCarousel) {
+      return;
+    }
+
+    const carousel &#x3D; this.unifiedCarousel.nativeElement;
+    const card &#x3D; carousel.querySelector(&#x60;[data-car-id&#x3D;&quot;${carId}&quot;]&#x60;) as HTMLElement;
+
+    if (!card) {
+      this.logger.warn(&#x60;Car card not found in carousel: ${carId}&#x60;, &#x27;CarsListPage&#x27;);
+      return;
+    }
+
+    // Scroll horizontal suave al card
+    const cardLeft &#x3D; card.offsetLeft;
+    const cardWidth &#x3D; card.offsetWidth;
+    const carouselWidth &#x3D; carousel.offsetWidth;
+    const scrollPosition &#x3D; cardLeft - carouselWidth / 2 + cardWidth / 2;
+
+    carousel.scrollTo({
+      left: Math.max(0, scrollPosition),
+      behavior: &#x27;smooth&#x27;,
+    });
+
+    // Highlight temporal
+    card.classList.add(&#x27;pulse-highlight&#x27;);
+    setTimeout(() &#x3D;&gt; {
+      card.classList.remove(&#x27;pulse-highlight&#x27;);
+    }, 1500);
+  }
+
+  private extractPhotoGallery(car: Car): string[] {
+    const rawPhotos &#x3D; car.photos ?? car.car_photos ?? [];
+    if (!Array.isArray(rawPhotos)) {
+      return [];
+    }
+    return rawPhotos
+      .map((photo) &#x3D;&gt; (typeof photo &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? photo : (photo?.url ?? null)))
+      .filter((url): url is string &#x3D;&gt; typeof url &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; url.length &gt; 0);
+  }
+
+  private isValidSort(
+    value: string,
+  ): value is &#x27;distance&#x27; | &#x27;price_asc&#x27; | &#x27;price_desc&#x27; | &#x27;rating&#x27; | &#x27;newest&#x27; {
+    return [&#x27;distance&#x27;, &#x27;price_asc&#x27;, &#x27;price_desc&#x27;, &#x27;rating&#x27;, &#x27;newest&#x27;].includes(value);
+  }
+
+  private trackAnalytics(event: string, payload: Record&lt;string, unknown&gt;): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent(ANALYTICS_EVENT, {
+        detail: {
+          event,
+          timestamp: Date.now(),
+          source: &#x27;cars-list-page&#x27;,
+          ...payload,
+        },
+      }),
+    );
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'CarWithDistance-3.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

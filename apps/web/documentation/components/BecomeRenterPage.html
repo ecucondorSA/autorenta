@@ -1,0 +1,2223 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  BecomeRenterPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/become-renter/become-renter.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Become Renter Page</p>
+<p>Página de onboarding para convertirse en Renter (propietario que renta su auto).
+Similar al &quot;Conviértete en anfitrión&quot; de Airbnb.</p>
+<p>Features:</p>
+<ul>
+<li>Hero section con beneficios</li>
+<li>Calculadora de ingresos potenciales</li>
+<li>Proceso paso a paso</li>
+<li>Testimonios de Renters exitosos</li>
+<li>CTA para iniciar publicación</li>
+<li>Información del programa de referidos</li>
+</ul>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-become-renter</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./become-renter.page.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./become-renter.page.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authService" >authService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#benefits" >benefits</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carValue" >carValue</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#daysPerMonth" >daysPerMonth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#estimatedMonthlyIncome" >estimatedMonthlyIncome</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#estimatedROI" >estimatedROI</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#estimatedYearlyIncome" >estimatedYearlyIncome</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#faqs" >faqs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isAuthenticated" >isAuthenticated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pricePerDay" >pricePerDay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#referralsService" >referralsService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#steps" >steps</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#testimonials" >testimonials</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#goToReferrals" >goToReferrals</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#scrollToSection" >scrollToSection</a>
+                            </li>
+                            <li>
+                                <a href="#startPublishing" >startPublishing</a>
+                            </li>
+                            <li>
+                                <a href="#toggleFAQ" >toggleFAQ</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="goToReferrals"></a>
+                    <span class="name">
+                        <span ><b>goToReferrals</b></span>
+                        <a href="#goToReferrals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>goToReferrals()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:233</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Navegar a referidos</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scrollToSection"></a>
+                    <span class="name">
+                        <span ><b>scrollToSection</b></span>
+                        <a href="#scrollToSection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>scrollToSection(sectionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Scroll a sección</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sectionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startPublishing"></a>
+                    <span class="name">
+                        <span ><b>startPublishing</b></span>
+                        <a href="#startPublishing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>startPublishing()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Navegar a publicar auto (si está autenticado) o a login</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleFAQ"></a>
+                    <span class="name">
+                        <span ><b>toggleFAQ</b></span>
+                        <a href="#toggleFAQ"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleFAQ(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="203"
+                                    class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:203</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Toggle FAQ</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authService</b></span>
+                        <a href="#authService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AuthService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="benefits"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>benefits</b></span>
+                        <a href="#benefits"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      title: &#x27;Ingresos extras&#x27;,
+      description: &#x27;Generá entre $50,000 y $200,000 por mes según tu auto y disponibilidad.&#x27;,
+      icon: &#x27;💵&#x27;,
+    },
+    {
+      title: &#x27;Vos decidís&#x27;,
+      description: &#x27;Controlás precios, disponibilidad y quién puede rentar tu auto.&#x27;,
+      icon: &#x27;🎯&#x27;,
+    },
+    {
+      title: &#x27;Seguro incluido&#x27;,
+      description: &#x27;Todas las rentas están protegidas con seguro contra terceros.&#x27;,
+      icon: &#x27;🛡️&#x27;,
+    },
+    {
+      title: &#x27;Soporte 24/7&#x27;,
+      description: &#x27;Nuestro equipo está disponible para ayudarte cuando lo necesites.&#x27;,
+      icon: &#x27;🤝&#x27;,
+    },
+    {
+      title: &#x27;Cobros automáticos&#x27;,
+      description: &#x27;Recibís tu dinero directamente en tu wallet, sin complicaciones.&#x27;,
+      icon: &#x27;⚡&#x27;,
+    },
+    {
+      title: &#x27;Programa de referidos&#x27;,
+      description: &#x27;Ganás bonos por invitar a otros propietarios a la plataforma.&#x27;,
+      icon: &#x27;🎁&#x27;,
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carValue"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carValue</b></span>
+                        <a href="#carValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(50000)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="daysPerMonth"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>daysPerMonth</b></span>
+                        <a href="#daysPerMonth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(10)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="estimatedMonthlyIncome"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>estimatedMonthlyIncome</b></span>
+                        <a href="#estimatedMonthlyIncome"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.daysPerMonth() * this.pricePerDay();
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="estimatedROI"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>estimatedROI</b></span>
+                        <a href="#estimatedROI"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const yearly &#x3D; this.estimatedYearlyIncome();
+    const carValueNum &#x3D; this.carValue();
+    if (carValueNum &#x3D;&#x3D;&#x3D; 0) return 0;
+    return (yearly / carValueNum) * 100;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="estimatedYearlyIncome"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>estimatedYearlyIncome</b></span>
+                        <a href="#estimatedYearlyIncome"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.estimatedMonthlyIncome() * 12;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="faqs"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>faqs</b></span>
+                        <a href="#faqs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      question: &#x27;¿Cuánto puedo ganar?&#x27;,
+      answer:
+        &#x27;Los ingresos varían según el tipo de auto, ubicación y disponibilidad. En promedio, nuestros Renters ganan entre $50,000 y $200,000 por mes. Usá nuestra calculadora arriba para estimar tus ingresos.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Qué pasa si mi auto se daña?&#x27;,
+      answer:
+        &#x27;Todas las rentas incluyen seguro contra terceros. Si hay daños, el locatario es responsable hasta el monto de la franquicia. Además, validamos la identidad de todos los usuarios.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Puedo cancelar una reserva?&#x27;,
+      answer:
+        &#x27;Sí, podés cancelar reservas, pero te recomendamos hacerlo solo en casos necesarios. Las cancelaciones frecuentes pueden afectar tu reputación y visibilidad en la plataforma.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Cuánto cobra Autorentar?&#x27;,
+      answer:
+        &#x27;Cobramos una comisión del 15% sobre cada renta. Vos te quedás con el 85% de los ingresos. No hay cargos ocultos ni costos de publicación.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Cómo funciona el programa de referidos?&#x27;,
+      answer:
+        &#x27;Por cada amigo que invites y publique su auto, ganás $1,500 ARS en bonos. Tu amigo también recibe $500 ARS de bienvenida. ¡Es ganar-ganar!&#x27;,
+      open: false,
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="158" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:158</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isAuthenticated"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isAuthenticated</b></span>
+                        <a href="#isAuthenticated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.authService.isAuthenticated</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pricePerDay"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pricePerDay</b></span>
+                        <a href="#pricePerDay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(8000)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="referralsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>referralsService</b></span>
+                        <a href="#referralsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ReferralsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="steps"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>steps</b></span>
+                        <a href="#steps"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      number: 1,
+      title: &#x27;Creá tu cuenta&#x27;,
+      description: &#x27;Registrate gratis y completá tu perfil en minutos.&#x27;,
+      icon: &#x27;📝&#x27;,
+    },
+    {
+      number: 2,
+      title: &#x27;Publicá tu auto&#x27;,
+      description: &#x27;Cargá fotos, detalles y configurá tu precio.&#x27;,
+      icon: &#x27;📸&#x27;,
+    },
+    {
+      number: 3,
+      title: &#x27;Verificá tu identidad&#x27;,
+      description: &#x27;Validamos tu identidad para seguridad de todos.&#x27;,
+      icon: &#x27;✅&#x27;,
+    },
+    {
+      number: 4,
+      title: &#x27;Recibí reservas&#x27;,
+      description: &#x27;Aprobá solicitudes y comenzá a generar ingresos.&#x27;,
+      icon: &#x27;💰&#x27;,
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="testimonials"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>testimonials</b></span>
+                        <a href="#testimonials"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    {
+      name: &#x27;María González&#x27;,
+      location: &#x27;Buenos Aires&#x27;,
+      photo: &#x27;/assets/images/testimonials/maria.jpg&#x27;,
+      carBrand: &#x27;Toyota Corolla 2020&#x27;,
+      earning: &#x27;$120,000/mes&#x27;,
+      quote:
+        &#x27;Publicar mi auto en Autorentar fue la mejor decisión. Genero ingresos mientras no lo uso y los locatarios son muy cuidadosos.&#x27;,
+      rating: 5,
+    },
+    {
+      name: &#x27;Carlos Pérez&#x27;,
+      location: &#x27;Córdoba&#x27;,
+      photo: &#x27;/assets/images/testimonials/carlos.jpg&#x27;,
+      carBrand: &#x27;Volkswagen Gol 2019&#x27;,
+      earning: &#x27;$80,000/mes&#x27;,
+      quote:
+        &#x27;El proceso es super simple. En 24 horas ya tenía mi auto publicado y recibí mi primera reserva en menos de una semana.&#x27;,
+      rating: 5,
+    },
+    {
+      name: &#x27;Laura Martínez&#x27;,
+      location: &#x27;Rosario&#x27;,
+      photo: &#x27;/assets/images/testimonials/laura.jpg&#x27;,
+      carBrand: &#x27;Chevrolet Onix 2021&#x27;,
+      earning: &#x27;$150,000/mes&#x27;,
+      quote:
+        &#x27;Lo que más me gusta es la flexibilidad. Yo controlo cuándo mi auto está disponible y el precio. ¡Es como tener un ingreso pasivo!&#x27;,
+      rating: 5,
+    },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/features/become-renter/become-renter.page.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, inject, signal, computed } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { AuthService } from &#x27;../../core/services/auth.service&#x27;;
+import { ReferralsService } from &#x27;../../core/services/referrals.service&#x27;;
+
+/**
+ * Become Renter Page
+ *
+ * Página de onboarding para convertirse en Renter (propietario que renta su auto).
+ * Similar al &quot;Conviértete en anfitrión&quot; de Airbnb.
+ *
+ * Features:
+ * - Hero section con beneficios
+ * - Calculadora de ingresos potenciales
+ * - Proceso paso a paso
+ * - Testimonios de Renters exitosos
+ * - CTA para iniciar publicación
+ * - Información del programa de referidos
+ */
+@Component({
+  selector: &#x27;app-become-renter&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: &#x27;./become-renter.page.html&#x27;,
+  styleUrls: [&#x27;./become-renter.page.css&#x27;],
+})
+export class BecomeRenterPage implements OnInit {
+  private readonly router &#x3D; inject(Router);
+  private readonly authService &#x3D; inject(AuthService);
+  private readonly referralsService &#x3D; inject(ReferralsService);
+
+  // State
+  readonly isAuthenticated &#x3D; this.authService.isAuthenticated;
+  readonly loading &#x3D; signal(false);
+
+  // Calculadora de ingresos
+  readonly carValue &#x3D; signal(50000); // Valor del auto en ARS (por defecto $50k)
+  readonly daysPerMonth &#x3D; signal(10); // Días rentados por mes
+  readonly pricePerDay &#x3D; signal(8000); // Precio por día en ARS
+
+  // Computed: Ingresos mensuales estimados
+  readonly estimatedMonthlyIncome &#x3D; computed(() &#x3D;&gt; {
+    return this.daysPerMonth() * this.pricePerDay();
+  });
+
+  // Computed: Ingresos anuales
+  readonly estimatedYearlyIncome &#x3D; computed(() &#x3D;&gt; {
+    return this.estimatedMonthlyIncome() * 12;
+  });
+
+  // Computed: ROI aproximado
+  readonly estimatedROI &#x3D; computed(() &#x3D;&gt; {
+    const yearly &#x3D; this.estimatedYearlyIncome();
+    const carValueNum &#x3D; this.carValue();
+    if (carValueNum &#x3D;&#x3D;&#x3D; 0) return 0;
+    return (yearly / carValueNum) * 100;
+  });
+
+  // Testimonials
+  readonly testimonials &#x3D; [
+    {
+      name: &#x27;María González&#x27;,
+      location: &#x27;Buenos Aires&#x27;,
+      photo: &#x27;/assets/images/testimonials/maria.jpg&#x27;,
+      carBrand: &#x27;Toyota Corolla 2020&#x27;,
+      earning: &#x27;$120,000/mes&#x27;,
+      quote:
+        &#x27;Publicar mi auto en Autorentar fue la mejor decisión. Genero ingresos mientras no lo uso y los locatarios son muy cuidadosos.&#x27;,
+      rating: 5,
+    },
+    {
+      name: &#x27;Carlos Pérez&#x27;,
+      location: &#x27;Córdoba&#x27;,
+      photo: &#x27;/assets/images/testimonials/carlos.jpg&#x27;,
+      carBrand: &#x27;Volkswagen Gol 2019&#x27;,
+      earning: &#x27;$80,000/mes&#x27;,
+      quote:
+        &#x27;El proceso es super simple. En 24 horas ya tenía mi auto publicado y recibí mi primera reserva en menos de una semana.&#x27;,
+      rating: 5,
+    },
+    {
+      name: &#x27;Laura Martínez&#x27;,
+      location: &#x27;Rosario&#x27;,
+      photo: &#x27;/assets/images/testimonials/laura.jpg&#x27;,
+      carBrand: &#x27;Chevrolet Onix 2021&#x27;,
+      earning: &#x27;$150,000/mes&#x27;,
+      quote:
+        &#x27;Lo que más me gusta es la flexibilidad. Yo controlo cuándo mi auto está disponible y el precio. ¡Es como tener un ingreso pasivo!&#x27;,
+      rating: 5,
+    },
+  ];
+
+  // Steps
+  readonly steps &#x3D; [
+    {
+      number: 1,
+      title: &#x27;Creá tu cuenta&#x27;,
+      description: &#x27;Registrate gratis y completá tu perfil en minutos.&#x27;,
+      icon: &#x27;📝&#x27;,
+    },
+    {
+      number: 2,
+      title: &#x27;Publicá tu auto&#x27;,
+      description: &#x27;Cargá fotos, detalles y configurá tu precio.&#x27;,
+      icon: &#x27;📸&#x27;,
+    },
+    {
+      number: 3,
+      title: &#x27;Verificá tu identidad&#x27;,
+      description: &#x27;Validamos tu identidad para seguridad de todos.&#x27;,
+      icon: &#x27;✅&#x27;,
+    },
+    {
+      number: 4,
+      title: &#x27;Recibí reservas&#x27;,
+      description: &#x27;Aprobá solicitudes y comenzá a generar ingresos.&#x27;,
+      icon: &#x27;💰&#x27;,
+    },
+  ];
+
+  // Benefits
+  readonly benefits &#x3D; [
+    {
+      title: &#x27;Ingresos extras&#x27;,
+      description: &#x27;Generá entre $50,000 y $200,000 por mes según tu auto y disponibilidad.&#x27;,
+      icon: &#x27;💵&#x27;,
+    },
+    {
+      title: &#x27;Vos decidís&#x27;,
+      description: &#x27;Controlás precios, disponibilidad y quién puede rentar tu auto.&#x27;,
+      icon: &#x27;🎯&#x27;,
+    },
+    {
+      title: &#x27;Seguro incluido&#x27;,
+      description: &#x27;Todas las rentas están protegidas con seguro contra terceros.&#x27;,
+      icon: &#x27;🛡️&#x27;,
+    },
+    {
+      title: &#x27;Soporte 24/7&#x27;,
+      description: &#x27;Nuestro equipo está disponible para ayudarte cuando lo necesites.&#x27;,
+      icon: &#x27;🤝&#x27;,
+    },
+    {
+      title: &#x27;Cobros automáticos&#x27;,
+      description: &#x27;Recibís tu dinero directamente en tu wallet, sin complicaciones.&#x27;,
+      icon: &#x27;⚡&#x27;,
+    },
+    {
+      title: &#x27;Programa de referidos&#x27;,
+      description: &#x27;Ganás bonos por invitar a otros propietarios a la plataforma.&#x27;,
+      icon: &#x27;🎁&#x27;,
+    },
+  ];
+
+  // FAQs
+  readonly faqs &#x3D; [
+    {
+      question: &#x27;¿Cuánto puedo ganar?&#x27;,
+      answer:
+        &#x27;Los ingresos varían según el tipo de auto, ubicación y disponibilidad. En promedio, nuestros Renters ganan entre $50,000 y $200,000 por mes. Usá nuestra calculadora arriba para estimar tus ingresos.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Qué pasa si mi auto se daña?&#x27;,
+      answer:
+        &#x27;Todas las rentas incluyen seguro contra terceros. Si hay daños, el locatario es responsable hasta el monto de la franquicia. Además, validamos la identidad de todos los usuarios.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Puedo cancelar una reserva?&#x27;,
+      answer:
+        &#x27;Sí, podés cancelar reservas, pero te recomendamos hacerlo solo en casos necesarios. Las cancelaciones frecuentes pueden afectar tu reputación y visibilidad en la plataforma.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Cuánto cobra Autorentar?&#x27;,
+      answer:
+        &#x27;Cobramos una comisión del 15% sobre cada renta. Vos te quedás con el 85% de los ingresos. No hay cargos ocultos ni costos de publicación.&#x27;,
+      open: false,
+    },
+    {
+      question: &#x27;¿Cómo funciona el programa de referidos?&#x27;,
+      answer:
+        &#x27;Por cada amigo que invites y publique su auto, ganás $1,500 ARS en bonos. Tu amigo también recibe $500 ARS de bienvenida. ¡Es ganar-ganar!&#x27;,
+      open: false,
+    },
+  ];
+
+  ngOnInit(): void {
+    // Si está autenticado, pre-cargar su código de referidos
+    if (this.isAuthenticated()) {
+      this.referralsService.getOrCreateMyReferralCode().catch(() &#x3D;&gt; {
+        // Silently fail - not critical
+      });
+    }
+  }
+
+  /**
+   * Toggle FAQ
+   */
+  toggleFAQ(index: number): void {
+    this.faqs[index].open &#x3D; !this.faqs[index].open;
+  }
+
+  /**
+   * Scroll a sección
+   */
+  scrollToSection(sectionId: string): void {
+    const element &#x3D; document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+    }
+  }
+
+  /**
+   * Navegar a publicar auto (si está autenticado) o a login
+   */
+  startPublishing(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate([&#x27;/cars/publish&#x27;]);
+    } else {
+      this.router.navigate([&#x27;/login&#x27;], {
+        queryParams: { redirect: &#x27;/cars/publish&#x27; },
+      });
+    }
+  }
+
+  /**
+   * Navegar a referidos
+   */
+  goToReferrals(): void {
+    if (this.isAuthenticated()) {
+      this.router.navigate([&#x27;/referrals&#x27;]);
+    } else {
+      this.router.navigate([&#x27;/login&#x27;], {
+        queryParams: { redirect: &#x27;/referrals&#x27; },
+      });
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;!-- Hero Section --&gt;
+&lt;section
+  class&#x3D;&quot;relative bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 lg:py-24 overflow-hidden&quot;
+&gt;
+  &lt;!-- Background decorative elements --&gt;
+  &lt;div class&#x3D;&quot;absolute inset-0 pointer-events-none&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;absolute top-0 right-0 w-96 h-96 bg-cta-default/10 dark:bg-cyan-500/10 rounded-full blur-3xl&quot;
+    &gt;&lt;/div&gt;
+    &lt;div
+      class&#x3D;&quot;absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 dark:bg-cyan-600/10 rounded-full blur-3xl&quot;
+    &gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class&#x3D;&quot;container-page px-container relative z-10&quot;&gt;
+    &lt;div class&#x3D;&quot;grid lg:grid-cols-2 gap-12 items-center&quot;&gt;
+      &lt;!-- Left: Content --&gt;
+      &lt;div&gt;
+        &lt;div
+          class&#x3D;&quot;inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised dark:bg-slate-800 border border-cta-default/20 dark:border-cyan-500/20 mb-6&quot;
+        &gt;
+          &lt;span class&#x3D;&quot;text-2xl&quot;&gt;🏠&lt;/span&gt;
+          &lt;span class&#x3D;&quot;text-sm font-medium text-cta-default dark:text-cyan-400&quot;
+            &gt;Programa de Renters&lt;/span
+          &gt;
+        &lt;/div&gt;
+
+        &lt;h1
+          class&#x3D;&quot;text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary dark:text-white leading-tight&quot;
+        &gt;
+          Convertí tu auto en una
+          &lt;span
+            class&#x3D;&quot;text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-cta-hover dark:from-cyan-400 dark:to-cyan-300&quot;
+          &gt;
+            fuente de ingresos
+          &lt;/span&gt;
+        &lt;/h1&gt;
+
+        &lt;p class&#x3D;&quot;text-lg lg:text-xl text-text-secondary dark:text-gray-300 mb-8 leading-relaxed&quot;&gt;
+          Publicá tu auto en Autorentar y generá entre
+          &lt;strong class&#x3D;&quot;text-cta-default dark:text-cyan-400&quot;&gt;$50,000 y $200,000&lt;/strong&gt; por mes.
+          Miles de personas están buscando rentar un auto como el tuyo.
+        &lt;/p&gt;
+
+        &lt;div class&#x3D;&quot;flex flex-col sm:flex-row gap-4 mb-8&quot;&gt;
+          &lt;button
+            data-tour-step&#x3D;&quot;start-publishing&quot;
+            (click)&#x3D;&quot;startPublishing()&quot;
+            class&#x3D;&quot;btn-primary btn-lg justify-center&quot;
+          &gt;
+            @if (isAuthenticated()) {
+              Publicar mi auto
+            } @else {
+              Comenzar ahora
+            }
+          &lt;/button&gt;
+
+          &lt;button
+            (click)&#x3D;&quot;scrollToSection(&#x27;calculator&#x27;)&quot;
+            class&#x3D;&quot;btn-secondary btn-lg justify-center&quot;
+          &gt;
+            Calcular mis ingresos
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Stats --&gt;
+        &lt;div class&#x3D;&quot;grid grid-cols-3 gap-4&quot;&gt;
+          &lt;div class&#x3D;&quot;text-center&quot;&gt;
+            &lt;div class&#x3D;&quot;text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400&quot;&gt;
+              1,500+
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;text-xs lg:text-sm text-text-muted dark:text-gray-400&quot;&gt;Renters activos&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-center&quot;&gt;
+            &lt;div class&#x3D;&quot;text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400&quot;&gt;
+              $120k
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;text-xs lg:text-sm text-text-muted dark:text-gray-400&quot;&gt;Promedio/mes&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-center&quot;&gt;
+            &lt;div class&#x3D;&quot;text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400&quot;&gt;
+              24hs
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;text-xs lg:text-sm text-text-muted dark:text-gray-400&quot;&gt;Para activar&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Right: Image/Illustration --&gt;
+      &lt;div class&#x3D;&quot;relative&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-slate-950&quot;
+        &gt;
+          &lt;img
+            src&#x3D;&quot;/BM.png&quot;
+            alt&#x3D;&quot;Convertite en Renter&quot;
+            class&#x3D;&quot;w-full h-full object-cover&quot;
+            loading&#x3D;&quot;lazy&quot;
+          /&gt;
+          &lt;!-- Overlay with stats card --&gt;
+          &lt;div
+            class&#x3D;&quot;absolute bottom-6 left-6 right-6 bg-surface-raised/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 dark:border-white/10 shadow-lg&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;flex items-center gap-3 mb-2&quot;&gt;
+              &lt;div class&#x3D;&quot;text-3xl&quot;&gt;💰&lt;/div&gt;
+              &lt;div&gt;
+                &lt;div class&#x3D;&quot;text-sm font-medium text-text-muted dark:text-gray-400&quot;&gt;
+                  Ganancia promedio
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-white&quot;&gt;$120,000/mes&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;text-xs text-text-muted dark:text-gray-400&quot;&gt;
+              Basado en datos de 1,500+ Renters activos
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Calculadora de Ingresos --&gt;
+&lt;section id&#x3D;&quot;calculator&quot; class&#x3D;&quot;py-16 bg-surface-base dark:bg-slate-950&quot;&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;max-w-4xl mx-auto&quot;&gt;
+      &lt;div class&#x3D;&quot;text-center mb-12&quot;&gt;
+        &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+          Calculá tus ingresos potenciales
+        &lt;/h2&gt;
+        &lt;p class&#x3D;&quot;text-lg text-text-secondary dark:text-gray-300&quot;&gt;
+          Estimá cuánto podés ganar rentando tu auto
+        &lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;div data-tour-step&#x3D;&quot;income-calculator&quot; class&#x3D;&quot;card-premium p-8&quot;&gt;
+        &lt;div class&#x3D;&quot;grid md:grid-cols-2 gap-8&quot;&gt;
+          &lt;!-- Inputs --&gt;
+          &lt;div class&#x3D;&quot;space-y-6&quot;&gt;
+            &lt;div&gt;
+              &lt;label class&#x3D;&quot;block text-sm font-medium mb-2 text-text-primary dark:text-white&quot;&gt;
+                Valor de tu auto
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;range&quot;
+                [(ngModel)]&#x3D;&quot;carValue&quot;
+                min&#x3D;&quot;20000&quot;
+                max&#x3D;&quot;200000&quot;
+                step&#x3D;&quot;5000&quot;
+                class&#x3D;&quot;w-full&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;text-right text-sm text-text-muted dark:text-gray-400 mt-1&quot;&gt;
+                {{ carValue() | number: &#x27;1.0-0&#x27; }} ARS
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div&gt;
+              &lt;label class&#x3D;&quot;block text-sm font-medium mb-2 text-text-primary dark:text-white&quot;&gt;
+                Días rentados por mes
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;range&quot;
+                [(ngModel)]&#x3D;&quot;daysPerMonth&quot;
+                min&#x3D;&quot;1&quot;
+                max&#x3D;&quot;30&quot;
+                step&#x3D;&quot;1&quot;
+                class&#x3D;&quot;w-full&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;text-right text-sm text-text-muted dark:text-gray-400 mt-1&quot;&gt;
+                {{ daysPerMonth() }} días
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div&gt;
+              &lt;label class&#x3D;&quot;block text-sm font-medium mb-2 text-text-primary dark:text-white&quot;&gt;
+                Precio por día
+              &lt;/label&gt;
+              &lt;input
+                type&#x3D;&quot;range&quot;
+                [(ngModel)]&#x3D;&quot;pricePerDay&quot;
+                min&#x3D;&quot;3000&quot;
+                max&#x3D;&quot;20000&quot;
+                step&#x3D;&quot;500&quot;
+                class&#x3D;&quot;w-full&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;text-right text-sm text-text-muted dark:text-gray-400 mt-1&quot;&gt;
+                {{ pricePerDay() | number: &#x27;1.0-0&#x27; }} ARS/día
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Results --&gt;
+          &lt;div
+            class&#x3D;&quot;bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;text-center mb-6&quot;&gt;
+              &lt;div class&#x3D;&quot;text-sm font-medium text-text-muted dark:text-gray-400 mb-2&quot;&gt;
+                Ingresos mensuales estimados
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;text-4xl lg:text-5xl font-bold text-cta-default dark:text-cyan-400&quot;&gt;
+                ${{ estimatedMonthlyIncome() | number: &#x27;1.0-0&#x27; }}
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;
+                  &gt;Ingresos anuales:&lt;/span
+                &gt;
+                &lt;span class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-white&quot;&gt;
+                  ${{ estimatedYearlyIncome() | number: &#x27;1.0-0&#x27; }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;&gt;ROI aproximado:&lt;/span&gt;
+                &lt;span class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-white&quot;&gt;
+                  {{ estimatedROI() | number: &#x27;1.1-1&#x27; }}%
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;div class&#x3D;&quot;flex justify-between items-center&quot;&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;&gt;Te quedás (85%):&lt;/span&gt;
+                &lt;span class&#x3D;&quot;text-lg font-semibold text-green-600 dark:text-green-400&quot;&gt;
+                  ${{ estimatedMonthlyIncome() * 0.85 | number: &#x27;1.0-0&#x27; }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;button (click)&#x3D;&quot;startPublishing()&quot; class&#x3D;&quot;btn-primary w-full mt-6&quot;&gt;
+              Comenzar a ganar
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Beneficios --&gt;
+&lt;section class&#x3D;&quot;py-16 bg-surface-raised dark:bg-slate-900&quot;&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;text-center mb-12&quot;&gt;
+      &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+        ¿Por qué elegir Autorentar?
+      &lt;/h2&gt;
+      &lt;p class&#x3D;&quot;text-lg text-text-secondary dark:text-gray-300&quot;&gt;
+        Te damos todas las herramientas para que rentes tu auto con seguridad y confianza
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div data-tour-step&#x3D;&quot;benefits-grid&quot; class&#x3D;&quot;grid md:grid-cols-2 lg:grid-cols-3 gap-6&quot;&gt;
+      @for (benefit of benefits; track benefit.title) {
+        &lt;div class&#x3D;&quot;card-premium p-6 hover:scale-[1.02] transition-transform&quot;&gt;
+          &lt;div class&#x3D;&quot;text-4xl mb-4&quot;&gt;{{ benefit.icon }}&lt;/div&gt;
+          &lt;h3 class&#x3D;&quot;text-xl font-semibold mb-2 text-text-primary dark:text-white&quot;&gt;
+            {{ benefit.title }}
+          &lt;/h3&gt;
+          &lt;p class&#x3D;&quot;text-text-secondary dark:text-gray-300&quot;&gt;
+            {{ benefit.description }}
+          &lt;/p&gt;
+        &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Proceso paso a paso --&gt;
+&lt;section class&#x3D;&quot;py-16 bg-surface-base dark:bg-slate-950&quot;&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;text-center mb-12&quot;&gt;
+      &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+        ¿Cómo funciona?
+      &lt;/h2&gt;
+      &lt;p class&#x3D;&quot;text-lg text-text-secondary dark:text-gray-300&quot;&gt;
+        4 pasos simples para comenzar a ganar dinero con tu auto
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;max-w-5xl mx-auto&quot;&gt;
+      &lt;div data-tour-step&#x3D;&quot;process-steps&quot; class&#x3D;&quot;grid md:grid-cols-2 lg:grid-cols-4 gap-6&quot;&gt;
+        @for (step of steps; track step.number) {
+          &lt;div class&#x3D;&quot;relative&quot;&gt;
+            &lt;div class&#x3D;&quot;card-premium p-6 text-center h-full&quot;&gt;
+              &lt;div class&#x3D;&quot;text-5xl mb-4&quot;&gt;{{ step.icon }}&lt;/div&gt;
+              &lt;div
+                class&#x3D;&quot;inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-white font-bold mb-4&quot;
+              &gt;
+                {{ step.number }}
+              &lt;/div&gt;
+              &lt;h3 class&#x3D;&quot;text-lg font-semibold mb-2 text-text-primary dark:text-white&quot;&gt;
+                {{ step.title }}
+              &lt;/h3&gt;
+              &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;&gt;
+                {{ step.description }}
+              &lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Connector arrow (except last item) --&gt;
+            @if (step.number &lt; steps.length) {
+              &lt;div
+                class&#x3D;&quot;hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10&quot;
+              &gt;
+                &lt;svg
+                  class&#x3D;&quot;w-6 h-6 text-cta-default dark:text-cyan-500&quot;
+                  fill&#x3D;&quot;currentColor&quot;
+                  viewBox&#x3D;&quot;0 0 20 20&quot;
+                &gt;
+                  &lt;path
+                    fill-rule&#x3D;&quot;evenodd&quot;
+                    d&#x3D;&quot;M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z&quot;
+                    clip-rule&#x3D;&quot;evenodd&quot;
+                  &gt;&lt;/path&gt;
+                &lt;/svg&gt;
+              &lt;/div&gt;
+            }
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;text-center mt-12&quot;&gt;
+        &lt;button (click)&#x3D;&quot;startPublishing()&quot; class&#x3D;&quot;btn-primary btn-lg&quot;&gt;Empezar ahora&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Testimonios --&gt;
+&lt;section class&#x3D;&quot;py-16 bg-surface-raised dark:bg-slate-900&quot;&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;text-center mb-12&quot;&gt;
+      &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+        Lo que dicen nuestros Renters
+      &lt;/h2&gt;
+      &lt;p class&#x3D;&quot;text-lg text-text-secondary dark:text-gray-300&quot;&gt;
+        Miles de propietarios ya están generando ingresos con sus autos
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div data-tour-step&#x3D;&quot;testimonials&quot; class&#x3D;&quot;grid md:grid-cols-3 gap-6&quot;&gt;
+      @for (testimonial of testimonials; track testimonial.name) {
+        &lt;div class&#x3D;&quot;card-premium p-6&quot;&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-1 mb-4&quot;&gt;
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              &lt;svg class&#x3D;&quot;w-5 h-5 text-yellow-400 fill-current&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+                &lt;path
+                  d&#x3D;&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            }
+          &lt;/div&gt;
+
+          &lt;p class&#x3D;&quot;text-text-secondary dark:text-gray-300 mb-6 italic&quot;&gt;
+            &quot;{{ testimonial.quote }}&quot;
+          &lt;/p&gt;
+
+          &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+            &lt;div
+              class&#x3D;&quot;w-12 h-12 rounded-full bg-surface-secondary dark:bg-slate-700 flex items-center justify-center text-xl font-bold text-cta-default dark:text-cyan-400&quot;
+            &gt;
+              {{ testimonial.name.charAt(0) }}
+            &lt;/div&gt;
+            &lt;div&gt;
+              &lt;div class&#x3D;&quot;font-semibold text-text-primary dark:text-white&quot;&gt;
+                {{ testimonial.name }}
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;text-sm text-text-muted dark:text-gray-400&quot;&gt;
+                {{ testimonial.location }}
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;text-xs text-cta-default dark:text-cyan-400&quot;&gt;
+                {{ testimonial.carBrand }}
+              &lt;/div&gt;
+              &lt;div class&#x3D;&quot;text-xs font-semibold text-green-600 dark:text-green-400&quot;&gt;
+                {{ testimonial.earning }}
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      }
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Programa de Referidos --&gt;
+&lt;section
+  class&#x3D;&quot;py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10 dark:from-cyan-900/20 dark:via-slate-950 dark:to-cyan-800/20&quot;
+&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div data-tour-step&#x3D;&quot;referral-program&quot; class&#x3D;&quot;max-w-4xl mx-auto text-center&quot;&gt;
+      &lt;div class&#x3D;&quot;text-5xl mb-6&quot;&gt;🎁&lt;/div&gt;
+      &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+        Ganás más con nuestro programa de referidos
+      &lt;/h2&gt;
+      &lt;p class&#x3D;&quot;text-lg text-text-secondary dark:text-gray-300 mb-8&quot;&gt;
+        Invitá a tus amigos propietarios y ganás
+        &lt;strong class&#x3D;&quot;text-cta-default dark:text-cyan-400&quot;&gt;$1,500 ARS&lt;/strong&gt; por cada uno que
+        publique su auto. Ellos también reciben
+        &lt;strong class&#x3D;&quot;text-cta-default dark:text-cyan-400&quot;&gt;$500 ARS&lt;/strong&gt; de bienvenida.
+      &lt;/p&gt;
+
+      &lt;div class&#x3D;&quot;grid md:grid-cols-2 gap-6 mb-8&quot;&gt;
+        &lt;div class&#x3D;&quot;card-premium p-6&quot;&gt;
+          &lt;div class&#x3D;&quot;text-3xl mb-3&quot;&gt;💵&lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2&quot;&gt;$1,500&lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;&gt;
+            Por cada amigo que publique su auto
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;card-premium p-6&quot;&gt;
+          &lt;div class&#x3D;&quot;text-3xl mb-3&quot;&gt;🚀&lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2&quot;&gt;Sin límites&lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-sm text-text-secondary dark:text-gray-300&quot;&gt;
+            Invitá a todos tus amigos y seguí ganando
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;button (click)&#x3D;&quot;goToReferrals()&quot; class&#x3D;&quot;btn-primary btn-lg&quot;&gt;
+        Ver mi código de referidos
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- FAQs --&gt;
+&lt;section class&#x3D;&quot;py-16 bg-surface-base dark:bg-slate-950&quot;&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;max-w-3xl mx-auto&quot;&gt;
+      &lt;div class&#x3D;&quot;text-center mb-12&quot;&gt;
+        &lt;h2 class&#x3D;&quot;text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white&quot;&gt;
+          Preguntas frecuentes
+        &lt;/h2&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+        @for (faq of faqs; track $index) {
+          &lt;div class&#x3D;&quot;card-premium overflow-hidden&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;toggleFAQ($index)&quot;
+              class&#x3D;&quot;w-full text-left px-6 py-4 flex items-center justify-between hover:bg-surface-secondary dark:hover:bg-slate-800 transition-colors&quot;
+            &gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-white&quot;&gt;{{
+                faq.question
+              }}&lt;/span&gt;
+              &lt;svg
+                class&#x3D;&quot;w-5 h-5 text-text-muted dark:text-gray-400 transition-transform&quot;
+                [class.rotate-180]&#x3D;&quot;faq.open&quot;
+                fill&#x3D;&quot;none&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 24 24&quot;
+              &gt;
+                &lt;path
+                  stroke-linecap&#x3D;&quot;round&quot;
+                  stroke-linejoin&#x3D;&quot;round&quot;
+                  stroke-width&#x3D;&quot;2&quot;
+                  d&#x3D;&quot;M19 9l-7 7-7-7&quot;
+                &gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/button&gt;
+
+            @if (faq.open) {
+              &lt;div class&#x3D;&quot;px-6 pb-4 text-text-secondary dark:text-gray-300&quot;&gt;
+                {{ faq.answer }}
+              &lt;/div&gt;
+            }
+          &lt;/div&gt;
+        }
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- Final CTA --&gt;
+&lt;section
+  class&#x3D;&quot;py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-white&quot;
+&gt;
+  &lt;div class&#x3D;&quot;container-page px-container&quot;&gt;
+    &lt;div class&#x3D;&quot;max-w-3xl mx-auto text-center&quot;&gt;
+      &lt;h2 class&#x3D;&quot;text-3xl lg:text-5xl font-bold mb-6&quot;&gt;¿Listo para comenzar a ganar?&lt;/h2&gt;
+      &lt;p class&#x3D;&quot;text-xl mb-8 opacity-90&quot;&gt;
+        Unite a miles de Renters que ya están generando ingresos con sus autos.
+      &lt;/p&gt;
+
+      &lt;button
+        (click)&#x3D;&quot;startPublishing()&quot;
+        class&#x3D;&quot;bg-white text-cta-default dark:text-cyan-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors shadow-lg&quot;
+      &gt;
+        @if (isAuthenticated()) {
+          Publicar mi auto ahora
+        } @else {
+          Crear cuenta gratis
+        }
+      &lt;/button&gt;
+
+      &lt;div class&#x3D;&quot;mt-8 text-sm opacity-75&quot;&gt;
+        ✅ Sin costos iniciales • ✅ Sin contratos • ✅ Cancelás cuando quieras
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./become-renter.page.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/* Become Renter Page Styles */
+
+/* Range inputs styling */
+input[type&#x3D;&#x27;range&#x27;] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    var(--cta-default, #0066cc) 0%,
+    var(--cta-default, #0066cc) 50%,
+    var(--surface-secondary, #e2e8f0) 50%,
+    var(--surface-secondary, #e2e8f0) 100%
+  );
+  outline: none;
+  transition: opacity 0.2s;
+}
+
+input[type&#x3D;&#x27;range&#x27;]:hover {
+  opacity: 0.8;
+}
+
+input[type&#x3D;&#x27;range&#x27;]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cta-default, #0066cc);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+input[type&#x3D;&#x27;range&#x27;]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+input[type&#x3D;&#x27;range&#x27;]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cta-default, #0066cc);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+input[type&#x3D;&#x27;range&#x27;]::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode overrides */
+.dark input[type&#x3D;&#x27;range&#x27;] {
+  background: linear-gradient(
+    to right,
+    var(--cta-default, #06b6d4) 0%,
+    var(--cta-default, #06b6d4) 50%,
+    var(--slate-700, #334155) 50%,
+    var(--slate-700, #334155) 100%
+  );
+}
+
+.dark input[type&#x3D;&#x27;range&#x27;]::-webkit-slider-thumb {
+  background: var(--cta-default, #06b6d4);
+}
+
+.dark input[type&#x3D;&#x27;range&#x27;]::-moz-range-thumb {
+  background: var(--cta-default, #06b6d4);
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Testimonial cards hover effect */
+.card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.dark .card-premium:hover {
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  input[type&#x3D;&#x27;range&#x27;]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  input[type&#x3D;&#x27;range&#x27;]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><!-- Hero Section --><section  class="relative bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 lg:py-24 overflow-hidden">  <!-- Background decorative elements -->  <div class="absolute inset-0 pointer-events-none">    <div      class="absolute top-0 right-0 w-96 h-96 bg-cta-default/10 dark:bg-cyan-500/10 rounded-full blur-3xl"    ></div>    <div      class="absolute bottom-0 left-0 w-96 h-96 bg-cta-hover/10 dark:bg-cyan-600/10 rounded-full blur-3xl"    ></div>  </div>  <div class="container-page px-container relative z-10">    <div class="grid lg:grid-cols-2 gap-12 items-center">      <!-- Left: Content -->      <div>        <div          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised dark:bg-slate-800 border border-cta-default/20 dark:border-cyan-500/20 mb-6"        >          <span class="text-2xl">🏠</span>          <span class="text-sm font-medium text-cta-default dark:text-cyan-400"            >Programa de Renters</span          >        </div>        <h1          class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6 text-text-primary dark:text-white leading-tight"        >          Convertí tu auto en una          <span            class="text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-cta-hover dark:from-cyan-400 dark:to-cyan-300"          >            fuente de ingresos          </span>        </h1>        <p class="text-lg lg:text-xl text-text-secondary dark:text-gray-300 mb-8 leading-relaxed">          Publicá tu auto en Autorentar y generá entre          <strong class="text-cta-default dark:text-cyan-400">$50,000 y $200,000</strong> por mes.          Miles de personas están buscando rentar un auto como el tuyo.        </p>        <div class="flex flex-col sm:flex-row gap-4 mb-8">          <button            data-tour-step="start-publishing"            (click)="startPublishing()"            class="btn-primary btn-lg justify-center"          >            @if (isAuthenticated()) {              Publicar mi auto            } @else {              Comenzar ahora            }          </button>          <button            (click)="scrollToSection(\'calculator\')"            class="btn-secondary btn-lg justify-center"          >            Calcular mis ingresos          </button>        </div>        <!-- Stats -->        <div class="grid grid-cols-3 gap-4">          <div class="text-center">            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">              1,500+            </div>            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Renters activos</div>          </div>          <div class="text-center">            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">              $120k            </div>            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Promedio/mes</div>          </div>          <div class="text-center">            <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">              24hs            </div>            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Para activar</div>          </div>        </div>      </div>      <!-- Right: Image/Illustration -->      <div class="relative">        <div          class="aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-slate-950"        >          <img            src="/BM.png"            alt="Convertite en Renter"            class="w-full h-full object-cover"            loading="lazy"          />          <!-- Overlay with stats card -->          <div            class="absolute bottom-6 left-6 right-6 bg-surface-raised/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 dark:border-white/10 shadow-lg"          >            <div class="flex items-center gap-3 mb-2">              <div class="text-3xl">💰</div>              <div>                <div class="text-sm font-medium text-text-muted dark:text-gray-400">                  Ganancia promedio                </div>                <div class="text-2xl font-bold text-text-primary dark:text-white">$120,000/mes</div>              </div>            </div>            <div class="text-xs text-text-muted dark:text-gray-400">              Basado en datos de 1,500+ Renters activos            </div>          </div>        </div>      </div>    </div>  </div></section><!-- Calculadora de Ingresos --><section id="calculator" class="py-16 bg-surface-base dark:bg-slate-950">  <div class="container-page px-container">    <div class="max-w-4xl mx-auto">      <div class="text-center mb-12">        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">          Calculá tus ingresos potenciales        </h2>        <p class="text-lg text-text-secondary dark:text-gray-300">          Estimá cuánto podés ganar rentando tu auto        </p>      </div>      <div data-tour-step="income-calculator" class="card-premium p-8">        <div class="grid md:grid-cols-2 gap-8">          <!-- Inputs -->          <div class="space-y-6">            <div>              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">                Valor de tu auto              </label>              <input                type="range"                [(ngModel)]="carValue"                min="20000"                max="200000"                step="5000"                class="w-full"              />              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">                {{ carValue() | number: \'1.0-0\' }} ARS              </div>            </div>            <div>              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">                Días rentados por mes              </label>              <input                type="range"                [(ngModel)]="daysPerMonth"                min="1"                max="30"                step="1"                class="w-full"              />              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">                {{ daysPerMonth() }} días              </div>            </div>            <div>              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">                Precio por día              </label>              <input                type="range"                [(ngModel)]="pricePerDay"                min="3000"                max="20000"                step="500"                class="w-full"              />              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">                {{ pricePerDay() | number: \'1.0-0\' }} ARS/día              </div>            </div>          </div>          <!-- Results -->          <div            class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20"          >            <div class="text-center mb-6">              <div class="text-sm font-medium text-text-muted dark:text-gray-400 mb-2">                Ingresos mensuales estimados              </div>              <div class="text-4xl lg:text-5xl font-bold text-cta-default dark:text-cyan-400">                ${{ estimatedMonthlyIncome() | number: \'1.0-0\' }}              </div>            </div>            <div class="space-y-4">              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-gray-300"                  >Ingresos anuales:</span                >                <span class="text-lg font-semibold text-text-primary dark:text-white">                  ${{ estimatedYearlyIncome() | number: \'1.0-0\' }}                </span>              </div>              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-gray-300">ROI aproximado:</span>                <span class="text-lg font-semibold text-text-primary dark:text-white">                  {{ estimatedROI() | number: \'1.1-1\' }}%                </span>              </div>              <div class="flex justify-between items-center">                <span class="text-sm text-text-secondary dark:text-gray-300">Te quedás (85%):</span>                <span class="text-lg font-semibold text-green-600 dark:text-green-400">                  ${{ estimatedMonthlyIncome() * 0.85 | number: \'1.0-0\' }}                </span>              </div>            </div>            <button (click)="startPublishing()" class="btn-primary w-full mt-6">              Comenzar a ganar            </button>          </div>        </div>      </div>    </div>  </div></section><!-- Beneficios --><section class="py-16 bg-surface-raised dark:bg-slate-900">  <div class="container-page px-container">    <div class="text-center mb-12">      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">        ¿Por qué elegir Autorentar?      </h2>      <p class="text-lg text-text-secondary dark:text-gray-300">        Te damos todas las herramientas para que rentes tu auto con seguridad y confianza      </p>    </div>    <div data-tour-step="benefits-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">      @for (benefit of benefits; track benefit.title) {        <div class="card-premium p-6 hover:scale-[1.02] transition-transform">          <div class="text-4xl mb-4">{{ benefit.icon }}</div>          <h3 class="text-xl font-semibold mb-2 text-text-primary dark:text-white">            {{ benefit.title }}          </h3>          <p class="text-text-secondary dark:text-gray-300">            {{ benefit.description }}          </p>        </div>      }    </div>  </div></section><!-- Proceso paso a paso --><section class="py-16 bg-surface-base dark:bg-slate-950">  <div class="container-page px-container">    <div class="text-center mb-12">      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">        ¿Cómo funciona?      </h2>      <p class="text-lg text-text-secondary dark:text-gray-300">        4 pasos simples para comenzar a ganar dinero con tu auto      </p>    </div>    <div class="max-w-5xl mx-auto">      <div data-tour-step="process-steps" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">        @for (step of steps; track step.number) {          <div class="relative">            <div class="card-premium p-6 text-center h-full">              <div class="text-5xl mb-4">{{ step.icon }}</div>              <div                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-white font-bold mb-4"              >                {{ step.number }}              </div>              <h3 class="text-lg font-semibold mb-2 text-text-primary dark:text-white">                {{ step.title }}              </h3>              <p class="text-sm text-text-secondary dark:text-gray-300">                {{ step.description }}              </p>            </div>            <!-- Connector arrow (except last item) -->            @if (step.number < steps.length) {              <div                class="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10"              >                <svg                  class="w-6 h-6 text-cta-default dark:text-cyan-500"                  fill="currentColor"                  viewBox="0 0 20 20"                >                  <path                    fill-rule="evenodd"                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"                    clip-rule="evenodd"                  ></path>                </svg>              </div>            }          </div>        }      </div>      <div class="text-center mt-12">        <button (click)="startPublishing()" class="btn-primary btn-lg">Empezar ahora</button>      </div>    </div>  </div></section><!-- Testimonios --><section class="py-16 bg-surface-raised dark:bg-slate-900">  <div class="container-page px-container">    <div class="text-center mb-12">      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">        Lo que dicen nuestros Renters      </h2>      <p class="text-lg text-text-secondary dark:text-gray-300">        Miles de propietarios ya están generando ingresos con sus autos      </p>    </div>    <div data-tour-step="testimonials" class="grid md:grid-cols-3 gap-6">      @for (testimonial of testimonials; track testimonial.name) {        <div class="card-premium p-6">          <div class="flex items-center gap-1 mb-4">            @for (star of [1, 2, 3, 4, 5]; track star) {              <svg class="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">                <path                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"                ></path>              </svg>            }          </div>          <p class="text-text-secondary dark:text-gray-300 mb-6 italic">            "{{ testimonial.quote }}"          </p>          <div class="flex items-center gap-3">            <div              class="w-12 h-12 rounded-full bg-surface-secondary dark:bg-slate-700 flex items-center justify-center text-xl font-bold text-cta-default dark:text-cyan-400"            >              {{ testimonial.name.charAt(0) }}            </div>            <div>              <div class="font-semibold text-text-primary dark:text-white">                {{ testimonial.name }}              </div>              <div class="text-sm text-text-muted dark:text-gray-400">                {{ testimonial.location }}              </div>              <div class="text-xs text-cta-default dark:text-cyan-400">                {{ testimonial.carBrand }}              </div>              <div class="text-xs font-semibold text-green-600 dark:text-green-400">                {{ testimonial.earning }}              </div>            </div>          </div>        </div>      }    </div>  </div></section><!-- Programa de Referidos --><section  class="py-16 bg-gradient-to-br from-cta-default/10 via-surface-base to-cta-hover/10 dark:from-cyan-900/20 dark:via-slate-950 dark:to-cyan-800/20">  <div class="container-page px-container">    <div data-tour-step="referral-program" class="max-w-4xl mx-auto text-center">      <div class="text-5xl mb-6">🎁</div>      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">        Ganás más con nuestro programa de referidos      </h2>      <p class="text-lg text-text-secondary dark:text-gray-300 mb-8">        Invitá a tus amigos propietarios y ganás        <strong class="text-cta-default dark:text-cyan-400">$1,500 ARS</strong> por cada uno que        publique su auto. Ellos también reciben        <strong class="text-cta-default dark:text-cyan-400">$500 ARS</strong> de bienvenida.      </p>      <div class="grid md:grid-cols-2 gap-6 mb-8">        <div class="card-premium p-6">          <div class="text-3xl mb-3">💵</div>          <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">$1,500</div>          <div class="text-sm text-text-secondary dark:text-gray-300">            Por cada amigo que publique su auto          </div>        </div>        <div class="card-premium p-6">          <div class="text-3xl mb-3">🚀</div>          <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">Sin límites</div>          <div class="text-sm text-text-secondary dark:text-gray-300">            Invitá a todos tus amigos y seguí ganando          </div>        </div>      </div>      <button (click)="goToReferrals()" class="btn-primary btn-lg">        Ver mi código de referidos      </button>    </div>  </div></section><!-- FAQs --><section class="py-16 bg-surface-base dark:bg-slate-950">  <div class="container-page px-container">    <div class="max-w-3xl mx-auto">      <div class="text-center mb-12">        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">          Preguntas frecuentes        </h2>      </div>      <div class="space-y-4">        @for (faq of faqs; track $index) {          <div class="card-premium overflow-hidden">            <button              (click)="toggleFAQ($index)"              class="w-full text-left px-6 py-4 flex items-center justify-between hover:bg-surface-secondary dark:hover:bg-slate-800 transition-colors"            >              <span class="font-semibold text-text-primary dark:text-white">{{                faq.question              }}</span>              <svg                class="w-5 h-5 text-text-muted dark:text-gray-400 transition-transform"                [class.rotate-180]="faq.open"                fill="none"                stroke="currentColor"                viewBox="0 0 24 24"              >                <path                  stroke-linecap="round"                  stroke-linejoin="round"                  stroke-width="2"                  d="M19 9l-7 7-7-7"                ></path>              </svg>            </button>            @if (faq.open) {              <div class="px-6 pb-4 text-text-secondary dark:text-gray-300">                {{ faq.answer }}              </div>            }          </div>        }      </div>    </div>  </div></section><!-- Final CTA --><section  class="py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-white">  <div class="container-page px-container">    <div class="max-w-3xl mx-auto text-center">      <h2 class="text-3xl lg:text-5xl font-bold mb-6">¿Listo para comenzar a ganar?</h2>      <p class="text-xl mb-8 opacity-90">        Unite a miles de Renters que ya están generando ingresos con sus autos.      </p>      <button        (click)="startPublishing()"        class="bg-white text-cta-default dark:text-cyan-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors shadow-lg"      >        @if (isAuthenticated()) {          Publicar mi auto ahora        } @else {          Crear cuenta gratis        }      </button>      <div class="mt-8 text-sm opacity-75">        ✅ Sin costos iniciales • ✅ Sin contratos • ✅ Cancelás cuando quieras      </div>    </div>  </div></section></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'BecomeRenterPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'BecomeRenterPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

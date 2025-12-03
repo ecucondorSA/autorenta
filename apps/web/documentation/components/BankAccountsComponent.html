@@ -1,0 +1,2430 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  BankAccountsComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/payouts/components/bank-accounts.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Bank Accounts Component</p>
+<p>Manages user&#39;s bank accounts (CBU/CVU)</p>
+<ul>
+<li>List all accounts</li>
+<li>Add new account</li>
+<li>Set default account</li>
+<li>Delete account</li>
+</ul>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-bank-accounts</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>ReactiveFormsModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      .bank-accounts {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .accounts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .account-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s;
+      }
+
+      .account-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .account-card.default {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+
+      .account-info {
+        margin-bottom: 0.75rem;
+      }
+
+      .account-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .account-holder {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .badge-primary {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .badge-secondary {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+
+      .account-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .account-number {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+      }
+
+      .account-status {
+        margin-top: 0.5rem;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .status-badge.verified {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-badge.unverified {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-badge.invalid {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .account-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .empty-icon {
+        width: 3rem;
+        height: 3rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
+
+      .empty-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .empty-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .add-form {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+      }
+
+      .form-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #dbeafe;
+      }
+
+      .hint-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+
+      .error-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #dc2626;
+        margin-top: 0.25rem;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
+
+      .checkbox-label input[type&#x3D;&#x27;checkbox&#x27;] {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-text {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: #eff6ff;
+      }
+
+      .btn-text {
+        background: transparent;
+        color: #6b7280;
+      }
+
+      .btn-text:hover:not(:disabled) {
+        color: #111827;
+      }
+
+      .btn-primary:disabled,
+      .btn-secondary:disabled,
+      .btn-text:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .alert {
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;bank-accounts&quot;&gt;
+  &lt;!-- Accounts List --&gt;
+  &lt;div class&#x3D;&quot;accounts-list&quot; *ngIf&#x3D;&quot;accounts().length &gt; 0&quot;&gt;
+    &lt;div
+      *ngFor&#x3D;&quot;let account of accounts()&quot;
+      class&#x3D;&quot;account-card&quot;
+      [class.default]&#x3D;&quot;account.isDefault&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;account-info&quot;&gt;
+        &lt;div class&#x3D;&quot;account-header&quot;&gt;
+          &lt;h4 class&#x3D;&quot;account-holder&quot;&gt;{{ account.accountHolder }}&lt;/h4&gt;
+          &lt;span *ngIf&#x3D;&quot;account.isDefault&quot; class&#x3D;&quot;badge badge-primary&quot;&gt; Predeterminada &lt;/span&gt;
+          &lt;span *ngIf&#x3D;&quot;!account.isDefault&quot; class&#x3D;&quot;badge badge-secondary&quot;&gt; Adicional &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;account-details&quot;&gt;
+          &lt;span class&#x3D;&quot;account-type&quot;&gt;
+            {{ account.accountType &#x3D;&#x3D;&#x3D; &#x27;checking&#x27; ? &#x27;Cuenta Corriente&#x27; : &#x27;Caja de Ahorro&#x27; }}
+          &lt;/span&gt;
+          &lt;span class&#x3D;&quot;account-number&quot;&gt;
+            {{ formatAccountNumber(account.accountNumber) }}
+          &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;account-status&quot;&gt;
+          &lt;span
+            class&#x3D;&quot;status-badge&quot;
+            [class.verified]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;verified&#x27;&quot;
+            [class.unverified]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;unverified&#x27;&quot;
+            [class.invalid]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;invalid&#x27;&quot;
+          &gt;
+            {{ getStatusText(account.status) }}
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;account-actions&quot;&gt;
+        &lt;button
+          *ngIf&#x3D;&quot;!account.isDefault&quot;
+          type&#x3D;&quot;button&quot;
+          class&#x3D;&quot;btn-text&quot;
+          (click)&#x3D;&quot;setAsDefault(account.id)&quot;
+          [disabled]&#x3D;&quot;loading()&quot;
+        &gt;
+          Usar como predeterminada
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Empty State --&gt;
+  &lt;div *ngIf&#x3D;&quot;accounts().length &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;empty-state&quot;&gt;
+    &lt;svg class&#x3D;&quot;empty-icon&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+      &lt;path
+        stroke-linecap&#x3D;&quot;round&quot;
+        stroke-linejoin&#x3D;&quot;round&quot;
+        stroke-width&#x3D;&quot;2&quot;
+        d&#x3D;&quot;M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z&quot;
+      /&gt;
+    &lt;/svg&gt;
+    &lt;p class&#x3D;&quot;empty-text&quot;&gt;No tenés cuentas bancarias configuradas&lt;/p&gt;
+    &lt;p class&#x3D;&quot;empty-hint&quot;&gt;Agregá una cuenta para poder retirar fondos&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Add Account Button --&gt;
+  &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn-secondary&quot; (click)&#x3D;&quot;toggleAddForm()&quot; *ngIf&#x3D;&quot;!showAddForm()&quot;&gt;
+    &lt;svg class&#x3D;&quot;w-5 h-5&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+      &lt;path
+        stroke-linecap&#x3D;&quot;round&quot;
+        stroke-linejoin&#x3D;&quot;round&quot;
+        stroke-width&#x3D;&quot;2&quot;
+        d&#x3D;&quot;M12 4v16m8-8H4&quot;
+      /&gt;
+    &lt;/svg&gt;
+    Agregar Cuenta Bancaria
+  &lt;/button&gt;
+
+  &lt;!-- Add Account Form --&gt;
+  &lt;div *ngIf&#x3D;&quot;showAddForm()&quot; class&#x3D;&quot;add-form&quot;&gt;
+    &lt;h3 class&#x3D;&quot;form-title&quot;&gt;Nueva Cuenta Bancaria&lt;/h3&gt;
+    &lt;form [formGroup]&#x3D;&quot;form&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label&gt;Titular de la Cuenta&lt;/label&gt;
+        &lt;input
+          type&#x3D;&quot;text&quot;
+          formControlName&#x3D;&quot;accountHolder&quot;
+          placeholder&#x3D;&quot;Juan Pérez&quot;
+          class&#x3D;&quot;form-input&quot;
+        /&gt;
+        &lt;span
+          *ngIf&#x3D;&quot;form.controls.accountHolder.invalid &amp;&amp; form.controls.accountHolder.touched&quot;
+          class&#x3D;&quot;error-text&quot;
+        &gt;
+          El nombre del titular es requerido
+        &lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label&gt;CBU/CVU&lt;/label&gt;
+        &lt;input
+          type&#x3D;&quot;text&quot;
+          formControlName&#x3D;&quot;accountNumber&quot;
+          placeholder&#x3D;&quot;0000003100010000000000&quot;
+          maxlength&#x3D;&quot;22&quot;
+          class&#x3D;&quot;form-input&quot;
+        /&gt;
+        &lt;span class&#x3D;&quot;hint-text&quot;&gt;22 dígitos sin espacios&lt;/span&gt;
+        &lt;span
+          *ngIf&#x3D;&quot;form.controls.accountNumber.invalid &amp;&amp; form.controls.accountNumber.touched&quot;
+          class&#x3D;&quot;error-text&quot;
+        &gt;
+          CBU/CVU debe tener 22 dígitos
+        &lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label&gt;Tipo de Cuenta&lt;/label&gt;
+        &lt;select formControlName&#x3D;&quot;accountType&quot; class&#x3D;&quot;form-select&quot;&gt;
+          &lt;option value&#x3D;&quot;savings&quot;&gt;Caja de Ahorro&lt;/option&gt;
+          &lt;option value&#x3D;&quot;checking&quot;&gt;Cuenta Corriente&lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;
+        &lt;label class&#x3D;&quot;checkbox-label&quot;&gt;
+          &lt;input type&#x3D;&quot;checkbox&quot; formControlName&#x3D;&quot;isDefault&quot; /&gt;
+          &lt;span&gt;Usar como cuenta predeterminada&lt;/span&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+
+      &lt;div class&#x3D;&quot;form-actions&quot;&gt;
+        &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn-text&quot; (click)&#x3D;&quot;toggleAddForm()&quot; [disabled]&#x3D;&quot;loading()&quot;&gt;
+          Cancelar
+        &lt;/button&gt;
+        &lt;button type&#x3D;&quot;submit&quot; class&#x3D;&quot;btn-primary&quot; [disabled]&#x3D;&quot;form.invalid || loading()&quot;&gt;
+          {{ loading() ? &#x27;Guardando...&#x27; : &#x27;Agregar Cuenta&#x27; }}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Error Message --&gt;
+  &lt;div *ngIf&#x3D;&quot;error()&quot; class&#x3D;&quot;alert alert-error&quot;&gt;
+    {{ error() }}
+  &lt;/div&gt;
+
+  &lt;!-- Success Message --&gt;
+  &lt;div *ngIf&#x3D;&quot;success()&quot; class&#x3D;&quot;alert alert-success&quot;&gt;
+    {{ success() }}
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#accounts" >accounts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fb" >fb</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#form" >form</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#payoutService" >payoutService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#showAddForm" >showAddForm</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#success" >success</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatAccountNumber" >formatAccountNumber</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusText" >getStatusText</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadAccounts" >loadAccounts</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onSubmit" >onSubmit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#setAsDefault" >setAsDefault</a>
+                            </li>
+                            <li>
+                                <a href="#toggleAddForm" >toggleAddForm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#userId" >userId</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#accountUpdated" >accountUpdated</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="userId"></a>
+                        <b>userId</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="451" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:451</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="accountUpdated"></a>
+                        <b>accountUpdated</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EventEmitter</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="452" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:452</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatAccountNumber"></a>
+                    <span class="name">
+                        <span ><b>formatAccountNumber</b></span>
+                        <a href="#formatAccountNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatAccountNumber(accountNumber: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="559"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:559</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>accountNumber</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusText"></a>
+                    <span class="name">
+                        <span ><b>getStatusText</b></span>
+                        <a href="#getStatusText"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusText(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="564"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:564</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadAccounts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadAccounts</b></span>
+                        <a href="#loadAccounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadAccounts()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="475"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:475</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="471"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:471</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onSubmit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onSubmit</b></span>
+                        <a href="#onSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onSubmit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:502</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setAsDefault"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setAsDefault</b></span>
+                        <a href="#setAsDefault"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setAsDefault(accountId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="536"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:536</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>accountId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleAddForm"></a>
+                    <span class="name">
+                        <span ><b>toggleAddForm</b></span>
+                        <a href="#toggleAddForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleAddForm()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="493"
+                                    class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:493</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="accounts"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>accounts</b></span>
+                        <a href="#accounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BankAccount[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="457" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:457</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="459" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:459</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fb"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fb</b></span>
+                        <a href="#fb"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FormBuilder)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="455" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:455</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="form"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>form</b></span>
+                        <a href="#form"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.fb.nonNullable.group({
+    accountHolder: [&#x27;&#x27;, Validators.required],
+    accountNumber: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^\d{22}$/)]],
+    accountType: [&#x27;savings&#x27; as &#x27;savings&#x27; | &#x27;checking&#x27;, Validators.required],
+    bankCode: [&#x27;&#x27;],
+    isDefault: [false],
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="463" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:463</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="458" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:458</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="payoutService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>payoutService</b></span>
+                        <a href="#payoutService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(PayoutService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="454" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:454</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showAddForm"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>showAddForm</b></span>
+                        <a href="#showAddForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="461" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:461</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="success"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>success</b></span>
+                        <a href="#success"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="460" class="link-to-prism">src/app/features/payouts/components/bank-accounts.component.ts:460</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from &#x27;@angular/core&#x27;;
+import { FormBuilder, ReactiveFormsModule, Validators } from &#x27;@angular/forms&#x27;;
+import { take } from &#x27;rxjs/operators&#x27;;
+import { BankAccount, PayoutService } from &#x27;../../../core/services/payout.service&#x27;;
+
+/**
+ * Bank Accounts Component
+ *
+ * Manages user&#x27;s bank accounts (CBU/CVU)
+ * - List all accounts
+ * - Add new account
+ * - Set default account
+ * - Delete account
+ */
+@Component({
+  selector: &#x27;app-bank-accounts&#x27;,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;bank-accounts&quot;&gt;
+      &lt;!-- Accounts List --&gt;
+      &lt;div class&#x3D;&quot;accounts-list&quot; *ngIf&#x3D;&quot;accounts().length &gt; 0&quot;&gt;
+        &lt;div
+          *ngFor&#x3D;&quot;let account of accounts()&quot;
+          class&#x3D;&quot;account-card&quot;
+          [class.default]&#x3D;&quot;account.isDefault&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;account-info&quot;&gt;
+            &lt;div class&#x3D;&quot;account-header&quot;&gt;
+              &lt;h4 class&#x3D;&quot;account-holder&quot;&gt;{{ account.accountHolder }}&lt;/h4&gt;
+              &lt;span *ngIf&#x3D;&quot;account.isDefault&quot; class&#x3D;&quot;badge badge-primary&quot;&gt; Predeterminada &lt;/span&gt;
+              &lt;span *ngIf&#x3D;&quot;!account.isDefault&quot; class&#x3D;&quot;badge badge-secondary&quot;&gt; Adicional &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;account-details&quot;&gt;
+              &lt;span class&#x3D;&quot;account-type&quot;&gt;
+                {{ account.accountType &#x3D;&#x3D;&#x3D; &#x27;checking&#x27; ? &#x27;Cuenta Corriente&#x27; : &#x27;Caja de Ahorro&#x27; }}
+              &lt;/span&gt;
+              &lt;span class&#x3D;&quot;account-number&quot;&gt;
+                {{ formatAccountNumber(account.accountNumber) }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;account-status&quot;&gt;
+              &lt;span
+                class&#x3D;&quot;status-badge&quot;
+                [class.verified]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;verified&#x27;&quot;
+                [class.unverified]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;unverified&#x27;&quot;
+                [class.invalid]&#x3D;&quot;account.status &#x3D;&#x3D;&#x3D; &#x27;invalid&#x27;&quot;
+              &gt;
+                {{ getStatusText(account.status) }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;account-actions&quot;&gt;
+            &lt;button
+              *ngIf&#x3D;&quot;!account.isDefault&quot;
+              type&#x3D;&quot;button&quot;
+              class&#x3D;&quot;btn-text&quot;
+              (click)&#x3D;&quot;setAsDefault(account.id)&quot;
+              [disabled]&#x3D;&quot;loading()&quot;
+            &gt;
+              Usar como predeterminada
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Empty State --&gt;
+      &lt;div *ngIf&#x3D;&quot;accounts().length &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;empty-state&quot;&gt;
+        &lt;svg class&#x3D;&quot;empty-icon&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+          &lt;path
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            d&#x3D;&quot;M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z&quot;
+          /&gt;
+        &lt;/svg&gt;
+        &lt;p class&#x3D;&quot;empty-text&quot;&gt;No tenés cuentas bancarias configuradas&lt;/p&gt;
+        &lt;p class&#x3D;&quot;empty-hint&quot;&gt;Agregá una cuenta para poder retirar fondos&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Add Account Button --&gt;
+      &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn-secondary&quot; (click)&#x3D;&quot;toggleAddForm()&quot; *ngIf&#x3D;&quot;!showAddForm()&quot;&gt;
+        &lt;svg class&#x3D;&quot;w-5 h-5&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+          &lt;path
+            stroke-linecap&#x3D;&quot;round&quot;
+            stroke-linejoin&#x3D;&quot;round&quot;
+            stroke-width&#x3D;&quot;2&quot;
+            d&#x3D;&quot;M12 4v16m8-8H4&quot;
+          /&gt;
+        &lt;/svg&gt;
+        Agregar Cuenta Bancaria
+      &lt;/button&gt;
+
+      &lt;!-- Add Account Form --&gt;
+      &lt;div *ngIf&#x3D;&quot;showAddForm()&quot; class&#x3D;&quot;add-form&quot;&gt;
+        &lt;h3 class&#x3D;&quot;form-title&quot;&gt;Nueva Cuenta Bancaria&lt;/h3&gt;
+        &lt;form [formGroup]&#x3D;&quot;form&quot; (ngSubmit)&#x3D;&quot;onSubmit()&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label&gt;Titular de la Cuenta&lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;accountHolder&quot;
+              placeholder&#x3D;&quot;Juan Pérez&quot;
+              class&#x3D;&quot;form-input&quot;
+            /&gt;
+            &lt;span
+              *ngIf&#x3D;&quot;form.controls.accountHolder.invalid &amp;&amp; form.controls.accountHolder.touched&quot;
+              class&#x3D;&quot;error-text&quot;
+            &gt;
+              El nombre del titular es requerido
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label&gt;CBU/CVU&lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              formControlName&#x3D;&quot;accountNumber&quot;
+              placeholder&#x3D;&quot;0000003100010000000000&quot;
+              maxlength&#x3D;&quot;22&quot;
+              class&#x3D;&quot;form-input&quot;
+            /&gt;
+            &lt;span class&#x3D;&quot;hint-text&quot;&gt;22 dígitos sin espacios&lt;/span&gt;
+            &lt;span
+              *ngIf&#x3D;&quot;form.controls.accountNumber.invalid &amp;&amp; form.controls.accountNumber.touched&quot;
+              class&#x3D;&quot;error-text&quot;
+            &gt;
+              CBU/CVU debe tener 22 dígitos
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label&gt;Tipo de Cuenta&lt;/label&gt;
+            &lt;select formControlName&#x3D;&quot;accountType&quot; class&#x3D;&quot;form-select&quot;&gt;
+              &lt;option value&#x3D;&quot;savings&quot;&gt;Caja de Ahorro&lt;/option&gt;
+              &lt;option value&#x3D;&quot;checking&quot;&gt;Cuenta Corriente&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label class&#x3D;&quot;checkbox-label&quot;&gt;
+              &lt;input type&#x3D;&quot;checkbox&quot; formControlName&#x3D;&quot;isDefault&quot; /&gt;
+              &lt;span&gt;Usar como cuenta predeterminada&lt;/span&gt;
+            &lt;/label&gt;
+          &lt;/div&gt;
+
+          &lt;div class&#x3D;&quot;form-actions&quot;&gt;
+            &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn-text&quot; (click)&#x3D;&quot;toggleAddForm()&quot; [disabled]&#x3D;&quot;loading()&quot;&gt;
+              Cancelar
+            &lt;/button&gt;
+            &lt;button type&#x3D;&quot;submit&quot; class&#x3D;&quot;btn-primary&quot; [disabled]&#x3D;&quot;form.invalid || loading()&quot;&gt;
+              {{ loading() ? &#x27;Guardando...&#x27; : &#x27;Agregar Cuenta&#x27; }}
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Error Message --&gt;
+      &lt;div *ngIf&#x3D;&quot;error()&quot; class&#x3D;&quot;alert alert-error&quot;&gt;
+        {{ error() }}
+      &lt;/div&gt;
+
+      &lt;!-- Success Message --&gt;
+      &lt;div *ngIf&#x3D;&quot;success()&quot; class&#x3D;&quot;alert alert-success&quot;&gt;
+        {{ success() }}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      .bank-accounts {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .accounts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .account-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s;
+      }
+
+      .account-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .account-card.default {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+
+      .account-info {
+        margin-bottom: 0.75rem;
+      }
+
+      .account-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .account-holder {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .badge-primary {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .badge-secondary {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+
+      .account-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .account-number {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+      }
+
+      .account-status {
+        margin-top: 0.5rem;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .status-badge.verified {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-badge.unverified {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-badge.invalid {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .account-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .empty-icon {
+        width: 3rem;
+        height: 3rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
+
+      .empty-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .empty-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .add-form {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+      }
+
+      .form-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #dbeafe;
+      }
+
+      .hint-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+
+      .error-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #dc2626;
+        margin-top: 0.25rem;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
+
+      .checkbox-label input[type&#x3D;&#x27;checkbox&#x27;] {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-text {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: #eff6ff;
+      }
+
+      .btn-text {
+        background: transparent;
+        color: #6b7280;
+      }
+
+      .btn-text:hover:not(:disabled) {
+        color: #111827;
+      }
+
+      .btn-primary:disabled,
+      .btn-secondary:disabled,
+      .btn-text:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .alert {
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+    &#x60;,
+  ],
+})
+export class BankAccountsComponent implements OnInit {
+  @Input() userId!: string;
+  @Output() accountUpdated &#x3D; new EventEmitter&lt;void&gt;();
+
+  private readonly payoutService &#x3D; inject(PayoutService);
+  private readonly fb &#x3D; inject(FormBuilder);
+
+  readonly accounts &#x3D; signal&lt;BankAccount[]&gt;([]);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly success &#x3D; signal&lt;string | null&gt;(null);
+  readonly showAddForm &#x3D; signal(false);
+
+  readonly form &#x3D; this.fb.nonNullable.group({
+    accountHolder: [&#x27;&#x27;, Validators.required],
+    accountNumber: [&#x27;&#x27;, [Validators.required, Validators.pattern(/^\d{22}$/)]],
+    accountType: [&#x27;savings&#x27; as &#x27;savings&#x27; | &#x27;checking&#x27;, Validators.required],
+    bankCode: [&#x27;&#x27;],
+    isDefault: [false],
+  });
+
+  ngOnInit(): void {
+    void this.loadAccounts();
+  }
+
+  async loadAccounts(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const accounts &#x3D; await this.payoutService
+        .getUserBankAccounts(this.userId)
+        .pipe(take(1))
+        .toPromise();
+
+      this.accounts.set(accounts || []);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al cargar cuentas&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  toggleAddForm(): void {
+    this.showAddForm.set(!this.showAddForm());
+    if (!this.showAddForm()) {
+      this.form.reset({ accountType: &#x27;savings&#x27;, isDefault: false });
+      this.error.set(null);
+      this.success.set(null);
+    }
+  }
+
+  async onSubmit(): Promise&lt;void&gt; {
+    if (this.form.invalid) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+    this.success.set(null);
+
+    try {
+      const formValue &#x3D; this.form.getRawValue();
+      await this.payoutService
+        .addBankAccount(this.userId, {
+          accountHolder: formValue.accountHolder,
+          accountNumber: formValue.accountNumber,
+          accountType: formValue.accountType,
+          bankCode: formValue.bankCode || &#x27;AUTO&#x27;,
+          isDefault: formValue.isDefault,
+        })
+        .pipe(take(1))
+        .toPromise();
+
+      this.success.set(&#x27;Cuenta bancaria agregada exitosamente&#x27;);
+      this.form.reset({ accountType: &#x27;savings&#x27;, isDefault: false });
+      this.showAddForm.set(false);
+      await this.loadAccounts();
+      this.accountUpdated.emit();
+
+      setTimeout(() &#x3D;&gt; this.success.set(null), 3000);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al agregar cuenta&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async setAsDefault(accountId: string): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+    this.success.set(null);
+
+    try {
+      await this.payoutService
+        .setDefaultBankAccount(this.userId, accountId)
+        .pipe(take(1))
+        .toPromise();
+
+      this.success.set(&#x27;Cuenta predeterminada actualizada&#x27;);
+      await this.loadAccounts();
+      this.accountUpdated.emit();
+
+      setTimeout(() &#x3D;&gt; this.success.set(null), 3000);
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : &#x27;Error al actualizar cuenta&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  formatAccountNumber(accountNumber: string): string {
+    // Format: 0000 0031 0001 0000 0000 00
+    return accountNumber.replace(/(\d{4})/g, &#x27;$1 &#x27;).trim();
+  }
+
+  getStatusText(status: string): string {
+    const statusMap: Record&lt;string, string&gt; &#x3D; {
+      verified: &#x27;Verificada&#x27;,
+      unverified: &#x27;Sin verificar&#x27;,
+      invalid: &#x27;Inválida&#x27;,
+    };
+    return statusMap[status] || status;
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      .bank-accounts {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .accounts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .account-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        transition: all 0.2s;
+      }
+
+      .account-card:hover {
+        border-color: #d1d5db;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .account-card.default {
+        border-color: #3b82f6;
+        background: #eff6ff;
+      }
+
+      .account-info {
+        margin-bottom: 0.75rem;
+      }
+
+      .account-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .account-holder {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .badge-primary {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .badge-secondary {
+        background: #f3f4f6;
+        color: #6b7280;
+      }
+
+      .account-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .account-number {
+        font-family: var(--font-mono);
+        font-size: 0.875rem;
+      }
+
+      .account-status {
+        margin-top: 0.5rem;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 500;
+      }
+
+      .status-badge.verified {
+        background: #d1fae5;
+        color: #065f46;
+      }
+
+      .status-badge.unverified {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-badge.invalid {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .account-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .empty-icon {
+        width: 3rem;
+        height: 3rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+      }
+
+      .empty-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .empty-hint {
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+
+      .add-form {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        background: #f9fafb;
+      }
+
+      .form-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #dbeafe;
+      }
+
+      .hint-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+      }
+
+      .error-text {
+        display: block;
+        font-size: 0.75rem;
+        color: #dc2626;
+        margin-top: 0.25rem;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+      }
+
+      .checkbox-label input[type&#x3D;&#x27;checkbox&#x27;] {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+      }
+
+      .btn-primary,
+      .btn-secondary,
+      .btn-text {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: #eff6ff;
+      }
+
+      .btn-text {
+        background: transparent;
+        color: #6b7280;
+      }
+
+      .btn-text:hover:not(:disabled) {
+        color: #111827;
+      }
+
+      .btn-primary:disabled,
+      .btn-secondary:disabled,
+      .btn-text:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .alert {
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="bank-accounts">  <!-- Accounts List -->  <div class="accounts-list" *ngIf="accounts().length > 0">    <div      *ngFor="let account of accounts()"      class="account-card"      [class.default]="account.isDefault"    >      <div class="account-info">        <div class="account-header">          <h4 class="account-holder">{{ account.accountHolder }}</h4>          <span *ngIf="account.isDefault" class="badge badge-primary"> Predeterminada </span>          <span *ngIf="!account.isDefault" class="badge badge-secondary"> Adicional </span>        </div>        <div class="account-details">          <span class="account-type">            {{ account.accountType === \'checking\' ? \'Cuenta Corriente\' : \'Caja de Ahorro\' }}          </span>          <span class="account-number">            {{ formatAccountNumber(account.accountNumber) }}          </span>        </div>        <div class="account-status">          <span            class="status-badge"            [class.verified]="account.status === \'verified\'"            [class.unverified]="account.status === \'unverified\'"            [class.invalid]="account.status === \'invalid\'"          >            {{ getStatusText(account.status) }}          </span>        </div>      </div>      <div class="account-actions">        <button          *ngIf="!account.isDefault"          type="button"          class="btn-text"          (click)="setAsDefault(account.id)"          [disabled]="loading()"        >          Usar como predeterminada        </button>      </div>    </div>  </div>  <!-- Empty State -->  <div *ngIf="accounts().length === 0" class="empty-state">    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">      <path        stroke-linecap="round"        stroke-linejoin="round"        stroke-width="2"        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"      />    </svg>    <p class="empty-text">No tenés cuentas bancarias configuradas</p>    <p class="empty-hint">Agregá una cuenta para poder retirar fondos</p>  </div>  <!-- Add Account Button -->  <button type="button" class="btn-secondary" (click)="toggleAddForm()" *ngIf="!showAddForm()">    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">      <path        stroke-linecap="round"        stroke-linejoin="round"        stroke-width="2"        d="M12 4v16m8-8H4"      />    </svg>    Agregar Cuenta Bancaria  </button>  <!-- Add Account Form -->  <div *ngIf="showAddForm()" class="add-form">    <h3 class="form-title">Nueva Cuenta Bancaria</h3>    <form [formGroup]="form" (ngSubmit)="onSubmit()">      <div class="form-group">        <label>Titular de la Cuenta</label>        <input          type="text"          formControlName="accountHolder"          placeholder="Juan Pérez"          class="form-input"        />        <span          *ngIf="form.controls.accountHolder.invalid && form.controls.accountHolder.touched"          class="error-text"        >          El nombre del titular es requerido        </span>      </div>      <div class="form-group">        <label>CBU/CVU</label>        <input          type="text"          formControlName="accountNumber"          placeholder="0000003100010000000000"          maxlength="22"          class="form-input"        />        <span class="hint-text">22 dígitos sin espacios</span>        <span          *ngIf="form.controls.accountNumber.invalid && form.controls.accountNumber.touched"          class="error-text"        >          CBU/CVU debe tener 22 dígitos        </span>      </div>      <div class="form-group">        <label>Tipo de Cuenta</label>        <select formControlName="accountType" class="form-select">          <option value="savings">Caja de Ahorro</option>          <option value="checking">Cuenta Corriente</option>        </select>      </div>      <div class="form-group">        <label class="checkbox-label">          <input type="checkbox" formControlName="isDefault" />          <span>Usar como cuenta predeterminada</span>        </label>      </div>      <div class="form-actions">        <button type="button" class="btn-text" (click)="toggleAddForm()" [disabled]="loading()">          Cancelar        </button>        <button type="submit" class="btn-primary" [disabled]="form.invalid || loading()">          {{ loading() ? \'Guardando...\' : \'Agregar Cuenta\' }}        </button>      </div>    </form>  </div>  <!-- Error Message -->  <div *ngIf="error()" class="alert alert-error">    {{ error() }}  </div>  <!-- Success Message -->  <div *ngIf="success()" class="alert alert-success">    {{ success() }}  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'BankAccountsComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'BankAccountsComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -58,6 +58,8 @@ import {
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
+import { RiskCalculatorService, RiskCalculation } from '../../../core/services/risk-calculator.service';
 
 // Temporary interfaces until components are created
 export interface Photo {
@@ -109,6 +111,7 @@ interface CarDetailState {
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
     IconComponent,
+    RiskCalculatorViewerComponent,
     // TODO: Re-add when components are created
     // PhotoGalleryComponent,
     // BreadcrumbsComponent,
@@ -135,6 +138,7 @@ export class CarDetailPage implements OnInit, OnDestroy {
   private readonly waitlistService = inject(WaitlistService);
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
+  private readonly riskCalculatorService = inject(RiskCalculatorService);
 
   // P0-006 FIX: Memory leak prevention
   private readonly destroy$ = new Subject<void>();
@@ -183,6 +187,10 @@ export class CarDetailPage implements OnInit, OnDestroy {
   readonly hourlyRateLoading = signal(false);
 
   readonly isCarOwner = signal<boolean>(false);
+
+  // Risk calculation for guarantee display
+  readonly riskCalculation = signal<RiskCalculation | null>(null);
+  readonly showRiskCalculator = signal(false);
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
 

@@ -1,0 +1,2537 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  ReportClaimPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/report-claim/report-claim.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Página para reportar siniestros/accidentes
+Permite al usuario documentar y reportar daños durante el alquiler</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-report-claim</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                            <code>IonicModule</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      ion-content {
+        --background: var(--ion-color-light);
+      }
+
+      .warning-card {
+        margin: 16px;
+      }
+
+      .warning-content {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .warning-content ion-icon {
+        flex-shrink: 0;
+      }
+
+      .warning-content h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.1em;
+      }
+
+      .warning-content p {
+        margin: 0 0 12px 0;
+      }
+
+      .emergency-button {
+        margin-top: 8px;
+      }
+
+      .photos-section {
+        margin: 20px 0;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .photos-section h3 {
+        margin: 0 0 8px 0;
+        font-size: 1em;
+      }
+
+      .photos-hint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 8px 0 12px 0;
+        font-size: 0.9em;
+        color: var(--ion-color-medium);
+      }
+
+      .photos-hint ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .photo-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .photo-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--ion-color-light-shade);
+      }
+
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .delete-photo {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+      }
+
+      .submit-button {
+        margin-top: 24px;
+      }
+
+      .legal-note {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 12px;
+        background: var(--ion-color-light-shade);
+        border-radius: 8px;
+        font-size: 0.85em;
+        line-height: 1.4;
+      }
+
+      .legal-note ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;ion-header&gt;
+  &lt;ion-toolbar color&#x3D;&quot;danger&quot;&gt;
+    &lt;ion-buttons slot&#x3D;&quot;start&quot;&gt;
+      &lt;ion-back-button [defaultHref]&#x3D;&quot;&#x27;/bookings/&#x27; + bookingId&quot;&gt;&lt;/ion-back-button&gt;
+    &lt;/ion-buttons&gt;
+    &lt;ion-title&gt;Reportar Siniestro&lt;/ion-title&gt;
+  &lt;/ion-toolbar&gt;
+&lt;/ion-header&gt;
+
+&lt;ion-content&gt;
+  &lt;form #claimForm&#x3D;&quot;ngForm&quot; (ngSubmit)&#x3D;&quot;submitClaim()&quot;&gt;
+    &lt;!-- Advertencia Importante --&gt;
+    &lt;ion-card color&#x3D;&quot;danger&quot; class&#x3D;&quot;warning-card&quot;&gt;
+      &lt;ion-card-content&gt;
+        &lt;div class&#x3D;&quot;warning-content&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;alert-circle&quot; size&#x3D;&quot;large&quot;&gt;&lt;/ion-icon&gt;
+          &lt;div&gt;
+            &lt;h3&gt;⚠️ Importante&lt;/h3&gt;
+            &lt;p&gt;Si hubo lesionados o el vehículo no puede circular, llama de inmediato a:&lt;/p&gt;
+            &lt;ion-button
+              expand&#x3D;&quot;block&quot;
+              color&#x3D;&quot;light&quot;
+              href&#x3D;&quot;tel:0800-AUTORENTAR&quot;
+              class&#x3D;&quot;emergency-button&quot;
+            &gt;
+              &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;call&quot;&gt;&lt;/ion-icon&gt;
+              0800-AUTORENTAR (24/7)
+            &lt;/ion-button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/ion-card-content&gt;
+    &lt;/ion-card&gt;
+
+    &lt;ion-card&gt;
+      &lt;ion-card-header&gt;
+        &lt;ion-card-title&gt;Información del Siniestro&lt;/ion-card-title&gt;
+      &lt;/ion-card-header&gt;
+
+      &lt;ion-card-content&gt;
+        &lt;!-- Tipo de Siniestro --&gt;
+        &lt;ion-item&gt;
+          &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+            Tipo de Siniestro *
+            &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+          &lt;/ion-label&gt;
+          &lt;ion-select
+            [(ngModel)]&#x3D;&quot;claimData.claim_type&quot;
+            name&#x3D;&quot;claimType&quot;
+            required
+            interface&#x3D;&quot;action-sheet&quot;
+            placeholder&#x3D;&quot;Selecciona el tipo&quot;
+          &gt;
+            &lt;ion-select-option *ngFor&#x3D;&quot;let type of claimTypes&quot; [value]&#x3D;&quot;type.value&quot;&gt;
+              {{ type.label }}
+            &lt;/ion-select-option&gt;
+          &lt;/ion-select&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Fecha y Hora --&gt;
+        &lt;ion-item&gt;
+          &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+            Fecha y Hora del Incidente *
+            &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+          &lt;/ion-label&gt;
+          &lt;ion-datetime
+            [(ngModel)]&#x3D;&quot;claimData.incident_date&quot;
+            name&#x3D;&quot;incidentDate&quot;
+            presentation&#x3D;&quot;date-time&quot;
+            [max]&#x3D;&quot;maxDate&quot;
+            required
+          &gt;
+          &lt;/ion-datetime&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Ubicación --&gt;
+        &lt;ion-item&gt;
+          &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+            Ubicación
+            &lt;ion-text color&#x3D;&quot;medium&quot;&gt;(opcional)&lt;/ion-text&gt;
+          &lt;/ion-label&gt;
+          &lt;ion-input
+            [(ngModel)]&#x3D;&quot;claimData.location&quot;
+            name&#x3D;&quot;location&quot;
+            placeholder&#x3D;&quot;Ej: Av. Corrientes 1234, CABA&quot;
+            type&#x3D;&quot;text&quot;
+          &gt;
+          &lt;/ion-input&gt;
+          &lt;ion-button
+            slot&#x3D;&quot;end&quot;
+            fill&#x3D;&quot;clear&quot;
+            (click)&#x3D;&quot;useCurrentLocation()&quot;
+            [disabled]&#x3D;&quot;gettingLocation&quot;
+          &gt;
+            &lt;ion-icon [name]&#x3D;&quot;gettingLocation ? &#x27;hourglass&#x27; : &#x27;location&#x27;&quot; slot&#x3D;&quot;icon-only&quot;&gt;
+            &lt;/ion-icon&gt;
+          &lt;/ion-button&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Descripción --&gt;
+        &lt;ion-item lines&#x3D;&quot;none&quot;&gt;
+          &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+            Descripción Detallada *
+            &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+          &lt;/ion-label&gt;
+        &lt;/ion-item&gt;
+        &lt;ion-item&gt;
+          &lt;ion-textarea
+            [(ngModel)]&#x3D;&quot;claimData.description&quot;
+            name&#x3D;&quot;description&quot;
+            rows&#x3D;&quot;6&quot;
+            placeholder&#x3D;&quot;Describe qué ocurrió, cómo sucedió, daños visibles, otros vehículos involucrados, etc.&quot;
+            required
+            counter&#x3D;&quot;true&quot;
+            maxlength&#x3D;&quot;1000&quot;
+          &gt;
+          &lt;/ion-textarea&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Fotos --&gt;
+        &lt;div class&#x3D;&quot;photos-section&quot;&gt;
+          &lt;h3&gt;📸 Fotos del Siniestro&lt;/h3&gt;
+          &lt;p class&#x3D;&quot;photos-hint&quot;&gt;
+            &lt;ion-icon name&#x3D;&quot;information-circle&quot;&gt;&lt;/ion-icon&gt;
+            Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.
+          &lt;/p&gt;
+
+          &lt;input
+            type&#x3D;&quot;file&quot;
+            accept&#x3D;&quot;image/*&quot;
+            multiple
+            (change)&#x3D;&quot;onPhotosSelected($event)&quot;
+            #fileInput
+            style&#x3D;&quot;display: none;&quot;
+          /&gt;
+
+          &lt;ion-button
+            expand&#x3D;&quot;block&quot;
+            fill&#x3D;&quot;outline&quot;
+            (click)&#x3D;&quot;fileInput.click()&quot;
+            [disabled]&#x3D;&quot;uploadedPhotoPreviews.length &gt;&#x3D; 10 || uploadingPhotos&quot;
+          &gt;
+            &lt;ion-icon slot&#x3D;&quot;start&quot; [name]&#x3D;&quot;uploadingPhotos ? &#x27;hourglass&#x27; : &#x27;camera&#x27;&quot;&gt;&lt;/ion-icon&gt;
+            {{
+              uploadingPhotos
+                ? &#x27;Subiendo...&#x27;
+                : uploadedPhotoPreviews.length &gt; 0
+                  ? &#x27;Agregar más fotos&#x27;
+                  : &#x27;Tomar/Subir Fotos&#x27;
+            }}
+            ({{ uploadedPhotoPreviews.length }}/10)
+          &lt;/ion-button&gt;
+
+          &lt;div class&#x3D;&quot;photo-preview&quot; *ngIf&#x3D;&quot;uploadedPhotoPreviews.length &gt; 0&quot;&gt;
+            &lt;div class&#x3D;&quot;photo-item&quot; *ngFor&#x3D;&quot;let photo of uploadedPhotoPreviews; let i &#x3D; index&quot;&gt;
+              &lt;img [src]&#x3D;&quot;photo&quot; [alt]&#x3D;&quot;&#x27;Foto &#x27; + (i + 1)&quot; /&gt;
+              &lt;ion-button
+                fill&#x3D;&quot;clear&quot;
+                color&#x3D;&quot;danger&quot;
+                class&#x3D;&quot;delete-photo&quot;
+                (click)&#x3D;&quot;removePhoto(i)&quot;
+              &gt;
+                &lt;ion-icon name&#x3D;&quot;close-circle&quot; slot&#x3D;&quot;icon-only&quot;&gt;&lt;/ion-icon&gt;
+              &lt;/ion-button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Denuncia Policial --&gt;
+        &lt;ion-item&gt;
+          &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+            N° Denuncia Policial
+            &lt;ion-text color&#x3D;&quot;medium&quot;&gt;(si aplica)&lt;/ion-text&gt;
+          &lt;/ion-label&gt;
+          &lt;ion-input
+            [(ngModel)]&#x3D;&quot;claimData.police_report_number&quot;
+            name&#x3D;&quot;policeReport&quot;
+            placeholder&#x3D;&quot;Ej: 12345/2025&quot;
+            type&#x3D;&quot;text&quot;
+          &gt;
+          &lt;/ion-input&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Checkbox de confirmación --&gt;
+        &lt;ion-item lines&#x3D;&quot;none&quot;&gt;
+          &lt;ion-checkbox [(ngModel)]&#x3D;&quot;confirmDeclaration&quot; name&#x3D;&quot;confirm&quot; labelPlacement&#x3D;&quot;end&quot;&gt;
+            Declaro que la información proporcionada es verdadera y completa
+          &lt;/ion-checkbox&gt;
+        &lt;/ion-item&gt;
+
+        &lt;!-- Botón Submit --&gt;
+        &lt;ion-button
+          expand&#x3D;&quot;block&quot;
+          type&#x3D;&quot;submit&quot;
+          [disabled]&#x3D;&quot;!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration&quot;
+          color&#x3D;&quot;danger&quot;
+          class&#x3D;&quot;submit-button&quot;
+        &gt;
+          &lt;ion-icon slot&#x3D;&quot;start&quot; [name]&#x3D;&quot;submitting ? &#x27;hourglass&#x27; : &#x27;alert-circle&#x27;&quot;&gt;&lt;/ion-icon&gt;
+          {{
+            submitting
+              ? &#x27;Enviando...&#x27;
+              : uploadingPhotos
+                ? &#x27;Subiendo fotos...&#x27;
+                : &#x27;Reportar Siniestro&#x27;
+          }}
+        &lt;/ion-button&gt;
+
+        &lt;!-- Información Legal --&gt;
+        &lt;ion-note color&#x3D;&quot;medium&quot; class&#x3D;&quot;legal-note&quot;&gt;
+          &lt;ion-icon name&#x3D;&quot;information-circle&quot;&gt;&lt;/ion-icon&gt;
+          Al reportar este siniestro, autorizas a la aseguradora a contactarte y verificar la
+          información. La franquicia máxima que podrías pagar es
+          {{ formatCurrency(maxDeductible) }}.
+        &lt;/ion-note&gt;
+      &lt;/ion-card-content&gt;
+    &lt;/ion-card&gt;
+
+    &lt;!-- Qué hacer después --&gt;
+    &lt;ion-card&gt;
+      &lt;ion-card-header&gt;
+        &lt;ion-card-title&gt;
+          &lt;ion-icon name&#x3D;&quot;checkmark-circle&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+          ¿Qué hacer ahora?
+        &lt;/ion-card-title&gt;
+      &lt;/ion-card-header&gt;
+      &lt;ion-card-content&gt;
+        &lt;ion-list lines&#x3D;&quot;none&quot;&gt;
+          &lt;ion-item&gt;
+            &lt;ion-icon name&#x3D;&quot;call&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+            &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+              &lt;h3&gt;1. Contacta a la aseguradora&lt;/h3&gt;
+              &lt;p&gt;Llama al 0800-AUTORENTAR (24/7) después de reportar&lt;/p&gt;
+            &lt;/ion-label&gt;
+          &lt;/ion-item&gt;
+          &lt;ion-item&gt;
+            &lt;ion-icon name&#x3D;&quot;document-text&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+            &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+              &lt;h3&gt;2. Espera instrucciones&lt;/h3&gt;
+              &lt;p&gt;Un gestor te contactará en las próximas 2 horas&lt;/p&gt;
+            &lt;/ion-label&gt;
+          &lt;/ion-item&gt;
+          &lt;ion-item&gt;
+            &lt;ion-icon name&#x3D;&quot;car&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+            &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+              &lt;h3&gt;3. No muevas el vehículo&lt;/h3&gt;
+              &lt;p&gt;A menos que sea necesario por seguridad&lt;/p&gt;
+            &lt;/ion-label&gt;
+          &lt;/ion-item&gt;
+        &lt;/ion-list&gt;
+      &lt;/ion-card-content&gt;
+    &lt;/ion-card&gt;
+  &lt;/form&gt;
+&lt;/ion-content&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#alertController" >alertController</a>
+                            </li>
+                            <li>
+                                <a href="#bookingId" >bookingId</a>
+                            </li>
+                            <li>
+                                <a href="#claimData" >claimData</a>
+                            </li>
+                            <li>
+                                <a href="#claimTypes" >claimTypes</a>
+                            </li>
+                            <li>
+                                <a href="#confirmDeclaration" >confirmDeclaration</a>
+                            </li>
+                            <li>
+                                <a href="#gettingLocation" >gettingLocation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#insuranceService" >insuranceService</a>
+                            </li>
+                            <li>
+                                <a href="#maxDate" >maxDate</a>
+                            </li>
+                            <li>
+                                <a href="#maxDeductible" >maxDeductible</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#route" >route</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#router" >router</a>
+                            </li>
+                            <li>
+                                <a href="#submitting" >submitting</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#toastController" >toastController</a>
+                            </li>
+                            <li>
+                                <a href="#uploadedFiles" >uploadedFiles</a>
+                            </li>
+                            <li>
+                                <a href="#uploadedPhotoPreviews" >uploadedPhotoPreviews</a>
+                            </li>
+                            <li>
+                                <a href="#uploadedPhotos" >uploadedPhotos</a>
+                            </li>
+                            <li>
+                                <a href="#uploadingPhotos" >uploadingPhotos</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#formatCurrency" >formatCurrency</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onPhotosSelected" >onPhotosSelected</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#proceedWithSubmit" >proceedWithSubmit</a>
+                            </li>
+                            <li>
+                                <a href="#removePhoto" >removePhoto</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#showToast" >showToast</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#submitClaim" >submitClaim</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#useCurrentLocation" >useCurrentLocation</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatCurrency"></a>
+                    <span class="name">
+                        <span ><b>formatCurrency</b></span>
+                        <a href="#formatCurrency"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatCurrency(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="584"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:584</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="414"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:414</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onPhotosSelected"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onPhotosSelected</b></span>
+                        <a href="#onPhotosSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onPhotosSelected(event: Event)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="421"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:421</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>event</td>
+                                            <td>
+                                                        <code>Event</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="proceedWithSubmit"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>proceedWithSubmit</b></span>
+                        <a href="#proceedWithSubmit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>proceedWithSubmit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="523"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:523</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removePhoto"></a>
+                    <span class="name">
+                        <span ><b>removePhoto</b></span>
+                        <a href="#removePhoto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>removePhoto(index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="476"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:476</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showToast"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>showToast</b></span>
+                        <a href="#showToast"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>showToast(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, color: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="574"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:574</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>color</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;dark&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitClaim"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>submitClaim</b></span>
+                        <a href="#submitClaim"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>submitClaim()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="502"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:502</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="useCurrentLocation"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>useCurrentLocation</b></span>
+                        <a href="#useCurrentLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>useCurrentLocation()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="482"
+                                    class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:482</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="alertController"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>alertController</b></span>
+                        <a href="#alertController"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(AlertController)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="386" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:386</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookingId"></a>
+                    <span class="name">
+                        <span ><b>bookingId</b></span>
+                        <a href="#bookingId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="389" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:389</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="claimData"></a>
+                    <span class="name">
+                        <span ><b>claimData</b></span>
+                        <a href="#claimData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    claim_type: &#x27;collision&#x27; as ClaimType,
+    description: &#x27;&#x27;,
+    incident_date: new Date().toISOString(),
+    location: &#x27;&#x27;,
+    police_report_number: &#x27;&#x27;,
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="395" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:395</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="claimTypes"></a>
+                    <span class="name">
+                        <span ><b>claimTypes</b></span>
+                        <a href="#claimTypes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Object.entries(CLAIM_TYPE_LABELS).map(([value, label]) &#x3D;&gt; ({
+    value: value as ClaimType,
+    label,
+  }))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="409" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:409</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmDeclaration"></a>
+                    <span class="name">
+                        <span ><b>confirmDeclaration</b></span>
+                        <a href="#confirmDeclaration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="391" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:391</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="gettingLocation"></a>
+                    <span class="name">
+                        <span ><b>gettingLocation</b></span>
+                        <a href="#gettingLocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="392" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:392</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="insuranceService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>insuranceService</b></span>
+                        <a href="#insuranceService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(InsuranceService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="385" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:385</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxDate"></a>
+                    <span class="name">
+                        <span ><b>maxDate</b></span>
+                        <a href="#maxDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Date().toISOString()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="406" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:406</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxDeductible"></a>
+                    <span class="name">
+                        <span ><b>maxDeductible</b></span>
+                        <a href="#maxDeductible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>2000000</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="393" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:393</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="route"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>route</b></span>
+                        <a href="#route"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ActivatedRoute)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="383" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:383</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="router"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>router</b></span>
+                        <a href="#router"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(Router)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="384" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:384</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitting"></a>
+                    <span class="name">
+                        <span ><b>submitting</b></span>
+                        <a href="#submitting"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="390" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:390</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toastController"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>toastController</b></span>
+                        <a href="#toastController"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ToastController)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="387" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:387</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadedFiles"></a>
+                    <span class="name">
+                        <span ><b>uploadedFiles</b></span>
+                        <a href="#uploadedFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>File[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="405" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:405</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadedPhotoPreviews"></a>
+                    <span class="name">
+                        <span ><b>uploadedPhotoPreviews</b></span>
+                        <a href="#uploadedPhotoPreviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="404" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:404</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadedPhotos"></a>
+                    <span class="name">
+                        <span ><b>uploadedPhotos</b></span>
+                        <a href="#uploadedPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="403" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:403</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadingPhotos"></a>
+                    <span class="name">
+                        <span ><b>uploadingPhotos</b></span>
+                        <a href="#uploadingPhotos"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="407" class="link-to-prism">src/app/features/bookings/report-claim/report-claim.page.ts:407</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, inject } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { IonicModule, AlertController, ToastController } from &#x27;@ionic/angular&#x27;;
+import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { InsuranceService } from &#x27;../../../core/services/insurance.service&#x27;;
+import { ClaimType, CLAIM_TYPE_LABELS } from &#x27;../../../core/models/insurance.model&#x27;;
+
+/**
+ * Página para reportar siniestros/accidentes
+ * Permite al usuario documentar y reportar daños durante el alquiler
+ */
+@Component({
+  selector: &#x27;app-report-claim&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonicModule],
+  template: &#x60;
+    &lt;ion-header&gt;
+      &lt;ion-toolbar color&#x3D;&quot;danger&quot;&gt;
+        &lt;ion-buttons slot&#x3D;&quot;start&quot;&gt;
+          &lt;ion-back-button [defaultHref]&#x3D;&quot;&#x27;/bookings/&#x27; + bookingId&quot;&gt;&lt;/ion-back-button&gt;
+        &lt;/ion-buttons&gt;
+        &lt;ion-title&gt;Reportar Siniestro&lt;/ion-title&gt;
+      &lt;/ion-toolbar&gt;
+    &lt;/ion-header&gt;
+
+    &lt;ion-content&gt;
+      &lt;form #claimForm&#x3D;&quot;ngForm&quot; (ngSubmit)&#x3D;&quot;submitClaim()&quot;&gt;
+        &lt;!-- Advertencia Importante --&gt;
+        &lt;ion-card color&#x3D;&quot;danger&quot; class&#x3D;&quot;warning-card&quot;&gt;
+          &lt;ion-card-content&gt;
+            &lt;div class&#x3D;&quot;warning-content&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;alert-circle&quot; size&#x3D;&quot;large&quot;&gt;&lt;/ion-icon&gt;
+              &lt;div&gt;
+                &lt;h3&gt;⚠️ Importante&lt;/h3&gt;
+                &lt;p&gt;Si hubo lesionados o el vehículo no puede circular, llama de inmediato a:&lt;/p&gt;
+                &lt;ion-button
+                  expand&#x3D;&quot;block&quot;
+                  color&#x3D;&quot;light&quot;
+                  href&#x3D;&quot;tel:0800-AUTORENTAR&quot;
+                  class&#x3D;&quot;emergency-button&quot;
+                &gt;
+                  &lt;ion-icon slot&#x3D;&quot;start&quot; name&#x3D;&quot;call&quot;&gt;&lt;/ion-icon&gt;
+                  0800-AUTORENTAR (24/7)
+                &lt;/ion-button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/ion-card-content&gt;
+        &lt;/ion-card&gt;
+
+        &lt;ion-card&gt;
+          &lt;ion-card-header&gt;
+            &lt;ion-card-title&gt;Información del Siniestro&lt;/ion-card-title&gt;
+          &lt;/ion-card-header&gt;
+
+          &lt;ion-card-content&gt;
+            &lt;!-- Tipo de Siniestro --&gt;
+            &lt;ion-item&gt;
+              &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+                Tipo de Siniestro *
+                &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+              &lt;/ion-label&gt;
+              &lt;ion-select
+                [(ngModel)]&#x3D;&quot;claimData.claim_type&quot;
+                name&#x3D;&quot;claimType&quot;
+                required
+                interface&#x3D;&quot;action-sheet&quot;
+                placeholder&#x3D;&quot;Selecciona el tipo&quot;
+              &gt;
+                &lt;ion-select-option *ngFor&#x3D;&quot;let type of claimTypes&quot; [value]&#x3D;&quot;type.value&quot;&gt;
+                  {{ type.label }}
+                &lt;/ion-select-option&gt;
+              &lt;/ion-select&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Fecha y Hora --&gt;
+            &lt;ion-item&gt;
+              &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+                Fecha y Hora del Incidente *
+                &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+              &lt;/ion-label&gt;
+              &lt;ion-datetime
+                [(ngModel)]&#x3D;&quot;claimData.incident_date&quot;
+                name&#x3D;&quot;incidentDate&quot;
+                presentation&#x3D;&quot;date-time&quot;
+                [max]&#x3D;&quot;maxDate&quot;
+                required
+              &gt;
+              &lt;/ion-datetime&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Ubicación --&gt;
+            &lt;ion-item&gt;
+              &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+                Ubicación
+                &lt;ion-text color&#x3D;&quot;medium&quot;&gt;(opcional)&lt;/ion-text&gt;
+              &lt;/ion-label&gt;
+              &lt;ion-input
+                [(ngModel)]&#x3D;&quot;claimData.location&quot;
+                name&#x3D;&quot;location&quot;
+                placeholder&#x3D;&quot;Ej: Av. Corrientes 1234, CABA&quot;
+                type&#x3D;&quot;text&quot;
+              &gt;
+              &lt;/ion-input&gt;
+              &lt;ion-button
+                slot&#x3D;&quot;end&quot;
+                fill&#x3D;&quot;clear&quot;
+                (click)&#x3D;&quot;useCurrentLocation()&quot;
+                [disabled]&#x3D;&quot;gettingLocation&quot;
+              &gt;
+                &lt;ion-icon [name]&#x3D;&quot;gettingLocation ? &#x27;hourglass&#x27; : &#x27;location&#x27;&quot; slot&#x3D;&quot;icon-only&quot;&gt;
+                &lt;/ion-icon&gt;
+              &lt;/ion-button&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Descripción --&gt;
+            &lt;ion-item lines&#x3D;&quot;none&quot;&gt;
+              &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+                Descripción Detallada *
+                &lt;ion-text color&#x3D;&quot;danger&quot;&gt;&lt;/ion-text&gt;
+              &lt;/ion-label&gt;
+            &lt;/ion-item&gt;
+            &lt;ion-item&gt;
+              &lt;ion-textarea
+                [(ngModel)]&#x3D;&quot;claimData.description&quot;
+                name&#x3D;&quot;description&quot;
+                rows&#x3D;&quot;6&quot;
+                placeholder&#x3D;&quot;Describe qué ocurrió, cómo sucedió, daños visibles, otros vehículos involucrados, etc.&quot;
+                required
+                counter&#x3D;&quot;true&quot;
+                maxlength&#x3D;&quot;1000&quot;
+              &gt;
+              &lt;/ion-textarea&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Fotos --&gt;
+            &lt;div class&#x3D;&quot;photos-section&quot;&gt;
+              &lt;h3&gt;📸 Fotos del Siniestro&lt;/h3&gt;
+              &lt;p class&#x3D;&quot;photos-hint&quot;&gt;
+                &lt;ion-icon name&#x3D;&quot;information-circle&quot;&gt;&lt;/ion-icon&gt;
+                Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.
+              &lt;/p&gt;
+
+              &lt;input
+                type&#x3D;&quot;file&quot;
+                accept&#x3D;&quot;image/*&quot;
+                multiple
+                (change)&#x3D;&quot;onPhotosSelected($event)&quot;
+                #fileInput
+                style&#x3D;&quot;display: none;&quot;
+              /&gt;
+
+              &lt;ion-button
+                expand&#x3D;&quot;block&quot;
+                fill&#x3D;&quot;outline&quot;
+                (click)&#x3D;&quot;fileInput.click()&quot;
+                [disabled]&#x3D;&quot;uploadedPhotoPreviews.length &gt;&#x3D; 10 || uploadingPhotos&quot;
+              &gt;
+                &lt;ion-icon slot&#x3D;&quot;start&quot; [name]&#x3D;&quot;uploadingPhotos ? &#x27;hourglass&#x27; : &#x27;camera&#x27;&quot;&gt;&lt;/ion-icon&gt;
+                {{
+                  uploadingPhotos
+                    ? &#x27;Subiendo...&#x27;
+                    : uploadedPhotoPreviews.length &gt; 0
+                      ? &#x27;Agregar más fotos&#x27;
+                      : &#x27;Tomar/Subir Fotos&#x27;
+                }}
+                ({{ uploadedPhotoPreviews.length }}/10)
+              &lt;/ion-button&gt;
+
+              &lt;div class&#x3D;&quot;photo-preview&quot; *ngIf&#x3D;&quot;uploadedPhotoPreviews.length &gt; 0&quot;&gt;
+                &lt;div class&#x3D;&quot;photo-item&quot; *ngFor&#x3D;&quot;let photo of uploadedPhotoPreviews; let i &#x3D; index&quot;&gt;
+                  &lt;img [src]&#x3D;&quot;photo&quot; [alt]&#x3D;&quot;&#x27;Foto &#x27; + (i + 1)&quot; /&gt;
+                  &lt;ion-button
+                    fill&#x3D;&quot;clear&quot;
+                    color&#x3D;&quot;danger&quot;
+                    class&#x3D;&quot;delete-photo&quot;
+                    (click)&#x3D;&quot;removePhoto(i)&quot;
+                  &gt;
+                    &lt;ion-icon name&#x3D;&quot;close-circle&quot; slot&#x3D;&quot;icon-only&quot;&gt;&lt;/ion-icon&gt;
+                  &lt;/ion-button&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Denuncia Policial --&gt;
+            &lt;ion-item&gt;
+              &lt;ion-label position&#x3D;&quot;stacked&quot;&gt;
+                N° Denuncia Policial
+                &lt;ion-text color&#x3D;&quot;medium&quot;&gt;(si aplica)&lt;/ion-text&gt;
+              &lt;/ion-label&gt;
+              &lt;ion-input
+                [(ngModel)]&#x3D;&quot;claimData.police_report_number&quot;
+                name&#x3D;&quot;policeReport&quot;
+                placeholder&#x3D;&quot;Ej: 12345/2025&quot;
+                type&#x3D;&quot;text&quot;
+              &gt;
+              &lt;/ion-input&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Checkbox de confirmación --&gt;
+            &lt;ion-item lines&#x3D;&quot;none&quot;&gt;
+              &lt;ion-checkbox [(ngModel)]&#x3D;&quot;confirmDeclaration&quot; name&#x3D;&quot;confirm&quot; labelPlacement&#x3D;&quot;end&quot;&gt;
+                Declaro que la información proporcionada es verdadera y completa
+              &lt;/ion-checkbox&gt;
+            &lt;/ion-item&gt;
+
+            &lt;!-- Botón Submit --&gt;
+            &lt;ion-button
+              expand&#x3D;&quot;block&quot;
+              type&#x3D;&quot;submit&quot;
+              [disabled]&#x3D;&quot;!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration&quot;
+              color&#x3D;&quot;danger&quot;
+              class&#x3D;&quot;submit-button&quot;
+            &gt;
+              &lt;ion-icon slot&#x3D;&quot;start&quot; [name]&#x3D;&quot;submitting ? &#x27;hourglass&#x27; : &#x27;alert-circle&#x27;&quot;&gt;&lt;/ion-icon&gt;
+              {{
+                submitting
+                  ? &#x27;Enviando...&#x27;
+                  : uploadingPhotos
+                    ? &#x27;Subiendo fotos...&#x27;
+                    : &#x27;Reportar Siniestro&#x27;
+              }}
+            &lt;/ion-button&gt;
+
+            &lt;!-- Información Legal --&gt;
+            &lt;ion-note color&#x3D;&quot;medium&quot; class&#x3D;&quot;legal-note&quot;&gt;
+              &lt;ion-icon name&#x3D;&quot;information-circle&quot;&gt;&lt;/ion-icon&gt;
+              Al reportar este siniestro, autorizas a la aseguradora a contactarte y verificar la
+              información. La franquicia máxima que podrías pagar es
+              {{ formatCurrency(maxDeductible) }}.
+            &lt;/ion-note&gt;
+          &lt;/ion-card-content&gt;
+        &lt;/ion-card&gt;
+
+        &lt;!-- Qué hacer después --&gt;
+        &lt;ion-card&gt;
+          &lt;ion-card-header&gt;
+            &lt;ion-card-title&gt;
+              &lt;ion-icon name&#x3D;&quot;checkmark-circle&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+              ¿Qué hacer ahora?
+            &lt;/ion-card-title&gt;
+          &lt;/ion-card-header&gt;
+          &lt;ion-card-content&gt;
+            &lt;ion-list lines&#x3D;&quot;none&quot;&gt;
+              &lt;ion-item&gt;
+                &lt;ion-icon name&#x3D;&quot;call&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+                &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+                  &lt;h3&gt;1. Contacta a la aseguradora&lt;/h3&gt;
+                  &lt;p&gt;Llama al 0800-AUTORENTAR (24/7) después de reportar&lt;/p&gt;
+                &lt;/ion-label&gt;
+              &lt;/ion-item&gt;
+              &lt;ion-item&gt;
+                &lt;ion-icon name&#x3D;&quot;document-text&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+                &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+                  &lt;h3&gt;2. Espera instrucciones&lt;/h3&gt;
+                  &lt;p&gt;Un gestor te contactará en las próximas 2 horas&lt;/p&gt;
+                &lt;/ion-label&gt;
+              &lt;/ion-item&gt;
+              &lt;ion-item&gt;
+                &lt;ion-icon name&#x3D;&quot;car&quot; slot&#x3D;&quot;start&quot; color&#x3D;&quot;primary&quot;&gt;&lt;/ion-icon&gt;
+                &lt;ion-label class&#x3D;&quot;ion-text-wrap&quot;&gt;
+                  &lt;h3&gt;3. No muevas el vehículo&lt;/h3&gt;
+                  &lt;p&gt;A menos que sea necesario por seguridad&lt;/p&gt;
+                &lt;/ion-label&gt;
+              &lt;/ion-item&gt;
+            &lt;/ion-list&gt;
+          &lt;/ion-card-content&gt;
+        &lt;/ion-card&gt;
+      &lt;/form&gt;
+    &lt;/ion-content&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      ion-content {
+        --background: var(--ion-color-light);
+      }
+
+      .warning-card {
+        margin: 16px;
+      }
+
+      .warning-content {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .warning-content ion-icon {
+        flex-shrink: 0;
+      }
+
+      .warning-content h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.1em;
+      }
+
+      .warning-content p {
+        margin: 0 0 12px 0;
+      }
+
+      .emergency-button {
+        margin-top: 8px;
+      }
+
+      .photos-section {
+        margin: 20px 0;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .photos-section h3 {
+        margin: 0 0 8px 0;
+        font-size: 1em;
+      }
+
+      .photos-hint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 8px 0 12px 0;
+        font-size: 0.9em;
+        color: var(--ion-color-medium);
+      }
+
+      .photos-hint ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .photo-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .photo-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--ion-color-light-shade);
+      }
+
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .delete-photo {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+      }
+
+      .submit-button {
+        margin-top: 24px;
+      }
+
+      .legal-note {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 12px;
+        background: var(--ion-color-light-shade);
+        border-radius: 8px;
+        font-size: 0.85em;
+        line-height: 1.4;
+      }
+
+      .legal-note ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    &#x60;,
+  ],
+})
+export class ReportClaimPage implements OnInit {
+  private readonly route &#x3D; inject(ActivatedRoute);
+  private readonly router &#x3D; inject(Router);
+  private readonly insuranceService &#x3D; inject(InsuranceService);
+  private readonly alertController &#x3D; inject(AlertController);
+  private readonly toastController &#x3D; inject(ToastController);
+
+  bookingId!: string;
+  submitting &#x3D; false;
+  confirmDeclaration &#x3D; false;
+  gettingLocation &#x3D; false;
+  maxDeductible &#x3D; 2000000; // Default
+
+  claimData &#x3D; {
+    claim_type: &#x27;collision&#x27; as ClaimType,
+    description: &#x27;&#x27;,
+    incident_date: new Date().toISOString(),
+    location: &#x27;&#x27;,
+    police_report_number: &#x27;&#x27;,
+  };
+
+  uploadedPhotos: string[] &#x3D; []; // Storage paths
+  uploadedPhotoPreviews: string[] &#x3D; []; // Data URLs for preview
+  uploadedFiles: File[] &#x3D; []; // Original files
+  maxDate &#x3D; new Date().toISOString();
+  uploadingPhotos &#x3D; false;
+
+  claimTypes &#x3D; Object.entries(CLAIM_TYPE_LABELS).map(([value, label]) &#x3D;&gt; ({
+    value: value as ClaimType,
+    label,
+  }));
+
+  ngOnInit() {
+    this.bookingId &#x3D; this.route.snapshot.paramMap.get(&#x27;bookingId&#x27;)!;
+    if (!this.bookingId) {
+      this.router.navigate([&#x27;/bookings&#x27;]);
+    }
+  }
+
+  async onPhotosSelected(event: Event) {
+    const input &#x3D; event.target as HTMLInputElement;
+    const files &#x3D; input.files;
+    if (!files || files.length &#x3D;&#x3D;&#x3D; 0) return;
+
+    const remainingSlots &#x3D; 10 - this.uploadedPhotoPreviews.length;
+    const filesToProcess &#x3D; Math.min(files.length, remainingSlots);
+
+    this.uploadingPhotos &#x3D; true;
+
+    for (let i &#x3D; 0; i &lt; filesToProcess; i++) {
+      const file &#x3D; files[i];
+
+      // Validar tamaño (max 5MB)
+      if (file.size &gt; 5 * 1024 * 1024) {
+        await this.showToast(&#x27;Imagen muy grande. Máximo 5MB por foto.&#x27;, &#x27;warning&#x27;);
+        continue;
+      }
+
+      // Validar tipo
+      if (!file.type.startsWith(&#x27;image/&#x27;)) {
+        await this.showToast(&#x27;Solo se permiten imágenes&#x27;, &#x27;warning&#x27;);
+        continue;
+      }
+
+      try {
+        // Subir a Storage
+        const filePath &#x3D; await this.insuranceService.uploadClaimEvidence(file, this.bookingId);
+        this.uploadedPhotos.push(filePath);
+
+        // Crear preview local
+        const reader &#x3D; new FileReader();
+        reader.onload &#x3D; (e: ProgressEvent&lt;FileReader&gt;) &#x3D;&gt; {
+          const result &#x3D; e.target?.result;
+          if (result) {
+            this.uploadedPhotoPreviews.push(result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+
+        // Guardar archivo original por si necesitamos re-subirlo
+        this.uploadedFiles.push(file);
+      } catch (error: unknown) {
+        const message &#x3D;
+          error instanceof Error ? error.message : &#x27;Error al subir foto. Intenta nuevamente.&#x27;;
+        await this.showToast(message, &#x27;danger&#x27;);
+      }
+    }
+
+    this.uploadingPhotos &#x3D; false;
+
+    // Reset input
+    input.value &#x3D; &#x27;&#x27;;
+  }
+
+  removePhoto(index: number) {
+    this.uploadedPhotos.splice(index, 1);
+    this.uploadedPhotoPreviews.splice(index, 1);
+    this.uploadedFiles.splice(index, 1);
+  }
+
+  async useCurrentLocation() {
+    this.gettingLocation &#x3D; true;
+    try {
+      const position &#x3D; await new Promise&lt;GeolocationPosition&gt;((resolve, reject) &#x3D;&gt; {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const { latitude, longitude } &#x3D; position.coords;
+
+      // Reverse geocoding simple (en producción usar API real)
+      this.claimData.location &#x3D; &#x60;Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}&#x60;;
+
+      await this.showToast(&#x27;Ubicación obtenida&#x27;, &#x27;success&#x27;);
+    } catch {
+      await this.showToast(&#x27;No se pudo obtener la ubicación&#x27;, &#x27;danger&#x27;);
+    } finally {
+      this.gettingLocation &#x3D; false;
+    }
+  }
+
+  async submitClaim() {
+    if (this.submitting || this.uploadingPhotos) return;
+
+    // Validaciones extra
+    if (this.uploadedPhotos.length &#x3D;&#x3D;&#x3D; 0) {
+      const alert &#x3D; await this.alertController.create({
+        header: &#x27;Fotos Recomendadas&#x27;,
+        message:
+          &#x27;¿Estás seguro de reportar sin fotos? Las fotos ayudan a procesar el siniestro más rápido.&#x27;,
+        buttons: [
+          { text: &#x27;Agregar Fotos&#x27;, role: &#x27;cancel&#x27; },
+          { text: &#x27;Continuar Sin Fotos&#x27;, handler: () &#x3D;&gt; this.proceedWithSubmit() },
+        ],
+      });
+      await alert.present();
+      return;
+    }
+
+    await this.proceedWithSubmit();
+  }
+
+  private async proceedWithSubmit() {
+    try {
+      this.submitting &#x3D; true;
+
+      // Reportar siniestro
+      const claimId &#x3D; await this.insuranceService.reportClaim({
+        booking_id: this.bookingId,
+        ...this.claimData,
+        photos: this.uploadedPhotos,
+      });
+
+      // Mostrar confirmación
+      const alert &#x3D; await this.alertController.create({
+        header: &#x27;✅ Siniestro Reportado&#x27;,
+        message: &#x60;
+          &lt;p&gt;Tu reporte ha sido registrado exitosamente.&lt;/p&gt;
+          &lt;p&gt;&lt;strong&gt;N° de Siniestro:&lt;/strong&gt; ${claimId.substring(0, 8).toUpperCase()}&lt;/p&gt;
+          &lt;p&gt;Un gestor de la aseguradora te contactará en las próximas 2 horas.&lt;/p&gt;
+          &lt;p&gt;&lt;strong&gt;Importante:&lt;/strong&gt; Llama ahora al 0800-AUTORENTAR para reportar verbalmente.&lt;/p&gt;
+        &#x60;,
+        buttons: [
+          {
+            text: &#x27;Llamar Ahora&#x27;,
+            handler: () &#x3D;&gt; {
+              window.location.href &#x3D; &#x27;tel:0800-AUTORENTAR&#x27;;
+            },
+          },
+          {
+            text: &#x27;OK&#x27;,
+            handler: () &#x3D;&gt; {
+              this.router.navigate([&#x27;/bookings&#x27;, this.bookingId]);
+            },
+          },
+        ],
+      });
+      await alert.present();
+    } catch (error: unknown) {
+      const alert &#x3D; await this.alertController.create({
+        header: &#x27;❌ Error&#x27;,
+        message:
+          error instanceof Error
+            ? error.message
+            : &#x27;No se pudo reportar el siniestro. Intenta nuevamente.&#x27;,
+        buttons: [&#x27;OK&#x27;],
+      });
+      await alert.present();
+    } finally {
+      this.submitting &#x3D; false;
+    }
+  }
+
+  private async showToast(message: string, color: string &#x3D; &#x27;dark&#x27;) {
+    const toast &#x3D; await this.toastController.create({
+      message,
+      duration: 2000,
+      color,
+      position: &#x27;bottom&#x27;,
+    });
+    await toast.present();
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;ARS&#x27;,
+      minimumFractionDigits: 0,
+    }).format(amount);
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      ion-content {
+        --background: var(--ion-color-light);
+      }
+
+      .warning-card {
+        margin: 16px;
+      }
+
+      .warning-content {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .warning-content ion-icon {
+        flex-shrink: 0;
+      }
+
+      .warning-content h3 {
+        margin: 0 0 8px 0;
+        font-size: 1.1em;
+      }
+
+      .warning-content p {
+        margin: 0 0 12px 0;
+      }
+
+      .emergency-button {
+        margin-top: 8px;
+      }
+
+      .photos-section {
+        margin: 20px 0;
+        padding: 16px;
+        background: var(--ion-color-light);
+        border-radius: 8px;
+      }
+
+      .photos-section h3 {
+        margin: 0 0 8px 0;
+        font-size: 1em;
+      }
+
+      .photos-hint {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 8px 0 12px 0;
+        font-size: 0.9em;
+        color: var(--ion-color-medium);
+      }
+
+      .photos-hint ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .photo-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .photo-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--ion-color-light-shade);
+      }
+
+      .photo-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .delete-photo {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+      }
+
+      .submit-button {
+        margin-top: 24px;
+      }
+
+      .legal-note {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 12px;
+        background: var(--ion-color-light-shade);
+        border-radius: 8px;
+        font-size: 0.85em;
+        line-height: 1.4;
+      }
+
+      .legal-note ion-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><ion-header>  <ion-toolbar color="danger">    <ion-buttons slot="start">      <ion-back-button [defaultHref]="\'/bookings/\' + bookingId"></ion-back-button>    </ion-buttons>    <ion-title>Reportar Siniestro</ion-title>  </ion-toolbar></ion-header><ion-content>  <form #claimForm="ngForm" (ngSubmit)="submitClaim()">    <!-- Advertencia Importante -->    <ion-card color="danger" class="warning-card">      <ion-card-content>        <div class="warning-content">          <ion-icon name="alert-circle" size="large"></ion-icon>          <div>            <h3>⚠️ Importante</h3>            <p>Si hubo lesionados o el vehículo no puede circular, llama de inmediato a:</p>            <ion-button              expand="block"              color="light"              href="tel:0800-AUTORENTAR"              class="emergency-button"            >              <ion-icon slot="start" name="call"></ion-icon>              0800-AUTORENTAR (24/7)            </ion-button>          </div>        </div>      </ion-card-content>    </ion-card>    <ion-card>      <ion-card-header>        <ion-card-title>Información del Siniestro</ion-card-title>      </ion-card-header>      <ion-card-content>        <!-- Tipo de Siniestro -->        <ion-item>          <ion-label position="stacked">            Tipo de Siniestro *            <ion-text color="danger"></ion-text>          </ion-label>          <ion-select            [(ngModel)]="claimData.claim_type"            name="claimType"            required            interface="action-sheet"            placeholder="Selecciona el tipo"          >            <ion-select-option *ngFor="let type of claimTypes" [value]="type.value">              {{ type.label }}            </ion-select-option>          </ion-select>        </ion-item>        <!-- Fecha y Hora -->        <ion-item>          <ion-label position="stacked">            Fecha y Hora del Incidente *            <ion-text color="danger"></ion-text>          </ion-label>          <ion-datetime            [(ngModel)]="claimData.incident_date"            name="incidentDate"            presentation="date-time"            [max]="maxDate"            required          >          </ion-datetime>        </ion-item>        <!-- Ubicación -->        <ion-item>          <ion-label position="stacked">            Ubicación            <ion-text color="medium">(opcional)</ion-text>          </ion-label>          <ion-input            [(ngModel)]="claimData.location"            name="location"            placeholder="Ej: Av. Corrientes 1234, CABA"            type="text"          >          </ion-input>          <ion-button            slot="end"            fill="clear"            (click)="useCurrentLocation()"            [disabled]="gettingLocation"          >            <ion-icon [name]="gettingLocation ? \'hourglass\' : \'location\'" slot="icon-only">            </ion-icon>          </ion-button>        </ion-item>        <!-- Descripción -->        <ion-item lines="none">          <ion-label position="stacked">            Descripción Detallada *            <ion-text color="danger"></ion-text>          </ion-label>        </ion-item>        <ion-item>          <ion-textarea            [(ngModel)]="claimData.description"            name="description"            rows="6"            placeholder="Describe qué ocurrió, cómo sucedió, daños visibles, otros vehículos involucrados, etc."            required            counter="true"            maxlength="1000"          >          </ion-textarea>        </ion-item>        <!-- Fotos -->        <div class="photos-section">          <h3>📸 Fotos del Siniestro</h3>          <p class="photos-hint">            <ion-icon name="information-circle"></ion-icon>            Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.          </p>          <input            type="file"            accept="image/*"            multiple            (change)="onPhotosSelected($event)"            #fileInput            style="display: none;"          />          <ion-button            expand="block"            fill="outline"            (click)="fileInput.click()"            [disabled]="uploadedPhotoPreviews.length >= 10 || uploadingPhotos"          >            <ion-icon slot="start" [name]="uploadingPhotos ? \'hourglass\' : \'camera\'"></ion-icon>            {{              uploadingPhotos                ? \'Subiendo...\'                : uploadedPhotoPreviews.length > 0                  ? \'Agregar más fotos\'                  : \'Tomar/Subir Fotos\'            }}            ({{ uploadedPhotoPreviews.length }}/10)          </ion-button>          <div class="photo-preview" *ngIf="uploadedPhotoPreviews.length > 0">            <div class="photo-item" *ngFor="let photo of uploadedPhotoPreviews; let i = index">              <img [src]="photo" [alt]="\'Foto \' + (i + 1)" />              <ion-button                fill="clear"                color="danger"                class="delete-photo"                (click)="removePhoto(i)"              >                <ion-icon name="close-circle" slot="icon-only"></ion-icon>              </ion-button>            </div>          </div>        </div>        <!-- Denuncia Policial -->        <ion-item>          <ion-label position="stacked">            N° Denuncia Policial            <ion-text color="medium">(si aplica)</ion-text>          </ion-label>          <ion-input            [(ngModel)]="claimData.police_report_number"            name="policeReport"            placeholder="Ej: 12345/2025"            type="text"          >          </ion-input>        </ion-item>        <!-- Checkbox de confirmación -->        <ion-item lines="none">          <ion-checkbox [(ngModel)]="confirmDeclaration" name="confirm" labelPlacement="end">            Declaro que la información proporcionada es verdadera y completa          </ion-checkbox>        </ion-item>        <!-- Botón Submit -->        <ion-button          expand="block"          type="submit"          [disabled]="!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration"          color="danger"          class="submit-button"        >          <ion-icon slot="start" [name]="submitting ? \'hourglass\' : \'alert-circle\'"></ion-icon>          {{            submitting              ? \'Enviando...\'              : uploadingPhotos                ? \'Subiendo fotos...\'                : \'Reportar Siniestro\'          }}        </ion-button>        <!-- Información Legal -->        <ion-note color="medium" class="legal-note">          <ion-icon name="information-circle"></ion-icon>          Al reportar este siniestro, autorizas a la aseguradora a contactarte y verificar la          información. La franquicia máxima que podrías pagar es          {{ formatCurrency(maxDeductible) }}.        </ion-note>      </ion-card-content>    </ion-card>    <!-- Qué hacer después -->    <ion-card>      <ion-card-header>        <ion-card-title>          <ion-icon name="checkmark-circle" color="primary"></ion-icon>          ¿Qué hacer ahora?        </ion-card-title>      </ion-card-header>      <ion-card-content>        <ion-list lines="none">          <ion-item>            <ion-icon name="call" slot="start" color="primary"></ion-icon>            <ion-label class="ion-text-wrap">              <h3>1. Contacta a la aseguradora</h3>              <p>Llama al 0800-AUTORENTAR (24/7) después de reportar</p>            </ion-label>          </ion-item>          <ion-item>            <ion-icon name="document-text" slot="start" color="primary"></ion-icon>            <ion-label class="ion-text-wrap">              <h3>2. Espera instrucciones</h3>              <p>Un gestor te contactará en las próximas 2 horas</p>            </ion-label>          </ion-item>          <ion-item>            <ion-icon name="car" slot="start" color="primary"></ion-icon>            <ion-label class="ion-text-wrap">              <h3>3. No muevas el vehículo</h3>              <p>A menos que sea necesario por seguridad</p>            </ion-label>          </ion-item>        </ion-list>      </ion-card-content>    </ion-card>  </form></ion-content></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'ReportClaimPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'ReportClaimPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

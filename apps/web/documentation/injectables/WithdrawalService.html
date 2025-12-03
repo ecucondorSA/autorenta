@@ -1,0 +1,2586 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >WithdrawalService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/withdrawal.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>WithdrawalService</p>
+<p>Servicio para gestionar el sistema de retiros:</p>
+<ul>
+<li>Gestionar cuentas bancarias del usuario</li>
+<li>Solicitar retiros de fondos</li>
+<li>Ver historial de retiros</li>
+<li>Aprobar/rechazar retiros (admin)</li>
+</ul>
+<p>Usa signals de Angular 17+ para state management reactivo.</p>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#activeBankAccounts" >activeBankAccounts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bankAccounts" >bankAccounts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#completedWithdrawals" >completedWithdrawals</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#defaultBankAccount" >defaultBankAccount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isLoading" >isLoading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pendingWithdrawals" >pendingWithdrawals</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#withdrawalRequests" >withdrawalRequests</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addBankAccount" >addBankAccount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#approveWithdrawal" >approveWithdrawal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#cancelWithdrawalRequest" >cancelWithdrawalRequest</a>
+                            </li>
+                            <li>
+                                <a href="#clear" >clear</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#clearError" >clearError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createError" >createError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteBankAccount" >deleteBankAccount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllWithdrawals" >getAllWithdrawals</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBankAccounts" >getBankAccounts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getWithdrawalRequests" >getWithdrawalRequests</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleError" >handleError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isWalletError" >isWalletError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#refresh" >refresh</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#rejectWithdrawal" >rejectWithdrawal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#requestWithdrawal" >requestWithdrawal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#setDefaultBankAccount" >setDefaultBankAccount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setLoadingState" >setLoadingState</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#validateAccountNumber" >validateAccountNumber</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addBankAccount"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addBankAccount</b></span>
+                        <a href="#addBankAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addBankAccount(params: <a href="../interfaces/AddBankAccountParams.html" target="_self">AddBankAccountParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Agrega una nueva cuenta bancaria</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AddBankAccountParams.html" target="_self" >AddBankAccountParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#BankAccount" target="_self" >Promise&lt;BankAccount&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="approveWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>approveWithdrawal</b></span>
+                        <a href="#approveWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>approveWithdrawal(params: <a href="../interfaces/ApproveWithdrawalParams.html" target="_self">ApproveWithdrawalParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="383"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:383</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Aprueba una solicitud de retiro (admin only)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ApproveWithdrawalParams.html" target="_self" >ApproveWithdrawalParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WalletApproveWithdrawalResponse.html" target="_self" >Promise&lt;WalletApproveWithdrawalResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cancelWithdrawalRequest"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>cancelWithdrawalRequest</b></span>
+                        <a href="#cancelWithdrawalRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>cancelWithdrawalRequest(requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="351"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:351</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Cancela una solicitud de retiro pendiente</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>requestId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clear"></a>
+                    <span class="name">
+                        <span ><b>clear</b></span>
+                        <a href="#clear"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clear()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="483"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:483</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el estado del servicio</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>clearError</b></span>
+                        <a href="#clearError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearError()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="565"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:565</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Limpia el error actual</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createError</b></span>
+                        <a href="#createError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createError(code: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, details?: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="527"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:527</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Crea un objeto de error estandarizado</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>code</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>details</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WalletError.html" target="_self" >WalletError</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteBankAccount"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteBankAccount</b></span>
+                        <a href="#deleteBankAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteBankAccount(accountId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Elimina una cuenta bancaria</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>accountId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllWithdrawals"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAllWithdrawals</b></span>
+                        <a href="#getAllWithdrawals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllWithdrawals(filters?: <a href="../interfaces/WithdrawalFilters.html" target="_self">WithdrawalFilters</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:344</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene TODAS las solicitudes de retiro (Admin only)
+Este método es semánticamente para uso administrativo.
+Confía en que las políticas RLS del backend permitirán al admin ver todo.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalFilters.html" target="_self" >WithdrawalFilters</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;WithdrawalRequest[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBankAccounts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getBankAccounts</b></span>
+                        <a href="#getBankAccounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBankAccounts()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:103</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene las cuentas bancarias del usuario</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#BankAccount" target="_self" >Promise&lt;BankAccount[]&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getWithdrawalRequests"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getWithdrawalRequests</b></span>
+                        <a href="#getWithdrawalRequests"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getWithdrawalRequests(filters?: <a href="../interfaces/WithdrawalFilters.html" target="_self">WithdrawalFilters</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="293"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene el historial de solicitudes de retiro</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../interfaces/WithdrawalFilters.html" target="_self" >WithdrawalFilters</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;WithdrawalRequest[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleError</b></span>
+                        <a href="#handleError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleError(err: unknown, defaultMessage: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="536"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:536</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Maneja errores genéricos y los convierte a WalletError</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>err</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>defaultMessage</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WalletError.html" target="_self" >WalletError</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isWalletError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isWalletError</b></span>
+                        <a href="#isWalletError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isWalletError(err: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="551"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:551</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Type guard para WalletError</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>err</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WalletError.html" target="_self" >WalletError</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refresh"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>refresh</b></span>
+                        <a href="#refresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>refresh()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="469"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:469</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Refresca tanto las cuentas como las solicitudes</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rejectWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>rejectWithdrawal</b></span>
+                        <a href="#rejectWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>rejectWithdrawal(params: <a href="../interfaces/RejectWithdrawalParams.html" target="_self">RejectWithdrawalParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="426"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:426</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Rechaza una solicitud de retiro (admin only)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RejectWithdrawalParams.html" target="_self" >RejectWithdrawalParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requestWithdrawal"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>requestWithdrawal</b></span>
+                        <a href="#requestWithdrawal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>requestWithdrawal(params: <a href="../interfaces/RequestWithdrawalParams.html" target="_self">RequestWithdrawalParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="240"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:240</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Solicita un retiro de fondos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RequestWithdrawalParams.html" target="_self" >RequestWithdrawalParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WalletRequestWithdrawalResponse.html" target="_self" >Promise&lt;WalletRequestWithdrawalResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDefaultBankAccount"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setDefaultBankAccount</b></span>
+                        <a href="#setDefaultBankAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setDefaultBankAccount(accountId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Establece una cuenta como predeterminada</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>accountId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setLoadingState"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setLoadingState</b></span>
+                        <a href="#setLoadingState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setLoadingState(key: unknown, value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="520"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:520</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Actualiza un estado de carga específico</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateAccountNumber"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>validateAccountNumber</b></span>
+                        <a href="#validateAccountNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateAccountNumber(type: <a href="../undefineds/BankAccountType.html" target="_self">BankAccountType</a>, number: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="494"
+                                    class="link-to-prism">src/app/core/services/withdrawal.service.ts:494</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Valida el formato de número de cuenta según el tipo</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#BankAccountType" target="_self" >BankAccountType</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>number</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeBankAccounts"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>activeBankAccounts</b></span>
+                        <a href="#activeBankAccounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bankAccounts().filter((acc) &#x3D;&gt; acc.is_active))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/app/core/services/withdrawal.service.ts:74</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cuentas bancarias activas</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bankAccounts"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bankAccounts</b></span>
+                        <a href="#bankAccounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;BankAccount[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/app/core/services/withdrawal.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cuentas bancarias del usuario</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completedWithdrawals"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>completedWithdrawals</b></span>
+                        <a href="#completedWithdrawals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt;
+    this.withdrawalRequests().filter((req) &#x3D;&gt; req.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;),
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/app/core/services/withdrawal.service.ts:86</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Retiros completados</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultBankAccount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>defaultBankAccount</b></span>
+                        <a href="#defaultBankAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; this.bankAccounts().find((acc) &#x3D;&gt; acc.is_default))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/app/core/services/withdrawal.service.ts:69</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cuenta bancaria por defecto del usuario</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WalletError | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/app/core/services/withdrawal.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Error actual (si existe)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isLoading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isLoading</b></span>
+                        <a href="#isLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const loadingState &#x3D; this.loading();
+    return Object.values(loadingState).some((v) &#x3D;&gt; v);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/app/core/services/withdrawal.service.ts:93</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indica si hay alguna operación en progreso</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WithdrawalLoadingState&gt;({
+    requesting: false,
+    approving: false,
+    rejecting: false,
+    fetchingRequests: false,
+    addingBankAccount: false,
+    fetchingBankAccounts: false,
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/core/services/withdrawal.service.ts:50</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Estados de carga para operaciones asíncronas</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pendingWithdrawals"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pendingWithdrawals</b></span>
+                        <a href="#pendingWithdrawals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt;
+    this.withdrawalRequests().filter((req) &#x3D;&gt; req.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;),
+  )</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/app/core/services/withdrawal.service.ts:79</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Retiros pendientes</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(SupabaseClientService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/core/services/withdrawal.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="withdrawalRequests"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>withdrawalRequests</b></span>
+                        <a href="#withdrawalRequests"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;WithdrawalRequest[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/core/services/withdrawal.service.ts:45</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Solicitudes de retiro del usuario</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, signal, computed, inject } from &#x27;@angular/core&#x27;;
+import type {
+  BankAccount,
+  WithdrawalRequest,
+  RequestWithdrawalParams,
+  WalletRequestWithdrawalResponse,
+  WalletApproveWithdrawalResponse,
+  ApproveWithdrawalParams,
+  RejectWithdrawalParams,
+  AddBankAccountParams,
+  WithdrawalFilters,
+  WithdrawalLoadingState,
+  WalletError,
+  BankAccountType,
+} from &#x27;../models/wallet.model&#x27;;
+import { SupabaseClientService } from &#x27;./supabase-client.service&#x27;;
+
+/**
+ * WithdrawalService
+ *
+ * Servicio para gestionar el sistema de retiros:
+ * - Gestionar cuentas bancarias del usuario
+ * - Solicitar retiros de fondos
+ * - Ver historial de retiros
+ * - Aprobar/rechazar retiros (admin)
+ *
+ * Usa signals de Angular 17+ para state management reactivo.
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class WithdrawalService {
+  private readonly supabase &#x3D; inject(SupabaseClientService);
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; SIGNALS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Cuentas bancarias del usuario
+   */
+  readonly bankAccounts &#x3D; signal&lt;BankAccount[]&gt;([]);
+
+  /**
+   * Solicitudes de retiro del usuario
+   */
+  readonly withdrawalRequests &#x3D; signal&lt;WithdrawalRequest[]&gt;([]);
+
+  /**
+   * Estados de carga para operaciones asíncronas
+   */
+  readonly loading &#x3D; signal&lt;WithdrawalLoadingState&gt;({
+    requesting: false,
+    approving: false,
+    rejecting: false,
+    fetchingRequests: false,
+    addingBankAccount: false,
+    fetchingBankAccounts: false,
+  });
+
+  /**
+   * Error actual (si existe)
+   */
+  readonly error &#x3D; signal&lt;WalletError | null&gt;(null);
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; COMPUTED SIGNALS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Cuenta bancaria por defecto del usuario
+   */
+  readonly defaultBankAccount &#x3D; computed(() &#x3D;&gt; this.bankAccounts().find((acc) &#x3D;&gt; acc.is_default));
+
+  /**
+   * Cuentas bancarias activas
+   */
+  readonly activeBankAccounts &#x3D; computed(() &#x3D;&gt; this.bankAccounts().filter((acc) &#x3D;&gt; acc.is_active));
+
+  /**
+   * Retiros pendientes
+   */
+  readonly pendingWithdrawals &#x3D; computed(() &#x3D;&gt;
+    this.withdrawalRequests().filter((req) &#x3D;&gt; req.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;),
+  );
+
+  /**
+   * Retiros completados
+   */
+  readonly completedWithdrawals &#x3D; computed(() &#x3D;&gt;
+    this.withdrawalRequests().filter((req) &#x3D;&gt; req.status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;),
+  );
+
+  /**
+   * Indica si hay alguna operación en progreso
+   */
+  readonly isLoading &#x3D; computed(() &#x3D;&gt; {
+    const loadingState &#x3D; this.loading();
+    return Object.values(loadingState).some((v) &#x3D;&gt; v);
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; BANK ACCOUNTS METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Obtiene las cuentas bancarias del usuario
+   */
+  async getBankAccounts(): Promise&lt;BankAccount[]&gt; {
+    this.setLoadingState(&#x27;fetchingBankAccounts&#x27;, true);
+    this.clearError();
+
+    try {
+      const { data, error } &#x3D; await this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .select(&#x27;*&#x27;)
+        .order(&#x27;is_default&#x27;, { ascending: false })
+        .order(&#x27;created_at&#x27;, { ascending: false });
+
+      if (error) {
+        throw this.createError(&#x27;BANK_ACCOUNTS_FETCH_ERROR&#x27;, error.message, error);
+      }
+
+      const accounts &#x3D; (data ?? []) as BankAccount[];
+      this.bankAccounts.set(accounts);
+
+      return accounts;
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al obtener cuentas bancarias&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;fetchingBankAccounts&#x27;, false);
+    }
+  }
+
+  /**
+   * Agrega una nueva cuenta bancaria
+   */
+  async addBankAccount(params: AddBankAccountParams): Promise&lt;BankAccount&gt; {
+    this.setLoadingState(&#x27;addingBankAccount&#x27;, true);
+    this.clearError();
+
+    try {
+      // Validar formato según tipo de cuenta
+      this.validateAccountNumber(params.account_type, params.account_number);
+
+      // Validar DNI/CUIT
+      if (!params.account_holder_document || params.account_holder_document.length &lt; 7) {
+        throw this.createError(&#x27;INVALID_DOCUMENT&#x27;, &#x27;DNI/CUIT inválido&#x27;);
+      }
+
+      // Crear cuenta bancaria
+      const { data, error } &#x3D; await this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .insert({
+          account_type: params.account_type,
+          account_number: params.account_number,
+          account_holder_name: params.account_holder_name,
+          account_holder_document: params.account_holder_document,
+          bank_name: params.bank_name,
+          is_active: true,
+          // Marcar como default si es la primera cuenta
+          is_default: this.bankAccounts().length &#x3D;&#x3D;&#x3D; 0,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw this.createError(&#x27;ADD_BANK_ACCOUNT_ERROR&#x27;, error.message, error);
+      }
+
+      const account &#x3D; data as BankAccount;
+
+      // Actualizar lista de cuentas
+      this.bankAccounts.update((accounts) &#x3D;&gt; [account, ...accounts]);
+
+      return account;
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al agregar cuenta bancaria&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;addingBankAccount&#x27;, false);
+    }
+  }
+
+  /**
+   * Establece una cuenta como predeterminada
+   */
+  async setDefaultBankAccount(accountId: string): Promise&lt;void&gt; {
+    this.clearError();
+
+    try {
+      const { error } &#x3D; await this.supabase.getClient().rpc(&#x27;set_default_bank_account&#x27;, {
+        p_bank_account_id: accountId,
+      });
+
+      if (error) {
+        throw this.createError(&#x27;SET_DEFAULT_ERROR&#x27;, error.message, error);
+      }
+
+      // Actualizar estado local
+      this.bankAccounts.update((accounts) &#x3D;&gt;
+        accounts.map((acc) &#x3D;&gt; ({
+          ...acc,
+          is_default: acc.id &#x3D;&#x3D;&#x3D; accountId,
+        })),
+      );
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al establecer cuenta predeterminada&#x27;);
+      throw walletError;
+    }
+  }
+
+  /**
+   * Elimina una cuenta bancaria
+   */
+  async deleteBankAccount(accountId: string): Promise&lt;void&gt; {
+    this.clearError();
+
+    try {
+      const { error } &#x3D; await this.supabase
+        .getClient()
+        .from(&#x27;bank_accounts&#x27;)
+        .delete()
+        .eq(&#x27;id&#x27;, accountId);
+
+      if (error) {
+        throw this.createError(&#x27;DELETE_BANK_ACCOUNT_ERROR&#x27;, error.message, error);
+      }
+
+      // Actualizar estado local
+      this.bankAccounts.update((accounts) &#x3D;&gt; accounts.filter((acc) &#x3D;&gt; acc.id !&#x3D;&#x3D; accountId));
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al eliminar cuenta bancaria&#x27;);
+      throw walletError;
+    }
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; WITHDRAWAL METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Solicita un retiro de fondos
+   */
+  async requestWithdrawal(
+    params: RequestWithdrawalParams,
+  ): Promise&lt;WalletRequestWithdrawalResponse&gt; {
+    this.setLoadingState(&#x27;requesting&#x27;, true);
+    this.clearError();
+
+    try {
+      // Validar parámetros
+      if (params.amount &lt;&#x3D; 0) {
+        throw this.createError(&#x27;INVALID_AMOUNT&#x27;, &#x27;El monto debe ser mayor a 0&#x27;);
+      }
+
+      if (params.amount &lt; 100) {
+        throw this.createError(&#x27;AMOUNT_TOO_LOW&#x27;, &#x27;El monto mínimo de retiro es $100 ARS&#x27;);
+      }
+
+      const { data, error } &#x3D; await this.supabase.getClient().rpc(&#x27;wallet_request_withdrawal&#x27;, {
+        p_bank_account_id: params.bank_account_id,
+        p_amount: params.amount,
+        p_user_notes: params.user_notes ?? null,
+      });
+
+      if (error) {
+        throw this.createError(&#x27;REQUEST_WITHDRAWAL_ERROR&#x27;, error.message, error);
+      }
+
+      if (!data || data.length &#x3D;&#x3D;&#x3D; 0) {
+        throw this.createError(&#x27;REQUEST_WITHDRAWAL_EMPTY&#x27;, &#x27;No se pudo procesar la solicitud&#x27;);
+      }
+
+      const result &#x3D; data[0] as WalletRequestWithdrawalResponse;
+
+      if (!result.success) {
+        throw this.createError(&#x27;REQUEST_WITHDRAWAL_FAILED&#x27;, result.message);
+      }
+
+      // Refrescar lista de solicitudes
+      await this.getWithdrawalRequests().catch(() &#x3D;&gt; {
+        /* Ignorar errores de refresh */
+      });
+
+      return result;
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al solicitar retiro&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;requesting&#x27;, false);
+    }
+  }
+
+  /**
+   * Obtiene el historial de solicitudes de retiro
+   */
+  async getWithdrawalRequests(filters?: WithdrawalFilters): Promise&lt;WithdrawalRequest[]&gt; {
+    this.setLoadingState(&#x27;fetchingRequests&#x27;, true);
+    this.clearError();
+
+    try {
+      let query &#x3D; this.supabase
+        .getClient()
+        .from(&#x27;withdrawal_requests&#x27;)
+        .select(&#x27;*&#x27;)
+        .order(&#x27;created_at&#x27;, { ascending: false });
+
+      // Aplicar filtros
+      if (filters?.status) {
+        if (Array.isArray(filters.status)) {
+          query &#x3D; query.in(&#x27;status&#x27;, filters.status);
+        } else {
+          query &#x3D; query.eq(&#x27;status&#x27;, filters.status);
+        }
+      }
+
+      if (filters?.from_date) {
+        query &#x3D; query.gte(&#x27;created_at&#x27;, filters.from_date.toISOString());
+      }
+
+      if (filters?.to_date) {
+        query &#x3D; query.lte(&#x27;created_at&#x27;, filters.to_date.toISOString());
+      }
+
+      const { data, error } &#x3D; await query;
+
+      if (error) {
+        throw this.createError(&#x27;WITHDRAWAL_REQUESTS_FETCH_ERROR&#x27;, error.message, error);
+      }
+
+      const requests &#x3D; (data ?? []) as WithdrawalRequest[];
+      this.withdrawalRequests.set(requests);
+
+      return requests;
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al obtener solicitudes de retiro&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;fetchingRequests&#x27;, false);
+    }
+  }
+
+  /**
+   * Obtiene TODAS las solicitudes de retiro (Admin only)
+   * Este método es semánticamente para uso administrativo.
+   * Confía en que las políticas RLS del backend permitirán al admin ver todo.
+   */
+  async getAllWithdrawals(filters?: WithdrawalFilters): Promise&lt;WithdrawalRequest[]&gt; {
+    return this.getWithdrawalRequests(filters);
+  }
+
+  /**
+   * Cancela una solicitud de retiro pendiente
+   */
+  async cancelWithdrawalRequest(requestId: string): Promise&lt;void&gt; {
+    this.clearError();
+
+    try {
+      const { error } &#x3D; await this.supabase
+        .getClient()
+        .from(&#x27;withdrawal_requests&#x27;)
+        .update({ status: &#x27;cancelled&#x27;, updated_at: new Date().toISOString() })
+        .eq(&#x27;id&#x27;, requestId)
+        .eq(&#x27;status&#x27;, &#x27;pending&#x27;); // Solo permitir cancelar pendientes
+
+      if (error) {
+        throw this.createError(&#x27;CANCEL_WITHDRAWAL_ERROR&#x27;, error.message, error);
+      }
+
+      // Actualizar estado local
+      this.withdrawalRequests.update((requests) &#x3D;&gt;
+        requests.map((req) &#x3D;&gt;
+          req.id &#x3D;&#x3D;&#x3D; requestId ? { ...req, status: &#x27;cancelled&#x27; as const } : req,
+        ),
+      );
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al cancelar solicitud de retiro&#x27;);
+      throw walletError;
+    }
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; ADMIN METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Aprueba una solicitud de retiro (admin only)
+   */
+  async approveWithdrawal(
+    params: ApproveWithdrawalParams,
+  ): Promise&lt;WalletApproveWithdrawalResponse&gt; {
+    this.setLoadingState(&#x27;approving&#x27;, true);
+    this.clearError();
+
+    try {
+      const { data, error } &#x3D; await this.supabase.getClient().rpc(&#x27;wallet_approve_withdrawal&#x27;, {
+        p_request_id: params.request_id,
+        p_admin_notes: params.admin_notes ?? null,
+      });
+
+      if (error) {
+        throw this.createError(&#x27;APPROVE_WITHDRAWAL_ERROR&#x27;, error.message, error);
+      }
+
+      if (!data || data.length &#x3D;&#x3D;&#x3D; 0) {
+        throw this.createError(&#x27;APPROVE_WITHDRAWAL_EMPTY&#x27;, &#x27;No se pudo procesar la aprobación&#x27;);
+      }
+
+      const result &#x3D; data[0] as WalletApproveWithdrawalResponse;
+
+      if (!result.success) {
+        throw this.createError(&#x27;APPROVE_WITHDRAWAL_FAILED&#x27;, result.message);
+      }
+
+      // Refrescar lista de solicitudes
+      await this.getWithdrawalRequests().catch(() &#x3D;&gt; {
+        /* Ignorar errores de refresh */
+      });
+
+      return result;
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al aprobar retiro&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;approving&#x27;, false);
+    }
+  }
+
+  /**
+   * Rechaza una solicitud de retiro (admin only)
+   */
+  async rejectWithdrawal(params: RejectWithdrawalParams): Promise&lt;void&gt; {
+    this.setLoadingState(&#x27;rejecting&#x27;, true);
+    this.clearError();
+
+    try {
+      const { error } &#x3D; await this.supabase
+        .getClient()
+        .from(&#x27;withdrawal_requests&#x27;)
+        .update({
+          status: &#x27;rejected&#x27;,
+          rejection_reason: params.rejection_reason,
+          updated_at: new Date().toISOString(),
+        })
+        .eq(&#x27;id&#x27;, params.request_id)
+        .eq(&#x27;status&#x27;, &#x27;pending&#x27;);
+
+      if (error) {
+        throw this.createError(&#x27;REJECT_WITHDRAWAL_ERROR&#x27;, error.message, error);
+      }
+
+      // Actualizar estado local
+      this.withdrawalRequests.update((requests) &#x3D;&gt;
+        requests.map((req) &#x3D;&gt;
+          req.id &#x3D;&#x3D;&#x3D; params.request_id
+            ? {
+                ...req,
+                status: &#x27;rejected&#x27; as const,
+                rejection_reason: params.rejection_reason,
+              }
+            : req,
+        ),
+      );
+    } catch (err) {
+      const walletError &#x3D; this.handleError(err, &#x27;Error al rechazar retiro&#x27;);
+      throw walletError;
+    } finally {
+      this.setLoadingState(&#x27;rejecting&#x27;, false);
+    }
+  }
+
+  /**
+   * Refresca tanto las cuentas como las solicitudes
+   */
+  async refresh(): Promise&lt;void&gt; {
+    await Promise.all([
+      this.getBankAccounts().catch(() &#x3D;&gt; {
+        /* Ignorar errores de refresh */
+      }),
+      this.getWithdrawalRequests().catch(() &#x3D;&gt; {
+        /* Ignorar errores de refresh */
+      }),
+    ]);
+  }
+
+  /**
+   * Limpia el estado del servicio
+   */
+  clear(): void {
+    this.bankAccounts.set([]);
+    this.withdrawalRequests.set([]);
+    this.clearError();
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; PRIVATE METHODS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Valida el formato de número de cuenta según el tipo
+   */
+  private validateAccountNumber(type: BankAccountType, number: string): void {
+    switch (type) {
+      case &#x27;cbu&#x27;:
+        if (!/^\d{22}$/.test(number)) {
+          throw this.createError(&#x27;INVALID_CBU&#x27;, &#x27;El CBU debe tener 22 dígitos&#x27;);
+        }
+        break;
+      case &#x27;cvu&#x27;:
+        if (!/^\d{22}$/.test(number)) {
+          throw this.createError(&#x27;INVALID_CVU&#x27;, &#x27;El CVU debe tener 22 dígitos&#x27;);
+        }
+        break;
+      case &#x27;alias&#x27;:
+        if (!/^[a-zA-Z0-9.]+$/.test(number) || number.length &lt; 6 || number.length &gt; 20) {
+          throw this.createError(
+            &#x27;INVALID_ALIAS&#x27;,
+            &#x27;El alias debe tener entre 6 y 20 caracteres alfanuméricos&#x27;,
+          );
+        }
+        break;
+    }
+  }
+
+  /**
+   * Actualiza un estado de carga específico
+   */
+  private setLoadingState(key: keyof WithdrawalLoadingState, value: boolean): void {
+    this.loading.update((state) &#x3D;&gt; ({ ...state, [key]: value }));
+  }
+
+  /**
+   * Crea un objeto de error estandarizado
+   */
+  private createError(code: string, message: string, details?: unknown): WalletError {
+    const error: WalletError &#x3D; { code, message, details };
+    this.error.set(error);
+    return error;
+  }
+
+  /**
+   * Maneja errores genéricos y los convierte a WalletError
+   */
+  private handleError(err: unknown, defaultMessage: string): WalletError {
+    if (this.isWalletError(err)) {
+      return err;
+    }
+
+    if (err instanceof Error) {
+      return this.createError(&#x27;UNKNOWN_ERROR&#x27;, err.message || defaultMessage, err);
+    }
+
+    return this.createError(&#x27;UNKNOWN_ERROR&#x27;, defaultMessage, err);
+  }
+
+  /**
+   * Type guard para WalletError
+   */
+  private isWalletError(err: unknown): err is WalletError {
+    return (
+      typeof err &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+      err !&#x3D;&#x3D; null &amp;&amp;
+      &#x27;code&#x27; in err &amp;&amp;
+      &#x27;message&#x27; in err &amp;&amp;
+      typeof (err as WalletError).code &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp;
+      typeof (err as WalletError).message &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
+    );
+  }
+
+  /**
+   * Limpia el error actual
+   */
+  private clearError(): void {
+    this.error.set(null);
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'WithdrawalService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

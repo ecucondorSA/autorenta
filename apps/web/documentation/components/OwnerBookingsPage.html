@@ -1,0 +1,3354 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  OwnerBookingsPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/owner-bookings/owner-bookings.page.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-owner-bookings-page</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>MoneyPipe</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                            <code>TranslateModule</code>
+                            <code>IonicModule</code>
+                                <code><a href="../components/DepositStatusBadgeComponent.html" target="_self" >DepositStatusBadgeComponent</a></code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./owner-bookings.page.html</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">styleUrl</td>
+                <td class="col-md-9"><code>./owner-bookings.page.css</code></td>
+            </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#bookings" >bookings</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carLeads" >carLeads</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#currentUserId" >currentUserId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#leadsLoading" >leadsLoading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#marketplaceStatus" >marketplaceStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#processingAction" >processingAction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#renterContacts" >renterContacts</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#canCancelBooking" >canCancelBooking</a>
+                            </li>
+                            <li>
+                                <a href="#canCompleteRental" >canCompleteRental</a>
+                            </li>
+                            <li>
+                                <a href="#canDoOwnerCheckIn" >canDoOwnerCheckIn</a>
+                            </li>
+                            <li>
+                                <a href="#canDoOwnerCheckOut" >canDoOwnerCheckOut</a>
+                            </li>
+                            <li>
+                                <a href="#canStartRental" >canStartRental</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#initialize" >initialize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadBookings" >loadBookings</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadCarLeads" >loadCarLeads</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadMarketplaceStatus" >loadMarketplaceStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadRenterContacts" >loadRenterContacts</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onCancelBooking" >onCancelBooking</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onCompleteRental" >onCompleteRental</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onStartRental" >onStartRental</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#openCarChat" >openCarChat</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#presentConfirmation" >presentConfirmation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#presentToast" >presentToast</a>
+                            </li>
+                            <li>
+                                <a href="#rangeLabel" >rangeLabel</a>
+                            </li>
+                            <li>
+                                <a href="#renterDisplayName" >renterDisplayName</a>
+                            </li>
+                            <li>
+                                <a href="#renterEmail" >renterEmail</a>
+                            </li>
+                            <li>
+                                <a href="#renterPhone" >renterPhone</a>
+                            </li>
+                            <li>
+                                <a href="#statusBadgeClass" >statusBadgeClass</a>
+                            </li>
+                            <li>
+                                <a href="#statusHint" >statusHint</a>
+                            </li>
+                            <li>
+                                <a href="#statusIcon" >statusIcon</a>
+                            </li>
+                            <li>
+                                <a href="#statusLabel" >statusLabel</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(bookingsService: <a href="../injectables/BookingsService.html" target="_self">BookingsService</a>, alertController: AlertController, toastController: <a href="../interfaces/Toast.html" target="_self">ToastController</a>, messagesService: <a href="../injectables/MessagesService.html" target="_self">MessagesService</a>, authService: <a href="../injectables/AuthService.html" target="_self">AuthService</a>, router: <a href="../interfaces/Route.html" target="_self">Router</a>, marketplaceService: <a href="../injectables/MarketplaceOnboardingService.html" target="_self">MarketplaceOnboardingService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:54</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>bookingsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/BookingsService.html" target="_self" >BookingsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>alertController</td>
+                                                  
+                                                        <td>
+                                                                    <code>AlertController</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>toastController</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Toast.html" target="_self" >ToastController</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>messagesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MessagesService.html" target="_self" >MessagesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthService.html" target="_self" >AuthService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Route.html" target="_self" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>marketplaceService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MarketplaceOnboardingService.html" target="_self" >MarketplaceOnboardingService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canCancelBooking"></a>
+                    <span class="name">
+                        <span ><b>canCancelBooking</b></span>
+                        <a href="#canCancelBooking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canCancelBooking(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:199</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canCompleteRental"></a>
+                    <span class="name">
+                        <span ><b>canCompleteRental</b></span>
+                        <a href="#canCompleteRental"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canCompleteRental(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="195"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:195</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canDoOwnerCheckIn"></a>
+                    <span class="name">
+                        <span ><b>canDoOwnerCheckIn</b></span>
+                        <a href="#canDoOwnerCheckIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canDoOwnerCheckIn(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:181</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canDoOwnerCheckOut"></a>
+                    <span class="name">
+                        <span ><b>canDoOwnerCheckOut</b></span>
+                        <a href="#canDoOwnerCheckOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canDoOwnerCheckOut(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:186</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canStartRental"></a>
+                    <span class="name">
+                        <span ><b>canStartRental</b></span>
+                        <a href="#canStartRental"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>canStartRental(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:191</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initialize"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>initialize</b></span>
+                        <a href="#initialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>initialize()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadBookings"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadBookings</b></span>
+                        <a href="#loadBookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadBookings()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadCarLeads"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadCarLeads</b></span>
+                        <a href="#loadCarLeads"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadCarLeads()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="282"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:282</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadMarketplaceStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>loadMarketplaceStatus</b></span>
+                        <a href="#loadMarketplaceStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadMarketplaceStatus(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="380"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:380</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadRenterContacts"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>loadRenterContacts</b></span>
+                        <a href="#loadRenterContacts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadRenterContacts(bookings: Booking[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="389"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:389</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookings</td>
+                                            <td>
+                                                        <code>Booking[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCancelBooking"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onCancelBooking</b></span>
+                        <a href="#onCancelBooking"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onCancelBooking(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:245</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onCompleteRental"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onCompleteRental</b></span>
+                        <a href="#onCompleteRental"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onCompleteRental(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:224</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onStartRental"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onStartRental</b></span>
+                        <a href="#onStartRental"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onStartRental(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="203"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:203</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openCarChat"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>openCarChat</b></span>
+                        <a href="#openCarChat"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>openCarChat(lead: <a href="../interfaces/CarLead.html" target="_self">CarLead</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="369"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:369</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>lead</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CarLead.html" target="_self" >CarLead</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="presentConfirmation"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>presentConfirmation</b></span>
+                        <a href="#presentConfirmation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>presentConfirmation(options: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="418"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:418</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="presentToast"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>presentToast</b></span>
+                        <a href="#presentToast"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>presentToast(message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, color: "success" | "danger" | "warning")</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="446"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:446</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>color</td>
+                                            <td>
+                                                        <code>&quot;success&quot; | &quot;danger&quot; | &quot;warning&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;success&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="rangeLabel"></a>
+                    <span class="name">
+                        <span ><b>rangeLabel</b></span>
+                        <a href="#rangeLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>rangeLabel(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:104</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renterDisplayName"></a>
+                    <span class="name">
+                        <span ><b>renterDisplayName</b></span>
+                        <a href="#renterDisplayName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>renterDisplayName(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:267</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renterEmail"></a>
+                    <span class="name">
+                        <span ><b>renterEmail</b></span>
+                        <a href="#renterEmail"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>renterEmail(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="272"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:272</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renterPhone"></a>
+                    <span class="name">
+                        <span ><b>renterPhone</b></span>
+                        <a href="#renterPhone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>renterPhone(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="277"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:277</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusBadgeClass"></a>
+                    <span class="name">
+                        <span ><b>statusBadgeClass</b></span>
+                        <a href="#statusBadgeClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusBadgeClass(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:144</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusHint"></a>
+                    <span class="name">
+                        <span ><b>statusHint</b></span>
+                        <a href="#statusHint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusHint(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:127</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusIcon"></a>
+                    <span class="name">
+                        <span ><b>statusIcon</b></span>
+                        <a href="#statusIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusIcon(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="162"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:162</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusLabel"></a>
+                    <span class="name">
+                        <span ><b>statusLabel</b></span>
+                        <a href="#statusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>statusLabel(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bookings"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>bookings</b></span>
+                        <a href="#bookings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Booking[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carLeads"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carLeads</b></span>
+                        <a href="#carLeads"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;CarLead[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentUserId"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>currentUserId</b></span>
+                        <a href="#currentUserId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="leadsLoading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>leadsLoading</b></span>
+                        <a href="#leadsLoading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="marketplaceStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>marketplaceStatus</b></span>
+                        <a href="#marketplaceStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;MarketplaceStatus | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processingAction"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>processingAction</b></span>
+                        <a href="#processingAction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renterContacts"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>renterContacts</b></span>
+                        <a href="#renterContacts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;
+    Record&lt;string, { name?: string; email?: string; phone?: string }&gt;
+  &gt;({})</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/features/bookings/owner-bookings/owner-bookings.page.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule } from &#x27;@angular/common&#x27;;
+import { ChangeDetectionStrategy, Component, OnInit, signal } from &#x27;@angular/core&#x27;;
+import { Router, RouterLink } from &#x27;@angular/router&#x27;;
+import { AlertController, IonicModule, ToastController } from &#x27;@ionic/angular&#x27;;
+import { TranslateModule } from &#x27;@ngx-translate/core&#x27;;
+import { Booking } from &#x27;../../../core/models&#x27;;
+import { AuthService } from &#x27;../../../core/services/auth.service&#x27;;
+import { BookingsService } from &#x27;../../../core/services/bookings.service&#x27;;
+import {
+  MarketplaceOnboardingService,
+  MarketplaceStatus,
+} from &#x27;../../../core/services/marketplace-onboarding.service&#x27;;
+import { Message, MessagesService } from &#x27;../../../core/services/messages.service&#x27;;
+import { DepositStatusBadgeComponent } from &#x27;../../../shared/components/deposit-status-badge/deposit-status-badge.component&#x27;;
+import { MoneyPipe } from &#x27;../../../shared/pipes/money.pipe&#x27;;
+import { formatDateRange } from &#x27;../../../shared/utils/date.utils&#x27;;
+
+interface CarLead {
+  carId: string;
+  carTitle: string;
+  participantId: string;
+  participantName: string | null;
+  lastMessage: Message;
+  unreadCount: number;
+}
+
+@Component({
+  standalone: true,
+  selector: &#x27;app-owner-bookings-page&#x27;,
+  imports: [
+    CommonModule,
+    MoneyPipe,
+    RouterLink,
+    TranslateModule,
+    IonicModule,
+    DepositStatusBadgeComponent,
+  ],
+  templateUrl: &#x27;./owner-bookings.page.html&#x27;,
+  styleUrl: &#x27;./owner-bookings.page.css&#x27;,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class OwnerBookingsPage implements OnInit {
+  readonly bookings &#x3D; signal&lt;Booking[]&gt;([]);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly processingAction &#x3D; signal&lt;string | null&gt;(null);
+  readonly renterContacts &#x3D; signal&lt;
+    Record&lt;string, { name?: string; email?: string; phone?: string }&gt;
+  &gt;({});
+  readonly carLeads &#x3D; signal&lt;CarLead[]&gt;([]);
+  readonly leadsLoading &#x3D; signal(false);
+  readonly marketplaceStatus &#x3D; signal&lt;MarketplaceStatus | null&gt;(null);
+
+  private currentUserId: string | null &#x3D; null;
+
+  constructor(
+    private readonly bookingsService: BookingsService,
+    private readonly alertController: AlertController,
+    private readonly toastController: ToastController,
+    private readonly messagesService: MessagesService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly marketplaceService: MarketplaceOnboardingService,
+  ) {}
+
+  ngOnInit(): void {
+    void this.initialize();
+  }
+
+  private async initialize(): Promise&lt;void&gt; {
+    try {
+      const session &#x3D; await this.authService.ensureSession();
+      this.currentUserId &#x3D; session?.user?.id ?? null;
+      if (this.currentUserId) {
+        await this.loadMarketplaceStatus(this.currentUserId);
+      } else {
+        this.marketplaceStatus.set(null);
+      }
+    } catch {
+      this.currentUserId &#x3D; null;
+      this.marketplaceStatus.set(null);
+    } finally {
+      await this.loadBookings();
+    }
+  }
+
+  async loadBookings(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+    this.renterContacts.set({});
+    try {
+      // ✅ NUEVO: Obtener reservas de AUTOS DEL LOCADOR
+      const { bookings } &#x3D; await this.bookingsService.getOwnerBookings();
+      await this.loadRenterContacts(bookings);
+      this.bookings.set(bookings);
+      await this.loadCarLeads();
+    } catch {
+      this.error.set(&#x27;No pudimos cargar las reservas. Por favor intentá de nuevo más tarde.&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  rangeLabel(booking: Booking): string {
+    return formatDateRange(booking.start_at, booking.end_at);
+  }
+
+  statusLabel(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;Pendiente de confirmación&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Confirmada&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;En curso&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Finalizada&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Cancelada&#x27;;
+      case &#x27;expired&#x27;:
+        return &#x27;Vencida&#x27;;
+      default:
+        return booking.status;
+    }
+  }
+
+  statusHint(booking: Booking): string | null {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;El locatario debe completar el pago.&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;Coordiná la entrega del auto con el locatario.&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;El auto está siendo utilizado.&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;Alquiler finalizado correctamente.&#x27;;
+      case &#x27;cancelled&#x27;:
+        return &#x27;Esta reserva fue cancelada.&#x27;;
+      default:
+        return null;
+    }
+  }
+
+  statusBadgeClass(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;badge-warning&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;badge-success&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;badge-info&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;badge-neutral&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;badge-danger&#x27;;
+      default:
+        return &#x27;badge-neutral&#x27;;
+    }
+  }
+
+  statusIcon(booking: Booking): string {
+    switch (booking.status) {
+      case &#x27;pending&#x27;:
+        return &#x27;⏳&#x27;;
+      case &#x27;confirmed&#x27;:
+        return &#x27;✅&#x27;;
+      case &#x27;in_progress&#x27;:
+        return &#x27;🚗&#x27;;
+      case &#x27;completed&#x27;:
+        return &#x27;🏁&#x27;;
+      case &#x27;cancelled&#x27;:
+      case &#x27;expired&#x27;:
+        return &#x27;❌&#x27;;
+      default:
+        return &#x27;ℹ️&#x27;;
+    }
+  }
+
+  // ✅ NUEVO: Acciones del locador
+  canDoOwnerCheckIn(booking: Booking): boolean {
+    // Check-in cuando está confirmed y llega la fecha
+    return booking.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27; &amp;&amp; new Date(booking.start_at) &lt;&#x3D; new Date();
+  }
+
+  canDoOwnerCheckOut(booking: Booking): boolean {
+    // Check-out cuando está in_progress
+    return booking.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;;
+  }
+
+  canStartRental(booking: Booking): boolean {
+    return booking.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;;
+  }
+
+  canCompleteRental(booking: Booking): boolean {
+    return booking.status &#x3D;&#x3D;&#x3D; &#x27;in_progress&#x27;;
+  }
+
+  canCancelBooking(booking: Booking): boolean {
+    return booking.status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27; || booking.status &#x3D;&#x3D;&#x3D; &#x27;confirmed&#x27;;
+  }
+
+  async onStartRental(bookingId: string): Promise&lt;void&gt; {
+    const confirmed &#x3D; await this.presentConfirmation({
+      header: &#x27;Iniciar alquiler&#x27;,
+      message: &#x27;Confirmá que el locatario recibió el auto.&#x27;,
+      confirmText: &#x27;Iniciar&#x27;,
+    });
+    if (!confirmed) return;
+
+    this.processingAction.set(bookingId);
+    try {
+      await this.bookingsService.updateBooking(bookingId, { status: &#x27;in_progress&#x27; });
+      await this.loadBookings();
+      await this.presentToast(&#x27;Alquiler iniciado correctamente&#x27;);
+    } catch (error) {
+      console.error(&#x27;Error starting rental:&#x27;, error);
+      await this.presentToast(&#x27;Error al iniciar el alquiler&#x27;, &#x27;danger&#x27;);
+    } finally {
+      this.processingAction.set(null);
+    }
+  }
+
+  async onCompleteRental(bookingId: string): Promise&lt;void&gt; {
+    const confirmed &#x3D; await this.presentConfirmation({
+      header: &#x27;Finalizar alquiler&#x27;,
+      message: &#x27;Confirmá que el locatario devolvió el auto en buen estado.&#x27;,
+      confirmText: &#x27;Finalizar&#x27;,
+    });
+    if (!confirmed) return;
+
+    this.processingAction.set(bookingId);
+    try {
+      await this.bookingsService.updateBooking(bookingId, { status: &#x27;completed&#x27; });
+      await this.loadBookings();
+      await this.presentToast(&#x27;Alquiler finalizado correctamente&#x27;);
+    } catch (error) {
+      console.error(&#x27;Error completing rental:&#x27;, error);
+      await this.presentToast(&#x27;Error al finalizar el alquiler&#x27;, &#x27;danger&#x27;);
+    } finally {
+      this.processingAction.set(null);
+    }
+  }
+
+  async onCancelBooking(bookingId: string): Promise&lt;void&gt; {
+    const confirmed &#x3D; await this.presentConfirmation({
+      header: &#x27;Cancelar reserva&#x27;,
+      message: &#x27;Esta acción cancelará la reserva actual. ¿Deseás continuar?&#x27;,
+      confirmText: &#x27;Cancelar reserva&#x27;,
+      confirmColor: &#x27;danger&#x27;,
+    });
+    if (!confirmed) return;
+
+    this.processingAction.set(bookingId);
+    try {
+      await this.bookingsService.cancelBooking(bookingId, false);
+      await this.loadBookings();
+      await this.presentToast(&#x27;Reserva cancelada&#x27;);
+    } catch (error) {
+      console.error(&#x27;Error cancelling booking:&#x27;, error);
+      await this.presentToast(&#x27;Error al cancelar la reserva&#x27;, &#x27;danger&#x27;);
+    } finally {
+      this.processingAction.set(null);
+    }
+  }
+
+  renterDisplayName(booking: Booking): string {
+    const contact &#x3D; this.renterContacts()[booking.id];
+    return contact?.name || contact?.email || booking.renter_id || &#x27;Locatario&#x27;;
+  }
+
+  renterEmail(booking: Booking): string | null {
+    const contact &#x3D; this.renterContacts()[booking.id];
+    return contact?.email ?? null;
+  }
+
+  renterPhone(booking: Booking): string | null {
+    const contact &#x3D; this.renterContacts()[booking.id];
+    return contact?.phone ?? null;
+  }
+
+  async loadCarLeads(): Promise&lt;void&gt; {
+    if (!this.currentUserId) {
+      this.carLeads.set([]);
+      return;
+    }
+
+    this.leadsLoading.set(true);
+
+    try {
+      const rows &#x3D; await this.messagesService.listCarLeadsForOwner(this.currentUserId);
+
+      const threads &#x3D; new Map&lt;
+        string,
+        {
+          carId: string;
+          carTitle: string;
+          participantId: string;
+          lastMessage: Message;
+          unreadCount: number;
+        }
+      &gt;();
+
+      for (const row of rows) {
+        if (!row.car?.id) {
+          continue;
+        }
+
+        const key &#x3D; &#x60;${row.car.id}:${row.otherUserId}&#x60;;
+        const existing &#x3D; threads.get(key);
+        const isUnread &#x3D; row.message.recipient_id &#x3D;&#x3D;&#x3D; this.currentUserId &amp;&amp; !row.message.read_at;
+
+        if (!existing) {
+          threads.set(key, {
+            carId: row.car.id,
+            carTitle: row.car.title ?? &#x27;Auto sin título&#x27;,
+            participantId: row.otherUserId,
+            lastMessage: row.message,
+            unreadCount: isUnread ? 1 : 0,
+          });
+        } else {
+          const existingDate &#x3D; new Date(existing.lastMessage.created_at).getTime();
+          const currentDate &#x3D; new Date(row.message.created_at).getTime();
+
+          if (currentDate &gt; existingDate) {
+            existing.lastMessage &#x3D; row.message;
+          }
+
+          if (isUnread) {
+            existing.unreadCount +&#x3D; 1;
+          }
+        }
+      }
+
+      const leadsOrdered &#x3D; Array.from(threads.values()).sort((a, b) &#x3D;&gt; {
+        const aDate &#x3D; new Date(a.lastMessage.created_at).getTime();
+        const bDate &#x3D; new Date(b.lastMessage.created_at).getTime();
+        return bDate - aDate;
+      });
+
+      const enriched &#x3D; await Promise.all(
+        leadsOrdered.map(async (lead) &#x3D;&gt; {
+          let participantName: string | null &#x3D; null;
+
+          try {
+            const contact &#x3D; await this.bookingsService.getOwnerContact(lead.participantId);
+            if (contact.success) {
+              participantName &#x3D; contact.name || contact.email || null;
+            }
+          } catch {
+            // Silently ignore error, participant name is optional
+          }
+
+          return {
+            ...lead,
+            participantName,
+          };
+        }),
+      );
+
+      this.carLeads.set(enriched);
+    } catch (error) {
+      console.error(&#x27;Error loading car leads:&#x27;, error);
+    } finally {
+      this.leadsLoading.set(false);
+    }
+  }
+
+  async openCarChat(lead: CarLead): Promise&lt;void&gt; {
+    await this.router.navigate([&#x27;/messages&#x27;], {
+      queryParams: {
+        carId: lead.carId,
+        userId: lead.participantId,
+        carName: lead.carTitle,
+        userName: lead.participantName ?? &#x27;Usuario&#x27;,
+      },
+    });
+  }
+
+  private async loadMarketplaceStatus(userId: string): Promise&lt;void&gt; {
+    try {
+      const status &#x3D; await this.marketplaceService.getMarketplaceStatus(userId);
+      this.marketplaceStatus.set(status);
+    } catch {
+      this.marketplaceStatus.set(null);
+    }
+  }
+
+  private async loadRenterContacts(bookings: Booking[]): Promise&lt;void&gt; {
+    const contacts: Record&lt;string, { name?: string; email?: string; phone?: string }&gt; &#x3D; {};
+
+    await Promise.all(
+      bookings.map(async (booking) &#x3D;&gt; {
+        if (!booking?.id || !booking?.renter_id) {
+          return;
+        }
+
+        try {
+          const contact &#x3D; await this.bookingsService.getOwnerContact(booking.renter_id);
+          if (contact.success) {
+            contacts[booking.id] &#x3D; {
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+            };
+          } else {
+            // No action needed if contact is not found
+          }
+        } catch {
+          // Silently ignore errors
+        }
+      }),
+    );
+
+    this.renterContacts.set(contacts);
+  }
+
+  private async presentConfirmation(options: {
+    header: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    confirmColor?: &#x27;primary&#x27; | &#x27;danger&#x27;;
+  }): Promise&lt;boolean&gt; {
+    const alert &#x3D; await this.alertController.create({
+      header: options.header,
+      message: options.message,
+      buttons: [
+        {
+          text: options.cancelText ?? &#x27;Volver&#x27;,
+          role: &#x27;cancel&#x27;,
+        },
+        {
+          text: options.confirmText ?? &#x27;Confirmar&#x27;,
+          role: &#x27;confirm&#x27;,
+          cssClass: options.confirmColor &#x3D;&#x3D;&#x3D; &#x27;danger&#x27; ? &#x27;alert-button-danger&#x27; : undefined,
+        },
+      ],
+    });
+
+    await alert.present();
+    const { role } &#x3D; await alert.onDidDismiss();
+    return role &#x3D;&#x3D;&#x3D; &#x27;confirm&#x27;;
+  }
+
+  private async presentToast(
+    message: string,
+    color: &#x27;success&#x27; | &#x27;danger&#x27; | &#x27;warning&#x27; &#x3D; &#x27;success&#x27;,
+  ): Promise&lt;void&gt; {
+    const toast &#x3D; await this.toastController.create({
+      message,
+      duration: 2500,
+      position: &#x27;top&#x27;,
+      color,
+    });
+    await toast.present();
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div
+  class&#x3D;&quot;owner-bookings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300&quot;
+&gt;
+  &lt;!-- Header --&gt;
+  &lt;div
+    class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300&quot;
+  &gt;
+    &lt;div class&#x3D;&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6&quot;&gt;
+      &lt;h1 class&#x3D;&quot;text-3xl font-bold text-text-primary dark:text-text-primary&quot;&gt;
+        Reservas de Mis Autos
+      &lt;/h1&gt;
+      &lt;p class&#x3D;&quot;mt-2 text-text-secondary dark:text-text-secondary/70&quot;&gt;
+        Gestiona las reservas de tus vehículos
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Content --&gt;
+  &lt;div class&#x3D;&quot;max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8&quot;&gt;
+    @if (loading()) {
+      &lt;div class&#x3D;&quot;flex flex-col items-center justify-center py-16&quot;&gt;
+        &lt;svg
+          class&#x3D;&quot;animate-spin h-12 w-12 text-primary-600 dark:text-cta-default&quot;
+          fill&#x3D;&quot;none&quot;
+          viewBox&#x3D;&quot;0 0 24 24&quot;
+        &gt;
+          &lt;circle
+            class&#x3D;&quot;opacity-25&quot;
+            cx&#x3D;&quot;12&quot;
+            cy&#x3D;&quot;12&quot;
+            r&#x3D;&quot;10&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            stroke-width&#x3D;&quot;4&quot;
+          &gt;&lt;/circle&gt;
+          &lt;path
+            class&#x3D;&quot;opacity-75&quot;
+            fill&#x3D;&quot;currentColor&quot;
+            d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+          &gt;&lt;/path&gt;
+        &lt;/svg&gt;
+        &lt;p class&#x3D;&quot;mt-4 text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+          Cargando reservas...
+        &lt;/p&gt;
+      &lt;/div&gt;
+    }
+
+    &lt;!-- Error State --&gt;
+    @if (error(); as errorMsg) {
+      &lt;div
+        class&#x3D;&quot;bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4&quot;
+      &gt;
+        &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ errorMsg }}&lt;/p&gt;
+        &lt;button (click)&#x3D;&quot;loadBookings()&quot; class&#x3D;&quot;mt-2 text-sm font-medium text-error-text underline&quot;&gt;
+          Intentar de nuevo
+        &lt;/button&gt;
+      &lt;/div&gt;
+    }
+
+    @if (!loading() &amp;&amp; !error()) {
+      @if (marketplaceStatus(); as mpStatus) {
+        @if (!mpStatus.isApproved) {
+          &lt;div
+            class&#x3D;&quot;mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong dark:border-warning-600/60 dark:bg-warning-900/25 dark:text-warning-100&quot;
+          &gt;
+            &lt;div class&#x3D;&quot;flex flex-col gap-2 md:flex-row md:items-center md:justify-between&quot;&gt;
+              &lt;div class&#x3D;&quot;flex items-start gap-3&quot;&gt;
+                &lt;span class&#x3D;&quot;mt-0.5 text-lg&quot;&gt;⚠️&lt;/span&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;font-semibold&quot;&gt;Pagos automáticos pendientes&lt;/p&gt;
+                  &lt;p&gt;
+                    Aún no vinculaste Mercado Pago. Las reservas se liquidarán en tu wallet de
+                    Autorenta hasta que completes el onboarding.
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+              &lt;a
+                [routerLink]&#x3D;&quot;[&#x27;/profile&#x27;]&quot;
+                [queryParams]&#x3D;&quot;{ section: &#x27;payments&#x27; }&quot;
+                class&#x3D;&quot;inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover dark:border-warning-border/70 dark:bg-transparent dark:text-warning-100 dark:hover:bg-warning-900/40&quot;
+              &gt;
+                Vincular ahora →
+              &lt;/a&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        }
+      }
+      &lt;section class&#x3D;&quot;mb-10&quot;&gt;
+        &lt;div class&#x3D;&quot;flex items-center justify-between mb-4&quot;&gt;
+          &lt;div&gt;
+            &lt;h2 class&#x3D;&quot;text-xl font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+              Consultas sobre tus autos
+            &lt;/h2&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+              Responde mensajes iniciales antes de que concreten una reserva.
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        @if (leadsLoading()) {
+          &lt;div
+            class&#x3D;&quot;flex items-center gap-3 rounded-lg border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70&quot;
+          &gt;
+            &lt;svg
+              class&#x3D;&quot;h-5 w-5 animate-spin text-primary-600 dark:text-cta-default&quot;
+              viewBox&#x3D;&quot;0 0 24 24&quot;
+              fill&#x3D;&quot;none&quot;
+            &gt;
+              &lt;circle
+                class&#x3D;&quot;opacity-25&quot;
+                cx&#x3D;&quot;12&quot;
+                cy&#x3D;&quot;12&quot;
+                r&#x3D;&quot;10&quot;
+                stroke&#x3D;&quot;currentColor&quot;
+                stroke-width&#x3D;&quot;4&quot;
+              &gt;&lt;/circle&gt;
+              &lt;path
+                class&#x3D;&quot;opacity-75&quot;
+                fill&#x3D;&quot;currentColor&quot;
+                d&#x3D;&quot;M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z&quot;
+              &gt;&lt;/path&gt;
+            &lt;/svg&gt;
+            &lt;span&gt;Buscando nuevas consultas...&lt;/span&gt;
+          &lt;/div&gt;
+        } @else if (carLeads().length &#x3D;&#x3D;&#x3D; 0) {
+          &lt;div
+            class&#x3D;&quot;rounded-lg border border-dashed border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary/40 dark:bg-surface-raised/40 px-4 py-6 text-center&quot;
+          &gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+              Aún no hay consultas pendientes sin reserva.
+            &lt;/p&gt;
+          &lt;/div&gt;
+        } @else {
+          &lt;div class&#x3D;&quot;grid gap-4 md:grid-cols-2&quot;&gt;
+            @for (lead of carLeads(); track lead.carId + lead.participantId) {
+              &lt;div
+                class&#x3D;&quot;rounded-lg border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-4 shadow-sm transition&quot;
+              &gt;
+                &lt;div class&#x3D;&quot;flex items-start justify-between gap-3&quot;&gt;
+                  &lt;div&gt;
+                    &lt;p
+                      class&#x3D;&quot;text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60&quot;
+                    &gt;
+                      {{ lead.carTitle }}
+                    &lt;/p&gt;
+                    &lt;h3 class&#x3D;&quot;text-base font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                      {{ lead.participantName ?? &#x27;Interesado&#x27; }}
+                    &lt;/h3&gt;
+                  &lt;/div&gt;
+                  @if (lead.unreadCount &gt; 0) {
+                    &lt;span
+                      class&#x3D;&quot;inline-flex items-center justify-center rounded-full bg-cta-default text-cta-text&quot;
+                    &gt;
+                      {{ lead.unreadCount }}
+                      {{ lead.unreadCount &#x3D;&#x3D;&#x3D; 1 ? &#x27;mensaje sin leer&#x27; : &#x27;mensajes sin leer&#x27; }}
+                    &lt;/span&gt;
+                  }
+                &lt;/div&gt;
+
+                &lt;p
+                  class&#x3D;&quot;mt-3 text-sm text-text-secondary dark:text-text-secondary/70 line-clamp-3&quot;
+                &gt;
+                  {{ lead.lastMessage.body }}
+                &lt;/p&gt;
+                &lt;p
+                  class&#x3D;&quot;mt-2 text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/50&quot;
+                &gt;
+                  {{ lead.lastMessage.created_at | date: &#x27;dd/MM/yyyy HH:mm&#x27; }}
+                &lt;/p&gt;
+
+                &lt;button
+                  (click)&#x3D;&quot;openCarChat(lead)&quot;
+                  class&#x3D;&quot;mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-cta-text transition hover:bg-primary-700 dark:bg-cta-default dark:hover:bg-cta-default/90&quot;
+                  type&#x3D;&quot;button&quot;
+                &gt;
+                  Abrir chat
+                  &lt;svg class&#x3D;&quot;h-4 w-4&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 20 20&quot;&gt;
+                    &lt;path
+                      d&#x3D;&quot;M12.293 4.293a1 1 0 011.414 0l4 4a.997.997 0 01.083 1.32l-.083.094-4 4a1 1 0 01-1.497-1.32l.083-.094L14.585 10H4a1 1 0 01-.117-1.993L4 8h10.585l-2.292-2.293a1 1 0 01-.083-1.32l.083-.094z&quot;
+                    /&gt;
+                  &lt;/svg&gt;
+                &lt;/button&gt;
+              &lt;/div&gt;
+            }
+          &lt;/div&gt;
+        }
+      &lt;/section&gt;
+
+      &lt;!-- Bookings List --&gt;
+      @if (bookings().length &#x3D;&#x3D;&#x3D; 0) {
+        &lt;div class&#x3D;&quot;text-center py-16&quot;&gt;
+          &lt;svg
+            class&#x3D;&quot;mx-auto h-12 w-12 text-text-secondary dark:text-text-secondary/50&quot;
+            fill&#x3D;&quot;none&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2&quot;
+            /&gt;
+          &lt;/svg&gt;
+          &lt;h3 class&#x3D;&quot;mt-2 text-sm font-medium text-text-primary dark:text-text-primary&quot;&gt;
+            No tenés reservas
+          &lt;/h3&gt;
+          &lt;p class&#x3D;&quot;mt-1 text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+            Cuando alguien alquile tus autos, aparecerán acá.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      } @else {
+        &lt;div class&#x3D;&quot;space-y-4&quot;&gt;
+          @for (booking of bookings(); track booking.id) {
+            &lt;div
+              class&#x3D;&quot;bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 transition-colors duration-300&quot;
+            &gt;
+              &lt;!-- Header --&gt;
+              &lt;div class&#x3D;&quot;flex items-start justify-between mb-4&quot;&gt;
+                &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+                  &lt;div class&#x3D;&quot;flex items-center gap-3 mb-2 flex-wrap&quot;&gt;
+                    &lt;span class&#x3D;&quot;text-2xl&quot;&gt;{{ statusIcon(booking) }}&lt;/span&gt;
+                    &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-primary&quot;&gt;
+                      Vehículo ID: {{ booking.car_id }}
+                    &lt;/h3&gt;
+                    &lt;span
+                      class&#x3D;&quot;px-2 py-1 text-xs font-medium rounded-full&quot;
+                      [ngClass]&#x3D;&quot;statusBadgeClass(booking)&quot;
+                    &gt;
+                      {{ statusLabel(booking) }}
+                    &lt;/span&gt;
+                    &lt;app-deposit-status-badge
+                      *ngIf&#x3D;&quot;booking.deposit_status&quot;
+                      [status]&#x3D;&quot;booking.deposit_status&quot;
+                    &gt;&lt;/app-deposit-status-badge&gt;
+                  &lt;/div&gt;
+                  &lt;div class&#x3D;&quot;space-y-1&quot;&gt;
+                    &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                      Locatario:
+                      &lt;strong&gt;
+                        {{ renterDisplayName(booking) }}
+                      &lt;/strong&gt;
+                    &lt;/p&gt;
+                    @if (renterEmail(booking); as renterEmail) {
+                      &lt;p
+                        class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60&quot;
+                      &gt;
+                        Email: {{ renterEmail }}
+                      &lt;/p&gt;
+                    }
+                    @if (renterPhone(booking); as renterPhone) {
+                      &lt;p
+                        class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60&quot;
+                      &gt;
+                        Teléfono: {{ renterPhone }}
+                      &lt;/p&gt;
+                    }
+                  &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class&#x3D;&quot;text-right&quot;&gt;
+                  &lt;p class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-primary&quot;&gt;
+                    {{ booking.total_amount | money }}
+                  &lt;/p&gt;
+                  &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/70&quot;&gt;
+                    {{ booking.currency }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Details --&gt;
+              &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-2 gap-4 mb-4&quot;&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/70 mb-1&quot;&gt;Fechas&lt;/p&gt;
+                  &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-primary&quot;&gt;
+                    {{ rangeLabel(booking) }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-secondary/70 mb-1&quot;&gt;
+                    Modo de pago
+                  &lt;/p&gt;
+                  &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-primary&quot;&gt;
+                    {{ booking.payment_mode &#x3D;&#x3D;&#x3D; &#x27;card&#x27; ? &#x27;Tarjeta&#x27; : &#x27;Wallet&#x27; }}
+                  &lt;/p&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Hint --&gt;
+              @if (statusHint(booking); as hint) {
+                &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded p-3 mb-4&quot;&gt;
+                  &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-secondary/70&quot;&gt;{{ hint }}&lt;/p&gt;
+                &lt;/div&gt;
+              }
+
+              &lt;!-- Actions --&gt;
+              &lt;div class&#x3D;&quot;flex flex-wrap gap-2&quot;&gt;
+                @if (canDoOwnerCheckIn(booking)) {
+                  &lt;a
+                    [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id, &#x27;owner-check-in&#x27;]&quot;
+                    class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg transition-colors&quot;
+                  &gt;
+                    📝 Check-In (Entregar Auto)
+                  &lt;/a&gt;
+                }
+
+                @if (canDoOwnerCheckOut(booking)) {
+                  &lt;a
+                    [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id, &#x27;owner-check-out&#x27;]&quot;
+                    class&#x3D;&quot;px-4 py-2 bg-cta-default text-cta-text text-sm font-medium rounded-lg transition-colors&quot;
+                  &gt;
+                    🏁 Check-Out (Recibir Auto)
+                  &lt;/a&gt;
+                }
+
+                @if (canStartRental(booking)) {
+                  &lt;button
+                    (click)&#x3D;&quot;onStartRental(booking.id)&quot;
+                    [disabled]&#x3D;&quot;processingAction() &#x3D;&#x3D;&#x3D; booking.id&quot;
+                    class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors&quot;
+                  &gt;
+                    {{ processingAction() &#x3D;&#x3D;&#x3D; booking.id ? &#x27;...&#x27; : &#x27;🚗 Iniciar Alquiler (Manual)&#x27; }}
+                  &lt;/button&gt;
+                }
+
+                @if (canCompleteRental(booking)) {
+                  &lt;button
+                    (click)&#x3D;&quot;onCompleteRental(booking.id)&quot;
+                    [disabled]&#x3D;&quot;processingAction() &#x3D;&#x3D;&#x3D; booking.id&quot;
+                    class&#x3D;&quot;px-4 py-2 bg-purple-600 hover:bg-purple-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors&quot;
+                  &gt;
+                    {{
+                      processingAction() &#x3D;&#x3D;&#x3D; booking.id ? &#x27;...&#x27; : &#x27;✅ Finalizar Alquiler (Manual)&#x27;
+                    }}
+                  &lt;/button&gt;
+                }
+
+                @if (canCancelBooking(booking)) {
+                  &lt;button
+                    (click)&#x3D;&quot;onCancelBooking(booking.id)&quot;
+                    [disabled]&#x3D;&quot;processingAction() &#x3D;&#x3D;&#x3D; booking.id&quot;
+                    class&#x3D;&quot;px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors&quot;
+                  &gt;
+                    {{ processingAction() &#x3D;&#x3D;&#x3D; booking.id ? &#x27;...&#x27; : &#x27;❌ Cancelar&#x27; }}
+                  &lt;/button&gt;
+                }
+
+                &lt;a
+                  [routerLink]&#x3D;&quot;[&#x27;/bookings&#x27;, booking.id]&quot;
+                  class&#x3D;&quot;px-4 py-2 border border-border-default dark:border-neutral-700 text-text-primary dark:text-text-primary text-sm font-medium rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors&quot;
+                &gt;
+                  Ver Detalles →
+                &lt;/a&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          }
+        &lt;/div&gt;
+      }
+    }
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div  class="owner-bookings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300">  <!-- Header -->  <div    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"  >    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">        Reservas de Mis Autos      </h1>      <p class="mt-2 text-text-secondary dark:text-text-secondary/70">        Gestiona las reservas de tus vehículos      </p>    </div>  </div>  <!-- Content -->  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">    @if (loading()) {      <div class="flex flex-col items-center justify-center py-16">        <svg          class="animate-spin h-12 w-12 text-primary-600 dark:text-cta-default"          fill="none"          viewBox="0 0 24 24"        >          <circle            class="opacity-25"            cx="12"            cy="12"            r="10"            stroke="currentColor"            stroke-width="4"          ></circle>          <path            class="opacity-75"            fill="currentColor"            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"          ></path>        </svg>        <p class="mt-4 text-sm text-text-secondary dark:text-text-secondary/70">          Cargando reservas...        </p>      </div>    }    <!-- Error State -->    @if (error(); as errorMsg) {      <div        class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"      >        <p class="text-sm text-error-strong">{{ errorMsg }}</p>        <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-error-text underline">          Intentar de nuevo        </button>      </div>    }    @if (!loading() && !error()) {      @if (marketplaceStatus(); as mpStatus) {        @if (!mpStatus.isApproved) {          <div            class="mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong dark:border-warning-600/60 dark:bg-warning-900/25 dark:text-warning-100"          >            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">              <div class="flex items-start gap-3">                <span class="mt-0.5 text-lg">⚠️</span>                <div>                  <p class="font-semibold">Pagos automáticos pendientes</p>                  <p>                    Aún no vinculaste Mercado Pago. Las reservas se liquidarán en tu wallet de                    Autorenta hasta que completes el onboarding.                  </p>                </div>              </div>              <a                [routerLink]="[\'/profile\']"                [queryParams]="{ section: \'payments\' }"                class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover dark:border-warning-border/70 dark:bg-transparent dark:text-warning-100 dark:hover:bg-warning-900/40"              >                Vincular ahora →              </a>            </div>          </div>        }      }      <section class="mb-10">        <div class="flex items-center justify-between mb-4">          <div>            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">              Consultas sobre tus autos            </h2>            <p class="text-sm text-text-secondary dark:text-text-secondary/70">              Responde mensajes iniciales antes de que concreten una reserva.            </p>          </div>        </div>        @if (leadsLoading()) {          <div            class="flex items-center gap-3 rounded-lg border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70"          >            <svg              class="h-5 w-5 animate-spin text-primary-600 dark:text-cta-default"              viewBox="0 0 24 24"              fill="none"            >              <circle                class="opacity-25"                cx="12"                cy="12"                r="10"                stroke="currentColor"                stroke-width="4"              ></circle>              <path                class="opacity-75"                fill="currentColor"                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"              ></path>            </svg>            <span>Buscando nuevas consultas...</span>          </div>        } @else if (carLeads().length === 0) {          <div            class="rounded-lg border border-dashed border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary/40 dark:bg-surface-raised/40 px-4 py-6 text-center"          >            <p class="text-sm text-text-secondary dark:text-text-secondary/70">              Aún no hay consultas pendientes sin reserva.            </p>          </div>        } @else {          <div class="grid gap-4 md:grid-cols-2">            @for (lead of carLeads(); track lead.carId + lead.participantId) {              <div                class="rounded-lg border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-4 shadow-sm transition"              >                <div class="flex items-start justify-between gap-3">                  <div>                    <p                      class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"                    >                      {{ lead.carTitle }}                    </p>                    <h3 class="text-base font-semibold text-text-primary dark:text-text-primary">                      {{ lead.participantName ?? \'Interesado\' }}                    </h3>                  </div>                  @if (lead.unreadCount > 0) {                    <span                      class="inline-flex items-center justify-center rounded-full bg-cta-default text-cta-text"                    >                      {{ lead.unreadCount }}                      {{ lead.unreadCount === 1 ? \'mensaje sin leer\' : \'mensajes sin leer\' }}                    </span>                  }                </div>                <p                  class="mt-3 text-sm text-text-secondary dark:text-text-secondary/70 line-clamp-3"                >                  {{ lead.lastMessage.body }}                </p>                <p                  class="mt-2 text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/50"                >                  {{ lead.lastMessage.created_at | date: \'dd/MM/yyyy HH:mm\' }}                </p>                <button                  (click)="openCarChat(lead)"                  class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-cta-text transition hover:bg-primary-700 dark:bg-cta-default dark:hover:bg-cta-default/90"                  type="button"                >                  Abrir chat                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">                    <path                      d="M12.293 4.293a1 1 0 011.414 0l4 4a.997.997 0 01.083 1.32l-.083.094-4 4a1 1 0 01-1.497-1.32l.083-.094L14.585 10H4a1 1 0 01-.117-1.993L4 8h10.585l-2.292-2.293a1 1 0 01-.083-1.32l.083-.094z"                    />                  </svg>                </button>              </div>            }          </div>        }      </section>      <!-- Bookings List -->      @if (bookings().length === 0) {        <div class="text-center py-16">          <svg            class="mx-auto h-12 w-12 text-text-secondary dark:text-text-secondary/50"            fill="none"            viewBox="0 0 24 24"            stroke="currentColor"          >            <path              stroke-linecap="round"              stroke-linejoin="round"              stroke-width="2"              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"            />          </svg>          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-primary">            No tenés reservas          </h3>          <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary/70">            Cuando alguien alquile tus autos, aparecerán acá.          </p>        </div>      } @else {        <div class="space-y-4">          @for (booking of bookings(); track booking.id) {            <div              class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 transition-colors duration-300"            >              <!-- Header -->              <div class="flex items-start justify-between mb-4">                <div class="flex-1">                  <div class="flex items-center gap-3 mb-2 flex-wrap">                    <span class="text-2xl">{{ statusIcon(booking) }}</span>                    <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">                      Vehículo ID: {{ booking.car_id }}                    </h3>                    <span                      class="px-2 py-1 text-xs font-medium rounded-full"                      [ngClass]="statusBadgeClass(booking)"                    >                      {{ statusLabel(booking) }}                    </span>                    <app-deposit-status-badge                      *ngIf="booking.deposit_status"                      [status]="booking.deposit_status"                    ></app-deposit-status-badge>                  </div>                  <div class="space-y-1">                    <p class="text-sm text-text-secondary dark:text-text-secondary/70">                      Locatario:                      <strong>                        {{ renterDisplayName(booking) }}                      </strong>                    </p>                    @if (renterEmail(booking); as renterEmail) {                      <p                        class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60"                      >                        Email: {{ renterEmail }}                      </p>                    }                    @if (renterPhone(booking); as renterPhone) {                      <p                        class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60"                      >                        Teléfono: {{ renterPhone }}                      </p>                    }                  </div>                </div>                <div class="text-right">                  <p class="text-2xl font-bold text-text-primary dark:text-text-primary">                    {{ booking.total_amount | money }}                  </p>                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">                    {{ booking.currency }}                  </p>                </div>              </div>              <!-- Details -->              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">                <div>                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mb-1">Fechas</p>                  <p class="text-sm font-medium text-text-primary dark:text-text-primary">                    {{ rangeLabel(booking) }}                  </p>                </div>                <div>                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mb-1">                    Modo de pago                  </p>                  <p class="text-sm font-medium text-text-primary dark:text-text-primary">                    {{ booking.payment_mode === \'card\' ? \'Tarjeta\' : \'Wallet\' }}                  </p>                </div>              </div>              <!-- Hint -->              @if (statusHint(booking); as hint) {                <div class="bg-surface-base dark:bg-surface-base rounded p-3 mb-4">                  <p class="text-sm text-text-secondary dark:text-text-secondary/70">{{ hint }}</p>                </div>              }              <!-- Actions -->              <div class="flex flex-wrap gap-2">                @if (canDoOwnerCheckIn(booking)) {                  <a                    [routerLink]="[\'/bookings\', booking.id, \'owner-check-in\']"                    class="px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg transition-colors"                  >                    📝 Check-In (Entregar Auto)                  </a>                }                @if (canDoOwnerCheckOut(booking)) {                  <a                    [routerLink]="[\'/bookings\', booking.id, \'owner-check-out\']"                    class="px-4 py-2 bg-cta-default text-cta-text text-sm font-medium rounded-lg transition-colors"                  >                    🏁 Check-Out (Recibir Auto)                  </a>                }                @if (canStartRental(booking)) {                  <button                    (click)="onStartRental(booking.id)"                    [disabled]="processingAction() === booking.id"                    class="px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"                  >                    {{ processingAction() === booking.id ? \'...\' : \'🚗 Iniciar Alquiler (Manual)\' }}                  </button>                }                @if (canCompleteRental(booking)) {                  <button                    (click)="onCompleteRental(booking.id)"                    [disabled]="processingAction() === booking.id"                    class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"                  >                    {{                      processingAction() === booking.id ? \'...\' : \'✅ Finalizar Alquiler (Manual)\'                    }}                  </button>                }                @if (canCancelBooking(booking)) {                  <button                    (click)="onCancelBooking(booking.id)"                    [disabled]="processingAction() === booking.id"                    class="px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"                  >                    {{ processingAction() === booking.id ? \'...\' : \'❌ Cancelar\' }}                  </button>                }                <a                  [routerLink]="[\'/bookings\', booking.id]"                  class="px-4 py-2 border border-border-default dark:border-neutral-700 text-text-primary dark:text-text-primary text-sm font-medium rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"                >                  Ver Detalles →                </a>              </div>            </div>          }        </div>      }    }  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'OwnerBookingsPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'OwnerBookingsPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

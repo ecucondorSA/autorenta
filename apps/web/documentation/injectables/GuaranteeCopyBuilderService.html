@@ -1,0 +1,1061 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >GuaranteeCopyBuilderService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/guarantee-copy-builder.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Servicio de Generación de Copy UX (Argentina)</p>
+<p>Genera todos los textos dinámicos para el checkout y voucher según:</p>
+<ul>
+<li>Tipo de garantía (hold con tarjeta / crédito de seguridad sin tarjeta)</li>
+<li>Franquicias (estándar y rollover)</li>
+<li>Tasas FX snapshot</li>
+<li>Ejemplos de cálculo prácticos</li>
+</ul>
+<p>Cumple con los requisitos AR de:</p>
+<ul>
+<li>Mostrar siempre ARS y USD con FX snapshot</li>
+<li>Tabla comparativa de franquicias</li>
+<li>Ejemplos claros de uso</li>
+<li>Disclaimers legales</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#franchiseService" >franchiseService</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#buildCheckoutCopy" >buildCheckoutCopy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildDescription" >buildDescription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildDisclaimers" >buildDisclaimers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildExampleScenario" >buildExampleScenario</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildFaqs" >buildFaqs</a>
+                            </li>
+                            <li>
+                                <a href="#buildSummaryLine" >buildSummaryLine</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildCheckoutCopy"></a>
+                    <span class="name">
+                        <span ><b>buildCheckoutCopy</b></span>
+                        <a href="#buildCheckoutCopy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildCheckoutCopy(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera el copy completo para el checkout</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/GuaranteeCopy.html" target="_self" >GuaranteeCopy</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildDescription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildDescription</b></span>
+                        <a href="#buildDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildDescription(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:102</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera descripción principal</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildDisclaimers"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildDisclaimers</b></span>
+                        <a href="#buildDisclaimers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildDisclaimers(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="166"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:166</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera disclaimers legales</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildExampleScenario"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildExampleScenario</b></span>
+                        <a href="#buildExampleScenario"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildExampleScenario(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="125"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:125</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera ejemplo de cálculo práctico</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildFaqs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildFaqs</b></span>
+                        <a href="#buildFaqs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildFaqs(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:197</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera FAQs dinámicas</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Array&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildSummaryLine"></a>
+                    <span class="name">
+                        <span ><b>buildSummaryLine</b></span>
+                        <a href="#buildSummaryLine"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildSummaryLine(risk: <a href="../interfaces/RiskCalculation.html" target="_self">RiskCalculation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:267</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Genera resumen breve para confirmación</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>risk</td>
+                                            <td>
+                                                            <code><a href="../interfaces/RiskCalculation.html" target="_self" >RiskCalculation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="franchiseService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>franchiseService</b></span>
+                        <a href="#franchiseService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(FranchiseTableService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/app/core/services/guarantee-copy-builder.service.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { FranchiseTableService } from &#x27;./franchise-table.service&#x27;;
+import { RiskCalculation } from &#x27;./risk-calculator.service&#x27;;
+
+/**
+ * Copy completo de garantía para checkout/voucher
+ */
+export interface GuaranteeCopy {
+  // Sección principal
+  title: string;
+  subtitle: string;
+  description: string;
+
+  // Montos
+  amountArs: string;
+  amountUsd: string;
+  amountLabel: string;
+
+  // Franquicias
+  franchiseTable: {
+    standardUsd: string;
+    standardArs: string;
+    rolloverUsd: string;
+    rolloverArs: string;
+  };
+
+  // Ejemplo de cálculo
+  exampleScenario: string;
+
+  // Disclaimers
+  disclaimers: string[];
+
+  // FAQ
+  faqs: Array&lt;{ question: string; answer: string }&gt;;
+}
+
+/**
+ * Servicio de Generación de Copy UX (Argentina)
+ *
+ * Genera todos los textos dinámicos para el checkout y voucher según:
+ * - Tipo de garantía (hold con tarjeta / crédito de seguridad sin tarjeta)
+ * - Franquicias (estándar y rollover)
+ * - Tasas FX snapshot
+ * - Ejemplos de cálculo prácticos
+ *
+ * Cumple con los requisitos AR de:
+ * - Mostrar siempre ARS y USD con FX snapshot
+ * - Tabla comparativa de franquicias
+ * - Ejemplos claros de uso
+ * - Disclaimers legales
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class GuaranteeCopyBuilderService {
+  private readonly franchiseService &#x3D; inject(FranchiseTableService);
+
+  /**
+   * Genera el copy completo para el checkout
+   */
+  buildCheckoutCopy(risk: RiskCalculation): GuaranteeCopy {
+    const isHold &#x3D; risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;;
+
+    return {
+      // Sección principal
+      title: isHold ? &#x27;Garantía Reembolsable&#x27; : &#x27;Crédito de Seguridad&#x27;,
+      subtitle: isHold ? &#x27;Preautorización en tu tarjeta&#x27; : &#x27;Depósito no reembolsable en tu wallet&#x27;,
+
+      description: this.buildDescription(risk),
+
+      // Montos
+      amountArs: this.franchiseService.formatArs(risk.guaranteeAmountArs),
+      amountUsd: this.franchiseService.formatUsd(risk.guaranteeAmountUsd),
+      amountLabel: isHold ? &#x27;Hold estimado&#x27; : &#x27;Crédito requerido&#x27;,
+
+      // Franquicias
+      franchiseTable: {
+        standardUsd: this.franchiseService.formatUsd(risk.standardFranchiseUsd),
+        standardArs: this.franchiseService.formatArs(
+          Math.round(risk.standardFranchiseUsd * risk.fxRate),
+        ),
+        rolloverUsd: this.franchiseService.formatUsd(risk.rolloverFranchiseUsd),
+        rolloverArs: this.franchiseService.formatArs(
+          Math.round(risk.rolloverFranchiseUsd * risk.fxRate),
+        ),
+      },
+
+      // Ejemplo de cálculo
+      exampleScenario: this.buildExampleScenario(risk),
+
+      // Disclaimers
+      disclaimers: this.buildDisclaimers(risk),
+
+      // FAQ
+      faqs: this.buildFaqs(risk),
+    };
+  }
+
+  /**
+   * Genera descripción principal
+   */
+  private buildDescription(risk: RiskCalculation): string {
+    if (risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;) {
+      return (
+        &#x60;Se preautorizará ${this.franchiseService.formatArs(risk.guaranteeAmountArs)} &#x60; +
+        &#x60;(aprox. ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)}) en tu tarjeta. &#x60; +
+        &#x60;Este monto NO se cobrará, solo quedará &quot;retenido&quot; temporalmente. &#x60; +
+        &#x60;\n\nSi entregas el auto en perfecto estado, se libera automáticamente en 24-48 horas. &#x60; +
+        &#x60;Si hay gastos (combustible, limpieza) o daños, solo capturamos lo necesario hasta tu franquicia.&#x60;
+      );
+    } else {
+      return (
+        &#x60;Pagarás ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)} &#x60; +
+        &#x60;(aprox. ${this.franchiseService.formatArs(risk.guaranteeAmountArs)}) como Crédito de Seguridad. &#x60; +
+        &#x60;Este monto queda en tu wallet y NO es retirable. &#x60; +
+        &#x60;\n\nSe usa primero para cubrir gastos o daños durante el alquiler. &#x60; +
+        &#x60;Si no se usa, queda disponible para tus próximas reservas en AutoRenta.&#x60;
+      );
+    }
+  }
+
+  /**
+   * Genera ejemplo de cálculo práctico
+   */
+  private buildExampleScenario(risk: RiskCalculation): string {
+    const damageUsd &#x3D; 420;
+    const cleaningUsd &#x3D; 25;
+    const totalUsd &#x3D; damageUsd + cleaningUsd;
+
+    const damageArs &#x3D; Math.round(damageUsd * risk.fxRate);
+    const cleaningArs &#x3D; Math.round(cleaningUsd * risk.fxRate);
+    const totalArs &#x3D; damageArs + cleaningArs;
+
+    if (risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;) {
+      return (
+        &#x60;📝 Ejemplo: Daños menores (${this.franchiseService.formatUsd(damageUsd)} / ${this.franchiseService.formatArs(damageArs)}) &#x60; +
+        &#x60;+ limpieza (${this.franchiseService.formatUsd(cleaningUsd)} / ${this.franchiseService.formatArs(cleaningArs)}) &#x60; +
+        &#x60;&#x3D; ${this.franchiseService.formatUsd(totalUsd)} (${this.franchiseService.formatArs(totalArs)})\n\n&#x60; +
+        &#x60;✅ Se captura solo ${this.franchiseService.formatArs(totalArs)} y se libera el resto del hold.&#x60;
+      );
+    } else {
+      const creditUsd &#x3D; risk.guaranteeAmountUsd;
+      const remainingUsd &#x3D; totalUsd - creditUsd;
+
+      if (remainingUsd &gt; 0) {
+        return (
+          &#x60;📝 Ejemplo: Daños (${this.franchiseService.formatUsd(damageUsd)}) + limpieza (${this.franchiseService.formatUsd(cleaningUsd)}) &#x60; +
+          &#x60;&#x3D; ${this.franchiseService.formatUsd(totalUsd)}\n\n&#x60; +
+          &#x60;✅ Se debitan ${this.franchiseService.formatUsd(creditUsd)} de tu Crédito de Seguridad.\n&#x60; +
+          &#x60;⚠️ Deberías pagar ${this.franchiseService.formatUsd(remainingUsd)} adicionales (top-up en 72 horas).&#x60;
+        );
+      } else {
+        return (
+          &#x60;📝 Ejemplo: Daños menores (${this.franchiseService.formatUsd(damageUsd)}) + limpieza (${this.franchiseService.formatUsd(cleaningUsd)}) &#x60; +
+          &#x60;&#x3D; ${this.franchiseService.formatUsd(totalUsd)}\n\n&#x60; +
+          &#x60;✅ Se debitan ${this.franchiseService.formatUsd(totalUsd)} de tu Crédito de Seguridad.\n&#x60; +
+          &#x60;✅ Te quedan ${this.franchiseService.formatUsd(creditUsd - totalUsd)} disponibles.&#x60;
+        );
+      }
+    }
+  }
+
+  /**
+   * Genera disclaimers legales
+   */
+  private buildDisclaimers(risk: RiskCalculation): string[] {
+    const disclaimers &#x3D; [
+      &#x60;Tasa de cambio utilizada: USD 1 &#x3D; ARS ${risk.fxRate.toFixed(2)} (snapshot del ${risk.fxSnapshotDate.toLocaleDateString(&#x27;es-AR&#x27;)})&#x60;,
+      &#x60;Franquicia estándar (daño/robo): ${this.franchiseService.formatUsd(risk.standardFranchiseUsd)}&#x60;,
+      &#x60;Franquicia por vuelco (rollover): ${this.franchiseService.formatUsd(risk.rolloverFranchiseUsd)} (2× la estándar)&#x60;,
+    ];
+
+    if (risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;) {
+      disclaimers.push(
+        &#x27;El hold puede reautorizarse cada 6-7 días en alquileres largos (&gt;7 días)&#x27;,
+        &#x27;Si el hold falla, se te solicitará un método de pago alternativo o se cancelará la reserva&#x27;,
+      );
+    } else {
+      disclaimers.push(
+        &#x27;El Crédito de Seguridad NO es reembolsable, pero queda disponible para futuras reservas&#x27;,
+        &#x27;Si los gastos superan el crédito, debes completar el pago en 72 horas o tu cuenta será bloqueada&#x27;,
+      );
+    }
+
+    if (risk.requiresRevalidation) {
+      disclaimers.push(
+        &#x27;⚠️ Este cálculo requiere revalidación. La tasa FX ha variado más del 10% o han pasado más de 7 días desde la reserva.&#x27;,
+      );
+    }
+
+    return disclaimers;
+  }
+
+  /**
+   * Genera FAQs dinámicas
+   */
+  private buildFaqs(risk: RiskCalculation): Array&lt;{ question: string; answer: string }&gt; {
+    const faqs: Array&lt;{ question: string; answer: string }&gt; &#x3D; [];
+
+    if (risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;) {
+      faqs.push(
+        {
+          question: &#x27;¿Cuándo se libera el hold?&#x27;,
+          answer:
+            &#x27;Automáticamente en 24-48 horas después de devolver el auto en perfecto estado. &#x27; +
+            &#x27;Si hay gastos o daños, se captura solo lo necesario y se libera el resto.&#x27;,
+        },
+        {
+          question: &#x27;¿Qué pasa si el hold falla?&#x27;,
+          answer:
+            &#x27;Te notificaremos de inmediato. Deberás proveer otro método de pago o completar el depósito por wallet. &#x27; +
+            &#x27;Si no se resuelve, la reserva puede cancelarse.&#x27;,
+        },
+        {
+          question: &#x27;¿Puedo usar mi tarjeta de débito?&#x27;,
+          answer:
+            &#x27;Depende del banco. Algunas tarjetas de débito permiten preautorizaciones, pero no todas. &#x27; +
+            &#x27;Si no funciona, puedes pagar con wallet o parcial (wallet + tarjeta).&#x27;,
+        },
+      );
+    } else {
+      faqs.push(
+        {
+          question: &#x27;¿Puedo recuperar el Crédito de Seguridad?&#x27;,
+          answer:
+            &#x27;No es reembolsable, pero queda en tu wallet para futuras reservas en AutoRenta. &#x27; +
+            &#x27;Solo se debita si hay gastos o daños durante el alquiler.&#x27;,
+        },
+        {
+          question: &#x27;¿Qué pasa si los gastos superan mi crédito?&#x27;,
+          answer:
+            &#x27;Deberás completar el pago en 72 horas. Si no lo haces, tu cuenta será bloqueada temporalmente. &#x27; +
+            &#x27;Si los daños superan tu franquicia, el FGO puede ayudarte (según disponibilidad).&#x27;,
+        },
+        {
+          question: &#x27;¿Por qué no puedo retirar este dinero?&#x27;,
+          answer:
+            &#x27;Es un crédito de seguridad, no un depósito reembolsable. Está diseñado para cubrir gastos operativos &#x27; +
+            &#x27;y garantizar que puedas alquilar sin tarjeta de crédito.&#x27;,
+        },
+      );
+    }
+
+    // FAQs comunes
+    faqs.push(
+      {
+        question: &#x27;¿Qué cubre mi franquicia?&#x27;,
+        answer:
+          &#x60;Tu franquicia (${this.franchiseService.formatUsd(risk.standardFranchiseUsd)}) es el monto máximo que pagarías &#x60; +
+          &#x60;en caso de daños, robo o pérdida total. Si el daño es mayor, el locador puede cobrar el resto o el FGO puede ayudarte. &#x60; +
+          &#x60;En caso de vuelco, la franquicia es ${this.franchiseService.formatUsd(risk.rolloverFranchiseUsd)} (2× la estándar).&#x60;,
+      },
+      {
+        question: &#x27;¿Qué es el FGO?&#x27;,
+        answer:
+          &#x27;El Fondo de Garantía Operativa (FGO) es un fondo comunitario que ayuda a cubrir daños cuando el locatario &#x27; +
+          &#x27;no puede pagar su franquicia completa. Tiene límites (USD 800 por evento) y depende de la solvencia del fondo.&#x27;,
+      },
+    );
+
+    return faqs;
+  }
+
+  /**
+   * Genera resumen breve para confirmación
+   */
+  buildSummaryLine(risk: RiskCalculation): string {
+    if (risk.guaranteeType &#x3D;&#x3D;&#x3D; &#x27;hold&#x27;) {
+      return &#x60;Hold ${this.franchiseService.formatArs(risk.guaranteeAmountArs)} (${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)})&#x60;;
+    } else {
+      return &#x60;Crédito ${this.franchiseService.formatUsd(risk.guaranteeAmountUsd)} (${this.franchiseService.formatArs(risk.guaranteeAmountArs)})&#x60;;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'GuaranteeCopyBuilderService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

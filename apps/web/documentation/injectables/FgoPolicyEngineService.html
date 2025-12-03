@@ -1,0 +1,1562 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >FgoPolicyEngineService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/fgo-policy-engine.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Servicio de Motor de Políticas FGO (Argentina)</p>
+<p>Implementa las reglas de solvencia, gates y límites del Fondo de Garantía Operativa:</p>
+<ul>
+<li><p><strong>RC (Coverage Ratio)</strong>: Ratio de cobertura</p>
+<ul>
+<li>RC ≥ 1.2 (60 días): α = 10%, excedente a promos</li>
+<li>RC ≥ 1.0: uso normal, α = 15%</li>
+<li>0.8 ≤ RC &lt; 1.0: co-pago 20%, α = 20%</li>
+<li>RC &lt; 0.8: solo micro-pagos ≤USD 100, α = 20%</li>
+<li>RC &lt; 0.9: α = 20% hasta volver a RC ≥ 1.0</li>
+</ul>
+</li>
+<li><p><strong>Aportes (α)</strong>: 15% de depósitos + 4% comisiones + 15% membresías</p>
+</li>
+<li><p><strong>Límites</strong>:</p>
+<ul>
+<li>Máx. 8% del FGO/mes en pagos</li>
+<li>Máx. 2 eventos/usuario/trimestre (salvo comité)</li>
+<li>Tope por evento: USD 800</li>
+</ul>
+</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#CONTRIBUTION_RATES" >CONTRIBUTION_RATES</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_COVERAGE_PER_EVENT_USD" >MAX_COVERAGE_PER_EVENT_USD</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_EVENTS_PER_QUARTER" >MAX_EVENTS_PER_QUARTER</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MAX_MONTHLY_PAYOUT_PERCENTAGE" >MAX_MONTHLY_PAYOUT_PERCENTAGE</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildMessages" >buildMessages</a>
+                            </li>
+                            <li>
+                                <a href="#calculateContribution" >calculateContribution</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#calculateContributionAlpha" >calculateContributionAlpha</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#canUseFgo" >canUseFgo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#determineSolvencyStatus" >determineSolvencyStatus</a>
+                            </li>
+                            <li>
+                                <a href="#evaluatePolicy" >evaluatePolicy</a>
+                            </li>
+                            <li>
+                                <a href="#validatePayout" >validatePayout</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildMessages"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildMessages</b></span>
+                        <a href="#buildMessages"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildMessages(status: <a href="../undefineds/FgoSolvencyStatus.html" target="_self">FgoSolvencyStatus</a>, rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, remainingEvents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, canUseFgo: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:196</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Construye mensajes informativos para el usuario</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FgoSolvencyStatus" target="_self" >FgoSolvencyStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>remainingEvents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>canUseFgo</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateContribution"></a>
+                    <span class="name">
+                        <span ><b>calculateContribution</b></span>
+                        <a href="#calculateContribution"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>calculateContribution(amountCents: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, transactionType: "deposit" | "commission" | "membership", rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="252"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:252</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Calcula el aporte al FGO para una transacción</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amountCents</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Monto de la transacción en centavos</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>transactionType</td>
+                                            <td>
+                                                        <code>&quot;deposit&quot; | &quot;commission&quot; | &quot;membership&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Tipo de transacción</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Coverage Ratio actual</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Aporte en centavos</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateContributionAlpha"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>calculateContributionAlpha</b></span>
+                        <a href="#calculateContributionAlpha"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateContributionAlpha(rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="165"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:165</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Calcula el alpha de contribución según RC</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canUseFgo"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>canUseFgo</b></span>
+                        <a href="#canUseFgo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>canUseFgo(rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userEventCountThisQuarter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, monthlyPayoutsUsd: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, totalBalanceUsd: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:174</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Verifica si el FGO puede usarse en este momento</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userEventCountThisQuarter</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>monthlyPayoutsUsd</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>totalBalanceUsd</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="determineSolvencyStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>determineSolvencyStatus</b></span>
+                        <a href="#determineSolvencyStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>determineSolvencyStatus(rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, lr90d: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="155"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:155</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Determina el estado de solvencia del FGO</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>lr90d</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FgoSolvencyStatus" target="_self" >FgoSolvencyStatus</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluatePolicy"></a>
+                    <span class="name">
+                        <span ><b>evaluatePolicy</b></span>
+                        <a href="#evaluatePolicy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>evaluatePolicy(rc: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, lr90d: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, totalBalanceUsd: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, userEventCountThisQuarter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, monthlyPayoutsUsd: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Evalúa la política FGO actual y retorna decisiones</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>rc</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Coverage Ratio (total_balance / PEM)</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>lr90d</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Loss Ratio de los últimos 90 días</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>totalBalanceUsd</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Balance total del FGO en USD</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>userEventCountThisQuarter</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Eventos del usuario en el trimestre actual</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>monthlyPayoutsUsd</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Pagos realizados este mes en USD</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/FgoPolicyDecision.html" target="_self" >FgoPolicyDecision</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Decisión de política completa</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validatePayout"></a>
+                    <span class="name">
+                        <span ><b>validatePayout</b></span>
+                        <a href="#validatePayout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validatePayout(requestedAmountUsd: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, policy: <a href="../interfaces/FgoPolicyDecision.html" target="_self">FgoPolicyDecision</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Valida si un payout FGO es viable</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>requestedAmountUsd</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Monto solicitado en USD</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>policy</td>
+                                            <td>
+                                                            <code><a href="../interfaces/FgoPolicyDecision.html" target="_self" >FgoPolicyDecision</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Política actual</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>: boolean, reason?: string, adjustedAmountUsd?: number }</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CONTRIBUTION_RATES"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>CONTRIBUTION_RATES</b></span>
+                        <a href="#CONTRIBUTION_RATES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    healthy: 0.1, // 10% cuando RC &gt; 1.2
+    normal: 0.15, // 15% cuando RC ≥ 1.0
+    stressed: 0.2, // 20% cuando RC &lt; 1.0
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Topes de contribución según solvencia</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_COVERAGE_PER_EVENT_USD"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_COVERAGE_PER_EVENT_USD</b></span>
+                        <a href="#MAX_COVERAGE_PER_EVENT_USD"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>800</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tope máximo de cobertura por evento (USD)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_EVENTS_PER_QUARTER"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_EVENTS_PER_QUARTER</b></span>
+                        <a href="#MAX_EVENTS_PER_QUARTER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>2</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:66</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Máximo de eventos por usuario por trimestre</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_MONTHLY_PAYOUT_PERCENTAGE"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>MAX_MONTHLY_PAYOUT_PERCENTAGE</b></span>
+                        <a href="#MAX_MONTHLY_PAYOUT_PERCENTAGE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>0.08</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/app/core/services/fgo-policy-engine.service.ts:71</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Porcentaje máximo del FGO que puede usarse en pagos por mes</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+
+/**
+ * Estado de solvencia del FGO
+ */
+export type FgoSolvencyStatus &#x3D; &#x27;healthy&#x27; | &#x27;warning&#x27; | &#x27;critical&#x27; | &#x27;suspended&#x27;;
+
+/**
+ * Resultado de evaluación de política FGO
+ */
+export interface FgoPolicyDecision {
+  // Gates de solvencia
+  canUseFgo: boolean;
+  maxCoveragePerEventUsd: number;
+  requiresCoPay: boolean;
+  coPayPercentage: number;
+
+  // Tasas de contribución
+  contributionAlpha: number; // Porcentaje de aportes al FGO
+
+  // Límites de usuario
+  maxEventsPerQuarter: number;
+  remainingEventsThisQuarter: number;
+
+  // Estado general
+  solvencyStatus: FgoSolvencyStatus;
+  rc: number; // Coverage Ratio
+  lr: number; // Loss Ratio (90 días)
+
+  // Mensajes
+  statusMessage: string;
+  restrictions: string[];
+}
+
+/**
+ * Servicio de Motor de Políticas FGO (Argentina)
+ *
+ * Implementa las reglas de solvencia, gates y límites del Fondo de Garantía Operativa:
+ *
+ * - **RC (Coverage Ratio)**: Ratio de cobertura
+ *   - RC ≥ 1.2 (60 días): α &#x3D; 10%, excedente a promos
+ *   - RC ≥ 1.0: uso normal, α &#x3D; 15%
+ *   - 0.8 ≤ RC &lt; 1.0: co-pago 20%, α &#x3D; 20%
+ *   - RC &lt; 0.8: solo micro-pagos ≤USD 100, α &#x3D; 20%
+ *   - RC &lt; 0.9: α &#x3D; 20% hasta volver a RC ≥ 1.0
+ *
+ * - **Aportes (α)**: 15% de depósitos + 4% comisiones + 15% membresías
+ *
+ * - **Límites**:
+ *   - Máx. 8% del FGO/mes en pagos
+ *   - Máx. 2 eventos/usuario/trimestre (salvo comité)
+ *   - Tope por evento: USD 800
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class FgoPolicyEngineService {
+  /**
+   * Tope máximo de cobertura por evento (USD)
+   */
+  private readonly MAX_COVERAGE_PER_EVENT_USD &#x3D; 800;
+
+  /**
+   * Máximo de eventos por usuario por trimestre
+   */
+  private readonly MAX_EVENTS_PER_QUARTER &#x3D; 2;
+
+  /**
+   * Porcentaje máximo del FGO que puede usarse en pagos por mes
+   */
+  private readonly MAX_MONTHLY_PAYOUT_PERCENTAGE &#x3D; 0.08; // 8%
+
+  /**
+   * Topes de contribución según solvencia
+   */
+  private readonly CONTRIBUTION_RATES &#x3D; {
+    healthy: 0.1, // 10% cuando RC &gt; 1.2
+    normal: 0.15, // 15% cuando RC ≥ 1.0
+    stressed: 0.2, // 20% cuando RC &lt; 1.0
+  };
+
+  /**
+   * Evalúa la política FGO actual y retorna decisiones
+   *
+   * @param rc - Coverage Ratio (total_balance / PEM)
+   * @param lr90d - Loss Ratio de los últimos 90 días
+   * @param totalBalanceUsd - Balance total del FGO en USD
+   * @param userEventCountThisQuarter - Eventos del usuario en el trimestre actual
+   * @param monthlyPayoutsUsd - Pagos realizados este mes en USD
+   * @returns Decisión de política completa
+   */
+  evaluatePolicy(
+    rc: number,
+    lr90d: number,
+    totalBalanceUsd: number,
+    userEventCountThisQuarter: number,
+    monthlyPayoutsUsd: number,
+  ): FgoPolicyDecision {
+    const solvencyStatus &#x3D; this.determineSolvencyStatus(rc, lr90d);
+    const contributionAlpha &#x3D; this.calculateContributionAlpha(rc);
+    const canUseFgo &#x3D; this.canUseFgo(
+      rc,
+      userEventCountThisQuarter,
+      monthlyPayoutsUsd,
+      totalBalanceUsd,
+    );
+
+    let maxCoveragePerEventUsd &#x3D; this.MAX_COVERAGE_PER_EVENT_USD;
+    let requiresCoPay &#x3D; false;
+    let coPayPercentage &#x3D; 0;
+
+    // Aplicar gates de solvencia
+    if (rc &lt; 0.8) {
+      // Crítico: solo micro-pagos
+      maxCoveragePerEventUsd &#x3D; 100;
+    } else if (rc &gt;&#x3D; 0.8 &amp;&amp; rc &lt; 1.0) {
+      // Warning: co-pago 20%
+      requiresCoPay &#x3D; true;
+      coPayPercentage &#x3D; 0.2;
+    }
+
+    // Límites de eventos por usuario
+    const remainingEventsThisQuarter &#x3D; Math.max(
+      0,
+      this.MAX_EVENTS_PER_QUARTER - userEventCountThisQuarter,
+    );
+
+    // Mensajes y restricciones
+    const { statusMessage, restrictions } &#x3D; this.buildMessages(
+      solvencyStatus,
+      rc,
+      remainingEventsThisQuarter,
+      canUseFgo,
+    );
+
+    return {
+      canUseFgo,
+      maxCoveragePerEventUsd,
+      requiresCoPay,
+      coPayPercentage,
+      contributionAlpha,
+      maxEventsPerQuarter: this.MAX_EVENTS_PER_QUARTER,
+      remainingEventsThisQuarter,
+      solvencyStatus,
+      rc,
+      lr: lr90d,
+      statusMessage,
+      restrictions,
+    };
+  }
+
+  /**
+   * Determina el estado de solvencia del FGO
+   */
+  private determineSolvencyStatus(rc: number, lr90d: number): FgoSolvencyStatus {
+    if (rc &lt; 0.8) return &#x27;critical&#x27;;
+    if (rc &lt; 1.0) return &#x27;warning&#x27;;
+    if (rc &gt;&#x3D; 1.2 &amp;&amp; lr90d &lt; 0.3) return &#x27;healthy&#x27;;
+    return &#x27;healthy&#x27;;
+  }
+
+  /**
+   * Calcula el alpha de contribución según RC
+   */
+  private calculateContributionAlpha(rc: number): number {
+    if (rc &gt;&#x3D; 1.2) return this.CONTRIBUTION_RATES.healthy; // 10%
+    if (rc &gt;&#x3D; 1.0) return this.CONTRIBUTION_RATES.normal; // 15%
+    return this.CONTRIBUTION_RATES.stressed; // 20%
+  }
+
+  /**
+   * Verifica si el FGO puede usarse en este momento
+   */
+  private canUseFgo(
+    rc: number,
+    userEventCountThisQuarter: number,
+    monthlyPayoutsUsd: number,
+    totalBalanceUsd: number,
+  ): boolean {
+    // Gate 1: RC mínimo
+    if (rc &lt; 0.8) return false;
+
+    // Gate 2: Límite de eventos por usuario
+    if (userEventCountThisQuarter &gt;&#x3D; this.MAX_EVENTS_PER_QUARTER) return false;
+
+    // Gate 3: Límite mensual de pagos (8% del FGO)
+    const maxMonthlyPayout &#x3D; totalBalanceUsd * this.MAX_MONTHLY_PAYOUT_PERCENTAGE;
+    if (monthlyPayoutsUsd &gt;&#x3D; maxMonthlyPayout) return false;
+
+    return true;
+  }
+
+  /**
+   * Construye mensajes informativos para el usuario
+   */
+  private buildMessages(
+    status: FgoSolvencyStatus,
+    rc: number,
+    remainingEvents: number,
+    canUseFgo: boolean,
+  ): {
+    statusMessage: string;
+    restrictions: string[];
+  } {
+    const restrictions: string[] &#x3D; [];
+    let statusMessage &#x3D; &#x27;&#x27;;
+
+    switch (status) {
+      case &#x27;healthy&#x27;:
+        statusMessage &#x3D;
+          &#x27;FGO operando con normalidad. Cobertura disponible hasta USD 800 por evento.&#x27;;
+        break;
+
+      case &#x27;warning&#x27;:
+        statusMessage &#x3D; &#x60;FGO en estado de alerta (RC: ${rc.toFixed(2)}). Cobertura con co-pago del 20%.&#x60;;
+        restrictions.push(&#x27;Se requiere co-pago del 20% en coberturas FGO&#x27;);
+        break;
+
+      case &#x27;critical&#x27;:
+        statusMessage &#x3D; &#x60;FGO en estado crítico (RC: ${rc.toFixed(2)}). Solo micro-pagos ≤USD 100.&#x60;;
+        restrictions.push(&#x27;Cobertura limitada a USD 100 por evento&#x27;);
+        restrictions.push(&#x27;Aumentando contribuciones al 20% para recuperar solvencia&#x27;);
+        break;
+
+      case &#x27;suspended&#x27;:
+        statusMessage &#x3D; &#x27;FGO suspendido temporalmente. Contacte soporte para más información.&#x27;;
+        restrictions.push(&#x27;No se pueden procesar nuevos eventos&#x27;);
+        break;
+    }
+
+    if (remainingEvents &#x3D;&#x3D;&#x3D; 0) {
+      restrictions.push(&#x27;Has alcanzado el límite de 2 eventos por trimestre&#x27;);
+    } else if (remainingEvents &#x3D;&#x3D;&#x3D; 1) {
+      restrictions.push(&#x27;Te queda 1 evento disponible este trimestre&#x27;);
+    }
+
+    if (!canUseFgo) {
+      restrictions.push(&#x27;FGO no disponible en este momento&#x27;);
+    }
+
+    return { statusMessage, restrictions };
+  }
+
+  /**
+   * Calcula el aporte al FGO para una transacción
+   *
+   * @param amountCents - Monto de la transacción en centavos
+   * @param transactionType - Tipo de transacción
+   * @param rc - Coverage Ratio actual
+   * @returns Aporte en centavos
+   */
+  calculateContribution(
+    amountCents: number,
+    transactionType: &#x27;deposit&#x27; | &#x27;commission&#x27; | &#x27;membership&#x27;,
+    rc: number,
+  ): number {
+    const alpha &#x3D; this.calculateContributionAlpha(rc);
+
+    switch (transactionType) {
+      case &#x27;deposit&#x27;:
+        // 15% de depósitos/recargas (o 10%/20% según RC)
+        return Math.round(amountCents * alpha);
+
+      case &#x27;commission&#x27;:
+        // 4% de comisiones (fijo, no varía con RC)
+        return Math.round(amountCents * 0.04);
+
+      case &#x27;membership&#x27;:
+        // 15% de membresías (o 10%/20% según RC)
+        return Math.round(amountCents * alpha);
+
+      default:
+        return 0;
+    }
+  }
+
+  /**
+   * Valida si un payout FGO es viable
+   *
+   * @param requestedAmountUsd - Monto solicitado en USD
+   * @param policy - Política actual
+   * @returns { approved: boolean, reason?: string, adjustedAmountUsd?: number }
+   */
+  validatePayout(
+    requestedAmountUsd: number,
+    policy: FgoPolicyDecision,
+  ): {
+    approved: boolean;
+    reason?: string;
+    adjustedAmountUsd?: number;
+  } {
+    if (!policy.canUseFgo) {
+      return {
+        approved: false,
+        reason: &#x27;FGO no disponible. &#x27; + policy.restrictions.join(&#x27;. &#x27;),
+      };
+    }
+
+    if (requestedAmountUsd &gt; policy.maxCoveragePerEventUsd) {
+      return {
+        approved: true,
+        reason: &#x60;Monto ajustado al tope de USD ${policy.maxCoveragePerEventUsd}&#x60;,
+        adjustedAmountUsd: policy.maxCoveragePerEventUsd,
+      };
+    }
+
+    if (policy.requiresCoPay) {
+      return {
+        approved: true,
+        reason: &#x60;Cobertura aprobada con co-pago del ${policy.coPayPercentage * 100}%&#x60;,
+        adjustedAmountUsd: requestedAmountUsd,
+      };
+    }
+
+    return {
+      approved: true,
+      adjustedAmountUsd: requestedAmountUsd,
+    };
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'FgoPolicyEngineService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

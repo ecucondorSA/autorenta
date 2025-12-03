@@ -1,0 +1,1938 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  BookingPaymentCoverageStepComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>BookingPaymentCoverageStepComponent - Step 2 of booking checkout wizard</p>
+<p>Allows user to select:</p>
+<ul>
+<li>Payment provider (MercadoPago, PayPal)</li>
+<li>Coverage level (basic, standard, premium)</li>
+<li>Additional driver protection</li>
+<li>Accept terms and conditions</li>
+</ul>
+
+    </p>
+
+
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-booking-payment-coverage-step</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                                <code><a href="../components/WizardStepComponent.html" target="_self" >WizardStepComponent</a></code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">styles</td>
+                <td class="col-md-9"><code>
+      .payment-coverage-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      /* Provider Options */
+      .provider-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .provider-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .provider-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .provider-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .provider-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .provider-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .provider-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .provider-icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--cta-default);
+      }
+
+      .provider-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .provider-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .provider-methods {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .method-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.625rem;
+        background: var(--surface-hover);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+      }
+
+      /* Coverage Options */
+      .coverage-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .coverage-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .coverage-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .coverage-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .coverage-card.recommended {
+        border-color: var(--success-600);
+      }
+
+      .coverage-card.recommended.selected {
+        border-color: var(--success-600);
+        background: var(--success-600) / 10;
+      }
+
+      .recommended-badge {
+        position: absolute;
+        top: -0.625rem;
+        right: 1rem;
+        background: var(--success-600);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+      }
+
+      .coverage-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .coverage-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .coverage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .coverage-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .coverage-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .coverage-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .coverage-features li {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        padding-left: 1.25rem;
+        position: relative;
+      }
+
+      .coverage-features li::before {
+        content: &#x27;✓&#x27;;
+        position: absolute;
+        left: 0;
+        color: var(--success-600);
+        font-weight: 600;
+      }
+
+      /* Checkbox Card */
+      .checkbox-card {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .checkbox-card:hover {
+        border-color: var(--border-focus);
+        background: var(--surface-hover);
+      }
+
+      .checkbox-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .checkbox-content {
+        flex: 1;
+      }
+
+      .checkbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .checkbox-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .checkbox-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .checkbox-description {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* Terms */
+      .terms-checkbox {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        cursor: pointer;
+      }
+
+      .terms-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .terms-link {
+        color: var(--cta-default);
+        text-decoration: underline;
+      }
+
+      .terms-link:hover {
+        color: var(--cta-hover);
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .provider-options,
+        .coverage-options {
+          grid-template-columns: 1fr;
+        }
+
+        .recommended-badge {
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+    </code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;app-wizard-step
+  title&#x3D;&quot;Pago y Cobertura&quot;
+  subtitle&#x3D;&quot;Selecciona tu método de pago y nivel de cobertura&quot;
+&gt;
+  &lt;div class&#x3D;&quot;payment-coverage-form&quot;&gt;
+    &lt;!-- Payment Provider Section --&gt;
+    &lt;div class&#x3D;&quot;form-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Método de Pago&lt;/h3&gt;
+
+      &lt;div class&#x3D;&quot;provider-options&quot;&gt;
+        &lt;!-- MercadoPago --&gt;
+        &lt;label
+          class&#x3D;&quot;provider-card&quot;
+          [class.selected]&#x3D;&quot;localData.paymentProvider &#x3D;&#x3D;&#x3D; &#x27;mercadopago&#x27;&quot;
+        &gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            name&#x3D;&quot;provider&quot;
+            value&#x3D;&quot;mercadopago&quot;
+            [(ngModel)]&#x3D;&quot;localData.paymentProvider&quot;
+            class&#x3D;&quot;provider-radio&quot;
+          /&gt;
+          &lt;div class&#x3D;&quot;provider-content&quot;&gt;
+            &lt;div class&#x3D;&quot;provider-header&quot;&gt;
+              &lt;svg class&#x3D;&quot;provider-icon&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  d&#x3D;&quot;M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span class&#x3D;&quot;provider-name&quot;&gt;MercadoPago&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;p class&#x3D;&quot;provider-description&quot;&gt;Paga en pesos argentinos (ARS)&lt;/p&gt;
+            &lt;div class&#x3D;&quot;provider-methods&quot;&gt;
+              &lt;span class&#x3D;&quot;method-badge&quot;&gt;Tarjeta&lt;/span&gt;
+              &lt;span class&#x3D;&quot;method-badge&quot;&gt;Efectivo&lt;/span&gt;
+              &lt;span class&#x3D;&quot;method-badge&quot;&gt;Débito&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- PayPal --&gt;
+        &lt;label class&#x3D;&quot;provider-card&quot; [class.selected]&#x3D;&quot;localData.paymentProvider &#x3D;&#x3D;&#x3D; &#x27;paypal&#x27;&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            name&#x3D;&quot;provider&quot;
+            value&#x3D;&quot;paypal&quot;
+            [(ngModel)]&#x3D;&quot;localData.paymentProvider&quot;
+            class&#x3D;&quot;provider-radio&quot;
+          /&gt;
+          &lt;div class&#x3D;&quot;provider-content&quot;&gt;
+            &lt;div class&#x3D;&quot;provider-header&quot;&gt;
+              &lt;svg class&#x3D;&quot;provider-icon&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  d&#x3D;&quot;M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.805.805 0 01-.793.68H8.29c-.306 0-.555-.227-.597-.525L6.03 11.642a.805.805 0 01.793-.925h2.51a.805.805 0 00.794-.68l.047-.25.88-5.567.027-.15a.805.805 0 01.793-.68h2.847c1.889 0 3.18.393 3.943 1.205.35.375.601.823.757 1.336z&quot;
+                /&gt;
+              &lt;/svg&gt;
+              &lt;span class&#x3D;&quot;provider-name&quot;&gt;PayPal&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;p class&#x3D;&quot;provider-description&quot;&gt;Paga en dólares (USD)&lt;/p&gt;
+            &lt;div class&#x3D;&quot;provider-methods&quot;&gt;
+              &lt;span class&#x3D;&quot;method-badge&quot;&gt;PayPal&lt;/span&gt;
+              &lt;span class&#x3D;&quot;method-badge&quot;&gt;Tarjeta&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Coverage Level Section --&gt;
+    &lt;div class&#x3D;&quot;form-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Nivel de Cobertura&lt;/h3&gt;
+
+      &lt;div class&#x3D;&quot;coverage-options&quot;&gt;
+        &lt;!-- Basic --&gt;
+        &lt;label class&#x3D;&quot;coverage-card&quot; [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;basic&#x27;&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            name&#x3D;&quot;coverage&quot;
+            value&#x3D;&quot;basic&quot;
+            [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+            class&#x3D;&quot;coverage-radio&quot;
+          /&gt;
+          &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+            &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+              &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Básica&lt;/span&gt;
+              &lt;span class&#x3D;&quot;coverage-price&quot;&gt;Incluida&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+              &lt;li&gt;Seguro obligatorio&lt;/li&gt;
+              &lt;li&gt;Asistencia en ruta&lt;/li&gt;
+              &lt;li&gt;Cobertura por daños a terceros&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- Standard --&gt;
+        &lt;label
+          class&#x3D;&quot;coverage-card recommended&quot;
+          [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;standard&#x27;&quot;
+        &gt;
+          &lt;div class&#x3D;&quot;recommended-badge&quot;&gt;Recomendado&lt;/div&gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            name&#x3D;&quot;coverage&quot;
+            value&#x3D;&quot;standard&quot;
+            [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+            class&#x3D;&quot;coverage-radio&quot;
+          /&gt;
+          &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+            &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+              &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Estándar&lt;/span&gt;
+              &lt;span class&#x3D;&quot;coverage-price&quot;&gt;+ $500/día&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+              &lt;li&gt;Todo lo de Básica&lt;/li&gt;
+              &lt;li&gt;Cobertura por robo&lt;/li&gt;
+              &lt;li&gt;Reducción de franquicia&lt;/li&gt;
+              &lt;li&gt;Conductor adicional gratis&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/label&gt;
+
+        &lt;!-- Premium --&gt;
+        &lt;label class&#x3D;&quot;coverage-card&quot; [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;premium&#x27;&quot;&gt;
+          &lt;input
+            type&#x3D;&quot;radio&quot;
+            name&#x3D;&quot;coverage&quot;
+            value&#x3D;&quot;premium&quot;
+            [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+            class&#x3D;&quot;coverage-radio&quot;
+          /&gt;
+          &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+            &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+              &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Premium&lt;/span&gt;
+              &lt;span class&#x3D;&quot;coverage-price&quot;&gt;+ $1,200/día&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+              &lt;li&gt;Todo lo de Estándar&lt;/li&gt;
+              &lt;li&gt;Cobertura total sin franquicia&lt;/li&gt;
+              &lt;li&gt;Asistencia 24/7&lt;/li&gt;
+              &lt;li&gt;Vehículo de reemplazo&lt;/li&gt;
+              &lt;li&gt;Cancelación gratuita&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Additional Options Section --&gt;
+    &lt;div class&#x3D;&quot;form-section&quot;&gt;
+      &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Opciones Adicionales&lt;/h3&gt;
+
+      &lt;label class&#x3D;&quot;checkbox-card&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;checkbox&quot;
+          [(ngModel)]&#x3D;&quot;localData.addDriverProtection&quot;
+          class&#x3D;&quot;checkbox-input&quot;
+        /&gt;
+        &lt;div class&#x3D;&quot;checkbox-content&quot;&gt;
+          &lt;div class&#x3D;&quot;checkbox-header&quot;&gt;
+            &lt;span class&#x3D;&quot;checkbox-name&quot;&gt;Protección del Conductor&lt;/span&gt;
+            &lt;span class&#x3D;&quot;checkbox-price&quot;&gt;+ $300/día&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p class&#x3D;&quot;checkbox-description&quot;&gt;
+            Cobertura médica y de responsabilidad civil para el conductor en caso de accidente.
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Terms Section --&gt;
+    &lt;div class&#x3D;&quot;form-section&quot;&gt;
+      &lt;label class&#x3D;&quot;terms-checkbox&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;checkbox&quot;
+          [(ngModel)]&#x3D;&quot;localData.acceptTerms&quot;
+          class&#x3D;&quot;checkbox-input&quot;
+          required
+        /&gt;
+        &lt;span class&#x3D;&quot;terms-text&quot;&gt;
+          Acepto los
+          &lt;a href&#x3D;&quot;/legal/terms&quot; target&#x3D;&quot;_blank&quot; class&#x3D;&quot;terms-link&quot;&gt;términos y condiciones&lt;/a&gt;
+          y la
+          &lt;a href&#x3D;&quot;/legal/privacy&quot; target&#x3D;&quot;_blank&quot; class&#x3D;&quot;terms-link&quot;&gt;política de privacidad&lt;/a&gt;
+        &lt;/span&gt;
+      &lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/app-wizard-step&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#isValid" >isValid</a>
+                            </li>
+                            <li>
+                                <a href="#localData" >localData</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#data" >data</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Outputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#dataChange" >dataChange</a>
+                            </li>
+                            <li>
+                                <a href="#validChange" >validChange</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="549" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:549</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+    <section data-compodoc="block-inputs">
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="data"></a>
+                        <b>data</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/BookingPaymentCoverage.html" target="_self" >BookingPaymentCoverage</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{    paymentProvider: &#x27;mercadopago&#x27;,    coverageLevel: &#x27;standard&#x27;,    addDriverProtection: false,    acceptTerms: false,  }</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="511" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:511</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Initial data</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+    <section data-compodoc="block-outputs">
+    <h3 id="outputs">Outputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="dataChange"></a>
+                        <b>dataChange</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/BookingPaymentCoverage.html" target="_self" >BookingPaymentCoverage</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="523" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:523</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emitted when data changes</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="validChange"></a>
+                        <b>validChange</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="528" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:528</a></div>
+                            </td>
+                        </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Emitted when validation state changes</p>
+</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isValid"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>isValid</b></span>
+                        <a href="#isValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.localData.acceptTerms;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="547" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:547</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Is form valid?</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="localData"></a>
+                    <span class="name">
+                        <span ><b>localData</b></span>
+                        <a href="#localData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/BookingPaymentCoverage.html" target="_self" >BookingPaymentCoverage</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    paymentProvider: &#x27;mercadopago&#x27;,
+    coverageLevel: &#x27;standard&#x27;,
+    addDriverProtection: false,
+    acceptTerms: false,
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="535" class="link-to-prism">src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts:535</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Local editable data</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, computed, effect, input, output } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { WizardStepComponent } from &#x27;../../../../shared/components/wizard-step/wizard-step.component&#x27;;
+import { PaymentProvider } from &#x27;../../../../core/interfaces/payment-gateway.interface&#x27;;
+
+export interface BookingPaymentCoverage {
+  paymentProvider: PaymentProvider;
+  coverageLevel: &#x27;basic&#x27; | &#x27;standard&#x27; | &#x27;premium&#x27;;
+  addDriverProtection: boolean;
+  acceptTerms: boolean;
+}
+
+/**
+ * BookingPaymentCoverageStepComponent - Step 2 of booking checkout wizard
+ *
+ * Allows user to select:
+ * - Payment provider (MercadoPago, PayPal)
+ * - Coverage level (basic, standard, premium)
+ * - Additional driver protection
+ * - Accept terms and conditions
+ */
+@Component({
+  selector: &#x27;app-booking-payment-coverage-step&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, WizardStepComponent],
+  template: &#x60;
+    &lt;app-wizard-step
+      title&#x3D;&quot;Pago y Cobertura&quot;
+      subtitle&#x3D;&quot;Selecciona tu método de pago y nivel de cobertura&quot;
+    &gt;
+      &lt;div class&#x3D;&quot;payment-coverage-form&quot;&gt;
+        &lt;!-- Payment Provider Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Método de Pago&lt;/h3&gt;
+
+          &lt;div class&#x3D;&quot;provider-options&quot;&gt;
+            &lt;!-- MercadoPago --&gt;
+            &lt;label
+              class&#x3D;&quot;provider-card&quot;
+              [class.selected]&#x3D;&quot;localData.paymentProvider &#x3D;&#x3D;&#x3D; &#x27;mercadopago&#x27;&quot;
+            &gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;provider&quot;
+                value&#x3D;&quot;mercadopago&quot;
+                [(ngModel)]&#x3D;&quot;localData.paymentProvider&quot;
+                class&#x3D;&quot;provider-radio&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;provider-content&quot;&gt;
+                &lt;div class&#x3D;&quot;provider-header&quot;&gt;
+                  &lt;svg class&#x3D;&quot;provider-icon&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                    &lt;path
+                      d&#x3D;&quot;M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z&quot;
+                    /&gt;
+                  &lt;/svg&gt;
+                  &lt;span class&#x3D;&quot;provider-name&quot;&gt;MercadoPago&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;p class&#x3D;&quot;provider-description&quot;&gt;Paga en pesos argentinos (ARS)&lt;/p&gt;
+                &lt;div class&#x3D;&quot;provider-methods&quot;&gt;
+                  &lt;span class&#x3D;&quot;method-badge&quot;&gt;Tarjeta&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;method-badge&quot;&gt;Efectivo&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;method-badge&quot;&gt;Débito&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/label&gt;
+
+            &lt;!-- PayPal --&gt;
+            &lt;label class&#x3D;&quot;provider-card&quot; [class.selected]&#x3D;&quot;localData.paymentProvider &#x3D;&#x3D;&#x3D; &#x27;paypal&#x27;&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;provider&quot;
+                value&#x3D;&quot;paypal&quot;
+                [(ngModel)]&#x3D;&quot;localData.paymentProvider&quot;
+                class&#x3D;&quot;provider-radio&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;provider-content&quot;&gt;
+                &lt;div class&#x3D;&quot;provider-header&quot;&gt;
+                  &lt;svg class&#x3D;&quot;provider-icon&quot; fill&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+                    &lt;path
+                      d&#x3D;&quot;M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.805.805 0 01-.793.68H8.29c-.306 0-.555-.227-.597-.525L6.03 11.642a.805.805 0 01.793-.925h2.51a.805.805 0 00.794-.68l.047-.25.88-5.567.027-.15a.805.805 0 01.793-.68h2.847c1.889 0 3.18.393 3.943 1.205.35.375.601.823.757 1.336z&quot;
+                    /&gt;
+                  &lt;/svg&gt;
+                  &lt;span class&#x3D;&quot;provider-name&quot;&gt;PayPal&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;p class&#x3D;&quot;provider-description&quot;&gt;Paga en dólares (USD)&lt;/p&gt;
+                &lt;div class&#x3D;&quot;provider-methods&quot;&gt;
+                  &lt;span class&#x3D;&quot;method-badge&quot;&gt;PayPal&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;method-badge&quot;&gt;Tarjeta&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/label&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Coverage Level Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Nivel de Cobertura&lt;/h3&gt;
+
+          &lt;div class&#x3D;&quot;coverage-options&quot;&gt;
+            &lt;!-- Basic --&gt;
+            &lt;label class&#x3D;&quot;coverage-card&quot; [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;basic&#x27;&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;coverage&quot;
+                value&#x3D;&quot;basic&quot;
+                [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+                class&#x3D;&quot;coverage-radio&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+                &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+                  &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Básica&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;coverage-price&quot;&gt;Incluida&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+                  &lt;li&gt;Seguro obligatorio&lt;/li&gt;
+                  &lt;li&gt;Asistencia en ruta&lt;/li&gt;
+                  &lt;li&gt;Cobertura por daños a terceros&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/label&gt;
+
+            &lt;!-- Standard --&gt;
+            &lt;label
+              class&#x3D;&quot;coverage-card recommended&quot;
+              [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;standard&#x27;&quot;
+            &gt;
+              &lt;div class&#x3D;&quot;recommended-badge&quot;&gt;Recomendado&lt;/div&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;coverage&quot;
+                value&#x3D;&quot;standard&quot;
+                [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+                class&#x3D;&quot;coverage-radio&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+                &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+                  &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Estándar&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;coverage-price&quot;&gt;+ $500/día&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+                  &lt;li&gt;Todo lo de Básica&lt;/li&gt;
+                  &lt;li&gt;Cobertura por robo&lt;/li&gt;
+                  &lt;li&gt;Reducción de franquicia&lt;/li&gt;
+                  &lt;li&gt;Conductor adicional gratis&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/label&gt;
+
+            &lt;!-- Premium --&gt;
+            &lt;label class&#x3D;&quot;coverage-card&quot; [class.selected]&#x3D;&quot;localData.coverageLevel &#x3D;&#x3D;&#x3D; &#x27;premium&#x27;&quot;&gt;
+              &lt;input
+                type&#x3D;&quot;radio&quot;
+                name&#x3D;&quot;coverage&quot;
+                value&#x3D;&quot;premium&quot;
+                [(ngModel)]&#x3D;&quot;localData.coverageLevel&quot;
+                class&#x3D;&quot;coverage-radio&quot;
+              /&gt;
+              &lt;div class&#x3D;&quot;coverage-content&quot;&gt;
+                &lt;div class&#x3D;&quot;coverage-header&quot;&gt;
+                  &lt;span class&#x3D;&quot;coverage-name&quot;&gt;Premium&lt;/span&gt;
+                  &lt;span class&#x3D;&quot;coverage-price&quot;&gt;+ $1,200/día&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;ul class&#x3D;&quot;coverage-features&quot;&gt;
+                  &lt;li&gt;Todo lo de Estándar&lt;/li&gt;
+                  &lt;li&gt;Cobertura total sin franquicia&lt;/li&gt;
+                  &lt;li&gt;Asistencia 24/7&lt;/li&gt;
+                  &lt;li&gt;Vehículo de reemplazo&lt;/li&gt;
+                  &lt;li&gt;Cancelación gratuita&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/div&gt;
+            &lt;/label&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Additional Options Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;h3 class&#x3D;&quot;section-title&quot;&gt;Opciones Adicionales&lt;/h3&gt;
+
+          &lt;label class&#x3D;&quot;checkbox-card&quot;&gt;
+            &lt;input
+              type&#x3D;&quot;checkbox&quot;
+              [(ngModel)]&#x3D;&quot;localData.addDriverProtection&quot;
+              class&#x3D;&quot;checkbox-input&quot;
+            /&gt;
+            &lt;div class&#x3D;&quot;checkbox-content&quot;&gt;
+              &lt;div class&#x3D;&quot;checkbox-header&quot;&gt;
+                &lt;span class&#x3D;&quot;checkbox-name&quot;&gt;Protección del Conductor&lt;/span&gt;
+                &lt;span class&#x3D;&quot;checkbox-price&quot;&gt;+ $300/día&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;p class&#x3D;&quot;checkbox-description&quot;&gt;
+                Cobertura médica y de responsabilidad civil para el conductor en caso de accidente.
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/label&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Terms Section --&gt;
+        &lt;div class&#x3D;&quot;form-section&quot;&gt;
+          &lt;label class&#x3D;&quot;terms-checkbox&quot;&gt;
+            &lt;input
+              type&#x3D;&quot;checkbox&quot;
+              [(ngModel)]&#x3D;&quot;localData.acceptTerms&quot;
+              class&#x3D;&quot;checkbox-input&quot;
+              required
+            /&gt;
+            &lt;span class&#x3D;&quot;terms-text&quot;&gt;
+              Acepto los
+              &lt;a href&#x3D;&quot;/legal/terms&quot; target&#x3D;&quot;_blank&quot; class&#x3D;&quot;terms-link&quot;&gt;términos y condiciones&lt;/a&gt;
+              y la
+              &lt;a href&#x3D;&quot;/legal/privacy&quot; target&#x3D;&quot;_blank&quot; class&#x3D;&quot;terms-link&quot;&gt;política de privacidad&lt;/a&gt;
+            &lt;/span&gt;
+          &lt;/label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/app-wizard-step&gt;
+  &#x60;,
+  styles: [
+    &#x60;
+      .payment-coverage-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      /* Provider Options */
+      .provider-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .provider-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .provider-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .provider-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .provider-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .provider-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .provider-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .provider-icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--cta-default);
+      }
+
+      .provider-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .provider-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .provider-methods {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .method-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.625rem;
+        background: var(--surface-hover);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+      }
+
+      /* Coverage Options */
+      .coverage-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .coverage-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .coverage-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .coverage-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .coverage-card.recommended {
+        border-color: var(--success-600);
+      }
+
+      .coverage-card.recommended.selected {
+        border-color: var(--success-600);
+        background: var(--success-600) / 10;
+      }
+
+      .recommended-badge {
+        position: absolute;
+        top: -0.625rem;
+        right: 1rem;
+        background: var(--success-600);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+      }
+
+      .coverage-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .coverage-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .coverage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .coverage-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .coverage-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .coverage-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .coverage-features li {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        padding-left: 1.25rem;
+        position: relative;
+      }
+
+      .coverage-features li::before {
+        content: &#x27;✓&#x27;;
+        position: absolute;
+        left: 0;
+        color: var(--success-600);
+        font-weight: 600;
+      }
+
+      /* Checkbox Card */
+      .checkbox-card {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .checkbox-card:hover {
+        border-color: var(--border-focus);
+        background: var(--surface-hover);
+      }
+
+      .checkbox-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .checkbox-content {
+        flex: 1;
+      }
+
+      .checkbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .checkbox-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .checkbox-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .checkbox-description {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* Terms */
+      .terms-checkbox {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        cursor: pointer;
+      }
+
+      .terms-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .terms-link {
+        color: var(--cta-default);
+        text-decoration: underline;
+      }
+
+      .terms-link:hover {
+        color: var(--cta-hover);
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .provider-options,
+        .coverage-options {
+          grid-template-columns: 1fr;
+        }
+
+        .recommended-badge {
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+    &#x60;,
+  ],
+})
+export class BookingPaymentCoverageStepComponent {
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; INPUTS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Initial data
+   */
+  data &#x3D; input&lt;BookingPaymentCoverage&gt;({
+    paymentProvider: &#x27;mercadopago&#x27;,
+    coverageLevel: &#x27;standard&#x27;,
+    addDriverProtection: false,
+    acceptTerms: false,
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; OUTPUTS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Emitted when data changes
+   */
+  dataChange &#x3D; output&lt;BookingPaymentCoverage&gt;();
+
+  /**
+   * Emitted when validation state changes
+   */
+  validChange &#x3D; output&lt;boolean&gt;();
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; STATE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Local editable data
+   */
+  localData: BookingPaymentCoverage &#x3D; {
+    paymentProvider: &#x27;mercadopago&#x27;,
+    coverageLevel: &#x27;standard&#x27;,
+    addDriverProtection: false,
+    acceptTerms: false,
+  };
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; COMPUTED &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Is form valid?
+   */
+  readonly isValid &#x3D; computed(() &#x3D;&gt; {
+    return this.localData.acceptTerms;
+  });
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; LIFECYCLE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  constructor() {
+    // Initialize local data from input
+    effect(() &#x3D;&gt; {
+      this.localData &#x3D; { ...this.data() };
+    });
+
+    // Emit changes when local data changes
+    effect(() &#x3D;&gt; {
+      const valid &#x3D; this.isValid();
+      this.validChange.emit(valid);
+
+      if (valid) {
+        this.dataChange.emit({ ...this.localData });
+      }
+    });
+  }
+}
+</code></pre>
+    </div>
+
+
+    <div class="tab-pane fade " id="styleData">
+            <pre class="line-numbers"><code class="language-scss">
+      .payment-coverage-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .form-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      /* Provider Options */
+      .provider-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .provider-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .provider-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .provider-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .provider-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .provider-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .provider-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .provider-icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--cta-default);
+      }
+
+      .provider-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .provider-description {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      .provider-methods {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .method-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.625rem;
+        background: var(--surface-hover);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+      }
+
+      /* Coverage Options */
+      .coverage-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .coverage-card {
+        position: relative;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .coverage-card:hover {
+        border-color: var(--border-focus);
+        box-shadow: var(--elevation-2);
+      }
+
+      .coverage-card.selected {
+        border-color: var(--cta-default);
+        background: var(--cta-default) / 5;
+      }
+
+      .coverage-card.recommended {
+        border-color: var(--success-600);
+      }
+
+      .coverage-card.recommended.selected {
+        border-color: var(--success-600);
+        background: var(--success-600) / 10;
+      }
+
+      .recommended-badge {
+        position: absolute;
+        top: -0.625rem;
+        right: 1rem;
+        background: var(--success-600);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+      }
+
+      .coverage-radio {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .coverage-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .coverage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .coverage-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .coverage-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .coverage-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .coverage-features li {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        padding-left: 1.25rem;
+        position: relative;
+      }
+
+      .coverage-features li::before {
+        content: &#x27;✓&#x27;;
+        position: absolute;
+        left: 0;
+        color: var(--success-600);
+        font-weight: 600;
+      }
+
+      /* Checkbox Card */
+      .checkbox-card {
+        display: flex;
+        gap: 1rem;
+        padding: 1.25rem;
+        border: 2px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-default);
+      }
+
+      .checkbox-card:hover {
+        border-color: var(--border-focus);
+        background: var(--surface-hover);
+      }
+
+      .checkbox-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .checkbox-content {
+        flex: 1;
+      }
+
+      .checkbox-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .checkbox-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .checkbox-price {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cta-default);
+      }
+
+      .checkbox-description {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* Terms */
+      .terms-checkbox {
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        cursor: pointer;
+      }
+
+      .terms-text {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .terms-link {
+        color: var(--cta-default);
+        text-decoration: underline;
+      }
+
+      .terms-link:hover {
+        color: var(--cta-hover);
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .provider-options,
+        .coverage-options {
+          grid-template-columns: 1fr;
+        }
+
+        .recommended-badge {
+          top: 1rem;
+          right: 1rem;
+        }
+      }
+    
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><app-wizard-step  title="Pago y Cobertura"  subtitle="Selecciona tu método de pago y nivel de cobertura">  <div class="payment-coverage-form">    <!-- Payment Provider Section -->    <div class="form-section">      <h3 class="section-title">Método de Pago</h3>      <div class="provider-options">        <!-- MercadoPago -->        <label          class="provider-card"          [class.selected]="localData.paymentProvider === \'mercadopago\'"        >          <input            type="radio"            name="provider"            value="mercadopago"            [(ngModel)]="localData.paymentProvider"            class="provider-radio"          />          <div class="provider-content">            <div class="provider-header">              <svg class="provider-icon" fill="currentColor" viewBox="0 0 24 24">                <path                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"                />              </svg>              <span class="provider-name">MercadoPago</span>            </div>            <p class="provider-description">Paga en pesos argentinos (ARS)</p>            <div class="provider-methods">              <span class="method-badge">Tarjeta</span>              <span class="method-badge">Efectivo</span>              <span class="method-badge">Débito</span>            </div>          </div>        </label>        <!-- PayPal -->        <label class="provider-card" [class.selected]="localData.paymentProvider === \'paypal\'">          <input            type="radio"            name="provider"            value="paypal"            [(ngModel)]="localData.paymentProvider"            class="provider-radio"          />          <div class="provider-content">            <div class="provider-header">              <svg class="provider-icon" fill="currentColor" viewBox="0 0 24 24">                <path                  d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.805.805 0 01-.793.68H8.29c-.306 0-.555-.227-.597-.525L6.03 11.642a.805.805 0 01.793-.925h2.51a.805.805 0 00.794-.68l.047-.25.88-5.567.027-.15a.805.805 0 01.793-.68h2.847c1.889 0 3.18.393 3.943 1.205.35.375.601.823.757 1.336z"                />              </svg>              <span class="provider-name">PayPal</span>            </div>            <p class="provider-description">Paga en dólares (USD)</p>            <div class="provider-methods">              <span class="method-badge">PayPal</span>              <span class="method-badge">Tarjeta</span>            </div>          </div>        </label>      </div>    </div>    <!-- Coverage Level Section -->    <div class="form-section">      <h3 class="section-title">Nivel de Cobertura</h3>      <div class="coverage-options">        <!-- Basic -->        <label class="coverage-card" [class.selected]="localData.coverageLevel === \'basic\'">          <input            type="radio"            name="coverage"            value="basic"            [(ngModel)]="localData.coverageLevel"            class="coverage-radio"          />          <div class="coverage-content">            <div class="coverage-header">              <span class="coverage-name">Básica</span>              <span class="coverage-price">Incluida</span>            </div>            <ul class="coverage-features">              <li>Seguro obligatorio</li>              <li>Asistencia en ruta</li>              <li>Cobertura por daños a terceros</li>            </ul>          </div>        </label>        <!-- Standard -->        <label          class="coverage-card recommended"          [class.selected]="localData.coverageLevel === \'standard\'"        >          <div class="recommended-badge">Recomendado</div>          <input            type="radio"            name="coverage"            value="standard"            [(ngModel)]="localData.coverageLevel"            class="coverage-radio"          />          <div class="coverage-content">            <div class="coverage-header">              <span class="coverage-name">Estándar</span>              <span class="coverage-price">+ $500/día</span>            </div>            <ul class="coverage-features">              <li>Todo lo de Básica</li>              <li>Cobertura por robo</li>              <li>Reducción de franquicia</li>              <li>Conductor adicional gratis</li>            </ul>          </div>        </label>        <!-- Premium -->        <label class="coverage-card" [class.selected]="localData.coverageLevel === \'premium\'">          <input            type="radio"            name="coverage"            value="premium"            [(ngModel)]="localData.coverageLevel"            class="coverage-radio"          />          <div class="coverage-content">            <div class="coverage-header">              <span class="coverage-name">Premium</span>              <span class="coverage-price">+ $1,200/día</span>            </div>            <ul class="coverage-features">              <li>Todo lo de Estándar</li>              <li>Cobertura total sin franquicia</li>              <li>Asistencia 24/7</li>              <li>Vehículo de reemplazo</li>              <li>Cancelación gratuita</li>            </ul>          </div>        </label>      </div>    </div>    <!-- Additional Options Section -->    <div class="form-section">      <h3 class="section-title">Opciones Adicionales</h3>      <label class="checkbox-card">        <input          type="checkbox"          [(ngModel)]="localData.addDriverProtection"          class="checkbox-input"        />        <div class="checkbox-content">          <div class="checkbox-header">            <span class="checkbox-name">Protección del Conductor</span>            <span class="checkbox-price">+ $300/día</span>          </div>          <p class="checkbox-description">            Cobertura médica y de responsabilidad civil para el conductor en caso de accidente.          </p>        </div>      </label>    </div>    <!-- Terms Section -->    <div class="form-section">      <label class="terms-checkbox">        <input          type="checkbox"          [(ngModel)]="localData.acceptTerms"          class="checkbox-input"          required        />        <span class="terms-text">          Acepto los          <a href="/legal/terms" target="_blank" class="terms-link">términos y condiciones</a>          y la          <a href="/legal/privacy" target="_blank" class="terms-link">política de privacidad</a>        </span>      </label>    </div>  </div></app-wizard-step></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'BookingPaymentCoverageStepComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'BookingPaymentCoverageStepComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

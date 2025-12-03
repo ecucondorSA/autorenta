@@ -1,0 +1,2589 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  AdminReviewsPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/admin/reviews/admin-reviews.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Admin Reviews Moderation Dashboard
+Lists all flagged reviews with filtering by moderation status
+Allows admin to approve or reject flagged reviews</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-admin-reviews</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                                <code><a href="../interfaces/Route.html" target="_self" >RouterLink</a></code>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">template</td>
+                <td class="col-md-9"><pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;max-w-7xl mx-auto py-8 px-4&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+    &lt;button
+      routerLink&#x3D;&quot;/admin&quot;
+      class&#x3D;&quot;inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4&quot;
+    &gt;
+      &lt;svg class&#x3D;&quot;w-4 h-4&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+        &lt;path
+          stroke-linecap&#x3D;&quot;round&quot;
+          stroke-linejoin&#x3D;&quot;round&quot;
+          stroke-width&#x3D;&quot;2&quot;
+          d&#x3D;&quot;M10 19l-7-7m0 0l7-7m-7 7h18&quot;
+        /&gt;
+      &lt;/svg&gt;
+      Volver al Dashboard
+    &lt;/button&gt;
+
+    &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+      &lt;div&gt;
+        &lt;h1 class&#x3D;&quot;text-3xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+          Moderación de Reseñas
+        &lt;/h1&gt;
+        &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-secondary mt-1&quot;&gt;
+          Gestiona reseñas reportadas por usuarios
+        &lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;text-right&quot;&gt;
+        &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;Reseñas pendientes&lt;/p&gt;
+        &lt;p class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+          {{ pendingCount() }}
+        &lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Filters --&gt;
+  &lt;div
+    class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm&quot;
+  &gt;
+    &lt;h3 class&#x3D;&quot;text-sm font-semibold text-text-primary dark:text-text-secondary mb-3&quot;&gt;
+      Filtros
+    &lt;/h3&gt;
+    &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-2 gap-4&quot;&gt;
+      &lt;!-- Status Filter --&gt;
+      &lt;div&gt;
+        &lt;label
+          class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;
+        &gt;
+          Estado de Moderación
+        &lt;/label&gt;
+        &lt;select
+          [(ngModel)]&#x3D;&quot;filterStatus&quot;
+          (ngModelChange)&#x3D;&quot;onFilterChange()&quot;
+          class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+        &gt;
+          &lt;option value&#x3D;&quot;&quot;&gt;Todos los estados&lt;/option&gt;
+          &lt;option *ngFor&#x3D;&quot;let status of statusOptions&quot; [value]&#x3D;&quot;status.value&quot;&gt;
+            {{ status.label }}
+          &lt;/option&gt;
+        &lt;/select&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Bulk Actions --&gt;
+      &lt;div *ngIf&#x3D;&quot;selectedReviews().length &gt; 0&quot; class&#x3D;&quot;flex items-end gap-2&quot;&gt;
+        &lt;button
+          (click)&#x3D;&quot;bulkApprove()&quot;
+          class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+        &gt;
+          Aprobar Seleccionadas ({{ selectedReviews().length }})
+        &lt;/button&gt;
+        &lt;button
+          (click)&#x3D;&quot;bulkReject()&quot;
+          class&#x3D;&quot;px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+        &gt;
+          Rechazar Seleccionadas ({{ selectedReviews().length }})
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Loading State --&gt;
+  &lt;div *ngIf&#x3D;&quot;loading()&quot; class&#x3D;&quot;text-center py-12&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent&quot;
+    &gt;&lt;/div&gt;
+    &lt;p class&#x3D;&quot;mt-4 text-text-secondary dark:text-text-muted&quot;&gt;Cargando reseñas...&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Error State --&gt;
+  &lt;div
+    *ngIf&#x3D;&quot;error() &amp;&amp; !loading()&quot;
+    class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center&quot;
+  &gt;
+    &lt;p class&#x3D;&quot;text-error-strong&quot;&gt;{{ error() }}&lt;/p&gt;
+    &lt;button
+      (click)&#x3D;&quot;loadReviews()&quot;
+      class&#x3D;&quot;mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors&quot;
+    &gt;
+      Reintentar
+    &lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Reviews List --&gt;
+  &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; !error()&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+    &lt;!-- Empty State --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;filteredReviews().length &#x3D;&#x3D;&#x3D; 0&quot;
+      class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center&quot;
+    &gt;
+      &lt;svg
+        class&#x3D;&quot;mx-auto h-12 w-12 text-text-muted&quot;
+        fill&#x3D;&quot;none&quot;
+        stroke&#x3D;&quot;currentColor&quot;
+        viewBox&#x3D;&quot;0 0 24 24&quot;
+      &gt;
+        &lt;path
+          stroke-linecap&#x3D;&quot;round&quot;
+          stroke-linejoin&#x3D;&quot;round&quot;
+          stroke-width&#x3D;&quot;2&quot;
+          d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+        /&gt;
+      &lt;/svg&gt;
+      &lt;h3 class&#x3D;&quot;mt-2 text-sm font-medium text-text-primary dark:text-text-inverse&quot;&gt;
+        No hay reseñas reportadas
+      &lt;/h3&gt;
+      &lt;p class&#x3D;&quot;mt-1 text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+        Todas las reseñas están en buen estado.
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Review Cards --&gt;
+    &lt;div
+      *ngFor&#x3D;&quot;let review of filteredReviews()&quot;
+      class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow&quot;
+    &gt;
+      &lt;!-- Header with Checkbox --&gt;
+      &lt;div class&#x3D;&quot;flex items-start gap-4&quot;&gt;
+        &lt;input
+          type&#x3D;&quot;checkbox&quot;
+          [checked]&#x3D;&quot;isSelected(review.id)&quot;
+          (change)&#x3D;&quot;toggleSelection(review.id)&quot;
+          class&#x3D;&quot;mt-1 h-4 w-4 rounded border-border-muted&quot;
+        /&gt;
+
+        &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+          &lt;!-- Review Info --&gt;
+          &lt;div class&#x3D;&quot;flex items-start justify-between mb-4&quot;&gt;
+            &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+              &lt;img
+                [src]&#x3D;&quot;review.reviewer_avatar || &#x27;/assets/avatar-placeholder.png&#x27;&quot;
+                [alt]&#x3D;&quot;review.reviewer_name&quot;
+                class&#x3D;&quot;h-10 w-10 rounded-full object-cover&quot;
+              /&gt;
+              &lt;div&gt;
+                &lt;p class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                  {{ review.reviewer_name }}
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-muted&quot;&gt;
+                  Reseña para: {{ review.reviewee_name }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Moderation Status Badge --&gt;
+            &lt;span
+              [class]&#x3D;&quot;getModerationBadgeClass(review.moderation_status)&quot;
+              class&#x3D;&quot;inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold&quot;
+            &gt;
+              {{ getModerationStatusLabel(review.moderation_status) }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Rating --&gt;
+          &lt;div class&#x3D;&quot;flex items-center gap-2 mb-2&quot;&gt;
+            &lt;span class&#x3D;&quot;text-lg font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+              {{ getOverallRating(review).toFixed(1) }}
+            &lt;/span&gt;
+            &lt;div class&#x3D;&quot;flex gap-0.5&quot;&gt;
+              &lt;svg
+                *ngFor&#x3D;&quot;let _ of [1, 2, 3, 4, 5]&quot;
+                class&#x3D;&quot;h-4 w-4 text-warning-400&quot;
+                fill&#x3D;&quot;currentColor&quot;
+                viewBox&#x3D;&quot;0 0 20 20&quot;
+              &gt;
+                &lt;path
+                  d&#x3D;&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;
+                /&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+              {{ review.created_at | date: &#x27;short&#x27; }}
+            &lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Category Ratings --&gt;
+          &lt;div class&#x3D;&quot;grid grid-cols-3 gap-2 mb-4&quot;&gt;
+            &lt;div
+              *ngFor&#x3D;&quot;let category of getCategoryRatings(review)&quot;
+              class&#x3D;&quot;flex items-center justify-between text-xs&quot;
+            &gt;
+              &lt;span class&#x3D;&quot;text-text-secondary dark:text-text-muted&quot;
+                &gt;{{ category.label }}:&lt;/span
+              &gt;
+              &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                {{ category.value.toFixed(1) }}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Public Comment --&gt;
+          &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded-lg p-3 mb-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;&gt;
+              Comentario Público:
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-primary dark:text-text-inverse&quot;&gt;
+              {{ review.comment_public || &#x27;(Sin comentario público)&#x27; }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Flag Reason --&gt;
+          &lt;div class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-error-strong mb-1&quot;&gt;Motivo del Reporte:&lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ review.flag_reason }}&lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-xs text-error-text mt-1&quot;&gt;
+              Reportado por: {{ review.flagged_by_name || &#x27;Usuario&#x27; }} el
+              {{ review.flagged_at | date: &#x27;short&#x27; }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Moderation Notes (if moderated) --&gt;
+          &lt;div
+            *ngIf&#x3D;&quot;review.moderation_notes&quot;
+            class&#x3D;&quot;bg-cta-default/10 dark:bg-cta-default/10 rounded-lg p-3 mb-4&quot;
+          &gt;
+            &lt;p class&#x3D;&quot;text-sm font-medium text-cta-default dark:text-cta-default mb-1&quot;&gt;
+              Notas de Moderación:
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-sm text-cta-default dark:text-cta-default&quot;&gt;
+              {{ review.moderation_notes }}
+            &lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default mt-1&quot;&gt;
+              Moderado por: {{ review.moderated_by_name || &#x27;Usuario&#x27; }} el
+              {{ review.moderated_at | date: &#x27;short&#x27; }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Action Buttons --&gt;
+          &lt;div *ngIf&#x3D;&quot;review.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot; class&#x3D;&quot;flex gap-2&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;openModerationModal(review, &#x27;approved&#x27;)&quot;
+              class&#x3D;&quot;flex-1 px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+            &gt;
+              ✓ Aprobar
+            &lt;/button&gt;
+            &lt;button
+              (click)&#x3D;&quot;openModerationModal(review, &#x27;rejected&#x27;)&quot;
+              class&#x3D;&quot;flex-1 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+            &gt;
+              ✗ Rechazar
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Moderation Modal --&gt;
+&lt;div
+  *ngIf&#x3D;&quot;showModal()&quot;
+  class&#x3D;&quot;fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay bg-opacity-50 p-4&quot;
+  (click)&#x3D;&quot;closeModal()&quot;
+&gt;
+  &lt;div
+    class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-md w-full p-6&quot;
+    (click)&#x3D;&quot;$event.stopPropagation()&quot;
+  &gt;
+    &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-inverse mb-4&quot;&gt;
+      {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;Aprobar&#x27; : &#x27;Rechazar&#x27; }} Reseña
+    &lt;/h3&gt;
+
+    &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted mb-4&quot;&gt;
+      ¿Estás seguro de que deseas {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;aprobar&#x27; : &#x27;rechazar&#x27; }}
+      esta reseña?
+      {{
+        modalAction() &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;
+          ? &#x27;La reseña será ocultada y no será visible públicamente.&#x27;
+          : &#x27;&#x27;
+      }}
+    &lt;/p&gt;
+
+    &lt;!-- Notes Input --&gt;
+    &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+      &lt;label class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-2&quot;&gt;
+        Notas de moderación (opcional):
+      &lt;/label&gt;
+      &lt;textarea
+        [(ngModel)]&#x3D;&quot;moderationNotes&quot;
+        rows&#x3D;&quot;3&quot;
+        class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+        placeholder&#x3D;&quot;Agrega notas sobre esta decisión...&quot;
+      &gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Action Buttons --&gt;
+    &lt;div class&#x3D;&quot;flex gap-2&quot;&gt;
+      &lt;button
+        (click)&#x3D;&quot;closeModal()&quot;
+        class&#x3D;&quot;flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-secondary rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 transition-colors text-sm font-medium&quot;
+      &gt;
+        Cancelar
+      &lt;/button&gt;
+      &lt;button
+        (click)&#x3D;&quot;confirmModeration()&quot;
+        [disabled]&#x3D;&quot;processing()&quot;
+        [class]&#x3D;&quot;
+          modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;
+            ? &#x27;bg-success-light hover:bg-success-light&#x27;
+            : &#x27;bg-error-600 hover:bg-error-700&#x27;
+        &quot;
+        class&#x3D;&quot;flex-1 px-4 py-2 text-text-inverse rounded-lg transition-colors text-sm font-medium disabled:opacity-50&quot;
+      &gt;
+        {{ processing() ? &#x27;Procesando...&#x27; : &#x27;Confirmar&#x27; }}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></td>
+            </tr>
+
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#error" >error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#filteredReviews" >filteredReviews</a>
+                            </li>
+                            <li>
+                                <a href="#filterStatus" >filterStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#loading" >loading</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#modalAction" >modalAction</a>
+                            </li>
+                            <li>
+                                <a href="#moderationNotes" >moderationNotes</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#pendingCount" >pendingCount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#processing" >processing</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#reviews" >reviews</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#reviewsService" >reviewsService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedReview" >selectedReview</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#selectedReviews" >selectedReviews</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#showModal" >showModal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#statusOptions" >statusOptions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#bulkApprove" >bulkApprove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#bulkReject" >bulkReject</a>
+                            </li>
+                            <li>
+                                <a href="#closeModal" >closeModal</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#confirmModeration" >confirmModeration</a>
+                            </li>
+                            <li>
+                                <a href="#getCategoryRatings" >getCategoryRatings</a>
+                            </li>
+                            <li>
+                                <a href="#getModerationBadgeClass" >getModerationBadgeClass</a>
+                            </li>
+                            <li>
+                                <a href="#getModerationStatusLabel" >getModerationStatusLabel</a>
+                            </li>
+                            <li>
+                                <a href="#getOverallRating" >getOverallRating</a>
+                            </li>
+                            <li>
+                                <a href="#isSelected" >isSelected</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#loadReviews" >loadReviews</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#onFilterChange" >onFilterChange</a>
+                            </li>
+                            <li>
+                                <a href="#openModerationModal" >openModerationModal</a>
+                            </li>
+                            <li>
+                                <a href="#toggleSelection" >toggleSelection</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bulkApprove"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>bulkApprove</b></span>
+                        <a href="#bulkApprove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>bulkApprove()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="468"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:468</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bulkReject"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>bulkReject</b></span>
+                        <a href="#bulkReject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>bulkReject()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="495"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:495</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeModal"></a>
+                    <span class="name">
+                        <span ><b>closeModal</b></span>
+                        <a href="#closeModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="422"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:422</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="confirmModeration"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>confirmModeration</b></span>
+                        <a href="#confirmModeration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>confirmModeration()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="428"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:428</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCategoryRatings"></a>
+                    <span class="name">
+                        <span ><b>getCategoryRatings</b></span>
+                        <a href="#getCategoryRatings"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCategoryRatings(review: <a href="../interfaces/Review.html" target="_self">Review</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="554"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:554</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>review</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Review.html" target="_self" >Review</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Array&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getModerationBadgeClass"></a>
+                    <span class="name">
+                        <span ><b>getModerationBadgeClass</b></span>
+                        <a href="#getModerationBadgeClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getModerationBadgeClass(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="531"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:531</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getModerationStatusLabel"></a>
+                    <span class="name">
+                        <span ><b>getModerationStatusLabel</b></span>
+                        <a href="#getModerationStatusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getModerationStatusLabel(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:522</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOverallRating"></a>
+                    <span class="name">
+                        <span ><b>getOverallRating</b></span>
+                        <a href="#getOverallRating"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getOverallRating(review: <a href="../interfaces/Review.html" target="_self">Review</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="542"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:542</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>review</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Review.html" target="_self" >Review</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSelected"></a>
+                    <span class="name">
+                        <span ><b>isSelected</b></span>
+                        <a href="#isSelected"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSelected(reviewId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="464"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:464</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>reviewId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadReviews"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>loadReviews</b></span>
+                        <a href="#loadReviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadReviews()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="396"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:396</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:392</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onFilterChange"></a>
+                    <span class="name">
+                        <span ><b>onFilterChange</b></span>
+                        <a href="#onFilterChange"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>onFilterChange()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="411"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:411</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openModerationModal"></a>
+                    <span class="name">
+                        <span ><b>openModerationModal</b></span>
+                        <a href="#openModerationModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openModerationModal(review: <a href="../interfaces/Review.html" target="_self">Review</a>, action: <a href="../unknowns/app.html" target="_self">&quot;approved&quot; | &quot;rejected&quot;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="415"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:415</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>review</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Review.html" target="_self" >Review</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>action</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/variables.html#app" target="_self" >&quot;approved&quot; | &quot;rejected&quot;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleSelection"></a>
+                    <span class="name">
+                        <span ><b>toggleSelection</b></span>
+                        <a href="#toggleSelection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toggleSelection(reviewId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="455"
+                                    class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:455</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>reviewId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="error"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>error</b></span>
+                        <a href="#error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="359" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:359</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filteredReviews"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>filteredReviews</b></span>
+                        <a href="#filteredReviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    const reviews &#x3D; this.reviews();
+    if (!this.filterStatus) return reviews;
+    return reviews.filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; this.filterStatus);
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="382" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:382</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterStatus"></a>
+                    <span class="name">
+                        <span ><b>filterStatus</b></span>
+                        <a href="#filterStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="363" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:363</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loading"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>loading</b></span>
+                        <a href="#loading"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="358" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:358</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="modalAction"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>modalAction</b></span>
+                        <a href="#modalAction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;&#x27;approved&#x27; | &#x27;rejected&#x27;&gt;(&#x27;approved&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="368" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:368</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="moderationNotes"></a>
+                    <span class="name">
+                        <span ><b>moderationNotes</b></span>
+                        <a href="#moderationNotes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="369" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:369</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pendingCount"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>pendingCount</b></span>
+                        <a href="#pendingCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>computed(() &#x3D;&gt; {
+    return this.reviews().filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length;
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="388" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:388</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processing"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>processing</b></span>
+                        <a href="#processing"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="360" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:360</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reviews"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>reviews</b></span>
+                        <a href="#reviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Review[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="357" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:357</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reviewsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>reviewsService</b></span>
+                        <a href="#reviewsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(ReviewsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="354" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:354</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedReview"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedReview</b></span>
+                        <a href="#selectedReview"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;Review | null&gt;(null)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="367" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:367</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedReviews"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>selectedReviews</b></span>
+                        <a href="#selectedReviews"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal&lt;string[]&gt;([])</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="372" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:372</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showModal"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>showModal</b></span>
+                        <a href="#showModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>signal(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="366" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:366</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusOptions"></a>
+                    <span class="name">
+                            <span class="modifier">Readonly</span>
+                        <span ><b>statusOptions</b></span>
+                        <a href="#statusOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#ModerationStatus" target="_self" >ModerationStatusOption[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    { value: &#x27;pending&#x27;, label: &#x27;Pendiente&#x27; },
+    { value: &#x27;approved&#x27;, label: &#x27;Aprobado&#x27; },
+    { value: &#x27;rejected&#x27;, label: &#x27;Rechazado&#x27; },
+  ]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="375" class="link-to-prism">src/app/features/admin/reviews/admin-reviews.page.ts:375</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, inject, signal, computed } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { RouterLink } from &#x27;@angular/router&#x27;;
+import { ReviewsService } from &#x27;../../../core/services/reviews.service&#x27;;
+import { Review } from &#x27;../../../core/models&#x27;;
+
+interface ModerationStatusOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Admin Reviews Moderation Dashboard
+ * Lists all flagged reviews with filtering by moderation status
+ * Allows admin to approve or reject flagged reviews
+ */
+@Component({
+  selector: &#x27;app-admin-reviews&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink],
+  template: &#x60;
+    &lt;div class&#x3D;&quot;max-w-7xl mx-auto py-8 px-4&quot;&gt;
+      &lt;!-- Header --&gt;
+      &lt;div class&#x3D;&quot;mb-6&quot;&gt;
+        &lt;button
+          routerLink&#x3D;&quot;/admin&quot;
+          class&#x3D;&quot;inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4&quot;
+        &gt;
+          &lt;svg class&#x3D;&quot;w-4 h-4&quot; fill&#x3D;&quot;none&quot; stroke&#x3D;&quot;currentColor&quot; viewBox&#x3D;&quot;0 0 24 24&quot;&gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M10 19l-7-7m0 0l7-7m-7 7h18&quot;
+            /&gt;
+          &lt;/svg&gt;
+          Volver al Dashboard
+        &lt;/button&gt;
+
+        &lt;div class&#x3D;&quot;flex items-center justify-between&quot;&gt;
+          &lt;div&gt;
+            &lt;h1 class&#x3D;&quot;text-3xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+              Moderación de Reseñas
+            &lt;/h1&gt;
+            &lt;p class&#x3D;&quot;text-text-secondary dark:text-text-secondary mt-1&quot;&gt;
+              Gestiona reseñas reportadas por usuarios
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;text-right&quot;&gt;
+            &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;Reseñas pendientes&lt;/p&gt;
+            &lt;p class&#x3D;&quot;text-2xl font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+              {{ pendingCount() }}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Filters --&gt;
+      &lt;div
+        class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm&quot;
+      &gt;
+        &lt;h3 class&#x3D;&quot;text-sm font-semibold text-text-primary dark:text-text-secondary mb-3&quot;&gt;
+          Filtros
+        &lt;/h3&gt;
+        &lt;div class&#x3D;&quot;grid grid-cols-1 md:grid-cols-2 gap-4&quot;&gt;
+          &lt;!-- Status Filter --&gt;
+          &lt;div&gt;
+            &lt;label
+              class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;
+            &gt;
+              Estado de Moderación
+            &lt;/label&gt;
+            &lt;select
+              [(ngModel)]&#x3D;&quot;filterStatus&quot;
+              (ngModelChange)&#x3D;&quot;onFilterChange()&quot;
+              class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+            &gt;
+              &lt;option value&#x3D;&quot;&quot;&gt;Todos los estados&lt;/option&gt;
+              &lt;option *ngFor&#x3D;&quot;let status of statusOptions&quot; [value]&#x3D;&quot;status.value&quot;&gt;
+                {{ status.label }}
+              &lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Bulk Actions --&gt;
+          &lt;div *ngIf&#x3D;&quot;selectedReviews().length &gt; 0&quot; class&#x3D;&quot;flex items-end gap-2&quot;&gt;
+            &lt;button
+              (click)&#x3D;&quot;bulkApprove()&quot;
+              class&#x3D;&quot;px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+            &gt;
+              Aprobar Seleccionadas ({{ selectedReviews().length }})
+            &lt;/button&gt;
+            &lt;button
+              (click)&#x3D;&quot;bulkReject()&quot;
+              class&#x3D;&quot;px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+            &gt;
+              Rechazar Seleccionadas ({{ selectedReviews().length }})
+            &lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Loading State --&gt;
+      &lt;div *ngIf&#x3D;&quot;loading()&quot; class&#x3D;&quot;text-center py-12&quot;&gt;
+        &lt;div
+          class&#x3D;&quot;inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent&quot;
+        &gt;&lt;/div&gt;
+        &lt;p class&#x3D;&quot;mt-4 text-text-secondary dark:text-text-muted&quot;&gt;Cargando reseñas...&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Error State --&gt;
+      &lt;div
+        *ngIf&#x3D;&quot;error() &amp;&amp; !loading()&quot;
+        class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center&quot;
+      &gt;
+        &lt;p class&#x3D;&quot;text-error-strong&quot;&gt;{{ error() }}&lt;/p&gt;
+        &lt;button
+          (click)&#x3D;&quot;loadReviews()&quot;
+          class&#x3D;&quot;mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors&quot;
+        &gt;
+          Reintentar
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Reviews List --&gt;
+      &lt;div *ngIf&#x3D;&quot;!loading() &amp;&amp; !error()&quot; class&#x3D;&quot;space-y-4&quot;&gt;
+        &lt;!-- Empty State --&gt;
+        &lt;div
+          *ngIf&#x3D;&quot;filteredReviews().length &#x3D;&#x3D;&#x3D; 0&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center&quot;
+        &gt;
+          &lt;svg
+            class&#x3D;&quot;mx-auto h-12 w-12 text-text-muted&quot;
+            fill&#x3D;&quot;none&quot;
+            stroke&#x3D;&quot;currentColor&quot;
+            viewBox&#x3D;&quot;0 0 24 24&quot;
+          &gt;
+            &lt;path
+              stroke-linecap&#x3D;&quot;round&quot;
+              stroke-linejoin&#x3D;&quot;round&quot;
+              stroke-width&#x3D;&quot;2&quot;
+              d&#x3D;&quot;M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z&quot;
+            /&gt;
+          &lt;/svg&gt;
+          &lt;h3 class&#x3D;&quot;mt-2 text-sm font-medium text-text-primary dark:text-text-inverse&quot;&gt;
+            No hay reseñas reportadas
+          &lt;/h3&gt;
+          &lt;p class&#x3D;&quot;mt-1 text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+            Todas las reseñas están en buen estado.
+          &lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Review Cards --&gt;
+        &lt;div
+          *ngFor&#x3D;&quot;let review of filteredReviews()&quot;
+          class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow&quot;
+        &gt;
+          &lt;!-- Header with Checkbox --&gt;
+          &lt;div class&#x3D;&quot;flex items-start gap-4&quot;&gt;
+            &lt;input
+              type&#x3D;&quot;checkbox&quot;
+              [checked]&#x3D;&quot;isSelected(review.id)&quot;
+              (change)&#x3D;&quot;toggleSelection(review.id)&quot;
+              class&#x3D;&quot;mt-1 h-4 w-4 rounded border-border-muted&quot;
+            /&gt;
+
+            &lt;div class&#x3D;&quot;flex-1&quot;&gt;
+              &lt;!-- Review Info --&gt;
+              &lt;div class&#x3D;&quot;flex items-start justify-between mb-4&quot;&gt;
+                &lt;div class&#x3D;&quot;flex items-center gap-3&quot;&gt;
+                  &lt;img
+                    [src]&#x3D;&quot;review.reviewer_avatar || &#x27;/assets/avatar-placeholder.png&#x27;&quot;
+                    [alt]&#x3D;&quot;review.reviewer_name&quot;
+                    class&#x3D;&quot;h-10 w-10 rounded-full object-cover&quot;
+                  /&gt;
+                  &lt;div&gt;
+                    &lt;p class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                      {{ review.reviewer_name }}
+                    &lt;/p&gt;
+                    &lt;p class&#x3D;&quot;text-xs text-text-secondary dark:text-text-muted&quot;&gt;
+                      Reseña para: {{ review.reviewee_name }}
+                    &lt;/p&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Moderation Status Badge --&gt;
+                &lt;span
+                  [class]&#x3D;&quot;getModerationBadgeClass(review.moderation_status)&quot;
+                  class&#x3D;&quot;inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold&quot;
+                &gt;
+                  {{ getModerationStatusLabel(review.moderation_status) }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Rating --&gt;
+              &lt;div class&#x3D;&quot;flex items-center gap-2 mb-2&quot;&gt;
+                &lt;span class&#x3D;&quot;text-lg font-bold text-text-primary dark:text-text-inverse&quot;&gt;
+                  {{ getOverallRating(review).toFixed(1) }}
+                &lt;/span&gt;
+                &lt;div class&#x3D;&quot;flex gap-0.5&quot;&gt;
+                  &lt;svg
+                    *ngFor&#x3D;&quot;let _ of [1, 2, 3, 4, 5]&quot;
+                    class&#x3D;&quot;h-4 w-4 text-warning-400&quot;
+                    fill&#x3D;&quot;currentColor&quot;
+                    viewBox&#x3D;&quot;0 0 20 20&quot;
+                  &gt;
+                    &lt;path
+                      d&#x3D;&quot;M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z&quot;
+                    /&gt;
+                  &lt;/svg&gt;
+                &lt;/div&gt;
+                &lt;span class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted&quot;&gt;
+                  {{ review.created_at | date: &#x27;short&#x27; }}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Category Ratings --&gt;
+              &lt;div class&#x3D;&quot;grid grid-cols-3 gap-2 mb-4&quot;&gt;
+                &lt;div
+                  *ngFor&#x3D;&quot;let category of getCategoryRatings(review)&quot;
+                  class&#x3D;&quot;flex items-center justify-between text-xs&quot;
+                &gt;
+                  &lt;span class&#x3D;&quot;text-text-secondary dark:text-text-muted&quot;
+                    &gt;{{ category.label }}:&lt;/span
+                  &gt;
+                  &lt;span class&#x3D;&quot;font-semibold text-text-primary dark:text-text-inverse&quot;&gt;
+                    {{ category.value.toFixed(1) }}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Public Comment --&gt;
+              &lt;div class&#x3D;&quot;bg-surface-base dark:bg-surface-base rounded-lg p-3 mb-4&quot;&gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-text-primary dark:text-text-secondary mb-1&quot;&gt;
+                  Comentario Público:
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-text-primary dark:text-text-inverse&quot;&gt;
+                  {{ review.comment_public || &#x27;(Sin comentario público)&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Flag Reason --&gt;
+              &lt;div class&#x3D;&quot;bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4&quot;&gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-error-strong mb-1&quot;&gt;Motivo del Reporte:&lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-error-strong&quot;&gt;{{ review.flag_reason }}&lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-xs text-error-text mt-1&quot;&gt;
+                  Reportado por: {{ review.flagged_by_name || &#x27;Usuario&#x27; }} el
+                  {{ review.flagged_at | date: &#x27;short&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Moderation Notes (if moderated) --&gt;
+              &lt;div
+                *ngIf&#x3D;&quot;review.moderation_notes&quot;
+                class&#x3D;&quot;bg-cta-default/10 dark:bg-cta-default/10 rounded-lg p-3 mb-4&quot;
+              &gt;
+                &lt;p class&#x3D;&quot;text-sm font-medium text-cta-default dark:text-cta-default mb-1&quot;&gt;
+                  Notas de Moderación:
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-sm text-cta-default dark:text-cta-default&quot;&gt;
+                  {{ review.moderation_notes }}
+                &lt;/p&gt;
+                &lt;p class&#x3D;&quot;text-xs text-cta-default dark:text-cta-default mt-1&quot;&gt;
+                  Moderado por: {{ review.moderated_by_name || &#x27;Usuario&#x27; }} el
+                  {{ review.moderated_at | date: &#x27;short&#x27; }}
+                &lt;/p&gt;
+              &lt;/div&gt;
+
+              &lt;!-- Action Buttons --&gt;
+              &lt;div *ngIf&#x3D;&quot;review.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;&quot; class&#x3D;&quot;flex gap-2&quot;&gt;
+                &lt;button
+                  (click)&#x3D;&quot;openModerationModal(review, &#x27;approved&#x27;)&quot;
+                  class&#x3D;&quot;flex-1 px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium&quot;
+                &gt;
+                  ✓ Aprobar
+                &lt;/button&gt;
+                &lt;button
+                  (click)&#x3D;&quot;openModerationModal(review, &#x27;rejected&#x27;)&quot;
+                  class&#x3D;&quot;flex-1 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium&quot;
+                &gt;
+                  ✗ Rechazar
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Moderation Modal --&gt;
+    &lt;div
+      *ngIf&#x3D;&quot;showModal()&quot;
+      class&#x3D;&quot;fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay bg-opacity-50 p-4&quot;
+      (click)&#x3D;&quot;closeModal()&quot;
+    &gt;
+      &lt;div
+        class&#x3D;&quot;bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-md w-full p-6&quot;
+        (click)&#x3D;&quot;$event.stopPropagation()&quot;
+      &gt;
+        &lt;h3 class&#x3D;&quot;text-lg font-semibold text-text-primary dark:text-text-inverse mb-4&quot;&gt;
+          {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;Aprobar&#x27; : &#x27;Rechazar&#x27; }} Reseña
+        &lt;/h3&gt;
+
+        &lt;p class&#x3D;&quot;text-sm text-text-secondary dark:text-text-muted mb-4&quot;&gt;
+          ¿Estás seguro de que deseas {{ modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; ? &#x27;aprobar&#x27; : &#x27;rechazar&#x27; }}
+          esta reseña?
+          {{
+            modalAction() &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;
+              ? &#x27;La reseña será ocultada y no será visible públicamente.&#x27;
+              : &#x27;&#x27;
+          }}
+        &lt;/p&gt;
+
+        &lt;!-- Notes Input --&gt;
+        &lt;div class&#x3D;&quot;mb-4&quot;&gt;
+          &lt;label class&#x3D;&quot;block text-sm font-medium text-text-primary dark:text-text-secondary mb-2&quot;&gt;
+            Notas de moderación (opcional):
+          &lt;/label&gt;
+          &lt;textarea
+            [(ngModel)]&#x3D;&quot;moderationNotes&quot;
+            rows&#x3D;&quot;3&quot;
+            class&#x3D;&quot;w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm&quot;
+            placeholder&#x3D;&quot;Agrega notas sobre esta decisión...&quot;
+          &gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Action Buttons --&gt;
+        &lt;div class&#x3D;&quot;flex gap-2&quot;&gt;
+          &lt;button
+            (click)&#x3D;&quot;closeModal()&quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-secondary rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 transition-colors text-sm font-medium&quot;
+          &gt;
+            Cancelar
+          &lt;/button&gt;
+          &lt;button
+            (click)&#x3D;&quot;confirmModeration()&quot;
+            [disabled]&#x3D;&quot;processing()&quot;
+            [class]&#x3D;&quot;
+              modalAction() &#x3D;&#x3D;&#x3D; &#x27;approved&#x27;
+                ? &#x27;bg-success-light hover:bg-success-light&#x27;
+                : &#x27;bg-error-600 hover:bg-error-700&#x27;
+            &quot;
+            class&#x3D;&quot;flex-1 px-4 py-2 text-text-inverse rounded-lg transition-colors text-sm font-medium disabled:opacity-50&quot;
+          &gt;
+            {{ processing() ? &#x27;Procesando...&#x27; : &#x27;Confirmar&#x27; }}
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &#x60;,
+})
+export class AdminReviewsPage implements OnInit {
+  private readonly reviewsService &#x3D; inject(ReviewsService);
+
+  // State
+  readonly reviews &#x3D; signal&lt;Review[]&gt;([]);
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly processing &#x3D; signal(false);
+
+  // Filters
+  filterStatus &#x3D; &#x27;&#x27;;
+
+  // Moderation modal
+  readonly showModal &#x3D; signal(false);
+  readonly selectedReview &#x3D; signal&lt;Review | null&gt;(null);
+  readonly modalAction &#x3D; signal&lt;&#x27;approved&#x27; | &#x27;rejected&#x27;&gt;(&#x27;approved&#x27;);
+  moderationNotes &#x3D; &#x27;&#x27;;
+
+  // Bulk actions
+  readonly selectedReviews &#x3D; signal&lt;string[]&gt;([]);
+
+  // Options
+  readonly statusOptions: ModerationStatusOption[] &#x3D; [
+    { value: &#x27;pending&#x27;, label: &#x27;Pendiente&#x27; },
+    { value: &#x27;approved&#x27;, label: &#x27;Aprobado&#x27; },
+    { value: &#x27;rejected&#x27;, label: &#x27;Rechazado&#x27; },
+  ];
+
+  // Computed
+  readonly filteredReviews &#x3D; computed(() &#x3D;&gt; {
+    const reviews &#x3D; this.reviews();
+    if (!this.filterStatus) return reviews;
+    return reviews.filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; this.filterStatus);
+  });
+
+  readonly pendingCount &#x3D; computed(() &#x3D;&gt; {
+    return this.reviews().filter((r) &#x3D;&gt; r.moderation_status &#x3D;&#x3D;&#x3D; &#x27;pending&#x27;).length;
+  });
+
+  ngOnInit(): void {
+    this.loadReviews();
+  }
+
+  async loadReviews(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const reviews &#x3D; await this.reviewsService.getFlaggedReviews();
+      this.reviews.set(reviews);
+    } catch (err) {
+      this.error.set(&#x27;Error al cargar las reseñas reportadas&#x27;);
+      console.error(err);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  onFilterChange(): void {
+    // Filter is computed automatically
+  }
+
+  openModerationModal(review: Review, action: &#x27;approved&#x27; | &#x27;rejected&#x27;): void {
+    this.selectedReview.set(review);
+    this.modalAction.set(action);
+    this.moderationNotes &#x3D; &#x27;&#x27;;
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+    this.selectedReview.set(null);
+    this.moderationNotes &#x3D; &#x27;&#x27;;
+  }
+
+  async confirmModeration(): Promise&lt;void&gt; {
+    const review &#x3D; this.selectedReview();
+    if (!review) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.moderateReview(
+        review.id,
+        this.modalAction(),
+        this.moderationNotes || undefined,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.closeModal();
+      } else {
+        this.error.set(result.error || &#x27;Error al moderar la reseña&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al moderar la reseña&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  toggleSelection(reviewId: string): void {
+    const selected &#x3D; this.selectedReviews();
+    if (selected.includes(reviewId)) {
+      this.selectedReviews.set(selected.filter((id) &#x3D;&gt; id !&#x3D;&#x3D; reviewId));
+    } else {
+      this.selectedReviews.set([...selected, reviewId]);
+    }
+  }
+
+  isSelected(reviewId: string): boolean {
+    return this.selectedReviews().includes(reviewId);
+  }
+
+  async bulkApprove(): Promise&lt;void&gt; {
+    if (this.selectedReviews().length &#x3D;&#x3D;&#x3D; 0) return;
+
+    if (!confirm(&#x60;¿Aprobar ${this.selectedReviews().length} reseñas seleccionadas?&#x60;)) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.bulkModerateReviews(
+        this.selectedReviews(),
+        &#x27;approved&#x27;,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.selectedReviews.set([]);
+      } else {
+        this.error.set(result.error || &#x27;Error al aprobar las reseñas&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al aprobar las reseñas&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  async bulkReject(): Promise&lt;void&gt; {
+    if (this.selectedReviews().length &#x3D;&#x3D;&#x3D; 0) return;
+
+    if (!confirm(&#x60;¿Rechazar ${this.selectedReviews().length} reseñas seleccionadas?&#x60;)) return;
+
+    this.processing.set(true);
+
+    try {
+      const result &#x3D; await this.reviewsService.bulkModerateReviews(
+        this.selectedReviews(),
+        &#x27;rejected&#x27;,
+      );
+
+      if (result.success) {
+        await this.loadReviews();
+        this.selectedReviews.set([]);
+      } else {
+        this.error.set(result.error || &#x27;Error al rechazar las reseñas&#x27;);
+      }
+    } catch (err) {
+      this.error.set(&#x27;Error al rechazar las reseñas&#x27;);
+      console.error(err);
+    } finally {
+      this.processing.set(false);
+    }
+  }
+
+  getModerationStatusLabel(status: string): string {
+    const labels: Record&lt;string, string&gt; &#x3D; {
+      pending: &#x27;Pendiente&#x27;,
+      approved: &#x27;Aprobado&#x27;,
+      rejected: &#x27;Rechazado&#x27;,
+    };
+    return labels[status] || status;
+  }
+
+  getModerationBadgeClass(status: string): string {
+    const classes: Record&lt;string, string&gt; &#x3D; {
+      pending:
+        &#x27;bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300&#x27;,
+      approved:
+        &#x27;bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light&#x27;,
+      rejected: &#x27;bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300&#x27;,
+    };
+    return classes[status] || &#x27;bg-surface-raised text-text-primary&#x27;;
+  }
+
+  getOverallRating(review: Review): number {
+    return (
+      (review.rating_cleanliness +
+        review.rating_communication +
+        review.rating_accuracy +
+        review.rating_location +
+        review.rating_checkin +
+        review.rating_value) /
+      6
+    );
+  }
+
+  getCategoryRatings(review: Review): Array&lt;{ label: string; value: number }&gt; {
+    return [
+      { label: &#x27;Limpieza&#x27;, value: review.rating_cleanliness },
+      { label: &#x27;Comunicación&#x27;, value: review.rating_communication },
+      { label: &#x27;Precisión&#x27;, value: review.rating_accuracy },
+      { label: &#x27;Ubicación&#x27;, value: review.rating_location },
+      { label: &#x27;Check-in&#x27;, value: review.rating_checkin },
+      { label: &#x27;Valor&#x27;, value: review.rating_value },
+    ];
+  }
+}
+</code></pre>
+    </div>
+
+
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="max-w-7xl mx-auto py-8 px-4">  <!-- Header -->  <div class="mb-6">    <button      routerLink="/admin"      class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4"    >      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">        <path          stroke-linecap="round"          stroke-linejoin="round"          stroke-width="2"          d="M10 19l-7-7m0 0l7-7m-7 7h18"        />      </svg>      Volver al Dashboard    </button>    <div class="flex items-center justify-between">      <div>        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">          Moderación de Reseñas        </h1>        <p class="text-text-secondary dark:text-text-secondary mt-1">          Gestiona reseñas reportadas por usuarios        </p>      </div>      <div class="text-right">        <p class="text-sm text-text-secondary dark:text-text-muted">Reseñas pendientes</p>        <p class="text-2xl font-bold text-text-primary dark:text-text-inverse">          {{ pendingCount() }}        </p>      </div>    </div>  </div>  <!-- Filters -->  <div    class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-4 mb-6 shadow-sm"  >    <h3 class="text-sm font-semibold text-text-primary dark:text-text-secondary mb-3">      Filtros    </h3>    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">      <!-- Status Filter -->      <div>        <label          class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-1"        >          Estado de Moderación        </label>        <select          [(ngModel)]="filterStatus"          (ngModelChange)="onFilterChange()"          class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"        >          <option value="">Todos los estados</option>          <option *ngFor="let status of statusOptions" [value]="status.value">            {{ status.label }}          </option>        </select>      </div>      <!-- Bulk Actions -->      <div *ngIf="selectedReviews().length > 0" class="flex items-end gap-2">        <button          (click)="bulkApprove()"          class="px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium"        >          Aprobar Seleccionadas ({{ selectedReviews().length }})        </button>        <button          (click)="bulkReject()"          class="px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium"        >          Rechazar Seleccionadas ({{ selectedReviews().length }})        </button>      </div>    </div>  </div>  <!-- Loading State -->  <div *ngIf="loading()" class="text-center py-12">    <div      class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"    ></div>    <p class="mt-4 text-text-secondary dark:text-text-muted">Cargando reseñas...</p>  </div>  <!-- Error State -->  <div    *ngIf="error() && !loading()"    class="bg-error-bg dark:bg-error-bg0/15 border border-error-border dark:border-error-400/40 rounded-lg p-6 text-center"  >    <p class="text-error-strong">{{ error() }}</p>    <button      (click)="loadReviews()"      class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors"    >      Reintentar    </button>  </div>  <!-- Reviews List -->  <div *ngIf="!loading() && !error()" class="space-y-4">    <!-- Empty State -->    <div      *ngIf="filteredReviews().length === 0"      class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-12 text-center"    >      <svg        class="mx-auto h-12 w-12 text-text-muted"        fill="none"        stroke="currentColor"        viewBox="0 0 24 24"      >        <path          stroke-linecap="round"          stroke-linejoin="round"          stroke-width="2"          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"        />      </svg>      <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-inverse">        No hay reseñas reportadas      </h3>      <p class="mt-1 text-sm text-text-secondary dark:text-text-muted">        Todas las reseñas están en buen estado.      </p>    </div>    <!-- Review Cards -->    <div      *ngFor="let review of filteredReviews()"      class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm hover:shadow-md transition-shadow"    >      <!-- Header with Checkbox -->      <div class="flex items-start gap-4">        <input          type="checkbox"          [checked]="isSelected(review.id)"          (change)="toggleSelection(review.id)"          class="mt-1 h-4 w-4 rounded border-border-muted"        />        <div class="flex-1">          <!-- Review Info -->          <div class="flex items-start justify-between mb-4">            <div class="flex items-center gap-3">              <img                [src]="review.reviewer_avatar || \'/assets/avatar-placeholder.png\'"                [alt]="review.reviewer_name"                class="h-10 w-10 rounded-full object-cover"              />              <div>                <p class="font-semibold text-text-primary dark:text-text-inverse">                  {{ review.reviewer_name }}                </p>                <p class="text-xs text-text-secondary dark:text-text-muted">                  Reseña para: {{ review.reviewee_name }}                </p>              </div>            </div>            <!-- Moderation Status Badge -->            <span              [class]="getModerationBadgeClass(review.moderation_status)"              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"            >              {{ getModerationStatusLabel(review.moderation_status) }}            </span>          </div>          <!-- Rating -->          <div class="flex items-center gap-2 mb-2">            <span class="text-lg font-bold text-text-primary dark:text-text-inverse">              {{ getOverallRating(review).toFixed(1) }}            </span>            <div class="flex gap-0.5">              <svg                *ngFor="let _ of [1, 2, 3, 4, 5]"                class="h-4 w-4 text-warning-400"                fill="currentColor"                viewBox="0 0 20 20"              >                <path                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"                />              </svg>            </div>            <span class="text-sm text-text-secondary dark:text-text-muted">              {{ review.created_at | date: \'short\' }}            </span>          </div>          <!-- Category Ratings -->          <div class="grid grid-cols-3 gap-2 mb-4">            <div              *ngFor="let category of getCategoryRatings(review)"              class="flex items-center justify-between text-xs"            >              <span class="text-text-secondary dark:text-text-muted"                >{{ category.label }}:</span              >              <span class="font-semibold text-text-primary dark:text-text-inverse">                {{ category.value.toFixed(1) }}              </span>            </div>          </div>          <!-- Public Comment -->          <div class="bg-surface-base dark:bg-surface-base rounded-lg p-3 mb-4">            <p class="text-sm font-medium text-text-primary dark:text-text-secondary mb-1">              Comentario Público:            </p>            <p class="text-sm text-text-primary dark:text-text-inverse">              {{ review.comment_public || \'(Sin comentario público)\' }}            </p>          </div>          <!-- Flag Reason -->          <div class="bg-error-bg dark:bg-error-bg0/10 rounded-lg p-3 mb-4">            <p class="text-sm font-medium text-error-strong mb-1">Motivo del Reporte:</p>            <p class="text-sm text-error-strong">{{ review.flag_reason }}</p>            <p class="text-xs text-error-text mt-1">              Reportado por: {{ review.flagged_by_name || \'Usuario\' }} el              {{ review.flagged_at | date: \'short\' }}            </p>          </div>          <!-- Moderation Notes (if moderated) -->          <div            *ngIf="review.moderation_notes"            class="bg-cta-default/10 dark:bg-cta-default/10 rounded-lg p-3 mb-4"          >            <p class="text-sm font-medium text-cta-default dark:text-cta-default mb-1">              Notas de Moderación:            </p>            <p class="text-sm text-cta-default dark:text-cta-default">              {{ review.moderation_notes }}            </p>            <p class="text-xs text-cta-default dark:text-cta-default mt-1">              Moderado por: {{ review.moderated_by_name || \'Usuario\' }} el              {{ review.moderated_at | date: \'short\' }}            </p>          </div>          <!-- Action Buttons -->          <div *ngIf="review.moderation_status === \'pending\'" class="flex gap-2">            <button              (click)="openModerationModal(review, \'approved\')"              class="flex-1 px-4 py-2 bg-success-light text-text-primary rounded-lg hover:bg-success-light transition-colors text-sm font-medium"            >              ✓ Aprobar            </button>            <button              (click)="openModerationModal(review, \'rejected\')"              class="flex-1 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors text-sm font-medium"            >              ✗ Rechazar            </button>          </div>        </div>      </div>    </div>  </div></div><!-- Moderation Modal --><div  *ngIf="showModal()"  class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay bg-opacity-50 p-4"  (click)="closeModal()">  <div    class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl max-w-md w-full p-6"    (click)="$event.stopPropagation()"  >    <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">      {{ modalAction() === \'approved\' ? \'Aprobar\' : \'Rechazar\' }} Reseña    </h3>    <p class="text-sm text-text-secondary dark:text-text-muted mb-4">      ¿Estás seguro de que deseas {{ modalAction() === \'approved\' ? \'aprobar\' : \'rechazar\' }}      esta reseña?      {{        modalAction() === \'rejected\'          ? \'La reseña será ocultada y no será visible públicamente.\'          : \'\'      }}    </p>    <!-- Notes Input -->    <div class="mb-4">      <label class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2">        Notas de moderación (opcional):      </label>      <textarea        [(ngModel)]="moderationNotes"        rows="3"        class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"        placeholder="Agrega notas sobre esta decisión..."      ></textarea>    </div>    <!-- Action Buttons -->    <div class="flex gap-2">      <button        (click)="closeModal()"        class="flex-1 px-4 py-2 bg-surface-hover dark:bg-surface-base text-text-primary dark:text-text-secondary rounded-lg hover:bg-surface-pressed dark:hover:bg-gray-600 transition-colors text-sm font-medium"      >        Cancelar      </button>      <button        (click)="confirmModeration()"        [disabled]="processing()"        [class]="          modalAction() === \'approved\'            ? \'bg-success-light hover:bg-success-light\'            : \'bg-error-600 hover:bg-error-700\'        "        class="flex-1 px-4 py-2 text-text-inverse rounded-lg transition-colors text-sm font-medium disabled:opacity-50"      >        {{ processing() ? \'Procesando...\' : \'Confirmar\' }}      </button>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'AdminReviewsPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'AdminReviewsPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

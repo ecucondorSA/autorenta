@@ -1,0 +1,3687 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Components</li>
+  <li class="breadcrumb-item"
+  >
+  FgoOverviewPage</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" class="nav-link"
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li class="nav-item">
+            <a href="#templateData" class="nav-link"
+                role="tab" id="templateData-tab" data-bs-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li class="nav-item">
+            <a href="#styleData" class="nav-link"
+                role="tab" id="styleData-tab" data-bs-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li class="nav-item">
+            <a href="#tree" class="nav-link"
+                role="tab" id="tree-tab" data-bs-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/features/admin/fgo/fgo-overview.page.ts</code>
+</p>
+
+
+    <p class="comment">
+        <h3>Description</h3>
+    </p>
+    <p class="comment">
+        <p>Componente de vista general del FGO
+Muestra el estado del fondo, saldos por subfondo y movimientos recientes</p>
+
+    </p>
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                <code>OnInit</code>
+                <code>OnDestroy</code>
+    </p>
+
+
+<section data-compodoc="block-metadata">
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-fgo-overview</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">standalone</td>
+                <td class="col-md-9"><code>true</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">imports</td>
+                <td class="col-md-9">
+                            <code>CommonModule</code>
+                            <code>FormsModule</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./fgo-overview.page.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./fgo-overview.page.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#destroy$" >destroy$</a>
+                            </li>
+                            <li>
+                                <a href="#fgoStatus" >fgoStatus</a>
+                            </li>
+                            <li>
+                                <a href="#formatRatio" >formatRatio</a>
+                            </li>
+                            <li>
+                                <a href="#getMovementTypeName" >getMovementTypeName</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusColor" >getStatusColor</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusIcon" >getStatusIcon</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusMessage" >getStatusMessage</a>
+                            </li>
+                            <li>
+                                <a href="#getSubfundName" >getSubfundName</a>
+                            </li>
+                            <li>
+                                <a href="#loadingMovements" >loadingMovements</a>
+                            </li>
+                            <li>
+                                <a href="#loadingStatus" >loadingStatus</a>
+                            </li>
+                            <li>
+                                <a href="#loadingSubfunds" >loadingSubfunds</a>
+                            </li>
+                            <li>
+                                <a href="#processingSiniestro" >processingSiniestro</a>
+                            </li>
+                            <li>
+                                <a href="#processingTransfer" >processingTransfer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#realtimeChannel" >realtimeChannel</a>
+                            </li>
+                            <li>
+                                <a href="#recentMovements" >recentMovements</a>
+                            </li>
+                            <li>
+                                <a href="#showSiniestroModal" >showSiniestroModal</a>
+                            </li>
+                            <li>
+                                <a href="#showTransferModal" >showTransferModal</a>
+                            </li>
+                            <li>
+                                <a href="#siniestroForm" >siniestroForm</a>
+                            </li>
+                            <li>
+                                <a href="#subfunds" >subfunds</a>
+                            </li>
+                            <li>
+                                <a href="#transferForm" >transferForm</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#closeSiniestroModal" >closeSiniestroModal</a>
+                            </li>
+                            <li>
+                                <a href="#closeTransferModal" >closeTransferModal</a>
+                            </li>
+                            <li>
+                                <a href="#formatDate" >formatDate</a>
+                            </li>
+                            <li>
+                                <a href="#formatUsd" >formatUsd</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusClass" >getStatusClass</a>
+                            </li>
+                            <li>
+                                <a href="#getSubfundColor" >getSubfundColor</a>
+                            </li>
+                            <li>
+                                <a href="#isSiniestroFormValid" >isSiniestroFormValid</a>
+                            </li>
+                            <li>
+                                <a href="#isTransferFormValid" >isTransferFormValid</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadFgoStatus" >loadFgoStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadRecentMovements" >loadRecentMovements</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadSubfunds" >loadSubfunds</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                <a href="#openSiniestroModal" >openSiniestroModal</a>
+                            </li>
+                            <li>
+                                <a href="#openTransferModal" >openTransferModal</a>
+                            </li>
+                            <li>
+                                <a href="#recalculateMetrics" >recalculateMetrics</a>
+                            </li>
+                            <li>
+                                <a href="#refreshData" >refreshData</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setupRealtimeSubscription" >setupRealtimeSubscription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#submitSiniestro" >submitSiniestro</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#submitTransfer" >submitTransfer</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(fgoService: <a href="../injectables/FgoV1_1Service.html" target="_self">FgoV1_1Service</a>, supabaseService: <a href="../injectables/SupabaseClientService.html" target="_self">SupabaseClientService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:52</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>fgoService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FgoV1_1Service.html" target="_self" >FgoV1_1Service</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>supabaseService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SupabaseClientService.html" target="_self" >SupabaseClientService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeSiniestroModal"></a>
+                    <span class="name">
+                        <span ><b>closeSiniestroModal</b></span>
+                        <a href="#closeSiniestroModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeSiniestroModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="388"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:388</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Cierra modal de pago de siniestro</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="closeTransferModal"></a>
+                    <span class="name">
+                        <span ><b>closeTransferModal</b></span>
+                        <a href="#closeTransferModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>closeTransferModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:316</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Cierra modal de transferencia</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatDate"></a>
+                    <span class="name">
+                        <span ><b>formatDate</b></span>
+                        <a href="#formatDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatDate(date: Date | null | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="240"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:240</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Formatea una fecha</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>date</td>
+                                            <td>
+                                                        <code>Date | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatUsd"></a>
+                    <span class="name">
+                        <span ><b>formatUsd</b></span>
+                        <a href="#formatUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>formatUsd(amount: number | null | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="232"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:232</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Formatea un monto en USD</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                        <code>number | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusClass"></a>
+                    <span class="name">
+                        <span ><b>getStatusClass</b></span>
+                        <a href="#getStatusClass"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusClass(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="254"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:254</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene la clase CSS según el estado</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSubfundColor"></a>
+                    <span class="name">
+                        <span ><b>getSubfundColor</b></span>
+                        <a href="#getSubfundColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getSubfundColor(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="266"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:266</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtiene el color del subfondo</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>type</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSiniestroFormValid"></a>
+                    <span class="name">
+                        <span ><b>isSiniestroFormValid</b></span>
+                        <a href="#isSiniestroFormValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSiniestroFormValid()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="395"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:395</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Valida formulario de siniestro</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTransferFormValid"></a>
+                    <span class="name">
+                        <span ><b>isTransferFormValid</b></span>
+                        <a href="#isTransferFormValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTransferFormValid()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="323"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:323</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Valida formulario de transferencia</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadFgoStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadFgoStatus</b></span>
+                        <a href="#loadFgoStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadFgoStatus()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga el estado del FGO (métricas, RC, LR)</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadRecentMovements"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadRecentMovements</b></span>
+                        <a href="#loadRecentMovements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadRecentMovements()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:185</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga los movimientos recientes</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadSubfunds"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadSubfunds</b></span>
+                        <a href="#loadSubfunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadSubfunds()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:147</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Carga los saldos de cada subfondo</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:59</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openSiniestroModal"></a>
+                    <span class="name">
+                        <span ><b>openSiniestroModal</b></span>
+                        <a href="#openSiniestroModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openSiniestroModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="375"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:375</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre modal de pago de siniestro</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="openTransferModal"></a>
+                    <span class="name">
+                        <span ><b>openTransferModal</b></span>
+                        <a href="#openTransferModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>openTransferModal()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="302"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:302</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Abre modal de transferencia</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="recalculateMetrics"></a>
+                    <span class="name">
+                        <span ><b>recalculateMetrics</b></span>
+                        <a href="#recalculateMetrics"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>recalculateMetrics()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Recalcula las métricas manualmente</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refreshData"></a>
+                    <span class="name">
+                        <span ><b>refreshData</b></span>
+                        <a href="#refreshData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>refreshData()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="204"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:204</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Refresca todos los datos</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setupRealtimeSubscription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setupRealtimeSubscription</b></span>
+                        <a href="#setupRealtimeSubscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setupRealtimeSubscription()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:86</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Configura suscripción a cambios en tiempo real</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitSiniestro"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>submitSiniestro</b></span>
+                        <a href="#submitSiniestro"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>submitSiniestro()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="406"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:406</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Envía pago de siniestro</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="submitTransfer"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>submitTransfer</b></span>
+                        <a href="#submitTransfer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>submitTransfer()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="336"
+                                    class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:336</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Envía transferencia entre subfondos</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="destroy$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>destroy$</b></span>
+                        <a href="#destroy$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subject&lt;void&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fgoStatus"></a>
+                    <span class="name">
+                        <span ><b>fgoStatus</b></span>
+                        <a href="#fgoStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FgoStatus | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatRatio"></a>
+                    <span class="name">
+                        <span ><b>formatRatio</b></span>
+                        <a href="#formatRatio"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>formatRatio</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMovementTypeName"></a>
+                    <span class="name">
+                        <span ><b>getMovementTypeName</b></span>
+                        <a href="#getMovementTypeName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>getMovementTypeName</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusColor"></a>
+                    <span class="name">
+                        <span ><b>getStatusColor</b></span>
+                        <a href="#getStatusColor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>getStatusColor</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusIcon"></a>
+                    <span class="name">
+                        <span ><b>getStatusIcon</b></span>
+                        <a href="#getStatusIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>getStatusIcon</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusMessage"></a>
+                    <span class="name">
+                        <span ><b>getStatusMessage</b></span>
+                        <a href="#getStatusMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>getStatusMessage</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSubfundName"></a>
+                    <span class="name">
+                        <span ><b>getSubfundName</b></span>
+                        <a href="#getSubfundName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>getSubfundName</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingMovements"></a>
+                    <span class="name">
+                        <span ><b>loadingMovements</b></span>
+                        <a href="#loadingMovements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingStatus"></a>
+                    <span class="name">
+                        <span ><b>loadingStatus</b></span>
+                        <a href="#loadingStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadingSubfunds"></a>
+                    <span class="name">
+                        <span ><b>loadingSubfunds</b></span>
+                        <a href="#loadingSubfunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>true</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processingSiniestro"></a>
+                    <span class="name">
+                        <span ><b>processingSiniestro</b></span>
+                        <a href="#processingSiniestro"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="283" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:283</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processingTransfer"></a>
+                    <span class="name">
+                        <span ><b>processingTransfer</b></span>
+                        <a href="#processingTransfer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="282" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:282</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="realtimeChannel"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>realtimeChannel</b></span>
+                        <a href="#realtimeChannel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>RealtimeChannel | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="recentMovements"></a>
+                    <span class="name">
+                        <span ><b>recentMovements</b></span>
+                        <a href="#recentMovements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>FgoMovementView[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showSiniestroModal"></a>
+                    <span class="name">
+                        <span ><b>showSiniestroModal</b></span>
+                        <a href="#showSiniestroModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="281" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:281</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="showTransferModal"></a>
+                    <span class="name">
+                        <span ><b>showTransferModal</b></span>
+                        <a href="#showTransferModal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="280" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:280</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="siniestroForm"></a>
+                    <span class="name">
+                        <span ><b>siniestroForm</b></span>
+                        <a href="#siniestroForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    bookingId: &#x27;&#x27;,
+    amount: 0,
+    description: &#x27;&#x27;,
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="293" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:293</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subfunds"></a>
+                    <span class="name">
+                        <span ><b>subfunds</b></span>
+                        <a href="#subfunds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/SubfundBalance.html" target="_self" >SubfundBalance[]</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[]</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="transferForm"></a>
+                    <span class="name">
+                        <span ><b>transferForm</b></span>
+                        <a href="#transferForm"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    fromSubfund: &#x27;&#x27;,
+    toSubfund: &#x27;&#x27;,
+    amount: 0,
+    reason: &#x27;&#x27;,
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="286" class="link-to-prism">src/app/features/admin/fgo/fgo-overview.page.ts:286</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnInit, OnDestroy } from &#x27;@angular/core&#x27;;
+import { CommonModule } from &#x27;@angular/common&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { Subject, takeUntil, interval, firstValueFrom } from &#x27;rxjs&#x27;;
+import { RealtimeChannel } from &#x27;@supabase/supabase-js&#x27;;
+import { FgoV1_1Service } from &#x27;../../../core/services/fgo-v1-1.service&#x27;;
+import { SupabaseClientService } from &#x27;../../../core/services/supabase-client.service&#x27;;
+import {
+  FgoStatus,
+  SubfundBalance,
+  FgoMovementView,
+  getStatusIcon,
+  getStatusMessage,
+  getStatusColor,
+  getSubfundName,
+  getMovementTypeName,
+  formatRatio,
+} from &#x27;../../../core/models/fgo.model&#x27;;
+import { FgoStatusV1_1 } from &#x27;../../../core/models/fgo-v1-1.model&#x27;;
+
+/**
+ * Componente de vista general del FGO
+ * Muestra el estado del fondo, saldos por subfondo y movimientos recientes
+ */
+@Component({
+  selector: &#x27;app-fgo-overview&#x27;,
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: &#x27;./fgo-overview.page.html&#x27;,
+  styleUrls: [&#x27;./fgo-overview.page.css&#x27;],
+})
+export class FgoOverviewPage implements OnInit, OnDestroy {
+  private destroy$ &#x3D; new Subject&lt;void&gt;();
+  private realtimeChannel: RealtimeChannel | null &#x3D; null;
+
+  // Estado del FGO
+  fgoStatus: FgoStatus | null &#x3D; null;
+  subfunds: SubfundBalance[] &#x3D; [];
+  recentMovements: FgoMovementView[] &#x3D; [];
+
+  // Estados de carga
+  loadingStatus &#x3D; true;
+  loadingSubfunds &#x3D; true;
+  loadingMovements &#x3D; true;
+
+  // Helpers para templates
+  getStatusIcon &#x3D; getStatusIcon;
+  getStatusMessage &#x3D; getStatusMessage;
+  getStatusColor &#x3D; getStatusColor;
+  getSubfundName &#x3D; getSubfundName;
+  getMovementTypeName &#x3D; getMovementTypeName;
+  formatRatio &#x3D; formatRatio;
+
+  constructor(
+    private readonly fgoService: FgoV1_1Service,
+    private readonly supabaseService: SupabaseClientService,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadFgoStatus();
+    this.loadSubfunds();
+    this.loadRecentMovements();
+    this.setupRealtimeSubscription();
+
+    // Fallback: Actualizar cada 30 segundos por si falla realtime
+    interval(30000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() &#x3D;&gt; {
+        this.refreshData();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    // Cleanup realtime subscription
+    if (this.realtimeChannel) {
+      this.supabaseService.getClient().removeChannel(this.realtimeChannel);
+    }
+  }
+
+  /**
+   * Configura suscripción a cambios en tiempo real
+   */
+  private setupRealtimeSubscription(): void {
+    const supabase &#x3D; this.supabaseService.getClient();
+
+    // Suscribirse a cambios en fgo_movements
+    this.realtimeChannel &#x3D; supabase
+      .channel(&#x27;fgo-movements-changes&#x27;)
+      .on(
+        &#x27;postgres_changes&#x27;,
+        {
+          event: &#x27;*&#x27;, // INSERT, UPDATE, DELETE
+          schema: &#x27;public&#x27;,
+          table: &#x27;fgo_movements&#x27;,
+        },
+        (_payload) &#x3D;&gt; {
+          // Recargar todos los datos cuando hay un cambio
+          this.refreshData();
+        },
+      )
+      .on(
+        &#x27;postgres_changes&#x27;,
+        {
+          event: &#x27;*&#x27;,
+          schema: &#x27;public&#x27;,
+          table: &#x27;fgo_metrics&#x27;,
+        },
+        (_payload) &#x3D;&gt; {
+          // Recargar estado cuando cambian las métricas
+          this.loadFgoStatus();
+        },
+      )
+      .subscribe((status) &#x3D;&gt; {
+        if (status &#x3D;&#x3D;&#x3D; &#x27;SUBSCRIBED&#x27;) {
+          // Placeholder for any logic to run on successful subscription
+        } else if (status &#x3D;&#x3D;&#x3D; &#x27;CHANNEL_ERROR&#x27;) {
+          // Placeholder for handling channel errors, e.g., by logging
+        }
+      });
+  }
+
+  /**
+   * Carga el estado del FGO (métricas, RC, LR)
+   */
+  private loadFgoStatus(): void {
+    this.loadingStatus &#x3D; true;
+    this.fgoService
+      .getStatusV1_1()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (status: FgoStatusV1_1 | null) &#x3D;&gt; {
+          this.fgoStatus &#x3D; status;
+          this.loadingStatus &#x3D; false;
+        },
+        error: (_error) &#x3D;&gt; {
+          this.loadingStatus &#x3D; false;
+        },
+      });
+  }
+
+  /**
+   * Carga los saldos de cada subfondo
+   */
+  private loadSubfunds(): void {
+    this.loadingSubfunds &#x3D; true;
+    if (this.fgoStatus) {
+      this.subfunds &#x3D; [
+        {
+          type: &#x27;liquidity&#x27;,
+          balanceCents: this.fgoStatus.liquidityBalance * 100,
+          balanceUsd: this.fgoStatus.liquidityBalance,
+          percentage: (this.fgoStatus.liquidityBalance / this.fgoStatus.totalBalance) * 100,
+          description: &#x27;Liquidez&#x27;,
+          purpose: &#x27;Fondos disponibles para pagos inmediatos&#x27;,
+        },
+        {
+          type: &#x27;capitalization&#x27;,
+          balanceCents: this.fgoStatus.capitalizationBalance * 100,
+          balanceUsd: this.fgoStatus.capitalizationBalance,
+          percentage: (this.fgoStatus.capitalizationBalance / this.fgoStatus.totalBalance) * 100,
+          description: &#x27;Capitalización&#x27;,
+          purpose: &#x27;Fondos acumulados para crecimiento&#x27;,
+        },
+        {
+          type: &#x27;profitability&#x27;,
+          balanceCents: this.fgoStatus.profitabilityBalance * 100,
+          balanceUsd: this.fgoStatus.profitabilityBalance,
+          percentage: (this.fgoStatus.profitabilityBalance / this.fgoStatus.totalBalance) * 100,
+          description: &#x27;Rentabilidad&#x27;,
+          purpose: &#x27;Fondos para generar intereses&#x27;,
+        },
+      ];
+      this.loadingSubfunds &#x3D; false;
+    } else {
+      this.loadingSubfunds &#x3D; false;
+    }
+  }
+
+  /**
+   * Carga los movimientos recientes
+   */
+  private loadRecentMovements(): void {
+    this.loadingMovements &#x3D; true;
+    this.fgoService
+      .getMovements(10, 0)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (movements: FgoMovementView[]) &#x3D;&gt; {
+          this.recentMovements &#x3D; movements;
+          this.loadingMovements &#x3D; false;
+        },
+        error: (_error: unknown) &#x3D;&gt; {
+          this.loadingMovements &#x3D; false;
+        },
+      });
+  }
+
+  /**
+   * Refresca todos los datos
+   */
+  refreshData(): void {
+    this.loadFgoStatus();
+    this.loadSubfunds();
+    this.loadRecentMovements();
+  }
+
+  /**
+   * Recalcula las métricas manualmente
+   */
+  recalculateMetrics(): void {
+    this.fgoService
+      .recalculateMetrics()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (result: { ok: boolean; error?: string } | null) &#x3D;&gt; {
+          if (result?.ok) {
+            this.refreshData();
+          }
+        },
+        error: (error: unknown) &#x3D;&gt; {
+          console.error(&#x27;Error recalculating metrics:&#x27;, error);
+        },
+      });
+  }
+
+  /**
+   * Formatea un monto en USD
+   */
+  formatUsd(amount: number | null | undefined): string {
+    if (amount &#x3D;&#x3D;&#x3D; null || amount &#x3D;&#x3D;&#x3D; undefined) return &#x27;USD 0.00&#x27;;
+    return &#x60;USD ${amount.toFixed(2)}&#x60;;
+  }
+
+  /**
+   * Formatea una fecha
+   */
+  formatDate(date: Date | null | undefined): string {
+    if (!date) return &#x27;N/A&#x27;;
+    return new Date(date).toLocaleDateString(&#x27;es-AR&#x27;, {
+      day: &#x27;2-digit&#x27;,
+      month: &#x27;2-digit&#x27;,
+      year: &#x27;numeric&#x27;,
+      hour: &#x27;2-digit&#x27;,
+      minute: &#x27;2-digit&#x27;,
+    });
+  }
+
+  /**
+   * Obtiene la clase CSS según el estado
+   */
+  getStatusClass(status: string): string {
+    const classes: Record&lt;string, string&gt; &#x3D; {
+      healthy: &#x27;status-healthy&#x27;,
+      warning: &#x27;status-warning&#x27;,
+      critical: &#x27;status-critical&#x27;,
+    };
+    return classes[status] || &#x27;status-unknown&#x27;;
+  }
+
+  /**
+   * Obtiene el color del subfondo
+   */
+  getSubfundColor(type: string): string {
+    const colors: Record&lt;string, string&gt; &#x3D; {
+      liquidity: &#x27;#3b82f6&#x27;,
+      capitalization: &#x27;#10b981&#x27;,
+      profitability: &#x27;#f59e0b&#x27;,
+    };
+    return colors[type] || &#x27;#6b7280&#x27;;
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+  // ACCIONES DE ADMINISTRADOR
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  // Estados de modales
+  showTransferModal &#x3D; false;
+  showSiniestroModal &#x3D; false;
+  processingTransfer &#x3D; false;
+  processingSiniestro &#x3D; false;
+
+  // Formularios
+  transferForm &#x3D; {
+    fromSubfund: &#x27;&#x27;,
+    toSubfund: &#x27;&#x27;,
+    amount: 0,
+    reason: &#x27;&#x27;,
+  };
+
+  siniestroForm &#x3D; {
+    bookingId: &#x27;&#x27;,
+    amount: 0,
+    description: &#x27;&#x27;,
+  };
+
+  /**
+   * Abre modal de transferencia
+   */
+  openTransferModal(): void {
+    this.showTransferModal &#x3D; true;
+    // Reset form
+    this.transferForm &#x3D; {
+      fromSubfund: &#x27;&#x27;,
+      toSubfund: &#x27;&#x27;,
+      amount: 0,
+      reason: &#x27;&#x27;,
+    };
+  }
+
+  /**
+   * Cierra modal de transferencia
+   */
+  closeTransferModal(): void {
+    this.showTransferModal &#x3D; false;
+  }
+
+  /**
+   * Valida formulario de transferencia
+   */
+  isTransferFormValid(): boolean {
+    return (
+      !!this.transferForm.fromSubfund &amp;&amp;
+      !!this.transferForm.toSubfund &amp;&amp;
+      this.transferForm.fromSubfund !&#x3D;&#x3D; this.transferForm.toSubfund &amp;&amp;
+      this.transferForm.amount &gt; 0 &amp;&amp;
+      !!this.transferForm.reason.trim()
+    );
+  }
+
+  /**
+   * Envía transferencia entre subfondos
+   */
+  async submitTransfer(): Promise&lt;void&gt; {
+    if (!this.isTransferFormValid()) return;
+
+    this.processingTransfer &#x3D; true;
+
+    try {
+      const adminId &#x3D; await this.fgoService.getCurrentUserId();
+      if (!adminId) {
+        alert(&#x27;Error: Usuario no autenticado&#x27;);
+        return;
+      }
+
+      const result &#x3D; await firstValueFrom(
+        this.fgoService.transferBetweenSubfunds({
+          fromSubfund: this.transferForm.fromSubfund,
+          toSubfund: this.transferForm.toSubfund,
+          amountCents: Math.round(this.transferForm.amount * 100),
+          reason: this.transferForm.reason,
+          adminId,
+        }),
+      );
+
+      if (result?.ok) {
+        alert(&#x60;✅ Transferencia exitosa!\nReferencia: ${result.ref || &#x27;N/A&#x27;}&#x60;);
+        this.closeTransferModal();
+        this.refreshData();
+      } else {
+        alert(&#x60;❌ Error: ${result?.error || &#x27;Transferencia fallida&#x27;}&#x60;);
+      }
+    } catch (error: unknown) {
+      alert(&#x60;❌ Error: ${error instanceof Error ? error.message : &#x27;Error desconocido&#x27;}&#x60;);
+    } finally {
+      this.processingTransfer &#x3D; false;
+    }
+  }
+
+  /**
+   * Abre modal de pago de siniestro
+   */
+  openSiniestroModal(): void {
+    this.showSiniestroModal &#x3D; true;
+    // Reset form
+    this.siniestroForm &#x3D; {
+      bookingId: &#x27;&#x27;,
+      amount: 0,
+      description: &#x27;&#x27;,
+    };
+  }
+
+  /**
+   * Cierra modal de pago de siniestro
+   */
+  closeSiniestroModal(): void {
+    this.showSiniestroModal &#x3D; false;
+  }
+
+  /**
+   * Valida formulario de siniestro
+   */
+  isSiniestroFormValid(): boolean {
+    return (
+      !!this.siniestroForm.bookingId.trim() &amp;&amp;
+      this.siniestroForm.amount &gt; 0 &amp;&amp;
+      !!this.siniestroForm.description.trim()
+    );
+  }
+
+  /**
+   * Envía pago de siniestro
+   */
+  async submitSiniestro(): Promise&lt;void&gt; {
+    if (!this.isSiniestroFormValid()) return;
+
+    const confirmed &#x3D; confirm(
+      &#x60;⚠️ ¿Confirmas el pago de ${this.formatUsd(this.siniestroForm.amount)} para el siniestro?\n\nEsto debitará el subfondo de Liquidez.&#x60;,
+    );
+
+    if (!confirmed) return;
+
+    this.processingSiniestro &#x3D; true;
+
+    try {
+      const result &#x3D; await firstValueFrom(
+        this.fgoService.paySiniestro({
+          bookingId: this.siniestroForm.bookingId,
+          amountCents: Math.round(this.siniestroForm.amount * 100),
+          description: this.siniestroForm.description,
+        }),
+      );
+
+      if (result?.ok) {
+        alert(&#x60;✅ Siniestro pagado exitosamente!\nReferencia: ${result.ref || &#x27;N/A&#x27;}&#x60;);
+        this.closeSiniestroModal();
+        this.refreshData();
+      } else {
+        alert(&#x60;❌ Error: ${result?.error || &#x27;Pago fallido&#x27;}&#x60;);
+      }
+    } catch (error: unknown) {
+      alert(&#x60;❌ Error: ${error instanceof Error ? error.message : &#x27;Error desconocido&#x27;}&#x60;);
+    } finally {
+      this.processingSiniestro &#x3D; false;
+    }
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;fgo-overview-container&quot;&gt;
+  &lt;!-- Header --&gt;
+  &lt;div class&#x3D;&quot;page-header&quot;&gt;
+    &lt;h1&gt;Fondo de Garantía Operativa (FGO)&lt;/h1&gt;
+    &lt;div class&#x3D;&quot;header-actions&quot;&gt;
+      &lt;button class&#x3D;&quot;btn-action btn-transfer&quot; (click)&#x3D;&quot;openTransferModal()&quot;&gt;
+        &lt;span class&#x3D;&quot;icon&quot;&gt;↔️&lt;/span&gt;
+        Transferir Subfondos
+      &lt;/button&gt;
+      &lt;button class&#x3D;&quot;btn-action btn-siniestro&quot; (click)&#x3D;&quot;openSiniestroModal()&quot;&gt;
+        &lt;span class&#x3D;&quot;icon&quot;&gt;💸&lt;/span&gt;
+        Pagar Siniestro
+      &lt;/button&gt;
+      &lt;button class&#x3D;&quot;btn-refresh&quot; (click)&#x3D;&quot;refreshData()&quot; [disabled]&#x3D;&quot;loadingStatus&quot;&gt;
+        &lt;span class&#x3D;&quot;icon&quot;&gt;🔄&lt;/span&gt;
+        Actualizar
+      &lt;/button&gt;
+      &lt;button class&#x3D;&quot;btn-recalculate&quot; (click)&#x3D;&quot;recalculateMetrics()&quot; [disabled]&#x3D;&quot;loadingStatus&quot;&gt;
+        &lt;span class&#x3D;&quot;icon&quot;&gt;🧮&lt;/span&gt;
+        Recalcular Métricas
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Estado General del FGO --&gt;
+  &lt;section class&#x3D;&quot;fgo-status-section&quot;&gt;
+    &lt;h2&gt;Estado General&lt;/h2&gt;
+
+    &lt;div *ngIf&#x3D;&quot;loadingStatus&quot; class&#x3D;&quot;loading-state&quot;&gt;
+      &lt;div class&#x3D;&quot;spinner&quot;&gt;&lt;/div&gt;
+      &lt;p&gt;Cargando estado del FGO...&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;!loadingStatus &amp;&amp; fgoStatus&quot; class&#x3D;&quot;status-grid&quot;&gt;
+      &lt;!-- Balance Total --&gt;
+      &lt;div class&#x3D;&quot;status-card card-primary&quot;&gt;
+        &lt;div class&#x3D;&quot;card-header&quot;&gt;
+          &lt;h3&gt;Balance Total&lt;/h3&gt;
+          &lt;span class&#x3D;&quot;icon&quot;&gt;💰&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;card-body&quot;&gt;
+          &lt;div class&#x3D;&quot;main-value&quot;&gt;{{ formatUsd(fgoStatus.totalBalance) }}&lt;/div&gt;
+          &lt;div class&#x3D;&quot;card-meta&quot;&gt;
+            &lt;div class&#x3D;&quot;meta-item&quot;&gt;
+              &lt;span class&#x3D;&quot;label&quot;&gt;Meta:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;value&quot;&gt;{{ formatUsd(fgoStatus.targetBalance) }}&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Ratio de Cobertura (RC) --&gt;
+      &lt;div class&#x3D;&quot;status-card&quot; [ngClass]&#x3D;&quot;getStatusClass(fgoStatus.status)&quot;&gt;
+        &lt;div class&#x3D;&quot;card-header&quot;&gt;
+          &lt;h3&gt;Cobertura (RC)&lt;/h3&gt;
+          &lt;span class&#x3D;&quot;status-icon&quot;&gt;{{ getStatusIcon(fgoStatus.status) }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;card-body&quot;&gt;
+          &lt;div class&#x3D;&quot;main-value&quot;&gt;{{ formatRatio(fgoStatus.coverageRatio) }}&lt;/div&gt;
+          &lt;div class&#x3D;&quot;status-label&quot;&gt;{{ getStatusMessage(fgoStatus.status) }}&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Loss Ratio (LR) --&gt;
+      &lt;div class&#x3D;&quot;status-card&quot;&gt;
+        &lt;div class&#x3D;&quot;card-header&quot;&gt;
+          &lt;h3&gt;Loss Ratio (LR)&lt;/h3&gt;
+          &lt;span class&#x3D;&quot;icon&quot;&gt;📊&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;card-body&quot;&gt;
+          &lt;div class&#x3D;&quot;main-value&quot;&gt;{{ formatRatio(fgoStatus.lossRatio) }}&lt;/div&gt;
+          &lt;div class&#x3D;&quot;card-meta&quot;&gt;
+            &lt;div class&#x3D;&quot;meta-item&quot;&gt;
+              &lt;span class&#x3D;&quot;label&quot;&gt;Siniestros pagados:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;value&quot;&gt;{{ formatUsd(fgoStatus.totalSiniestrosPaid) }}&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Alpha Percentage --&gt;
+      &lt;div class&#x3D;&quot;status-card&quot;&gt;
+        &lt;div class&#x3D;&quot;card-header&quot;&gt;
+          &lt;h3&gt;Parámetro Alpha (α)&lt;/h3&gt;
+          &lt;span class&#x3D;&quot;icon&quot;&gt;⚙️&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;card-body&quot;&gt;
+          &lt;div class&#x3D;&quot;main-value&quot;&gt;{{ fgoStatus.alphaPercentage }}%&lt;/div&gt;
+          &lt;div class&#x3D;&quot;card-meta&quot;&gt;
+            &lt;div class&#x3D;&quot;meta-item&quot;&gt;
+              &lt;span class&#x3D;&quot;label&quot;&gt;Total aportes:&lt;/span&gt;
+              &lt;span class&#x3D;&quot;value&quot;&gt;{{ formatUsd(fgoStatus.totalContributions) }}&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Subfondos --&gt;
+  &lt;section class&#x3D;&quot;subfunds-section&quot;&gt;
+    &lt;h2&gt;Distribución por Subfondo&lt;/h2&gt;
+
+    &lt;div *ngIf&#x3D;&quot;loadingSubfunds&quot; class&#x3D;&quot;loading-state&quot;&gt;
+      &lt;div class&#x3D;&quot;spinner&quot;&gt;&lt;/div&gt;
+      &lt;p&gt;Cargando subfondos...&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;!loadingSubfunds &amp;&amp; subfunds.length &gt; 0&quot; class&#x3D;&quot;subfunds-grid&quot;&gt;
+      &lt;div *ngFor&#x3D;&quot;let subfund of subfunds&quot; class&#x3D;&quot;subfund-card&quot;&gt;
+        &lt;div class&#x3D;&quot;subfund-header&quot;&gt;
+          &lt;h3&gt;{{ getSubfundName(subfund.type) }}&lt;/h3&gt;
+          &lt;div class&#x3D;&quot;subfund-percentage&quot; [style.color]&#x3D;&quot;getSubfundColor(subfund.type)&quot;&gt;
+            {{ subfund.percentage.toFixed(1) }}%
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;subfund-body&quot;&gt;
+          &lt;div class&#x3D;&quot;subfund-balance&quot;&gt;{{ formatUsd(subfund.balanceUsd) }}&lt;/div&gt;
+          &lt;div class&#x3D;&quot;subfund-description&quot;&gt;{{ subfund.description || subfund.purpose }}&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class&#x3D;&quot;subfund-progress&quot;&gt;
+          &lt;div
+            class&#x3D;&quot;progress-bar&quot;
+            [style.width.%]&#x3D;&quot;subfund.percentage&quot;
+            [style.background-color]&#x3D;&quot;getSubfundColor(subfund.type)&quot;
+          &gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;!loadingSubfunds &amp;&amp; subfunds.length &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;empty-state&quot;&gt;
+      &lt;p&gt;No se encontraron subfondos&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Movimientos Recientes --&gt;
+  &lt;section class&#x3D;&quot;movements-section&quot;&gt;
+    &lt;div class&#x3D;&quot;section-header&quot;&gt;
+      &lt;h2&gt;Movimientos Recientes&lt;/h2&gt;
+      &lt;div class&#x3D;&quot;section-actions&quot;&gt;
+        &lt;span class&#x3D;&quot;movement-count&quot;&gt;{{ recentMovements.length }} movimientos&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;loadingMovements&quot; class&#x3D;&quot;loading-state&quot;&gt;
+      &lt;div class&#x3D;&quot;spinner&quot;&gt;&lt;/div&gt;
+      &lt;p&gt;Cargando movimientos...&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div
+      *ngIf&#x3D;&quot;!loadingMovements &amp;&amp; recentMovements.length &gt; 0&quot;
+      class&#x3D;&quot;movements-table-container overflow-x-auto&quot;
+    &gt;
+      &lt;table class&#x3D;&quot;movements-table min-w-full&quot;&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            &lt;th&gt;Fecha&lt;/th&gt;
+            &lt;th&gt;Tipo&lt;/th&gt;
+            &lt;th&gt;Subfondo&lt;/th&gt;
+            &lt;th&gt;Monto&lt;/th&gt;
+            &lt;th&gt;Operación&lt;/th&gt;
+            &lt;th&gt;Usuario&lt;/th&gt;
+            &lt;th&gt;Referencia&lt;/th&gt;
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          &lt;tr
+            *ngFor&#x3D;&quot;let movement of recentMovements&quot;
+            [class.movement-credit]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;credit&#x27;&quot;
+            [class.movement-debit]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;debit&#x27;&quot;
+          &gt;
+            &lt;td class&#x3D;&quot;movement-date&quot;&gt;{{ formatDate(movement.timestamp) }}&lt;/td&gt;
+            &lt;td class&#x3D;&quot;movement-type&quot;&gt;{{ getMovementTypeName(movement.movementType) }}&lt;/td&gt;
+            &lt;td class&#x3D;&quot;movement-subfund&quot;&gt;{{ getSubfundName(movement.subfundType) }}&lt;/td&gt;
+            &lt;td
+              class&#x3D;&quot;movement-amount&quot;
+              [class.positive]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;credit&#x27;&quot;
+              [class.negative]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;debit&#x27;&quot;
+            &gt;
+              &lt;span class&#x3D;&quot;operation-sign&quot;&gt;{{ movement.operation &#x3D;&#x3D;&#x3D; &#x27;credit&#x27; ? &#x27;+&#x27; : &#x27;-&#x27; }}&lt;/span&gt;
+              {{ formatUsd(movement.amount) }}
+            &lt;/td&gt;
+            &lt;td class&#x3D;&quot;movement-operation&quot;&gt;
+              &lt;span
+                class&#x3D;&quot;badge&quot;
+                [class.badge-credit]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;credit&#x27;&quot;
+                [class.badge-debit]&#x3D;&quot;movement.operation &#x3D;&#x3D;&#x3D; &#x27;debit&#x27;&quot;
+              &gt;
+                {{ movement.operation &#x3D;&#x3D;&#x3D; &#x27;credit&#x27; ? &#x27;Crédito&#x27; : &#x27;Débito&#x27; }}
+              &lt;/span&gt;
+            &lt;/td&gt;
+            &lt;td class&#x3D;&quot;movement-user&quot;&gt;{{ movement.userName || &#x27;Sistema&#x27; }}&lt;/td&gt;
+            &lt;td class&#x3D;&quot;movement-ref&quot;&gt;
+              &lt;code&gt;{{ movement.reference }}&lt;/code&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+
+    &lt;div *ngIf&#x3D;&quot;!loadingMovements &amp;&amp; recentMovements.length &#x3D;&#x3D;&#x3D; 0&quot; class&#x3D;&quot;empty-state&quot;&gt;
+      &lt;p&gt;No se encontraron movimientos recientes&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Footer Info --&gt;
+  &lt;div class&#x3D;&quot;page-footer&quot;&gt;
+    &lt;div class&#x3D;&quot;footer-info&quot; *ngIf&#x3D;&quot;fgoStatus&quot;&gt;
+      &lt;span class&#x3D;&quot;info-item&quot;&gt;
+        &lt;strong&gt;Última actualización:&lt;/strong&gt; {{ formatDate(fgoStatus.updatedAt) }}
+      &lt;/span&gt;
+      &lt;span class&#x3D;&quot;info-item&quot;&gt;
+        &lt;strong&gt;Métricas calculadas:&lt;/strong&gt; {{ formatDate(fgoStatus.lastCalculatedAt) }}
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Modal: Transferir entre Subfondos --&gt;
+  &lt;div class&#x3D;&quot;modal-overlay&quot; *ngIf&#x3D;&quot;showTransferModal&quot; (click)&#x3D;&quot;closeTransferModal()&quot;&gt;
+    &lt;div class&#x3D;&quot;modal-content&quot; (click)&#x3D;&quot;$event.stopPropagation()&quot;&gt;
+      &lt;div class&#x3D;&quot;modal-header&quot;&gt;
+        &lt;h2&gt;Transferir entre Subfondos&lt;/h2&gt;
+        &lt;button class&#x3D;&quot;btn-close&quot; (click)&#x3D;&quot;closeTransferModal()&quot;&gt;✕&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;modal-body&quot;&gt;
+        &lt;form class&#x3D;&quot;transfer-form&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;fromSubfund&quot;&gt;Desde Subfondo&lt;/label&gt;
+            &lt;select id&#x3D;&quot;fromSubfund&quot; [(ngModel)]&#x3D;&quot;transferForm.fromSubfund&quot; name&#x3D;&quot;fromSubfund&quot;&gt;
+              &lt;option value&#x3D;&quot;&quot;&gt;Seleccionar...&lt;/option&gt;
+              &lt;option value&#x3D;&quot;liquidity&quot;&gt;Liquidez&lt;/option&gt;
+              &lt;option value&#x3D;&quot;capitalization&quot;&gt;Capitalización&lt;/option&gt;
+              &lt;option value&#x3D;&quot;profitability&quot;&gt;Rentabilidad&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;toSubfund&quot;&gt;Hacia Subfondo&lt;/label&gt;
+            &lt;select id&#x3D;&quot;toSubfund&quot; [(ngModel)]&#x3D;&quot;transferForm.toSubfund&quot; name&#x3D;&quot;toSubfund&quot;&gt;
+              &lt;option value&#x3D;&quot;&quot;&gt;Seleccionar...&lt;/option&gt;
+              &lt;option value&#x3D;&quot;liquidity&quot;&gt;Liquidez&lt;/option&gt;
+              &lt;option value&#x3D;&quot;capitalization&quot;&gt;Capitalización&lt;/option&gt;
+              &lt;option value&#x3D;&quot;profitability&quot;&gt;Rentabilidad&lt;/option&gt;
+            &lt;/select&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;amount&quot;&gt;Monto (USD)&lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;number&quot;
+              id&#x3D;&quot;amount&quot;
+              [(ngModel)]&#x3D;&quot;transferForm.amount&quot;
+              name&#x3D;&quot;amount&quot;
+              min&#x3D;&quot;0&quot;
+              step&#x3D;&quot;0.01&quot;
+              placeholder&#x3D;&quot;0.00&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;reason&quot;&gt;Motivo&lt;/label&gt;
+            &lt;textarea
+              id&#x3D;&quot;reason&quot;
+              [(ngModel)]&#x3D;&quot;transferForm.reason&quot;
+              name&#x3D;&quot;reason&quot;
+              rows&#x3D;&quot;3&quot;
+              placeholder&#x3D;&quot;Describe el motivo de la transferencia...&quot;
+            &gt;&lt;/textarea&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;modal-footer&quot;&gt;
+        &lt;button class&#x3D;&quot;btn-secondary&quot; (click)&#x3D;&quot;closeTransferModal()&quot;&gt;Cancelar&lt;/button&gt;
+        &lt;button
+          class&#x3D;&quot;btn-primary&quot;
+          (click)&#x3D;&quot;submitTransfer()&quot;
+          [disabled]&#x3D;&quot;!isTransferFormValid() || processingTransfer&quot;
+        &gt;
+          {{ processingTransfer ? &#x27;Procesando...&#x27; : &#x27;Transferir&#x27; }}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Modal: Pagar Siniestro --&gt;
+  &lt;div class&#x3D;&quot;modal-overlay&quot; *ngIf&#x3D;&quot;showSiniestroModal&quot; (click)&#x3D;&quot;closeSiniestroModal()&quot;&gt;
+    &lt;div class&#x3D;&quot;modal-content&quot; (click)&#x3D;&quot;$event.stopPropagation()&quot;&gt;
+      &lt;div class&#x3D;&quot;modal-header&quot;&gt;
+        &lt;h2&gt;Pagar Siniestro&lt;/h2&gt;
+        &lt;button class&#x3D;&quot;btn-close&quot; (click)&#x3D;&quot;closeSiniestroModal()&quot;&gt;✕&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;modal-body&quot;&gt;
+        &lt;form class&#x3D;&quot;siniestro-form&quot;&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;bookingId&quot;&gt;ID de Reserva&lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;text&quot;
+              id&#x3D;&quot;bookingId&quot;
+              [(ngModel)]&#x3D;&quot;siniestroForm.bookingId&quot;
+              name&#x3D;&quot;bookingId&quot;
+              placeholder&#x3D;&quot;UUID de la reserva&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;siniestroAmount&quot;&gt;Monto (USD)&lt;/label&gt;
+            &lt;input
+              type&#x3D;&quot;number&quot;
+              id&#x3D;&quot;siniestroAmount&quot;
+              [(ngModel)]&#x3D;&quot;siniestroForm.amount&quot;
+              name&#x3D;&quot;siniestroAmount&quot;
+              min&#x3D;&quot;0&quot;
+              step&#x3D;&quot;0.01&quot;
+              placeholder&#x3D;&quot;0.00&quot;
+            /&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;form-group&quot;&gt;
+            &lt;label for&#x3D;&quot;description&quot;&gt;Descripción&lt;/label&gt;
+            &lt;textarea
+              id&#x3D;&quot;description&quot;
+              [(ngModel)]&#x3D;&quot;siniestroForm.description&quot;
+              name&#x3D;&quot;description&quot;
+              rows&#x3D;&quot;4&quot;
+              placeholder&#x3D;&quot;Describe el siniestro (daños, circunstancias, etc.)...&quot;
+            &gt;&lt;/textarea&gt;
+          &lt;/div&gt;
+          &lt;div class&#x3D;&quot;alert-warning&quot;&gt;
+            ⚠️ Esta acción debitará &lt;strong&gt;{{ formatUsd(siniestroForm.amount || 0) }}&lt;/strong&gt; del
+            subfondo de Liquidez.
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+      &lt;div class&#x3D;&quot;modal-footer&quot;&gt;
+        &lt;button class&#x3D;&quot;btn-secondary&quot; (click)&#x3D;&quot;closeSiniestroModal()&quot;&gt;Cancelar&lt;/button&gt;
+        &lt;button
+          class&#x3D;&quot;btn-danger&quot;
+          (click)&#x3D;&quot;submitSiniestro()&quot;
+          [disabled]&#x3D;&quot;!isSiniestroFormValid() || processingSiniestro&quot;
+        &gt;
+          {{ processingSiniestro ? &#x27;Procesando...&#x27; : &#x27;Pagar Siniestro&#x27; }}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="styleData">
+                <p class="comment">
+                    <code>./fgo-overview.page.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">/* FGO Overview Page Styles */
+
+.fgo-overview-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family:
+    -apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, Roboto, &#x27;Helvetica Neue&#x27;, Arial, sans-serif;
+  background: var(--bg-primary, #f8f6f3);
+  min-height: 100vh;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Header
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a1a);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-refresh,
+.btn-recalculate {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-refresh:hover,
+.btn-recalculate:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-refresh:disabled,
+.btn-recalculate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-refresh .icon,
+.btn-recalculate .icon {
+  font-size: 1.125rem;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Sections
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+section {
+  margin-bottom: 3rem;
+}
+
+section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.movement-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Loading State
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Empty State
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.empty-state p {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Status Cards Grid
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.status-card {
+  background: var(--bg-elevated, #ffffff);
+  border: 1px solid var(--border-color, #d9d6d0);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+}
+
+.status-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.card-primary {
+  border-color: var(--accent-primary, #2c4a52);
+  background: var(--accent-primary, #2c4a52);
+  color: white;
+}
+
+.status-healthy {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.status-warning {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.status-critical {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-header h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin: 0;
+}
+
+.card-primary .card-header h3 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-header .icon,
+.card-header .status-icon {
+  font-size: 1.5rem;
+}
+
+.card-body {
+  margin-top: 1rem;
+}
+
+.main-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.status-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-primary .card-meta {
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.meta-item .label {
+  color: #6b7280;
+}
+
+.card-primary .meta-item .label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.meta-item .value {
+  font-weight: 600;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Subfunds Grid
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.subfunds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.subfund-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.subfund-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.subfund-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.subfund-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.subfund-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subfund-body {
+  margin-bottom: 1rem;
+}
+
+.subfund-balance {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.subfund-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.subfund-progress {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  height: 100%;
+  transition: width 0.6s ease;
+  border-radius: 9999px;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Movements Table
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.movements-table-container {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.movements-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.movements-table thead {
+  background: #f9fafb;
+}
+
+.movements-table th {
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.movements-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.15s;
+}
+
+.movements-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.movements-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.movements-table td {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.movement-credit {
+  border-left: 3px solid #10b981;
+}
+
+.movement-debit {
+  border-left: 3px solid #ef4444;
+}
+
+.movement-date {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.movement-type {
+  font-weight: 500;
+}
+
+.movement-amount {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.movement-amount.positive {
+  color: #10b981;
+}
+
+.movement-amount.negative {
+  color: #ef4444;
+}
+
+.operation-sign {
+  margin-right: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.badge-credit {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-debit {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.movement-ref code {
+  padding: 0.25rem 0.5rem;
+  background: #f3f4f6;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: #374151;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Footer
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.page-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.info-item {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.info-item strong {
+  color: #374151;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Responsive
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+@media (max-width: 1024px) {
+  .status-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .subfunds-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .fgo-overview-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-refresh,
+  .btn-recalculate {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .movements-table-container {
+    overflow-x: auto;
+  }
+
+  .movements-table {
+    min-width: 800px;
+  }
+
+  .footer-info {
+    flex-direction: column;
+  }
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Action Buttons
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+}
+
+.btn-transfer {
+  background: var(--accent-primary, #2c4a52);
+}
+
+.btn-transfer:hover {
+  background: #234047;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(44, 74, 82, 0.3);
+}
+
+.btn-siniestro {
+  background: var(--accent-warm, #8b7355);
+}
+
+.btn-siniestro:hover {
+  background: #7a6349;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(139, 115, 85, 0.3);
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Modals
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.btn-close:hover {
+  color: #111827;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Forms
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Buttons
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent-primary, #2c4a52);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #234047;
+}
+
+.btn-primary:disabled {
+  background: var(--text-disabled, #8e8e8e);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--bg-secondary, #edeae3);
+  color: var(--text-primary, #1a1a1a);
+}
+
+.btn-secondary:hover {
+  background: var(--border-color, #d9d6d0);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn-danger:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   Alerts
+   &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; */
+
+.alert-warning {
+  padding: 1rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  color: #92400e;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.alert-warning strong {
+  font-weight: 700;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis-network.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="fgo-overview-container">  <!-- Header -->  <div class="page-header">    <h1>Fondo de Garantía Operativa (FGO)</h1>    <div class="header-actions">      <button class="btn-action btn-transfer" (click)="openTransferModal()">        <span class="icon">↔️</span>        Transferir Subfondos      </button>      <button class="btn-action btn-siniestro" (click)="openSiniestroModal()">        <span class="icon">💸</span>        Pagar Siniestro      </button>      <button class="btn-refresh" (click)="refreshData()" [disabled]="loadingStatus">        <span class="icon">🔄</span>        Actualizar      </button>      <button class="btn-recalculate" (click)="recalculateMetrics()" [disabled]="loadingStatus">        <span class="icon">🧮</span>        Recalcular Métricas      </button>    </div>  </div>  <!-- Estado General del FGO -->  <section class="fgo-status-section">    <h2>Estado General</h2>    <div *ngIf="loadingStatus" class="loading-state">      <div class="spinner"></div>      <p>Cargando estado del FGO...</p>    </div>    <div *ngIf="!loadingStatus && fgoStatus" class="status-grid">      <!-- Balance Total -->      <div class="status-card card-primary">        <div class="card-header">          <h3>Balance Total</h3>          <span class="icon">💰</span>        </div>        <div class="card-body">          <div class="main-value">{{ formatUsd(fgoStatus.totalBalance) }}</div>          <div class="card-meta">            <div class="meta-item">              <span class="label">Meta:</span>              <span class="value">{{ formatUsd(fgoStatus.targetBalance) }}</span>            </div>          </div>        </div>      </div>      <!-- Ratio de Cobertura (RC) -->      <div class="status-card" [ngClass]="getStatusClass(fgoStatus.status)">        <div class="card-header">          <h3>Cobertura (RC)</h3>          <span class="status-icon">{{ getStatusIcon(fgoStatus.status) }}</span>        </div>        <div class="card-body">          <div class="main-value">{{ formatRatio(fgoStatus.coverageRatio) }}</div>          <div class="status-label">{{ getStatusMessage(fgoStatus.status) }}</div>        </div>      </div>      <!-- Loss Ratio (LR) -->      <div class="status-card">        <div class="card-header">          <h3>Loss Ratio (LR)</h3>          <span class="icon">📊</span>        </div>        <div class="card-body">          <div class="main-value">{{ formatRatio(fgoStatus.lossRatio) }}</div>          <div class="card-meta">            <div class="meta-item">              <span class="label">Siniestros pagados:</span>              <span class="value">{{ formatUsd(fgoStatus.totalSiniestrosPaid) }}</span>            </div>          </div>        </div>      </div>      <!-- Alpha Percentage -->      <div class="status-card">        <div class="card-header">          <h3>Parámetro Alpha (α)</h3>          <span class="icon">⚙️</span>        </div>        <div class="card-body">          <div class="main-value">{{ fgoStatus.alphaPercentage }}%</div>          <div class="card-meta">            <div class="meta-item">              <span class="label">Total aportes:</span>              <span class="value">{{ formatUsd(fgoStatus.totalContributions) }}</span>            </div>          </div>        </div>      </div>    </div>  </section>  <!-- Subfondos -->  <section class="subfunds-section">    <h2>Distribución por Subfondo</h2>    <div *ngIf="loadingSubfunds" class="loading-state">      <div class="spinner"></div>      <p>Cargando subfondos...</p>    </div>    <div *ngIf="!loadingSubfunds && subfunds.length > 0" class="subfunds-grid">      <div *ngFor="let subfund of subfunds" class="subfund-card">        <div class="subfund-header">          <h3>{{ getSubfundName(subfund.type) }}</h3>          <div class="subfund-percentage" [style.color]="getSubfundColor(subfund.type)">            {{ subfund.percentage.toFixed(1) }}%          </div>        </div>        <div class="subfund-body">          <div class="subfund-balance">{{ formatUsd(subfund.balanceUsd) }}</div>          <div class="subfund-description">{{ subfund.description || subfund.purpose }}</div>        </div>        <div class="subfund-progress">          <div            class="progress-bar"            [style.width.%]="subfund.percentage"            [style.background-color]="getSubfundColor(subfund.type)"          ></div>        </div>      </div>    </div>    <div *ngIf="!loadingSubfunds && subfunds.length === 0" class="empty-state">      <p>No se encontraron subfondos</p>    </div>  </section>  <!-- Movimientos Recientes -->  <section class="movements-section">    <div class="section-header">      <h2>Movimientos Recientes</h2>      <div class="section-actions">        <span class="movement-count">{{ recentMovements.length }} movimientos</span>      </div>    </div>    <div *ngIf="loadingMovements" class="loading-state">      <div class="spinner"></div>      <p>Cargando movimientos...</p>    </div>    <div      *ngIf="!loadingMovements && recentMovements.length > 0"      class="movements-table-container overflow-x-auto"    >      <table class="movements-table min-w-full">        <thead>          <tr>            <th>Fecha</th>            <th>Tipo</th>            <th>Subfondo</th>            <th>Monto</th>            <th>Operación</th>            <th>Usuario</th>            <th>Referencia</th>          </tr>        </thead>        <tbody>          <tr            *ngFor="let movement of recentMovements"            [class.movement-credit]="movement.operation === \'credit\'"            [class.movement-debit]="movement.operation === \'debit\'"          >            <td class="movement-date">{{ formatDate(movement.timestamp) }}</td>            <td class="movement-type">{{ getMovementTypeName(movement.movementType) }}</td>            <td class="movement-subfund">{{ getSubfundName(movement.subfundType) }}</td>            <td              class="movement-amount"              [class.positive]="movement.operation === \'credit\'"              [class.negative]="movement.operation === \'debit\'"            >              <span class="operation-sign">{{ movement.operation === \'credit\' ? \'+\' : \'-\' }}</span>              {{ formatUsd(movement.amount) }}            </td>            <td class="movement-operation">              <span                class="badge"                [class.badge-credit]="movement.operation === \'credit\'"                [class.badge-debit]="movement.operation === \'debit\'"              >                {{ movement.operation === \'credit\' ? \'Crédito\' : \'Débito\' }}              </span>            </td>            <td class="movement-user">{{ movement.userName || \'Sistema\' }}</td>            <td class="movement-ref">              <code>{{ movement.reference }}</code>            </td>          </tr>        </tbody>      </table>    </div>    <div *ngIf="!loadingMovements && recentMovements.length === 0" class="empty-state">      <p>No se encontraron movimientos recientes</p>    </div>  </section>  <!-- Footer Info -->  <div class="page-footer">    <div class="footer-info" *ngIf="fgoStatus">      <span class="info-item">        <strong>Última actualización:</strong> {{ formatDate(fgoStatus.updatedAt) }}      </span>      <span class="info-item">        <strong>Métricas calculadas:</strong> {{ formatDate(fgoStatus.lastCalculatedAt) }}      </span>    </div>  </div>  <!-- Modal: Transferir entre Subfondos -->  <div class="modal-overlay" *ngIf="showTransferModal" (click)="closeTransferModal()">    <div class="modal-content" (click)="$event.stopPropagation()">      <div class="modal-header">        <h2>Transferir entre Subfondos</h2>        <button class="btn-close" (click)="closeTransferModal()">✕</button>      </div>      <div class="modal-body">        <form class="transfer-form">          <div class="form-group">            <label for="fromSubfund">Desde Subfondo</label>            <select id="fromSubfund" [(ngModel)]="transferForm.fromSubfund" name="fromSubfund">              <option value="">Seleccionar...</option>              <option value="liquidity">Liquidez</option>              <option value="capitalization">Capitalización</option>              <option value="profitability">Rentabilidad</option>            </select>          </div>          <div class="form-group">            <label for="toSubfund">Hacia Subfondo</label>            <select id="toSubfund" [(ngModel)]="transferForm.toSubfund" name="toSubfund">              <option value="">Seleccionar...</option>              <option value="liquidity">Liquidez</option>              <option value="capitalization">Capitalización</option>              <option value="profitability">Rentabilidad</option>            </select>          </div>          <div class="form-group">            <label for="amount">Monto (USD)</label>            <input              type="number"              id="amount"              [(ngModel)]="transferForm.amount"              name="amount"              min="0"              step="0.01"              placeholder="0.00"            />          </div>          <div class="form-group">            <label for="reason">Motivo</label>            <textarea              id="reason"              [(ngModel)]="transferForm.reason"              name="reason"              rows="3"              placeholder="Describe el motivo de la transferencia..."            ></textarea>          </div>        </form>      </div>      <div class="modal-footer">        <button class="btn-secondary" (click)="closeTransferModal()">Cancelar</button>        <button          class="btn-primary"          (click)="submitTransfer()"          [disabled]="!isTransferFormValid() || processingTransfer"        >          {{ processingTransfer ? \'Procesando...\' : \'Transferir\' }}        </button>      </div>    </div>  </div>  <!-- Modal: Pagar Siniestro -->  <div class="modal-overlay" *ngIf="showSiniestroModal" (click)="closeSiniestroModal()">    <div class="modal-content" (click)="$event.stopPropagation()">      <div class="modal-header">        <h2>Pagar Siniestro</h2>        <button class="btn-close" (click)="closeSiniestroModal()">✕</button>      </div>      <div class="modal-body">        <form class="siniestro-form">          <div class="form-group">            <label for="bookingId">ID de Reserva</label>            <input              type="text"              id="bookingId"              [(ngModel)]="siniestroForm.bookingId"              name="bookingId"              placeholder="UUID de la reserva"            />          </div>          <div class="form-group">            <label for="siniestroAmount">Monto (USD)</label>            <input              type="number"              id="siniestroAmount"              [(ngModel)]="siniestroForm.amount"              name="siniestroAmount"              min="0"              step="0.01"              placeholder="0.00"            />          </div>          <div class="form-group">            <label for="description">Descripción</label>            <textarea              id="description"              [(ngModel)]="siniestroForm.description"              name="description"              rows="4"              placeholder="Describe el siniestro (daños, circunstancias, etc.)..."            ></textarea>          </div>          <div class="alert-warning">            ⚠️ Esta acción debitará <strong>{{ formatUsd(siniestroForm.amount || 0) }}</strong> del            subfondo de Liquidez.          </div>        </form>      </div>      <div class="modal-footer">        <button class="btn-secondary" (click)="closeSiniestroModal()">Cancelar</button>        <button          class="btn-danger"          (click)="submitSiniestro()"          [disabled]="!isSiniestroFormValid() || processingSiniestro"        >          {{ processingSiniestro ? \'Procesando...\' : \'Pagar Siniestro\' }}        </button>      </div>    </div>  </div></div></div>'
+    var COMPONENTS = [{'name': 'AccordionComponent', 'selector': 'app-accordion'},{'name': 'AccountingAdminPage', 'selector': 'autorenta-accounting-admin-page'},{'name': 'AccountingDashboardComponent', 'selector': 'app-accounting-dashboard'},{'name': 'AccountingDashboardPage', 'selector': 'app-accounting-dashboard'},{'name': 'AdminAnalyticsPage', 'selector': 'app-admin-analytics-page'},{'name': 'AdminClaimDetailPage', 'selector': 'app-admin-claim-detail'},{'name': 'AdminClaimsPage', 'selector': 'app-admin-claims'},{'name': 'AdminDashboardPage', 'selector': 'autorenta-admin-dashboard-page'},{'name': 'AdminDisputesPage', 'selector': 'app-admin-disputes'},{'name': 'AdminFeatureFlagsPage', 'selector': 'app-admin-feature-flags'},{'name': 'AdminPricingPage', 'selector': 'app-admin-pricing-page'},{'name': 'AdminRefundsPage', 'selector': 'autorenta-admin-refunds-page'},{'name': 'AdminReviewsPage', 'selector': 'app-admin-reviews'},{'name': 'AdminSettlementsPage', 'selector': 'app-admin-settlements-page'},{'name': 'AdminVerificationsPage', 'selector': 'autorenta-admin-verifications-page'},{'name': 'AdminWithdrawalsPage', 'selector': 'autorenta-admin-withdrawals-page'},{'name': 'AiPhotoGeneratorComponent', 'selector': 'app-ai-photo-generator'},{'name': 'AnalyticsDemoComponent', 'selector': 'app-analytics-demo'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'AppHeaderComponent', 'selector': 'app-app-header'},{'name': 'AuditLogsPage', 'selector': 'app-audit-logs'},{'name': 'AuthCallbackPage', 'selector': 'app-auth-callback-page'},{'name': 'AutorentarCreditCardComponent', 'selector': 'app-autorentar-credit-card'},{'name': 'AvailabilityAlertComponent', 'selector': 'app-availability-alert'},{'name': 'AvailabilityCalendarPage', 'selector': 'app-availability-calendar'},{'name': 'BadgeComponent', 'selector': 'app-badge'},{'name': 'BalanceSheetPage', 'selector': 'app-balance-sheet'},{'name': 'BankAccountFormComponent', 'selector': 'app-bank-account-form'},{'name': 'BankAccountsComponent', 'selector': 'app-bank-accounts'},{'name': 'BankAccountsListComponent', 'selector': 'app-bank-accounts-list'},{'name': 'BaseChatComponent', 'selector': 'app-base-chat'},{'name': 'BecomeRenterPage', 'selector': 'app-become-renter'},{'name': 'BirthDateModalComponent', 'selector': 'app-birth-date-modal'},{'name': 'BlockDateModalComponent', 'selector': 'app-block-date-modal'},{'name': 'BonusProtectorPurchaseComponent', 'selector': 'app-bonus-protector-purchase'},{'name': 'BonusProtectorSimulatorComponent', 'selector': 'app-bonus-protector-simulator'},{'name': 'BookingBenefitsComponent', 'selector': 'app-booking-benefits'},{'name': 'BookingChatComponent', 'selector': 'app-booking-chat'},{'name': 'BookingChatWrapperComponent', 'selector': 'app-booking-chat'},{'name': 'BookingCheckoutPage', 'selector': 'app-booking-checkout'},{'name': 'BookingConfirmationPage', 'selector': 'app-booking-confirmation'},{'name': 'BookingConfirmationStepComponent', 'selector': 'app-booking-confirmation-step'},{'name': 'BookingConfirmationTimelineComponent', 'selector': 'app-booking-confirmation-timeline'},{'name': 'BookingContractComponent', 'selector': 'app-booking-contract'},{'name': 'BookingContractPage', 'selector': 'app-booking-contract-page'},{'name': 'BookingDatesLocationStepComponent', 'selector': 'app-booking-dates-location-step'},{'name': 'BookingDatesStepComponent', 'selector': 'app-booking-dates-step'},{'name': 'BookingDetailPage', 'selector': 'app-booking-detail'},{'name': 'BookingDetailPaymentPage', 'selector': 'app-booking-detail-payment'},{'name': 'BookingDriverStepComponent', 'selector': 'app-booking-driver-step'},{'name': 'BookingExtrasStepComponent', 'selector': 'app-booking-extras-step'},{'name': 'BookingFlowMetricsComponent', 'selector': 'app-booking-flow-metrics'},{'name': 'BookingInsuranceStepComponent', 'selector': 'app-booking-insurance-step'},{'name': 'BookingInsuranceSummaryComponent', 'selector': 'app-booking-insurance-summary'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingLocationFormComponent', 'selector': 'app-booking-location-form'},{'name': 'BookingOpsTimelineComponent', 'selector': 'app-booking-ops-timeline'},{'name': 'BookingPaymentCoverageStepComponent', 'selector': 'app-booking-payment-coverage-step'},{'name': 'BookingPaymentPage', 'selector': 'app-booking-payment'},{'name': 'BookingPaymentStepComponent', 'selector': 'app-booking-payment-step'},{'name': 'BookingPendingPage', 'selector': 'app-booking-pending'},{'name': 'BookingPickerPage', 'selector': 'app-booking-picker'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingPricingBreakdownComponent', 'selector': 'app-booking-pricing-breakdown'},{'name': 'BookingReviewStepComponent', 'selector': 'app-booking-review-step'},{'name': 'BookingStatusComponent', 'selector': 'app-booking-status'},{'name': 'BookingStepIndicatorComponent', 'selector': 'app-booking-step-indicator'},{'name': 'BookingSuccessPage', 'selector': 'app-booking-success'},{'name': 'BookingSummaryCardComponent', 'selector': 'app-booking-summary-card'},{'name': 'BookingTrackingComponent', 'selector': 'app-booking-tracking'},{'name': 'BookingWizardPage', 'selector': 'app-booking-wizard'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetComponent', 'selector': 'app-bottom-sheet'},{'name': 'BottomSheetFiltersComponent', 'selector': 'app-bottom-sheet-filters'},{'name': 'BulkBlockingPage', 'selector': 'app-bulk-blocking'},{'name': 'ButtonComponent', 'selector': 'app-button'},{'name': 'ButtonV2Component', 'selector': 'app-button-v2'},{'name': 'CalendarComponent', 'selector': 'app-calendar'},{'name': 'CalendarEventsListComponent', 'selector': 'app-calendar-events-list'},{'name': 'CalendarPage', 'selector': 'app-calendar'},{'name': 'CalendarWidgetComponent', 'selector': 'app-calendar-widget'},{'name': 'Car3dViewerComponent', 'selector': 'app-car-3d-viewer'},{'name': 'CarBookingPage', 'selector': 'app-car-booking'},{'name': 'CarCard', 'selector': 'app-car-card'},{'name': 'CarCardComponent', 'selector': 'app-car-card'},{'name': 'CarChatComponent', 'selector': 'app-car-chat'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CardComponent', 'selector': 'app-card'},{'name': 'CarDetailPage', 'selector': 'app-car-detail-page'},{'name': 'CardHoldPanelComponent', 'selector': 'app-card-hold-panel'},{'name': 'CarReviewsSectionComponent', 'selector': 'app-car-reviews-section'},{'name': 'CarsConversionPage', 'selector': 'app-cars-conversion'},{'name': 'CarsDrawerComponent', 'selector': 'app-cars-drawer'},{'name': 'CarsListComponent', 'selector': 'app-cars-list'},{'name': 'CarsListPage', 'selector': 'app-cars-list-page'},{'name': 'CarsMapComponent', 'selector': 'app-cars-map'},{'name': 'CashFlowPage', 'selector': 'app-cash-flow'},{'name': 'ChatShellComponent', 'selector': 'app-chat-shell'},{'name': 'CheckInPage', 'selector': 'app-check-in'},{'name': 'CheckOutPage', 'selector': 'app-check-out'},{'name': 'ChipComponent', 'selector': 'app-chip'},{'name': 'CitySelectComponent', 'selector': 'app-city-select'},{'name': 'ClaimFormComponent', 'selector': 'app-claim-form'},{'name': 'ClassBenefitsModalComponent', 'selector': 'app-class-benefits-modal'},{'name': 'ComparePage', 'selector': 'app-compare-page'},{'name': 'ContractPdfViewerComponent', 'selector': 'app-contract-pdf-viewer'},{'name': 'ContractSignModalComponent', 'selector': 'app-contract-sign-modal'},{'name': 'ContractsManagementPage', 'selector': 'app-contracts-management'},{'name': 'CoverageFundDashboardComponent', 'selector': 'app-coverage-fund-dashboard'},{'name': 'CoverageUpgradeSelectorComponent', 'selector': 'app-coverage-upgrade-selector'},{'name': 'CreditSecurityPanelComponent', 'selector': 'app-credit-security-panel'},{'name': 'CustomFeatureComponent', 'selector': 'app-custom-feature'},{'name': 'DamageComparisonComponent', 'selector': 'app-damage-comparison'},{'name': 'DarkModeToggleComponent', 'selector': 'app-dark-mode-toggle'},{'name': 'DashboardCalendarPage', 'selector': 'app-dashboard-calendar-page'},{'name': 'DashboardPage', 'selector': 'app-dashboard-page'},{'name': 'DatabaseExportPage', 'selector': 'app-database-export'},{'name': 'DateRangePickerComponent', 'selector': 'app-date-range-picker'},{'name': 'DateSearchComponent', 'selector': 'app-date-search'},{'name': 'DepositPage', 'selector': 'app-deposit'},{'name': 'DepositsMonitoringPage', 'selector': 'app-deposits-monitoring'},{'name': 'DepositStatusBadgeComponent', 'selector': 'app-deposit-status-badge'},{'name': 'DepositWarningComponent', 'selector': 'app-deposit-warning'},{'name': 'DevToolsComponent', 'selector': 'app-dev-tools'},{'name': 'DismissibleTourComponent', 'selector': 'app-dismissible-tour'},{'name': 'DisputeDetailPage', 'selector': 'app-dispute-detail-page'},{'name': 'DisputeFormComponent', 'selector': 'app-dispute-form'},{'name': 'DisputesListComponent', 'selector': 'app-disputes-list'},{'name': 'DisputesManagementPage', 'selector': 'app-disputes-management'},{'name': 'DistanceBadgeComponent', 'selector': 'app-distance-badge'},{'name': 'DistanceRiskTierBadgeComponent', 'selector': 'app-distance-risk-tier-badge'},{'name': 'DistanceSummaryComponent', 'selector': 'app-distance-summary'},{'name': 'DniUploaderComponent', 'selector': 'app-dni-uploader'},{'name': 'DriverProfileAdvancedComponent', 'selector': 'app-driver-profile-advanced'},{'name': 'DriverProfileCardComponent', 'selector': 'app-driver-profile-card'},{'name': 'DriverProfilePage', 'selector': 'app-driver-profile-page'},{'name': 'DrivingStatsPage', 'selector': 'app-driving-stats'},{'name': 'DynamicPriceBreakdownModalComponent', 'selector': 'app-dynamic-price-breakdown-modal'},{'name': 'DynamicPriceDisplayComponent', 'selector': 'app-dynamic-price-display'},{'name': 'DynamicPriceLockPanelComponent', 'selector': 'app-dynamic-price-lock-panel'},{'name': 'DynamicPricingBadgeComponent', 'selector': 'app-dynamic-pricing-badge'},{'name': 'EarningsCardComponent', 'selector': 'app-earnings-card'},{'name': 'EarningsPage', 'selector': 'app-earnings-page'},{'name': 'EmailVerificationComponent', 'selector': 'app-email-verification'},{'name': 'EmptyStateComponent', 'selector': 'app-empty-state'},{'name': 'EnhancedMapTooltipComponent', 'selector': 'app-enhanced-map-tooltip'},{'name': 'ErrorStateComponent', 'selector': 'app-error-state'},{'name': 'EvidenceUploaderComponent', 'selector': 'app-evidence-uploader'},{'name': 'ExchangeRatesPage', 'selector': 'app-exchange-rates'},{'name': 'ExplorePage', 'selector': 'app-explore'},{'name': 'FABComponent', 'selector': 'app-fab'},{'name': 'FacebookSidebarComponent', 'selector': 'app-facebook-sidebar'},{'name': 'FAQSectionComponent', 'selector': 'app-faq-section'},{'name': 'FavoriteButtonComponent', 'selector': 'app-favorite-button'},{'name': 'FavoritesPage', 'selector': 'app-favorites-page'},{'name': 'FgoManagementComponent', 'selector': 'app-fgo-management'},{'name': 'FgoOverviewPage', 'selector': 'app-fgo-overview'},{'name': 'FinancialHealthPage', 'selector': 'app-financial-health'},{'name': 'FipeAutocompleteComponent', 'selector': 'app-fipe-autocomplete'},{'name': 'FlagReviewModalComponent', 'selector': 'app-flag-review-modal'},{'name': 'FloatingActionFabComponent', 'selector': 'app-floating-action-fab'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'GuaranteeOptionsInfoComponent', 'selector': 'app-guarantee-options-info'},{'name': 'HelpButtonComponent', 'selector': 'app-help-button'},{'name': 'HelpMenuComponent', 'selector': 'app-help-menu'},{'name': 'HostSupportInfoPanelComponent', 'selector': 'app-host-support-info-panel'},{'name': 'IconComponent', 'selector': 'app-icon'},{'name': 'InboxPage', 'selector': 'app-inbox'},{'name': 'IncomeStatementPage', 'selector': 'app-income-statement'},{'name': 'InfoBannerComponent', 'selector': 'app-info-banner'},{'name': 'InitialGoalModalComponent', 'selector': 'app-initial-goal-modal'},{'name': 'InputComponent', 'selector': 'app-input'},{'name': 'InspectionUploaderComponent', 'selector': 'app-inspection-uploader'},{'name': 'InsurancePage', 'selector': 'app-insurance-page'},{'name': 'InsurancePolicyPage', 'selector': 'app-insurance-policy'},{'name': 'InsuranceSelectorComponent', 'selector': 'app-insurance-selector'},{'name': 'InsuranceSummaryCardComponent', 'selector': 'app-insurance-summary-card'},{'name': 'JournalEntriesPage', 'selector': 'app-journal-entries'},{'name': 'KpiCardComponent', 'selector': 'app-kpi-card'},{'name': 'LanguageSelectorComponent', 'selector': 'app-language-selector'},{'name': 'LayoutComponent', 'selector': 'app-layout'},{'name': 'LedgerHistoryComponent', 'selector': 'app-ledger-history'},{'name': 'LedgerPage', 'selector': 'app-ledger'},{'name': 'LicenseUploaderComponent', 'selector': 'app-license-uploader'},{'name': 'LiveTrackingMapComponent', 'selector': 'app-live-tracking-map'},{'name': 'LoadingStateComponent', 'selector': 'app-loading-state'},{'name': 'LocationMapPickerComponent', 'selector': 'app-location-map-picker'},{'name': 'LocationPickerComponent', 'selector': 'app-location-picker'},{'name': 'LocationSettingsPage', 'selector': 'app-location-settings-page'},{'name': 'LoginPage', 'selector': 'app-login-page'},{'name': 'MakeCalendarPublicButtonComponent', 'selector': 'app-make-calendar-public-button'},{'name': 'ManualJournalEntryPage', 'selector': 'app-manual-journal-entry'},{'name': 'MapBookingPanelComponent', 'selector': 'app-map-booking-panel'},{'name': 'MapCardTooltipComponent', 'selector': 'app-map-card-tooltip'},{'name': 'MapControlsComponent', 'selector': 'app-map-controls'},{'name': 'MapDetailsPanelComponent', 'selector': 'app-map-details-panel'},{'name': 'MapDrawerComponent', 'selector': 'app-map-drawer'},{'name': 'MapFiltersComponent', 'selector': 'app-map-filters'},{'name': 'MapLayersControlComponent', 'selector': 'app-map-layers-control'},{'name': 'MapMarkerComponent', 'selector': 'app-map-marker'},{'name': 'MarketplaceV2Page', 'selector': 'app-marketplace-v2-page'},{'name': 'MercadoPagoCallbackPage', 'selector': 'app-mercadopago-callback'},{'name': 'MercadopagoCardFormComponent', 'selector': 'app-mercadopago-card-form'},{'name': 'MercadoPagoConnectComponent', 'selector': 'app-mercadopago-connect'},{'name': 'MercadopagoPaymentBrickComponent', 'selector': 'app-mercadopago-payment-brick'},{'name': 'MessagesPage', 'selector': 'app-messages'},{'name': 'MissingDocumentsWidgetComponent', 'selector': 'app-missing-documents-widget'},{'name': 'MobileBottomNavComponent', 'selector': 'app-mobile-bottom-nav'},{'name': 'ModalComponent', 'selector': 'app-modal'},{'name': 'ModerateReviewsPage', 'selector': 'app-moderate-reviews'},{'name': 'MpCallbackPage', 'selector': 'app-mp-callback'},{'name': 'MpOnboardingModalComponent', 'selector': 'app-mp-onboarding-modal'},{'name': 'MultiCarCalendarComponent', 'selector': 'app-multi-car-calendar'},{'name': 'MyBookingsPage', 'selector': 'app-my-bookings-page'},{'name': 'MyCarsPage', 'selector': 'app-my-cars-page'},{'name': 'MyClaimsPage', 'selector': 'app-my-claims'},{'name': 'NotificationPreferencesPage', 'selector': 'app-notification-preferences'},{'name': 'NotificationsComponent', 'selector': 'app-notifications'},{'name': 'NotificationsPage', 'selector': 'app-notifications-page'},{'name': 'NotificationsSettingsPage', 'selector': 'app-notifications-settings'},{'name': 'OfflineBannerComponent', 'selector': 'app-offline-banner'},{'name': 'OfflineMessagesIndicatorComponent', 'selector': 'app-offline-messages-indicator'},{'name': 'OfflineMessagesPanelComponent', 'selector': 'app-offline-messages-panel'},{'name': 'OnboardingComponent', 'selector': 'app-onboarding'},{'name': 'OnboardingPage', 'selector': 'app-onboarding-page'},{'name': 'OrganizationDashboardComponent', 'selector': 'app-organization-dashboard'},{'name': 'OwnerBookingsPage', 'selector': 'app-owner-bookings-page'},{'name': 'OwnerCheckInPage', 'selector': 'app-owner-check-in'},{'name': 'OwnerCheckOutPage', 'selector': 'app-owner-check-out'},{'name': 'OwnerConfirmationComponent', 'selector': 'app-owner-confirmation'},{'name': 'OwnerDamageReportPage', 'selector': 'app-owner-damage-report'},{'name': 'OwnerDashboardPage', 'selector': 'app-owner-dashboard'},{'name': 'PaymentActionsComponent', 'selector': 'app-payment-actions'},{'name': 'PaymentMethodButtonsComponent', 'selector': 'app-payment-method-buttons'},{'name': 'PaymentMethodComparisonModalComponent', 'selector': 'app-payment-method-comparison-modal'},{'name': 'PaymentMethodSelectorComponent', 'selector': 'app-payment-method-selector'},{'name': 'PaymentModeAlertComponent', 'selector': 'app-payment-mode-alert'},{'name': 'PaymentModeToggleComponent', 'selector': 'app-payment-mode-toggle'},{'name': 'PaymentProviderSelectorComponent', 'selector': 'app-payment-provider-selector'},{'name': 'PaymentSummaryPanelComponent', 'selector': 'app-payment-summary-panel'},{'name': 'PayoutHistoryComponent', 'selector': 'app-payout-history'},{'name': 'PayoutsHistoryComponent', 'selector': 'app-payouts-history'},{'name': 'PayoutsPage', 'selector': 'app-payouts-page'},{'name': 'PayoutStatsComponent', 'selector': 'app-payout-stats'},{'name': 'PayoutsWidgetComponent', 'selector': 'app-payouts-widget'},{'name': 'PayPalButtonComponent', 'selector': 'app-paypal-button'},{'name': 'PendingApprovalPage', 'selector': 'app-pending-approval'},{'name': 'PendingReviewsBannerComponent', 'selector': 'app-pending-reviews-banner'},{'name': 'PendingReviewsListComponent', 'selector': 'app-pending-reviews-list'},{'name': 'PendingReviewsPage', 'selector': 'app-pending-reviews'},{'name': 'PeriodClosuresPage', 'selector': 'app-period-closures'},{'name': 'PersonalizedDashboardComponent', 'selector': 'app-personalized-dashboard'},{'name': 'PersonalizedLocationComponent', 'selector': 'app-personalized-location'},{'name': 'PhoneVerificationComponent', 'selector': 'app-phone-verification'},{'name': 'PickupLocationSelectorComponent', 'selector': 'app-pickup-location-selector'},{'name': 'PremiumFeatureComponent', 'selector': 'app-premium-feature'},{'name': 'ProfessionalDateInputComponent', 'selector': 'app-professional-date-input'},{'name': 'ProfileContactPage', 'selector': 'app-profile-contact'},{'name': 'ProfileContactSectionComponent', 'selector': 'app-profile-contact-section'},{'name': 'ProfileExpandedPage', 'selector': 'app-profile-expanded-page'},{'name': 'ProfileHeaderComponent', 'selector': 'app-profile-header'},{'name': 'ProfileIdentitySectionComponent', 'selector': 'app-profile-identity-section'},{'name': 'ProfileKpisComponent', 'selector': 'app-profile-kpis'},{'name': 'ProfilePage', 'selector': 'app-profile-page'},{'name': 'ProfilePreferencesPage', 'selector': 'app-profile-preferences'},{'name': 'ProfileSecurityPage', 'selector': 'app-profile-security'},{'name': 'ProfileVerificationPage', 'selector': 'app-profile-verification'},{'name': 'ProfileWizardComponent', 'selector': 'app-profile-wizard'},{'name': 'PromoCodeInputComponent', 'selector': 'app-promo-code-input'},{'name': 'ProtectionCreditCardComponent', 'selector': 'app-protection-credit-card'},{'name': 'ProtectionCreditExplanationModalComponent', 'selector': 'app-protection-credit-explanation-modal'},{'name': 'ProtectionsPage', 'selector': 'app-protections-page'},{'name': 'ProvisionsPage', 'selector': 'app-provisions'},{'name': 'PublicProfilePage', 'selector': 'app-public-profile'},{'name': 'PublishCarV2Page', 'selector': 'app-publish-car-v2'},{'name': 'PullToRefreshComponent', 'selector': 'app-pull-to-refresh'},{'name': 'PwaCapabilitiesComponent', 'selector': 'app-pwa-capabilities'},{'name': 'PwaInstallBannerComponent', 'selector': 'app-pwa-install-banner'},{'name': 'PwaInstallPromptComponent', 'selector': 'app-pwa-install-prompt'},{'name': 'PwaTitlebarComponent', 'selector': 'app-pwa-titlebar'},{'name': 'PwaUpdatePromptComponent', 'selector': 'app-pwa-update-prompt'},{'name': 'QuickBookingModalComponent', 'selector': 'app-quick-booking-modal'},{'name': 'QuickBookPage', 'selector': 'app-quick-book-page'},{'name': 'ReconciliationPage', 'selector': 'app-reconciliation'},{'name': 'ReembolsabilityBadgeComponent', 'selector': 'app-reembolsability-badge'},{'name': 'ReferralLandingPage', 'selector': 'app-referral-landing'},{'name': 'ReferralsPage', 'selector': 'app-referrals'},{'name': 'RefundRequestComponent', 'selector': 'app-refund-request'},{'name': 'RefundStatusComponent', 'selector': 'app-refund-status'},{'name': 'RegisterPage', 'selector': 'app-register-page'},{'name': 'RenterConfirmationComponent', 'selector': 'app-renter-confirmation'},{'name': 'ReportClaimPage', 'selector': 'app-report-claim'},{'name': 'RequestPayoutModalComponent', 'selector': 'app-request-payout-modal'},{'name': 'ResetPasswordPage', 'selector': 'app-reset-password-page'},{'name': 'ResponsiveFeatureComponent', 'selector': 'app-responsive-feature'},{'name': 'RevenueRecognitionPage', 'selector': 'app-revenue-recognition'},{'name': 'ReviewCardComponent', 'selector': 'app-review-card'},{'name': 'ReviewFormComponent', 'selector': 'app-review-form'},{'name': 'ReviewManagementComponent', 'selector': 'app-review-management'},{'name': 'ReviewRadarChartComponent', 'selector': 'app-review-radar-chart'},{'name': 'ReviewsPage', 'selector': 'app-reviews-page'},{'name': 'ReviewSummaryComponent', 'selector': 'app-review-summary'},{'name': 'RiskCalculatorViewerComponent', 'selector': 'app-risk-calculator-viewer'},{'name': 'RiskPolicyTableComponent', 'selector': 'app-risk-policy-table'},{'name': 'SectionCardComponent', 'selector': 'app-section-card'},{'name': 'SelfieCaptureComponent', 'selector': 'app-selfie-capture'},{'name': 'SettlementSimulatorComponent', 'selector': 'app-settlement-simulator'},{'name': 'ShareButtonComponent', 'selector': 'app-share-button'},{'name': 'ShareMenuComponent', 'selector': 'app-share-menu'},{'name': 'SimpleCheckoutComponent', 'selector': 'app-simple-checkout'},{'name': 'SkeletonComponent', 'selector': 'app-skeleton'},{'name': 'SkeletonLoaderComponent', 'selector': 'app-skeleton-loader'},{'name': 'SmartOnboardingComponent', 'selector': 'app-smart-onboarding'},{'name': 'SplashComponent', 'selector': 'app-splash'},{'name': 'SplashLoaderComponent', 'selector': 'app-splash-loader'},{'name': 'StatisticsWidgetComponent', 'selector': 'app-statistics-widget'},{'name': 'StatsPage', 'selector': 'app-stats-page'},{'name': 'StatsStripComponent', 'selector': 'app-stats-strip'},{'name': 'StepperModalComponent', 'selector': 'app-stepper-modal'},{'name': 'StickyCtaMobileComponent', 'selector': 'app-sticky-cta-mobile'},{'name': 'StockPhotosSelectorComponent', 'selector': 'app-stock-photos-selector'},{'name': 'TermsAndConsentsComponent', 'selector': 'app-terms-and-consents'},{'name': 'TermsPage', 'selector': 'app-terms'},{'name': 'ThreeCanvasComponent', 'selector': 'app-three-canvas'},{'name': 'ToastComponent', 'selector': 'app-toast'},{'name': 'TooltipComponent', 'selector': 'app-tooltip'},{'name': 'TourStatusComponent', 'selector': 'app-tour-status'},{'name': 'TransactionHistoryComponent', 'selector': 'app-transaction-history'},{'name': 'TransferFundsComponent', 'selector': 'app-transfer-funds'},{'name': 'UploadImageComponent', 'selector': 'app-upload-image'},{'name': 'UrgencyBannerComponent', 'selector': 'app-urgency-banner'},{'name': 'UrgentBookingPage', 'selector': 'app-urgent-booking'},{'name': 'UrgentRentalBannerComponent', 'selector': 'app-urgent-rental-banner'},{'name': 'UserBadgesComponent', 'selector': 'app-user-badges'},{'name': 'UtilityBarComponent', 'selector': 'app-utility-bar'},{'name': 'VehicleDocumentsPage', 'selector': 'app-vehicle-documents'},{'name': 'VerificationBadgeComponent', 'selector': 'app-verification-badge'},{'name': 'VerificationBlockingModalComponent', 'selector': 'app-verification-blocking-modal'},{'name': 'VerificationPage', 'selector': 'app-verification'},{'name': 'VerificationProgressComponent', 'selector': 'app-verification-progress'},{'name': 'VerificationPromptBannerComponent', 'selector': 'app-verification-prompt-banner'},{'name': 'WaitlistCountComponent', 'selector': 'app-waitlist-count'},{'name': 'WaitlistPage', 'selector': 'app-waitlist-page'},{'name': 'WalletAccountNumberCardComponent', 'selector': 'app-wallet-account-number-card'},{'name': 'WalletBalanceCardComponent', 'selector': 'app-wallet-balance-card'},{'name': 'WalletFaqComponent', 'selector': 'app-wallet-faq'},{'name': 'WalletPage', 'selector': 'app-wallet'},{'name': 'WalletTransfersComponent', 'selector': 'app-wallet-transfers'},{'name': 'WaterfallSimulatorComponent', 'selector': 'app-waterfall-simulator'},{'name': 'WazeLiveMapComponent', 'selector': 'app-waze-live-map'},{'name': 'WithdrawalHistoryComponent', 'selector': 'app-withdrawal-history'},{'name': 'WithdrawalRequestFormComponent', 'selector': 'app-withdrawal-request-form'},{'name': 'WithdrawalsAdminPage', 'selector': 'app-withdrawals-admin'},{'name': 'WizardComponent', 'selector': 'app-wizard'},{'name': 'WizardStepComponent', 'selector': 'app-wizard-step'}];
+    var DIRECTIVES = [{'name': 'AutoAltDirective', 'selector': 'img[appAutoAlt]'},{'name': 'ClickOutsideDirective', 'selector': '[appClickOutside]'},{'name': 'EscapeKeyDirective', 'selector': '[appEscapeKey]'},{'name': 'FeatureFlagDirective', 'selector': '[appFeatureFlag]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FocusTrapDirective', 'selector': '[appFocusTrap]'},{'name': 'FormErrorAriaDirective', 'selector': 'input[appFormErrorAria], textarea[appFormErrorAria], select[appFormErrorAria]'},{'name': 'ResponsiveImageDirective', 'selector': 'img[appResponsiveImage]'}];
+    var ACTUAL_COMPONENT = {'name': 'FgoOverviewPage'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'FgoOverviewPage.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

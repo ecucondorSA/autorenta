@@ -328,8 +328,19 @@
               <span>USD {{ total | number:'1.0-0' }}</span>
             </div>
             <div class="flex justify-between text-text-primary">
-              <span class="underline decoration-text-secondary/30">Seguro y protección</span>
+              <span class="underline decoration-text-secondary/30 cursor-pointer" (click)="showRiskCalculator.set(!showRiskCalculator())">
+                Seguro y protección
+                <span class="text-xs ml-1">{{ showRiskCalculator() ? '▲' : '▼' }}</span>
+              </span>
               <span class="text-success-default">¡Incluido!</span>
+            </div>
+
+            <!-- Risk Calculator Details (expandible) -->
+            <div *ngIf="showRiskCalculator() && riskCalculation()" class="mt-3 animate-fadeIn">
+              <app-risk-calculator-viewer
+                [riskCalculation]="riskCalculation()"
+                [carValueUsd]="car()?.value_usd || 0">
+              </app-risk-calculator-viewer>
             </div>
             <div class="border-t border-border-default my-2"></div>
             <div class="flex justify-between text-lg font-bold text-text-primary">

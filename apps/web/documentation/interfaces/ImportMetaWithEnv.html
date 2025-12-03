@@ -1,0 +1,469 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ImportMetaWithEnv</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/environments/environment.base.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#env" 
+>
+                                            env
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="env"></a>
+                                        <span class="name "><b>env</b>
+                                            <a href="#env">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>env:     <code>Record&lt;string | string | undefined&gt;</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>Record&lt;string | string | undefined&gt;</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">interface DistanceConfig {
+  localThresholdKm: number;
+  regionalThresholdKm: number;
+  guaranteeMultipliers: {
+    local: number;
+    regional: number;
+    longDistance: number;
+  };
+  deliveryFeePerKm: number;
+  minDistanceForDeliveryFee: number;
+  maxDeliveryDistance: number;
+  defaultSearchRadiusKm: number;
+  maxSearchRadiusKm: number;
+}
+
+interface TikTokConfig {
+  clientId?: string;
+}
+
+interface EnvDefaults {
+  production?: boolean;
+  supabaseUrl?: string;
+  supabaseAnonKey?: string;
+  defaultCurrency?: string;
+  tripoApiKey?: string;
+  paymentsWebhookUrl?: string;
+  mapboxAccessToken?: string;
+  carLocationsCacheTtlMs?: number;
+  carLocationsRefreshMs?: number;
+  carLocationsEdgeFunction?: string;
+  mercadopagoPublicKey?: string;
+  mercadopagoClientId?: string;
+  // P0-027 FIX: CLIENT_SECRET removed - must NEVER be in frontend
+  // mercadopagoClientSecret is handled by backend Edge Functions only
+  paypalClientId?: string;
+  // P0-027 FIX: PayPal secret removed - must NEVER be in frontend
+  // paypalClientSecret is handled by backend Edge Functions only
+  appUrl?: string;
+  encryptionKey?: string;
+  googleAnalyticsMeasurementId?: string;
+  enableAnalytics?: boolean;
+  distanceConfig?: DistanceConfig;
+  docVerifierUrl?: string;
+  cloudflareWorkerUrl?: string;
+  googleAiImageUrl?: string;
+  sentryDsn?: string;
+  sentryEnvironment?: string;
+  sentryTracesSampleRate?: number;
+  googleCalendarId?: string;
+  googleCalendarApiKey?: string;
+  googleCalendarClientId?: string;
+  googleGeolocationApiKey?: string;
+  tiktok?: TikTokConfig;
+}
+
+// Type-safe interfaces for global environment access
+interface GlobalWithEnv {
+  __env?: Record&lt;string, string | undefined&gt;;
+  process?: {
+    env?: Record&lt;string, string | undefined&gt;;
+  };
+}
+
+interface ImportMetaWithEnv {
+  env?: Record&lt;string, string | undefined&gt;;
+}
+
+const readEnv &#x3D; (key: string): string | undefined &#x3D;&gt; {
+  // Runtime window-based env (assets/env.js pattern)
+  const globalEnv &#x3D; (globalThis as unknown as GlobalWithEnv)?.__env?.[key];
+  if (typeof globalEnv &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; globalEnv.length &gt; 0) {
+    return globalEnv;
+  }
+
+  // import.meta.env (Angular 17+ builder exposes env vars at build time)
+  const metaEnv &#x3D;
+    typeof import.meta !&#x3D;&#x3D; &#x27;undefined&#x27; &amp;&amp; (import.meta as unknown as ImportMetaWithEnv).env
+      ? (import.meta as unknown as ImportMetaWithEnv).env?.[key]
+      : undefined;
+  if (typeof metaEnv &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; metaEnv.length &gt; 0) {
+    return metaEnv;
+  }
+
+  // process.env (guarded via globalThis) as last resort for SSR/tests
+  const nodeEnv &#x3D; (globalThis as unknown as GlobalWithEnv)?.process?.env?.[key];
+  if (typeof nodeEnv &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; nodeEnv.length &gt; 0) {
+    return nodeEnv;
+  }
+
+  return undefined;
+};
+
+const resolve &#x3D; (key: string, fallback?: string): string &#x3D;&gt; {
+  return readEnv(key) ?? fallback ?? &#x27;&#x27;;
+};
+
+const defaultDistanceConfig: DistanceConfig &#x3D; {
+  localThresholdKm: 20,
+  regionalThresholdKm: 100,
+  guaranteeMultipliers: {
+    local: 1.0,
+    regional: 1.15,
+    longDistance: 1.3,
+  },
+  deliveryFeePerKm: 0, // DESHABILITADO - delivery gratis
+  minDistanceForDeliveryFee: 5,
+  maxDeliveryDistance: 50,
+  defaultSearchRadiusKm: 50,
+  maxSearchRadiusKm: 100,
+};
+
+export const buildEnvironment &#x3D; (defaults: EnvDefaults) &#x3D;&gt; ({
+  production: defaults.production ?? false,
+  supabaseUrl: resolve(&#x27;NG_APP_SUPABASE_URL&#x27;, defaults.supabaseUrl),
+  supabaseAnonKey: resolve(&#x27;NG_APP_SUPABASE_ANON_KEY&#x27;, defaults.supabaseAnonKey),
+  defaultCurrency: resolve(&#x27;NG_APP_DEFAULT_CURRENCY&#x27;, defaults.defaultCurrency ?? &#x27;USD&#x27;),
+  paymentsWebhookUrl: resolve(&#x27;NG_APP_PAYMENTS_WEBHOOK_URL&#x27;, defaults.paymentsWebhookUrl ?? &#x27;&#x27;),
+  // Read from env var first, then fallback to defaults
+  mapboxAccessToken: resolve(&#x27;NG_APP_MAPBOX_ACCESS_TOKEN&#x27;, defaults.mapboxAccessToken),
+  carLocationsCacheTtlMs: defaults.carLocationsCacheTtlMs ?? 5 * 60 * 1000,
+  carLocationsRefreshMs: defaults.carLocationsRefreshMs ?? 60 * 1000,
+  carLocationsEdgeFunction: resolve(
+    &#x27;NG_APP_CAR_LOCATIONS_EDGE_FUNCTION&#x27;,
+    defaults.carLocationsEdgeFunction,
+  ),
+  tripoApiKey: resolve(&#x27;NG_APP_TRIPO_API_KEY&#x27;, defaults.tripoApiKey),
+  mercadopagoPublicKey: resolve(&#x27;NG_APP_MERCADOPAGO_PUBLIC_KEY&#x27;, defaults.mercadopagoPublicKey),
+  mercadopagoClientId: resolve(&#x27;NG_APP_MERCADOPAGO_CLIENT_ID&#x27;, defaults.mercadopagoClientId),
+  // P0-027 FIX: Secrets removed from frontend - handled by backend only
+  paypalClientId: resolve(&#x27;NG_APP_PAYPAL_CLIENT_ID&#x27;, defaults.paypalClientId),
+  appUrl: resolve(&#x27;NG_APP_URL&#x27;, defaults.appUrl ?? &#x27;http://localhost:4200&#x27;),
+  encryptionKey: resolve(&#x27;NG_APP_ENCRYPTION_KEY&#x27;, defaults.encryptionKey),
+  googleAnalyticsMeasurementId: resolve(
+    &#x27;NG_APP_GA4_MEASUREMENT_ID&#x27;,
+    defaults.googleAnalyticsMeasurementId,
+  ),
+  enableAnalytics: defaults.enableAnalytics ?? defaults.production ?? false,
+  distanceConfig: defaults.distanceConfig ?? defaultDistanceConfig,
+  docVerifierUrl: resolve(&#x27;NG_APP_DOC_VERIFIER_URL&#x27;, defaults.docVerifierUrl),
+  cloudflareWorkerUrl: resolve(
+    &#x27;NG_APP_CLOUDFLARE_WORKER_URL&#x27;,
+    defaults.cloudflareWorkerUrl ?? &#x27;http://localhost:8787&#x27;,
+  ),
+  googleAiImageUrl: resolve(&#x27;NG_APP_GOOGLE_AI_IMAGE_URL&#x27;, defaults.googleAiImageUrl),
+  sentryDsn: resolve(&#x27;NG_APP_SENTRY_DSN&#x27;, defaults.sentryDsn),
+  sentryEnvironment: resolve(
+    &#x27;NG_APP_SENTRY_ENVIRONMENT&#x27;,
+    defaults.sentryEnvironment ?? (defaults.production ? &#x27;production&#x27; : &#x27;development&#x27;),
+  ),
+  sentryTracesSampleRate: defaults.sentryTracesSampleRate ?? (defaults.production ? 0.1 : 1.0),
+  googleCalendarId: resolve(&#x27;NG_APP_GOOGLE_CALENDAR_ID&#x27;, defaults.googleCalendarId),
+  googleCalendarApiKey: resolve(&#x27;NG_APP_GOOGLE_CALENDAR_API_KEY&#x27;, defaults.googleCalendarApiKey),
+  googleCalendarClientId: resolve(
+    &#x27;NG_APP_GOOGLE_CALENDAR_CLIENT_ID&#x27;,
+    defaults.googleCalendarClientId,
+  ),
+  googleGeolocationApiKey: resolve(
+    &#x27;NG_APP_GOOGLE_GEOLOCATION_API_KEY&#x27;,
+    defaults.googleGeolocationApiKey,
+  ),
+  tiktok: {
+    clientId: resolve(&#x27;NG_APP_TIKTOK_CLIENT_ID&#x27;, defaults.tiktok?.clientId),
+  },
+});
+
+export type Environment &#x3D; ReturnType&lt;typeof buildEnvironment&gt;;
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ImportMetaWithEnv.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

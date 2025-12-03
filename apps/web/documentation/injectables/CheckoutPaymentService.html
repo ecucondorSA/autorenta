@@ -1,0 +1,1879 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >CheckoutPaymentService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/bookings/checkout/services/checkout-payment.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#delay" >delay</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#formatUsd" >formatUsd</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleOwnerOnboardingBlock" >handleOwnerOnboardingBlock</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleUnlockFailure" >handleUnlockFailure</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isOwnerOnboardingError" >isOwnerOnboardingError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#payWithCreditCard" >payWithCreditCard</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#payWithPartialWallet" >payWithPartialWallet</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#payWithWallet" >payWithWallet</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#processPayment" >processPayment</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#requestPreferenceOrThrow" >requestPreferenceOrThrow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#safeUnlockWallet" >safeUnlockWallet</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#scheduleRiskSnapshot" >scheduleRiskSnapshot</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(state: <a href="../injectables/CheckoutStateService.html" target="_self">CheckoutStateService</a>, wallet: <a href="../injectables/WalletService.html" target="_self">WalletService</a>, payments: <a href="../injectables/PaymentsService.html" target="_self">PaymentsService</a>, bookings: <a href="../injectables/BookingsService.html" target="_self">BookingsService</a>, router: <a href="../interfaces/Route.html" target="_self">Router</a>, mpGateway: <a href="../injectables/MercadoPagoBookingGateway.html" target="_self">MercadoPagoBookingGateway</a>, riskCalculator: <a href="../injectables/CheckoutRiskCalculator.html" target="_self">CheckoutRiskCalculator</a>, fgoService: <a href="../injectables/FgoV1_1Service.html" target="_self">FgoV1_1Service</a>, loggerService: <a href="../injectables/LoggerService.html" target="_self">LoggerService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:25</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>state</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CheckoutStateService.html" target="_self" >CheckoutStateService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>wallet</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WalletService.html" target="_self" >WalletService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>payments</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PaymentsService.html" target="_self" >PaymentsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>bookings</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/BookingsService.html" target="_self" >BookingsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/Route.html" target="_self" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>mpGateway</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/MercadoPagoBookingGateway.html" target="_self" >MercadoPagoBookingGateway</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>riskCalculator</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CheckoutRiskCalculator.html" target="_self" >CheckoutRiskCalculator</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>fgoService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FgoV1_1Service.html" target="_self" >FgoV1_1Service</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>loggerService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/LoggerService.html" target="_self" >LoggerService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delay"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>delay</b></span>
+                        <a href="#delay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>delay(ms: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="445"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:445</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Utility: Delay execution for specified milliseconds</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ms</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formatUsd"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>formatUsd</b></span>
+                        <a href="#formatUsd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>formatUsd(amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="449"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:449</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleOwnerOnboardingBlock"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleOwnerOnboardingBlock</b></span>
+                        <a href="#handleOwnerOnboardingBlock"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleOwnerOnboardingBlock(_error: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="255"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:255</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>_error</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>never</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleUnlockFailure"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>handleUnlockFailure</b></span>
+                        <a href="#handleUnlockFailure"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleUnlockFailure(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, reason: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="379"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:379</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle critical wallet unlock failure after all retries exhausted</p>
+<p>Actions:</p>
+<ol>
+<li>Log critical error to Sentry</li>
+<li>Create payment issue record in DB for manual review</li>
+<li>Attempt to schedule background retry job</li>
+</ol>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID de la reserva</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>reason</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Razón del unlock</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Error que causó el fallo</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isOwnerOnboardingError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isOwnerOnboardingError</b></span>
+                        <a href="#isOwnerOnboardingError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isOwnerOnboardingError(error: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="244"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:244</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="payWithCreditCard"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>payWithCreditCard</b></span>
+                        <a href="#payWithCreditCard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>payWithCreditCard(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="106"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:106</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/Payment.html" target="_self" >Promise&lt;CheckoutPaymentOutcome&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="payWithPartialWallet"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>payWithPartialWallet</b></span>
+                        <a href="#payWithPartialWallet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>payWithPartialWallet(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/Payment.html" target="_self" >Promise&lt;CheckoutPaymentOutcome&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="payWithWallet"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>payWithWallet</b></span>
+                        <a href="#payWithWallet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>payWithWallet(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/Payment.html" target="_self" >Promise&lt;CheckoutPaymentOutcome&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processPayment"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>processPayment</b></span>
+                        <a href="#processPayment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>processPayment()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="41"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/Payment.html" target="_self" >Promise&lt;CheckoutPaymentOutcome&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requestPreferenceOrThrow"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>requestPreferenceOrThrow</b></span>
+                        <a href="#requestPreferenceOrThrow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>requestPreferenceOrThrow(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:228</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;MercadoPagoPreferenceResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="safeUnlockWallet"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>safeUnlockWallet</b></span>
+                        <a href="#safeUnlockWallet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>safeUnlockWallet(bookingId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, reason: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="323"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:323</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Unlock wallet funds with retry logic and proper error handling</p>
+<p>✅ P0-002 FIX: Wallet unlock con retry automático y alertas</p>
+<p>Features:</p>
+<ul>
+<li>3 retry attempts con exponential backoff (1s, 2s, 4s)</li>
+<li>Logging detallado de cada intento</li>
+<li>Alertas críticas a Sentry si falla completamente</li>
+<li>Registro en DB para background job retry</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bookingId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID de la reserva</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>reason</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Razón del unlock</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scheduleRiskSnapshot"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>scheduleRiskSnapshot</b></span>
+                        <a href="#scheduleRiskSnapshot"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>scheduleRiskSnapshot(booking: <a href="../interfaces/Booking.html" target="_self">Booking</a>, method: <a href="../undefineds/BookingPaymentMethod.html" target="_self">BookingPaymentMethod</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:264</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>booking</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Booking.html" target="_self" >Booking</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>method</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#BookingPaymentMethod" target="_self" >BookingPaymentMethod</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/features/bookings/checkout/services/checkout-payment.service.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { firstValueFrom, of } from &#x27;rxjs&#x27;;
+import { catchError, timeout } from &#x27;rxjs/operators&#x27;;
+import { Booking } from &#x27;../../../../core/models&#x27;;
+import { BookingPaymentMethod } from &#x27;../../../../core/models/wallet.model&#x27;;
+import { BookingsService } from &#x27;../../../../core/services/bookings.service&#x27;;
+import { FgoV1_1Service } from &#x27;../../../../core/services/fgo-v1-1.service&#x27;;
+import { LoggerService } from &#x27;../../../../core/services/logger.service&#x27;;
+import { PaymentsService } from &#x27;../../../../core/services/payments.service&#x27;;
+import { WalletService } from &#x27;../../../../core/services/wallet.service&#x27;;
+import { CheckoutStateService } from &#x27;../state/checkout-state.service&#x27;;
+import {
+  MercadoPagoBookingGateway,
+  type MercadoPagoPreferenceResponse,
+} from &#x27;../support/mercadopago-booking.gateway&#x27;;
+import { CheckoutRiskCalculator } from &#x27;../support/risk-calculator&#x27;;
+
+export type CheckoutPaymentOutcome &#x3D;
+  | { kind: &#x27;wallet_success&#x27;; bookingId: string }
+  | { kind: &#x27;redirect_to_mercadopago&#x27;; initPoint: string; preferenceId: string; bookingId: string };
+
+@Injectable()
+export class CheckoutPaymentService {
+  private readonly logger;
+
+  constructor(
+    private readonly state: CheckoutStateService,
+    private readonly wallet: WalletService,
+    private readonly payments: PaymentsService,
+    private readonly bookings: BookingsService,
+    private readonly router: Router,
+    private readonly mpGateway: MercadoPagoBookingGateway,
+    private readonly riskCalculator: CheckoutRiskCalculator,
+    private readonly fgoService: FgoV1_1Service,
+    private readonly loggerService: LoggerService,
+  ) {
+    this.logger &#x3D; this.loggerService.createChildLogger(&#x27;CheckoutPaymentService&#x27;);
+  }
+
+  async processPayment(): Promise&lt;CheckoutPaymentOutcome&gt; {
+    const booking &#x3D; this.state.getBooking();
+    const bookingId &#x3D; this.state.getBookingId();
+
+    if (!booking || !bookingId) {
+      throw new Error(&#x27;No hay una reserva válida para procesar el pago.&#x27;);
+    }
+
+    const method &#x3D; this.state.getPaymentMethod();
+
+    switch (method) {
+      case &#x27;wallet&#x27;:
+        return this.payWithWallet(booking);
+      case &#x27;partial_wallet&#x27;:
+        return this.payWithPartialWallet(booking);
+      case &#x27;credit_card&#x27;:
+      default:
+        return this.payWithCreditCard(booking);
+    }
+  }
+
+  private async payWithWallet(booking: Booking): Promise&lt;CheckoutPaymentOutcome&gt; {
+    const bookingId &#x3D; booking.id;
+    const depositUsd &#x3D; this.state.getDepositUsd();
+    const rentalAmount &#x3D; booking.total_amount;
+
+    const lock &#x3D; await firstValueFrom(
+      this.wallet.lockRentalAndDeposit(bookingId, rentalAmount, depositUsd),
+    );
+
+    if (!lock.success) {
+      throw new Error(lock.message ?? &#x27;No se pudo bloquear la garantía en wallet&#x27;);
+    }
+
+    try {
+      await this.bookings.updateBooking(bookingId, {
+        payment_method: &#x27;wallet&#x27;,
+        rental_amount_cents: Math.round(rentalAmount * 100),
+        deposit_amount_cents: Math.round(depositUsd * 100),
+        rental_lock_transaction_id: lock.rental_lock_transaction_id,
+        deposit_lock_transaction_id: lock.deposit_lock_transaction_id,
+        deposit_status: &#x27;locked&#x27;,
+        status: &#x27;confirmed&#x27;,
+      });
+
+      await this.bookings.recalculatePricing(bookingId);
+
+      this.state.setStatus(&#x27;paid_with_wallet&#x27;);
+      this.state.setMessage(&#x27;Pago confirmado con wallet. Redirigiendo al detalle de tu reserva.&#x27;);
+
+      this.scheduleRiskSnapshot(booking, &#x27;wallet&#x27;).catch((_err) &#x3D;&gt; {
+        // Silent error - risk snapshot is non-critical
+      });
+
+      await this.router.navigate([&#x27;/bookings&#x27;, bookingId]);
+
+      return { kind: &#x27;wallet_success&#x27;, bookingId };
+    } catch (_error) {
+      await this.safeUnlockWallet(bookingId, &#x27;Reversión por error en checkout (wallet)&#x27;);
+      throw _error instanceof Error
+        ? _error
+        : new Error(&#x27;Error inesperado al actualizar la reserva.&#x27;);
+    }
+  }
+
+  private async payWithCreditCard(booking: Booking): Promise&lt;CheckoutPaymentOutcome&gt; {
+    const bookingId &#x3D; booking.id;
+
+    const intent &#x3D; await this.payments.createIntent(bookingId);
+    this.state.setStatus(intent.status);
+
+    await this.bookings.updateBooking(bookingId, {
+      payment_method: &#x27;credit_card&#x27;,
+      wallet_amount_cents: 0,
+      deposit_amount_cents: Math.round(this.state.getDepositUsd() * 100),
+    });
+
+    await this.bookings.recalculatePricing(bookingId);
+
+    this.state.setMessage(&#x27;Redirigiendo a Mercado Pago...&#x27;);
+
+    const preference &#x3D; await this.requestPreferenceOrThrow(bookingId);
+    this.state.setStatus(&#x27;redirecting_to_mercadopago&#x27;);
+
+    this.scheduleRiskSnapshot(booking, &#x27;credit_card&#x27;).catch((_err) &#x3D;&gt; {
+      // Silent error - risk snapshot is non-critical
+    });
+
+    return {
+      kind: &#x27;redirect_to_mercadopago&#x27;,
+      initPoint: preference.initPoint,
+      preferenceId: preference.preferenceId,
+      bookingId,
+    };
+  }
+
+  private async payWithPartialWallet(booking: Booking): Promise&lt;CheckoutPaymentOutcome&gt; {
+    const bookingId &#x3D; booking.id;
+    const split &#x3D; this.state.getWalletSplit();
+    const walletAmount &#x3D; Math.max(0, Number(split.wallet ?? 0));
+    const cardAmount &#x3D; Math.max(0, Number(split.card ?? 0));
+
+    if (walletAmount &lt;&#x3D; 0) {
+      throw new Error(&#x27;Seleccioná un monto a bloquear de tu wallet mayor a 0.&#x27;);
+    }
+
+    if (cardAmount &lt;&#x3D; 0) {
+      throw new Error(&#x27;El monto restante en tarjeta debe ser mayor a 0 para pago mixto.&#x27;);
+    }
+
+    const depositUsd &#x3D; this.state.getDepositUsd();
+    let walletLocked &#x3D; false;
+
+    try {
+      const lockResult &#x3D; await firstValueFrom(
+        this.wallet.lockFunds(
+          bookingId,
+          walletAmount,
+          &#x60;Pago parcial Autorentar (${bookingId.slice(0, 8)})&#x60;,
+        ),
+      );
+
+      if (!lockResult.success) {
+        throw new Error(lockResult.message ?? &#x27;No se pudo bloquear fondos en tu wallet.&#x27;);
+      }
+
+      walletLocked &#x3D; true;
+
+      const intent &#x3D; await this.payments.createIntent(bookingId);
+      this.state.setStatus(intent.status);
+
+      await this.bookings.updateBooking(bookingId, {
+        status: &#x27;pending_payment&#x27;,
+        payment_method: &#x27;partial_wallet&#x27;,
+        wallet_amount_cents: Math.round(walletAmount * 100),
+        wallet_status: &#x27;locked&#x27;,
+        wallet_lock_transaction_id: lockResult.transaction_id ?? undefined,
+        payment_intent_id: intent.id,
+        deposit_amount_cents: Math.round(depositUsd * 100),
+      });
+
+      await this.bookings.recalculatePricing(bookingId);
+
+      const preference &#x3D; await this.requestPreferenceOrThrow(bookingId);
+
+      const walletText &#x3D; this.formatUsd(walletAmount);
+      const cardText &#x3D; this.formatUsd(cardAmount);
+
+      this.state.setStatus(&#x27;redirecting_to_mercadopago&#x27;);
+      this.state.setMessage(
+        &#x60;${walletText} bloqueados de tu wallet. Redirigiendo a Mercado Pago para pagar ${cardText}...&#x60;,
+      );
+
+      this.scheduleRiskSnapshot(booking, &#x27;partial_wallet&#x27;).catch((_err) &#x3D;&gt; {
+        // Silently ignore risk snapshot errors
+      });
+
+      return {
+        kind: &#x27;redirect_to_mercadopago&#x27;,
+        initPoint: preference.initPoint,
+        preferenceId: preference.preferenceId,
+        bookingId,
+      };
+    } catch (_error) {
+      if (walletLocked) {
+        await this.safeUnlockWallet(bookingId, &#x27;Reversión pago parcial fallido&#x27;);
+      }
+
+      try {
+        await this.bookings.updateBooking(bookingId, {
+          status: &#x27;pending&#x27;,
+          payment_method: booking.payment_method ?? null,
+          wallet_amount_cents: booking.wallet_amount_cents ?? undefined,
+          wallet_status: booking.wallet_status ?? &#x27;none&#x27;,
+          wallet_lock_transaction_id: booking.wallet_lock_transaction_id ?? undefined,
+          payment_intent_id: booking.payment_intent_id ?? undefined,
+        });
+      } catch {
+        // Silently ignore rollback errors
+      }
+
+      throw _error instanceof Error
+        ? _error
+        : new Error(&#x27;No pudimos completar el pago mixto. Intentá nuevamente.&#x27;);
+    }
+  }
+
+  private async requestPreferenceOrThrow(
+    bookingId: string,
+  ): Promise&lt;MercadoPagoPreferenceResponse&gt; {
+    try {
+      return await this.mpGateway.createPreference(bookingId);
+    } catch (_error) {
+      if (this.isOwnerOnboardingError(_error)) {
+        this.handleOwnerOnboardingBlock(_error);
+      }
+
+      throw _error instanceof Error
+        ? _error
+        : new Error(&#x27;No pudimos iniciar el pago con Mercado Pago.&#x27;);
+    }
+  }
+
+  private isOwnerOnboardingError(
+    error: unknown,
+  ): error is Error &amp; { code?: string; meta?: unknown } {
+    return (
+      !!error &amp;&amp;
+      typeof error &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+      &#x27;code&#x27; in error &amp;&amp;
+      (error as { code?: string }).code &#x3D;&#x3D;&#x3D; &#x27;OWNER_ONBOARDING_REQUIRED&#x27;
+    );
+  }
+
+  private handleOwnerOnboardingBlock(_error: Error &amp; { code?: string; meta?: unknown }): never {
+    const message &#x3D;
+      _error.message ||
+      &#x27;El propietario todavía no completó la vinculación de Mercado Pago. Tu reserva quedará pendiente y te avisaremos cuando pueda cobrar.&#x27;;
+    this.state.setStatus(&#x27;owner_onboarding_blocked&#x27;);
+    this.state.setMessage(message);
+    throw _error;
+  }
+
+  private async scheduleRiskSnapshot(
+    booking: Booking,
+    method: BookingPaymentMethod,
+  ): Promise&lt;void&gt; {
+    const bucket &#x3D; this.state.getBucket();
+    if (!bucket) {
+      return;
+    }
+
+    const franchise &#x3D; this.state.getFranchiseInfo();
+    if (!franchise) {
+      return;
+    }
+
+    const guarantee &#x3D; this.riskCalculator.calculateGuarantee({
+      booking,
+      franchise,
+      fxSnapshot: this.state.getFxSnapshot(),
+      paymentMethod: method,
+      walletSplit: this.state.getWalletSplit(),
+    });
+
+    const request$ &#x3D; this.fgoService
+      .createRiskSnapshot({
+        bookingId: booking.id,
+        countryCode: &#x27;AR&#x27;,
+        bucket,
+        fxSnapshot: this.state.getFxSnapshot(),
+        currency: booking.currency as &#x27;USD&#x27; | &#x27;ARS&#x27;,
+        estimatedHoldAmount: guarantee.holdUsd,
+        estimatedDeposit: guarantee.creditSecurityUsd,
+        franchiseUsd: guarantee.franchiseStandardUsd,
+        hasCard: method &#x3D;&#x3D;&#x3D; &#x27;credit_card&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;,
+        hasWalletSecurity: method &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;,
+      })
+      .pipe(
+        timeout({ each: 10_000 }),
+        catchError((_error) &#x3D;&gt; {
+          return of(null);
+        }),
+      );
+
+    await firstValueFrom(request$);
+  }
+
+  /**
+   * Unlock wallet funds with retry logic and proper error handling
+   *
+   * ✅ P0-002 FIX: Wallet unlock con retry automático y alertas
+   *
+   * Features:
+   * - 3 retry attempts con exponential backoff (1s, 2s, 4s)
+   * - Logging detallado de cada intento
+   * - Alertas críticas a Sentry si falla completamente
+   * - Registro en DB para background job retry
+   *
+   * @param bookingId - ID de la reserva
+   * @param reason - Razón del unlock
+   */
+  private async safeUnlockWallet(bookingId: string, reason: string): Promise&lt;void&gt; {
+    const maxRetries &#x3D; 3;
+    let lastError: unknown;
+
+    for (let attempt &#x3D; 1; attempt &lt;&#x3D; maxRetries; attempt++) {
+      try {
+        this.logger.info(&#x60;Attempting wallet unlock (attempt ${attempt}/${maxRetries})&#x60;, {
+          bookingId,
+          reason,
+          attempt,
+        });
+
+        await firstValueFrom(this.wallet.unlockFunds(bookingId, reason));
+
+        this.logger.info(&#x27;Wallet unlocked successfully&#x27;, {
+          bookingId,
+          reason,
+          attempt,
+          totalAttempts: attempt,
+        });
+
+        return; // ✅ Success - exit
+      } catch (error) {
+        lastError &#x3D; error;
+
+        this.logger.warn(&#x60;Wallet unlock failed (attempt ${attempt}/${maxRetries})&#x60;, {
+          bookingId,
+          reason,
+          attempt,
+          error: error instanceof Error ? error.message : String(error),
+        });
+
+        // Si no es el último intento, esperar con exponential backoff
+        if (attempt &lt; maxRetries) {
+          const delayMs &#x3D; Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s
+          await this.delay(delayMs);
+        }
+      }
+    }
+
+    // ❌ Si llegamos aquí, fallaron todos los reintentos
+    await this.handleUnlockFailure(bookingId, reason, lastError);
+  }
+
+  /**
+   * Handle critical wallet unlock failure after all retries exhausted
+   *
+   * Actions:
+   * 1. Log critical error to Sentry
+   * 2. Create payment issue record in DB for manual review
+   * 3. Attempt to schedule background retry job
+   *
+   * @param bookingId - ID de la reserva
+   * @param reason - Razón del unlock
+   * @param error - Error que causó el fallo
+   */
+  private async handleUnlockFailure(
+    bookingId: string,
+    reason: string,
+    error: unknown,
+  ): Promise&lt;void&gt; {
+    const errorMessage &#x3D; error instanceof Error ? error.message : String(error);
+    const errorStack &#x3D; error instanceof Error ? error.stack : undefined;
+
+    // 1. ❌ CRITICAL LOG - Alerta a Sentry con máxima prioridad
+    this.logger.critical(
+      &#x27;CRITICAL: Wallet unlock failed completely after all retries&#x27;,
+      error instanceof Error ? error : new Error(&#x60;Wallet unlock failed: ${errorMessage}&#x60;),
+    );
+
+    // 2. Log detallado para debugging
+    this.logger.error(&#x27;Wallet unlock failure details&#x27;, {
+      bookingId,
+      reason,
+      error: errorMessage,
+      stack: errorStack,
+      timestamp: new Date().toISOString(),
+      severity: &#x27;CRITICAL&#x27;,
+      impact: &#x27;FUNDS_LOCKED&#x27;,
+      userImpact: &#x27;User funds may be permanently locked&#x27;,
+      actionRequired: &#x27;IMMEDIATE_MANUAL_INTERVENTION&#x27;,
+    });
+
+    // 3. ⚠️ TODO: Guardar en tabla payment_issues para background retry
+    // Esto requiere un servicio de PaymentIssuesService que guardará en Supabase
+    try {
+      await this.bookings.createPaymentIssue({
+        booking_id: bookingId,
+        issue_type: &#x27;wallet_unlock_failed&#x27;,
+        severity: &#x27;critical&#x27;,
+        description: &#x60;Failed to unlock wallet funds after ${3} retry attempts&#x60;,
+        metadata: {
+          reason,
+          error: errorMessage,
+          stack: errorStack,
+          timestamp: new Date().toISOString(),
+          retry_count: 3,
+        },
+        status: &#x27;pending_review&#x27;,
+      });
+
+      this.logger.info(&#x27;Payment issue created for manual review&#x27;, {
+        bookingId,
+        issueType: &#x27;wallet_unlock_failed&#x27;,
+      });
+    } catch (issueError) {
+      // Si falla la creación de issue, al menos logueamos
+      this.logger.error(&#x27;Failed to create payment issue record&#x27;, {
+        bookingId,
+        originalError: errorMessage,
+        issueCreationError: issueError instanceof Error ? issueError.message : String(issueError),
+      });
+    }
+
+    // ⚠️ NO lanzamos error porque no queremos bloquear el flujo principal
+    // El usuario ya vio el error del pago/cancelación
+    // El equipo de soporte recibirá la alerta de Sentry
+  }
+
+  /**
+   * Utility: Delay execution for specified milliseconds
+   */
+  private delay(ms: number): Promise&lt;void&gt; {
+    return new Promise((resolve) &#x3D;&gt; setTimeout(resolve, ms));
+  }
+
+  private formatUsd(amount: number): string {
+    const fractionDigits &#x3D; Number.isInteger(amount) ? 0 : 2;
+    return new Intl.NumberFormat(&#x27;es-AR&#x27;, {
+      style: &#x27;currency&#x27;,
+      currency: &#x27;USD&#x27;,
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    }).format(amount);
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CheckoutPaymentService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

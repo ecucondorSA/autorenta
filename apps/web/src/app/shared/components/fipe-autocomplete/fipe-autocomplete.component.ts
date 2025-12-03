@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, signal, computed, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, computed, OnChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CarBrandsService } from '../../../core/services/car-brands.service';
 
 export interface FipeAutocompleteOption {
   code: string;
@@ -97,7 +98,17 @@ export interface FipeAutocompleteOption {
               (mousedown)="selectOption(option)"
               class="w-full px-4 py-3 text-left hover:bg-blue-50 focus:bg-blue-50 focus:outline-none transition-colors border-b border-gray-100 last:border-b-0"
             >
-              <div class="text-sm font-medium text-gray-900">{{ option.name }}</div>
+              <div class="flex items-center gap-3">
+                @if (getBrandLogoPath(option.name); as logoPath) {
+                  <img
+                    [src]="logoPath"
+                    [alt]="option.name"
+                    class="w-6 h-6 object-contain flex-shrink-0"
+                    loading="lazy"
+                  />
+                }
+                <span class="text-sm font-medium text-gray-900">{{ option.name }}</span>
+              </div>
             </button>
           }
         </div>
@@ -127,6 +138,8 @@ export interface FipeAutocompleteOption {
   ],
 })
 export class FipeAutocompleteComponent implements OnChanges {
+  private readonly carBrandsService = inject(CarBrandsService);
+
   @Input() placeholder = 'Escribe para buscar...';
   @Input() options: FipeAutocompleteOption[] = [];
   @Input() disabled = false;
@@ -135,6 +148,7 @@ export class FipeAutocompleteComponent implements OnChanges {
   @Input() helperText = '';
   @Input() selectedValue: FipeAutocompleteOption | null = null;
   @Input() dataTestId: string | null = null;
+  @Input() showBrandLogos = false; // Enable brand logos in dropdown
 
   @Output() optionSelected = new EventEmitter<FipeAutocompleteOption>();
   @Output() searchQueryChanged = new EventEmitter<string>();
@@ -215,5 +229,13 @@ export class FipeAutocompleteComponent implements OnChanges {
   onDropdownLeave(): void {
     this.isHoveringDropdown.set(false);
     this.hideDropdownSoon();
+  }
+
+  /**
+   * Get brand logo path for a given brand name
+   */
+  getBrandLogoPath(brandName: string): string | null {
+    if (!this.showBrandLogos) return null;
+    return this.carBrandsService.getCarBrandLogoPath(brandName);
   }
 }

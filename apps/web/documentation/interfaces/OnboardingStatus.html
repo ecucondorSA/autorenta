@@ -1,0 +1,838 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  OnboardingStatus</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/onboarding.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#activeChecklist" 
+>
+                                            activeChecklist
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#locadorSteps" 
+>
+                                            locadorSteps
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#locatarioSteps" 
+>
+                                            locatarioSteps
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#onboardingStatus" 
+>
+                                            onboardingStatus
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#primaryGoal" 
+>
+                                            primaryGoal
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#role" 
+>
+                                            role
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#showInitialModal" 
+>
+                                            showInitialModal
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#userId" 
+>
+                                            userId
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="activeChecklist"></a>
+                                        <span class="name "><b>activeChecklist</b>
+                                            <a href="#activeChecklist">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>activeChecklist:     <code>&quot;locador&quot; | &quot;locatario&quot; | &quot;both&quot; | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>&quot;locador&quot; | &quot;locatario&quot; | &quot;both&quot; | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="locadorSteps"></a>
+                                        <span class="name "><b>locadorSteps</b>
+                                            <a href="#locadorSteps">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>locadorSteps:     <code>OnboardingStep[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>OnboardingStep[]</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="locatarioSteps"></a>
+                                        <span class="name "><b>locatarioSteps</b>
+                                            <a href="#locatarioSteps">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>locatarioSteps:     <code>OnboardingStep[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>OnboardingStep[]</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="onboardingStatus"></a>
+                                        <span class="name "><b>onboardingStatus</b>
+                                            <a href="#onboardingStatus">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>onboardingStatus:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="primaryGoal"></a>
+                                        <span class="name "><b>primaryGoal</b>
+                                            <a href="#primaryGoal">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>primaryGoal:         <code><a href="../miscellaneous/typealiases.html#PrimaryGoal" target="_self" >PrimaryGoal</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#PrimaryGoal" target="_self" >PrimaryGoal</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="role"></a>
+                                        <span class="name "><b>role</b>
+                                            <a href="#role">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>role:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="showInitialModal"></a>
+                                        <span class="name "><b>showInitialModal</b>
+                                            <a href="#showInitialModal">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>showInitialModal:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="userId"></a>
+                                        <span class="name "><b>userId</b>
+                                            <a href="#userId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>userId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject, signal, computed } from &#x27;@angular/core&#x27;;
+import { createClient, SupabaseClient } from &#x27;@supabase/supabase-js&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { environment } from &#x27;../../../environments/environment&#x27;;
+import { ProfileStore } from &#x27;../stores/profile.store&#x27;;
+import { AnalyticsService } from &#x27;./analytics.service&#x27;;
+
+/**
+ * Onboarding MVP Service
+ *
+ * Manages the simplified onboarding flow for new users.
+ *
+ * Features:
+ * - Initial goal selection (publish, rent, both)
+ * - Hardcoded checklist for locador and locatario
+ * - Progress tracking with analytics
+ * - Navigation helpers
+ */
+
+export type PrimaryGoal &#x3D; &#x27;publish&#x27; | &#x27;rent&#x27; | &#x27;both&#x27; | null;
+
+export interface OnboardingStep {
+  key: string;
+  title: string;
+  completed: boolean;
+  action: string; // Route to navigate
+}
+
+export interface OnboardingStatus {
+  userId: string;
+  role: string | null;
+  primaryGoal: PrimaryGoal;
+  showInitialModal: boolean;
+  onboardingStatus: string | null;
+  locadorSteps: OnboardingStep[];
+  locatarioSteps: OnboardingStep[];
+  activeChecklist: &#x27;locador&#x27; | &#x27;locatario&#x27; | &#x27;both&#x27; | null;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class OnboardingService {
+  private readonly router &#x3D; inject(Router);
+  private readonly analytics &#x3D; inject(AnalyticsService);
+  private readonly profileStore &#x3D; inject(ProfileStore);
+  private readonly supabase: SupabaseClient;
+
+  // State
+  readonly onboardingStatus &#x3D; signal&lt;OnboardingStatus | null&gt;(null);
+  readonly isLoading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+
+  // Computed
+  readonly showInitialModal &#x3D; computed(() &#x3D;&gt; this.onboardingStatus()?.showInitialModal ?? false);
+  readonly primaryGoal &#x3D; computed(() &#x3D;&gt; this.onboardingStatus()?.primaryGoal ?? null);
+  readonly locadorSteps &#x3D; computed(() &#x3D;&gt; this.onboardingStatus()?.locadorSteps ?? []);
+  readonly locatarioSteps &#x3D; computed(() &#x3D;&gt; this.onboardingStatus()?.locatarioSteps ?? []);
+  readonly activeChecklist &#x3D; computed(() &#x3D;&gt; this.onboardingStatus()?.activeChecklist ?? null);
+
+  // Progress computed
+  readonly locadorProgress &#x3D; computed(() &#x3D;&gt; {
+    const steps &#x3D; this.locadorSteps();
+    if (steps.length &#x3D;&#x3D;&#x3D; 0) return 0;
+    const completed &#x3D; steps.filter((s) &#x3D;&gt; s.completed).length;
+    return Math.round((completed / steps.length) * 100);
+  });
+
+  readonly locatarioProgress &#x3D; computed(() &#x3D;&gt; {
+    const steps &#x3D; this.locatarioSteps();
+    if (steps.length &#x3D;&#x3D;&#x3D; 0) return 0;
+    const completed &#x3D; steps.filter((s) &#x3D;&gt; s.completed).length;
+    return Math.round((completed / steps.length) * 100);
+  });
+
+  readonly isOnboardingComplete &#x3D; computed(() &#x3D;&gt; {
+    const checklist &#x3D; this.activeChecklist();
+    if (!checklist) return true;
+
+    if (checklist &#x3D;&#x3D;&#x3D; &#x27;both&#x27;) {
+      return this.locadorProgress() &#x3D;&#x3D;&#x3D; 100 &amp;&amp; this.locatarioProgress() &#x3D;&#x3D;&#x3D; 100;
+    }
+
+    if (checklist &#x3D;&#x3D;&#x3D; &#x27;locador&#x27;) {
+      return this.locadorProgress() &#x3D;&#x3D;&#x3D; 100;
+    }
+
+    if (checklist &#x3D;&#x3D;&#x3D; &#x27;locatario&#x27;) {
+      return this.locatarioProgress() &#x3D;&#x3D;&#x3D; 100;
+    }
+
+    return false;
+  });
+
+  constructor() {
+    this.supabase &#x3D; createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+  }
+
+  /**
+   * Load onboarding status from database
+   */
+  async loadOnboardingStatus(): Promise&lt;void&gt; {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    try {
+      const { data, error } &#x3D; await this.supabase.rpc(&#x27;get_onboarding_status&#x27;);
+
+      if (error) {
+        console.error(&#x27;Error loading onboarding status:&#x27;, error);
+        this.error.set(error.message);
+        return;
+      }
+
+      if (data) {
+        this.onboardingStatus.set(data as OnboardingStatus);
+
+        // Track analytics
+        if (data.showInitialModal) {
+          this.analytics.trackEvent(&#x27;onboarding_modal_shown&#x27;, {
+            userId: data.userId,
+          });
+        }
+      }
+    } catch (err) {
+      console.error(&#x27;Error loading onboarding status:&#x27;, err);
+      this.error.set(&#x27;Error cargando estado de onboarding&#x27;);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  /**
+   * Set primary goal and redirect
+   */
+  async setPrimaryGoal(goal: &#x27;publish&#x27; | &#x27;rent&#x27; | &#x27;both&#x27;): Promise&lt;void&gt; {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    try {
+      const { data, error } &#x3D; await this.supabase.rpc(&#x27;set_primary_goal&#x27;, {
+        p_goal: goal,
+      });
+
+      if (error) {
+        console.error(&#x27;Error setting primary goal:&#x27;, error);
+        this.error.set(error.message);
+        return;
+      }
+
+      if (data &amp;&amp; data.success) {
+        // Track analytics
+        this.analytics.trackEvent(&#x27;onboarding_goal_selected&#x27;, {
+          goal,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Reload onboarding status
+        await this.loadOnboardingStatus();
+
+        // Navigate based on goal
+        this.navigateToFirstStep(goal);
+      } else {
+        this.error.set(data?.error || &#x27;Error guardando objetivo&#x27;);
+      }
+    } catch (err) {
+      console.error(&#x27;Error setting primary goal:&#x27;, err);
+      this.error.set(&#x27;Error guardando objetivo&#x27;);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  /**
+   * Navigate to first step based on goal
+   */
+  private navigateToFirstStep(goal: &#x27;publish&#x27; | &#x27;rent&#x27; | &#x27;both&#x27;): void {
+    // Check if profile is complete first
+    const profile &#x3D; this.profileStore.profile();
+    const hasBasicProfile &#x3D; profile?.full_name &amp;&amp; profile?.phone;
+
+    if (!hasBasicProfile) {
+      this.router.navigate([&#x27;/profile&#x27;]);
+      return;
+    }
+
+    // Navigate based on goal
+    switch (goal) {
+      case &#x27;publish&#x27;:
+        this.router.navigate([&#x27;/cars/publish&#x27;]);
+        break;
+      case &#x27;rent&#x27;:
+        this.router.navigate([&#x27;/marketplace&#x27;]);
+        break;
+      case &#x27;both&#x27;:
+        // Fall back to the marketplace landing where both experiences converge
+        this.router.navigate([&#x27;/&#x27;]);
+        break;
+    }
+  }
+
+  /**
+   * Get next pending step for a checklist
+   */
+  getNextStep(checklist: &#x27;locador&#x27; | &#x27;locatario&#x27;): OnboardingStep | null {
+    const steps &#x3D; checklist &#x3D;&#x3D;&#x3D; &#x27;locador&#x27; ? this.locadorSteps() : this.locatarioSteps();
+    return steps.find((s) &#x3D;&gt; !s.completed) || null;
+  }
+
+  /**
+   * Navigate to a step&#x27;s action
+   */
+  navigateToStep(step: OnboardingStep): void {
+    this.analytics.trackEvent(&#x27;onboarding_step_clicked&#x27;, {
+      step: step.key,
+      title: step.title,
+      route: step.action,
+    });
+
+    this.router.navigateByUrl(step.action);
+  }
+
+  /**
+   * Track step completion (called from components)
+   */
+  trackStepCompletion(stepKey: string): void {
+    this.analytics.trackEvent(&#x27;onboarding_step_completed&#x27;, {
+      step: stepKey,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Dismiss initial modal (without selecting goal)
+   */
+  async dismissInitialModal(): Promise&lt;void&gt; {
+    this.analytics.trackEvent(&#x27;onboarding_modal_dismissed&#x27;, {
+      timestamp: new Date().toISOString(),
+    });
+
+    // Just close the modal, don&#x27;t set a goal
+    // User can set it later from profile
+  }
+
+  /**
+   * Reset onboarding (for testing/admin)
+   */
+  async resetOnboarding(): Promise&lt;void&gt; {
+    try {
+      const { error } &#x3D; await this.supabase
+        .from(&#x27;profiles&#x27;)
+        .update({
+          primary_goal: null,
+          onboarding: &#x27;incomplete&#x27;,
+        })
+        .eq(&#x27;id&#x27;, this.profileStore.profile()?.id);
+
+      if (error) {
+        console.error(&#x27;Error resetting onboarding:&#x27;, error);
+        return;
+      }
+
+      await this.loadOnboardingStatus();
+    } catch (err) {
+      console.error(&#x27;Error resetting onboarding:&#x27;, err);
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'OnboardingStatus.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

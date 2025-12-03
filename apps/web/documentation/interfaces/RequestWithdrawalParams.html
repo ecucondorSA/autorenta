@@ -1,0 +1,916 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  RequestWithdrawalParams</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/models/wallet.model.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Parámetros para solicitar retiro</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#amount" 
+>
+                                            amount
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#bank_account_id" 
+>
+                                            bank_account_id
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#user_notes" 
+>
+                                            user_notes
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="amount"></a>
+                                        <span class="name "><b>amount</b>
+                                            <a href="#amount">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>amount:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="bank_account_id"></a>
+                                        <span class="name "><b>bank_account_id</b>
+                                            <a href="#bank_account_id">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>bank_account_id:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="user_notes"></a>
+                                        <span class="name "><b>user_notes</b>
+                                            <a href="#user_notes">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>user_notes:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export type {
+  WalletBalance as WalletBalanceDB,
+  WalletTransaction as WalletTransactionDB,
+  WalletLedger as WalletLedgerDB,
+} from &#x27;../types/supabase-types&#x27;;
+
+/**
+ * Balance de wallet del usuario (custom extended type)
+ */
+export interface WalletBalance {
+  user_id: string;
+  available_balance: number; // Fondos disponibles (Total - Locked)
+  transferable_balance: number; // Fondos transferibles in-app (Available - Protected)
+  withdrawable_balance: number; // Fondos retirables a banco (Transferable - Hold)
+
+  // Nuevo sistema de créditos separados (Migration 20251106)
+  autorentar_credit_balance: number; // Crédito Autorentar USD $300 renovable (no retirable)
+  cash_deposit_balance: number; // Depósitos en efectivo (no retirables)
+
+  // DEPRECATED: Sum of autorentar_credit + cash_deposit for backward compatibility
+  /** @deprecated Use autorentar_credit_balance and cash_deposit_balance instead */
+  protected_credit_balance: number;
+
+  locked_balance: number; // Fondos bloqueados en reservas activas
+  total_balance: number; // Total (available + locked)
+  currency: string; // &#x27;USD&#x27; o &#x27;UYU&#x27;
+
+  // DEPRECATED: Backward compatibility - será removido
+  /** @deprecated Use protected_credit_balance instead */
+  non_withdrawable_balance?: number;
+}
+
+/**
+ * Tipos de transacciones de wallet
+ */
+export type WalletTransactionType &#x3D;
+  | &#x27;deposit&#x27; // Depósito de fondos
+  | &#x27;lock&#x27; // Bloqueo de fondos para garantía
+  | &#x27;unlock&#x27; // Desbloqueo de fondos
+  | &#x27;charge&#x27; // Cargo efectivo de fondos
+  | &#x27;refund&#x27; // Devolución de fondos
+  | &#x27;bonus&#x27; // Bonificación/regalo
+  // Nuevos tipos para sistema dual rental + deposit
+  | &#x27;rental_payment_lock&#x27; // Bloqueo del pago del alquiler
+  | &#x27;rental_payment_transfer&#x27; // Transferencia del pago al propietario
+  | &#x27;security_deposit_lock&#x27; // Bloqueo de la garantía
+  | &#x27;security_deposit_release&#x27; // Liberación de la garantía al usuario
+  | &#x27;security_deposit_charge&#x27; // Cargo por daños de la garantía
+  // Tipos para sistema de retiros
+  | &#x27;withdrawal&#x27;; // Retiro de fondos a cuenta bancaria
+
+/**
+ * Estados de transacciones de wallet
+ */
+export type WalletTransactionStatus &#x3D;
+  | &#x27;pending&#x27; // En proceso
+  | &#x27;completed&#x27; // Completada exitosamente
+  | &#x27;failed&#x27; // Falló
+  | &#x27;refunded&#x27;; // Reembolsada
+
+/**
+ * Tipos de referencia de transacciones
+ */
+export type WalletReferenceType &#x3D;
+  | &#x27;booking&#x27; // Reserva/booking
+  | &#x27;deposit&#x27; // Depósito normal
+  | &#x27;reward&#x27; // Bonificación/recompensa
+  | &#x27;credit_protected&#x27; // Crédito Autorentar (no retirable, meta inicial USD 300)
+  | &#x27;transfer&#x27; // Transferencia entre usuarios
+  | &#x27;withdrawal&#x27;; // Retiro a cuenta bancaria
+
+/**
+ * Proveedores de pago soportados
+ */
+export type WalletPaymentProvider &#x3D; &#x27;mercadopago&#x27; | &#x27;stripe&#x27; | &#x27;bank_transfer&#x27; | &#x27;internal&#x27;;
+
+/**
+ * Respuesta de wallet_lock_funds
+ */
+export interface WalletLockFundsResponse {
+  transaction_id: string | null;
+  success: boolean;
+  message: string;
+  new_available_balance: number;
+  new_locked_balance: number;
+}
+
+/**
+ * Respuesta de wallet_unlock_funds
+ */
+export interface WalletUnlockFundsResponse {
+  transaction_id: string | null;
+  success: boolean;
+  message: string;
+  unlocked_amount: number;
+  new_available_balance: number;
+  new_locked_balance: number;
+}
+
+/**
+ * Respuesta de wallet_initiate_deposit
+ */
+export interface WalletInitiateDepositResponse {
+  success: boolean;
+  message?: string;
+  transaction_id: string;
+  amount: number;
+  currency: string;
+  provider: string;
+  payment_url?: string;
+  payment_mobile_deep_link?: string;
+  init_point?: string;
+  preference_id?: string;
+}
+
+/**
+ * Respuesta de wallet_confirm_deposit (webhook)
+ */
+export interface WalletConfirmDepositResponse {
+  success: boolean;
+  message: string;
+  new_available_balance: number;
+}
+
+/**
+ * Respuesta de booking_charge_wallet_funds
+ */
+export interface BookingChargeWalletFundsResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Parámetros para iniciar un depósito
+ */
+export interface InitiateDepositParams {
+  amount: number;
+  provider?: WalletPaymentProvider;
+  description?: string;
+  /** Si true, los fondos serán retirables. Si false, será Crédito Autorentar (no retirable) */
+  allowWithdrawal?: boolean;
+}
+
+/**
+ * Parámetros para bloquear fondos
+ */
+export interface LockFundsParams {
+  booking_id: string;
+  amount: number;
+  description?: string;
+}
+
+/**
+ * Parámetros para desbloquear fondos
+ */
+export interface UnlockFundsParams {
+  booking_id: string;
+  description?: string;
+}
+
+/**
+ * Filtros para historial de transacciones
+ */
+export interface WalletTransactionFilters {
+  type?: WalletTransactionType | WalletTransactionType[];
+  status?: WalletTransactionStatus | WalletTransactionStatus[];
+  reference_type?: WalletReferenceType;
+  reference_id?: string;
+  from_date?: Date;
+  to_date?: Date;
+}
+
+/**
+ * Métodos de pago para bookings
+ */
+export type BookingPaymentMethod &#x3D;
+  | &#x27;credit_card&#x27; // 100% tarjeta de crédito
+  | &#x27;wallet&#x27; // 100% wallet
+  | &#x27;partial_wallet&#x27;; // Mix de wallet + tarjeta
+
+/**
+ * Estados de wallet en bookings
+ */
+export type BookingWalletStatus &#x3D;
+  | &#x27;none&#x27; // No usa wallet
+  | &#x27;locked&#x27; // Fondos bloqueados
+  | &#x27;charged&#x27; // Fondos cargados
+  | &#x27;refunded&#x27;; // Fondos reembolsados
+
+/**
+ * Información de wallet en booking
+ */
+export interface BookingWalletInfo {
+  payment_method: BookingPaymentMethod;
+  wallet_amount_cents: number;
+  wallet_lock_transaction_id?: string;
+  wallet_status: BookingWalletStatus;
+  wallet_charged_at?: string;
+  wallet_refunded_at?: string;
+}
+
+/**
+ * Estado de carga del wallet service
+ */
+export interface WalletLoadingState {
+  balance: boolean;
+  transactions: boolean;
+  initiatingDeposit: boolean;
+  lockingFunds: boolean;
+  unlockingFunds: boolean;
+}
+
+/**
+ * Errores del wallet service
+ */
+export interface WalletError {
+  code: string;
+  message: string;
+  details?: unknown;
+}
+
+/**
+ * Respuesta de wallet_lock_rental_and_deposit
+ */
+export interface WalletLockRentalAndDepositResponse {
+  success: boolean;
+  message: string;
+  rental_lock_transaction_id: string | null;
+  deposit_lock_transaction_id: string | null;
+  total_locked: number;
+  new_available_balance: number;
+  new_locked_balance: number;
+}
+
+/**
+ * Respuesta de wallet_complete_booking (sin daños)
+ */
+export interface WalletCompleteBookingResponse {
+  success: boolean;
+  message: string;
+  rental_payment_transaction_id: string | null;
+  deposit_release_transaction_id: string | null;
+  platform_fee_transaction_id: string | null;
+  amount_to_owner: number;
+  amount_to_renter: number;
+  platform_fee: number;
+}
+
+/**
+ * Respuesta de wallet_complete_booking_with_damages
+ */
+export interface WalletCompleteBookingWithDamagesResponse {
+  success: boolean;
+  message: string;
+  rental_payment_transaction_id: string | null;
+  damage_charge_transaction_id: string | null;
+  deposit_release_transaction_id: string | null;
+  platform_fee_transaction_id: string | null;
+  amount_to_owner: number;
+  damage_charged: number;
+  amount_returned_to_renter: number;
+  platform_fee: number;
+}
+
+/**
+ * Parámetros para bloquear rental + deposit
+ */
+export interface LockRentalAndDepositParams {
+  booking_id: string;
+  rental_amount: number;
+  deposit_amount?: number; // Default $250
+}
+
+/**
+ * Parámetros para completar booking con daños
+ */
+export interface CompleteBookingWithDamagesParams {
+  booking_id: string;
+  damage_amount: number;
+  damage_description: string;
+}
+
+/**
+ * Estados de depósito en bookings
+ */
+export type BookingDepositStatus &#x3D;
+  | &#x27;none&#x27; // Sin garantía
+  | &#x27;locked&#x27; // Garantía bloqueada
+  | &#x27;released&#x27; // Garantía liberada al usuario
+  | &#x27;partially_charged&#x27; // Garantía parcialmente cobrada por daños
+  | &#x27;fully_charged&#x27;; // Garantía completamente cobrada por daños
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// WITHDRAWAL SYSTEM - Sistema de Retiros
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+/**
+ * Tipos de cuenta bancaria soportados
+ */
+export type BankAccountType &#x3D; &#x27;cbu&#x27; | &#x27;cvu&#x27; | &#x27;alias&#x27;;
+
+/**
+ * Cuenta bancaria del usuario para retiros
+ */
+export interface BankAccount {
+  id: string;
+  user_id: string;
+  account_type: BankAccountType;
+  account_number: string; // CBU/CVU o Alias
+  account_holder_name: string;
+  account_holder_document: string; // DNI/CUIT
+  bank_name?: string;
+  is_verified: boolean;
+  verified_at?: string;
+  verification_method?: string;
+  is_active: boolean;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Estados de solicitudes de retiro
+ */
+export type WithdrawalStatus &#x3D;
+  | &#x27;pending&#x27; // Esperando aprobación
+  | &#x27;approved&#x27; // Aprobada, lista para procesar
+  | &#x27;processing&#x27; // En proceso de transferencia
+  | &#x27;completed&#x27; // Transferencia exitosa
+  | &#x27;failed&#x27; // Transferencia falló
+  | &#x27;rejected&#x27; // Rechazada por admin
+  | &#x27;cancelled&#x27;; // Cancelada por usuario
+
+/**
+ * Solicitud de retiro
+ */
+export interface WithdrawalRequest {
+  id: string;
+  user_id: string;
+  bank_account_id: string;
+  amount: number;
+  currency: string;
+  fee_amount: number;
+  net_amount: number;
+  status: WithdrawalStatus;
+  provider?: string;
+  provider_transaction_id?: string;
+  provider_metadata?: Record&lt;string, unknown&gt;;
+  approved_by?: string;
+  approved_at?: string;
+  rejection_reason?: string;
+  processed_at?: string;
+  completed_at?: string;
+  failed_at?: string;
+  failure_reason?: string;
+  wallet_transaction_id?: string;
+  user_notes?: string;
+  admin_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Parámetros para solicitar retiro
+ */
+export interface RequestWithdrawalParams {
+  bank_account_id: string;
+  amount: number;
+  user_notes?: string;
+}
+
+/**
+ * Respuesta de wallet_request_withdrawal
+ */
+export interface WalletRequestWithdrawalResponse {
+  success: boolean;
+  message: string;
+  request_id: string | null;
+  fee_amount: number;
+  net_amount: number;
+  new_available_balance: number;
+}
+
+/**
+ * Respuesta de wallet_approve_withdrawal
+ */
+export interface WalletApproveWithdrawalResponse {
+  success: boolean;
+  message: string;
+  provider: string;
+  amount: number;
+  recipient: string;
+}
+
+/**
+ * Respuesta de wallet_complete_withdrawal
+ */
+export interface WalletCompleteWithdrawalResponse {
+  success: boolean;
+  message: string;
+  wallet_transaction_id: string | null;
+}
+
+/**
+ * Parámetros para aprobar retiro
+ */
+export interface ApproveWithdrawalParams {
+  request_id: string;
+  admin_notes?: string;
+}
+
+/**
+ * Parámetros para rechazar retiro
+ */
+export interface RejectWithdrawalParams {
+  request_id: string;
+  rejection_reason: string;
+}
+
+/**
+ * Parámetros para agregar cuenta bancaria
+ */
+export interface AddBankAccountParams {
+  account_type: BankAccountType;
+  account_number: string;
+  account_holder_name: string;
+  account_holder_document: string;
+  bank_name?: string;
+}
+
+/**
+ * Filtros para historial de retiros
+ */
+export interface WithdrawalFilters {
+  status?: WithdrawalStatus | WithdrawalStatus[];
+  from_date?: Date;
+  to_date?: Date;
+}
+
+/**
+ * Estado de carga para withdrawal operations
+ */
+export interface WithdrawalLoadingState {
+  requesting: boolean;
+  approving: boolean;
+  rejecting: boolean;
+  fetchingRequests: boolean;
+  addingBankAccount: boolean;
+  fetchingBankAccounts: boolean;
+}
+
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+// CONSOLIDATED WALLET HISTORY - Vista Unificada (Migration 009)
+// &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+/**
+ * Sistema de origen de la transacción
+ * Indica de dónde proviene el dato en la vista consolidada
+ */
+export type WalletHistorySourceSystem &#x3D;
+  | &#x27;legacy&#x27; // Solo en wallet_transactions (sistema anterior)
+  | &#x27;ledger&#x27; // Solo en wallet_ledger (sistema nuevo de doble partida)
+  | &#x27;both&#x27;; // Migrada: existe en ambos sistemas
+
+/**
+ * Entry de la vista consolidada v_wallet_history
+ *
+ * Esta interfaz representa una transacción de wallet que puede provenir de:
+ * - wallet_transactions (sistema legacy, deprecated)
+ * - wallet_ledger (sistema nuevo de doble partida)
+ * - Ambos (transacción migrada)
+ *
+ * Creada en: Migration 009 (2025-10-22)
+ * Vista SQL: v_wallet_history
+ * Uso: WalletService.getTransactions() usa esta vista internamente
+ */
+export interface WalletHistoryEntry {
+  // Campos principales normalizados
+  id: string;
+  user_id: string;
+  transaction_date: string; // TIMESTAMPTZ
+  transaction_type: string; // Normalizado de type (legacy) o kind (ledger)
+  status: string; // &#x27;pending&#x27; | &#x27;completed&#x27; | &#x27;failed&#x27; | &#x27;refunded&#x27;
+
+  // Monto (siempre en centavos para consistencia)
+  amount_cents: number; // BIGINT
+  currency: string; // &#x27;USD&#x27; | &#x27;UYU&#x27; | &#x27;ARS&#x27;
+
+  // Metadata unificada (JSONB)
+  metadata: {
+    description?: string;
+    reference_type?: WalletReferenceType;
+    reference_id?: string;
+    provider?: WalletPaymentProvider;
+    provider_transaction_id?: string;
+    provider_metadata?: Record&lt;string, unknown&gt;;
+    admin_notes?: string;
+    is_withdrawable?: boolean;
+    [key: string]: unknown; // Campos adicionales específicos de ledger/legacy
+  };
+
+  // Referencias
+  booking_id?: string; // UUID
+
+  // Sistema de origen (para debugging y migración)
+  source_system: WalletHistorySourceSystem;
+
+  // IDs originales (para traceability)
+  legacy_transaction_id?: string; // UUID si proviene de wallet_transactions
+  ledger_entry_id?: string; // UUID si proviene de wallet_ledger
+  ledger_ref?: string; // Ref de idempotencia (solo ledger)
+
+  // Timestamps
+  legacy_completed_at?: string; // completed_at de wallet_transactions
+  ledger_created_at?: string; // created_at de wallet_ledger
+}
+
+/**
+ * Estadísticas de migración legacy → ledger
+ * Retornada por: get_wallet_migration_stats() RPC function
+ */
+export interface WalletMigrationStats {
+  total_legacy_transactions: number; // Total en wallet_transactions
+  migrated_to_ledger: number; // Ya migradas (source_system &#x3D; &#x27;both&#x27;)
+  pending_migration: number; // Pendientes (source_system &#x3D; &#x27;legacy&#x27;)
+  ledger_only_entries: number; // Solo en ledger (source_system &#x3D; &#x27;ledger&#x27;)
+  migration_percentage: number; // % de progreso (0-100)
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'RequestWithdrawalParams.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

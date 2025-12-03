@@ -1,0 +1,1915 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >VehicleDocumentsService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/vehicle-documents.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#BUCKET_NAME" >BUCKET_NAME</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carOwnerNotifications" >carOwnerNotifications</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#carsService" >carsService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#supabase" >supabase</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteDocument" >deleteDocument</a>
+                            </li>
+                            <li>
+                                <a href="#getCarDocuments" >getCarDocuments</a>
+                            </li>
+                            <li>
+                                <a href="#getDocument" >getDocument</a>
+                            </li>
+                            <li>
+                                <a href="#getDocumentKindIcon" >getDocumentKindIcon</a>
+                            </li>
+                            <li>
+                                <a href="#getDocumentKindLabel" >getDocumentKindLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDocumentUrl" >getDocumentUrl</a>
+                            </li>
+                            <li>
+                                <a href="#getExpiringDocuments" >getExpiringDocuments</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMissingDocuments" >getMissingDocuments</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusLabel" >getStatusLabel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#hasRequiredDocuments" >hasRequiredDocuments</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#notifyDocumentUploaded" >notifyDocumentUploaded</a>
+                            </li>
+                            <li>
+                                <a href="#subscribeToDocumentStatusChanges" >subscribeToDocumentStatusChanges</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateDocument" >updateDocument</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadDocument" >uploadDocument</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteDocument</b></span>
+                        <a href="#deleteDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteDocument(documentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="207"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:207</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Eliminar un documento (solo si está pending)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>documentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCarDocuments"></a>
+                    <span class="name">
+                        <span ><b>getCarDocuments</b></span>
+                        <a href="#getCarDocuments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCarDocuments(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="72"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener todos los documentos de un vehículo</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;VehicleDocument[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocument"></a>
+                    <span class="name">
+                        <span ><b>getDocument</b></span>
+                        <a href="#getDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocument(documentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener un documento específico</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>documentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;VehicleDocument | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocumentKindIcon"></a>
+                    <span class="name">
+                        <span ><b>getDocumentKindIcon</b></span>
+                        <a href="#getDocumentKindIcon"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocumentKindIcon(kind: <a href="../undefineds/VehicleDocumentKind.html" target="_self">VehicleDocumentKind</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="401"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:401</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Iconos para tipos de documentos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#VehicleDocumentKind" target="_self" >VehicleDocumentKind</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocumentKindLabel"></a>
+                    <span class="name">
+                        <span ><b>getDocumentKindLabel</b></span>
+                        <a href="#getDocumentKindLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getDocumentKindLabel(kind: <a href="../undefineds/VehicleDocumentKind.html" target="_self">VehicleDocumentKind</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="375"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:375</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Labels para tipos de documentos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#VehicleDocumentKind" target="_self" >VehicleDocumentKind</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDocumentUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getDocumentUrl</b></span>
+                        <a href="#getDocumentUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDocumentUrl(storagePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="248"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:248</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener URL pública de un documento</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>storagePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getExpiringDocuments"></a>
+                    <span class="name">
+                        <span ><b>getExpiringDocuments</b></span>
+                        <a href="#getExpiringDocuments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getExpiringDocuments(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="351"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:351</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener documentos próximos a vencer (30 días)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Observable&lt;VehicleDocument[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMissingDocuments"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMissingDocuments</b></span>
+                        <a href="#getMissingDocuments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMissingDocuments(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:289</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Obtener lista de documentos faltantes para un auto</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;VehicleDocumentKind[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusLabel"></a>
+                    <span class="name">
+                        <span ><b>getStatusLabel</b></span>
+                        <a href="#getStatusLabel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusLabel(status: <a href="../undefineds/VehicleDocumentStatus.html" target="_self">VehicleDocumentStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="389"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:389</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Labels para estados</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#VehicleDocumentStatus" target="_self" >VehicleDocumentStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasRequiredDocuments"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>hasRequiredDocuments</b></span>
+                        <a href="#hasRequiredDocuments"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasRequiredDocuments(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="263"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:263</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Verificar si un auto tiene todos los documentos requeridos</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="notifyDocumentUploaded"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>notifyDocumentUploaded</b></span>
+                        <a href="#notifyDocumentUploaded"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>notifyDocumentUploaded(document: <a href="../interfaces/VehicleDocument.html" target="_self">VehicleDocument</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="165"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:165</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Notifica al usuario cuando se sube un documento</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>document</td>
+                                            <td>
+                                                            <code><a href="../interfaces/VehicleDocument.html" target="_self" >VehicleDocument</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="subscribeToDocumentStatusChanges"></a>
+                    <span class="name">
+                        <span ><b>subscribeToDocumentStatusChanges</b></span>
+                        <a href="#subscribeToDocumentStatusChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>subscribeToDocumentStatusChanges(carId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, callback: (document: <a href="../interfaces/VehicleDocument.html">VehicleDocument</a>) => void)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="318"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:318</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Suscribirse a cambios de estado de documentos para notificar al usuario</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>carId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>ID del auto</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>callback</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Callback cuando cambia el estado</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateDocument</b></span>
+                        <a href="#updateDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateDocument(documentId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, updates: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="189"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:189</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Actualizar un documento (solo si está pending)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>documentId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>updates</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadDocument"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadDocument</b></span>
+                        <a href="#uploadDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadDocument(params: <a href="../interfaces/UploadDocumentParams.html" target="_self">UploadDocumentParams</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:112</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Subir un documento</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>params</td>
+                                            <td>
+                                                            <code><a href="../interfaces/UploadDocumentParams.html" target="_self" >UploadDocumentParams</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;VehicleDocument&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BUCKET_NAME"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>BUCKET_NAME</b></span>
+                        <a href="#BUCKET_NAME"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&#x27;vehicle-documents&#x27;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:65</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carOwnerNotifications"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carOwnerNotifications</b></span>
+                        <a href="#carOwnerNotifications"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CarOwnerNotificationsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:66</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="carsService"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>carsService</b></span>
+                        <a href="#carsService"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>inject(CarsService)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supabase"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>supabase</b></span>
+                        <a href="#supabase"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>injectSupabase()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/app/core/services/vehicle-documents.service.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { Observable, from, map, catchError, of } from &#x27;rxjs&#x27;;
+import { injectSupabase } from &#x27;./supabase-client.service&#x27;;
+import { CarOwnerNotificationsService } from &#x27;./car-owner-notifications.service&#x27;;
+import { CarsService } from &#x27;./cars.service&#x27;;
+
+/**
+ * VehicleDocumentsService
+ *
+ * Servicio para gestión de documentos del vehículo.
+ *
+ * Documentos soportados:
+ * - registration: Cédula verde/título de propiedad
+ * - insurance: Póliza de seguro
+ * - technical_inspection: Revisión técnica (VTV)
+ * - circulation_permit: Permiso de circulación
+ * - ownership_proof: Comprobante de titularidad
+ *
+ * Estados:
+ * - pending: Subido, esperando verificación
+ * - verified: Verificado por admin
+ * - rejected: Rechazado por admin
+ *
+ * Storage:
+ * - Bucket: &#x27;vehicle-documents&#x27;
+ * - Path: {car_id}/{document_kind}_{timestamp}.{ext}
+ */
+
+export type VehicleDocumentKind &#x3D;
+  | &#x27;registration&#x27;
+  | &#x27;insurance&#x27;
+  | &#x27;technical_inspection&#x27;
+  | &#x27;circulation_permit&#x27;
+  | &#x27;ownership_proof&#x27;;
+
+export type VehicleDocumentStatus &#x3D; &#x27;pending&#x27; | &#x27;verified&#x27; | &#x27;rejected&#x27;;
+
+export interface VehicleDocument {
+  id: string;
+  car_id: string;
+  kind: VehicleDocumentKind;
+  storage_path: string;
+  status: VehicleDocumentStatus;
+  expiry_date?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+  verified_by?: string;
+  verified_at?: string;
+}
+
+export interface UploadDocumentParams {
+  car_id: string;
+  kind: VehicleDocumentKind;
+  file: File;
+  expiry_date?: string;
+  notes?: string;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class VehicleDocumentsService {
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly BUCKET_NAME &#x3D; &#x27;vehicle-documents&#x27;;
+  private readonly carOwnerNotifications &#x3D; inject(CarOwnerNotificationsService);
+  private readonly carsService &#x3D; inject(CarsService);
+
+  /**
+   * Obtener todos los documentos de un vehículo
+   */
+  getCarDocuments(carId: string): Observable&lt;VehicleDocument[]&gt; {
+    return from(
+      this.supabase
+        .from(&#x27;vehicle_documents&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .order(&#x27;created_at&#x27;, { ascending: false }),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        return (data as VehicleDocument[]) || [];
+      }),
+      catchError((error) &#x3D;&gt; {
+        console.error(&#x27;Error fetching car documents:&#x27;, error);
+        return of([]);
+      }),
+    );
+  }
+
+  /**
+   * Obtener un documento específico
+   */
+  getDocument(documentId: string): Observable&lt;VehicleDocument | null&gt; {
+    return from(
+      this.supabase.from(&#x27;vehicle_documents&#x27;).select(&#x27;*&#x27;).eq(&#x27;id&#x27;, documentId).single(),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) {
+          if (error.code &#x3D;&#x3D;&#x3D; &#x27;PGRST116&#x27;) return null;
+          throw error;
+        }
+        return data as VehicleDocument;
+      }),
+      catchError(() &#x3D;&gt; of(null)),
+    );
+  }
+
+  /**
+   * Subir un documento
+   */
+  async uploadDocument(params: UploadDocumentParams): Promise&lt;VehicleDocument&gt; {
+    const { car_id, kind, file, expiry_date, notes } &#x3D; params;
+
+    // 1. Upload file to storage
+    const timestamp &#x3D; Date.now();
+    const ext &#x3D; file.name.split(&#x27;.&#x27;).pop();
+    const fileName &#x3D; &#x60;${kind}_${timestamp}.${ext}&#x60;;
+    const storagePath &#x3D; &#x60;${car_id}/${fileName}&#x60;;
+
+    const { error: uploadError } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .upload(storagePath, file, {
+        cacheControl: &#x27;3600&#x27;,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw new Error(&#x60;Error uploading file: ${uploadError.message}&#x60;);
+    }
+
+    // 2. Create database record
+    const { data, error: dbError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .insert({
+        car_id,
+        kind,
+        storage_path: storagePath,
+        status: &#x27;pending&#x27;,
+        expiry_date,
+        notes,
+      })
+      .select()
+      .single();
+
+    if (dbError) {
+      // Rollback: delete uploaded file
+      await this.supabase.storage.from(this.BUCKET_NAME).remove([storagePath]);
+      throw new Error(&#x60;Error creating document record: ${dbError.message}&#x60;);
+    }
+
+    const document &#x3D; data as VehicleDocument;
+
+    // ✅ NUEVO: Notificar al usuario que el documento fue subido
+    this.notifyDocumentUploaded(document).catch(() &#x3D;&gt; {
+      // Silently fail - notification is optional
+    });
+
+    return document;
+  }
+
+  /**
+   * Notifica al usuario cuando se sube un documento
+   */
+  private async notifyDocumentUploaded(document: VehicleDocument): Promise&lt;void&gt; {
+    try {
+      const car &#x3D; await this.carsService.getCarById(document.car_id);
+      if (!car) return;
+
+      const carName &#x3D; car.title || &#x60;${car.brand || &#x27;&#x27;} ${car.model || &#x27;&#x27;}&#x60;.trim() || &#x27;tu auto&#x27;;
+      const documentType &#x3D; this.getDocumentKindLabel(document.kind);
+      const documentsUrl &#x3D; &#x60;/cars/${document.car_id}/documents&#x60;;
+
+      this.carOwnerNotifications.notifyDocumentStatusChanged(
+        documentType,
+        carName,
+        &#x27;verified&#x27;,
+        undefined,
+        documentsUrl,
+      );
+    } catch {
+      // Silently fail
+    }
+  }
+
+  /**
+   * Actualizar un documento (solo si está pending)
+   */
+  async updateDocument(
+    documentId: string,
+    updates: { expiry_date?: string; notes?: string },
+  ): Promise&lt;void&gt; {
+    const { error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .update(updates)
+      .eq(&#x27;id&#x27;, documentId)
+      .eq(&#x27;status&#x27;, &#x27;pending&#x27;); // Solo se puede actualizar si está pending
+
+    if (error) {
+      throw new Error(&#x60;Error updating document: ${error.message}&#x60;);
+    }
+  }
+
+  /**
+   * Eliminar un documento (solo si está pending)
+   */
+  async deleteDocument(documentId: string): Promise&lt;void&gt; {
+    // 1. Get document to get storage path
+    const { data: doc, error: fetchError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;storage_path, status&#x27;)
+      .eq(&#x27;id&#x27;, documentId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(&#x60;Error fetching document: ${fetchError.message}&#x60;);
+    }
+
+    if (doc.status !&#x3D;&#x3D; &#x27;pending&#x27;) {
+      throw new Error(&#x27;Cannot delete verified or rejected documents&#x27;);
+    }
+
+    // 2. Delete from storage
+    const { error: storageError } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .remove([doc.storage_path]);
+
+    if (storageError) {
+      console.warn(&#x27;Error deleting file from storage:&#x27;, storageError);
+      // Continue anyway - mejor borrar el registro aunque falle el storage
+    }
+
+    // 3. Delete from database
+    const { error: deleteError } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .delete()
+      .eq(&#x27;id&#x27;, documentId)
+      .eq(&#x27;status&#x27;, &#x27;pending&#x27;);
+
+    if (deleteError) {
+      throw new Error(&#x60;Error deleting document: ${deleteError.message}&#x60;);
+    }
+  }
+
+  /**
+   * Obtener URL pública de un documento
+   */
+  async getDocumentUrl(storagePath: string): Promise&lt;string&gt; {
+    const { data } &#x3D; await this.supabase.storage
+      .from(this.BUCKET_NAME)
+      .createSignedUrl(storagePath, 3600); // 1 hour
+
+    if (!data?.signedUrl) {
+      throw new Error(&#x27;Could not generate signed URL&#x27;);
+    }
+
+    return data.signedUrl;
+  }
+
+  /**
+   * Verificar si un auto tiene todos los documentos requeridos
+   */
+  async hasRequiredDocuments(carId: string): Promise&lt;boolean&gt; {
+    const requiredKinds: VehicleDocumentKind[] &#x3D; [
+      &#x27;registration&#x27;,
+      &#x27;insurance&#x27;,
+      &#x27;technical_inspection&#x27;,
+    ];
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;kind, status&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .in(&#x27;kind&#x27;, requiredKinds)
+      .eq(&#x27;status&#x27;, &#x27;verified&#x27;);
+
+    if (error) {
+      console.error(&#x27;Error checking required documents:&#x27;, error);
+      return false;
+    }
+
+    const verifiedKinds &#x3D; new Set((data || []).map((d) &#x3D;&gt; d.kind));
+    return requiredKinds.every((kind) &#x3D;&gt; verifiedKinds.has(kind));
+  }
+
+  /**
+   * Obtener lista de documentos faltantes para un auto
+   */
+  async getMissingDocuments(carId: string): Promise&lt;VehicleDocumentKind[]&gt; {
+    const requiredKinds: VehicleDocumentKind[] &#x3D; [
+      &#x27;registration&#x27;,
+      &#x27;insurance&#x27;,
+      &#x27;technical_inspection&#x27;,
+    ];
+
+    const { data, error } &#x3D; await this.supabase
+      .from(&#x27;vehicle_documents&#x27;)
+      .select(&#x27;kind, status&#x27;)
+      .eq(&#x27;car_id&#x27;, carId)
+      .in(&#x27;kind&#x27;, requiredKinds)
+      .eq(&#x27;status&#x27;, &#x27;verified&#x27;);
+
+    if (error) {
+      console.error(&#x27;Error checking documents:&#x27;, error);
+      return requiredKinds; // Si hay error, asumir que faltan todos
+    }
+
+    const verifiedKinds &#x3D; new Set((data || []).map((d) &#x3D;&gt; d.kind));
+    return requiredKinds.filter((kind) &#x3D;&gt; !verifiedKinds.has(kind));
+  }
+
+  /**
+   * Suscribirse a cambios de estado de documentos para notificar al usuario
+   *
+   * @param carId - ID del auto
+   * @param callback - Callback cuando cambia el estado
+   */
+  subscribeToDocumentStatusChanges(
+    carId: string,
+    callback: (document: VehicleDocument) &#x3D;&gt; void,
+  ): () &#x3D;&gt; void {
+    const channel &#x3D; this.supabase
+      .channel(&#x60;vehicle-documents-${carId}&#x60;)
+      .on(
+        &#x27;postgres_changes&#x27;,
+        {
+          event: &#x27;UPDATE&#x27;,
+          schema: &#x27;public&#x27;,
+          table: &#x27;vehicle_documents&#x27;,
+          filter: &#x60;car_id&#x3D;eq.${carId}&#x60;,
+        },
+        async (payload) &#x3D;&gt; {
+          const document &#x3D; payload.new as VehicleDocument;
+
+          // Solo notificar si cambió el status a verified o rejected
+          if (document.status &#x3D;&#x3D;&#x3D; &#x27;verified&#x27; || document.status &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27;) {
+            callback(document);
+          }
+        },
+      )
+      .subscribe();
+
+    return () &#x3D;&gt; {
+      this.supabase.removeChannel(channel);
+    };
+  }
+
+  /**
+   * Obtener documentos próximos a vencer (30 días)
+   */
+  getExpiringDocuments(carId: string): Observable&lt;VehicleDocument[]&gt; {
+    const thirtyDaysFromNow &#x3D; new Date();
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+    return from(
+      this.supabase
+        .from(&#x27;vehicle_documents&#x27;)
+        .select(&#x27;*&#x27;)
+        .eq(&#x27;car_id&#x27;, carId)
+        .eq(&#x27;status&#x27;, &#x27;verified&#x27;)
+        .not(&#x27;expiry_date&#x27;, &#x27;is&#x27;, null)
+        .lte(&#x27;expiry_date&#x27;, thirtyDaysFromNow.toISOString().split(&#x27;T&#x27;)[0]),
+    ).pipe(
+      map(({ data, error }) &#x3D;&gt; {
+        if (error) throw error;
+        return (data as VehicleDocument[]) || [];
+      }),
+      catchError(() &#x3D;&gt; of([])),
+    );
+  }
+
+  /**
+   * Labels para tipos de documentos
+   */
+  getDocumentKindLabel(kind: VehicleDocumentKind): string {
+    const labels: Record&lt;VehicleDocumentKind, string&gt; &#x3D; {
+      registration: &#x27;Cédula Verde / Título&#x27;,
+      insurance: &#x27;Póliza de Seguro&#x27;,
+      technical_inspection: &#x27;Revisión Técnica (VTV)&#x27;,
+      circulation_permit: &#x27;Permiso de Circulación&#x27;,
+      ownership_proof: &#x27;Comprobante de Titularidad&#x27;,
+    };
+    return labels[kind];
+  }
+
+  /**
+   * Labels para estados
+   */
+  getStatusLabel(status: VehicleDocumentStatus): string {
+    const labels: Record&lt;VehicleDocumentStatus, string&gt; &#x3D; {
+      pending: &#x27;Pendiente de Verificación&#x27;,
+      verified: &#x27;Verificado&#x27;,
+      rejected: &#x27;Rechazado&#x27;,
+    };
+    return labels[status];
+  }
+
+  /**
+   * Iconos para tipos de documentos
+   */
+  getDocumentKindIcon(kind: VehicleDocumentKind): string {
+    const icons: Record&lt;VehicleDocumentKind, string&gt; &#x3D; {
+      registration: &#x27;📋&#x27;,
+      insurance: &#x27;🛡️&#x27;,
+      technical_inspection: &#x27;🔧&#x27;,
+      circulation_permit: &#x27;🚦&#x27;,
+      ownership_proof: &#x27;📄&#x27;,
+    };
+    return icons[kind];
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'VehicleDocumentsService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

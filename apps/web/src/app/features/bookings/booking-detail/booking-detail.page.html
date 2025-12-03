@@ -667,6 +667,37 @@
               </div>
             </div>
 
+            <!-- Damage Comparison - Shows when both inspections are complete -->
+            <div
+              *ngIf="hasCheckIn() && hasCheckOut()"
+              class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
+            >
+              <h3 class="h5 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-warning-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Comparación de Inspecciones
+              </h3>
+              <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
+            </div>
+
+            <!-- Settlement Simulator - Only for owners on completed bookings -->
+            <div
+              *ngIf="isOwner() && (booking()?.status === 'completed' || booking()?.owner_reported_damages)"
+              class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-warning-border/30"
+            >
+              <h3 class="h5 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+                Simulador de Liquidación
+              </h3>
+              <p class="text-sm text-text-secondary mb-4">
+                Calculá cómo se distribuirían los fondos en caso de un siniestro o daño reportado.
+              </p>
+              <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
+            </div>
+
             <!-- Claims/Siniestros Section -->
             <div
               *ngIf="isRenter() && (canReportClaim() || hasClaim())"

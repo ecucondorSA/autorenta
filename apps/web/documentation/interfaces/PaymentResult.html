@@ -1,0 +1,920 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  PaymentResult</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/core/services/payment-orchestration.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Result of payment processing</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#bookingId" 
+>
+                                            bookingId
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#error" 
+>
+                                            error
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#mercadoPagoInitPoint" 
+>
+                                            mercadoPagoInitPoint
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#message" 
+>
+                                            message
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#paymentIntentId" 
+>
+                                            paymentIntentId
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#success" 
+>
+                                            success
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="bookingId"></a>
+                                        <span class="name "><b>bookingId</b>
+                                            <a href="#bookingId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>bookingId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="error"></a>
+                                        <span class="name "><b>error</b>
+                                            <a href="#error">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>error:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="mercadoPagoInitPoint"></a>
+                                        <span class="name "><b>mercadoPagoInitPoint</b>
+                                            <a href="#mercadoPagoInitPoint">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>mercadoPagoInitPoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="message"></a>
+                                        <span class="name "><b>message</b>
+                                            <a href="#message">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>message:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="paymentIntentId"></a>
+                                        <span class="name "><b>paymentIntentId</b>
+                                            <a href="#paymentIntentId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>paymentIntentId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="success"></a>
+                                        <span class="name "><b>success</b>
+                                            <a href="#success">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>success:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, inject } from &#x27;@angular/core&#x27;;
+import { Observable, from, throwError, of } from &#x27;rxjs&#x27;;
+import { catchError, map, switchMap } from &#x27;rxjs/operators&#x27;;
+import { PaymentsService } from &#x27;./payments.service&#x27;;
+import { PaymentAuthorizationService } from &#x27;./payment-authorization.service&#x27;;
+import { SplitPaymentService } from &#x27;./split-payment.service&#x27;;
+import { BookingsService } from &#x27;./bookings.service&#x27;;
+import { WalletService } from &#x27;./wallet.service&#x27;;
+import { LoggerService } from &#x27;./logger.service&#x27;;
+
+/**
+ * Payment method for a booking
+ */
+export type PaymentMethod &#x3D; &#x27;wallet&#x27; | &#x27;credit_card&#x27; | &#x27;partial_wallet&#x27;;
+
+/**
+ * Parameters for booking payment
+ */
+export interface BookingPaymentParams {
+  bookingId: string;
+  method: PaymentMethod;
+  totalAmount: number;
+  currency: string;
+  walletAmount?: number; // For partial_wallet
+  cardAmount?: number; // For partial_wallet
+}
+
+/**
+ * Result of payment processing
+ */
+export interface PaymentResult {
+  success: boolean;
+  bookingId: string;
+  paymentIntentId?: string;
+  mercadoPagoInitPoint?: string;
+  message: string;
+  error?: string;
+}
+
+/**
+ * Parameters for refund processing
+ */
+export interface RefundParams {
+  bookingId: string;
+  amount: number;
+  reason: string;
+  refundType: &#x27;full&#x27; | &#x27;partial&#x27;;
+}
+
+/**
+ * Result of refund processing
+ */
+export interface RefundResult {
+  success: boolean;
+  refundId?: string;
+  amount: number;
+  message: string;
+  error?: string;
+}
+
+interface PaymentWebhookPayload {
+  booking_id?: string;
+  status?: string;
+  payment_id?: string;
+}
+
+/**
+ * Payment Orchestration Service
+ *
+ * High-level service that orchestrates all payment flows across the application.
+ * This service acts as a facade for complex payment operations, delegating to
+ * specialized services for specific tasks.
+ *
+ * Responsibilities:
+ * - Orchestrate booking payment flows (wallet, credit card, partial)
+ * - Handle payment webhooks from providers
+ * - Process refunds for cancelled bookings
+ * - Coordinate payment splitting for marketplace
+ * - Send payment notifications
+ * - Handle payment errors with retry logic
+ *
+ * Architecture:
+ * - High-level orchestration (this service)
+ * - Mid-level services (CheckoutPaymentService - feature-specific)
+ * - Low-level services (PaymentsService, WalletService, etc.)
+ *
+ * Usage:
+ * - Controllers and webhooks use this service
+ * - Feature services (CheckoutPaymentService) can also use this for complex flows
+ * - Never bypass this service for critical payment operations
+ */
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class PaymentOrchestrationService {
+  private readonly paymentsService &#x3D; inject(PaymentsService);
+  private readonly authService &#x3D; inject(PaymentAuthorizationService);
+  private readonly splitService &#x3D; inject(SplitPaymentService);
+  private readonly bookingsService &#x3D; inject(BookingsService);
+  private readonly walletService &#x3D; inject(WalletService);
+  private readonly logger &#x3D; inject(LoggerService);
+
+  /**
+   * Process a booking payment (high-level orchestration)
+   *
+   * This method decides which payment flow to use based on the method
+   * and coordinates all necessary services.
+   */
+  processBookingPayment(params: BookingPaymentParams): Observable&lt;PaymentResult&gt; {
+    this.logger.info(&#x27;Processing booking payment&#x27;, JSON.stringify({ params }));
+
+    switch (params.method) {
+      case &#x27;wallet&#x27;:
+        return this.processWalletPayment(params);
+      case &#x27;credit_card&#x27;:
+        return this.processCreditCardPayment(params);
+      case &#x27;partial_wallet&#x27;:
+        return this.processPartialWalletPayment(params);
+      default:
+        return throwError(() &#x3D;&gt; new Error(&#x60;Unknown payment method: ${params.method}&#x60;));
+    }
+  }
+
+  /**
+   * Process wallet payment
+   */
+  private processWalletPayment(params: BookingPaymentParams): Observable&lt;PaymentResult&gt; {
+    return from(this.bookingsService.getBookingById(params.bookingId)).pipe(
+      switchMap((booking) &#x3D;&gt; {
+        if (!booking) {
+          return throwError(() &#x3D;&gt; new Error(&#x27;Booking not found&#x27;));
+        }
+
+        // Lock funds in wallet
+        return this.walletService.lockFunds(
+          params.bookingId,
+          params.totalAmount,
+          &#x60;Payment for booking ${params.bookingId}&#x60;,
+        );
+      }),
+      switchMap(() &#x3D;&gt; {
+        // Update booking status
+        return from(
+          this.bookingsService.updateBooking(params.bookingId, {
+            status: &#x27;confirmed&#x27;,
+            payment_method: &#x27;wallet&#x27;,
+          }),
+        );
+      }),
+      switchMap(() &#x3D;&gt; {
+        // Create payment intent
+        return from(this.paymentsService.createIntent(params.bookingId));
+      }),
+      map((intent) &#x3D;&gt; ({
+        success: true,
+        bookingId: params.bookingId,
+        paymentIntentId: intent.id,
+        message: &#x27;Payment processed successfully with wallet&#x27;,
+      })),
+      catchError((error) &#x3D;&gt; {
+        this.logger.error(&#x27;Wallet payment failed&#x27;, error);
+        return of({
+          success: false,
+          bookingId: params.bookingId,
+          message: &#x27;Failed to process wallet payment&#x27;,
+          error: error.message || &#x27;Unknown error&#x27;,
+        });
+      }),
+    );
+  }
+
+  /**
+   * Process credit card payment
+   */
+  private processCreditCardPayment(params: BookingPaymentParams): Observable&lt;PaymentResult&gt; {
+    return from(this.paymentsService.createIntent(params.bookingId)).pipe(
+      switchMap((intent) &#x3D;&gt; {
+        // Update booking to pending_payment
+        return from(
+          this.bookingsService.updateBooking(params.bookingId, {
+            status: &#x27;pending_payment&#x27;,
+            payment_method: &#x27;credit_card&#x27;,
+          }),
+        ).pipe(map(() &#x3D;&gt; intent));
+      }),
+      map((intent) &#x3D;&gt; ({
+        success: true,
+        bookingId: params.bookingId,
+        paymentIntentId: intent.id,
+        mercadoPagoInitPoint: &#x27;https://mercadopago.com/checkout&#x27;, // Replace with actual URL
+        message: &#x27;Redirecting to payment provider&#x27;,
+      })),
+      catchError((error) &#x3D;&gt; {
+        this.logger.error(&#x27;Credit card payment failed&#x27;, error);
+        return of({
+          success: false,
+          bookingId: params.bookingId,
+          message: &#x27;Failed to initiate credit card payment&#x27;,
+          error: error.message || &#x27;Unknown error&#x27;,
+        });
+      }),
+    );
+  }
+
+  /**
+   * Process partial wallet payment
+   */
+  private processPartialWalletPayment(params: BookingPaymentParams): Observable&lt;PaymentResult&gt; {
+    if (!params.walletAmount || !params.cardAmount) {
+      return throwError(() &#x3D;&gt; new Error(&#x27;Wallet and card amounts required for partial payment&#x27;));
+    }
+
+    return this.walletService
+      .lockFunds(
+        params.bookingId,
+        params.walletAmount,
+        &#x60;Partial payment for booking ${params.bookingId}&#x60;,
+      )
+      .pipe(
+        switchMap(() &#x3D;&gt; {
+          // Create payment intent for remaining amount
+          return from(this.paymentsService.createIntent(params.bookingId));
+        }),
+        switchMap((intent) &#x3D;&gt; {
+          // Update booking
+          return from(
+            this.bookingsService.updateBooking(params.bookingId, {
+              status: &#x27;pending_payment&#x27;,
+              payment_method: &#x27;partial_wallet&#x27;,
+              wallet_amount_cents: Math.round(params.walletAmount! * 100),
+            }),
+          ).pipe(map(() &#x3D;&gt; intent));
+        }),
+        map((intent) &#x3D;&gt; ({
+          success: true,
+          bookingId: params.bookingId,
+          paymentIntentId: intent.id,
+          mercadoPagoInitPoint: &#x27;https://mercadopago.com/checkout&#x27;, // Replace with actual URL
+          message: &#x27;Wallet funds locked, redirecting to payment provider for remaining amount&#x27;,
+        })),
+        catchError((error) &#x3D;&gt; {
+          this.logger.error(&#x27;Partial wallet payment failed&#x27;, error);
+          // Try to unlock funds if locking succeeded
+          this.walletService
+            .unlockFunds(params.bookingId, &#x27;Payment failed - reverting lock&#x27;)
+            .subscribe();
+
+          return of({
+            success: false,
+            bookingId: params.bookingId,
+            message: &#x27;Failed to process partial wallet payment&#x27;,
+            error: error.message || &#x27;Unknown error&#x27;,
+          });
+        }),
+      );
+  }
+
+  /**
+   * Handle payment webhook from provider
+   *
+   * This method processes IPN notifications from payment providers
+   * like MercadoPago and updates the booking status accordingly.
+   */
+  async handlePaymentWebhook(payload: unknown): Promise&lt;void&gt; {
+    this.logger.info(&#x27;Processing payment webhook&#x27;, JSON.stringify({ payload }));
+
+    try {
+      // Validate webhook signature (implement based on provider)
+      // const isValid &#x3D; await this.validateWebhookSignature(payload);
+      // if (!isValid) {
+      //   throw new Error(&#x27;Invalid webhook signature&#x27;);
+      // }
+
+      if (!this.isPaymentWebhookPayload(payload)) {
+        throw new Error(&#x27;Invalid webhook payload&#x27;);
+      }
+
+      const { booking_id, status, payment_id } &#x3D; payload;
+
+      if (!booking_id) {
+        throw new Error(&#x27;Missing booking_id in webhook payload&#x27;);
+      }
+
+      // Update payment intent status
+      if (payment_id) {
+        await this.paymentsService.getStatus(payment_id);
+      }
+
+      // Update booking status based on payment status
+      if (status &#x3D;&#x3D;&#x3D; &#x27;approved&#x27; || status &#x3D;&#x3D;&#x3D; &#x27;completed&#x27;) {
+        await this.bookingsService.updateBooking(booking_id, {
+          status: &#x27;confirmed&#x27;,
+        });
+
+        // Process payment split if applicable
+        // await this.processSplitPayment(booking_id);
+      } else if (status &#x3D;&#x3D;&#x3D; &#x27;rejected&#x27; || status &#x3D;&#x3D;&#x3D; &#x27;failed&#x27;) {
+        await this.bookingsService.updateBooking(booking_id, {
+          status: &#x27;cancelled&#x27;,
+        });
+
+        // Unlock wallet funds if they were locked
+        this.walletService.unlockFunds(booking_id, &#x27;Payment failed - releasing funds&#x27;).subscribe();
+      }
+
+      this.logger.info(&#x27;Webhook processed successfully&#x27;, JSON.stringify({ booking_id, status }));
+    } catch (error) {
+      this.logger.error(&#x27;Webhook processing failed&#x27;, String(error));
+      throw error;
+    }
+  }
+
+  private isPaymentWebhookPayload(payload: unknown): payload is PaymentWebhookPayload {
+    if (!payload || typeof payload !&#x3D;&#x3D; &#x27;object&#x27;) {
+      return false;
+    }
+
+    const candidate &#x3D; payload as Record&lt;string, unknown&gt;;
+    const isBookingIdValid &#x3D;
+      !(&#x27;booking_id&#x27; in candidate) || typeof candidate.booking_id &#x3D;&#x3D;&#x3D; &#x27;string&#x27;;
+    const isStatusValid &#x3D; !(&#x27;status&#x27; in candidate) || typeof candidate.status &#x3D;&#x3D;&#x3D; &#x27;string&#x27;;
+    const isPaymentIdValid &#x3D;
+      !(&#x27;payment_id&#x27; in candidate) || typeof candidate.payment_id &#x3D;&#x3D;&#x3D; &#x27;string&#x27;;
+
+    return isBookingIdValid &amp;&amp; isStatusValid &amp;&amp; isPaymentIdValid;
+  }
+
+  /**
+   * Process refund for cancelled booking
+   */
+  processRefund(params: RefundParams): Observable&lt;RefundResult&gt; {
+    this.logger.info(&#x27;Processing refund&#x27;, JSON.stringify({ params }));
+
+    return from(this.bookingsService.getBookingById(params.bookingId)).pipe(
+      switchMap((booking) &#x3D;&gt; {
+        if (!booking) {
+          return throwError(() &#x3D;&gt; new Error(&#x27;Booking not found&#x27;));
+        }
+
+        // Determine refund amount based on cancellation policy
+        const refundAmount &#x3D; this.calculateRefundAmount(booking, params);
+
+        // Unlock funds from wallet
+        if (booking.payment_method &#x3D;&#x3D;&#x3D; &#x27;wallet&#x27; || booking.payment_method &#x3D;&#x3D;&#x3D; &#x27;partial_wallet&#x27;) {
+          return this.walletService
+            .unlockFunds(params.bookingId, &#x60;Refund for cancelled booking&#x60;)
+            .pipe(
+              map(() &#x3D;&gt; ({
+                success: true,
+                amount: refundAmount,
+                message: &#x27;Funds unlocked successfully&#x27;,
+              })),
+            );
+        }
+
+        // For credit card payments, initiate refund with provider
+        return of({
+          success: true,
+          amount: refundAmount,
+          message: &#x27;Refund initiated with payment provider&#x27;,
+        });
+      }),
+      catchError((error) &#x3D;&gt; {
+        this.logger.error(&#x27;Refund processing failed&#x27;, error);
+        return of({
+          success: false,
+          amount: 0,
+          message: &#x27;Failed to process refund&#x27;,
+          error: error.message || &#x27;Unknown error&#x27;,
+        });
+      }),
+    );
+  }
+
+  /**
+   * Calculate refund amount based on cancellation policy
+   */
+  private calculateRefundAmount(booking: unknown, params: RefundParams): number {
+    if (params.refundType &#x3D;&#x3D;&#x3D; &#x27;full&#x27;) {
+      return params.amount;
+    }
+
+    // Implement cancellation policy logic here
+    // For now, return 50% for partial refunds
+    return params.amount * 0.5;
+  }
+
+  /**
+   * Get payment method statistics for analytics
+   */
+  async getPaymentMethodStats(): Promise&lt;{
+    wallet: number;
+    creditCard: number;
+    partialWallet: number;
+  }&gt; {
+    // Implement stats aggregation
+    return {
+      wallet: 0,
+      creditCard: 0,
+      partialWallet: 0,
+    };
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'PaymentResult.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

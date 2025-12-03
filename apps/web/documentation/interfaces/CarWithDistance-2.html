@@ -1,0 +1,1717 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>autorenta-web documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">autorenta-web documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  CarWithDistance</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app/features/marketplace/marketplace-v2.page.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/Car.html" target="_self" >Car</a></code>
+            </p>
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#distance" 
+>
+                                            distance
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#distanceText" 
+>
+                                            distanceText
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#latest_location" 
+>
+                                            latest_location
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="distance"></a>
+                                        <span class="name "><b>distance</b>
+                                            <a href="#distance">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>distance:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="distanceText"></a>
+                                        <span class="name "><b>distanceText</b>
+                                            <a href="#distanceText">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>distanceText:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="latest_location"></a>
+                                        <span class="name "><b>latest_location</b>
+                                            <a href="#latest_location">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>latest_location:     <code>literal type</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CommonModule, isPlatformBrowser } from &#x27;@angular/common&#x27;;
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+  ViewChild,
+} from &#x27;@angular/core&#x27;;
+import { FormsModule } from &#x27;@angular/forms&#x27;;
+import { Meta, Title } from &#x27;@angular/platform-browser&#x27;;
+import { Router, RouterModule } from &#x27;@angular/router&#x27;;
+import { RealtimeChannel } from &#x27;@supabase/supabase-js&#x27;;
+import { environment } from &#x27;../../../environments/environment&#x27;;
+import { Car } from &#x27;../../core/models&#x27;;
+import { CarMapLocation } from &#x27;../../core/services/car-locations.service&#x27;;
+import { CarsService } from &#x27;../../core/services/cars.service&#x27;;
+import { DistanceCalculatorService } from &#x27;../../core/services/distance-calculator.service&#x27;;
+import { GeocodingResult, GeocodingService } from &#x27;../../core/services/geocoding.service&#x27;;
+import { LocationService } from &#x27;../../core/services/location.service&#x27;;
+import { injectSupabase } from &#x27;../../core/services/supabase-client.service&#x27;;
+import { UrgentRentalService } from &#x27;../../core/services/urgent-rental.service&#x27;;
+import {
+  FabAction,
+  FloatingActionFabComponent,
+} from &#x27;../../shared/components/floating-action-fab/floating-action-fab.component&#x27;;
+import { FilterState } from &#x27;../../shared/components/map-filters/map-filters.component&#x27;;
+
+import { QuickFilter } from &#x27;../../shared/components/utility-bar/utility-bar.component&#x27;;
+
+import { AnalyticsService } from &#x27;../../core/services/analytics.service&#x27;;
+import { BookingsService } from &#x27;../../core/services/bookings.service&#x27;;
+import { BreakpointService } from &#x27;../../core/services/breakpoint.service&#x27;;
+import { NotificationManagerService } from &#x27;../../core/services/notification-manager.service&#x27;;
+import { TikTokEventsService } from &#x27;../../core/services/tiktok-events.service&#x27;;
+import {
+  Car3dViewerComponent,
+  CarPartInfo,
+} from &#x27;../../shared/components/car-3d-viewer/car-3d-viewer.component&#x27;;
+import {
+  DateRange,
+  DateRangePickerComponent,
+} from &#x27;../../shared/components/date-range-picker/date-range-picker.component&#x27;;
+
+import { CarLatestLocation, CarLocationService } from &#x27;../../core/services/car-location.service&#x27;;
+import { SeoSchemaService } from &#x27;../../core/services/seo-schema.service&#x27;;
+import { ThemeService } from &#x27;../../core/services/theme.service&#x27;;
+import { FAQSectionComponent } from &#x27;./components&#x27;;
+
+export interface LatLngBoundsLiteral {
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+
+export interface CarWithDistance extends Car {
+  distance?: number;
+  distanceText?: string;
+  latest_location?: {
+    lat: number;
+    lng: number;
+    recorded_at: string;
+  };
+}
+
+export type ViewMode &#x3D; &#x27;grid&#x27; | &#x27;list&#x27; | &#x27;map&#x27;;
+
+// Type alias for backward compatibility
+type ToastType &#x3D; &#x27;success&#x27; | &#x27;info&#x27; | &#x27;warning&#x27; | &#x27;error&#x27;;
+
+export interface Stat {
+  label: string;
+  value: string | number;
+  icon: string;
+}
+
+@Component({
+  selector: &#x27;app-marketplace-v2-page&#x27;,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+
+    FloatingActionFabComponent,
+
+    DateRangePickerComponent,
+    Car3dViewerComponent,
+
+    FAQSectionComponent,
+  ],
+  templateUrl: &#x27;./marketplace-v2.page.html&#x27;,
+  styleUrls: [&#x27;./marketplace-v2.page.css&#x27;],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MarketplaceV2Page implements OnInit, OnDestroy {
+  @ViewChild(&#x27;drawerContent&#x27;, { read: ElementRef }) drawerContent?: ElementRef&lt;HTMLDivElement&gt;;
+  @ViewChild(&#x27;carViewer&#x27;) carViewer?: Car3dViewerComponent;
+
+  private readonly router &#x3D; inject(Router);
+  private readonly carsService &#x3D; inject(CarsService);
+  private readonly locationService &#x3D; inject(LocationService);
+  private readonly geocodingService &#x3D; inject(GeocodingService);
+  private readonly urgentRentalService &#x3D; inject(UrgentRentalService);
+  private readonly notificationManager &#x3D; inject(NotificationManagerService);
+  private readonly tiktokEvents &#x3D; inject(TikTokEventsService);
+  private readonly distanceCalculator &#x3D; inject(DistanceCalculatorService);
+  private readonly bookingsService &#x3D; inject(BookingsService);
+  private readonly analyticsService &#x3D; inject(AnalyticsService);
+  private readonly breakpoint &#x3D; inject(BreakpointService);
+  private readonly carLocationService &#x3D; inject(CarLocationService);
+  private readonly supabase &#x3D; injectSupabase();
+  private readonly platformId &#x3D; inject(PLATFORM_ID);
+  private readonly isBrowser &#x3D; isPlatformBrowser(this.platformId);
+  private readonly meta &#x3D; inject(Meta);
+  private readonly titleService &#x3D; inject(Title);
+  private readonly seoSchemaService &#x3D; inject(SeoSchemaService);
+  readonly themeService &#x3D; inject(ThemeService);
+  private locationSearchTimeout?: ReturnType&lt;typeof setTimeout&gt;;
+
+  // State
+  readonly loading &#x3D; signal(false);
+  readonly error &#x3D; signal&lt;string | null&gt;(null);
+  readonly cars &#x3D; signal&lt;Car[]&gt;([]);
+  readonly selectedCarId &#x3D; signal&lt;string | null&gt;(null);
+  readonly latestLocations &#x3D; signal&lt;Record&lt;string, CarLatestLocation&gt;&gt;({});
+
+  // Calculator State
+  readonly calculatorCarValue &#x3D; signal(15000000);
+  readonly calculatorDays &#x3D; signal(15);
+  readonly calculatorEarnings &#x3D; computed(() &#x3D;&gt; {
+    // Estimación: 0.2% del valor del auto por día (tarifa promedio)
+    // Ejemplo: Auto de 15M -&gt; 30.000 por día
+    // Ganancia mensual &#x3D; tarifa * días
+    const dailyRate &#x3D; this.calculatorCarValue() * 0.002;
+    return Math.round(dailyRate * this.calculatorDays());
+  });
+
+  // Pagination
+  readonly currentPage &#x3D; signal(1);
+  readonly pageSize &#x3D; signal(12);
+  readonly totalCarsCount &#x3D; signal(0);
+  // User Location Signals
+  readonly userLocation &#x3D; signal&lt;{ lat: number; lng: number } | null&gt;(null);
+  readonly locationAccuracy &#x3D; signal&lt;number | null&gt;(null);
+  readonly lastLocationUpdate &#x3D; signal&lt;Date | null&gt;(null);
+  private locationWatchId: number | null &#x3D; null;
+
+  // UI State Signals
+
+  readonly drawerOpen &#x3D; signal(false);
+  readonly filtersVisible &#x3D; signal(true);
+  readonly dateRange &#x3D; signal&lt;DateRange&gt;({ from: null, to: null });
+  readonly mapFilters &#x3D; signal&lt;FilterState&gt;({
+    dateRange: null,
+    priceRange: null,
+    vehicleTypes: null,
+    immediateOnly: false,
+    transmission: null,
+  });
+  readonly urgentAvailability &#x3D; signal&lt;{
+    available: boolean;
+    distance?: number;
+    eta?: number;
+  } | null&gt;(null);
+  readonly expressMode &#x3D; signal(true);
+
+  readonly searchValue &#x3D; signal(&#x27;&#x27;);
+  readonly showFilters &#x3D; signal(false);
+  readonly viewMode &#x3D; signal&lt;ViewMode&gt;(&#x27;list&#x27;);
+  readonly toastMessage &#x3D; signal(&#x27;&#x27;);
+  readonly toastType &#x3D; signal&lt;ToastType&gt;(&#x27;info&#x27;);
+  readonly toastVisible &#x3D; signal(false);
+  readonly radiusKm &#x3D; signal(5); // Search radius in kilometers
+  readonly showDatePicker &#x3D; signal(false); // Modal de selector de fechas
+  readonly showLocationPicker &#x3D; signal(false); // Modal de selector de ubicación
+  readonly selectedLocation &#x3D; signal&lt;string&gt;(&#x27;&#x27;); // Ubicación seleccionada
+  readonly locationSuggestions &#x3D; signal&lt;GeocodingResult[]&gt;([]); // Sugerencias de ubicación
+  readonly showLocationSuggestions &#x3D; signal(false); // Mostrar dropdown de sugerencias
+  readonly locationSearchLoading &#x3D; signal(false); // Cargando sugerencias
+  readonly googleCalendarId &#x3D; signal&lt;string | null&gt;(environment.googleCalendarId || null); // ID del calendario de Google desde environment
+  readonly showPriceTransparencyModal &#x3D; signal(false); // Modal de transparencia de precios
+  readonly mapBounds &#x3D; signal&lt;{ north: number; south: number; east: number; west: number } | null&gt;(
+    null,
+  );
+  readonly showSearchAreaButton &#x3D; signal(false); // Botón &quot;Buscar en esta zona&quot;
+
+  // 3D Model State
+  current3DView: &#x27;default&#x27; | &#x27;front&#x27; | &#x27;side&#x27; | &#x27;interior&#x27; | &#x27;top&#x27; &#x3D; &#x27;default&#x27;;
+  modelLoaded &#x3D; false;
+
+  // 3D Part Interaction State
+  readonly hoveredPart &#x3D; signal&lt;CarPartInfo | null&gt;(null);
+  readonly hoveredPartPosition &#x3D; signal&lt;{ x: number; y: number } | null&gt;(null);
+  readonly selectedPart &#x3D; signal&lt;CarPartInfo | null&gt;(null);
+
+  // Quick Booking State
+  readonly quickBookingCar &#x3D; signal&lt;Car | null&gt;(null);
+  readonly quickBookingModalOpen &#x3D; signal(false);
+
+  // Computed - Ahora usa BreakpointService
+  readonly isMobile &#x3D; this.breakpoint.isMobile;
+  readonly isTablet &#x3D; this.breakpoint.isTablet;
+  readonly isDesktop &#x3D; this.breakpoint.isDesktop;
+
+  readonly selectedCar &#x3D; computed(() &#x3D;&gt; {
+    const carId &#x3D; this.selectedCarId();
+    if (!carId) return null;
+    return this.cars().find((c) &#x3D;&gt; c.id &#x3D;&#x3D;&#x3D; carId) || null;
+  });
+
+  readonly quickFilters: QuickFilter[] &#x3D; [
+    { id: &#x27;immediate&#x27;, label: &#x27;Entrega inmediata&#x27;, icon: &#x27;lightning&#x27; },
+    { id: &#x27;verified&#x27;, label: &#x27;Dueño verificado&#x27;, icon: &#x27;verified&#x27; },
+    { id: &#x27;no-card&#x27;, label: &#x27;Sin tarjeta&#x27;, icon: &#x27;credit-card&#x27; },
+    { id: &#x27;near-me&#x27;, label: &#x27;Cerca de mí&#x27;, icon: &#x27;location&#x27; },
+    { id: &#x27;electric&#x27;, label: &#x27;Eléctrico&#x27;, icon: &#x27;battery-charging&#x27; },
+  ];
+
+  readonly fabActions: FabAction[] &#x3D; [
+    { id: &#x27;filter&#x27;, label: &#x27;Filtros&#x27;, icon: &#x27;filter&#x27;, color: &#x27;primary&#x27; },
+    { id: &#x27;location&#x27;, label: &#x27;Mi ubicación&#x27;, icon: &#x27;location&#x27;, color: &#x27;secondary&#x27; },
+  ];
+
+  readonly carsWithDistance &#x3D; computed&lt;CarWithDistance[]&gt;(() &#x3D;&gt; {
+    const carsList &#x3D; this.cars();
+    const userLoc &#x3D; this.userLocation();
+
+    if (!carsList.length || !userLoc) {
+      return carsList.map((car) &#x3D;&gt; ({ ...car }));
+    }
+
+    return carsList.map((car) &#x3D;&gt; {
+      if (!car.location_lat || !car.location_lng) {
+        return { ...car };
+      }
+
+      const distanceKm &#x3D; this.distanceCalculator.calculateDistance(
+        userLoc.lat,
+        userLoc.lng,
+        car.location_lat,
+        car.location_lng,
+      );
+
+      let distanceText: string;
+      if (distanceKm &lt; 1) {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm * 10) * 100}m&#x60;;
+      } else if (distanceKm &lt; 10) {
+        distanceText &#x3D; &#x60;${distanceKm.toFixed(1)}km&#x60;;
+      } else {
+        distanceText &#x3D; &#x60;${Math.round(distanceKm)}km&#x60;;
+      }
+
+      return {
+        ...car,
+        distance: distanceKm,
+        distanceText,
+      };
+    });
+  });
+
+  readonly carMapLocations &#x3D; computed(() &#x3D;&gt;
+    this.carsWithDistance().map((car) &#x3D;&gt; {
+      const gallery &#x3D; this.extractPhotoGallery(car);
+      return {
+        carId: car.id,
+        title: &#x60;${car.brand_text_backup || &#x27;&#x27;} ${car.model_text_backup || &#x27;&#x27;}&#x60;.trim(),
+        pricePerDay: car.price_per_day,
+        currency: car.currency || &#x27;ARS&#x27;,
+        lat: car.location_lat || 0,
+        lng: car.location_lng || 0,
+        updatedAt: car.updated_at || new Date().toISOString(),
+        city: car.location_city,
+        state: car.location_state,
+        country: car.location_country,
+        locationLabel: car.location_city || &#x27;Sin ubicación&#x27;,
+        photoUrl: gallery[0] ?? null,
+        photoGallery: gallery,
+        description: car.description,
+      };
+    }),
+  );
+
+  readonly statsStripData &#x3D; computed&lt;Stat[]&gt;(() &#x3D;&gt; {
+    const totalCars &#x3D; this.carsWithDistance().length;
+    const availableNow &#x3D; this.carsWithDistance().filter((c) &#x3D;&gt; c.distance &amp;&amp; c.distance &lt; 5).length;
+    const avgPrice &#x3D; this.calculateAveragePrice();
+    return [
+      { label: &#x27;Autos disponibles&#x27;, value: totalCars, icon: &#x27;car&#x27; },
+      { label: &#x27;Cerca de ti&#x27;, value: availableNow, icon: &#x27;location&#x27; },
+      { label: &#x27;Desde&#x27;, value: &#x60;$${avgPrice}/día&#x60;, icon: &#x27;money&#x27; },
+    ];
+  });
+
+  readonly availableNowCount &#x3D; computed(() &#x3D;&gt; {
+    return this.carsWithDistance().filter((c) &#x3D;&gt; c.distance &amp;&amp; c.distance &lt; 5).length;
+  });
+
+  readonly activeQuickFilters &#x3D; signal&lt;Set&lt;string&gt;&gt;(new Set());
+
+  /**
+   * Visible cars with client-side enhancements.
+   * Note: Most filters are now applied server-side in loadCars().
+   * This computed only handles:
+   * - Distance sorting (requires user location)
+   * - Client-only filters (verified, no-card) that can&#x27;t be done server-side
+   */
+  readonly visibleCars &#x3D; computed(() &#x3D;&gt; {
+    let cars &#x3D; [...this.carsWithDistance()];
+    const quickFilters &#x3D; this.activeQuickFilters();
+
+    // Client-only filters (can&#x27;t be done server-side due to nested relations)
+    if (quickFilters.has(&#x27;verified&#x27;)) {
+      cars &#x3D; cars.filter((c) &#x3D;&gt; c.owner?.is_email_verified &amp;&amp; c.owner?.is_phone_verified);
+    }
+
+    if (quickFilters.has(&#x27;no-card&#x27;)) {
+      cars &#x3D; cars.filter(
+        (c) &#x3D;&gt;
+          c.payment_methods?.some((pm) &#x3D;&gt;
+            [&#x27;debit_card&#x27;, &#x27;cash&#x27;, &#x27;transfer&#x27;, &#x27;wallet&#x27;].includes(pm),
+          ) || !c.payment_methods?.includes(&#x27;credit_card&#x27;),
+      );
+    }
+
+    // Distance sorting (requires user location - can&#x27;t be done server-side)
+    const sort &#x3D; this.sortOrder();
+    if (sort &#x3D;&#x3D;&#x3D; &#x27;distance&#x27;) {
+      cars &#x3D; cars.sort((a, b) &#x3D;&gt; {
+        const distA &#x3D; a.distance ?? Number.MAX_VALUE;
+        const distB &#x3D; b.distance ?? Number.MAX_VALUE;
+        return distA - distB;
+      });
+    }
+    // Other sorts are now handled server-side in loadCars()
+
+    return cars;
+  });
+
+  readonly sortOrder &#x3D; signal&lt;string&gt;(&#x27;distance&#x27;);
+
+  /**
+   * Contextual marker variant:
+   * - &#x27;photo&#x27; for browsing/exploration (default for marketplace - more visual)
+   * - &#x27;price&#x27; when user is actively comparing prices (has filters or date range)
+   */
+  readonly contextualMarkerVariant &#x3D; computed&lt;&#x27;photo&#x27; | &#x27;price&#x27;&gt;(() &#x3D;&gt; {
+    // Default to &#x27;photo&#x27; for marketplace - more visual and marketplace-like
+    // Only switch to &#x27;price&#x27; when user is actively filtering/comparing
+    const filters &#x3D; this.mapFilters();
+    const dateRange &#x3D; this.dateRange();
+
+    // Switch to &#x27;price&#x27; mode ONLY when:
+    // 1. User has active price filters AND date range (serious comparison)
+    const hasPriceFilter &#x3D; filters.priceRange !&#x3D;&#x3D; null;
+    const hasDateRange &#x3D; dateRange.from !&#x3D;&#x3D; null &amp;&amp; dateRange.to !&#x3D;&#x3D; null;
+
+    // Only use price mode when both price filter AND date range are active
+    if (hasPriceFilter &amp;&amp; hasDateRange) {
+      return &#x27;price&#x27;; // Price comparison mode
+    }
+
+    // Default to photo mode for better marketplace experience
+    return &#x27;photo&#x27;; // Browsing/exploration mode (default - more visual)
+  });
+
+  /**
+   * Static Mapbox image URL for performance optimization
+   * Replaces interactive Mapbox GL JS with static image
+   */
+  readonly staticMapUrl &#x3D; computed(() &#x3D;&gt; {
+    const center &#x3D; this.userLocation() || { lng: -58.3816, lat: -34.6037 }; // Buenos Aires default
+    const token &#x3D; environment.mapboxAccessToken;
+    return &#x60;https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${center.lng},${center.lat},11,0/1200x800@2x?access_token&#x3D;${token}&#x60;;
+  });
+
+  /**
+   * Total pages for pagination
+   */
+  readonly totalPages &#x3D; computed(() &#x3D;&gt; Math.ceil(this.totalCarsCount() / this.pageSize()));
+
+  // Realtime
+  private realtimeChannel?: RealtimeChannel;
+
+  // Effects
+  private readonly filtersEffect &#x3D; effect(() &#x3D;&gt; {
+    const filters &#x3D; this.mapFilters();
+    if (filters.dateRange) {
+      const from &#x3D; filters.dateRange.start.toISOString().split(&#x27;T&#x27;)[0];
+      const to &#x3D; filters.dateRange.end.toISOString().split(&#x27;T&#x27;)[0];
+      this.dateRange.set({ from, to });
+    }
+  });
+
+  private readonly dateRangeEffect &#x3D; effect(() &#x3D;&gt; {
+    const range &#x3D; this.dateRange();
+    if (range.from &amp;&amp; range.to) {
+      void this.loadCars();
+    }
+  });
+
+  ngOnInit(): void {
+    // SEO Meta Tags
+    this.titleService.setTitle(
+      &#x27;Alquiler de Autos P2P | Autorentar - Renta Segura sin Intermediarios&#x27;,
+    );
+    this.meta.updateTag({
+      name: &#x27;description&#x27;,
+      content:
+        &#x27;Alquila autos verificados directamente de dueños. 100% asegurado, pagos seguros con MercadoPago, entrega express. Sin intermediarios, sin tarjeta de crédito requerida.&#x27;,
+    });
+    this.meta.updateTag({
+      name: &#x27;keywords&#x27;,
+      content:
+        &#x27;alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, P2P, Argentina&#x27;,
+    });
+    this.meta.updateTag({ property: &#x27;og:title&#x27;, content: &#x27;Autorentar - Alquiler de Autos P2P&#x27; });
+    this.meta.updateTag({
+      property: &#x27;og:description&#x27;,
+      content: &#x27;Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.&#x27;,
+    });
+    this.meta.updateTag({ property: &#x27;og:type&#x27;, content: &#x27;website&#x27; });
+    this.meta.updateTag({ name: &#x27;twitter:card&#x27;, content: &#x27;summary_large_image&#x27; });
+
+    // Initialize JSON-LD structured data schemas for SEO
+    if (this.isBrowser) {
+      this.seoSchemaService.setOrganizationSchema();
+      this.seoSchemaService.setLocalBusinessSchema();
+      this.seoSchemaService.setWebSiteSchema();
+    }
+
+    // Set default view mode: &#x27;map&#x27; for mobile, &#x27;list&#x27; for desktop
+    if (this.isMobile()) {
+      this.viewMode.set(&#x27;map&#x27;);
+    }
+
+    void this.initializeUserLocation();
+    void this.loadCars();
+    if (this.isBrowser) {
+      this.setupRealtimeSubscription();
+      this.checkPriceTransparencyModal();
+    }
+
+    // Show welcome toast
+    setTimeout(() &#x3D;&gt; {
+      this.showToast(&#x27;¡Bienvenido! Encuentra tu auto ideal 🚗&#x27;, &#x27;success&#x27;);
+    }, 500);
+  }
+
+  ngOnDestroy(): void {
+    if (this.locationWatchId !&#x3D;&#x3D; null) {
+      this.locationService.clearWatch(this.locationWatchId);
+    }
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
+    }
+  }
+
+  /**
+   * Initialize user location from profile or GPS
+   */
+  private async initializeUserLocation(): Promise&lt;void&gt; {
+    try {
+      const locationData &#x3D; await this.locationService.getUserLocation();
+      if (locationData) {
+        this.userLocation.set({
+          lat: locationData.lat,
+          lng: locationData.lng,
+        });
+      }
+    } catch (_error) {
+      console.warn(&#x27;Could not get user location:&#x27;, _error);
+    }
+  }
+
+  /**
+   * Load available cars with filters applied server-side
+   */
+  async loadCars(): Promise&lt;void&gt; {
+    this.loading.set(true);
+    this.error.set(null);
+    try {
+      const dateRange &#x3D; this.dateRange();
+      const filters &#x3D; this.mapFilters();
+      const quickFilters &#x3D; this.activeQuickFilters();
+      const page &#x3D; this.currentPage();
+      const size &#x3D; this.pageSize();
+      const rangeStart &#x3D; (page - 1) * size;
+      const rangeEnd &#x3D; rangeStart + size - 1;
+
+      if (dateRange.from &amp;&amp; dateRange.to) {
+        // Use RPC with PostGIS distance scoring when user has location
+        const userLoc &#x3D; this.userLocation();
+        if (userLoc) {
+          // Server-side distance sorting with RPC
+          const items &#x3D; await this.carsService.getAvailableCarsWithDistance(
+            dateRange.from,
+            dateRange.to,
+            {
+              lat: userLoc.lat,
+              lng: userLoc.lng,
+              limit: size,
+              offset: rangeStart,
+            },
+          );
+          // Map RPC result to Car format
+          const carsData &#x3D; items.map((item) &#x3D;&gt; ({
+            id: item.id,
+            owner_id: item.owner_id,
+            brand_text_backup: item.brand,
+            model_text_backup: item.model,
+            year: item.year,
+            plate: item.plate,
+            price_per_day: item.price_per_day,
+            currency: item.currency,
+            status: item.status,
+            location_city: item.location?.city || &#x27;&#x27;,
+            location_state: item.location?.state || &#x27;&#x27;,
+            location_lat: item.location?.lat || 0,
+            location_lng: item.location?.lng || 0,
+            photos: item.images?.map((url: string) &#x3D;&gt; ({ url })) || [],
+            car_photos: item.images?.map((url: string) &#x3D;&gt; ({ url })) || [],
+            features: item.features,
+            created_at: item.created_at,
+            updated_at: item.updated_at,
+            rating_avg: item.avg_rating,
+            score: item.score,
+          })) as unknown as Car[];
+          this.cars.set(carsData);
+        } else {
+          // Fallback to availability service without distance
+          const items &#x3D; await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
+            limit: size,
+            offset: rangeStart,
+          });
+          this.cars.set(items);
+          await this.loadLatestLocationsFor(items);
+        }
+        // For date-filtered queries, we need a separate count query
+        const { count } &#x3D; await this.supabase
+          .from(&#x27;cars&#x27;)
+          .select(&#x27;*&#x27;, { count: &#x27;exact&#x27;, head: true })
+          .eq(&#x27;status&#x27;, &#x27;active&#x27;);
+        this.totalCarsCount.set(count || 0);
+      } else {
+        // Build query with server-side filters
+        let query &#x3D; this.supabase
+          .from(&#x27;cars&#x27;)
+          .select(
+            &#x60;
+            *,
+            car_photos(*),
+            owner:profiles!cars_owner_id_fkey(
+              id,
+              full_name,
+              avatar_url,
+              rating_avg,
+              rating_count,
+              created_at,
+              is_email_verified,
+              is_phone_verified
+            )
+          &#x60;,
+            { count: &#x27;exact&#x27; },
+          )
+          .eq(&#x27;status&#x27;, &#x27;active&#x27;);
+
+        // Apply server-side filters
+        if (filters.priceRange) {
+          query &#x3D; query
+            .gte(&#x27;price_per_day&#x27;, filters.priceRange.min)
+            .lte(&#x27;price_per_day&#x27;, filters.priceRange.max);
+        }
+
+        if (filters.transmission &amp;&amp; filters.transmission.length &gt; 0) {
+          query &#x3D; query.in(&#x27;transmission&#x27;, filters.transmission);
+        }
+
+        if (filters.immediateOnly) {
+          query &#x3D; query.eq(&#x27;auto_approval&#x27;, true);
+        }
+
+        // Quick filters
+        if (quickFilters.has(&#x27;electric&#x27;)) {
+          query &#x3D; query.or(&#x27;fuel_type.eq.electric,fuel.eq.electric&#x27;);
+        }
+
+        // Apply sorting
+        const sort &#x3D; this.sortOrder();
+        switch (sort) {
+          case &#x27;price_asc&#x27;:
+            query &#x3D; query.order(&#x27;price_per_day&#x27;, { ascending: true });
+            break;
+          case &#x27;price_desc&#x27;:
+            query &#x3D; query.order(&#x27;price_per_day&#x27;, { ascending: false });
+            break;
+          case &#x27;rating&#x27;:
+            query &#x3D; query.order(&#x27;rating_avg&#x27;, { ascending: false, nullsFirst: false });
+            break;
+          default:
+            query &#x3D; query.order(&#x27;created_at&#x27;, { ascending: false });
+        }
+
+        const { data, count, error } &#x3D; await query.range(rangeStart, rangeEnd);
+
+        if (error) throw error;
+        const carsData &#x3D; (data as Car[]) || [];
+        this.cars.set(carsData);
+        await this.loadLatestLocationsFor(carsData);
+        this.totalCarsCount.set(count || 0);
+      }
+
+      // Hide search button after loading
+      this.showSearchAreaButton.set(false);
+
+      // Open drawer if there are cars and user location is set
+      if (this.cars().length &gt; 0 &amp;&amp; this.userLocation() &amp;&amp; !this.drawerOpen()) {
+        this.drawerOpen.set(true);
+      }
+    } catch (err) {
+      console.error(&#x27;Error loading cars:&#x27;, err);
+      this.error.set(&#x27;No se pudieron cargar los autos. Por favor, intenta de nuevo más tarde.&#x27;);
+      this.showToast(&#x27;Error al cargar los autos. Por favor intenta de nuevo.&#x27;, &#x27;error&#x27;);
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  private async loadLatestLocationsFor(cars: Car[]): Promise&lt;void&gt; {
+    if (!cars.length) return;
+
+    try {
+      const ids &#x3D; cars.map((c) &#x3D;&gt; c.id);
+      const locations &#x3D; await this.carLocationService.getLatestLocations(ids);
+
+      // Map for quick template lookup
+      const map: Record&lt;string, CarLatestLocation&gt; &#x3D; {};
+      for (const loc of locations) {
+        map[loc.car_id] &#x3D; loc;
+      }
+      this.latestLocations.set(map);
+
+      // Also enrich car list so other parts can reuse coords if needed
+      const locationMap &#x3D; new Map(locations.map((l) &#x3D;&gt; [l.car_id, l]));
+      this.cars.update((currentCars) &#x3D;&gt;
+        currentCars.map((car) &#x3D;&gt; {
+          const loc &#x3D; locationMap.get(car.id);
+          if (!loc) return car;
+          return {
+            ...car,
+            latest_location: {
+              lat: loc.lat,
+              lng: loc.lng,
+              recorded_at: loc.recorded_at,
+            },
+            location_lat: loc.lat ?? car.location_lat,
+            location_lng: loc.lng ?? car.location_lng,
+          } as Car;
+        }),
+      );
+    } catch (err) {
+      console.warn(&#x27;latest-locations-load&#x27;, err);
+    }
+  }
+
+  /**
+   * Setup realtime subscription for car updates
+   * Only listen to INSERT and DELETE events to avoid excessive reloads
+   */
+  private setupRealtimeSubscription(): void {
+    this.realtimeChannel &#x3D; this.supabase
+      .channel(&#x27;marketplace-realtime&#x27;)
+      .on(
+        &#x27;postgres_changes&#x27;,
+        { event: &#x27;INSERT&#x27;, schema: &#x27;public&#x27;, table: &#x27;cars&#x27; },
+        () &#x3D;&gt; void this.loadCars(),
+      )
+      .on(
+        &#x27;postgres_changes&#x27;,
+        { event: &#x27;DELETE&#x27;, schema: &#x27;public&#x27;, table: &#x27;cars&#x27; },
+        () &#x3D;&gt; void this.loadCars(),
+      )
+      .subscribe();
+  }
+
+  /**
+   * Handle logo click - switch to map view and request current location
+   */
+  async onLogoClick(): Promise&lt;void&gt; {
+    // Cambiar al modo mapa
+    this.viewMode.set(&#x27;map&#x27;);
+
+    // Solicitar ubicación actual del navegador
+    try {
+      const currentPosition &#x3D; await this.locationService.getCurrentPosition();
+      if (currentPosition) {
+        this.userLocation.set({
+          lat: currentPosition.lat,
+          lng: currentPosition.lng,
+        });
+        // Recargar autos con la nueva ubicación
+        await this.loadCars();
+        this.showToast(&#x27;Ubicación actualizada&#x27;, &#x27;success&#x27;);
+      } else {
+        this.showToast(
+          &#x27;No se pudo obtener tu ubicación. Verifica los permisos del navegador.&#x27;,
+          &#x27;warning&#x27;,
+        );
+      }
+    } catch (error) {
+      console.warn(&#x27;Error obteniendo ubicación:&#x27;, error);
+      this.showToast(&#x27;Error al obtener tu ubicación&#x27;, &#x27;error&#x27;);
+    }
+
+    // Scroll suave al mapa después de cambiar el modo
+    if (this.isBrowser) {
+      setTimeout(() &#x3D;&gt; {
+        const mapElement &#x3D; document.querySelector(&#x27;app-cars-map&#x27;);
+        if (mapElement) {
+          mapElement.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+        }
+      }, 100);
+    }
+  }
+
+  onCarSelected(carId: string): void {
+    // Navigate to car detail page
+    this.router.navigate([&#x27;/cars/detail&#x27;, carId]);
+
+    // Track analytics event
+    this.analyticsService.trackEvent(&#x27;car_details_clicked&#x27;, {
+      car_id: carId,
+      source: &#x27;car_card&#x27;,
+    });
+  }
+
+  /**
+   * Handle map filters change
+   */
+  onFiltersChange(filters: FilterState): void {
+    this.mapFilters.set(filters);
+
+    // Sync quick filters if needed
+    const quick &#x3D; new Set(this.activeQuickFilters());
+    if (filters.immediateOnly) quick.add(&#x27;immediate&#x27;);
+    else quick.delete(&#x27;immediate&#x27;);
+    this.activeQuickFilters.set(quick);
+
+    void this.loadCars();
+    this.showToast(&#x27;Filtros aplicados&#x27;, &#x27;success&#x27;);
+    this.closeFiltersPanel();
+  }
+
+  /**
+   * Handle drawer close
+   */
+  onDrawerClose(): void {
+    this.drawerOpen.set(false);
+  }
+
+  /**
+   * Handle reserve CTA click
+   */
+  onReserveClick(): void {
+    const carId &#x3D; this.selectedCarId();
+    if (carId) {
+      this.router.navigate([&#x27;/cars&#x27;, carId]);
+    }
+  }
+
+  /**
+   * Handle user location change from map
+   */
+  onUserLocationChange(location: { lat: number; lng: number }): void {
+    this.userLocation.set(location);
+    void this.loadCars();
+    this.showToast(&#x27;Ubicación actualizada&#x27;, &#x27;success&#x27;);
+  }
+
+  /**
+   * Handle map bounds change
+   */
+  onBoundsChange(bounds: LatLngBoundsLiteral): void {
+    // Don&#x27;t update immediately, just show the button
+    // Only update if bounds are significantly different to avoid jitter
+    this.mapBounds.set(bounds);
+    this.showSearchAreaButton.set(true);
+  }
+
+  /**
+   * Trigger search in current area
+   */
+  searchInArea(): void {
+    void this.loadCars();
+  }
+
+  /**
+   * Toggle fullscreen mode for map
+   */
+  private toggleFullscreen(): void {
+    const elem &#x3D; document.documentElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch((err) &#x3D;&gt; {
+        console.error(&#x60;Error attempting to enable fullscreen: ${err.message}&#x60;);
+        this.showToast(&#x27;No se pudo activar pantalla completa&#x27;, &#x27;error&#x27;);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  /**
+   * Extract photo gallery from car
+   */
+  extractPhotoGallery(car: Car): string[] {
+    const rawPhotos &#x3D; car.photos ?? car.car_photos ?? [];
+    if (!Array.isArray(rawPhotos)) {
+      return [];
+    }
+    return rawPhotos
+      .map((photo) &#x3D;&gt; (typeof photo &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? photo : (photo?.url ?? null)))
+      .filter((url): url is string &#x3D;&gt; typeof url &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; url.length &gt; 0);
+  }
+
+  /**
+   * Track by car ID for ngFor
+   */
+  trackByCarId(_index: number, car: CarWithDistance): string {
+    return car.id;
+  }
+
+  trackBySuggestion(_index: number, suggestion: GeocodingResult): string {
+    return &#x60;${suggestion.latitude}-${suggestion.longitude}&#x60;;
+  }
+
+  onSearchChange(value: string): void {
+    this.searchValue.set(value);
+  }
+
+  onSearchSubmit(value: string): void {
+    this.searchValue.set(value);
+    this.showToast(&#x60;Buscando autos en &quot;${value}&quot;...&#x60;, &#x27;info&#x27;);
+
+    // 🎯 TikTok Events: Track Search
+    void this.tiktokEvents.trackSearch({
+      searchString: value,
+    });
+
+    void this.loadCars();
+  }
+
+  onQuickFilterClick(filterId: string): void {
+    const current &#x3D; new Set(this.activeQuickFilters());
+    let active &#x3D; false;
+
+    if (current.has(filterId)) {
+      current.delete(filterId);
+      active &#x3D; false;
+    } else {
+      current.add(filterId);
+      active &#x3D; true;
+    }
+    this.activeQuickFilters.set(current);
+
+    // Sync specific filters with mapFilters
+    if (filterId &#x3D;&#x3D;&#x3D; &#x27;immediate&#x27;) {
+      const filters &#x3D; this.mapFilters();
+      this.mapFilters.set({ ...filters, immediateOnly: active });
+    }
+
+    if (filterId &#x3D;&#x3D;&#x3D; &#x27;near-me&#x27; &amp;&amp; active) {
+      this.sortOrder.set(&#x27;distance&#x27;);
+    }
+
+    this.showToast(&#x60;Filtro &quot;${filterId}&quot; ${active ? &#x27;activado&#x27; : &#x27;desactivado&#x27;}&#x60;, &#x27;info&#x27;);
+  }
+
+  private openQuickBooking(): void {
+    const selectedCar &#x3D; this.selectedCar();
+    const carToBook &#x3D; selectedCar ?? this.cars()[0] ?? null;
+
+    if (!carToBook) {
+      this.showToast(&#x27;No hay autos disponibles para reservar en este momento.&#x27;, &#x27;warning&#x27;);
+      return;
+    }
+
+    this.selectedCarId.set(carToBook.id);
+    this.quickBookingCar.set(carToBook);
+    this.quickBookingModalOpen.set(true);
+
+    this.analyticsService.trackEvent(&#x27;cta_clicked&#x27;, {
+      car_id: carToBook.id,
+      source: &#x27;fab_quick_booking&#x27;,
+    });
+  }
+
+  private async handleLocationAction(): Promise&lt;void&gt; {
+    await this.onLogoClick();
+    this.analyticsService.trackEvent(&#x27;cta_clicked&#x27;, {
+      source: &#x27;fab_location&#x27;,
+    });
+  }
+
+  private openFiltersPanel(): void {
+    this.showFilters.set(true);
+    this.analyticsService.trackEvent(&#x27;filters_opened&#x27;, {
+      source: &#x27;fab&#x27;,
+    });
+  }
+
+  closeFiltersPanel(): void {
+    this.showFilters.set(false);
+  }
+
+  /**
+   * Abre el selector de fechas
+   */
+  openDatePicker(): void {
+    this.showDatePicker.set(true);
+  }
+
+  /**
+   * Cierra el selector de fechas
+   */
+  closeDatePicker(): void {
+    this.showDatePicker.set(false);
+  }
+
+  /**
+   * Maneja el cambio de rango de fechas
+   */
+  onDateRangeChange(range: DateRange): void {
+    this.dateRange.set(range);
+
+    if (range.from &amp;&amp; range.to) {
+      this.showToast(&#x60;Fechas: ${range.from} - ${range.to}&#x60;, &#x27;success&#x27;);
+      void this.loadCars();
+      this.closeDatePicker(); // Cerrar el modal al seleccionar fechas
+    }
+  }
+
+  /**
+   * Abre el selector de ubicación
+   */
+  openLocationPicker(): void {
+    this.showLocationPicker.set(true);
+  }
+
+  /**
+   * Cierra el selector de ubicación
+   */
+  closeLocationPicker(): void {
+    this.showLocationPicker.set(false);
+  }
+
+  /**
+   * Maneja la selección de ubicación
+   */
+  onLocationSelect(location: string): void {
+    this.selectedLocation.set(location);
+    this.searchValue.set(location);
+    this.closeLocationPicker();
+    this.showToast(&#x60;Ubicación: ${location}&#x60;, &#x27;success&#x27;);
+    void this.loadCars();
+  }
+
+  /**
+   * Maneja el cambio en el input de ubicación - busca sugerencias dinámicamente
+   */
+  onLocationInputChange(event: Event): void {
+    const input &#x3D; event.target as HTMLInputElement;
+    const query &#x3D; input.value.trim();
+
+    this.selectedLocation.set(query);
+    this.searchValue.set(query);
+
+    // Limpiar timeout anterior
+    if (this.locationSearchTimeout) {
+      clearTimeout(this.locationSearchTimeout);
+    }
+
+    // Si el query es muy corto, ocultar sugerencias
+    if (query.length &lt; 2) {
+      this.locationSuggestions.set([]);
+      this.showLocationSuggestions.set(false);
+      return;
+    }
+
+    // Mostrar sugerencias
+    this.showLocationSuggestions.set(true);
+    this.locationSearchLoading.set(true);
+
+    // Debounce: esperar 300ms después de que el usuario deje de escribir
+    this.locationSearchTimeout &#x3D; setTimeout(async () &#x3D;&gt; {
+      try {
+        // Buscar en Argentina, Uruguay y Brasil
+        const suggestions &#x3D; await this.geocodingService.getLocationSuggestions(
+          query,
+          &#x27;AR,UY,BR&#x27;,
+          8,
+        );
+        this.locationSuggestions.set(suggestions);
+      } catch (error) {
+        console.warn(&#x27;Error buscando sugerencias:&#x27;, error);
+        this.locationSuggestions.set([]);
+      } finally {
+        this.locationSearchLoading.set(false);
+      }
+    }, 300);
+  }
+
+  /**
+   * Selecciona una sugerencia de ubicación
+   */
+  onLocationSuggestionSelect(suggestion: GeocodingResult): void {
+    this.selectedLocation.set(suggestion.fullAddress);
+    this.searchValue.set(suggestion.fullAddress);
+    this.showLocationSuggestions.set(false);
+    this.locationSuggestions.set([]);
+
+    // Actualizar ubicación del usuario en el mapa
+    this.userLocation.set({
+      lat: suggestion.latitude,
+      lng: suggestion.longitude,
+    });
+
+    // Recargar autos con la nueva ubicación
+    void this.loadCars();
+    this.showToast(&#x60;Ubicación: ${suggestion.placeName}&#x60;, &#x27;success&#x27;);
+  }
+
+  /**
+   * Cierra el dropdown de sugerencias
+   */
+  closeLocationSuggestions(): void {
+    this.showLocationSuggestions.set(false);
+  }
+
+  /**
+   * Maneja el blur del input de ubicación con delay para permitir clicks en sugerencias
+   */
+  onLocationInputBlur(): void {
+    setTimeout(() &#x3D;&gt; {
+      this.closeLocationSuggestions();
+    }, 200);
+  }
+
+  onFabActionClick(actionId: string): void {
+    switch (actionId) {
+      case &#x27;filter&#x27;:
+        this.openFiltersPanel();
+        break;
+      case &#x27;quick-rent&#x27;:
+        this.openQuickBooking();
+        break;
+      case &#x27;location&#x27;:
+        void this.handleLocationAction();
+        break;
+      default:
+        console.warn(&#x60;[Marketplace] Unhandled FAB action: ${actionId}&#x60;);
+        break;
+    }
+  }
+
+  calculateAveragePrice(): number {
+    const cars &#x3D; this.carsWithDistance();
+    if (cars.length &#x3D;&#x3D;&#x3D; 0) return 0;
+    const sum &#x3D; cars.reduce((acc, car) &#x3D;&gt; acc + car.price_per_day, 0);
+    return Math.round(sum / cars.length);
+  }
+
+  getCarInstantBooking(car: CarWithDistance): boolean {
+    // Check if car has auto_approval enabled (closest equivalent to instant booking)
+    return car.auto_approval &#x3D;&#x3D;&#x3D; true;
+  }
+
+  showToast(message: string, type: ToastType &#x3D; &#x27;info&#x27;): void {
+    // Using NotificationManagerService instead of inline toast
+    const title &#x3D;
+      type &#x3D;&#x3D;&#x3D; &#x27;success&#x27;
+        ? &#x27;Éxito&#x27;
+        : type &#x3D;&#x3D;&#x3D; &#x27;error&#x27;
+          ? &#x27;Error&#x27;
+          : type &#x3D;&#x3D;&#x3D; &#x27;warning&#x27;
+            ? &#x27;Advertencia&#x27;
+            : &#x27;Información&#x27;;
+
+    if (type &#x3D;&#x3D;&#x3D; &#x27;success&#x27;) {
+      this.notificationManager.success(title, message);
+    } else if (type &#x3D;&#x3D;&#x3D; &#x27;error&#x27;) {
+      this.notificationManager.error(title, message);
+    } else if (type &#x3D;&#x3D;&#x3D; &#x27;warning&#x27;) {
+      this.notificationManager.warning(title, message);
+    } else {
+      this.notificationManager.info(title, message);
+    }
+  }
+
+  /**
+   * Handle search radius change from map
+   */
+  onSearchRadiusChange(radiusKm: number): void {
+    this.radiusKm.set(radiusKm);
+    // Reload cars with new radius filter
+    void this.loadCars();
+  }
+
+  /**
+   * Check if user has seen price transparency modal
+   * Show it on first visit with a 1.5s delay
+   */
+  private checkPriceTransparencyModal(): void {
+    if (!this.isBrowser) return;
+
+    const hasSeenModal &#x3D; localStorage.getItem(&#x27;hasSeenPriceTransparencyModal&#x27;);
+
+    if (!hasSeenModal) {
+      // Show modal after 1.5 seconds (after welcome toast)
+      setTimeout(() &#x3D;&gt; {
+        this.showPriceTransparencyModal.set(true);
+      }, 1500);
+    }
+  }
+
+  /**
+   * Handle price transparency modal close
+   */
+  onPriceTransparencyModalClose(): void {
+    this.showPriceTransparencyModal.set(false);
+
+    if (this.isBrowser) {
+      localStorage.setItem(&#x27;hasSeenPriceTransparencyModal&#x27;, &#x27;true&#x27;);
+    }
+
+    // Track analytics event
+    this.analyticsService.trackEvent(&#x27;price_transparency_modal_viewed&#x27;, {
+      context: &#x27;marketplace_first_visit&#x27;,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Handle quick book from hero section
+   */
+  handleHeroQuickBook(): void {
+    const firstCar &#x3D; this.visibleCars()[0];
+    if (firstCar) {
+      this.openQuickBooking();
+    } else {
+      this.showToast(&#x27;No hay autos disponibles para reservar&#x27;, &#x27;warning&#x27;);
+    }
+  }
+
+  // &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 3D MODEL CONTROLS &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+  /**
+   * Set 3D view mode
+   */
+  set3DView(view: &#x27;default&#x27; | &#x27;front&#x27; | &#x27;side&#x27; | &#x27;interior&#x27; | &#x27;top&#x27;): void {
+    this.current3DView &#x3D; view;
+    if (this.carViewer) {
+      this.carViewer.setViewMode(view);
+    }
+  }
+
+  /**
+   * Handle model loaded event
+   */
+  onModelLoaded(): void {
+    this.modelLoaded &#x3D; true;
+  }
+
+  /**
+   * Handle view mode change from 3D viewer
+   */
+  onViewModeChange(mode: string): void {
+    this.current3DView &#x3D; mode as &#x27;default&#x27; | &#x27;front&#x27; | &#x27;side&#x27; | &#x27;interior&#x27; | &#x27;top&#x27;;
+  }
+
+  /**
+   * Handle part hover from 3D viewer
+   */
+  onPartHovered(event: {
+    part: string;
+    info: CarPartInfo | undefined;
+    position: { x: number; y: number };
+  }): void {
+    if (event.info) {
+      this.hoveredPart.set(event.info);
+      this.hoveredPartPosition.set(event.position);
+    } else {
+      this.hoveredPart.set(null);
+      this.hoveredPartPosition.set(null);
+    }
+  }
+
+  /**
+   * Handle part selection from 3D viewer
+   */
+  onPartSelected(event: { part: string; info: CarPartInfo | undefined }): void {
+    if (event.info) {
+      this.selectedPart.set(event.info);
+      // Track analytics - using cta_clicked for 3D part interaction
+      this.analyticsService.trackEvent(&#x27;cta_clicked&#x27;, {
+        cta_type: &#x27;3d_part_selected&#x27;,
+        source: event.part,
+      });
+    }
+  }
+
+  /**
+   * Handle part deselection from 3D viewer
+   */
+  onPartDeselected(): void {
+    this.selectedPart.set(null);
+  }
+
+  onPublishClick(): void {
+    void this.router.navigate([&#x27;/cars/publish&#x27;]);
+  }
+
+  /**
+   * Close the selected part panel
+   */
+  closePartPanel(): void {
+    this.selectedPart.set(null);
+    if (this.carViewer) {
+      this.carViewer.deselectPart();
+    }
+  }
+
+  /**
+   * Check if a quick filter is active
+   */
+  isQuickFilterActive(filterId: string): boolean {
+    return this.activeQuickFilters().has(filterId);
+  }
+
+  /**
+   * Handle sort order change
+   */
+  onSortOrderChange(event: Event): void {
+    const select &#x3D; event.target as HTMLSelectElement;
+    const value &#x3D; select.value;
+    this.sortOrder.set(value);
+
+    // Show user-friendly toast message
+    const messages: Record&lt;string, string&gt; &#x3D; {
+      distance: &#x27;Mostrando autos más cercanos primero&#x27;,
+      price_asc: &#x27;Ordenado por precio: menor a mayor&#x27;,
+      price_desc: &#x27;Ordenado por precio: mayor a menor&#x27;,
+      rating: &#x27;Mostrando mejor valorados primero&#x27;,
+      score: &#x27;Ordenado por relevancia&#x27;,
+      relevance: &#x27;Ordenado por relevancia&#x27;,
+    };
+
+    const message &#x3D; messages[value] || &#x60;Ordenado por: ${value}&#x60;;
+    this.showToast(message, &#x27;info&#x27;);
+  }
+
+  /**
+   * Clear all quick filters
+   */
+  clearQuickFilters(): void {
+    // Reset filters to default
+    this.mapFilters.set({
+      dateRange: null,
+      priceRange: null,
+      vehicleTypes: null,
+      immediateOnly: false,
+      transmission: null,
+    });
+    this.activeQuickFilters.set(new Set());
+    // Reset pagination
+    this.currentPage.set(1);
+    void this.loadCars();
+    this.showToast(&#x27;Filtros limpiados&#x27;, &#x27;success&#x27;);
+  }
+
+  /**
+   * Map filter source locations for the map component
+   */
+  mapFilterSourceLocations(): CarMapLocation[] {
+    return this.carMapLocations();
+  }
+
+  /**
+   * Go to next page of cars
+   */
+  nextPage(): void {
+    if (this.currentPage() &lt; this.totalPages()) {
+      this.currentPage.update((p) &#x3D;&gt; p + 1);
+      void this.loadCars();
+      if (this.isBrowser) {
+        window.scrollTo({ top: 0, behavior: &#x27;smooth&#x27; });
+      }
+    }
+  }
+
+  /**
+   * Go to previous page of cars
+   */
+  previousPage(): void {
+    if (this.currentPage() &gt; 1) {
+      this.currentPage.update((p) &#x3D;&gt; p - 1);
+      void this.loadCars();
+      if (this.isBrowser) {
+        window.scrollTo({ top: 0, behavior: &#x27;smooth&#x27; });
+      }
+    }
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'CarWithDistance-2.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
