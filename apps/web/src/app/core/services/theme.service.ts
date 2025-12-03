@@ -146,8 +146,8 @@ export class ThemeService {
       return stored;
     }
 
-    // Default to system preference
-    return 'system';
+    // Default to light mode
+    return 'light';
   }
 
   /**

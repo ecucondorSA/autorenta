@@ -20,6 +20,7 @@ export class AuthService implements OnDestroy {
   private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly TIKTOK_STATE_KEY = 'tiktok_oauth_state';
 
   constructor(
     private readonly router: Router,
@@ -145,6 +146,9 @@ export class AuthService implements OnDestroy {
    * Redirige al usuario a la página de autenticación de Google
    */
   async signInWithGoogle(): Promise<void> {
+    if (!this.isBrowser) {
+      throw new Error('OAuth solo disponible en browser');
+    }
     const { error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -166,6 +170,9 @@ export class AuthService implements OnDestroy {
    * Redirige al usuario a TikTok para autenticación
    */
   async signInWithTikTok(): Promise<void> {
+    if (!this.isBrowser) {
+      throw new Error('OAuth solo disponible en browser');
+    }
     const TIKTOK_CLIENT_ID = environment.tiktok?.clientId;
     if (!TIKTOK_CLIENT_ID) {
       throw new Error('TikTok Client ID no configurado');
@@ -176,7 +183,7 @@ export class AuthService implements OnDestroy {
     const state = this.generateRandomState();
 
     // Guardar state en sessionStorage para validación
-    sessionStorage.setItem('tiktok_oauth_state', state);
+    sessionStorage.setItem(this.TIKTOK_STATE_KEY, state);
 
     // Construir URL de TikTok
     const tiktokAuthUrl = new URL('https://www.tiktok.com/v2/oauth/authorize/');
@@ -195,10 +202,13 @@ export class AuthService implements OnDestroy {
    * Intercambia el código por sesión de usuario
    */
   async handleTikTokCallback(code: string): Promise<{ data: Session | null; error: Error | null }> {
+    if (!this.isBrowser) {
+      return { data: null, error: new Error('OAuth callback solo disponible en browser') };
+    }
     try {
       // Validar state para seguridad (CSRF protection)
-      const savedState = sessionStorage.getItem('tiktok_oauth_state');
-      sessionStorage.removeItem('tiktok_oauth_state');
+      const savedState = sessionStorage.getItem(this.TIKTOK_STATE_KEY);
+      sessionStorage.removeItem(this.TIKTOK_STATE_KEY);
 
       if (!savedState) {
         return {
@@ -214,6 +224,8 @@ export class AuthService implements OnDestroy {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${environment.supabaseAnonKey}`,
+            'apikey': environment.supabaseAnonKey,
           },
           body: JSON.stringify({ code }),
         },
@@ -228,13 +240,22 @@ export class AuthService implements OnDestroy {
         };
       }
 
-      // Si la función devolvió una sesión válida, usarla
+      // Si la función devolvió una sesión válida, establecerla en Supabase SDK
       if (data.session) {
-        this.state.set({
-          session: data.session,
-          loading: false,
+        // CRÍTICO: Usar setSession para que Supabase SDK maneje tokens y RLS funcione
+        const { error: setSessionError } = await this.supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
         });
 
+        if (setSessionError) {
+          return {
+            data: null,
+            error: new Error(`Error estableciendo sesión: ${setSessionError.message}`),
+          };
+        }
+
+        // El onAuthStateChange actualizará automáticamente el state signal
         return {
           data: data.session,
           error: null,
@@ -267,6 +288,9 @@ export class AuthService implements OnDestroy {
    * Supabase detecta automáticamente tokens en URL fragments (#access_token=...)
    */
   async handleOAuthCallback(): Promise<{ data: Session | null; error: Error | null }> {
+    if (!this.isBrowser) {
+      return { data: null, error: new Error('OAuth callback solo disponible en browser') };
+    }
     try {
       // Verificar si hay un hash en la URL (tokens de OAuth)
       const hash = window.location.hash;

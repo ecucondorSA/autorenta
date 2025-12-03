@@ -19,34 +19,14 @@ import { buildEnvironment } from './environment.base';
  */
 export const environment = buildEnvironment({
   production: false,
-  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
-  // ✅ Secrets se leen de .env.local (NO hardcodeados)
-  supabaseAnonKey: undefined, // Lee de NG_APP_SUPABASE_ANON_KEY
   defaultCurrency: 'ARS',
-  mapboxAccessToken: undefined, // Lee de NG_APP_MAPBOX_ACCESS_TOKEN
-  tripoApiKey: undefined, // Lee de NG_APP_TRIPO_API_KEY
-  paymentsWebhookUrl: 'http://localhost:8787/webhooks/payments',
   appUrl: 'http://localhost:4200',
-  // Google AI Image Generation (Gemini)
-  // Configura NG_APP_GOOGLE_AI_IMAGE_URL en .env.local con el endpoint completo (incluye ?key=... si aplica)
-  googleAiImageUrl: undefined,
-  // PayPal Sandbox Credentials
-  // P0-027 FIX: Only public client ID is safe for frontend
-  paypalClientId: undefined, // Lee de NG_APP_PAYPAL_CLIENT_ID
-  // Sentry Configuration
-  sentryDsn: '', // Opcional: NG_APP_SENTRY_DSN
-  sentryEnvironment: 'development',
-  sentryTracesSampleRate: 0.1,
-  // Google Calendar Configuration
-  // IMPORTANTE: Configurar via variables de entorno
-  // NG_APP_GOOGLE_CALENDAR_ID - ID del calendario (email o calendar ID)
-  // NG_APP_GOOGLE_CALENDAR_API_KEY - API Key de Google Cloud Console
-  // NG_APP_GOOGLE_CALENDAR_CLIENT_ID - OAuth Client ID (opcional, para escritura/calendarios privados)
-  googleCalendarId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_ID
-  googleCalendarApiKey: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_API_KEY
-  googleCalendarClientId: undefined, // Lee de NG_APP_GOOGLE_CALENDAR_CLIENT_ID
-  // TikTok OAuth Configuration
-  tiktok: {
-    clientId: undefined, // Lee de NG_APP_TIKTOK_CLIENT_ID
-  },
+  supabaseUrl: 'https://pisqjmoklivzpwufhscx.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc3FqbW9rbGl2enB3dWZoc2N4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQ3Nzk1MzYsImV4cCI6MTgyMDU0NTUzNn0.wQ_V4N35C-62X7-W6t-j7fM_430L17XQ50tCgY_B00I',
+  mapboxAccessToken: 'pk.eyJ1IjoicGhpbGxpcGNsYXJrIiwiYSI6ImNscW51enR3cTBqOWMybG8wZ2h1amxyeHoifQ.1D6wH_ePZ2n3M0t7mH01gQ',
+  tripoApiKey: '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',
+  googleAnalyticsMeasurementId: '',
+  enableAnalytics: false,
+  docVerifierUrl: 'http://localhost:8787',
+  googleGeolocationApiKey: 'AIzaSyD9VrprbZaNVWrY5CThI2mHpp_SuriWRHY',
 });

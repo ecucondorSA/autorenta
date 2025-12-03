@@ -2,13 +2,21 @@
   "mcpServers": {
     "gemini-suite": {
       "type": "stdio",
-      "command": "node",
+      "command": "/home/edu/autorenta/tools/gemini-suite-mcp-python/.venv/bin/python",
       "args": [
-        "/home/edu/autorenta/tools/gemini-suite-mcp/dist/index.js"
+        "/home/edu/autorenta/tools/gemini-suite-mcp-python/server.py"
       ],
       "env": {
-        "GEMINI_API_KEY": "AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU"
+        "GEMINI_API_KEY": "AIzaSyADvctF4PQGK0pHnwVPlgw6IGYddpybNPc"
       }
+    },
+    "playwright-streaming": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/playwright-streaming-mcp/server.js"
+      ],
+      "description": "Playwright browser automation with compact formatted output"
     }
   }
 }

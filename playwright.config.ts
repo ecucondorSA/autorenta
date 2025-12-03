@@ -22,11 +22,22 @@ export default defineConfig({
   // Timeout global (30s es estándar, pero para local rápido podemos bajarlo si la app es rápida)
   timeout: 30000,
 
+  // ... resto de la config ...
   use: {
     baseURL: 'http://localhost:4300', // URL de desarrollo por defecto
     trace: 'on-first-retry', // Solo guardar traza si falla (ahorra disco/tiempo)
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+  },
+
+  // Configuración de webServer para que Playwright gestione el servidor
+  webServer: {
+    command: 'npm run start --prefix apps/web', // Comando para levantar tu app, especificando el directorio
+    url: 'http://localhost:4300', // La URL a esperar
+    reuseExistingServer: !process.env.CI, // Reutiliza el servidor en desarrollo local, lo mata en CI
+    timeout: 120 * 1000, // Darle tiempo a Angular para compilar (2 minutos)
+    stdout: 'pipe', // Redirigir la salida para no llenar la consola del agente
+    stderr: 'pipe',
   },
 
   projects: [

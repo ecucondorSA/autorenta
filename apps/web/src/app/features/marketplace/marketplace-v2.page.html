@@ -1,19 +1,18 @@
 <!-- 🎨 MARKETPLACE V2 - IMMERSIVE 3D EXPERIENCE -->
 
 <!-- Hero Header - Full 3D Immersion -->
-<div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col bg-surface-base">
+<div class="hero-immersive relative overflow-hidden min-h-[100svh] flex flex-col bg-surface-base font-sans">
 
-  <!-- TOP NAV AREA - REMOVED DUPLICATE HEADER -->
-  <!-- The main app-header handles navigation. Keeping only necessary controls if needed, but removing full header to avoid duplication -->
+  <!-- TOP NAV AREA -->
   <div class="relative z-50 w-full pointer-events-none">
     <div class="max-w-[1800px] mx-auto px-6 lg:px-12 pt-6 lg:pt-8 flex justify-end">
-      <!-- Live Stats Pills & Dark Mode Only -->
+      <!-- Controls placeholder -->
     </div>
   </div>
 
   <!-- MAIN HERO CONTENT -->
   <div class="flex-1 flex items-center relative">
-    <!-- 3D Model - FULL WIDTH, NO OVERLAY, CRISP - Lazy loaded -->
+    <!-- 3D Model -->
     <div class="absolute inset-0 z-0">
       <div class="w-full h-full model-3d-container">
         @defer (on idle) {
@@ -27,13 +26,13 @@
           <div class="text-center">
             <div
               class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-white/5 flex items-center justify-center animate-pulse">
-              <svg class="w-10 h-10 text-cyan-400/50" fill="none" stroke="currentColor"
+              <svg class="w-10 h-10 text-primary/50" fill="none" stroke="currentColor"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                   d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
             </div>
-            <p class="text-sm text-text-muted">Cargando modelo 3D...</p>
+            <p class="text-sm text-text-muted">Cargando experiencia 3D...</p>
           </div>
         </div>
         } @loading (minimum 300ms) {
@@ -46,18 +45,7 @@
       </div>
     </div>
 
-    <!-- 3D Part Hover Tooltip -->
-    @if (hoveredPart() && hoveredPartPosition()) {
-    <div class="part-hover-tooltip" [style.left.px]="hoveredPartPosition()!.x + 15"
-      [style.top.px]="hoveredPartPosition()!.y - 10" role="tooltip">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">{{ hoveredPart()!.icon }}</span>
-        <span class="font-medium text-primary">{{ hoveredPart()!.name }}</span>
-      </div>
-    </div>
-    }
-
-    <!-- 3D Part Info Panel (on selection) -->
+    <!-- 3D Part Info Overlay -->
     @if (selectedPart()) {
     <div class="part-info-panel">
       <div class="flex items-center justify-between mb-3">
@@ -66,8 +54,8 @@
           <h4 class="font-bold text-lg text-primary">{{ selectedPart()!.name }}</h4>
         </div>
         <button (click)="closePartPanel()"
-          class="p-1.5 rounded-lg hover:bg-[#a7d8f4]/20 transition-colors"
-          aria-label="Cerrar panel de información">
+          class="p-1.5 rounded-lg hover:bg-surface-raised transition-colors"
+          aria-label="Cerrar panel">
           <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M6 18L18 6M6 6l12 12" />
@@ -75,119 +63,38 @@
         </button>
       </div>
       <p class="text-sm text-secondary leading-relaxed">{{ selectedPart()!.description }}</p>
-      @if (selectedPart()!.category) {
-      <div class="mt-3 pt-3 border-t border-[#a7d8f4]/20">
-        <span class="text-xs font-medium text-cta-default uppercase tracking-wide">
-          {{ selectedPart()!.category }}
-        </span>
-      </div>
-      }
     </div>
     }
-
-    <!-- 3D View Controls - Right Side -->
-    <div
-      class="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3 hero-fade-in hero-delay-2"
-      role="group" aria-label="Controles de vista 3D del vehículo">
-      <button (click)="set3DView('front')" class="view-control-btn"
-        [class.active]="current3DView === 'front'" [attr.aria-pressed]="current3DView === 'front'"
-        aria-label="Vista frontal del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      </button>
-      <button (click)="set3DView('side')" class="view-control-btn"
-        [class.active]="current3DView === 'side'" [attr.aria-pressed]="current3DView === 'side'"
-        aria-label="Vista lateral del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-        </svg>
-      </button>
-      <button (click)="set3DView('top')" class="view-control-btn"
-        [class.active]="current3DView === 'top'" [attr.aria-pressed]="current3DView === 'top'"
-        aria-label="Vista superior del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
-      <div class="h-px w-full bg-white/10 my-1" aria-hidden="true"></div>
-      <button (click)="set3DView('default')" class="view-control-btn"
-        [class.active]="current3DView === 'default'"
-        [attr.aria-pressed]="current3DView === 'default'" aria-label="Vista general del vehículo">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
-      </button>
-    </div>
 
     <!-- Hero Text Content - Left Side -->
     <div class="relative z-10 max-w-[1800px] mx-auto px-6 lg:px-12 w-full pointer-events-none">
       <div class="max-w-2xl pointer-events-auto">
         <!-- Eyebrow -->
         <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-[#a7d8f4]/40 mb-6 hero-fade-in shadow-sm">
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md border border-primary/10 mb-6 hero-fade-in shadow-lg">
           <span class="w-2 h-2 rounded-full bg-cta-default animate-pulse"></span>
-          <span class="text-sm font-medium text-primary/90 tracking-wide">Plataforma P2P de
-            Alquiler</span>
+          <span class="text-sm font-bold text-text-primary tracking-wide">Nueva experiencia de alquiler</span>
         </div>
 
         <!-- Main Headline -->
         <h1
-          class="font-display h1 text-primary leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1">
+          class="font-display h1 text-text-primary leading-[1.05] tracking-tight mb-6 hero-fade-in hero-delay-1 drop-shadow-sm">
           Maneja tu
-          <span class="text-gradient-celeste block sm:inline">proxima</span>
+          <span class="text-cta-default block sm:inline">próxima</span>
           aventura
         </h1>
 
         <!-- Subheadline -->
         <p
-          class="text-lg text-secondary font-light leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
-          Conectamos personas con vehiculos verificados. Sin intermediarios,
-          <span class="text-primary font-medium">100% asegurado</span>.
+          class="text-xl text-text-secondary font-medium leading-relaxed max-w-lg mb-8 hero-fade-in hero-delay-2">
+          Alquila autos verificados directamente de dueños locales. Sin filas, sin papeleo y
+          <span class="text-text-primary font-bold">100% asegurado</span>.
         </p>
-
-        <!-- Feature Pills -->
-        <div class="flex flex-wrap gap-3 mb-10 hero-fade-in hero-delay-2">
-          <div class="feature-pill">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Verificación instantánea</span>
-          </div>
-          <div class="feature-pill">
-            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <span>Pago seguro</span>
-          </div>
-          <div class="feature-pill">
-            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            <span>Entrega express</span>
-          </div>
-        </div>
 
         <!-- CTA Buttons Mobile -->
         <div class="flex flex-col sm:flex-row gap-4 hero-fade-in hero-delay-3 md:hidden">
-          <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full sm:w-auto">
-            <span class="relative z-10 flex items-center justify-center gap-2">
+          <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full sm:w-auto shadow-xl">
+            <span class="relative z-10 flex items-center justify-center gap-2 font-bold">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -195,32 +102,6 @@
               Reserva Instantánea
             </span>
           </button>
-          <button (click)="onLogoClick()" class="btn-outline-light w-full sm:w-auto">
-            Explorar Mapa
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Floating Stats - Bottom Left (positioned lower to avoid overlap with hero text) -->
-    <div
-      class="absolute bottom-8 lg:bottom-16 left-6 lg:left-12 z-10 hidden lg:block hero-fade-in hero-delay-3">
-      <div class="floating-stats-card">
-        <div class="flex items-center gap-4">
-          <div class="stat-item">
-            <span class="stat-value">{{ visibleCars().length }}+</span>
-            <span class="stat-label">Autos</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value">4.8</span>
-            <span class="stat-label">Rating</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value">24/7</span>
-            <span class="stat-label">Soporte</span>
-          </div>
         </div>
       </div>
     </div>
@@ -229,32 +110,33 @@
   <!-- SEARCH BAR - Bottom Floating -->
   <div class="relative z-20 pb-8 lg:pb-12">
     <div class="max-w-6xl mx-auto px-4 lg:px-8">
-      <div class="search-card-premium">
+      <!-- SEARCH CARD: Increased shadow and contrast -->
+      <div class="search-card-premium shadow-2xl border border-white/20 backdrop-blur-xl bg-surface-raised/90">
         <!-- Search Header -->
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <div>
-            <h3 class="font-display h4 text-primary tracking-tight"
+            <h3 class="font-display h4 text-text-primary tracking-tight font-bold"
               data-testid="marketplace-heading">
               Encuentra tu vehículo
             </h3>
-            <p class="text-sm text-secondary mt-1">Busca por ubicación o fecha</p>
+            <p class="text-sm text-text-secondary mt-1 font-medium">Busca por ubicación o fecha</p>
           </div>
           <div
-            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-sm font-medium text-emerald-400">{{ visibleCars().length }}
-              disponibles</span>
+            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-success-light/10 border border-success-light/20">
+            <span class="w-2 h-2 rounded-full bg-success-default animate-pulse"></span>
+            <span class="text-sm font-bold text-success-default">{{ visibleCars().length }}
+              disponibles hoy</span>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-end">
           <!-- Location Search -->
           <div class="lg:col-span-5 relative group z-30">
-            <label class="input-label-premium"> Ubicación </label>
+            <label class="input-label-premium text-text-primary font-bold"> Ubicación </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
-                  class="w-5 h-5 text-muted group-focus-within:text-cyan-500 transition-colors"
+                  class="w-5 h-5 text-text-secondary group-focus-within:text-primary transition-colors"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -266,27 +148,27 @@
                 [value]="selectedLocation() || searchValue()"
                 (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
                 (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
-                class="input-premium pl-12" />
+                class="input-premium pl-12 bg-surface-base border-border-default text-text-primary placeholder:text-text-muted" />
 
               <!-- Loading indicator -->
               <div *ngIf="locationSearchLoading()"
                 class="absolute right-4 top-1/2 -translate-y-1/2">
                 <div
-                  class="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400 border-t-transparent">
+                  class="animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent">
                 </div>
               </div>
 
               <!-- Dropdown de sugerencias -->
               <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
-                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 max-h-80 overflow-y-auto shadow-2xl">
+                class="absolute z-50 w-full mt-2 bg-surface-raised rounded-xl border border-border-default max-h-80 overflow-y-auto shadow-2xl">
                 <div class="py-1">
                   <button
                     *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion"
                     (click)="onLocationSuggestionSelect(suggestion)"
-                    class="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-start gap-3 group">
+                    class="w-full px-4 py-3 text-left hover:bg-surface-base transition-colors flex items-start gap-3 group">
                     <div
-                      class="p-2 bg-cyan-500/10 rounded-lg group-hover:bg-cyan-500/20 transition-colors">
-                      <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor"
+                      class="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                      <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -294,42 +176,22 @@
                     </div>
                     <div class="flex-1 min-w-0">
                       <p
-                        class="text-sm font-medium text-white group-hover:text-cyan-400 transition-colors">
+                        class="text-sm font-medium text-text-primary group-hover:text-primary transition-colors">
                         {{ suggestion.placeName }}
                       </p>
-                      <p class="text-xs text-white/40 truncate mt-0.5">
+                      <p class="text-xs text-text-secondary truncate mt-0.5">
                         {{ suggestion.fullAddress }}
                       </p>
                     </div>
                   </button>
                 </div>
               </div>
-
-              <!-- No results message -->
-              <div *ngIf="
-                  showLocationSuggestions() &&
-                  !locationSearchLoading() &&
-                  locationSuggestions().length === 0 &&
-                  (selectedLocation() || searchValue()).length >= 2
-                "
-                class="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl rounded-xl border border-white/10 p-6 text-center">
-                <div
-                  class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg class="w-6 h-6 text-white/40" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <p class="text-sm font-medium text-white">No encontramos esa ubicación</p>
-                <p class="text-xs text-white/40 mt-1">Intenta con otra dirección</p>
-              </div>
             </div>
           </div>
 
           <!-- Date Range Calendar -->
           <div class="lg:col-span-4 relative group z-20">
-            <label class="input-label-premium">Fechas</label>
+            <label class="input-label-premium text-text-primary font-bold">Fechas</label>
             <div class="relative">
               <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
                 (rangeChange)="onDateRangeChange($event)" (calendarClick)="openDatePicker()" />
@@ -338,8 +200,8 @@
 
           <!-- Search Button -->
           <div class="lg:col-span-3">
-            <button (click)="onSearchSubmit(searchValue())" class="btn-search-premium w-full">
-              <span>Buscar</span>
+            <button (click)="onSearchSubmit(searchValue())" class="btn-search-premium w-full shadow-lg shadow-cta-default/30 hover:shadow-cta-default/50">
+              <span class="font-bold text-lg">Buscar Auto</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -352,643 +214,218 @@
   </div>
 </div>
 
-<!-- Mobile 3D View Controls Bar -->
-<div class="mobile-3d-controls md:hidden">
-  <button (click)="set3DView('front')" class="mobile-view-btn"
-    [class.active]="current3DView === 'front'" aria-label="Vista frontal">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-    <span>Frontal</span>
-  </button>
-  <button (click)="set3DView('side')" class="mobile-view-btn"
-    [class.active]="current3DView === 'side'" aria-label="Vista lateral">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-    </svg>
-    <span>Lateral</span>
-  </button>
-  <button (click)="set3DView('top')" class="mobile-view-btn"
-    [class.active]="current3DView === 'top'" aria-label="Vista superior">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 15l7-7 7 7" />
-    </svg>
-    <span>Superior</span>
-  </button>
-  <button (click)="set3DView('interior')" class="mobile-view-btn"
-    [class.active]="current3DView === 'interior'" aria-label="Vista interior">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-    <span>Interior</span>
-  </button>
-  <button (click)="set3DView('default')" class="mobile-view-btn reset-btn"
-    aria-label="Restablecer vista">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-    </svg>
-  </button>
-</div>
+<!-- 1. CÓMO FUNCIONA (VISUAL JOURNEY) -->
+<section class="py-20 bg-surface-base relative overflow-hidden">
+  <!-- Decorative Line -->
+  <div class="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-border-default to-transparent -z-10"></div>
 
-<!-- Main Content Area -->
-<div class="marketplace-content bg-surface-base min-h-screen">
-  <!-- COLABORADORES / PARTNERS SECTION - PREMIUM -->
-  <section class="partners-section py-8 lg:py-10 relative overflow-hidden">
-    <!-- Background plano sin gradientes -->
-    <div class="absolute inset-0 bg-surface-base"></div>
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="text-center mb-16">
+      <span class="text-cta-default font-bold tracking-widest uppercase text-xs mb-2 block">Experiencia sin fricción</span>
+      <h2 class="text-3xl md:text-4xl font-black text-text-primary mb-4">Alquilar nunca fue tan fácil</h2>
+      <p class="text-text-secondary max-w-2xl mx-auto text-lg">Olvídate de las filas en el mostrador y el papeleo interminable. AutoRenta es 100% digital.</p>
+    </div>
 
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
-      <!-- Section Header -->
-      <div class="text-center mb-8">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-raised border border-cta-default/40 mb-4">
-          <span class="w-1.5 h-1.5 rounded-full bg-cta-default animate-pulse"></span>
-          <span class="text-[10px] font-semibold text-cta-text uppercase tracking-widest">Tecnología
-            de Clase Mundial</span>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+      <!-- Step 1 -->
+      <div class="relative group text-center">
+        <div class="w-20 h-20 mx-auto bg-surface-raised rounded-2xl shadow-elevated flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-transform duration-300 border border-border-default">
+          <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
         </div>
-        <h2 class="font-display h3 font-black text-text-primary dark:text-text-primary mb-3">
-          Respaldados por
-          <span class="text-cta-default">los mejores</span>
+        <div class="absolute top-10 right-0 w-1/2 h-0.5 bg-primary-100 hidden md:block -z-10 translate-x-1/2"></div>
+        <h3 class="text-xl font-bold text-text-primary mb-3">1. Elige tu auto ideal</h3>
+        <p class="text-text-secondary leading-relaxed">Filtra por modelo, precio o ubicación. Mira fotos reales y reseñas de otros usuarios.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="relative group text-center">
+        <div class="w-20 h-20 mx-auto bg-surface-raised rounded-2xl shadow-elevated flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-transform duration-300 border border-border-default">
+          <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <div class="absolute top-10 right-0 w-1/2 h-0.5 bg-primary-100 hidden md:block -z-10 translate-x-1/2"></div>
+        <h3 class="text-xl font-bold text-text-primary mb-3">2. Verificación Instantánea</h3>
+        <p class="text-text-secondary leading-relaxed">Sube tu licencia y DNI. Nuestra IA valida tu identidad en segundos para que puedas reservar al instante.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="relative group text-center">
+        <div class="w-20 h-20 mx-auto bg-surface-raised rounded-2xl shadow-elevated flex items-center justify-center mb-6 group-hover:-translate-y-2 transition-transform duration-300 border border-border-default">
+          <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+        </div>
+        <h3 class="text-xl font-bold text-text-primary mb-3">3. Retira y Disfruta</h3>
+        <p class="text-text-secondary leading-relaxed">Coordina con el dueño o usa el desbloqueo remoto. El seguro contra todo riesgo ya está activado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. TESTIMONIOS (SOCIAL PROOF) -->
+<section class="py-20 bg-surface-secondary border-y border-border-default">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+      <div>
+        <h2 class="text-3xl font-bold text-text-primary mb-2">Historias de la comunidad</h2>
+        <p class="text-text-secondary">Personas reales, viajes inolvidables.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-2xl font-bold text-text-primary">4.9</span>
+        <div class="flex text-warning-default">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <span class="text-text-secondary text-sm">en +25,000 viajes</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Review 1 -->
+      <div class="bg-surface-raised p-6 rounded-2xl shadow-sm border border-border-default flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-700 font-bold">M</div>
+          <div>
+            <p class="font-bold text-text-primary">Martín G.</p>
+            <p class="text-xs text-text-secondary">Alquiló un Toyota Etios</p>
+          </div>
+        </div>
+        <p class="text-text-secondary mb-4 flex-1">"Necesitaba un auto urgente para el fin de semana. En 15 minutos ya tenía la confirmación y estaba retirando el auto. Increíble la velocidad."</p>
+        <div class="flex items-center gap-2 text-xs font-medium text-success-default bg-success-light/10 px-2 py-1 rounded w-fit">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Compra Verificada
+        </div>
+      </div>
+
+      <!-- Review 2 -->
+      <div class="bg-surface-raised p-6 rounded-2xl shadow-sm border border-border-default flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">S</div>
+          <div>
+            <p class="font-bold text-text-primary">Sofía L.</p>
+            <p class="text-xs text-text-secondary">Alquiló una Ford Ranger</p>
+          </div>
+        </div>
+        <p class="text-text-secondary mb-4 flex-1">"El proceso de check-in con fotos me dio mucha seguridad. El dueño fue súper amable y el auto estaba impecable. Definitivamente vuelvo a usar la app."</p>
+        <div class="flex items-center gap-2 text-xs font-medium text-success-default bg-success-light/10 px-2 py-1 rounded w-fit">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Compra Verificada
+        </div>
+      </div>
+
+      <!-- Review 3 -->
+      <div class="bg-surface-raised p-6 rounded-2xl shadow-sm border border-border-default flex flex-col">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold">F</div>
+          <div>
+            <p class="font-bold text-text-primary">Federico R.</p>
+            <p class="text-xs text-text-secondary">Alquiló un Fiat Cronos</p>
+          </div>
+        </div>
+        <p class="text-text-secondary mb-4 flex-1">"Me encantó poder pagar con MercadoPago en cuotas. Es mucho más transparente que las rentadoras tradicionales donde siempre te agregan cargos extra."</p>
+        <div class="flex items-center gap-2 text-xs font-medium text-success-default bg-success-light/10 px-2 py-1 rounded w-fit">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Compra Verificada
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. OWNER CTA + CALCULADORA (DARK THEME) -->
+<section class="py-24 bg-gray-900 relative overflow-hidden">
+  <!-- Abstract Background Pattern -->
+  <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-900/20 to-transparent"></div>
+  <div class="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cta-default/10 rounded-full blur-3xl"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <!-- Text Content -->
+      <div>
+        <span class="text-cta-default font-bold tracking-widest uppercase text-xs mb-4 block">Para Dueños</span>
+        <h2 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+          Tu auto puede <br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cta-default to-white">pagarse solo</span>
         </h2>
-        <p class="text-base text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
-          Integramos las mejores soluciones tecnológicas para brindarte una experiencia segura y
-          confiable.
+        <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+          Convierte tu vehículo en un activo rentable. Publícalo cuando no lo uses, nosotros nos encargamos del seguro, los cobros y la seguridad.
         </p>
+        
+        <ul class="space-y-4 mb-10">
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <span class="text-gray-300">Pagos garantizados a las 24hs</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <span class="text-gray-300">Seguro total incluido en cada viaje</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 mt-0.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <span class="text-gray-300">Vos decidís el precio y la disponibilidad</span>
+          </li>
+        </ul>
+
+        <button (click)="onPublishClick()" class="bg-white text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+          Empezar a ganar dinero
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </button>
       </div>
 
-      <!-- Partner Logos Grid -->
-      <div class="partners-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
-        <!-- MercadoPago -->
-        <div class="partner-card group">
-          <div class="partner-card-inner p-4">
-            <div
-              class="partner-icon-wrapper bg-cta-default/15 group-hover:bg-cta-default/25 w-12 h-12 mb-3">
-              <svg class="h-6 w-auto text-cta-default" viewBox="0 0 100 30" fill="currentColor">
-                <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="18">
-                  MercadoPago
-                </text>
-              </svg>
-            </div>
-            <span class="partner-name text-sm">Pagos Seguros</span>
-          </div>
+      <!-- Visual Calculator Card -->
+      <div class="bg-gray-800/50 backdrop-blur-xl border border-gray-700 p-8 rounded-3xl shadow-2xl">
+        <div class="flex justify-between items-center mb-8">
+          <h3 class="text-xl font-bold text-white">Calculadora</h3>
+          <span class="text-xs bg-cta-default/20 text-cta-default px-2 py-1 rounded-lg">Estimado</span>
         </div>
 
-        <!-- Supabase -->
-        <div class="partner-card group">
-          <div class="partner-card-inner p-4">
-            <div
-              class="partner-icon-wrapper bg-success-bg group-hover:bg-success-bg-hover w-12 h-12 mb-3">
-              <svg class="h-6 w-6 text-success-text" viewBox="0 0 109 113" fill="currentColor">
-                <path
-                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z" />
-                <path
-                  d="M63.7 110.3c-2.5 3.3-7.9 1.5-7.9-2.7V71.4h45.1c5.8 0 9 6.8 5.4 11.3l-42.6 27.6z"
-                  fill-opacity=".2" />
-                <path
-                  d="M45.3 2.7c2.5-3.3 7.9-1.5 7.9 2.7v36.2H8.1c-5.8 0-9-6.8-5.4-11.3L45.3 2.7z" />
-              </svg>
+        <div class="space-y-8">
+          <!-- Valor del Auto -->
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Valor de tu auto</label>
+            <div class="h-2 bg-gray-700 rounded-full relative">
+              <div class="absolute w-2/3 h-full bg-gradient-to-r from-cta-default to-white rounded-full"></div>
+              <div class="absolute top-1/2 right-1/3 -translate-y-1/2 translate-x-1/2 w-6 h-6 bg-white rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"></div>
             </div>
-            <span class="partner-name text-sm">Base de Datos</span>
-          </div>
-        </div>
-
-        <!-- Cloudflare -->
-        <div class="partner-card group">
-          <div class="partner-card-inner p-4">
-            <div
-              class="partner-icon-wrapper bg-warning-bg group-hover:bg-warning-bg-hover w-12 h-12 mb-3">
-              <svg class="h-5 w-auto text-warning-text" viewBox="0 0 100 30" fill="currentColor">
-                <text x="0" y="22" font-family="system-ui" font-weight="800" font-size="16">
-                  Cloudflare
-                </text>
-              </svg>
+            <div class="flex justify-between mt-2 text-xs text-gray-500">
+              <span>$5M</span>
+              <span class="text-white font-bold">$15.000.000</span>
+              <span>$40M+</span>
             </div>
-            <span class="partner-name text-sm">CDN & Seguridad</span>
           </div>
-        </div>
 
-        <!-- Angular -->
-        <div class="partner-card group">
-          <div class="partner-card-inner p-4">
-            <div
-              class="partner-icon-wrapper bg-error-bg group-hover:bg-error-bg-hover w-12 h-12 mb-3">
-              <svg class="h-7 w-7 text-error-text" viewBox="0 0 250 250" fill="currentColor">
-                <path
-                  d="M125 30L31.9 63.2l14.2 123.1L125 230l78.9-43.7 14.2-123.1L125 30zm0 22.2l63.1 145.6h-23.5l-12.7-31.8h-54l-12.7 31.8H61.9L125 52.2z" />
-                <path d="M145.6 156.2L125 106.6l-20.6 49.6h41.2z" />
-              </svg>
+          <!-- Días Disponibles -->
+          <div>
+            <label class="block text-gray-400 text-sm mb-2">Días alquilado por mes</label>
+            <div class="h-2 bg-gray-700 rounded-full relative">
+              <div class="absolute w-1/2 h-full bg-gradient-to-r from-cta-default to-white rounded-full"></div>
+              <div class="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 bg-white rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform"></div>
             </div>
-            <span class="partner-name text-sm">Framework</span>
-          </div>
-        </div>
-
-        <!-- Google Maps -->
-        <div class="partner-card group">
-          <div class="partner-card-inner p-4">
-            <div
-              class="partner-icon-wrapper bg-cta-default/15 group-hover:bg-cta-default/25 w-12 h-12 mb-3">
-              <svg class="h-6 w-6 text-cta-default" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-              </svg>
+            <div class="flex justify-between mt-2 text-xs text-gray-500">
+              <span>1 día</span>
+              <span class="text-white font-bold">15 días</span>
+              <span>30 días</span>
             </div>
-            <span class="partner-name text-sm">Mapas</span>
           </div>
-        </div>
-      </div>
 
-      <!-- Security Badge -->
-      <div class="mt-8 flex justify-center">
-        <div
-          class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-surface-raised border border-border-muted shadow-sm">
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-success-text" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span class="text-sm font-medium text-secondary">Datos
-              encriptados</span>
-          </div>
-          <div class="w-px h-4 bg-border-muted"></div>
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <span class="text-sm font-medium text-secondary">SSL
-              Certificado</span>
-          </div>
-          <div class="w-px h-4 bg-border-muted"></div>
-          <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-cta-hover" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-secondary">99.9% Uptime</span>
+          <div class="pt-8 border-t border-gray-700 text-center">
+            <p class="text-gray-400 text-sm mb-1">Podrías ganar hasta</p>
+            <p class="text-5xl font-black text-white mb-2">$ 450.000<span class="text-lg font-normal text-gray-500">/mes</span></p>
+            <p class="text-xs text-gray-500">*Cálculo estimado basado en autos similares en tu zona.</p>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- BENEFICIOS PARA CONDUCTORES -->
-  <section class="py-14 lg:py-18 bg-surface-base">
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
-      <div class="text-center max-w-3xl mx-auto">
-        <span
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-cta-default/30 text-xs font-semibold uppercase tracking-widest text-cta-default mb-4">Para
-          quienes alquilan</span>
-        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-3">Súbete y maneja con
-          tranquilidad</h2>
-        <p class="text-text-secondary dark:text-text-secondary text-base">Seguro incluido, verificación
-          rápida y soporte 24/7 para que solo te ocupes del viaje.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
-            ✅</div>
-          <h3 class="font-semibold text-primary mb-2">Verificación en minutos</h3>
-          <p class="text-sm text-secondary">Sube DNI y licencia, IA valida y avanza sin
-            esperas.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">
-            🔒</div>
-          <h3 class="font-semibold text-primary mb-2">Pagos protegidos</h3>
-          <p class="text-sm text-secondary">MercadoPago, transferencia o Wallet. Depósitos
-            seguros y liberación automática.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">
-            🕒</div>
-          <h3 class="font-semibold text-primary mb-2">Entrega flexible</h3>
-          <p class="text-sm text-secondary">Coordina retiro y devolución cerca tuyo o a
-            domicilio.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">
-            🧭</div>
-          <h3 class="font-semibold text-primary mb-2">Soporte 24/7</h3>
-          <p class="text-sm text-secondary">Chat y WhatsApp en ruta para cualquier imprevisto.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BENEFICIOS PARA DUEÑOS -->
-  <section class="py-14 lg:py-18 bg-surface-base">
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 space-y-10">
-      <div class="text-center max-w-3xl mx-auto">
-        <span
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border/50 text-xs font-semibold uppercase tracking-widest text-success-text mb-4">Para
-          dueños</span>
-        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-3">Publica, bloquea y cobra
-          sin fricción</h2>
-        <p class="text-text-secondary dark:text-text-secondary text-base">Control total de precios y
-          disponibilidad, con protección y depósitos garantizados.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3">
-            💰</div>
-          <h3 class="font-semibold text-primary mb-2">Ingresos claros</h3>
-          <p class="text-sm text-secondary">Resumen por reserva y depósitos automáticos a tu
-            cuenta.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-3">
-            📅</div>
-          <h3 class="font-semibold text-primary mb-2">Calendario inteligente</h3>
-          <p class="text-sm text-secondary">Bloquea fechas, ajusta precios por día y recibe
-            reservas inmediatas.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-3">
-            🛡️</div>
-          <h3 class="font-semibold text-primary mb-2">Protección y verificación</h3>
-          <p class="text-sm text-secondary">Conductores verificados, depósitos de garantía y
-            reportes de estado.</p>
-        </div>
-        <div class="p-5 rounded-2xl bg-surface-raised border border-border-default/60 shadow-sm">
-          <div
-            class="w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center mb-3">
-            ⚙️</div>
-          <h3 class="font-semibold text-primary mb-2">Herramientas pro</h3>
-          <p class="text-sm text-secondary">Dashboard, precios dinámicos y alertas de
-            rendimiento.</p>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row items-center justify-center gap-3 pt-4 text-center">
-        <button (click)="handleHeroQuickBook()" class="btn-primary-glow w-full md:w-auto">Explorar
-          autos</button>
-        <button (click)="onPublishClick()" class="btn-outline-light w-full md:w-auto">Publicar mi
-          auto</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS - PREMIUM REDESIGNED -->
-  <section class="steps-section py-14 lg:py-20 relative overflow-hidden bg-surface-base">
-
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
-      <!-- Section Header -->
-      <div class="text-center mb-20 lg:mb-24">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 mb-6">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Proceso
-            Simple</span>
-        </div>
-        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-6"
-          data-testid="marketplace-h1">
-          Alquila en
-          <span class="relative">
-            <span class="text-gradient-cyan">4 pasos</span>
-            <svg class="absolute -bottom-2 left-0 w-full h-3 text-cyan-500/30" viewBox="0 0 200 12"
-              preserveAspectRatio="none">
-              <path d="M0 6c50-6 100-6 200 0" stroke="currentColor" stroke-width="3" fill="none"
-                stroke-linecap="round" />
-            </svg>
-          </span>
-        </h2>
-        <p class="text-lg lg:text-xl text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
-          Sin complicaciones. Sin intermediarios. Todo desde tu celular en minutos.
-        </p>
-      </div>
-
-      <!-- Steps Timeline -->
-      <div class="relative">
-        <!-- Connection Line (Desktop) -->
-        <div
-          class="hidden lg:block absolute top-[80px] left-[calc(12.5%+32px)] right-[calc(12.5%+32px)] h-0.5 from-cyan-500/20 via-cyan-500/20 to-amber-500/20">
-        </div>
-
-        <!-- Steps Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-          <!-- Step 1 -->
-          <div class="step-card-premium group">
-            <div class="step-number-badge">
-              <span class="step-number-text">01</span>
-            </div>
-            <div
-              class="step-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <h3 class="step-title-premium">Explora</h3>
-            <p class="step-description-premium">
-              Navega el mapa interactivo o la lista de autos verificados cerca de ti.
-            </p>
-            <div class="step-cta">
-              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">Ver autos
-                disponibles</span>
-              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="step-card-premium group">
-            <div class="step-number-badge">
-              <span class="step-number-text">02</span>
-            </div>
-            <div
-              class="step-icon-premium from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
-              <svg class="w-8 h-8 text-emerald-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 class="step-title-premium">Reserva</h3>
-            <p class="step-description-premium">
-              Elige tus fechas y chatea directo con el dueño para coordinar.
-            </p>
-            <div class="step-cta">
-              <span class="text-xs text-emerald-400 font-medium group-hover:text-emerald-300">Sin
-                compromiso</span>
-              <svg class="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="step-card-premium group">
-            <div class="step-number-badge">
-              <span class="step-number-text">03</span>
-            </div>
-            <div
-              class="step-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-8 h-8 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <h3 class="step-title-premium">Verifica</h3>
-            <p class="step-description-premium">
-              Sube tu licencia y DNI. Verificación automática con IA en minutos.
-            </p>
-            <div class="step-cta">
-              <span class="text-xs text-cyan-400 font-medium group-hover:text-cyan-300">100%
-                seguro</span>
-              <svg class="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="step-card-premium group">
-            <div class="step-number-badge">
-              <span class="step-number-text">04</span>
-            </div>
-            <div
-              class="step-icon-premium from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
-              <svg class="w-8 h-8 text-amber-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 class="step-title-premium">Maneja</h3>
-            <p class="step-description-premium">
-              Paga seguro por MercadoPago o Wallet. ¡Disfruta tu viaje!
-            </p>
-            <div class="step-cta">
-              <span class="text-xs text-amber-400 font-medium group-hover:text-amber-300">Múltiples
-                pagos</span>
-              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CTA Banner -->
-      <div class="mt-20 text-center">
-        <div
-          class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-cta-default/10 border border-cta-default/30">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-cta-default/20 flex items-center justify-center">
-              <svg class="w-6 h-6 text-cta-default" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div class="text-left">
-              <p class="text-primary font-semibold">Tiempo promedio: 5 minutos</p>
-              <p class="text-sm text-secondary">Desde búsqueda hasta reserva confirmada</p>
-            </div>
-          </div>
-          <div class="sm:pl-6 sm:border-l border-white/10">
-            <button (click)="handleHeroQuickBook()" class="btn-primary-glow">
-              <span class="relative z-10 flex items-center gap-2">
-                Comenzar ahora
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TRUST FEATURES - PREMIUM REDESIGNED -->
-  <section class="trust-section py-12 lg:py-16 relative overflow-hidden bg-surface-base">
-
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
-      <!-- Section Header -->
-      <div class="text-center mb-16">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised border border-success-border mb-6">
-          <svg class="w-4 h-4 text-success-text" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <span class="text-xs font-semibold text-success-text uppercase tracking-widest">¿Por qué
-            elegirnos?</span>
-        </div>
-        <h2 class="font-display h2 text-text-primary dark:text-text-primary mb-4">
-          Confianza en cada
-          <span class="text-gradient-cyan">kilómetro</span>
-        </h2>
-        <p class="text-lg text-text-secondary dark:text-text-secondary max-w-2xl mx-auto">
-          Tu seguridad es nuestra prioridad. Cada detalle está pensado para brindarte tranquilidad.
-        </p>
-      </div>
-
-      <!-- Trust Features Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-        <!-- Feature 1: Verificado -->
-        <div class="trust-card-premium group">
-          <div class="trust-card-glow bg-emerald-500/20"></div>
-          <div class="trust-card-content">
-            <div
-              class="trust-icon-premium from-emerald-500/20 to-emerald-500/5 group-hover:from-emerald-500 group-hover:to-emerald-600">
-              <svg class="w-7 h-7 text-emerald-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h4 class="trust-title-premium">100% Verificado</h4>
-            <p class="trust-desc-premium">
-              Todos los locadores pasan por verificación de identidad con IA y validación
-              documental.
-            </p>
-            <div class="trust-stat">
-              <span class="trust-stat-number text-emerald-400">+5,000</span>
-              <span class="trust-stat-label">usuarios verificados</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 2: Seguro -->
-        <div class="trust-card-premium group">
-          <div class="trust-card-glow bg-blue-500/20"></div>
-          <div class="trust-card-content">
-            <div
-              class="trust-icon-premium from-blue-500/20 to-blue-500/5 group-hover:from-blue-500 group-hover:to-blue-600">
-              <svg class="w-7 h-7 text-blue-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <h4 class="trust-title-premium">Seguro Incluido</h4>
-            <p class="trust-desc-premium">
-              Cobertura total contra daños, robo y responsabilidad civil en cada reserva.
-            </p>
-            <div class="trust-stat">
-              <span class="trust-stat-number text-blue-400">100%</span>
-              <span class="trust-stat-label">cobertura incluida</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 3: Pagos -->
-        <div class="trust-card-premium group">
-          <div class="trust-card-glow bg-cyan-500/20"></div>
-          <div class="trust-card-content">
-            <div
-              class="trust-icon-premium from-cyan-500/20 to-cyan-500/5 group-hover:from-cyan-500 group-hover:to-cyan-600">
-              <svg class="w-7 h-7 text-cyan-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-            </div>
-            <h4 class="trust-title-premium">Sin Tarjeta</h4>
-            <p class="trust-desc-premium">
-              Paga con MercadoPago, transferencia, efectivo o nuestra Wallet digital.
-            </p>
-            <div class="trust-stat">
-              <span class="trust-stat-number text-cyan-400">6+</span>
-              <span class="trust-stat-label">métodos de pago</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 4: Entrega -->
-        <div class="trust-card-premium group">
-          <div class="trust-card-glow bg-amber-500/20"></div>
-          <div class="trust-card-content">
-            <div
-              class="trust-icon-premium from-amber-500/20 to-amber-500/5 group-hover:from-amber-500 group-hover:to-amber-600">
-              <svg class="w-7 h-7 text-amber-400 group-hover:text-white transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h4 class="trust-title-premium">Entrega Rápida</h4>
-            <p class="trust-desc-premium">
-              Recibe el auto donde estés. Entrega y devolución flexible en minutos.
-            </p>
-            <div class="trust-stat">
-              <span class="trust-stat-number text-amber-400">15 min</span>
-              <span class="trust-stat-label">tiempo promedio</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Trust Badges Row -->
-      <div class="mt-16 flex flex-wrap justify-center gap-4">
-        <div class="trust-badge">
-          <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-          </svg>
-          <span>Encriptación SSL</span>
-        </div>
-        <div class="trust-badge">
-          <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <span>Verificación KYC</span>
-        </div>
-        <div class="trust-badge">
-          <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <span>Soporte 24/7</span>
-        </div>
-        <div class="trust-badge">
-          <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-          </svg>
-          <span>4.8/5 Rating</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CARS LISTING SECTION -->
+<!-- CARS LISTING SECTION -->
   <section class="py-16 lg:py-24 bg-surface-base">
     <div class="max-w-[2000px] mx-auto px-6 lg:px-12">
       <!-- Section Header -->
@@ -1007,59 +444,29 @@
           <div class="relative">
             <label for="sort-order" class="sr-only">Ordenar autos por</label>
             <select id="sort-order" [value]="sortOrder()" (change)="onSortOrderChange($event)"
-              class="select-premium" aria-label="Ordenar lista de autos">
+              class="select-premium bg-surface-raised border-border-default text-text-primary focus:ring-cta-default" aria-label="Ordenar lista de autos">
               <option value="distance">Más cercanos</option>
               <option value="score">Relevancia</option>
               <option value="price_asc">Menor precio</option>
               <option value="price_desc">Mayor precio</option>
               <option value="rating">Mejor valorados</option>
             </select>
-            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-secondary/60"
-              aria-hidden="true">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
           </div>
 
           <!-- View Toggle -->
-          <div class="view-toggle-premium" role="group" aria-label="Cambiar modo de visualización">
+          <div class="view-toggle-premium bg-surface-raised border border-border-default" role="group" aria-label="Cambiar modo de visualización">
             <button [class.active]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
               (click)="viewMode.set('grid')"
+              class="text-text-secondary hover:text-text-primary active:text-cta-default"
               [attr.aria-pressed]="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
               aria-label="Vista de cuadrícula">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 16a2 2 0 012-2h2a2 2 0 01-2-2h-2a2 2 0 01-2-2v-2z" /></svg>
             </button>
             <button [class.active]="viewMode() === 'list'" (click)="viewMode.set('list')"
+              class="text-text-secondary hover:text-text-primary active:text-cta-default"
               [attr.aria-pressed]="viewMode() === 'list'" aria-label="Vista de lista">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
-            <button [class.active]="viewMode() === 'map' && !isDesktop()"
-              (click)="viewMode.set('map')" class="lg:hidden"
-              [attr.aria-pressed]="viewMode() === 'map' && !isDesktop()" aria-label="Vista de mapa">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Results Count -->
-          <div
-            class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-cta-default/10 border border-cta-default/30">
-            <span class="w-2 h-2 rounded-full bg-cta-default"></span>
-            <span class="text-sm font-medium text-primary">{{ visibleCars().length }}
-              resultados</span>
           </div>
         </div>
       </div>
@@ -1069,125 +476,70 @@
         <!-- LEFT PANEL: Car Cards -->
         <div class="lg:col-span-5 xl:col-span-4 space-y-6"
           [class.hidden]="viewMode() === 'map' && !isDesktop()">
-          <!-- Grid View - Premium Cards -->
+          
+          <!-- Grid View - Using the NEW Premium Component Structure -->
           <div *ngIf="viewMode() === 'grid' || (isDesktop() && viewMode() === 'map')"
-            class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index"
-              class="car-card-premium group car-card-enhanced"
-              [class.car-card-selected]="selectedCarId() === car.id" (click)="onCarSelected(car.id)"
-              role="button" [attr.aria-label]="
-                'Ver detalles de ' + car.brand_text_backup + ' ' + car.model_text_backup
-              " tabindex="0" (keydown.enter)="onCarSelected(car.id)"
-              (keydown.space)="onCarSelected(car.id)" data-testid="car-card-enhanced">
-              <!-- Image -->
-              <div class="car-card-image">
-                <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
-                  [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
-                  class="w-full h-full object-cover" [loading]="i < 3 ? 'eager' : 'lazy'"
-                  [attr.fetchpriority]="i < 3 ? 'high' : 'auto'" />
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- CAR CARD LOOP (Refactored to match new style) -->
+            <div *ngFor="let car of visibleCars(); trackBy: trackByCarId; let i = index">
+               <!-- Usamos el componente car-card refactorizado si es posible, o emulamos su estructura aquí -->
+               <!-- Como el loop usa div directos en el original, aplicaré el estilo "Airbnb" aquí mismo -->
+               
+               <article
+                  (click)="onCarSelected(car.id)"
+                  class="group relative flex flex-col bg-surface-raised rounded-2xl overflow-hidden border border-transparent hover:border-border-default shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer h-full"
+                  [class.ring-2]="selectedCarId() === car.id"
+                  [class.ring-primary]="selectedCarId() === car.id">
 
-                <!-- Overlay -->
-                <div
-                  class="absolute inset-0 from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                </div>
-
-                <!-- Badges -->
-                <div class="absolute top-3 left-3 flex items-center gap-2">
-                  <span *ngIf="getCarInstantBooking(car)" class="badge-instant">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    Inmediato
-                  </span>
-
-                  <!-- Real-time Location Badge -->
-                  <span *ngIf="car.latest_location"
-                    [title]="'Actualizado: ' + (car.latest_location.recorded_at | date:'shortTime')"
-                    class="px-2 py-1 rounded-full bg-blue-500/90 text-white text-xs font-medium flex items-center gap-1 backdrop-blur-md shadow-sm border border-blue-400/30 cursor-help">
-                    <span class="relative flex h-2 w-2">
-                      <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                    </span>
-                    En vivo
-                  </span>
-                </div>
-              </div>
-
-              <!-- Content -->
-              <div class="car-card-content">
-                <div class="flex items-start justify-between gap-3 mb-2">
-                  <div class="flex-1 min-w-0">
-                    <h3
-                      class="font-display text-lg font-bold text-gray-900 dark:text-white truncate">
-                      {{ car.brand_text_backup }} {{ car.model_text_backup }}
-                    </h3>
-                    <div
-                      class="flex items-center gap-2 text-sm text-gray-500 dark:text-white/50 mt-1">
-                      <span class="flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                          viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                        {{ car.distanceText || car.location_city || 'N/A' }}
-                      </span>
-                      <span>•</span>
-                      <span class="flex items-center gap-1">
-                        <span class="text-amber-400">★</span>
-                        4.8
-                      </span>
-                      @if (latestLocations()[car.id]) {
-                        <span>•</span>
-                        <span class="flex items-center gap-1 text-cyan-500 dark:text-cyan-300">
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 22s7-7.58 7-12a7 7 0 10-14 0c0 4.42 7 12 7 12z" />
-                          </svg>
-                          Última señal {{ latestLocations()[car.id].recorded_at | date: 'short' }}
-                        </span>
-                      }
+                  <!-- Image -->
+                  <div class="relative aspect-[4/3] bg-surface-secondary overflow-hidden">
+                    <img [src]="extractPhotoGallery(car)[0] || '/assets/images/car-placeholder.svg'"
+                      [alt]="car.brand_text_backup + ' ' + car.model_text_backup"
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                      [loading]="i < 3 ? 'eager' : 'lazy'" />
+                    
+                    <!-- Badges -->
+                    <div class="absolute top-3 left-3 flex gap-2">
+                       <span *ngIf="getCarInstantBooking(car)" class="bg-cta-default text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                          Rayo
+                       </span>
                     </div>
                   </div>
-                  <div class="text-right flex-shrink-0">
-                    <span class="text-xl font-bold text-gray-900 dark:text-white">${{
-                      car.price_per_day | number:
-                      '1.0-0' }}</span>
-                    <span class="text-sm text-gray-500 dark:text-white/40 block">/ día</span>
-                  </div>
-                </div>
 
-                <!-- Specs Row -->
-                <div
-                  class="flex items-center gap-3 pt-3 border-t border-gray-100 dark:border-white/5">
-                  <span class="car-spec">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {{ car.transmission || 'Manual' }}
-                  </span>
-                  <span class="car-spec">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    {{ car.seats || 5 }}
-                  </span>
-                  <span class="car-spec">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    {{ car.fuel_type || 'Nafta' }}
-                  </span>
-                </div>
-              </div>
+                  <!-- Content -->
+                  <div class="flex flex-col flex-1 p-4 space-y-2">
+                    <div class="flex justify-between items-start">
+                       <div>
+                          <h3 class="font-bold text-text-primary leading-tight line-clamp-1 group-hover:text-primary transition-colors">
+                             {{ car.brand_text_backup }} {{ car.model_text_backup }}
+                          </h3>
+                          <p class="text-xs text-text-secondary mt-1">
+                             {{ car.distanceText || car.location_city || 'A consultar' }}
+                          </p>
+                       </div>
+                       <div class="flex items-center gap-1 text-xs font-medium">
+                          <svg class="w-3.5 h-3.5 text-warning-default fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                          <span>4.8</span>
+                       </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 text-xs text-text-secondary border-t border-border-default/50 pt-2 mt-2">
+                       <span>{{ car.transmission || 'Manual' }}</span>
+                       <span class="w-px h-3 bg-border-default"></span>
+                       <span>{{ car.seats || 5 }} plazas</span>
+                    </div>
+
+                    <div class="flex items-end justify-between mt-auto pt-2">
+                       <span class="text-xs text-text-secondary">por día</span>
+                       <span class="text-lg font-black text-text-primary tracking-tight">
+                          ${{ car.price_per_day | number: '1.0-0' }}
+                       </span>
+                    </div>
+                  </div>
+               </article>
+
             </div>
 
             <!-- Loading skeleton -->
@@ -1326,70 +678,23 @@
         <div
           class="lg:col-span-7 xl:col-span-8 hidden lg:block sticky top-24 h-[calc(100vh-180px)]">
           <div
-            class="static-map-container relative h-full rounded-xl overflow-hidden border border-white/10">
+            class="static-map-container relative h-full rounded-2xl overflow-hidden border border-border-default shadow-inner bg-surface-secondary">
             <!-- Static Map Image -->
-            <img [src]="staticMapUrl()" alt="Mapa de autos disponibles en tu zona"
-              class="w-full h-full object-cover" loading="eager" />
+            <img [src]="staticMapUrl()" alt="Mapa de autos disponibles"
+              class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500" loading="eager" />
 
             <!-- Overlay with CTA -->
             <div
-              class="absolute inset-0 from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center">
+              class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <a routerLink="/cars/map"
-                class="btn-primary-glow text-lg px-8 py-4 shadow-2xl hover:scale-105 transition-transform">
-                <svg class="w-6 h-6 mr-2 inline-block" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
+                class="btn-primary-glow text-lg px-8 py-4 shadow-2xl hover:scale-105 transition-transform pointer-events-auto flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
                 Ver mapa interactivo
               </a>
-              <p class="text-white/60 text-sm mt-4">Explora autos con filtros avanzados</p>
-            </div>
-
-            <!-- Car count badge -->
-            <div
-              class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg">
-              <span class="font-bold text-cyan-600 dark:text-cyan-400">{{ totalCarsCount() }}</span>
-              <span class="text-gray-600 dark:text-gray-300 ml-1">autos disponibles</span>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Map View (Mobile Only) - Static Map Preview -->
-      @if (viewMode() === 'map' && !isDesktop()) {
-      <div
-        class="static-map-container relative h-[70vh] mt-6 rounded-xl overflow-hidden border border-white/10">
-        <!-- Static Map Image -->
-        <img [src]="staticMapUrl()" alt="Mapa de autos disponibles"
-          class="w-full h-full object-cover" loading="eager" />
-
-        <!-- Overlay with CTA -->
-        <div
-          class="absolute inset-0 from-black/60 via-black/20 to-transparent flex flex-col items-center justify-center p-4">
-          <a routerLink="/cars/map" class="btn-primary-glow text-base px-6 py-3 shadow-2xl">
-            <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            Ver mapa interactivo
-          </a>
-          <p class="text-white/60 text-sm mt-3 text-center">
-            Explora autos con filtros avanzados
-          </p>
-        </div>
-
-        <!-- Car count badge -->
-        <div
-          class="absolute bottom-4 left-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg">
-          <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm">{{
-            totalCarsCount()
-            }}</span>
-          <span class="text-gray-600 dark:text-gray-300 text-sm ml-1">autos</span>
-        </div>
-      </div>
-      }
     </div>
   </section>
 </div>
@@ -1398,151 +703,9 @@
 <app-floating-action-fab [actions]="fabActions" position="bottom-right"
   (actionClick)="onFabActionClick($event)" />
 
-<!-- Date Picker Modal -->
-<div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"
-  (click)="closeDatePicker()">
-  <div
-    class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-700/50 overflow-hidden transform transition-all duration-300"
-    (click)="$event.stopPropagation()">
-    <!-- Header con gradiente de marca -->
-    <div class="from-cyan-500 via-cyan-400 to-teal-500 px-5 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div
-          class="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">Selecciona las fechas</h3>
-      </div>
-      <button (click)="closeDatePicker()"
-        class="w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-        aria-label="Cerrar">
-        <svg class="w-5 h-5 text-text-primary dark:text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+<!-- Modals (Date Picker, Location Picker) -->
+<div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4" (click)="closeDatePicker()">
+    <div class="w-full max-w-lg bg-surface-raised rounded-3xl shadow-2xl border border-border-default overflow-hidden" (click)="$event.stopPropagation()">
+        <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to" (rangeChange)="onDateRangeChange($event)" />
     </div>
-
-    <!-- Contenido -->
-    <div class="p-5 from-white to-gray-50/50 dark:from-slate-800 dark:to-slate-900/50">
-      <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
-        (rangeChange)="onDateRangeChange($event)" />
-
-      <!-- Footer con botón de acción -->
-      <div
-        class="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex items-center justify-end gap-3">
-        <button (click)="closeDatePicker()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-          Cancelar
-        </button>
-        <button (click)="closeDatePicker()"
-          class="px-6 py-2.5 from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl text-sm shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M5 13l4 4L19 7" />
-          </svg>
-          Aplicar fechas
-        </button>
-      </div>
-    </div>
-  </div>
 </div>
-
-<!-- Location Picker Modal -->
-<div *ngIf="showLocationPicker()"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-  (click)="closeLocationPicker()">
-  <div class="w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden"
-    (click)="$event.stopPropagation()">
-    <div
-      class="px-6 py-4 border-b border-gray-200 dark:border-slate-700 flex items-center justify-between">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Selecciona la ubicación</h3>
-      <button (click)="closeLocationPicker()"
-        class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-        <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-    <div class="p-6">
-      <!-- Search input -->
-      <div class="mb-4">
-        <input type="text" placeholder="Buscar ubicación..." [value]="selectedLocation()"
-          (input)="selectedLocation.set($any($event.target).value)"
-          class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 text-gray-900 dark:text-white placeholder:text-gray-400" />
-      </div>
-
-      <!-- Popular locations -->
-      <div class="space-y-2">
-        <p class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
-          Ubicaciones populares
-        </p>
-        <button
-          *ngFor="let location of ['Buenos Aires', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata']"
-          (click)="onLocationSelect(location)"
-          class="w-full px-4 py-3 text-left bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-xl transition-colors text-gray-900 dark:text-white">
-          <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span>{{ location }}</span>
-          </div>
-        </button>
-      </div>
-
-      <!-- Use my location button -->
-      <button (click)="onLogoClick()"
-        class="w-full mt-4 px-4 py-3 from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
-        <span class="text-xl">📍</span>
-        Usar mi ubicación
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════════════ -->
-<!-- CONVERSION SECTIONS - Landing Page Optimization -->
-<!-- ═══════════════════════════════════════════════════════════════════════════ -->
-
-<!-- Social Proof Bar - Animated stats -->
-<app-social-proof-bar [stats]="[
-    {
-      id: 'cars',
-      value: visibleCars().length || 500,
-      label: 'Autos disponibles',
-      icon: '🚗',
-      suffix: '+',
-    },
-    { id: 'users', value: 10000, label: 'Usuarios activos', icon: '👥', suffix: '+' },
-    { id: 'rentals', value: 25000, label: 'Alquileres completados', icon: '✅', suffix: '+' },
-    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: '⭐' },
-  ]" />
-
-<!-- Testimonials Section -->
-<app-testimonials-section />
-
-<!-- FAQ Section with JSON-LD Schema -->
-<app-faq-section />
-
-<!-- Final CTA Banner -->
-<app-final-cta-banner title="¿Listo para tu próxima aventura?"
-  subtitle="Únete a miles de usuarios que ya disfrutan de la libertad de alquilar sin intermediarios."
-  [primaryCta]="{ label: 'Buscar autos', link: '/cars/list' }"
-  [secondaryCta]="{ label: 'Publicar mi auto', link: '/cars/publish' }" />
-
-<!-- WhatsApp FAB -->
-<app-whatsapp-fab />
-
-<!-- Price Transparency Modal -->
-@if (showPriceTransparencyModal()) {
-<app-price-transparency-modal (closed)="onPriceTransparencyModalClose()" />
-}

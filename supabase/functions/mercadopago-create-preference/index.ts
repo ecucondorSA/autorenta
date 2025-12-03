@@ -194,12 +194,14 @@ serve(async (req) => {
     }
 
     // ========================================
-    // VALIDACIÓN: Montos dentro de límites
+    // VALIDACIÓN: Montos dentro de límites (ARS)
+    // MercadoPago Argentina usa ARS, no USD
+    // Mínimo: 1000 ARS (~$1.15 USD), Máximo: 2,000,000 ARS (~$2,300 USD)
     // ========================================
-    if (amount < 10 || amount > 5000) {
+    if (amount < 1000 || amount > 2000000) {
       return new Response(
         JSON.stringify({
-          error: `Amount must be between $10 and $5,000 (received: $${amount})`,
+          error: `El monto debe estar entre $1,000 y $2,000,000 ARS (recibido: $${amount})`,
           code: 'INVALID_AMOUNT',
         }),
         {
@@ -334,6 +336,12 @@ serve(async (req) => {
     console.log('Creating preference with MercadoPago REST API...');
 
     const preferenceData = {
+      // ========================================
+      // PURPOSE: wallet_purchase
+      // CRÍTICO para habilitar account_money y consumer_credits en Payment Brick
+      // Sin esto, solo aparecen tarjeta de crédito/débito y efectivo
+      // ========================================
+      purpose: 'wallet_purchase',
       items: [
         {
           // ========================================

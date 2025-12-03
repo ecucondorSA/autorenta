@@ -1,1242 +1,530 @@
-<div
-  class="min-h-screen bg-surface-base dark:bg-surface-base py-8 px-4 transition-colors duration-300 text-text-primary dark:text-text-secondary"
->
-  <div class="max-w-6xl mx-auto">
-    <!-- Hero -->
-    <div class="grid gap-6 mb-8 lg:grid-cols-5">
-      <div
-        class="lg:col-span-3 bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-soft border border-border-default/70 dark:border-neutral-800/70 p-6 transition-colors"
-      >
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Publicar Auto
-            </p>
-            <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1">
-              {{ editMode() ? 'Editar Auto' : 'Completa la información de tu vehículo' }}
-            </h1>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/75 mt-2 max-w-xl">
-              Ingresá datos del vehículo, condiciones y fotos. Este flujo te guía para que la
-              publicación quede lista para revisión.
-            </p>
-          </div>
-          <div class="hidden sm:flex flex-col text-right">
-            <p class="text-sm font-medium text-text-primary dark:text-text-primary">Paso 2 de 2</p>
-            <div class="flex items-center gap-1.5 mt-2">
-              <div class="flex items-center gap-1">
-                <span class="w-3 h-3 rounded-full bg-cta-default flex items-center justify-center text-white text-[8px] font-bold">✓</span>
-                <span class="h-1.5 w-10 rounded-full bg-cta-default"></span>
-              </div>
-              <div class="flex items-center gap-1">
-                <span class="w-3 h-3 rounded-full bg-cta-default text-white text-[8px] font-bold flex items-center justify-center">2</span>
-                <span class="h-1.5 w-6 rounded-full bg-gray-200 dark:bg-neutral-700"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 grid gap-4 sm:grid-cols-3">
-          <div class="rounded-xl border border-border-default/70 dark:border-neutral-800/70 p-4">
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Fotos listas
-            </p>
-            <p class="text-2xl font-bold text-cta-default dark:text-cta-default/80">
-              {{ uploadedPhotos().length }}/10
-            </p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-              Necesitás al menos 3
-            </p>
-          </div>
-          <div class="rounded-xl border border-border-default/70 dark:border-neutral-800/70 p-4">
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Revisión estimada
-            </p>
-            <p class="text-2xl font-bold text-warning-light dark:text-warning-light/90">24-48h</p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-              Te avisamos por mail cada cambio
-            </p>
-          </div>
-          <div class="rounded-xl border border-border-default/70 dark:border-neutral-800/70 p-4">
-            <p
-              class="text-xs uppercase tracking-wide text-text-secondary/70 dark:text-text-secondary/60"
-            >
-              Comisión
-            </p>
-            <p class="text-2xl font-bold text-cta-default dark:text-cta-default/80">15-25%</p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-              Dependiendo de categoría
-            </p>
-          </div>
-        </div>
-
-        <div
-          *ngIf="editMode()"
-          class="mt-4 bg-warning-bg/90 dark:bg-warning-bg0/15 border border-warning-border dark:border-warning-400/50 rounded-lg p-3 flex items-start gap-2"
-        >
-          <span class="text-warning-strong dark:text-warning-200 text-lg">✏️</span>
-          <div class="flex-1">
-            <p class="text-sm text-warning-strong dark:text-warning-100 font-medium">
-              Modo edición
-            </p>
-            <p class="text-sm text-warning-strong/90 dark:text-warning-100/90 mt-1">
-              Estás editando un auto existente. Los cambios se guardan al enviar el formulario.
-            </p>
-          </div>
-        </div>
-        <div
-          *ngIf="autofilledFromLast() && !editMode()"
-          class="mt-4 bg-cta-default/10 dark:bg-cta-default/15 border border-cta-default/30 dark:border-cta-default/40 rounded-lg p-3 flex items-start gap-2"
-        >
-          <span class="text-cta-default dark:text-text-primary text-lg">ℹ️</span>
-          <div class="flex-1">
-            <p class="text-sm text-cta-default dark:text-text-primary font-semibold">
-              Datos autocompletados
-            </p>
-            <p class="text-sm text-text-primary/80 dark:text-text-secondary mt-1">
-              Usamos tu última publicación para ahorrar tiempo. Revisá marca, modelo y fotos antes
-              de confirmar.
-            </p>
-          </div>
-        </div>
-
-        <div
-          *ngIf="mpStatusLoading()"
-          class="mt-4 flex items-center gap-3 rounded-lg border border-border-default/50 bg-surface-raised/70 p-3 text-sm text-text-secondary dark:border-neutral-700 dark:bg-surface-raised/60 dark:text-text-secondary/80"
-        >
-          <span class="inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-cta-default"></span>
-          Comprobando el estado de tu cuenta de Mercado Pago...
-        </div>
-
-        <div
-          *ngIf="mpStatusError()"
-          class="mt-4 rounded-xl border border-error-border bg-error-bg/90 p-4 text-sm text-error-strong dark:border-error-border/60 dark:bg-error-bg0/10 dark:text-error-200"
-        >
-          <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <div class="flex items-start gap-2">
-              <span class="text-lg">⚠️</span>
-              <div>
-                <p class="font-semibold">No pudimos verificar Mercado Pago</p>
-                <p class="text-xs md:text-sm">
-                  {{ mpStatusError() }}. Intentá nuevamente en unos minutos o volvé a vincular tu
-                  cuenta.
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              class="rounded-lg border border-error-300/80 px-4 py-2 text-xs font-semibold text-error-strong transition hover:bg-error-bg-hover/80 dark:border-error-400/50 dark:bg-transparent dark:text-error-100 dark:hover:bg-error-bg0/20"
-              (click)="openOnboardingModal()"
-            >
-              Reintentar vinculación
-            </button>
-          </div>
-        </div>
-
-        <div
-          *ngIf="showMpBanner()"
-          class="mt-4 rounded-2xl border border-cta-default/40/80 bg-cta-default/10/80 p-5 text-sm text-cta-default shadow-sm dark:border-cta-default/40 dark:bg-cta-default/15 dark:text-cta-default"
-        >
-          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div class="flex items-start gap-3">
-              <span class="text-2xl leading-none">💳</span>
-              <div class="space-y-1">
-                <p class="text-base font-semibold">Conectá Mercado Pago y empezá a ganar</p>
-                <p class="text-xs md:text-sm md:max-w-xl">
-                  Conectá tu cuenta en 30 segundos y empezá a recibir reservas con pagos
-                  automáticos. Tu auto se guardará como borrador y podrás activarlo cuando quieras.
-                </p>
-              </div>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <button
-                type="button"
-                class="rounded-lg bg-cta-default text-cta-text shadow-soft transition hover:bg-cta-default/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-600"
-                (click)="openOnboardingModal()"
-              >
-                Conectar ahora
-              </button>
-              <button
-                type="button"
-                class="rounded-lg border border-cta-default/40 px-4 py-2 text-sm font-semibold text-cta-default transition hover:bg-cta-default/15 dark:text-cta-default dark:hover:bg-cta-default/20"
-                (click)="dismissOnboardingReminder()"
-              >
-                Recordarme luego
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div
-          *ngIf="!mpStatusLoading() && mpReady()"
-          class="mt-4 rounded-2xl border border-emerald-200/80 bg-success-light/10/90 p-5 text-sm text-success-light shadow-sm dark:border-emerald-400/40 dark:bg-success-light/20 dark:text-success-light"
-        >
-          <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <div class="flex items-start gap-3">
-              <span class="text-2xl leading-none">✅</span>
-              <div class="space-y-1">
-                <p class="text-base font-semibold">Mercado Pago vinculado correctamente</p>
-                <p class="text-xs md:text-sm md:max-w-xl">
-                  Recibirás pagos automáticos con split inmediato en cada reserva confirmada.
-                </p>
-                <p
-                  *ngIf="mpStatus()?.collectorId"
-                  class="text-xs text-success-light/80 dark:text-success-light/80"
-                >
-                  Collector ID: {{ mpStatus()?.collectorId }}
-                </p>
-                <!-- TODO: Fix MarketplaceStatus type conflict between services -->
-                <!-- <p
-                  *ngIf="mpStatus()?.completedAt"
-                  class="text-xs text-success-light/80 dark:text-success-light/80"
-                >
-                  Onboarding completado
-                  {{ mpStatus()?.completedAt | date: 'dd/MM/yyyy HH:mm' }}.
-                </p> -->
-              </div>
-            </div>
-            <button
-              type="button"
-              class="rounded-lg border border-emerald-300/60 px-4 py-2 text-sm font-medium text-success-light transition hover:bg-success-light/20 dark:border-emerald-400/40 dark:text-success-light dark:hover:bg-success-light/25"
-              (click)="openOnboardingModal()"
-            >
-              Ver opciones
-            </button>
-          </div>
+<div class="min-h-screen bg-gray-50/50 dark:bg-[#0f1117] py-8 px-4 transition-colors duration-300 text-slate-800 dark:text-slate-200 font-sans">
+  <div class="max-w-5xl mx-auto">
+    
+    <!-- 1. Header Minimalista e Inspirador -->
+    <header class="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2">
+          {{ editMode() ? 'Tu auto, mejorado.' : 'Rentabilizá tu auto.' }}
+        </h1>
+        <p class="text-lg text-slate-500 dark:text-slate-400 font-medium">
+          Configurá tu activo en minutos con seguridad garantizada.
+        </p>
+      </div>
+      <!-- Indicador de Progreso Sutil -->
+      <div class="hidden sm:block text-right">
+        <div class="inline-flex items-center gap-2 bg-white dark:bg-neutral-800 px-4 py-2 rounded-full shadow-sm border border-slate-100 dark:border-neutral-700">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+          </span>
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            {{ editMode() ? 'Edición activa' : 'Creando publicación' }}
+          </span>
         </div>
       </div>
+    </header>
 
-      <div
-        class="lg:col-span-2 rounded-2xl border border-border-default/70 dark:border-neutral-800/70 bg-gradient-to-br from-sand-light to-ivory-soft dark:from-slate-deep/40 dark:to-anthracite p-6 shadow-soft"
-      >
-        <h3
-          class="text-lg font-semibold text-text-primary dark:text-text-primary mb-3 flex items-center gap-2"
-        >
-          <span>🧭</span> Checklist rápido
-        </h3>
-        <ul class="space-y-3 text-sm text-text-primary/80 dark:text-text-secondary">
-          <li class="flex items-start gap-2">
-            <span class="text-cta-default mt-0.5">•</span>Subí al menos 3 fotos con buena
-            iluminación.
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-cta-default mt-0.5">•</span>Ingresá el valor estimado para calcular
-            seguros y depósitos.
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-cta-default mt-0.5">•</span>Definí precios, mínimos y depósito según
-            tu disponibilidad.
-          </li>
-          <li class="flex items-start gap-2">
-            <span class="text-cta-default mt-0.5">•</span>Completá dirección exacta para habilitar
-            mapa y retiro.
-          </li>
-        </ul>
-        <div
-          class="mt-5 rounded-xl bg-surface-raised dark:bg-surface-raised border border-border-default/50 dark:border-neutral-800/50 p-4 text-sm"
-        >
-          <p class="font-semibold text-text-primary dark:text-text-primary mb-2">Workflow</p>
-          <ol
-            class="list-decimal list-inside space-y-1 text-text-primary/80 dark:text-text-secondary"
-          >
-            <li>Información del vehículo</li>
-            <li>Precio</li>
-            <li>Ubicación</li>
-            <li>Fotos y revisión final</li>
-          </ol>
-        </div>
-      </div>
-    </div>
+    <div class="grid gap-8 lg:grid-cols-12 items-start">
+      
+      <!-- COLUMNA PRINCIPAL (Formulario) -->
+      <div class="lg:col-span-8 space-y-8">
 
-    <div class="grid gap-6 lg:grid-cols-5">
-      <div class="lg:col-span-3">
-        <!-- Main Form -->
-        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-6" data-testid="publish-form">
-          <!-- 1. Vehículo -->
-          <div class="publish-card bg-surface-raised rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <span class="text-2xl">🚗</span>
-              Datos del auto
-            </h2>
+        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-8" data-testid="publish-form">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- ✅ PASO 1: Marca (búsqueda en base de datos) -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-text-primary mb-2">
-                  <span class="inline-block w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-2">1</span>
-                  Marca *
-                </label>
-                <app-fipe-autocomplete
-                  [placeholder]="'Buscar marca (ej: VW, Ford, Fiat)'"
-                  [options]="fipeBrands()"
-                  [isLoading]="isLoadingFIPEBrands()"
-                  [selectedValue]="selectedFIPEBrand()"
-                  [minChars]="2"
-                  [helperText]="'Escribe la marca'"
-                  (optionSelected)="onFIPEBrandSelected($event)"
-                ></app-fipe-autocomplete>
+          <!-- SECCIÓN 1: IDENTIDAD DEL VEHÍCULO (El "Qué") -->
+          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800">
+            <div class="p-8">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">¿Qué auto vas a publicar?</h2>
               </div>
 
-              <!-- ✅ PASO 2: Año -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-text-primary mb-2">
-                  <span class="inline-block w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-2">2</span>
-                  Año *
-                </label>
-                <select
-                  formControlName="year"
-                  (change)="onYearChange()"
-                  [disabled]="!selectedFIPEBrand()"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-gray-100"
-                >
-                  <option [ngValue]="null" disabled>Seleccioná un año</option>
-                  @for (year of yearOptions; track year) {
-                    <option [ngValue]="year">{{ year }}</option>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Marca -->
+                <div class="md:col-span-2 relative z-20">
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Marca</label>
+                  <app-fipe-autocomplete
+                    [placeholder]="'Ej: Toyota, Ford, BMW...'"
+                    [options]="fipeBrands()"
+                    [isLoading]="isLoadingFIPEBrands()"
+                    [selectedValue]="selectedFIPEBrand()"
+                    [minChars]="2"
+                    (optionSelected)="onFIPEBrandSelected($event)"
+                  ></app-fipe-autocomplete>
+                  @if (publishForm.get('brand_text_backup')?.invalid && (publishForm.get('brand_text_backup')?.dirty || publishForm.get('brand_text_backup')?.touched)) {
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Seleccioná una marca
+                    </p>
                   }
-                </select>
-                @if (!selectedFIPEBrand()) {
-                  <p class="mt-1 text-xs text-gray-500">Primero elige una marca</p>
-                }
-              </div>
+                </div>
 
-              <!-- ✅ PASO 3: Modelo (búsqueda en base de datos - solo modelos con precio para el año) -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-text-primary mb-2">
-                  <span class="inline-block w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-2">3</span>
-                  Modelo *
-                </label>
-                <app-fipe-autocomplete
-                  [placeholder]="'Buscar modelo'"
-                  [options]="fipeModels()"
-                  [isLoading]="isLoadingFIPEModels()"
-                  [selectedValue]="selectedFIPEModel()"
-                  [disabled]="!selectedFIPEBrand() || !publishForm.get('year')?.value"
-                  [minChars]="2"
-                  [helperText]="'Modelos disponibles'"
-                  (optionSelected)="onFIPEModelSelected($event)"
-                ></app-fipe-autocomplete>
-              </div>
+                <!-- Año -->
+                <div class="relative z-10">
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Año</label>
+                  <select
+                    formControlName="year"
+                    (change)="onYearChange()"
+                    [disabled]="!selectedFIPEBrand()"
+                    class="w-full bg-slate-50 dark:bg-neutral-800 border-0 rounded-xl px-4 py-3.5 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all disabled:opacity-50 font-medium"
+                  >
+                    <option [ngValue]="null" disabled>Año...</option>
+                    @for (year of yearOptions; track year) {
+                      <option [ngValue]="year">{{ year }}</option>
+                    }
+                  </select>
+                  @if (publishForm.get('year')?.invalid && (publishForm.get('year')?.dirty || publishForm.get('year')?.touched)) {
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Seleccioná un año
+                    </p>
+                  }
+                </div>
 
-              <!-- Mileage -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Km *</label>
-                <input
-                  type="number"
-                  formControlName="mileage"
-                  min="0"
-                  placeholder="50000"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- Color -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Color *</label>
-                <input
-                  type="text"
-                  formControlName="color"
-                  placeholder="Ej: Blanco, Negro"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- Transmission -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Transmisión *</label>
-                <select
-                  formControlName="transmission"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
-                >
-                  <option value="">Selecciona</option>
-                  <option value="manual">Manual</option>
-                  <option value="automatic">Automática</option>
-                </select>
-              </div>
-
-              <!-- Fuel -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Combustible *</label>
-                <select
-                  formControlName="fuel"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
-                >
-                  <option value="">Selecciona</option>
-                  <option value="nafta">Nafta</option>
-                  <option value="gasoil">Diesel</option>
-                  <option value="electrico">Eléctrico</option>
-                  <option value="hibrido">Híbrido</option>
-                </select>
+                <!-- Modelo -->
+                <div class="relative z-10">
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Modelo</label>
+                  <app-fipe-autocomplete
+                    [placeholder]="'Ej: Corolla, Focus...'"
+                    [options]="fipeModels()"
+                    [isLoading]="isLoadingFIPEModels()"
+                    [selectedValue]="selectedFIPEModel()"
+                    [disabled]="!selectedFIPEBrand() || !publishForm.get('year')?.value"
+                    [minChars]="2"
+                    (optionSelected)="onFIPEModelSelected($event)"
+                  ></app-fipe-autocomplete>
+                  @if (publishForm.get('model_text_backup')?.invalid && (publishForm.get('model_text_backup')?.dirty || publishForm.get('model_text_backup')?.touched)) {
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Seleccioná un modelo
+                    </p>
+                  }
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- 2. Precio -->
-          <div class="publish-card bg-surface-raised rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <span class="text-2xl">💰</span>
-              Precio
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Price per day -->
+            
+            <!-- Barra "Smart" de estimación -->
+            <div *ngIf="valueAutoCalculated()" class="bg-emerald-50/50 dark:bg-emerald-900/10 px-8 py-4 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </span>
               <div>
-                <label class="block text-sm font-medium text-text-primary mb-2"
-                  >Modo de precios *</label
-                >
-                <div class="grid xs:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-cta-default]="isDynamicPricingSignal()"
-                    [class.bg-cta-default/10]="isDynamicPricingSignal()"
-                    [class.text-cta-default]="isDynamicPricingSignal()"
-                    [class.border-border-muted]="!isDynamicPricingSignal()"
-                    [class.bg-surface-raised]="!isDynamicPricingSignal()"
-                    [class.text-text-primary]="!isDynamicPricingSignal()"
-                    (click)="setPricingStrategy('dynamic')"
-                  >
-                    <p class="text-sm font-semibold flex items-center gap-2">
-                      Precio dinámico
-                      <span
-                        class="text-2xs uppercase tracking-wide bg-cta-default/20 text-cta-default px-2 py-0.5 rounded-full"
-                        >Recomendado</span
-                      >
-                    </p>
-                    <p class="text-xs text-text-secondary mt-1">
-                      AutoRenta ajusta el valor según demanda y temporada.
-                    </p>
+                <p class="text-sm font-bold text-emerald-900 dark:text-emerald-100">Vehículo reconocido</p>
+                <p class="text-xs text-emerald-700 dark:text-emerald-300">Valor de mercado aprox: USD {{ publishForm.get('value_usd')?.value | number }}</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECCIÓN 2: FOTOS (El "Wow" Visual) -->
+          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-xl font-bold text-slate-900 dark:text-white">Galería</h2>
+                  <p class="text-sm text-slate-500">La clave para alquilar más rápido.</p>
+                </div>
+              </div>
+              
+              <!-- Botón WOW de IA -->
+              <button 
+                type="button" 
+                (click)="showAIPhotosModal.set(true)"
+                [disabled]="!selectedFIPEModel() || uploadedPhotos().length >= 10"
+                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                Generar con IA
+              </button>
+            </div>
+
+            <!-- Área de Carga Visual -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <!-- Upload Button Slot -->
+              <label class="aspect-[4/3] relative flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-neutral-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer group">
+                <div class="p-3 bg-indigo-50 dark:bg-indigo-500/20 rounded-full group-hover:scale-110 transition-transform">
+                   <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </div>
+                <span class="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-400">Subir fotos</span>
+                <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" />
+              </label>
+
+              <!-- Thumbnails -->
+              <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group aspect-[4/3] rounded-2xl overflow-hidden shadow-sm">
+                <img [src]="photo.preview" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button type="button" (click)="removePhoto(i)" class="p-2 bg-white/90 text-rose-600 rounded-full hover:bg-white">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                   </button>
-                  <button
-                    type="button"
-                    class="w-full rounded-xl border px-4 py-3 text-left transition"
-                    [class.border-cta-default]="!isDynamicPricingSignal()"
-                    [class.bg-cta-default/10]="!isDynamicPricingSignal()"
-                    [class.text-cta-default]="!isDynamicPricingSignal()"
-                    [class.border-border-muted]="isDynamicPricingSignal()"
-                    [class.bg-surface-raised]="isDynamicPricingSignal()"
-                    [class.text-text-primary]="isDynamicPricingSignal()"
-                    (click)="setPricingStrategy('custom')"
-                  >
-                    <p class="text-sm font-semibold">Precio personalizado</p>
-                    <p class="text-xs text-text-secondary mt-1">
-                      Definí manualmente el valor diario.
+                </div>
+                <div *ngIf="i === 0" class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md">
+                   <span class="text-[10px] font-bold text-white uppercase tracking-wider">Portada</span>
+                </div>
+              </div>
+
+               <!-- Empty Slots (Visual placeholders) -->
+               <ng-container *ngIf="uploadedPhotos().length === 0">
+                 <div class="aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 flex items-center justify-center border border-slate-100 dark:border-neutral-800">
+                    <span class="text-xs text-slate-300 dark:text-neutral-600">Foto lateral</span>
+                 </div>
+                 <div class="hidden md:flex aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 items-center justify-center border border-slate-100 dark:border-neutral-800">
+                    <span class="text-xs text-slate-300 dark:text-neutral-600">Interior</span>
+                 </div>
+               </ng-container>
+            </div>
+
+            <!-- Mobile AI Button -->
+            <button 
+              type="button" 
+              (click)="showAIPhotosModal.set(true)"
+              class="w-full sm:hidden flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-bold mb-4"
+            >
+              ✨ Generar fotos con IA
+            </button>
+
+            <!-- Tip sutil -->
+            <p class="text-sm text-slate-500 dark:text-slate-400 flex gap-2">
+              <span class="text-indigo-600">💡</span> 
+              <span>Las publicaciones con más de 5 fotos reciben un <strong>40% más de reservas</strong>.</span>
+            </p>
+          </section>
+
+          <!-- SECCIÓN 3: DETALLES TÉCNICOS (Colapsados visualmente en grid) -->
+          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Detalles básicos</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+               <div>
+                  <label class="label-text">Kilometraje</label>
+                  <div class="relative">
+                    <input type="number" formControlName="mileage" class="input-modern pl-10" placeholder="Ej: 45000">
+                    <span class="absolute left-3.5 top-3.5 text-slate-400 text-xs font-bold">KM</span>
+                  </div>
+                  @if (publishForm.get('mileage')?.invalid && (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)) {
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Ingresá el kilometraje (mínimo 0).
                     </p>
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  class="block text-sm font-medium text-text-primary mb-2 flex items-center gap-2"
-                >
-                  Precio por día *
-                  <span class="text-xs text-text-secondary" *ngIf="isDynamicPricing()"
-                    >(AutoRenta lo ajustará automáticamente)</span
-                  >
-                </label>
-
-                <!-- ✅ NEW: Show suggested price badge when dynamic pricing is enabled -->
-                @if (isDynamicPricing() && suggestedPrice() != null && suggestedPrice()! > 0) {
-                  <div class="mb-3 p-3 bg-cta-default/10 border border-cta-default/30 rounded-lg">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                        </svg>
-                        <span class="text-sm font-medium text-cta-default">Precio Sugerido</span>
-                      </div>
-                      <span class="text-xl font-bold text-cta-default">
-                        ${{ suggestedPrice() }}/día
-                      </span>
-                    </div>
-                    @if (selectedCategoryName()) {
-                      <p class="text-xs text-text-secondary mt-2">
-                        Basado en categoría {{ selectedCategoryName() }}, valor del vehículo y mercado local
-                      </p>
-                    }
-                  </div>
-                }
-
-                <!-- Show loading state while calculating -->
-                @if (isDynamicPricing() && isCalculatingSuggestedPrice()) {
-                  <div class="mb-3 p-3 bg-info-50 border border-info-200 rounded-lg">
-                    <div class="flex items-center gap-2">
-                      <svg class="animate-spin w-4 h-4 text-info-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span class="text-sm text-info-900">Calculando precio sugerido...</span>
-                    </div>
-                  </div>
-                }
-
-                <!-- ✅ NEW: Show error if category is missing -->
-                @if (isDynamicPricing() && !selectedCategoryName() && publishForm.get('value_usd')?.value) {
-                  <div class="mb-3 p-3 bg-warning-50 border border-warning-200 rounded-lg">
-                    <div class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-warning-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <div class="flex-1">
-                        <p class="text-sm font-medium text-warning-900">⚠️ Falta seleccionar la categoría del vehículo</p>
-                        <p class="text-xs text-warning-700 mt-1">
-                          Para calcular el precio automáticamente, necesitás seleccionar la categoría del vehículo (Económico, Estándar, Premium o Lujo).
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <input
-                  type="number"
-                  formControlName="price_per_day"
-                  min="1"
-                  placeholder="50"
-                  [readonly]="isDynamicPricing()"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent disabled:bg-surface-raised"
-                />
-                <p class="mt-1 text-xs text-text-secondary" *ngIf="!isDynamicPricing()">
-                  Puedes actualizar este valor cuando quieras desde tu panel.
-                </p>
-
-                <!-- Pricing Overrides Preview -->
-                @if (editMode() && pricingOverrides().length) {
-                  <div class="mt-3 p-3 rounded-lg border border-border-muted bg-surface-raised/60">
-                    <div class="flex items-center justify-between mb-2">
-                      <p class="text-sm font-semibold text-text-primary">Precios especiales</p>
-                      <span class="text-xs text-text-secondary">{{ pricingOverrides().length }} override(s)</span>
-                    </div>
-                    <div class="space-y-1 max-h-32 overflow-auto text-xs text-text-secondary">
-                      <div class="flex items-center justify-between" *ngFor="let o of pricingOverrides()">
-                        <span>{{ o.day | date: 'dd/MM/yyyy' }}</span>
-                        <span class="font-semibold text-text-primary">${{ o.price_per_day | number: '1.0-0' }}</span>
-                      </div>
-                    </div>
-                  </div>
-                }
-              </div>
-
-              <!-- Currency -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Moneda *</label>
-                <select
-                  formControlName="currency"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
-                >
-                  <option value="USD">USD - Dólar</option>
-                  <option value="ARS">ARS - Peso Argentino</option>
-                  <option value="UYU">UYU - Peso Uruguayo</option>
-                </select>
-              </div>
-
-              <!-- Valor del Vehículo (USD) -->
-              <div class="md:col-span-2">
-                <div class="flex items-center justify-between mb-2">
-                  <label class="block text-sm font-medium text-text-primary flex items-center gap-2">
-                    Valor Estimado del Vehículo (USD) *
-                    <span
-                      class="text-xs text-text-secondary font-normal"
-                      title="Este valor se usa para calcular seguros y garantías"
-                      >ℹ️</span
-                    >
-                  </label>
-                  <div class="flex items-center gap-2">
-                    @if (isFetchingFIPEValue()) {
-                      <span
-                        class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-info-50 text-info-700 border border-info-200"
-                      >
-                        <svg
-                          class="animate-spin w-3 h-3"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                          ></circle>
-                          <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Consultando valor de mercado...
-                      </span>
-                    }
-                    @if (valueAutoCalculated() && !isFetchingFIPEValue()) {
-                      <span
-                        class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-success-50 text-success-700 border border-success-200"
-                      >
-                        <svg
-                          class="w-3 h-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        Valor estimado
-                      </span>
-                    }
-                    @if (valueAutoCalculated() && !allowManualValueEdit() && !isFetchingFIPEValue()) {
-                      <button
-                        type="button"
-                        (click)="enableManualValueEdit()"
-                        class="text-xs text-cta-default hover:text-cta-hover underline"
-                      >
-                        Editar manualmente
-                      </button>
-                    }
-                  </div>
-                </div>
-                <div class="relative">
-                  <input
-                    type="number"
-                    formControlName="value_usd"
-                    min="5000"
-                    max="500000"
-                    placeholder="15000"
-                    [readonly]="(valueAutoCalculated() && !allowManualValueEdit()) || isFetchingFIPEValue()"
-                    [class]="
-                      valueAutoCalculated() && !allowManualValueEdit()
-                        ? 'w-full rounded-lg border border-success-200 bg-success-50/30 px-4 py-2.5 text-success-900 font-medium cursor-not-allowed'
-                        : isFetchingFIPEValue()
-                          ? 'w-full rounded-lg border border-info-200 bg-info-50/30 px-4 py-2.5 text-info-900 cursor-wait'
-                          : 'w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent'
-                    "
-                  />
-                  @if (valueAutoCalculated() && !allowManualValueEdit() && !isFetchingFIPEValue()) {
-                    <div
-                      class="absolute right-3 top-1/2 -translate-y-1/2 text-success-600"
-                      title="Valor calculado automáticamente"
-                    >
-                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          fill-rule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
-                    </div>
                   }
-                </div>
-
-                <!-- Multi-Currency Values Display -->
-                @if (fipeMultiCurrencyValues() && !isFetchingFIPEValue()) {
-                  <div class="mt-3 p-3 bg-success-50 border border-success-200 rounded-lg">
-                    <p class="text-xs font-medium text-success-900 mb-2">💰 Valores en múltiples monedas:</p>
-                    <div class="grid grid-cols-3 gap-2 text-xs">
-                      <div class="text-center p-2 bg-white rounded border border-success-100">
-                        <div class="text-text-secondary">🇧🇷 BRL</div>
-                        <div class="font-bold text-success-900">R$ {{ fipeMultiCurrencyValues()!.value_brl | number }}</div>
+               </div>
+               <div>
+                  <label class="label-text">Transmisión</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="cursor-pointer">
+                      <input type="radio" formControlName="transmission" value="manual" class="peer hidden">
+                      <div class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
+                        Manual
                       </div>
-                      <div class="text-center p-2 bg-white rounded border border-success-100">
-                        <div class="text-text-secondary">🇺🇸 USD</div>
-                        <div class="font-bold text-success-900">$ {{ fipeMultiCurrencyValues()!.value_usd | number }}</div>
-                      </div>
-                      <div class="text-center p-2 bg-white rounded border border-success-100">
-                        <div class="text-text-secondary">🇦🇷 ARS</div>
-                        <div class="font-bold text-success-900">$ {{ fipeMultiCurrencyValues()!.value_ars | number }}</div>
-                      </div>
-                    </div>
-                    <p class="text-xs text-success-700 mt-2">
-                      📅 Referencia: {{ fipeMultiCurrencyValues()!.reference_month }}
-                    </p>
-                  </div>
-                }
-
-                <!-- Error Message: BLOCKING (if catalog validation required) -->
-                @if (fipeError() && !isFetchingFIPEValue() && REQUIRE_FIPE_VALIDATION) {
-                  <div class="mt-2 p-4 bg-error-50 border-2 border-error-500 rounded-lg">
-                    <div class="flex items-start gap-3">
-                      <svg class="w-6 h-6 text-error-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <div class="flex-1">
-                        <p class="text-sm font-bold text-error-900 mb-2">
-                          🚫 {{ fipeError() }}
-                        </p>
-                        <p class="text-xs text-error-800 mb-3">
-                          No puedes publicar este vehículo porque no está en el catálogo de modelos.
-                        </p>
-                        @if (fipeSuggestions() && fipeSuggestions().length > 0) {
-                          <div class="text-xs text-error-800">
-                            <p class="font-semibold mb-1">Sugerencias:</p>
-                            <ul class="list-disc list-inside space-y-1 ml-2">
-                              @for (suggestion of fipeSuggestions(); track suggestion) {
-                                <li>{{ suggestion }}</li>
-                              }
-                            </ul>
-                          </div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <!-- Error Message: WARNING (if catalog validation NOT required) -->
-                @if (fipeError() && !isFetchingFIPEValue() && !REQUIRE_FIPE_VALIDATION) {
-                  <div class="mt-2 p-3 bg-warning-50 border border-warning-200 rounded-lg">
-                    <div class="flex items-start gap-2">
-                      <svg class="w-5 h-5 text-warning-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <div class="flex-1">
-                        <p class="text-xs text-warning-900 font-medium mb-1">
-                          ⚠️ {{ fipeError() }}
-                        </p>
-                        @if (fipeSuggestions() && fipeSuggestions().length > 0) {
-                          <ul class="text-xs text-warning-800 list-disc list-inside space-y-0.5 ml-2 mt-1">
-                            @for (suggestion of fipeSuggestions(); track suggestion) {
-                              <li>{{ suggestion }}</li>
-                            }
-                          </ul>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <!-- Help Text -->
-                <p class="mt-2 text-xs text-text-secondary">
-                  @if (isFetchingFIPEValue()) {
-                    <span class="text-info-700 font-medium">
-                      🔄 Consultando valor de mercado...
-                    </span>
-                  } @else if (valueAutoCalculated()) {
-                    <span class="text-success-700 font-medium">
-                      ✓ Valor de mercado calculado automáticamente.
-                    </span>
-                    Podés editarlo manualmente si lo necesitás.
-                  } @else {
-                    Ingresá el valor aproximado de mercado de tu vehículo. Este valor se usa para
-                    calcular coberturas de seguro y depósitos de garantía.
-                  }
-                </p>
-              </div>
-
-              <!-- Min rental days -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2"
-                  >Días mínimos *</label
-                >
-                <input
-                  type="number"
-                  formControlName="min_rental_days"
-                  min="1"
-                  placeholder="1"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- Max rental days -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Días máximos</label>
-                <input
-                  type="number"
-                  formControlName="max_rental_days"
-                  min="1"
-                  placeholder="30"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-                <p class="mt-1 text-xs text-text-secondary">Dejar vacío = sin límite</p>
-              </div>
-
-              <!-- Deposit -->
-              <div class="md:col-span-2 border-t border-border-default pt-4">
-                <div class="flex items-center gap-3 mb-3">
-                  <input
-                    type="checkbox"
-                    formControlName="deposit_required"
-                    id="deposit_required"
-                    class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
-                  />
-                  <label
-                    for="deposit_required"
-                    class="text-sm font-medium text-text-primary cursor-pointer"
-                  >
-                    Requiere depósito de garantía
-                  </label>
-                </div>
-                <div *ngIf="publishForm.get('deposit_required')?.value">
-                  <input
-                    type="number"
-                    formControlName="deposit_amount"
-                    min="0"
-                    placeholder="200"
-                    class="w-full md:w-1/2 rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                  />
-                  <p class="mt-1 text-xs text-text-secondary">Monto del depósito</p>
-                </div>
-              </div>
-
-              <!-- Insurance -->
-              <div class="md:col-span-2">
-                <div class="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    formControlName="insurance_included"
-                    id="insurance_included"
-                    class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default"
-                  />
-                  <label
-                    for="insurance_included"
-                    class="text-sm font-medium text-text-primary cursor-pointer"
-                  >
-                    El seguro está incluido en el precio
-                  </label>
-                </div>
-              </div>
-
-              <!-- Auto-approval -->
-              <div class="md:col-span-2">
-                <div
-                  class="flex items-start gap-3 p-4 bg-cta-default/10 dark:bg-cta-default/20 rounded-lg border border-cta-default/40 dark:border-cta-default"
-                >
-                  <input
-                    type="checkbox"
-                    formControlName="auto_approval"
-                    id="auto_approval"
-                    class="w-5 h-5 text-cta-default rounded focus:ring-2 focus:ring-cta-default mt-0.5"
-                  />
-                  <div class="flex-1">
-                    <label
-                      for="auto_approval"
-                      class="text-sm font-medium text-text-primary dark:text-text-primary cursor-pointer block mb-1"
-                    >
-                      Aprobar reservas automáticamente
                     </label>
-                    <p class="text-xs text-text-secondary dark:text-text-secondary/75">
-                      Las reservas se aprobarán instantáneamente sin tu intervención. Si no está
-                      activado, tendrás 24 horas para revisar y aprobar cada solicitud.
-                    </p>
+                    <label class="cursor-pointer">
+                      <input type="radio" formControlName="transmission" value="automatic" class="peer hidden">
+                      <div class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
+                        Automática
+                      </div>
+                    </label>
                   </div>
+                  @if (publishForm.get('transmission')?.invalid && (publishForm.get('transmission')?.dirty || publishForm.get('transmission')?.touched)) {
+                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Seleccioná la transmisión.
+                    </p>
+                  }
+               </div>
+               <div>
+                 <label class="label-text">Combustible</label>
+                 <select formControlName="fuel" class="input-modern">
+                   <option value="" disabled>Seleccionar</option>
+                   <option value="nafta">Nafta</option>
+                   <option value="gasoil">Diesel</option>
+                   <option value="electrico">Eléctrico</option>
+                   <option value="hibrido">Híbrido</option>
+                 </select>
+                 @if (publishForm.get('fuel')?.invalid && (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)) {
+                   <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                     Seleccioná el tipo de combustible.
+                   </p>
+                 }
+               </div>
+               <div>
+                 <label class="label-text">Color</label>
+                 <input type="text" formControlName="color" class="input-modern" placeholder="Ej: Blanco Perla">
+                 @if (publishForm.get('color')?.invalid && (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)) {
+                   <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                     Ingresá el color del auto.
+                   </p>
+                 }
+               </div>
+            </div>
+            
+            <div class="mt-6">
+              <label class="label-text">Descripción para el viajero</label>
+              <textarea 
+                formControlName="description" 
+                rows="3" 
+                class="input-modern w-full resize-none" 
+                placeholder="Contanos qué hace especial a tu auto. Ej: 'Ideal para ruta, bajo consumo, baúl amplio...'"
+              ></textarea>
+              <div class="flex justify-between mt-1">
+                 <p class="text-xs text-slate-400">Mínimo 40 caracteres.</p>
+                 @if (publishForm.get('description')?.hasError('required') && (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)) {
+                   <p class="text-xs text-rose-500">La descripción es obligatoria.</p>
+                 } @else if (publishForm.get('description')?.hasError('minlength') && (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)) {
+                   <p class="text-xs text-rose-500">Faltan al menos {{ 40 - (publishForm.get('description')?.value?.length || 0) }} caracteres.</p>
+                 }
+              </div>
+            </div>
+          </section>
+
+          <!-- SECCIÓN 4: PRECIO Y GANANCIA (El "Why") -->
+          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+            <div class="flex items-center gap-3 mb-6">
+               <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                  <span class="text-lg font-bold">$</span>
+               </div>
+               <div>
+                 <h2 class="text-xl font-bold text-slate-900 dark:text-white">Precio y Ganancias</h2>
+               </div>
+            </div>
+
+            <!-- Selector de Estrategia -->
+            <div class="bg-slate-50 dark:bg-neutral-800/50 p-1.5 rounded-xl flex gap-2 mb-6">
+               <button type="button" (click)="setPricingStrategy('dynamic')" 
+                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                 [class.bg-white]="isDynamicPricingSignal()"
+                 [class.shadow-sm]="isDynamicPricingSignal()"
+                 [class.text-indigo-600]="isDynamicPricingSignal()"
+                 [class.text-slate-500]="!isDynamicPricingSignal()"
+               >
+                 ⚡ Precio Dinámico (Recomendado)
+               </button>
+               <button type="button" (click)="setPricingStrategy('custom')"
+                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                 [class.bg-white]="!isDynamicPricingSignal()"
+                 [class.shadow-sm]="!isDynamicPricingSignal()"
+                 [class.text-slate-900]="!isDynamicPricingSignal()"
+                 [class.text-slate-500]="isDynamicPricingSignal()"
+               >
+                 Precio Fijo
+               </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <label class="label-text">Precio por día ({{ publishForm.get('currency')?.value }})</label>
+                <div class="relative">
+                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                   <input 
+                      type="number" 
+                      formControlName="price_per_day" 
+                      class="input-modern pl-8 text-2xl font-bold text-slate-900 dark:text-white h-14" 
+                      [readonly]="isDynamicPricingSignal()"
+                   >
                 </div>
+                @if (publishForm.get('price_per_day')?.invalid && (publishForm.get('price_per_day')?.dirty || publishForm.get('price_per_day')?.touched)) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Ingresá un precio por día válido (mínimo $1).
+                  </p>
+                }
+                <p *ngIf="isDynamicPricingSignal()" class="text-xs text-indigo-600 mt-2 font-medium">
+                  🤖 Ajustado automáticamente según demanda
+                </p>
+              </div>
+              
+              <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30">
+                 <p class="text-sm text-indigo-900 dark:text-indigo-200 font-medium mb-1">Potencial mensual estimado</p>
+                 <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400">
+                    {{ (publishForm.get('price_per_day')?.value || 0) * 10 | currency:publishForm.get('currency')?.value:'symbol':'1.0-0' }}
+                 </div>
+                 <p class="text-xs text-indigo-700/70 dark:text-indigo-300/70 mt-1">Calculado con 10 días de alquiler/mes</p>
               </div>
             </div>
-          </div>
-
-          <!-- 3. Ubicación -->
-          <div class="publish-card bg-surface-raised rounded-lg shadow-sm p-6">
-            <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <span class="text-2xl">📍</span>
-              Ubicación
-            </h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <!-- Street -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-text-primary mb-2">Calle *</label>
-                <input
-                  type="text"
-                  formControlName="location_street"
-                  placeholder="Ej: Av. Corrientes"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- Street number -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Número *</label>
-                <input
-                  type="text"
-                  formControlName="location_street_number"
-                  placeholder="1234"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- City -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Ciudad *</label>
-                <input
-                  type="text"
-                  formControlName="location_city"
-                  placeholder="Ej: Buenos Aires"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- State -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">Provincia *</label>
-                <input
-                  type="text"
-                  formControlName="location_state"
-                  placeholder="Ej: Buenos Aires"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default focus:border-transparent"
-                />
-              </div>
-
-              <!-- Country -->
-              <div>
-                <label class="block text-sm font-medium text-text-primary mb-2">País *</label>
-                <select
-                  formControlName="location_country"
-                  class="w-full rounded-lg border border-border-muted px-4 py-2.5 focus:ring-2 focus:ring-cta-default"
-                >
-                  <option value="AR">Argentina</option>
-                  <option value="UY">Uruguay</option>
-                  <option value="BR">Brasil</option>
-                  <option value="CL">Chile</option>
-                  <option value="PY">Paraguay</option>
-                </select>
-              </div>
+            
+            <!-- Configuraciones avanzadas (Depósito, Seguros) colapsadas o simplificadas -->
+            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-neutral-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+               <label class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition">
+                  <input type="checkbox" formControlName="deposit_required" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+                  <div class="ml-3">
+                     <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Solicitar Depósito</span>
+                     <span class="block text-xs text-slate-500">Garantía para el anfitrión</span>
+                  </div>
+               </label>
+               <label class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition">
+                  <input type="checkbox" formControlName="auto_approval" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
+                  <div class="ml-3">
+                     <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Reserva Inmediata</span>
+                     <span class="block text-xs text-slate-500">Acepta viajes automáticamente</span>
+                  </div>
+               </label>
             </div>
+          </section>
 
-            <!-- GPS Location Button - Minimalist -->
-            <div class="mt-4 flex items-center justify-between">
-              <button
-                type="button"
-                (click)="useCurrentLocation()"
-                class="btn-secondary flex items-center gap-2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                📍 Usar Mi Ubicación
-              </button>
-              <div *ngIf="manualCoordinates()" class="text-xs text-text-primary">✓ GPS activo</div>
-            </div>
-          </div>
-
-          <!-- 4. Fotos -->
-          <div
-            class="publish-card bg-surface-raised dark:bg-surface-raised rounded-2xl border border-border-default/70 dark:border-neutral-800/70 shadow-sm p-6"
-          >
-            <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <span class="text-2xl">📸</span>
-              Fotos ({{ uploadedPhotos().length }}/10)
-            </h2>
-
-            <div class="mb-4 space-y-3">
-              <!-- Botón principal: Agregar fotos manuales -->
-              <div class="flex flex-wrap gap-3">
-                <label
-                  class="cursor-pointer bg-cta-default text-cta-text px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                  [class.opacity-50]="isProcessingPhotos()"
-                  [class.cursor-not-allowed]="isProcessingPhotos()"
-                >
-                  <span *ngIf="!isProcessingPhotos()">➕ Agregar Fotos</span>
-                  <span *ngIf="isProcessingPhotos()" class="flex items-center gap-2">
-                    <svg
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Procesando...
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    (change)="onPhotoSelected($event)"
-                    class="hidden"
-                    [disabled]="isProcessingPhotos()"
-                  />
-                </label>
-
-                <!-- Botón: Buscar fotos de stock -->
-                <button
-                  type="button"
-                  (click)="showStockPhotosModal.set(true)"
-                  [disabled]="uploadedPhotos().length >= 10"
-                  class="bg-cta-default text-cta-text px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                >
-                  📸 Buscar Fotos de Stock
+          <!-- SECCIÓN 5: UBICACIÓN -->
+          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+             <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Ubicación del auto</h2>
+                <button type="button" (click)="useCurrentLocation()" class="text-indigo-600 text-sm font-bold hover:underline flex items-center gap-1">
+                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                   Usar mi ubicación actual
                 </button>
-
-                <!-- Botón: Generar con IA -->
-                <button
-                  type="button"
-                  (click)="showAIPhotosModal.set(true)"
-                  [disabled]="uploadedPhotos().length >= 10"
-                  class="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-text-inverse px-6 py-3 rounded-lg transition inline-flex items-center gap-2"
-                >
-                  ✨ Generar con IA
-                </button>
-              </div>
-
-              <!-- Ayuda y tips -->
-              <p class="text-xs text-text-secondary">
-                Mínimo 3 fotos, máximo 10. Primera foto será la portada.
-                <br />
-                <span class="text-cta-default dark:text-warning-light font-medium"
-                  >✨ Las fotos se procesarán automáticamente para remover el fondo</span
-                >
-                <br />
-                <span class="text-purple-600 dark:text-pink-400 font-medium"
-                  >🤖 O genera fotos profesionales con IA seleccionando primero marca y modelo</span
-                >
-              </p>
-            </div>
-
-            <div *ngIf="uploadedPhotos().length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group">
-                <img
-                  [src]="photo.preview"
-                  [alt]="'Foto ' + (i + 1)"
-                  class="w-full h-32 object-cover rounded-lg border-2"
-                  [class.border-cta-default]="i === 0"
-                  [class.border-border-muted]="i !== 0"
-                />
-                <div
-                  *ngIf="i === 0"
-                  class="absolute top-2 left-2 bg-cta-default text-cta-text text-xs font-semibold px-2 py-1 rounded"
-                >
-                  PORTADA
+             </div>
+             
+             <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                   <input type="text" formControlName="location_street" placeholder="Dirección / Calle" class="input-modern" data-testid="location-street-input">
+                   @if (publishForm.get('location_street')?.invalid && (publishForm.get('location_street')?.dirty || publishForm.get('location_street')?.touched)) {
+                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                       Ingresá la dirección.
+                     </p>
+                   }
                 </div>
-                <button
-                  type="button"
-                  (click)="removePhoto(i)"
-                  class="absolute top-2 right-2 bg-error-600 text-text-inverse p-1.5 rounded opacity-0 group-hover:opacity-100 transition"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
+                <div>
+                   <input type="text" formControlName="location_city" placeholder="Ciudad" class="input-modern" data-testid="location-city-input">
+                   @if (publishForm.get('location_city')?.invalid && (publishForm.get('location_city')?.dirty || publishForm.get('location_city')?.touched)) {
+                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                       Ingresá la ciudad.
+                     </p>
+                   }
+                </div>
+                <div>
+                   <input type="text" formControlName="location_state" placeholder="Provincia" class="input-modern" data-testid="location-state-input">
+                   @if (publishForm.get('location_state')?.invalid && (publishForm.get('location_state')?.dirty || publishForm.get('location_state')?.touched)) {
+                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                       Ingresá la provincia.
+                     </p>
+                   }
+                </div>
+                <div class="col-span-2 text-xs text-slate-400">
+                   * Tu dirección exacta solo se comparte al confirmar una reserva.
+                </div>
+             </div>
+          </section>
 
-            <div
-              class="mt-3 rounded-xl border border-dashed border-border-default/70 dark:border-neutral-800/70 bg-surface-base/70 dark:bg-neutral-900/60 p-3 text-xs text-text-secondary dark:text-text-secondary/70"
-            >
-              💡 Tip: combiná exteriores, interiores y tablero. La primera foto debe mostrar el auto
-              completo con buena iluminación.
-            </div>
-
-            <div
-              *ngIf="uploadedPhotos().length < 3"
-              class="mt-4 bg-warning-bg border border-warning-border rounded-lg p-3"
-            >
-              <p class="text-sm text-warning-strong">
-                ⚠️ Necesitas al menos 3 fotos para publicar. Actualmente tienes
-                {{ uploadedPhotos().length }}.
-              </p>
-            </div>
-          </div>
-
-          <!-- Actions -->
-          <div
-            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-border-default dark:border-neutral-800/60"
-          >
-            <div class="text-sm text-text-primary/80 dark:text-text-secondary">
-              Revisamos y te avisamos si falta algo.
-              <span
-                *ngIf="publishBlockerMessage()"
-                class="text-error-600 dark:text-error-400 font-semibold ml-1"
-                >{{ publishBlockerMessage() }}</span
+          <!-- BOTONES DE ACCIÓN FLOTANTES O FINALES -->
+          <div class="pt-6 flex flex-col sm:flex-row items-center gap-4">
+             <button 
+                type="submit" 
+                [disabled]="isSubmitting() || !canSubmit()"
+                class="w-full sm:w-auto px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                data-testid="publish-submit"
               >
-            </div>
-            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-              <button
-                type="button"
-                (click)="goBack()"
-                class="w-full sm:w-auto text-sm font-semibold text-text-primary/70 dark:text-text-secondary hover:text-text-primary transition-colors"
-              >
+                <span *ngIf="isSubmitting()" class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full"></span>
+                {{ editMode() ? 'Guardar Cambios' : 'Publicar Vehículo' }}
+             </button>
+             
+             <button type="button" (click)="goBack()" class="text-slate-500 font-medium hover:text-slate-800 transition">
                 Cancelar
-              </button>
-              <button
-                type="submit"
-                [disabled]="isSubmitting() || !canSubmitWithPayments()"
-                class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg text-cta-text font-semibold bg-primary-600 hover:bg-primary-700 dark:bg-cta-default dark:hover:bg-cta-default/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <svg
-                  *ngIf="isSubmitting()"
-                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-text-inverse"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span *ngIf="!isSubmitting()">{{ editMode() ? 'Guardar' : 'Publicar' }}</span>
-                <span *ngIf="isSubmitting()">{{ editMode() ? 'Guardando...' : 'Publicando...' }}</span>
-              </button>
-            </div>
+             </button>
           </div>
+          
         </form>
       </div>
 
-      <!-- Sidebar -->
-      <aside class="lg:col-span-2 space-y-6">
-        <div class="lg:sticky lg:top-6 space-y-6">
-          <app-host-support-info-panel></app-host-support-info-panel>
-
-          <section
-            class="rounded-2xl border border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-5 shadow-soft"
-          >
-            <h3
-              class="text-base font-semibold text-text-primary dark:text-text-primary mb-3 flex items-center gap-2"
-            >
-              <span>📚</span> Obligaciones clave
-            </h3>
-            <ul class="space-y-3 text-sm text-text-primary/80 dark:text-text-secondary">
-              <li class="flex gap-3">
-                <span class="text-cta-default dark:text-cta-default">🛡️</span>
-                Seguro vigente que habilite alquiler a terceros.
+      <!-- COLUMNA LATERAL (Trust & Preview) -->
+      <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
+        
+        <!-- Tarjeta de Confianza -->
+        <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+           <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+           <h3 class="font-bold text-lg mb-4 relative z-10">Tu seguridad es primero</h3>
+           <ul class="space-y-3 text-sm text-indigo-100 relative z-10">
+              <li class="flex gap-2">
+                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                 Cobertura de seguro incluida en cada viaje.
               </li>
-              <li class="flex gap-3">
-                <span class="text-cta-default dark:text-cta-default">⚙️</span>
-                Mantenimiento, VTV y documentación al día.
+              <li class="flex gap-2">
+                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                 Pagos protegidos hasta finalizar el alquiler.
               </li>
-              <li class="flex gap-3">
-                <span class="text-cta-default dark:text-cta-default">📄</span>
-                Cédula, DNI y pólizas listos para verificación.
+              <li class="flex gap-2">
+                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                 Conductores verificados con biometría.
               </li>
-              <li class="flex gap-3">
-                <span class="text-cta-default dark:text-cta-default">⏱️</span>
-                Responder solicitudes dentro de 24 h (si no usás auto-aprobación).
-              </li>
-            </ul>
-            <a
-              href="/docs/anfitriones"
-              class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-700 dark:text-cta-default hover:underline"
-            >
-              Ver guía completa
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7h6m0 0v6m0-6L10 16"
-                />
-              </svg>
-            </a>
-          </section>
+           </ul>
         </div>
+
+        <!-- Preview Simplificado -->
+        <div class="bg-white dark:bg-[#161821] rounded-3xl shadow-soft p-6 border border-slate-100 dark:border-neutral-800">
+           <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Vista Previa</h4>
+           <div class="aspect-[4/3] bg-slate-100 dark:bg-neutral-800 rounded-xl mb-4 overflow-hidden relative">
+              <img *ngIf="uploadedPhotos().length > 0" [src]="uploadedPhotos()[0].preview" class="w-full h-full object-cover">
+              <div *ngIf="uploadedPhotos().length === 0" class="flex items-center justify-center h-full text-slate-300">
+                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+              </div>
+           </div>
+           <div>
+              <p class="font-bold text-slate-900 dark:text-white truncate">
+                 {{ getCurrentBrand() || 'Marca' }} {{ getCurrentModel() || 'Modelo' }} {{ getCurrentYear() }}
+              </p>
+              <p class="text-sm text-slate-500 truncate">{{ publishForm.get('location_city')?.value || 'Ubicación' }}</p>
+              <div class="mt-3 flex items-baseline gap-1">
+                 <span class="text-lg font-bold text-indigo-600">${{ publishForm.get('price_per_day')?.value || 0 }}</span>
+                 <span class="text-xs text-slate-400">/ día</span>
+              </div>
+           </div>
+        </div>
+
       </aside>
     </div>
-  </div>
 
-  <!-- Stock Photos Modal -->
-  @if (showStockPhotosModal()) {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
-      (click)="showStockPhotosModal.set(false)"
-    >
-      <div
-        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto"
-        (click)="$event.stopPropagation()"
-      >
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
-              📸 Buscar Fotos de Stock
-            </h2>
-            <button
-              type="button"
-              (click)="showStockPhotosModal.set(false)"
-              class="text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-200"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+    <!-- Modals (Sin cambios estructurales profundos, solo wrappers) -->
+    @if (showStockPhotosModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
           <app-stock-photos-selector
             [brand]="getCurrentBrand()"
             [model]="getCurrentModel()"
             [year]="getCurrentYear()"
             (photosSelected)="onStockPhotosSelected($event)"
           ></app-stock-photos-selector>
+          <div class="p-4 border-t border-slate-100 dark:border-neutral-800 text-right">
+             <button (click)="showStockPhotosModal.set(false)" class="text-slate-500 font-bold hover:text-slate-800">Cerrar</button>
+          </div>
         </div>
       </div>
-    </div>
-  }
+    }
 
-  <!-- AI Photo Generator Modal -->
-  @if (showAIPhotosModal()) {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
-      (click)="showAIPhotosModal.set(false)"
-    >
-      <div
-        class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto"
-        (click)="$event.stopPropagation()"
-      >
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold text-text-primary dark:text-text-inverse">
-              ✨ Generar Fotos con IA
-            </h2>
-            <button
-              type="button"
-              (click)="showAIPhotosModal.set(false)"
-              class="text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-200"
-            >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+    @if (showAIPhotosModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
           <app-ai-photo-generator
             [brand]="getCurrentBrand()"
             [model]="getCurrentModel()"
             [year]="getCurrentYear()"
             (photosGenerated)="onAIPhotosGenerated($event)"
           ></app-ai-photo-generator>
+          <div class="p-4 border-t border-slate-100 dark:border-neutral-800 text-right">
+             <button (click)="showAIPhotosModal.set(false)" class="text-slate-500 font-bold hover:text-slate-800">Cerrar</button>
+          </div>
         </div>
       </div>
-    </div>
-  }
+    }
+
+  </div>
 </div>
+
+<!-- Styles helper for this page specifically -->
+<style>
+  .label-text {
+    @apply block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2;
+  }
+  .input-modern {
+    @apply w-full bg-slate-50 dark:bg-neutral-800 border-0 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-400;
+  }
+  .radio-card {
+    @apply flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer text-sm;
+  }
+</style>

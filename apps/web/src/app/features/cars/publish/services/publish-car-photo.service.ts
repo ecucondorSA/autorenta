@@ -110,8 +110,8 @@ export class PublishCarPhotoService {
     }
 
     const currentPhotos = this.uploadedPhotos();
-    // Solo generaremos hasta 2 imágenes nuevas (exterior + interior) respetando el máximo total de fotos
-    let remainingSlots = Math.min(this.MAX_PHOTOS - currentPhotos.length, 2);
+    // Solo generaremos hasta 3 imágenes nuevas (front, rear, interior) respetando el máximo total de fotos
+    let remainingSlots = Math.min(this.MAX_PHOTOS - currentPhotos.length, 3);
 
     if (remainingSlots <= 0) {
       alert('Ya alcanzaste el máximo de fotos permitidas.');
@@ -125,17 +125,14 @@ export class PublishCarPhotoService {
         alert('Falta configurar NG_APP_GOOGLE_AI_IMAGE_URL (endpoint de Gemini).');
       }
 
-      if (!environment.cloudflareWorkerUrl) {
-        alert('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (worker de generación).');
-      }
-
+      // Cloudflare worker es opcional si usamos Google
       const googleEnabled = Boolean(environment.googleAiImageUrl);
       const cloudflareEnabled = Boolean(environment.cloudflareWorkerUrl);
 
       const generatedPhotos: PhotoPreview[] = [];
       const errors: string[] = [];
 
-      // Generar dos imágenes con Gemini: exterior + interior (ambas <=1MB tras compresión) con escenarios aleatorios
+      // Generar 3 imágenes con Gemini: exterior front, interior, exterior rear
       const googlePrompts = this.buildGeminiPrompts(brand, model, year);
 
       if (googleEnabled) {
@@ -532,7 +529,9 @@ export class PublishCarPhotoService {
 
     const interiorPrompt = `Generate a realistic interior photo (not render) of a ${year} ${brand} ${model} car. Show front seats, dashboard and steering wheel from driver's door perspective. Lighting: ${interiorLight}, ${interiorWeather}. Style: handheld smartphone photo, slight imperfections, realistic textures, no studio lighting, no advertising vibe. Vary small details so photos are not identical.`;
 
-    return [exteriorPrompt, interiorPrompt];
+    const rearPrompt = `Generate a realistic photo (not render) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 rear view showing trunk and tail lights. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe.`;
+
+    return [exteriorPrompt, interiorPrompt, rearPrompt];
   }
 
   /**

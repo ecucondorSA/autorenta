@@ -3,145 +3,247 @@
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
     <div class="text-center mb-8">
-      <button (click)="onCancel()"
-        class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Volver al wallet
-      </button>
+      @if (showPaymentBrick()) {
+        <button (click)="onBackToAmount()"
+          class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Cambiar monto
+        </button>
+      } @else {
+        <button (click)="onCancel()"
+          class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Volver al wallet
+        </button>
+      }
 
       <h1 class="text-4xl font-bold text-text-primary dark:text-text-primary mb-2">
-        Depositar Fondos
+        @if (paymentCompleted()) {
+          ¡Depósito Exitoso!
+        } @else if (paymentPending()) {
+          Pago Pendiente
+        } @else if (showPaymentBrick()) {
+          Completar Pago
+        } @else {
+          Depositar Fondos
+        }
       </h1>
       <p class="text-lg text-text-secondary dark:text-text-secondary">
-        Agrega saldo a tu wallet usando MercadoPago
+        @if (paymentCompleted()) {
+          Los fondos se acreditaron a tu wallet
+        } @else if (paymentPending()) {
+          Completa el pago para acreditar los fondos
+        } @else if (showPaymentBrick()) {
+          Monto: ${{ arsAmount() | number:'1.0-0' }} ARS
+        } @else {
+          Agrega saldo a tu wallet usando MercadoPago
+        }
       </p>
     </div>
 
     <!-- Main Form Card -->
     <div
       class="bg-surface-raised dark:bg-surface-raised rounded-3xl shadow-soft border border-border-default dark:border-border-default p-8">
-      <form (ngSubmit)="onSubmit()" class="space-y-6">
 
-        <!-- Amount Input -->
-        <div>
-          <label for="amount"
-            class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2">
-            Monto en ARS
-          </label>
-          <div class="relative">
-            <span
-              class="absolute left-4 top-3.5 text-text-secondary dark:text-text-secondary text-lg">$</span>
-            <input type="number" id="amount" name="amount" [(ngModel)]="arsAmount"
-              (ngModelChange)="updateArsAmount($event)"
-              class="w-full pl-8 pr-4 py-3 text-lg rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
-              placeholder="0.00" min="0" step="100" data-testid="deposit-amount-input" />
+      <!-- Success State -->
+      @if (paymentCompleted()) {
+        <div class="text-center py-8">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-success-100 dark:bg-success-500/20 flex items-center justify-center">
+            <svg class="w-10 h-10 text-success-600 dark:text-success-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
           </div>
+          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+            ¡Pago Completado!
+          </h3>
+          <p class="text-text-secondary dark:text-text-secondary mb-2">
+            Se acreditaron {{ formatCurrency(usdAmount()) }} USD a tu wallet
+          </p>
+          <p class="text-sm text-text-muted dark:text-text-muted">
+            Redirigiendo al wallet...
+          </p>
+        </div>
+      }
 
-          <!-- Exchange Rate Info -->
-          <div class="mt-2">
-            @if (loadingRate()) {
-            <p class="text-sm text-text-secondary dark:text-text-secondary animate-pulse">
-              Cargando cotización...
-            </p>
-            }
-            @if (!loadingRate() && platformRate() && arsAmount() > 0) {
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-text-secondary dark:text-text-secondary">
-                Recibirás aproximadamente:
-              </span>
-              <span class="font-semibold text-primary-600 dark:text-primary-400">
-                {{ formatCurrency(usdAmount()) }} USD
-              </span>
+      <!-- Pending State -->
+      @else if (paymentPending()) {
+        <div class="text-center py-8">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-warning-100 dark:bg-warning-500/20 flex items-center justify-center">
+            <svg class="w-10 h-10 text-warning-600 dark:text-warning-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary mb-2">
+            Pago Pendiente
+          </h3>
+          <p class="text-text-secondary dark:text-text-secondary mb-4">
+            Completa el pago en Rapipago o Pago Fácil para acreditar los fondos.
+          </p>
+          <button (click)="onCancel()"
+            class="px-6 py-3 rounded-xl bg-primary-600 text-text-inverse font-semibold hover:bg-primary-700 transition-all">
+            Volver al Wallet
+          </button>
+        </div>
+      }
+
+      <!-- Payment Brick View -->
+      @else if (showPaymentBrick()) {
+        <div class="space-y-6">
+          <!-- Amount Summary -->
+          <div class="bg-surface-base dark:bg-surface-secondary rounded-xl p-4 border border-border-default">
+            <div class="flex justify-between items-center">
+              <span class="text-text-secondary">Total a pagar:</span>
+              <span class="text-2xl font-bold text-text-primary">${{ arsAmount() | number:'1.0-0' }} ARS</span>
             </div>
-            <p class="text-xs text-text-muted dark:text-text-muted mt-1">
-              Tasa: 1 USD ≈ {{ platformRate() | number: '1.2-2' }} ARS
-            </p>
-            }
-          </div>
-        </div>
-
-        <!-- Description (Optional) -->
-        <div>
-          <label for="description"
-            class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2">
-            Descripción <span
-              class="text-text-muted dark:text-text-muted font-normal">(opcional)</span>
-          </label>
-          <input type="text" id="description" name="description" [(ngModel)]="description"
-            (ngModelChange)="updateDescription($event)"
-            class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
-            placeholder="Ej: Depósito para reservas" maxlength="100" />
-        </div>
-
-        <!-- Error Message -->
-        @if (formError()) {
-        <div class="bg-error-bg border-l-4 border-error-500 text-error-strong px-4 py-3 rounded"
-          role="alert" data-testid="deposit-error">
-          <div class="flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clip-rule="evenodd" />
-            </svg>
-            <span class="font-semibold">{{ formError() }}</span>
-          </div>
-        </div>
-        }
-
-        <!-- Info Box -->
-        <div
-          class="bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-400/30 rounded-xl p-4">
-          <div class="flex">
-            <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0"
-              fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clip-rule="evenodd" />
-            </svg>
-            <div class="ml-3 text-sm">
-              <p class="text-primary-800 dark:text-primary-200 font-semibold mb-1">
-                Sobre los depósitos
+            @if (platformRate()) {
+              <p class="text-xs text-text-muted mt-1 text-right">
+                ≈ {{ formatCurrency(usdAmount()) }} USD
               </p>
-              <ul class="text-primary-700 dark:text-primary-300 space-y-1">
-                <li>• El monto mínimo es $1,000 ARS</li>
-                <li>• Los fondos se acreditan instantáneamente tras confirmación de pago</li>
-                <li>• Usa MercadoPago para mayor seguridad y rapidez</li>
-              </ul>
+            }
+          </div>
+
+          <!-- Error Message -->
+          @if (formError()) {
+            <div class="bg-error-bg border-l-4 border-error-500 text-error-strong px-4 py-3 rounded"
+              role="alert" data-testid="deposit-error">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="font-semibold">{{ formError() }}</span>
+              </div>
+            </div>
+          }
+
+          <!-- Payment Brick Component with preferenceId for account_money/consumer_credits -->
+          <app-mercadopago-payment-brick
+            [amount]="arsAmountCents()"
+            [description]="description() || 'Depósito a wallet AutoRentar'"
+            [preferenceId]="preferenceId()"
+            [depositId]="transactionId()"
+            (paymentSuccess)="onPaymentSuccess($event)"
+            (paymentError)="onPaymentError($event)"
+            (paymentPending)="onPaymentPending($event)"
+          />
+        </div>
+      }
+
+      <!-- Amount Selection Form -->
+      @else {
+        <form (ngSubmit)="onSubmit()" class="space-y-6">
+
+          <!-- Amount Input -->
+          <div>
+            <label for="amount"
+              class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2">
+              Monto en ARS
+            </label>
+            <div class="relative">
+              <span
+                class="absolute left-4 top-3.5 text-text-secondary dark:text-text-secondary text-lg">$</span>
+              <input type="number" id="amount" name="amount" [(ngModel)]="arsAmount"
+                (ngModelChange)="updateArsAmount($event)"
+                class="w-full pl-8 pr-4 py-3 text-lg rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
+                placeholder="0.00" min="0" step="100" data-testid="deposit-amount-input" />
+            </div>
+
+            <!-- Exchange Rate Info -->
+            <div class="mt-2">
+              @if (loadingRate()) {
+              <p class="text-sm text-text-secondary dark:text-text-secondary animate-pulse">
+                Cargando cotización...
+              </p>
+              }
+              @if (!loadingRate() && platformRate() && arsAmount() > 0) {
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-text-secondary dark:text-text-secondary">
+                  Recibirás aproximadamente:
+                </span>
+                <span class="font-semibold text-primary-600 dark:text-primary-400">
+                  {{ formatCurrency(usdAmount()) }} USD
+                </span>
+              </div>
+              <p class="text-xs text-text-muted dark:text-text-muted mt-1">
+                Tasa: 1 USD ≈ {{ platformRate() | number: '1.2-2' }} ARS
+              </p>
+              }
             </div>
           </div>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="flex gap-4 pt-4">
-          <button type="button" (click)="onCancel()"
-            class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-primary dark:text-text-primary font-semibold hover:bg-surface-base dark:hover:bg-surface-base transition-all">
-            Cancelar
-          </button>
+          <!-- Description (Optional) -->
+          <div>
+            <label for="description"
+              class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2">
+              Descripción <span
+                class="text-text-muted dark:text-text-muted font-normal">(opcional)</span>
+            </label>
+            <input type="text" id="description" name="description" [(ngModel)]="description"
+              (ngModelChange)="updateDescription($event)"
+              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
+              placeholder="Ej: Depósito para reservas" maxlength="100" />
+          </div>
 
-          <button type="submit" [disabled]="isProcessing() || !arsAmount() || arsAmount() <= 0"
-            class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 text-text-inverse font-semibold hover:from-primary-700 hover:to-primary-800 dark:hover:from-primary-600 dark:hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
-            data-testid="deposit-submit">
-            @if (isProcessing()) {
-            <span class="flex items-center justify-center" data-testid="deposit-processing">
-              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                  stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                </path>
+          <!-- Error Message -->
+          @if (formError()) {
+          <div class="bg-error-bg border-l-4 border-error-500 text-error-strong px-4 py-3 rounded"
+            role="alert" data-testid="deposit-error">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
               </svg>
-              Procesando...
-            </span>
-            } @else {
-            Continuar al Pago
-            }
-          </button>
-        </div>
-      </form>
+              <span class="font-semibold">{{ formError() }}</span>
+            </div>
+          </div>
+          }
+
+          <!-- Info Box -->
+          <div
+            class="bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-400/30 rounded-xl p-4">
+            <div class="flex">
+              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd" />
+              </svg>
+              <div class="ml-3 text-sm">
+                <p class="text-primary-800 dark:text-primary-200 font-semibold mb-1">
+                  Sobre los depósitos
+                </p>
+                <ul class="text-primary-700 dark:text-primary-300 space-y-1">
+                  <li>• El monto mínimo es $1,000 ARS</li>
+                  <li>• Los fondos se acreditan instantáneamente tras confirmación de pago</li>
+                  <li>• Paga con tarjeta, Rapipago, Pago Fácil o cuenta de Mercado Pago</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-4 pt-4">
+            <button type="button" (click)="onCancel()"
+              class="flex-1 px-6 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-primary dark:text-text-primary font-semibold hover:bg-surface-base dark:hover:bg-surface-base transition-all">
+              Cancelar
+            </button>
+
+            <button type="submit" [disabled]="isProcessing() || !arsAmount() || arsAmount() <= 0"
+              class="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-500 dark:to-primary-600 text-text-inverse font-semibold hover:from-primary-700 hover:to-primary-800 dark:hover:from-primary-600 dark:hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+              data-testid="deposit-submit">
+              Continuar al Pago
+            </button>
+          </div>
+        </form>
+      }
     </div>
 
     <!-- Security Badge -->

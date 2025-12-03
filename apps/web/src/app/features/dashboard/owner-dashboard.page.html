@@ -1,375 +1,382 @@
 <div
   class="owner-dashboard bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
 >
-  <!-- Header -->
+  <!-- Header con mejor jerarquía y sombra suave -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
+    class="bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300 shadow-sm z-10 relative"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">
+          <h1 class="text-2xl md:text-3xl font-extrabold text-text-primary tracking-tight">
             Panel del Locador
           </h1>
-          <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
-            Gestiona tus autos y ganancias
+          <p class="mt-1 text-text-secondary dark:text-text-secondary/70 font-medium">
+            Gestiona el rendimiento de tu flota y tus finanzas
           </p>
         </div>
         <a
           routerLink="/wallet"
-          class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-text-inverse font-medium rounded-lg transition-colors"
+          class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
         >
-          💰 Ir a Wallet
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Ir a Wallet
         </a>
       </div>
     </div>
   </div>
 
   <!-- Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Missing Documents Widget -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Missing Documents Widget (Mantenido igual) -->
     <app-missing-documents-widget />
 
-    <!-- Loading -->
+    <!-- Loading State con mejor diseño -->
     @if (loading()) {
-      <div class="flex items-center justify-center py-16">
-        <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
+      <div class="flex flex-col items-center justify-center py-20 space-y-4">
+        <div class="relative">
+          <div class="w-12 h-12 rounded-full border-4 border-primary-100 border-t-primary-600 animate-spin"></div>
+        </div>
+        <p class="text-text-secondary font-medium animate-pulse">Cargando tus métricas...</p>
       </div>
     }
 
-    <!-- Error -->
+    <!-- Error State -->
     @if (error(); as errorMsg) {
-      <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-6">
-        <p class="text-sm text-error-strong">{{ errorMsg }}</p>
-        <button
-          (click)="loadDashboardData()"
-          class="mt-2 text-sm font-medium text-error-text underline"
-        >
-          Reintentar
-        </button>
+      <div class="bg-error-bg/10 border border-error-border/50 rounded-xl p-6 flex items-start gap-4">
+        <div class="p-2 bg-error-bg text-error-strong rounded-full shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-error-strong mb-1">Error al cargar datos</h3>
+          <p class="text-sm text-text-secondary mb-3">{{ errorMsg }}</p>
+          <button
+            (click)="loadDashboardData()"
+            class="text-sm font-bold text-primary-600 hover:text-primary-700 hover:underline"
+          >
+            Reintentar conexión
+          </button>
+        </div>
       </div>
     }
 
     @if (!loading()) {
-      <!-- Balance Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <!-- Balance Disponible -->
+      <!-- Balance Cards - Rediseñadas con profundidad y sin emojis -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Balance Disponible (Verde) -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="group bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-neutral-800/60 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden"
         >
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
-              Balance Disponible
-            </p>
-            <span class="text-2xl">💵</span>
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-success-default group-hover:w-2 transition-all"></div>
+          <div class="flex items-start justify-between relative z-10">
+            <div>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider">
+                Balance Disponible
+              </p>
+              <p class="text-3xl font-extrabold text-text-primary mt-2 group-hover:text-success-default transition-colors">
+                {{ availableBalance() | money }}
+              </p>
+              <p class="text-xs text-success-default font-medium mt-1 flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                Listo para retirar
+              </p>
+            </div>
+            <div class="p-3 bg-success-light/10 text-success-default rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
-            {{ availableBalance() | money }}
-          </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-            Listo para retirar
-          </p>
         </div>
 
-        <!-- Balance Pendiente -->
+        <!-- Balance Pendiente (Naranja) -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="group bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-neutral-800/60 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden"
         >
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
-              Balance Pendiente
-            </p>
-            <span class="text-2xl">⏳</span>
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-warning-default group-hover:w-2 transition-all"></div>
+          <div class="flex items-start justify-between relative z-10">
+            <div>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider">
+                En Proceso
+              </p>
+              <p class="text-3xl font-extrabold text-text-primary mt-2 group-hover:text-warning-default transition-colors">
+                {{ pendingBalance() | money }}
+              </p>
+              <p class="text-xs text-warning-default font-medium mt-1 flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Reservas activas
+              </p>
+            </div>
+            <div class="p-3 bg-warning-light/10 text-warning-default rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
-            {{ pendingBalance() | money }}
-          </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-            De reservas en curso
-          </p>
         </div>
 
-        <!-- Total Ganado -->
+        <!-- Total Ganado (Azul/Primary) -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="group bg-surface-raised dark:bg-surface-raised rounded-2xl p-6 border border-border-default dark:border-neutral-800/60 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden"
         >
-          <div class="flex items-center justify-between mb-2">
-            <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70">
-              Total Ganado
-            </p>
-            <span class="text-2xl">💰</span>
+          <div class="absolute top-0 left-0 w-1.5 h-full bg-primary-500 group-hover:w-2 transition-all"></div>
+          <div class="flex items-start justify-between relative z-10">
+            <div>
+              <p class="text-sm font-medium text-text-secondary dark:text-text-secondary/70 uppercase tracking-wider">
+                Total Ganado
+              </p>
+              <p class="text-3xl font-extrabold text-text-primary mt-2 group-hover:text-primary-600 transition-colors">
+                {{ totalEarnings() | money }}
+              </p>
+              <p class="text-xs text-text-secondary font-medium mt-1 flex items-center gap-1">
+                Histórico acumulado
+              </p>
+            </div>
+            <div class="p-3 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
           </div>
-          <p class="text-3xl font-bold text-text-primary dark:text-text-primary">
-            {{ totalEarnings() | money }}
-          </p>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
-            Histórico total
-          </p>
         </div>
       </div>
 
       <!-- Earnings by Month -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-8"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
-          📊 Ganancias Mensuales
+        <h2 class="text-lg font-bold text-text-primary mb-6 flex items-center gap-2">
+          <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          Rendimiento Mensual
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Este Mes</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-border-default dark:divide-neutral-800">
+          <div class="pt-4 md:pt-0">
+            <p class="text-sm font-medium text-text-secondary mb-1">Este Mes</p>
+            <p class="text-3xl font-bold text-text-primary tracking-tight">
               {{ thisMonthEarnings() | money }}
             </p>
           </div>
-          <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Mes Anterior</p>
-            <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
+          <div class="pt-4 md:pt-0 md:pl-8">
+            <p class="text-sm font-medium text-text-secondary mb-1">Mes Anterior</p>
+            <p class="text-3xl font-bold text-text-secondary/60 tracking-tight">
               {{ lastMonthEarnings() | money }}
             </p>
           </div>
-          <div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Crecimiento</p>
-            <p
-              class="text-2xl font-bold"
-              [class.text-success-light]="isGrowthPositive()"
-              [class.text-error-text]="!isGrowthPositive()"
-            >
-              {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
-            </p>
+          <div class="pt-4 md:pt-0 md:pl-8">
+            <p class="text-sm font-medium text-text-secondary mb-1">Crecimiento</p>
+            <div class="flex items-baseline gap-2">
+              <p
+                class="text-3xl font-bold tracking-tight"
+                [class.text-success-strong]="isGrowthPositive()"
+                [class.text-error-strong]="!isGrowthPositive()"
+              >
+                {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%
+              </p>
+              @if (isGrowthPositive()) {
+                <span class="text-xs px-2 py-1 bg-success-light/20 text-success-strong rounded-full font-medium">Trending Up</span>
+              }
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Payouts History -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6 overflow-hidden"
       >
         <app-payouts-history></app-payouts-history>
       </div>
 
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Total Cars -->
-        <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+      <!-- Stats Cards - Refined -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Mis Autos -->
+        <a
+          routerLink="/cars/my-cars"
+          class="group bg-surface-raised dark:bg-surface-raised rounded-xl p-5 border border-border-default dark:border-neutral-800/60 hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-200 hover:shadow-md flex items-center justify-between"
         >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70">Mis Autos</p>
-              <p class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1">
-                {{ totalCars() }}
-              </p>
-            </div>
-            <span class="text-4xl">🚗</span>
+          <div>
+            <p class="text-sm font-medium text-text-secondary group-hover:text-primary-600 transition-colors">Mis Autos</p>
+            <p class="text-2xl font-bold text-text-primary mt-1">
+              {{ totalCars() }}
+            </p>
           </div>
-          <a
-            routerLink="/cars/my-cars"
-            class="text-xs text-primary-600 hover:underline mt-2 inline-block"
-          >
-            Ver todos →
-          </a>
+          <div class="w-10 h-10 rounded-lg bg-surface-base flex items-center justify-center text-text-secondary group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+          </div>
+        </a>
+
+        <!-- Activos -->
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-5 border border-border-default dark:border-neutral-800/60 flex items-center justify-between"
+        >
+          <div>
+            <p class="text-sm font-medium text-text-secondary">Disponibles</p>
+            <p class="text-2xl font-bold text-success-strong mt-1">
+              {{ activeCars() }}
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-success-light/10 flex items-center justify-center text-success-strong">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
         </div>
 
-        <!-- Active Cars -->
-        <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        <!-- Upcoming -->
+        <a
+          routerLink="/bookings/owner"
+          class="group bg-surface-raised dark:bg-surface-raised rounded-xl p-5 border border-border-default dark:border-neutral-800/60 hover:border-cta-default transition-all duration-200 hover:shadow-md flex items-center justify-between"
         >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70">Activos</p>
-              <p class="text-3xl font-bold text-success-light mt-1">
-                {{ activeCars() }}
-              </p>
-            </div>
-            <span class="text-4xl">✅</span>
+          <div>
+            <p class="text-sm font-medium text-text-secondary group-hover:text-cta-default transition-colors">Próximas</p>
+            <p class="text-2xl font-bold text-cta-default mt-1">
+              {{ upcomingBookings() }}
+            </p>
           </div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-2">
-            Disponibles para alquilar
-          </p>
-        </div>
-
-        <!-- Upcoming Bookings -->
-        <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70">Próximas</p>
-              <p class="text-3xl font-bold text-cta-default mt-1">
-                {{ upcomingBookings() }}
-              </p>
-            </div>
-            <span class="text-4xl">📅</span>
+          <div class="w-10 h-10 rounded-lg bg-cta-default/10 flex items-center justify-center text-cta-default">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
           </div>
-          <a
-            routerLink="/bookings/owner"
-            class="text-xs text-primary-600 hover:underline mt-2 inline-block"
-          >
-            Ver reservas →
-          </a>
-        </div>
+        </a>
 
         <!-- Active Rentals -->
         <div
-          class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="bg-surface-raised dark:bg-surface-raised rounded-xl p-5 border border-border-default dark:border-neutral-800/60 flex items-center justify-between"
         >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70">En Curso</p>
-              <p class="text-3xl font-bold text-warning-light mt-1">
-                {{ activeBookings() }}
-              </p>
-            </div>
-            <span class="text-4xl">🏁</span>
+          <div>
+            <p class="text-sm font-medium text-text-secondary">En Curso</p>
+            <p class="text-2xl font-bold text-warning-strong mt-1">
+              {{ activeBookings() }}
+            </p>
           </div>
-          <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-2">
-            Alquileres activos
-          </p>
+          <div class="w-10 h-10 rounded-lg bg-warning-light/10 flex items-center justify-center text-warning-strong">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          </div>
         </div>
       </div>
 
-      <!-- Recent Notifications -->
+      <!-- Recent Notifications (Estilo mejorado) -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 mb-8"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
       >
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">
-            🔔 Notificaciones Recientes
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-text-primary flex items-center gap-2">
+            <svg class="w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+            Actividad Reciente
           </h2>
           <a
             routerLink="/notifications"
-            class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+            class="text-sm text-primary-600 hover:text-primary-700 font-medium hover:underline"
           >
-            Ver todas →
+            Ver todas
           </a>
         </div>
+
         @if (recentNotifications().length === 0) {
-          <div class="text-center py-8">
-            <p class="text-text-secondary dark:text-text-secondary/70">
-              No tienes notificaciones
-            </p>
+          <div class="text-center py-12 border-2 border-dashed border-border-default rounded-xl">
+            <svg class="w-12 h-12 text-text-secondary/30 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
+            <p class="text-text-secondary">Todo tranquilo por aquí. No hay nuevas notificaciones.</p>
           </div>
         } @else {
-          <div class="space-y-3">
+          <div class="space-y-2">
             @for (notification of recentNotifications(); track notification.id) {
               <div
-                class="flex items-start gap-3 p-3 rounded-lg border border-border-default dark:border-neutral-700 hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors cursor-pointer"
+                class="group flex items-start gap-4 p-4 rounded-xl border border-transparent hover:border-border-default hover:bg-surface-base transition-all cursor-pointer"
                 [class.bg-primary-50]="!notification.read"
-                [class.dark:bg-primary-900/20]="!notification.read"
+                [class.dark:bg-primary-900/10]="!notification.read"
                 [routerLink]="notification.actionUrl || '/notifications'"
               >
+                <div class="mt-1">
+                   @if (!notification.read) {
+                    <span class="block w-2.5 h-2.5 bg-primary-600 rounded-full ring-4 ring-primary-100 dark:ring-primary-900/30"></span>
+                   } @else {
+                    <span class="block w-2.5 h-2.5 bg-text-secondary/30 rounded-full"></span>
+                   }
+                </div>
                 <div class="flex-1 min-w-0">
                   <p
-                    class="text-sm font-medium text-text-primary dark:text-text-primary"
-                    [class.font-semibold]="!notification.read"
+                    class="text-sm font-medium text-text-primary group-hover:text-primary-600 transition-colors"
+                    [class.font-bold]="!notification.read"
                   >
                     {{ notification.title }}
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1 line-clamp-2">
+                  <p class="text-sm text-text-secondary mt-0.5 line-clamp-1">
                     {{ notification.message }}
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/50 mt-1">
+                  <p class="text-xs text-text-secondary/60 mt-1.5 font-mono">
                     {{ notification.createdAt | date: 'short' }}
                   </p>
                 </div>
-                @if (!notification.read) {
-                  <span class="w-2 h-2 bg-primary-600 rounded-full flex-shrink-0 mt-2"></span>
-                }
+                <svg class="w-5 h-5 text-text-secondary/30 group-hover:text-primary-600 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
               </div>
             }
           </div>
         }
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Quick Actions - Tarjetas táctiles -->
       <div
-        class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4">
-          ⚡ Acciones Rápidas
-        </h2>
+        <h2 class="text-lg font-bold text-text-primary mb-6">Acciones Rápidas</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <a
             routerLink="/cars/publish"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex flex-col items-center justify-center p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-4 hover:ring-primary-50 dark:hover:ring-primary-900/20 rounded-2xl transition-all duration-200 group active:scale-95"
           >
-            <span class="text-2xl">➕</span>
-            <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Publicar Auto</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                Añade un nuevo vehículo
-              </p>
+            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 text-primary-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
             </div>
+            <p class="font-bold text-text-primary group-hover:text-primary-600 transition-colors">Publicar Auto</p>
+            <p class="text-xs text-text-secondary text-center mt-1">Añadir vehículo</p>
           </a>
 
           <a
             routerLink="/bookings/owner"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex flex-col items-center justify-center p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-4 hover:ring-primary-50 dark:hover:ring-primary-900/20 rounded-2xl transition-all duration-200 group active:scale-95"
           >
-            <span class="text-2xl">📋</span>
-            <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Mis Reservas</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                Gestiona alquileres
-              </p>
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
             </div>
+            <p class="font-bold text-text-primary group-hover:text-blue-600 transition-colors">Mis Reservas</p>
+            <p class="text-xs text-text-secondary text-center mt-1">Gestionar alquileres</p>
           </a>
 
           <button
             (click)="toggleCalendar()"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors text-left w-full"
+            class="flex flex-col items-center justify-center p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-4 hover:ring-primary-50 dark:hover:ring-primary-900/20 rounded-2xl transition-all duration-200 group active:scale-95 w-full"
           >
-            <span class="text-2xl">📅</span>
-            <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Calendario</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                Gestiona disponibilidad
-              </p>
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             </div>
+            <p class="font-bold text-text-primary group-hover:text-purple-600 transition-colors">Calendario</p>
+            <p class="text-xs text-text-secondary text-center mt-1">Ver disponibilidad</p>
           </button>
 
           <a
             routerLink="/wallet"
-            class="flex items-center gap-3 p-4 border border-border-default dark:border-neutral-700 rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
+            class="flex flex-col items-center justify-center p-6 bg-surface-base border border-border-default hover:border-primary-500 hover:ring-4 hover:ring-primary-50 dark:hover:ring-primary-900/20 rounded-2xl transition-all duration-200 group active:scale-95"
           >
-            <span class="text-2xl">💸</span>
-            <div>
-              <p class="font-medium text-text-primary dark:text-text-primary">Retirar Dinero</p>
-              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                Solicitar retiro
-              </p>
+            <div class="w-12 h-12 bg-success-light/20 text-success-strong rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
+            <p class="font-bold text-text-primary group-hover:text-success-strong transition-colors">Retirar Dinero</p>
+            <p class="text-xs text-text-secondary text-center mt-1">Ir a Billetera</p>
           </a>
         </div>
       </div>
 
-      <!-- Multi-Car Calendar Section (Expandable) -->
+      <!-- Multi-Car Calendar Section (Mantenido igual, solo wrapper mejorado) -->
       @if (showCalendar()) {
         <div
-          class="mt-8 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+          class="mt-8 bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-lg border border-border-default dark:border-neutral-800/60 p-6 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">
+            <h2 class="text-xl font-bold text-text-primary">
               📅 Calendario de Disponibilidad
             </h2>
             <button
               (click)="toggleCalendar()"
-              class="text-sm text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
+              class="px-3 py-1 text-sm font-medium text-text-secondary hover:text-text-primary bg-surface-base rounded-lg transition-colors"
             >
               Ocultar
             </button>

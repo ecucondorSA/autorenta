@@ -2,423 +2,128 @@
   [routerLink]="['/cars', car.id]"
   [attr.data-car-id]="car.id"
   data-testid="car-card"
-  class="cq-card car-card card-premium flex flex-col overflow-hidden group cursor-pointer hover-lift transition-smooth"
-  [class.selected]="selected"
-  [class.urgent-mode]="urgentMode"
-  [class.bg-gradient-to-br]="urgentMode"
-  [class.from-surface-raised]="urgentMode"
-  [class.via-cta-default/5]="urgentMode"
-  [class.to-warning-light/5]="urgentMode"
-  [class.border-2]="urgentMode"
-  [class.border-cta-default/20]="urgentMode">
-  <!-- Badge de urgencia -->
+  class="group relative flex flex-col bg-surface-raised dark:bg-surface-raised rounded-2xl overflow-hidden border border-transparent hover:border-border-default dark:hover:border-neutral-700 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
+  [class.ring-2]="selected"
+  [class.ring-primary-500]="selected"
+  [class.urgent-mode]="urgentMode">
+
+  <!-- Badge de urgencia (Flotante) -->
   <div
     *ngIf="urgentMode && urgentAvailability()?.available"
-    class="absolute -top-3 left-4 z-10 bg-gradient-to-r from-error-light to-warning-light text-text-inverse px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-pulse">
-    🚨 DISPONIBLE AHORA
+    class="absolute top-3 left-3 z-20 bg-error-strong text-white px-3 py-1 rounded-full text-xs font-bold shadow-md flex items-center gap-1 animate-pulse">
+    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    DISPONIBLE YA
   </div>
-  <!-- Imagen del auto con aspect ratio consistente -->
-  <div class="relative w-full aspect-[4/3] bg-surface-secondary overflow-hidden">
-    <!-- Imagen real del auto -->
-    <!-- Usar ngSrc solo si NO es Base64, sino usar src normal -->
+
+  <!-- Imagen del auto (Aspect Ratio 4/3 fijo) -->
+  <div class="relative aspect-[4/3] bg-surface-secondary overflow-hidden">
+    <!-- Imagen real -->
     <img
       *ngIf="displayImage() && !isBase64Image(displayImage()!.url)"
       [ngSrc]="displayImage()!.url"
       [alt]="displayImage()!.alt"
       fill
-      [priority]="priority" [attr.loading]="priority ? 'eager' : 'lazy'"
-      class="object-cover transition-slow group-hover:scale-105"
+      priority
+      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
     />
-    <!-- Imagen Base64 con src normal (NgOptimizedImage no soporta Base64) -->
     <img
       *ngIf="displayImage() && isBase64Image(displayImage()!.url)"
       [src]="displayImage()!.url"
       [alt]="displayImage()!.alt"
-      [attr.loading]="priority ? 'eager' : 'lazy'"
-      class="absolute inset-0 w-full h-full object-cover transition-slow group-hover:scale-105"
+      loading="lazy"
+      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
     />
 
-    <!-- Fallback premium cuando no hay foto -->
+    <!-- Fallback -->
     <div
       *ngIf="!displayImage()"
-      class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-warning-light/10 to-cta-default/10"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-surface-base/50"
     >
-      <!-- Ícono de auto -->
-      <svg
-        class="w-24 h-24 text-warning-light/40 mb-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-        />
-        <circle cx="7" cy="17" r="2" stroke-width="1.5"/>
-        <circle cx="17" cy="17" r="2" stroke-width="1.5"/>
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M5 15h14M8 12l1-4h6l1 4"
-        />
-      </svg>
-
-      <!-- Texto elegante -->
-      <div class="text-center px-4">
-        <p class="text-sm font-medium text-text-secondary dark:text-text-secondary">Sin foto</p>
-        <p class="text-xs text-text-muted dark:text-text-secondary/70 mt-1">Imagen no disponible</p>
-      </div>
-
-      <!-- Pattern decorativo sutil -->
-      <div class="absolute inset-0 opacity-5 bg-pattern bg-[length:20px_20px]"></div>
+      <svg class="w-12 h-12 text-text-secondary/30 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+      <span class="text-xs text-text-secondary/50">Sin imagen</span>
     </div>
 
-    <!-- Badge de estado -->
-    <div class="absolute top-4 right-4 bg-smoke-black/90 backdrop-blur-sm px-4 py-1.5 rounded-full">
-      <span class="text-xs font-semibold text-ivory-soft">Disponible</span>
-    </div>
+    <!-- Overlay gradiente en bottom para legibilidad de texto (si hubiera) -->
+    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-    <!-- Barra de disponibilidad urgente -->
-    <div
-      *ngIf="urgentMode && urgentAvailability()?.available"
-      class="absolute bottom-0 left-0 right-0 bg-cta-default/20 backdrop-blur-sm px-4 py-2"
-    >
-      <div class="w-full bg-border-default rounded-full h-1.5 mb-1">
-        <div
-          class="bg-gradient-to-r from-cta-default to-warning-light h-1.5 rounded-full animate-pulse"
-          [style.width.%]="urgentAvailability()?.eta ? Math.max(30, 100 - (urgentAvailability()!.eta! / 60) * 100) : 70"
-        ></div>
-      </div>
-      <div class="flex items-center justify-between text-xs">
-        <span class="text-cta-default font-semibold">
-          ⏰ Disponible por {{ urgentAvailability()?.eta ? urgentAvailability()!.eta + ' min' : 'ahora' }}
-        </span>
-        <span
-          *ngIf="urgentAvailability()?.distance"
-          class="text-text-secondary dark:text-text-secondary"
-        >
-          📍 {{ formatDistance(urgentAvailability()!.distance!) }}
-        </span>
-      </div>
+    <!-- Badge de estado (Top Right) -->
+    <div class="absolute top-3 right-3">
+       <span class="bg-white/90 dark:bg-black/80 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-semibold text-text-primary shadow-sm">
+         {{ car.status === 'active' ? 'Disponible' : 'Ocupado' }}
+       </span>
     </div>
   </div>
 
-  <!-- Contenido del card con padding uniforme -->
-  <div class="flex flex-1 flex-col stack-md p-6">
-    <!-- Título premium con sistema tipográfico -->
-    <h3 class="h3 text-text-primary group-hover:text-text-secondary dark:text-text-secondary transition-base">
-      {{ car.title }}
-    </h3>
-
-    <!-- Rating con estrellas (si tiene reviews) -->
-    <div *ngIf="car.rating_count > 0" class="flex items-center gap-2">
-      <div class="flex items-center gap-0.5">
-        <svg *ngFor="let star of [1,2,3,4,5]"
-             class="w-4 h-4"
-             [class.text-warning-light]="star <= car.rating_avg"
-             [class.text-pearl-gray]="star > car.rating_avg"
-             fill="currentColor"
-             viewBox="0 0 20 20"
-             aria-hidden="true">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-        </svg>
+  <!-- Contenido -->
+  <div class="flex flex-col flex-1 p-4 space-y-3">
+    
+    <!-- Header: Título y Rating -->
+    <div class="flex justify-between items-start gap-2">
+      <div>
+        <h3 class="font-bold text-lg text-text-primary leading-tight line-clamp-1 group-hover:text-primary-600 transition-colors">
+          {{ car.title }}
+        </h3>
+        <p class="text-xs text-text-secondary mt-1 flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          {{ car.location_city }}
+        </p>
       </div>
-      <span class="text-sm font-medium text-text-primary">
-        {{ car.rating_avg | number:'1.1-1' }}
+      
+      <!-- Rating (Compacto) -->
+      <div *ngIf="car.rating_count > 0" class="flex items-center gap-1 text-xs font-medium">
+        <svg class="w-3.5 h-3.5 text-warning-default fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        <span>{{ car.rating_avg | number:'1.1-1' }}</span>
+      </div>
+    </div>
+
+    <!-- Specs Grid (Minimalista) -->
+    <div class="flex items-center gap-3 text-xs text-text-secondary border-t border-border-default/50 pt-3">
+      <span class="flex items-center gap-1">
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+         {{ car.transmission | titlecase }}
       </span>
-      <span class="text-xs text-text-muted dark:text-text-secondary/70">
-        ({{ car.rating_count }} {{ car.rating_count === 1 ? 'reseña' : 'reseñas' }})
+      <span class="w-px h-3 bg-border-default"></span>
+      <span class="flex items-center gap-1">
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+         {{ car.seats }} Pas.
       </span>
-    </div>
-
-    <!-- Specs: Asientos y Puertas (usa car-specs para container queries) -->
-    <div class="car-specs flex flex-wrap items-center gap-4 text-text-secondary dark:text-text-secondary">
-      <div class="flex items-center gap-2 text-text-secondary dark:text-text-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-        </svg>
-        <span class="text-sm font-medium">{{ car.seats }} asientos</span>
-      </div>
-      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default"></span>
-      <div class="flex items-center gap-2 text-text-secondary dark:text-text-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-        </svg>
-        <span class="text-sm font-medium">{{ car.doors }} puertas</span>
-      </div>
-    </div>
-
-    <div class="car-specs-condensed text-xs font-medium text-text-secondary dark:text-text-secondary/80 flex items-center flex-wrap gap-2">
-      <span>{{ car.seats }} asientos</span>
-      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
-      <span>{{ car.doors }} puertas</span>
-      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
-      <span>{{ car.transmission | titlecase }}</span>
-      <span class="divider-dot w-1.5 h-1.5 rounded-full bg-border-default/70 dark:bg-white/20"></span>
-      <span>{{ car.fuel_type | titlecase }}</span>
-    </div>
-
-    <!-- Ubicación con icono minimalista -->
-    <div class="location-detailed flex items-start gap-2 text-text-secondary dark:text-text-secondary">
-      <svg
-        class="w-5 h-5 mt-0.5 flex-shrink-0"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
-      <p class="text-sm font-medium leading-relaxed line-clamp-2 flex-1 min-w-0">
-        <ng-container *ngTemplateOutlet="locationText"></ng-container>
-      </p>
-    </div>
-
-    <div class="location-condensed flex items-center gap-2 text-sm text-text-secondary dark:text-text-secondary">
-      <span class="text-base" aria-hidden="true">📍</span>
-      <span class="line-clamp-2 leading-relaxed flex-1 min-w-0">
-        <ng-container *ngTemplateOutlet="locationText"></ng-container>
+      <span class="w-px h-3 bg-border-default"></span>
+      <span class="flex items-center gap-1">
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+         {{ car.fuel_type | titlecase }}
       </span>
     </div>
 
-    <ng-template #locationText>
-      <ng-container *ngIf="car.location_formatted_address; else oldLocation">
-        {{ car.location_formatted_address }}
-      </ng-container>
-    </ng-template>
-    <ng-template #oldLocation>{{ car.location_city }}, {{ car.location_state }}</ng-template>
-
-    <!-- Badge de distancia (cuando está disponible) -->
-    <div *ngIf="distance" class="flex items-center gap-1.5 text-cta-default mt-1">
-      <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13 10V3L4 14h7v7l9-11h-7z"
-        />
-      </svg>
-      <span class="text-sm font-semibold">{{ distance }} de tu ubicación</span>
-    </div>
-
-    <!-- Especificaciones con separador elegante -->
-    <div class="flex items-center gap-3 text-xs text-text-muted dark:text-text-secondary/70 font-medium">
-      <span>{{ car.transmission | titlecase }}</span>
-      <span class="w-1 h-1 rounded-full bg-border-default"></span>
-      <span>{{ car.fuel_type | titlecase }}</span>
-    </div>
-
-    <!-- Features y Badges (usa car-features para container queries) -->
-    <div class="car-features flex flex-wrap gap-2 items-center">
-      <!-- Badge de seguro incluido -->
-      <span *ngIf="car.insurance_included"
-            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-success-bg text-success-strong border border-success-border">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-        </svg>
-        Seguro incluido
-      </span>
-
-      <!-- Top features (máximo 3) -->
-      <ng-container *ngFor="let feature of topFeatures()">
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-cta-default/10 text-cta-default border border-cta-default/20">
-          {{ feature }}
-        </span>
-      </ng-container>
-    </div>
-
-    <!-- Divider sutil con más espacio -->
-    <div class="divider-horizontal my-3"></div>
-
-    <!-- Precio y CTA con espaciado mejorado -->
-    <div class="price-actions flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-4 mt-auto pt-3">
-      <div class="flex-shrink-0">
-        <!-- Modo Urgente: Precio por hora -->
-        <ng-container *ngIf="urgentMode && hourlyPrice()">
-          <div class="flex items-center gap-3">
-            <div class="h3 font-black text-cta-default tracking-tight">
-              $ {{ hourlyPrice() | number:'1.0-0' }}
-            </div>
-            <div class="flex flex-col">
-              <span class="text-lg font-semibold text-text-primary">por hora</span>
-              <span class="text-sm text-text-secondary dark:text-text-secondary line-through">$ {{ displayPrice() | number:'1.0-0' }}</span>
-            </div>
-          </div>
-        </ng-container>
-
-        <!-- Modo Normal: Precio por día -->
-        <ng-container *ngIf="!urgentMode || !hourlyPrice()">
-          <!-- Skeleton loader mientras carga precio dinámico -->
-          <div *ngIf="showPriceLoader()" class="animate-pulse">
-            <div class="h-8 sm:h-10 bg-border-default dark:bg-surface-secondary rounded w-28 mb-1"></div>
-            <div class="h-4 bg-border-default dark:bg-surface-secondary rounded w-16"></div>
-          </div>
-
-          <!-- Precio (dinámico o estático) -->
-          <div *ngIf="!showPriceLoader()" class="flex items-baseline gap-2">
-            <p class="h3 text-text-primary tracking-tight leading-none">
-              {{ displayPrice() | money }}
-            </p>
-            <!-- Icono de surge pricing -->
-            <span *ngIf="priceSurgeIcon()"
-                  class="text-lg"
-                  [title]="priceSurgeIcon() === '⚡' ? 'Precio ajustado por demanda' : 'Descuento disponible'">
-              {{ priceSurgeIcon() }}
-            </span>
-          </div>
-          <p class="text-sm font-medium text-text-secondary dark:text-text-secondary mt-1">por día</p>
-        </ng-container>
+    <!-- Footer: Precio y Acción -->
+    <div class="flex items-end justify-between mt-auto pt-2">
+      <div>
+         <p class="text-xs text-text-secondary font-medium mb-0.5">Precio por día</p>
+         <div class="flex items-baseline gap-1">
+           <span class="text-xl font-black text-text-primary tracking-tight">
+             {{ displayPrice() | money }}
+           </span>
+           <span *ngIf="priceSurgeIcon()" class="text-sm animate-bounce">{{ priceSurgeIcon() }}</span>
+         </div>
       </div>
 
-      <div class="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
-        <!-- Botones para el dueño del auto -->
-        <ng-container *ngIf="showOwnerActions; else normalActions">
-          <!-- ✅ NUEVO: Botón Toggle Disponibilidad -->
-          <button
-            (click)="onToggleAvailability($event)"
-            [attr.aria-label]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
-            [class]="car.status === 'active'
-              ? 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-warning-border text-warning-text hover:bg-warning-bg transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'
-              : 'flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-success-light text-success-light hover:bg-success-light/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]'"
-            [title]="car.status === 'active' ? 'Desactivar auto' : 'Activar auto'"
-          >
-            <svg *ngIf="car.status === 'active'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-            </svg>
-            <svg *ngIf="car.status !== 'active'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="sm:hidden font-semibold">{{ car.status === 'active' ? 'Desactivar' : 'Activar' }}</span>
-          </button>
-
-          <!-- Botón Editar -->
-          <button
-            (click)="onEdit($event)"
-            aria-label="Editar auto"
-            class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-warning-light text-warning-light hover:bg-warning-light/10 transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]"
-            title="Editar auto"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            <span class="sm:hidden font-semibold">Editar</span>
-          </button>
-
-          <!-- Botón Eliminar -->
-          <button
-            (click)="onDelete($event)"
-            aria-label="Eliminar auto"
-            class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 border-error-border text-error-text hover:bg-error-bg transition-base flex items-center justify-center gap-2 focus-ring min-h-[44px]"
-            title="Eliminar auto"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            <span class="sm:hidden font-semibold">Eliminar</span>
-          </button>
-
-          <!-- Ver detalle -->
-          <a
-            [routerLink]="['/cars', car.id]"
-            class="btn-primary w-full sm:w-auto px-6 py-3 flex items-center justify-center gap-2 group/btn min-h-[44px]"
-          >
-            <span class="font-semibold">Ver</span>
-            <svg
-              class="w-5 h-5 transition-transform group-hover/btn:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </ng-container>
-
-        <!-- Botones normales (comparar + ver detalle) -->
-        <ng-template #normalActions>
-          <!-- Botón de comparación -->
-                                                            <button
-                                                              (click)="onCompareToggle($event)"
-                                                              [disabled]="compareDisabled && !isComparing"
-                                                              [class.btn-disabled]="compareDisabled && !isComparing"
-                                                              class="flex-1 sm:flex-initial px-4 py-3 rounded-xl border-2 transition-base focus-ring flex items-center justify-center gap-2 min-h-[44px]"
-                                                              [class.border-cta-default]="!isComparing"
-                                                              [class.text-cta-default]="!isComparing"
-                                                              [class.hover:bg-cta-default/10]="!isComparing && !compareDisabled"
-                                                              [class.bg-cta-default]="isComparing"
-                                                              [class.text-text-inverse]="isComparing"
-                                                              [class.border-cta-default]="isComparing"
-                                                              [title]="isComparing ? 'Quitar de comparación' : (compareDisabled ? 'Máximo 3 autos' : 'Agregar a comparación')">
-
-
-
-
-
-
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path *ngIf="!isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              <path *ngIf="isComparing" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span class="sm:hidden font-semibold">{{ isComparing ? 'En comparación' : 'Comparar' }}</span>
-          </button>
-
-          <!-- Botón Alquilar Ahora (modo urgente) -->
-          <a
-            *ngIf="urgentMode && urgentAvailability()?.available && hourlyPrice()"
-            [routerLink]="['/cars', car.id]"
-            [queryParams]="{ urgent: 'true' }"
-            class="w-full sm:w-auto bg-gradient-to-r from-cta-default to-warning-light hover:from-cta-hover hover:to-warning-light text-text-inverse font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 group/btn min-h-[44px]"
-          >
-            <span>🚗 ALQUILAR AHORA</span>
-            <span *ngIf="urgentAvailability()?.eta" class="text-xs opacity-90">
-              ({{ urgentAvailability()!.eta }} min)
-            </span>
-            <svg
-              class="w-5 h-5 transition-transform group-hover/btn:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-
-          <!-- Botón Ver Detalle (modo normal o si no está disponible urgentemente) -->
-          <a
-            *ngIf="!urgentMode || !urgentAvailability()?.available || !hourlyPrice()"
-            [routerLink]="['/cars', car.id]"
-            class="btn-primary w-full sm:w-auto px-6 py-3 flex items-center justify-center gap-2 group/btn min-h-[44px]"
-          >
-            <span class="font-semibold">Ver detalle</span>
-            <svg
-              class="w-5 h-5 transition-transform group-hover/btn:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </ng-template>
-      </div>
+      <!-- Botón (Solo visible en hover en desktop, siempre en mobile) -->
+      <button class="bg-primary-600 text-white p-2.5 rounded-xl shadow-lg shadow-primary-600/20 hover:bg-primary-700 active:scale-95 transition-all duration-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+      </button>
     </div>
+
+    <!-- Owner Actions (Ocultas por defecto, lógica preservada simplificada visualmente) -->
+    <div *ngIf="showOwnerActions" class="mt-3 pt-3 border-t border-border-default grid grid-cols-3 gap-2">
+       <button (click)="onEdit($event)" class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-primary-50 hover:text-primary-600 transition-colors">
+         Editar
+       </button>
+       <button (click)="onToggleAvailability($event)" class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-warning-light/10 hover:text-warning-text transition-colors">
+         {{ car.status === 'active' ? 'Pausar' : 'Activar' }}
+       </button>
+       <button (click)="onDelete($event)" class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-error-bg hover:text-error-text transition-colors">
+         Eliminar
+       </button>
+    </div>
+
   </div>
 </article>

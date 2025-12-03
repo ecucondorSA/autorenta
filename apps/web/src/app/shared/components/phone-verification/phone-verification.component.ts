@@ -62,29 +62,6 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
 
       <!-- Pending State -->
       <div *ngIf="!status().isVerified" class="space-y-4">
-        <!-- Debug Panel (temporal) -->
-        <div class="p-3 bg-warning-bg-hover border-2 border-warning-border rounded text-xs">
-          <p class="font-bold mb-2">🐛 DEBUG - Estado del componente:</p>
-          <p>
-            isVerified: <strong>{{ status().isVerified }}</strong>
-          </p>
-          <p>
-            phone: <strong>{{ status().value || 'null' }}</strong>
-          </p>
-          <p>
-            otpSent: <strong>{{ status().otpSent }}</strong>
-          </p>
-          <p>
-            verifiedAt: <strong>{{ status().verifiedAt || 'null' }}</strong>
-          </p>
-          <p>
-            canResend: <strong>{{ status().canResend }}</strong>
-          </p>
-          <p>
-            cooldownSeconds: <strong>{{ status().cooldownSeconds }}</strong>
-          </p>
-        </div>
-
         <!-- Phone Input (if OTP not sent yet) -->
         <div *ngIf="!status().otpSent" class="space-y-4">
           <div class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg">
@@ -305,14 +282,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
   private stopCooldownTimer?: () => void;
 
   async ngOnInit(): Promise<void> {
-    console.log('[PhoneVerification] Component initialized');
-
     await this.phoneVerificationService.checkStatus();
-
-    console.log('[PhoneVerification] Status after check:', this.status());
-    console.log('[PhoneVerification] Is verified?', this.status().isVerified);
-    console.log('[PhoneVerification] Phone:', this.status().value);
-    console.log('[PhoneVerification] OTP sent?', this.status().otpSent);
 
     this.unsubscribe = this.phoneVerificationService.subscribeToChanges((verified) => {
       if (verified) {

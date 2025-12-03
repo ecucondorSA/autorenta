@@ -41,37 +41,42 @@ export class PublishCarFormService {
       // Vehicle - SOLO ESTOS SON REQUERIDOS
       brand_id: [null], // UUID - puede ser null si usamos FIPE
       model_id: [null], // UUID - puede ser null si usamos FIPE
-      brand_text_backup: [''], // Texto backup para FIPE
-      model_text_backup: [''], // Texto backup para FIPE
+      brand_text_backup: ['', Validators.required], // Texto backup para FIPE
+      model_text_backup: ['', Validators.required], // Texto backup para FIPE
       year: [
         new Date().getFullYear(),
         [Validators.required, Validators.min(this.minYear), Validators.max(this.maxYear)],
       ],
       // Campos opcionales
-      color: [''],
-      mileage: [null, [Validators.min(0)]],
-      transmission: [''],
-      fuel: [''],
+      color: ['', Validators.required],
+      mileage: [null, [Validators.required, Validators.min(0)]],
+      transmission: ['', Validators.required],
+      fuel: ['', Validators.required],
+
+      // Descripción y disponibilidad
+      description: ['', [Validators.required, Validators.minLength(40), Validators.maxLength(800)]],
+      availability_start_date: [this.todayISO(), [Validators.required]],
+      availability_end_date: [this.nextMonthISO(), [Validators.required]],
 
       // Pricing - Opcional (se calcula automáticamente si es dinámico)
       pricing_strategy: ['dynamic'],
-      price_per_day: [null, [Validators.min(1)]], // Opcional si es dinámico
+      price_per_day: [null, [Validators.required, Validators.min(1)]], // Opcional si es dinámico
       currency: ['USD', Validators.required],
-      value_usd: [null, [Validators.min(5000), Validators.max(500000)]], // Opcional
+      value_usd: [null, [Validators.required, Validators.min(5000), Validators.max(500000)]], // Opcional
       category_id: [null], // Opcional (se auto-categoriza)
-      min_rental_days: [1, [Validators.min(1)]],
-      max_rental_days: [30],
+      min_rental_days: [1, [Validators.required, Validators.min(1)]],
+      max_rental_days: [30], // Opcional
       deposit_required: [true],
-      deposit_amount: [200],
+      deposit_amount: [200, [Validators.min(0)]], // Requerido condicionalmente, se maneja en el componente
       insurance_included: [false],
       auto_approval: [true],
 
       // Location - Opcional
-      location_street: [''],
-      location_street_number: [''],
-      location_city: [''],
-      location_state: [''],
-      location_country: ['AR'],
+      location_street: ['', Validators.required],
+      location_street_number: ['', Validators.required],
+      location_city: ['', Validators.required],
+      location_state: ['', Validators.required],
+      location_country: ['AR', Validators.required],
     });
 
     return this.formInstance;
@@ -298,6 +303,11 @@ export class PublishCarFormService {
       deposit_amount,
       insurance_included,
       auto_approval,
+
+      // Descripción y disponibilidad
+      description,
+      availability_start_date,
+      availability_end_date,
       location_street,
       location_street_number,
       location_city,
@@ -348,7 +358,7 @@ export class PublishCarFormService {
 
       // Generated/computed fields
       title: this.generateTitle() || 'Auto sin título',
-      description: '',
+      description,
       seats: model?.seats || 5,
       doors: model?.doors || 4,
       features: {},
@@ -356,6 +366,8 @@ export class PublishCarFormService {
       location_province: location_state,
       rating_avg: 0,
       rating_count: 0,
+      availability_start_date: availability_start_date || this.todayISO(),
+      availability_end_date: availability_end_date || null,
     };
   }
 
@@ -371,5 +383,21 @@ export class PublishCarFormService {
    */
   getErrors(): Record<string, unknown> | null {
     return this.formInstance?.errors ?? null;
+  }
+
+  /**
+   * Obtener fecha de hoy en formato ISO (yyyy-MM-dd)
+   */
+  private todayISO(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  /**
+   * Obtener fecha dentro de un mes para prellenar disponibilidad
+   */
+  private nextMonthISO(): string {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 1);
+    return date.toISOString().slice(0, 10);
   }
 }

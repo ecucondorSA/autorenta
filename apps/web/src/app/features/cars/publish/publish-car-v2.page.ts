@@ -156,18 +156,58 @@ export class PublishCarV2Page implements OnInit {
 
     const year = this.publishForm?.get('year')?.value;
     const hasPhotos = this.photoService.hasMinimumPhotos();
+    const description = this.publishForm?.get('description')?.value;
+    const availabilityStart = this.publishForm?.get('availability_start_date')?.value;
+    const availabilityEnd = this.publishForm?.get('availability_end_date')?.value;
 
     // ✅ CRITICAL: Ubicación es obligatoria para aparecer en búsquedas
     const hasLocation = this.hasValidLocation();
 
+    const hasDescription = !!(description && description.trim().length >= 40);
+    const hasAvailability =
+      !!availabilityStart && !!availabilityEnd && new Date(availabilityStart) <= new Date(availabilityEnd);
+
     // Bloquear si falta alguno de los requisitos
-    return !!(hasBrand && hasModel && year && hasPhotos && hasLocation);
+    return !!(hasBrand && hasModel && year && hasPhotos && hasLocation && hasDescription && hasAvailability);
   });
 
   // ✅ NEW: Check if we have valid location coordinates
   readonly hasValidLocation = computed(() => {
     const coordinates = this.locationService.getCoordinates();
     return !!(coordinates?.latitude && coordinates?.longitude);
+  });
+
+  // ✅ NEW: Show explicit pending requirements in UI
+  readonly missingRequirements = computed(() => {
+    const missing: string[] = [];
+
+    const brandId = this.publishForm?.get('brand_id')?.value;
+    const modelId = this.publishForm?.get('model_id')?.value;
+    const brandTextBackup = this.publishForm?.get('brand_text_backup')?.value;
+    const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
+    const fipeBrand = this.selectedFIPEBrand();
+    const fipeModel = this.selectedFIPEModel();
+    const year = this.publishForm?.get('year')?.value;
+
+    const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
+    const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
+    const description = this.publishForm?.get('description')?.value;
+    const availabilityStart = this.publishForm?.get('availability_start_date')?.value;
+    const availabilityEnd = this.publishForm?.get('availability_end_date')?.value;
+
+    if (!hasBrand) missing.push('Marca');
+    if (!hasModel) missing.push('Modelo');
+    if (!year) missing.push('Año');
+    if (!this.photoService.hasMinimumPhotos()) missing.push('Mínimo 3 fotos');
+    if (!this.hasValidLocation()) missing.push('Ubicación en el mapa');
+    if (!description || description.trim().length < 40) missing.push('Descripción (min. 40 caracteres)');
+    if (!availabilityStart || !availabilityEnd) {
+      missing.push('Rango de disponibilidad');
+    } else if (!this.isAvailabilityRangeValid()) {
+      missing.push('Fechas de disponibilidad válidas');
+    }
+
+    return missing;
   });
 
   // Submit habilitado con datos mínimos; MP recomendado pero no bloquea
@@ -191,6 +231,18 @@ export class PublishCarV2Page implements OnInit {
   // Year options (2013-2025)
   // ✅ Generate years dynamically from current year back 12 years
   readonly yearOptions = Array.from({ length: 13 }, (_, i) => new Date().getFullYear() - i);
+
+  // Helper to validate disponibilidad
+  readonly isAvailabilityRangeValid = computed(() => {
+    const start = this.publishForm?.get('availability_start_date')?.value;
+    const end = this.publishForm?.get('availability_end_date')?.value;
+
+    if (!start || !end) return false;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return startDate <= endDate;
+  });
 
   async ngOnInit(): Promise<void> {
     // Initialize form
@@ -898,14 +950,24 @@ export class PublishCarV2Page implements OnInit {
       );
 
       if (address) {
-        // Fill address fields
+        // Fill address fields - combine street + number for display
+        const streetWithNumber = address.streetNumber
+          ? `${address.street} ${address.streetNumber}`
+          : address.street;
+
         this.publishForm.patchValue({
-          location_street: address.street,
+          location_street: streetWithNumber,
           location_street_number: address.streetNumber,
           location_city: address.city,
           location_state: address.state,
           location_country: address.country,
         });
+        this.notificationManager.success('Ubicación actualizada', 'Se completó la dirección automáticamente.');
+      } else {
+        this.notificationManager.warning(
+          'Ubicación detectada',
+          'Tenemos tus coordenadas, pero no pudimos encontrar la dirección exacta. Por favor completa los campos manualmente.'
+        );
       }
     }
   }
@@ -954,6 +1016,31 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
+    const description = this.publishForm.get('description')?.value as string | undefined;
+    if (!description || description.trim().length < 40) {
+      this.notificationManager.error(
+        'Descripción incompleta',
+        'Agrega una descripción clara (mínimo 40 caracteres) para que los viajeros conozcan tu auto.',
+      );
+      return;
+    }
+
+    if (!this.publishForm.get('availability_start_date')?.value || !this.publishForm.get('availability_end_date')?.value) {
+      this.notificationManager.error(
+        'Disponibilidad faltante',
+        'Indicá desde cuándo y hasta cuándo está disponible el auto.',
+      );
+      return;
+    }
+
+    if (!this.isAvailabilityRangeValid()) {
+      this.notificationManager.error(
+        'Fechas inválidas',
+        'La fecha de fin debe ser posterior o igual a la fecha de inicio.',
+      );
+      return;
+    }
+
     // ✅ CRITICAL: Validar ubicación antes de publicar
     if (!this.hasValidLocation()) {
       this.notificationManager.error(
@@ -963,13 +1050,16 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    if (!this.mpReady()) {
+    const mpReady = this.mpReady();
+
+    if (!mpReady) {
       this.notificationManager.warning(
         'Conectá Mercado Pago',
-        'Antes de publicar, vinculá tu cuenta para poder recibir pagos y activar tu vehículo.',
+        'Vinculá tu cuenta para recibir pagos. Podés seguir y publicaremos el auto igual.',
       );
-      await this.openOnboardingModal();
-      return;
+
+      // No bloqueamos la publicación: abrimos el flujo de onboarding en background
+      void this.openOnboardingModal();
     }
 
     // ✅ IMPORTANTE: NO bloqueamos la publicación por documentos faltantes
@@ -1052,7 +1142,7 @@ export class PublishCarV2Page implements OnInit {
         delete carData.location_lng;
       }
 
-      carData.status = 'active' as const; // Car is active immediately and will appear on map
+      carData.status = 'active' as const; // Car is active inmediatamente y aparecerá en el mapa
 
       console.log('🚗 Final car data to submit:', {
         ...carData,

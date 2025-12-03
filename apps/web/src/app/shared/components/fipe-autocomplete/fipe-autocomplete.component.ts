@@ -26,6 +26,10 @@ export interface FipeAutocompleteOption {
           (blur)="onBlur()"
           [placeholder]="placeholder"
           [disabled]="disabled"
+          [attr.data-testid]="dataTestId"
+          role="combobox"
+          [attr.aria-expanded]="showDropdown()"
+          [attr.aria-controls]="dataTestId ? dataTestId + '-list' : null"
           class="block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
           [class.border-blue-500]="isFocused()"
           [class.bg-gray-50]="disabled"
@@ -82,6 +86,10 @@ export interface FipeAutocompleteOption {
       @if (showDropdown() && filteredOptions().length > 0) {
         <div
           class="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+          (mouseenter)="isHoveringDropdown.set(true)"
+          (mouseleave)="onDropdownLeave()"
+          [attr.id]="dataTestId ? dataTestId + '-list' : null"
+          role="listbox"
         >
           @for (option of filteredOptions(); track option.code) {
             <button
@@ -126,6 +134,7 @@ export class FipeAutocompleteComponent implements OnChanges {
   @Input() minChars = 2;
   @Input() helperText = '';
   @Input() selectedValue: FipeAutocompleteOption | null = null;
+  @Input() dataTestId: string | null = null;
 
   @Output() optionSelected = new EventEmitter<FipeAutocompleteOption>();
   @Output() searchQueryChanged = new EventEmitter<string>();
@@ -133,6 +142,7 @@ export class FipeAutocompleteComponent implements OnChanges {
   readonly searchQuery = signal('');
   readonly isFocused = signal(false);
   readonly showDropdown = signal(false);
+  readonly isHoveringDropdown = signal(false);
 
   filteredOptions = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
@@ -174,10 +184,7 @@ export class FipeAutocompleteComponent implements OnChanges {
 
   onBlur(): void {
     this.isFocused.set(false);
-    // Delay hiding dropdown to allow click on option or clear button
-    setTimeout(() => {
-      this.showDropdown.set(false);
-    }, 200);
+    this.hideDropdownSoon();
   }
 
   selectOption(option: FipeAutocompleteOption): void {
@@ -195,5 +202,18 @@ export class FipeAutocompleteComponent implements OnChanges {
     // Emit null to indicate clearing
     this.optionSelected.emit({ code: '', name: '' });
     this.searchQueryChanged.emit('');
+  }
+
+  private hideDropdownSoon(): void {
+    setTimeout(() => {
+      if (!this.isHoveringDropdown()) {
+        this.showDropdown.set(false);
+      }
+    }, 120);
+  }
+
+  onDropdownLeave(): void {
+    this.isHoveringDropdown.set(false);
+    this.hideDropdownSoon();
   }
 }

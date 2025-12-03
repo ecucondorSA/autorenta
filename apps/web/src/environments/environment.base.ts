@@ -49,6 +49,7 @@ interface EnvDefaults {
   googleCalendarId?: string;
   googleCalendarApiKey?: string;
   googleCalendarClientId?: string;
+  googleGeolocationApiKey?: string;
   tiktok?: TikTokConfig;
 }
 
@@ -155,6 +156,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   googleCalendarClientId: resolve(
     'NG_APP_GOOGLE_CALENDAR_CLIENT_ID',
     defaults.googleCalendarClientId,
+  ),
+  googleGeolocationApiKey: resolve(
+    'NG_APP_GOOGLE_GEOLOCATION_API_KEY',
+    defaults.googleGeolocationApiKey,
   ),
   tiktok: {
     clientId: resolve('NG_APP_TIKTOK_CLIENT_ID', defaults.tiktok?.clientId),

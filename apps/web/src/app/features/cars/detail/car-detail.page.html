@@ -3,768 +3,216 @@
 <!-- <app-breadcrumbs [items]="breadcrumbItems()" /> -->
 
 <ng-container *ngIf="car(); else loadingOrError">
-  <section
-    class="grid gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-[2fr_1fr] pb-[calc(6rem+env(safe-area-inset-bottom))]"
-  >
-    <div class="space-y-4 sm:space-y-6">
-      <div
-        class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
-      >
-        <div
-          class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/70 mb-4"
-        >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-            />
-          </svg>
-          <span>Mensajes directos</span>
+  
+  <!-- ✅ HEADER & TITLE SECTION (Fuera del grid principal) -->
+  <header class="max-w-7xl mx-auto px-4 pt-6 pb-4">
+    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary mb-2">
+      {{ car()?.title }}
+    </h1>
+    
+    <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
+      <!-- Rating & Location -->
+      <div class="flex items-center flex-wrap gap-4">
+        <div class="flex items-center gap-1 font-semibold">
+          <svg class="h-4 w-4 text-text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <span class="text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
+          <span class="text-text-secondary font-normal mx-1">·</span>
+          <a href="#reviews" class="text-text-primary underline font-medium hover:text-text-secondary">{{ car()?.rating_count || 0 }} reseñas</a>
         </div>
-
-        <ng-container *ngIf="car() as currentCar">
-          <ng-container *ngIf="canContactOwner(); else chatUnavailable">
-            <app-car-chat
-              [carId]="currentCar.id"
-              [recipientId]="currentCar.owner_id"
-              [recipientName]="currentCar.owner?.full_name || 'Anfitrión'"
-            ></app-car-chat>
+        
+        <div class="hidden sm:block w-1 h-1 bg-text-secondary rounded-full"></div>
+        
+        <div class="flex items-center gap-1 text-text-primary font-medium underline cursor-pointer hover:text-text-secondary">
+          <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">
+             {{ car()?.location_formatted_address }}
           </ng-container>
-        </ng-container>
-      </div>
-
-      <ng-template #chatUnavailable>
-        <div
-          class="mt-4 rounded-xl border border-border-default dark:border-border-default bg-surface-secondary/60 dark:bg-surface-raised/60 p-5 text-sm text-text-secondary dark:text-text-secondary"
-        >
-          <ng-container *ngIf="!authService.isAuthenticated(); else ownerChatNotice">
-            <p class="font-semibold mb-2">Iniciá sesión para chatear con el anfitrión.</p>
-            <p class="text-xs text-text-muted dark:text-text-secondary/70">
-              Vas a poder coordinar detalles y hacer preguntas directamente.
-            </p>
-            <a
-              routerLink="/auth/login"
-              [queryParams]="{ returnUrl: router.url }"
-              class="btn-primary mt-4 inline-flex items-center gap-2"
-            >
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                />
-              </svg>
-              Iniciar sesión
-            </a>
-          </ng-container>
-          <ng-template #ownerChatNotice>
-            <p class="font-semibold mb-2">Este es tu auto.</p>
-            <p class="text-xs text-text-muted dark:text-text-secondary/70">
-              El chat se habilita automáticamente para los viajeros interesados en tu publicación.
-            </p>
+          <ng-template #oldLocation>
+             {{ car()?.location_city }}, {{ car()?.location_state }}
           </ng-template>
         </div>
-      </ng-template>
-      <!-- Photo Gallery Component -->
-      <!-- TODO: Re-add when photo-gallery component is created -->
-      <!--
-      <div
-        class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised shadow-soft overflow-hidden"
-      >
-        <app-photo-gallery
-          [photos]="galleryPhotos()"
-          (photoChange)="onPhotoChange($event)"
-          (sharePhoto)="onPhotoShare($event)"
-        ></app-photo-gallery>
-      </div>
-      -->
 
-      <div class="space-y-3">
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-text-primary">
-            {{ car()?.title }}
-          </h1>
-          <div class="flex items-center gap-2">
-            <app-share-button
-              type="car"
-              [carId]="car()?.id || ''"
-              [carTitle]="car()?.title || ''"
-              [carPrice]="displayPrice() || 0"
-              label="Compartir"
-              buttonClass="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border-muted bg-surface-raised text-text-primary hover:bg-surface-base transition-colors"
-            ></app-share-button>
-            <app-share-menu
-              [title]="car()?.title || 'Auto en Autorentar'"
-              [text]="'Mirá este auto increíble en Autorentar: ' + (car()?.title || '')"
-              [url]="'https://autorenta-web.pages.dev/cars/' + car()?.id"
-            ></app-share-menu>
-          </div>
-        </div>
-
-        <div class="space-y-2">
-          <div class="flex items-start gap-2 text-text-secondary dark:text-text-secondary/70">
-            <svg
-              class="mt-0.5 h-5 w-5 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            <p class="text-base">
-              <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">
-                {{ car()?.location_formatted_address }}
-              </ng-container>
-              <ng-template #oldLocation>
-                {{ car()?.location_city }}, {{ car()?.location_state }}
-              </ng-template>
-            </p>
-          </div>
-
-          <!-- ✅ Distance Badge -->
-          @if (distanceKm() !== null && distanceKm() !== undefined) {
-            <div class="mt-2">
-              <app-distance-badge [distanceKm]="distanceKm()!"></app-distance-badge>
-            </div>
-          }
-        </div>
-
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-1">
-            <svg class="h-5 w-5 text-warning-light" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-              />
-            </svg>
-            <span class="font-semibold text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
-          </div>
-          <span class="text-sm text-text-muted dark:text-text-secondary/70"
-            >{{ car()?.rating_count || 0 }} {{ 'carDetail.reviews' | translate }}</span
-          >
-        </div>
+        @if (distanceKm() !== null && distanceKm() !== undefined) {
+            <span class="px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs text-text-secondary">
+              a {{ distanceKm() | number:'1.1-1' }} km
+            </span>
+        }
       </div>
 
-      <div
-        class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
-      >
-        <div class="flex items-start justify-between gap-4">
-          <h2 class="h4">Especificaciones</h2>
-          <button
-            type="button"
-            (click)="toggleSpecs()"
-            [attr.aria-expanded]="!specsCollapsed()"
-            class="flex items-center gap-2 rounded-lg border border-border-default dark:border-border-default px-3 py-1 text-xs font-semibold uppercase tracking-wide text-text-secondary dark:text-text-secondary transition hover:bg-border-default/20 dark:hover:bg-slate-deep-pure/60"
-          >
-            <span>{{ specsCollapsed() ? 'Ver detalles' : 'Ocultar' }}</span>
-            <svg
-              class="h-4 w-4 transition-transform"
-              [class.rotate-180]="!specsCollapsed()"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
+      <!-- Share Buttons -->
+      <div class="flex items-center gap-2">
+         <button class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+            Compartir
+         </button>
+         <button class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+            Guardar
+         </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ✅ HERO GALLERY (Grid Mosaico) -->
+  <div class="max-w-7xl mx-auto px-4 mb-8">
+     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[300px] md:h-[400px] rounded-2xl overflow-hidden relative">
+        <!-- Foto Principal (Grande) -->
+        <div class="md:col-span-2 md:row-span-2 h-full bg-surface-secondary relative group cursor-pointer">
+           <img 
+             *ngIf="car()?.photos?.[0]?.url" 
+             [src]="car()?.photos?.[0]?.url" 
+             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+             alt="Main photo"
+           />
         </div>
 
-        <ng-container *ngIf="!specsCollapsed()">
-          <div class="mt-4 grid grid-cols-1 xs:grid-cols-2 gap-4 md:grid-cols-3">
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Transmisión</p>
-                <p class="font-semibold text-text-primary">{{ car()?.transmission | titlecase }}</p>
-              </div>
-            </div>
+        <!-- Fotos Secundarias (Hidden on mobile) -->
+        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
+           <img *ngIf="car()?.photos?.[1]?.url" [src]="car()?.photos?.[1]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 2" />
+        </div>
+        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-tr-2xl">
+           <img *ngIf="car()?.photos?.[2]?.url" [src]="car()?.photos?.[2]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 3" />
+        </div>
+        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
+           <img *ngIf="car()?.photos?.[3]?.url" [src]="car()?.photos?.[3]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 4" />
+        </div>
+        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-br-2xl">
+           <img *ngIf="car()?.photos?.[4]?.url" [src]="car()?.photos?.[4]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 5" />
+           
+           <!-- Botón "Ver todas" -->
+           <button class="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:scale-105 transition-transform flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+              Mostrar todas las fotos
+           </button>
+        </div>
+     </div>
+  </div>
 
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Combustible</p>
-                <p class="font-semibold text-text-primary">{{ car()?.fuel_type | titlecase }}</p>
-              </div>
-            </div>
 
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Asientos</p>
-                <p class="font-semibold text-text-primary">{{ car()?.seats }} personas</p>
-              </div>
+  <!-- ✅ MAIN CONTENT GRID -->
+  <div class="max-w-7xl mx-auto px-4">
+    <section class="grid gap-12 lg:grid-cols-[2fr_1fr] pb-[calc(6rem+env(safe-area-inset-bottom))]">
+    
+    <!-- LEFT COLUMN: Details -->
+    <div class="space-y-8">
+      
+      <!-- HOST INFO HEADER -->
+      <div class="flex justify-between items-center pb-6 border-b border-border-default">
+         <div>
+            <h2 class="text-xl font-semibold text-text-primary mb-1">
+               {{ car()?.title }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
+            </h2>
+            <div class="text-text-secondary text-sm">
+               {{ car()?.year }} · {{ car()?.seats }} plazas · {{ car()?.doors }} puertas · {{ car()?.transmission }}
             </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Año</p>
-                <p class="font-semibold text-text-primary">{{ car()?.year }}</p>
-              </div>
+         </div>
+         <!-- Avatar -->
+         <div class="relative">
+            <img 
+               [src]="car()?.owner?.avatar_url" 
+               class="w-14 h-14 rounded-full object-cover border border-border-default shadow-sm"
+               [alt]="car()?.owner?.full_name"
+            />
+            <div *ngIf="car()?.owner?.is_email_verified" class="absolute bottom-0 right-0 p-1 bg-success-default rounded-full border-2 border-surface-base text-white">
+               <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
             </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Color</p>
-                <p class="font-semibold text-text-primary">{{ car()?.color | titlecase }}</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-secondary"
-              >
-                <svg
-                  class="h-5 w-5 text-cta-default"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p class="text-xs text-text-muted dark:text-text-secondary/70">Puertas</p>
-                <p class="font-semibold text-text-primary">{{ car()?.doors }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="mt-6 rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-raised p-4 sm:p-5 shadow-soft"
-          >
-            <div
-              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-text-muted dark:text-text-secondary/60"
-            >
-              <span>Flujo de alquiler</span>
-              <span class="text-[11px] font-medium text-text-muted/80 dark:text-text-secondary/80">
-                Paso
-                {{ canBook() ? 3 : canContactOwner() ? 2 : 1 }}
-                de 4
-              </span>
-            </div>
-
-            <div class="mt-4 flex flex-col gap-4 md:flex-row md:items-center md:gap-0">
-              <ng-container *ngFor="let step of [1, 2, 3, 4]; let i = index">
-                <div class="flex flex-1 items-center gap-3 p-2">
-                  <div
-                    class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors"
-                    [ngClass]="{
-                      'bg-cta-default text-cta-text':
-                        i === 0 || (i === 1 && canContactOwner()) || (i === 2 && canBook()),
-                      'bg-warning-light text-text-inverse': i === 0,
-                      'bg-ash-gray/20 text-text-muted dark:bg-border-default/10 dark:text-text-secondary/70':
-                        i > 0 && !((i === 1 && canContactOwner()) || (i === 2 && canBook())),
-                      'ring-2 ring-cta-default/40': i === 1 && canContactOwner(),
-                    }"
-                  >
-                    <ng-container [ngSwitch]="i">
-                      <span *ngSwitchCase="0">1</span>
-                      <ng-container *ngSwitchCase="1">
-                        <svg
-                          *ngIf="canContactOwner()"
-                          class="h-4 w-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        <span *ngIf="!canContactOwner()">2</span>
-                      </ng-container>
-                      <span *ngSwitchDefault>{{ i + 1 }}</span>
-                    </ng-container>
-                  </div>
-                  <div class="text-sm">
-                    <p class="font-semibold text-text-primary dark:text-text-inverse">
-                      <ng-container [ngSwitch]="i">
-                        <span *ngSwitchCase="0">Descubrí</span>
-                        <span *ngSwitchCase="1">Contactá al anfitrión</span>
-                        <span *ngSwitchCase="2">Reservá y pagá</span>
-                        <span *ngSwitchCase="3">Check-in & Check-out</span>
-                      </ng-container>
-                    </p>
-                    <p class="text-xs text-text-muted dark:text-text-secondary/70">
-                      <ng-container [ngSwitch]="i">
-                        <span *ngSwitchCase="0">Fotos, reseñas y detalles</span>
-                        <span *ngSwitchCase="1">
-                          {{
-                            canContactOwner()
-                              ? 'Chat listo para tus dudas'
-                              : 'Inicia sesión para enviar mensajes'
-                          }}
-                        </span>
-                        <span *ngSwitchCase="2">
-                          {{
-                            canBook()
-                              ? 'Fechas listas para confirmar'
-                              : 'Seleccioná fechas para ver precio'
-                          }}
-                        </span>
-                        <span *ngSwitchCase="3">Inspecciones y firma digital</span>
-                      </ng-container>
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  *ngIf="i < 3"
-                  class="hidden md:block h-0.5 flex-1 bg-gradient-to-r from-ash-gray/20 via-ash-gray/40 to-ash-gray/20"
-                ></div>
-              </ng-container>
-            </div>
-          </div>
-        </ng-container>
+         </div>
       </div>
 
-      <div
-        class="card-premium rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft"
-      >
-        <h2 class="h4 mb-3">Descripción</h2>
-        <p class="leading-relaxed text-text-secondary dark:text-text-secondary whitespace-pre-line">
+      <!-- FEATURES GRID -->
+      <div class="py-4">
+         <div class="flex items-start gap-4 mb-6">
+            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <div>
+               <h3 class="font-semibold text-text-primary">Cancelación gratuita por 24hs</h3>
+               <p class="text-text-secondary text-sm">Tenés un período de gracia para cancelar sin costo.</p>
+            </div>
+         </div>
+         <div class="flex items-start gap-4 mb-6">
+            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <div>
+               <p class="font-semibold text-text-primary">Check-in autónomo o presencial</p>
+               <p class="text-text-secondary text-sm">Coordina fácilmente la entrega con {{ car()?.owner?.full_name?.split(' ')?.[0] }}.</p>
+            </div>
+         </div>
+         <div class="flex items-start gap-4">
+            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <div>
+               <p class="font-semibold text-text-primary">Seguro incluído</p>
+               <p class="text-text-secondary text-sm">Viajá tranquilo con nuestra cobertura contra todo riesgo.</p>
+            </div>
+         </div>
+      </div>
+
+      <div class="border-t border-border-default my-6"></div>
+
+      <!-- DESCRIPCION -->
+      <div>
+         <h2 class="text-xl font-semibold text-text-primary mb-4">Sobre este vehículo</h2>
+         <p class="leading-relaxed text-text-primary whitespace-pre-line">
           {{ car()?.description || 'Sin descripción disponible' }}
         </p>
       </div>
 
-      <div
-        id="reviews"
-        class="card-premium reviews-section rounded-2xl border border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-raised p-4 sm:p-6 shadow-soft max-w-3xl mx-auto"
-      >
-        <!-- Estadísticas del auto (mantener si hay carStats) -->
-        <div
-          *ngIf="carStats() as stats"
-          class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-surface-secondary rounded-xl"
-        >
-          <div class="text-center">
-            <div class="text-3xl font-bold text-cta-default">
-              {{ stats.rating_avg | number: '1.1-1' }}
-            </div>
-            <div class="text-xs text-text-muted dark:text-text-secondary/70">Calificación</div>
-          </div>
-          <div class="text-center">
-            <div class="text-3xl font-bold text-text-primary">{{ stats.reviews_count }}</div>
-            <div class="text-xs text-text-muted dark:text-text-secondary/70">Reseñas</div>
-          </div>
-          <div class="text-center">
-            <div class="text-3xl font-bold text-text-primary">{{ stats.completed_bookings }}</div>
-            <div class="text-xs text-text-muted dark:text-text-secondary/70">Viajes</div>
-          </div>
-          <div class="text-center">
-            <div class="text-3xl font-bold text-cta-default">
-              {{ (1 - stats.cancellation_rate) * 100 | number: '1.0-0' }}%
-            </div>
-            <div class="text-xs text-text-muted dark:text-text-secondary/70">Éxito</div>
-          </div>
-        </div>
+      <div class="border-t border-border-default my-6"></div>
 
-        <div
-          *ngIf="carStats() && carStats()!.reviews_count > 0"
-          class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-3 mb-6"
-        >
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary">🧼 Limpieza</span>
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_cleanliness_avg | number: '1.1-1'
-            }}</span>
-          </div>
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary"
-              >💬 Comunicación</span
-            >
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_communication_avg | number: '1.1-1'
-            }}</span>
-          </div>
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary">✓ Precisión</span>
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_accuracy_avg | number: '1.1-1'
-            }}</span>
-          </div>
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary">📍 Ubicación</span>
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_location_avg | number: '1.1-1'
-            }}</span>
-          </div>
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary">🔑 Check-in</span>
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_checkin_avg | number: '1.1-1'
-            }}</span>
-          </div>
-          <div
-            class="flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-raised rounded-lg border border-border-default dark:border-border-default"
-          >
-            <span class="text-sm text-text-secondary dark:text-text-secondary">💰 Valor</span>
-            <span class="font-semibold text-text-primary">{{
-              carStats()!.rating_value_avg | number: '1.1-1'
-            }}</span>
-          </div>
+      <!-- ESPECIFICACIONES (Clean Tags) -->
+      <div>
+        <h2 class="text-xl font-semibold text-text-primary mb-4">Lo que ofrece este auto</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
+               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+               <span>{{ car()?.transmission | titlecase }}</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
+               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+               <span>{{ car()?.fuel_type | titlecase }}</span>
+            </div>
+             <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
+               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+               <span>{{ car()?.seats }} Asientos</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
+               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+               <span>Modelo {{ car()?.year }}</span>
+            </div>
         </div>
+      </div>
 
-        <!-- Nuevo componente de reviews -->
+      <!-- REVIEWS -->
+      <div id="reviews" class="py-8 border-t border-border-default mt-8">
+         <h2 class="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2">
+            <svg class="w-6 h-6 text-cta-default fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            {{ car()?.rating_avg || 'Nuevo' }} · {{ car()?.rating_count || 0 }} reseñas
+         </h2>
+         <!-- Nuevo componente de reviews -->
         <app-car-reviews-section *ngIf="car()?.id" [carId]="car()!.id" />
       </div>
 
-      <a
-        routerLink="/cars"
-        class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-cta-default/80"
-      >
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        Volver a buscar
-      </a>
     </div>
 
-    <aside class="space-y-4">
+    <!-- RIGHT COLUMN: Booking Widget -->
+    <aside class="relative hidden lg:block">
       <div
-        class="card-premium lg:sticky lg:top-24 rounded-2xl border-2 p-4 sm:p-6 shadow-elevated hover:shadow-xl transition-all duration-300 border-border-default dark:border-border-default bg-gradient-to-br from-white-pure via-cta-default/5 to-warning-light/5"
-        [ngClass]="{
-          'border-cta-default/20': expressMode(),
-        }"
+        class="sticky top-24 rounded-2xl border border-border-default dark:border-neutral-800 bg-surface-raised dark:bg-surface-raised p-6 shadow-xl"
       >
-        <!-- Banner de modo express -->
-        <app-urgent-rental-banner
-          *ngIf="expressMode()"
-          [carId]="car()?.id ?? ''"
-          [regionId]="car()?.region_id ?? ''"
-          [expressMode]="expressMode"
-        ></app-urgent-rental-banner>
-
-        <!-- Toggle Modo Express -->
-        <div class="mb-4 flex items-center justify-between">
-          <button
-            type="button"
-            (click)="toggleExpressMode()"
-            [ngClass]="{
-              'bg-cta-default': expressMode(),
-              'text-text-inverse': expressMode(),
-              'bg-border-default/20': !expressMode(),
-              'text-text-secondary dark:text-text-secondary': !expressMode(),
-            }"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-            <span class="font-semibold text-sm">
-              {{ expressMode() ? 'Modo Express Activado' : 'Alquiler Urgente' }}
-            </span>
-          </button>
+        <!-- Header del Widget -->
+        <div class="flex items-baseline justify-between mb-6">
+           <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-bold text-text-primary">{{ displayPrice() | money }}</span>
+              <span class="text-text-secondary font-normal"> por día</span>
+           </div>
+           <div class="flex items-center gap-1 text-sm">
+              <svg class="w-4 h-4 text-text-primary fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <span class="font-semibold text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
+              <span class="text-text-secondary">·</span>
+              <span class="text-text-secondary underline">{{ car()?.rating_count || 0 }} reseñas</span>
+           </div>
         </div>
 
-        <div class="mb-6">
-          <!-- Precio por hora (modo express) -->
-          <div *ngIf="expressMode(); else dailyPrice">
-            <div *ngIf="calculatedHourlyRate() && !hourlyRateLoading(); else hourlyLoading">
-              <div class="flex items-center gap-3">
-                <div class="text-3xl sm:text-4xl font-black text-cta-default tracking-tight">
-                  $ {{ calculatedHourlyRate() | number: '1.0-0' }}
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-lg font-semibold text-text-primary">por hora</span>
-                  <span class="text-sm text-text-secondary dark:text-text-secondary">
-                    (75% del precio diario)
-                  </span>
-                </div>
-              </div>
-            </div>
-            <ng-template #hourlyLoading>
-              <div class="flex items-center gap-3">
-                <div class="text-4xl font-black text-cta-default tracking-tight animate-pulse">
-                  ...
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-lg font-semibold text-text-primary">por hora</span>
-                  <span class="text-sm text-text-secondary dark:text-text-secondary animate-pulse">
-                    Cargando precio...
-                  </span>
-                </div>
-              </div>
-            </ng-template>
-            <div class="mt-2 px-3 py-2 bg-cta-default/10 rounded-lg">
-              <p class="text-xs text-text-secondary dark:text-text-secondary">
-                ⏱️ Mínimo 5 horas · Disponibilidad inmediata
-              </p>
-            </div>
-          </div>
-
-          <!-- Precio por día (modo normal) -->
-          <ng-template #dailyPrice>
-            <p class="text-2xl sm:text-3xl font-bold text-text-primary">
-              {{ displayPrice() | money }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary">por día</p>
-            <!-- ✅ FIX: Mostrar indicador si está cargando precio dinámico -->
-            <p
-              *ngIf="priceLoading()"
-              class="text-xs text-text-secondary dark:text-text-secondary animate-pulse"
-            >
-              Actualizando precio...
-            </p>
-          </ng-template>
-        </div>
-
-        <!-- Social Proof Indicators -->
-        <div class="mb-6">
-          <app-social-proof-indicators
-            [car]="car()"
-            [showViewers]="true"
-            [showBookings]="true"
-            [showAvailability]="true"
-          ></app-social-proof-indicators>
-        </div>
-
-        <!-- Owner Info with Superhost Badge -->
-        <div
-          *ngIf="car()?.owner"
-          class="mb-6 p-4 rounded-xl bg-surface-secondary border border-border-default dark:border-border-default"
-        >
-          <div class="flex items-center gap-3">
-            <!-- Owner Avatar -->
-            <div class="relative flex-shrink-0">
-              <img
-                *ngIf="car()?.owner?.avatar_url; else defaultAvatar"
-                [ngSrc]="car()?.owner?.avatar_url"
-                width="56"
-                height="56"
-                [alt]="car()?.owner?.full_name"
-                class="w-14 h-14 rounded-full object-cover border-2 border-cta-default"
-              />
-              <ng-template #defaultAvatar>
-                <div
-                  class="w-14 h-14 rounded-full bg-cta-default text-cta-text flex items-center justify-center text-xl font-bold border-2 border-cta-default"
-                >
-                  {{ car()?.owner?.full_name?.charAt(0)?.toUpperCase() ?? 'U' }}
-                </div>
-              </ng-template>
-
-              <!-- Verified Badge -->
-              <div
-                *ngIf="car()?.owner?.is_email_verified"
-                class="absolute -bottom-1 -right-1 bg-success-light rounded-full p-1"
-              >
-                <svg class="h-3 w-3 text-text-inverse" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            <!-- Owner Details -->
-            <div class="flex-1">
-              <div class="flex items-center gap-2 mb-1">
-                <h3 class="text-sm font-semibold text-text-primary">
-                  {{ car()?.owner?.full_name }}
-                </h3>
-
-                <!-- Superhost Badge -->
-                <span
-                  *ngIf="isSuperhost()"
-                  class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-text-inverse text-[10px] font-bold"
-                >
-                  <svg class="h-2.5 w-2.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    />
-                  </svg>
-                  SUPERHOST
-                </span>
-              </div>
-
-              <!-- Owner Rating -->
-              <div class="flex items-center gap-2 text-xs">
-                <div class="flex items-center gap-1">
-                  <svg class="h-3.5 w-3.5 text-warning-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    />
-                  </svg>
-                  <span class="font-bold text-text-primary">{{
-                    car()?.owner?.rating_avg | number: '1.1-1'
-                  }}</span>
-                </div>
-                <span class="text-text-secondary dark:text-text-secondary"
-                  >({{ car()?.owner?.rating_count }} reseñas)</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Best 5-Star Review Extract -->
-        <div
-          *ngIf="bestFiveStarReview() as review"
-          class="mb-6 p-4 rounded-xl bg-success-light/10 border border-success-light/40"
-        >
-          <div class="flex items-start gap-2 mb-2">
-            <svg
-              class="h-5 w-5 text-success-light flex-shrink-0"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-              />
-            </svg>
-            <div>
-              <div class="flex gap-0.5 mb-1">
-                <svg
-                  *ngFor="let star of [1, 2, 3, 4, 5]"
-                  class="h-3.5 w-3.5 text-warning-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
-              </div>
-              <p class="text-sm text-success-light line-clamp-3">"{{ review.comment_public }}"</p>
-              <p class="text-xs text-success-light mt-2 font-medium">
-                — {{ review.reviewer_name }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-6" id="tour-date-picker">
-          <app-date-range-picker
-            [label]="expressMode() ? 'Duración de alquiler' : 'Fechas de alquiler'"
+        <!-- Date Picker Wrapper -->
+        <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
+           <app-date-range-picker
+            [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
             (rangeChange)="onRangeChange($event)"
             [initialFrom]="dateRange().from"
             [initialTo]="dateRange().to"
@@ -774,562 +222,80 @@
             [availabilityChecker]="!expressMode() ? checkAvailability : null"
             [blockedRanges]="blockedRanges()"
           ></app-date-range-picker>
-
-          <div
-            *ngIf="dateRange().from && dateRange().to"
-            class="mt-3 rounded-lg bg-cta-default/10 border border-cta-default/20 p-3"
-          >
-            <div class="flex items-start gap-2">
-              <svg
-                class="h-5 w-5 flex-shrink-0 text-cta-default mt-0.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <div class="flex-1">
-                <p class="text-sm font-semibold text-text-primary">Fechas seleccionadas:</p>
-                <p class="text-sm text-text-secondary dark:text-text-secondary">
-                  <span class="font-medium">{{ dateRange().from | date: 'dd/MM/yyyy' }}</span>
-                  <span class="mx-2">→</span>
-                  <span class="font-medium">{{ dateRange().to | date: 'dd/MM/yyyy' }}</span>
-                  <span class="ml-2 text-cta-default font-semibold">
-                    <ng-container *ngIf="expressMode()">
-                      ({{ hoursCount() }} {{ hoursCount() === 1 ? 'hora' : 'horas' }})
-                    </ng-container>
-                    <ng-container *ngIf="!expressMode()"> ({{ daysCount() }} días) </ng-container>
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            *ngIf="!dateRange().from || !dateRange().to"
-            class="mt-3 rounded-lg bg-warning-bg border border-warning-border p-3"
-          >
-            <div class="flex items-start gap-2">
-              <svg
-                class="h-5 w-5 flex-shrink-0 text-warning-text mt-0.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-              <p class="text-sm text-warning-strong">
-                <span class="font-semibold">Seleccioná las fechas</span> para calcular el precio
-                total
-              </p>
-            </div>
-          </div>
         </div>
 
-        <div *ngIf="totalPrice() as total" class="mb-6 space-y-3">
-          <div
-            class="rounded-xl bg-surface-secondary p-4 transition-all duration-300"
-            [class.ring-2]="dateRange().from && dateRange().to"
-            [class.ring-cta-default]="dateRange().from && dateRange().to"
-            [class.shadow-lg]="dateRange().from && dateRange().to"
-            id="tour-price-summary"
-          >
-            <h3 class="mb-3 text-sm font-semibold text-text-primary flex items-center gap-2">
-              Resumen de Precios
-              <span
-                *ngIf="dateRange().from && dateRange().to"
-                class="inline-flex items-center gap-1 text-xs text-success-light font-normal animate-fade-in"
-              >
-                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  ></path>
-                </svg>
-                Actualizado
-              </span>
-            </h3>
-            <div class="space-y-2 text-sm">
-              <!-- Subtotal del alquiler -->
-              <div class="flex justify-between">
-                <span class="text-text-secondary dark:text-text-secondary">
-                  <ng-container *ngIf="expressMode() && calculatedHourlyRate()">
-                    {{ calculatedHourlyRate() | money }} x {{ hoursCount() }}
-                    {{ hoursCount() === 1 ? 'hora' : 'horas' }}
-                  </ng-container>
-                  <ng-container *ngIf="!expressMode()">
-                    {{ displayPrice() | money }} x {{ daysCount() }} días
-                  </ng-container>
-                </span>
-                <span class="font-semibold text-text-primary">{{ total | money }}</span>
-              </div>
-
-              <!-- Depósito de seguridad (reembolsable) -->
-              <div
-                *ngIf="car()?.deposit_required && depositAmount()"
-                class="flex justify-between items-center"
-              >
-                <div class="flex items-center gap-1">
-                  <span class="text-text-secondary dark:text-text-secondary">Garantía</span>
-                  <span
-                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-success-light/20 text-success-light font-medium"
-                    title="Este monto se pre-autoriza pero NO se cobra. Se libera automáticamente al finalizar sin incidentes."
-                  >
-                    Reembolsable
-                  </span>
-                </div>
-                <span class="font-semibold text-text-primary">{{
-                  depositAmount() | money: 'USD'
-                }}</span>
-              </div>
-
-              <!-- Total a autorizar -->
-              <div class="border-t border-border-default dark:border-border-default pt-2 mt-3">
-                <div class="flex justify-between items-baseline">
-                  <div class="flex flex-col">
-                    <span class="font-semibold text-text-primary">Total a Autorizar</span>
-                    <span class="text-xs text-text-secondary">Alquiler + Garantía</span>
-                  </div>
-                  <span class="text-xl font-bold text-cta-default">
-                    {{ authorizationTotal() | money }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Clarificación: Solo se cobra el alquiler -->
-              <div *ngIf="car()?.deposit_required && depositAmount()" class="pt-1">
-                <p class="text-xs text-text-secondary dark:text-text-secondary italic">
-                  💡 Se cobrará solo <strong>{{ total | money }}</strong> por el alquiler
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            *ngIf="car()?.deposit_required"
-            class="rounded-lg bg-cta-default/10 border border-cta-default/20 p-3 insurance-info"
-          >
-            <div class="flex items-start gap-2">
-              <svg
-                class="h-5 w-5 text-cta-default flex-shrink-0 mt-0.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-              <div class="flex-1">
-                <p class="text-xs text-cta-default font-medium">
-                  <strong>Sobre la Garantía (Depósito de Seguridad)</strong>
-                </p>
-                <p class="text-xs text-cta-default/80 mt-1">
-                  • Este monto se <strong>pre-autoriza</strong> pero <strong>NO se cobra</strong
-                  ><br />
-                  • Se libera automáticamente al finalizar el alquiler sin incidentes<br />
-                  • Protege al propietario en caso de daños o multas
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ✅ NEW: Recommendation block with suggestions and waitlist -->
-        <div
-          *ngIf="bookingError()"
-          class="mb-4 rounded-lg border-2 border-cta-default/50 bg-cta-default/10 p-4 text-sm"
-        >
-          <!-- Icon and title -->
-          <div class="flex items-start gap-3 mb-3">
-            <svg
-              class="h-6 w-6 flex-shrink-0 text-cta-default mt-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <div class="flex-1">
-              <p class="font-semibold text-cta-default">Fechas no disponibles</p>
-              <p class="text-cta-default mt-1">{{ bookingError() }}</p>
-            </div>
-          </div>
-
-          <!-- Date suggestions chips -->
-          <div *ngIf="suggestedDateRanges().length > 0" class="mt-4">
-            <p class="text-xs font-semibold text-cta-default mb-2">Próximas fechas disponibles:</p>
-            <div class="flex flex-wrap gap-2">
-              <button
-                *ngFor="let suggestion of suggestedDateRanges()"
-                (click)="applySuggestedDates(suggestion)"
-                class="inline-flex items-center gap-2 px-3 py-2 bg-surface-raised border-2 border-cta-default/50 rounded-lg text-cta-default hover:bg-cta-default/20 hover:border-cta-default transition-all duration-200 text-xs font-medium"
-              >
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span>
-                  {{ formatSuggestionDate(suggestion.startDate) }} →
-                  {{ formatSuggestionDate(suggestion.endDate) }}
-                  ({{ suggestion.daysCount }} día{{ suggestion.daysCount !== 1 ? 's' : '' }})
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Waitlist CTA -->
-          <div *ngIf="canWaitlist()" class="mt-4 pt-4 border-t border-cta-default/50">
-            <div class="flex items-start gap-3 mb-3">
-              <svg
-                class="h-5 w-5 text-cta-default flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <div class="flex-1">
-                <p class="font-semibold text-cta-default mb-1">¿Querés que te notifiquemos?</p>
-                <p class="text-cta-default text-xs mb-3">
-                  Te avisaremos automáticamente si otro usuario cancela o si el auto queda
-                  disponible para estas fechas.
-                </p>
-                <button
-                  (click)="addToWaitlist()"
-                  [disabled]="addingToWaitlist()"
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:bg-cta-default/50 disabled:cursor-not-allowed transition-colors duration-200 text-sm font-medium"
-                >
-                  <svg
-                    *ngIf="!addingToWaitlist()"
-                    class="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                  <span *ngIf="!addingToWaitlist()">Anotarme en lista de espera</span>
-                  <span *ngIf="addingToWaitlist()" class="flex items-center gap-2">
-                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Agregando...
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          *ngIf="!totalPrice() && (dateRange().from || dateRange().to)"
-          class="mb-4 rounded-lg border-2 border-warning-300 bg-warning-bg p-4 text-sm text-warning-strong"
-        >
-          <div class="flex items-start gap-2">
-            <svg
-              class="h-5 w-5 flex-shrink-0 text-warning-text mt-0.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-            <div class="flex-1">
-              <p class="font-semibold mb-1">No se pudo calcular el precio</p>
-              <p class="text-xs">
-                Por favor, verificá que hayas seleccionado correctamente las fechas de inicio y fin
-                del alquiler.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Confirmación Instantánea Badge (si auto_approval está activado) -->
-        <div
-          *ngIf="car()?.auto_approval && canBook() && !expressMode()"
-          class="mb-3 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-success-light/10 border border-success-light/40"
-        >
-          <svg class="h-4 w-4 text-success-light" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span class="text-sm font-semibold text-success-light">Confirmación Instantánea</span>
-        </div>
-
-        <!-- ✅ NEW: Payment Method Buttons (Normal Mode) -->
-        <div *ngIf="authService.isAuthenticated() && !expressMode() && canBook()">
-          <h3 class="mb-3 text-sm font-semibold text-text-primary dark:text-text-secondary">
-            Elegí tu Método de Pago
-          </h3>
-          <app-payment-method-buttons
-            [rentalAmount]="rentalTotal() ?? 0"
-            [depositAmount]="depositAmount()"
-            [disabled]="!canBook()"
-            (methodSelected)="onPaymentMethodSelected($event)"
-          />
-        </div>
-
-        <!-- ✅ NEW: Pickup Location Selector -->
-        <div *ngIf="car() && dateRange().from && dateRange().to" class="mb-6">
-          <app-pickup-location-selector
-            [carLocation]="{
-              lat: car()!.location_lat ?? 0,
-              lng: car()!.location_lng ?? 0,
-              address: car()!.location_formatted_address ?? undefined,
-            }"
-            [userHomeLocation]="userHomeLocation() ?? undefined"
-            (locationSelected)="onPickupLocationSelected($event)"
-          ></app-pickup-location-selector>
-        </div>
-
-        <!-- CTA Button (Express Mode or not authenticated) -->
-        <div
-          *ngIf="!authService.isAuthenticated() || expressMode() || !canBook()"
-          class="relative group"
-        >
-          <!-- Tooltip -->
-          <div
-            *ngIf="canBook()"
-            class="absolute -top-8 left-1/2 -translate-x-1/2 px-3 py-1 bg-smoke-black text-text-inverse text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10"
-          >
-            ⚡ Reserva confirmada en 2 minutos
-          </div>
-
-          <button
+        <!-- Reserve Button -->
+        <button
             id="book-now"
             *ngIf="authService.isAuthenticated()"
             (click)="onBookClick()"
             [disabled]="!canBook() || bookingInProgress()"
-            data-testid="book-car-button"
-            [ngClass]="{
-              'cursor-not-allowed': !canBook() || bookingInProgress(),
-              'bg-gradient-to-r': expressMode(),
-              'from-cta-default': expressMode(),
-              'to-warning-light': expressMode(),
-              'hover:from-cta-default/90': expressMode(),
-              'hover:to-warning-light/90': expressMode(),
-              'text-text-inverse': expressMode(),
-              'shadow-lg': expressMode() || (!expressMode() && canBook()),
-              'hover:shadow-xl': expressMode() || (!expressMode() && canBook()),
-              transform: expressMode() || (!expressMode() && canBook()),
-              'hover:scale-105': expressMode() || (!expressMode() && canBook()),
-              'animate-pulse': canBook() && !bookingInProgress() && expressMode(),
-              'bg-gradient-to-r from-cta-default to-cta-default/80 hover:from-cta-default/90 hover:to-cta-default':
-                !expressMode() && canBook(),
-              'text-white': !expressMode() && canBook(),
-              'bg-charcoal-medium': !canBook() && !expressMode(),
-              'hover:bg-charcoal-medium': !canBook() && !expressMode(),
-            }"
-            class="w-full py-4 text-base font-bold transition-all duration-300"
+            class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mb-4"
+            [ngClass]="{'opacity-50 cursor-not-allowed': !canBook() || bookingInProgress()}"
           >
-            <span *ngIf="!bookingInProgress()" class="flex items-center justify-center gap-2">
-              <svg
-                *ngIf="canBook()"
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <svg
-                *ngIf="!canBook()"
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-
-              <!-- Express Mode -->
-              <ng-container *ngIf="expressMode()">
-                🚗 ALQUILAR AHORA
-                <span *ngIf="urgentAvailability()?.eta" class="text-xs opacity-90">
-                  ({{ urgentAvailability()!.eta }} min)
-                </span>
-              </ng-container>
-
-              <!-- Normal Mode - Cannot Book (no dates selected) -->
-              <ng-container *ngIf="!expressMode() && !canBook()">
-                VER DISPONIBILIDAD Y PRECIO
-              </ng-container>
+            <span *ngIf="!bookingInProgress()">
+                {{ canBook() ? 'Reservar Ahora' : 'Ver Disponibilidad' }}
             </span>
-
-            <span *ngIf="bookingInProgress()" class="flex items-center justify-center gap-2">
-              <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Procesando...
+            <span *ngIf="bookingInProgress()" class="flex items-center gap-2">
+                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                Procesando...
             </span>
-          </button>
+        </button>
+
+        <p *ngIf="canBook()" class="text-center text-xs text-text-secondary mb-6">No se te cobrará nada todavía</p>
+
+        <!-- Price Breakdown (Only if dates selected) -->
+        <div *ngIf="totalPrice() as total" class="space-y-3 pt-4 border-t border-border-default">
+           <div class="flex justify-between text-text-primary">
+              <span class="underline decoration-text-secondary/30">{{ displayPrice() | money }} x {{ daysCount() }} días</span>
+              <span>{{ total | money }}</span>
+           </div>
+           <div class="flex justify-between text-text-primary">
+              <span class="underline decoration-text-secondary/30">Seguro y protección</span>
+              <span class="text-success-default">¡Incluido!</span>
+           </div>
+           <div class="border-t border-border-default my-2"></div>
+           <div class="flex justify-between text-lg font-bold text-text-primary">
+              <span>Total</span>
+              <span>{{ total | money }}</span>
+           </div>
         </div>
+        
+      </div>
 
-        <button
+      <!-- Contact Host (Secondary Action) -->
+       <button
           *ngIf="authService.isAuthenticated() && car() && !isCurrentUserOwner()"
           type="button"
           (click)="onContactOwner()"
-          class="btn-secondary mt-3 w-full py-3 text-base font-semibold flex items-center justify-center gap-2"
+          class="w-full mt-4 py-2 text-text-secondary font-medium underline hover:text-text-primary transition-colors text-sm flex items-center justify-center gap-2"
         >
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-            />
-          </svg>
-          Contactar Anfitrión
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          Contactar al anfitrión
         </button>
 
-        <ng-container *ngIf="!authService.isAuthenticated()">
-          <a
-            routerLink="/auth/login"
-            [queryParams]="{ returnUrl: router.url }"
-            class="btn-primary w-full py-3 text-base font-semibold flex items-center justify-center gap-2"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-              />
-            </svg>
-            Inicia sesión para reservar
-          </a>
-
-          <a
-            routerLink="/auth/login"
-            [queryParams]="{ returnUrl: router.url }"
-            class="btn-secondary mt-2 w-full py-3 text-base font-semibold flex items-center justify-center gap-2"
-          >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-              />
-            </svg>
-            Inicia sesión para contactar al anfitrión
-          </a>
-        </ng-container>
-
-        <div class="mt-4 space-y-2 text-xs text-text-muted dark:text-text-secondary/70">
-          <p class="flex items-center gap-2">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Cancelación gratuita hasta 24hs antes
-          </p>
-          <p class="flex items-center gap-2">
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              />
-            </svg>
-            Pago seguro con Mercado Pago
-          </p>
-        </div>
-      </div>
     </aside>
   </section>
+  </div>
 </ng-container>
 
 <ng-template #loadingOrError>
-  <p *ngIf="loading(); else errorTpl" class="text-center text-sm text-slate-500">
-    Cargando auto...
-  </p>
+  <div class="flex flex-col items-center justify-center py-32 space-y-6">
+        <div class="relative">
+          <div class="w-16 h-16 rounded-full border-4 border-primary-100 dark:border-primary-900/30 border-t-primary-600 animate-spin"></div>
+        </div>
+        <div class="text-center space-y-2">
+          <p class="text-text-primary font-medium animate-pulse">Cargando vehículo...</p>
+        </div>
+  </div>
 </ng-template>
 
 <ng-template #errorTpl>
-  <p class="text-center text-sm text-error-text">{{ error() ?? 'No pudimos cargar el auto.' }}</p>
+  <div class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center">
+     <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
+     <p class="text-text-secondary mt-2">{{ error() ?? 'El vehículo no existe o fue eliminado.' }}</p>
+     <a routerLink="/cars" class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base">Volver al catálogo</a>
+  </div>
 </ng-template>
 
 <!-- Sticky CTA Mobile (only visible on mobile when authenticated) -->
@@ -1348,10 +314,10 @@
 <!-- ✅ NEW: Booking Location Form Modal -->
 @if (showLocationForm()) {
   <div
-    class="fixed inset-0 bg-surface-overlay/50 dark:bg-surface-overlay/70 z-50 flex items-end sm:items-center justify-center p-4"
+    class="fixed inset-0 bg-surface-overlay/50 dark:bg-surface-overlay/70 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"
   >
     <div
-      class="bg-surface-raised dark:bg-surface-raised rounded-t-lg sm:rounded-lg w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+      class="bg-surface-raised dark:bg-surface-raised rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-10"
     >
       <div class="p-4 sm:p-6">
         <app-booking-location-form
@@ -1365,12 +331,3 @@
     </div>
   </div>
 }
-
-<!-- WhatsApp FAB - Contactar al propietario -->
-<!-- TODO: Activar cuando el modelo CarOwner incluya phone/whatsapp -->
-<!-- <app-whatsapp-fab
-  *ngIf="car()"
-  [car]="car()"
-  [ownerPhone]="null"
-  [ownerName]="car()?.owner?.full_name ?? null"
-></app-whatsapp-fab> -->

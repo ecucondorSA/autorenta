@@ -16,6 +16,12 @@
         "NODE_ENV": "production"
       },
       "description": "AutoRenta Platform MCP - Real-time access to cars, bookings,\n     users, platform operations + Specialized DB Security Audit Module (SECURITY_DEFINER functions, RLS policies, performance analysis)"
+    },
+    "playwright-streaming": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/playwright-streaming-mcp/server.js"
+      ]
     }
   }
 }

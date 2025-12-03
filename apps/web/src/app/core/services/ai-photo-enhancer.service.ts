@@ -7,10 +7,10 @@ export interface EnhancedPhoto {
   enhanced: Blob;
   stockPhoto?: StockPhoto;
   preview: string; // Object URL
-  source: 'stock' | 'cloudflare-ai'; // NEW: indicar origen
+  source: 'stock' | 'cloudflare-ai'; // Reverted: removed 'google-ai'
 }
 
-export type GenerationMethod = 'stock-photos' | 'cloudflare-ai';
+export type GenerationMethod = 'stock-photos' | 'cloudflare-ai'; // Reverted: removed 'google-ai'
 
 /**
  * Servicio para mejorar fotos de autos con IA
@@ -39,12 +39,23 @@ export class AiPhotoEnhancerService {
   }): Promise<EnhancedPhoto[]> {
     const method = params.method || 'stock-photos';
 
+    // Reverted: Removed google-ai condition
+    // if (method === 'google-ai') {
+    //   return this.generateWithGoogleAI(params);
+    // }
+
     if (method === 'cloudflare-ai') {
       return this.generateWithCloudflareAI(params);
     }
 
     return this.generateWithStockPhotos(params);
   }
+
+  // Reverted: Removed generateWithGoogleAI method
+  // private async generateWithGoogleAI(...) { ... }
+
+  // Reverted: Removed buildGeminiPrompts method
+  // private buildGeminiPrompts(...) { ... }
 
   /**
    * Método 1: Stock Photos (RÁPIDO)
@@ -276,5 +287,60 @@ export class AiPhotoEnhancerService {
         URL.revokeObjectURL(photo.preview);
       }
     });
+  }
+
+  // Preserved logic for Gemini prompts (not currently used)
+  private buildGeminiPrompts(brand: string, model: string, year: number): string[] {
+    const pick = <T>(list: T[]): T => list[Math.floor(Math.random() * list.length)];
+
+    const weather = pick([
+      'bright sunny day with soft shadows',
+      'slightly overcast day with diffused light',
+      'after-rain damp ground and cloudy sky',
+      'golden hour warm light with long shadows',
+      'early morning cool light with a bit of mist',
+    ]);
+
+    const terrain = pick([
+      'on a dirt road with light tire marks',
+      'on a gravel turnout near trees',
+      'on a rural roadside with dry grass',
+      'on a damp compacted earth surface',
+      'on a light muddy patch with puddles nearby',
+    ]);
+
+    const background = pick([
+      'trees and bushes behind the car',
+      'a distant hill line',
+      'light forest edge',
+      'open countryside',
+      'sparse shrubs and a cloudy horizon',
+    ]);
+
+    const camera = pick([
+      'handheld smartphone at eye level',
+      'handheld smartphone slightly low angle',
+      'handheld smartphone slightly high angle',
+    ]);
+
+    const interiorLight = pick([
+      'natural daylight entering through windows',
+      'soft overcast light through windshield',
+      'late afternoon warm light through side windows',
+    ]);
+
+    const interiorWeather = pick([
+      'windows slightly dusty',
+      'light reflections from cloudy sky',
+      'subtle streaks on glass from recent rain',
+    ]);
+
+    const exteriorPrompt = `Generate a realistic photo (not render, not showroom) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 front. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe. Vary the scene subtly each time so photos are not identical.`;
+
+    const interiorPrompt = `Generate a realistic interior photo (not render) of a ${year} ${brand} ${model} car. Show front seats, dashboard and steering wheel from driver's door perspective. Lighting: ${interiorLight}, ${interiorWeather}. Style: handheld smartphone photo, slight imperfections, realistic textures, no studio lighting, no advertising vibe. Vary small details so photos are not identical.`;
+
+    const rearPrompt = `Generate a realistic photo (not render) of a ${year} ${brand} ${model} car parked ${terrain}, ${weather}, background of ${background}. Angle: 3/4 rear view showing trunk and tail lights. Style: ${camera}, natural shadows, slight imperfections, realistic reflections, no studio lighting, no advertising vibe.`;
+
+    return [exteriorPrompt, interiorPrompt, rearPrompt];
   }
 }
