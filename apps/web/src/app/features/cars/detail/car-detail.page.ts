@@ -49,7 +49,6 @@ import {
 } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
 import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
 import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
-import { SocialProofIndicatorsComponent } from '../../../shared/components/social-proof-indicators/social-proof-indicators.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -103,7 +102,6 @@ interface CarDetailState {
     ShareButtonComponent,
     TranslateModule,
     UrgentRentalBannerComponent,
-    SocialProofIndicatorsComponent,
     StickyCtaMobileComponent,
     DistanceBadgeComponent,
     CarChatComponent,
@@ -723,12 +721,12 @@ export class CarDetailPage implements OnInit, OnDestroy {
   }
 
   /**
-   * ✅ FIX: Precio a mostrar (dinámico si está disponible, sino estático)
+   * ✅ FIX: Precio a mostrar en USD (precio base del auto)
+   * NOTE: Dynamic pricing temporarily disabled during USD migration
    */
   readonly displayPrice = computed(() => {
-    const dynamic = this.dynamicPrice();
     const car = this.car();
-    return dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
+    return car?.price_per_day ?? 0;
   });
 
   async setupExpressMode(): Promise<void> {

@@ -541,14 +541,6 @@
     (ctaClick)="onReserveClick(selectedCarId()!)"
   />
 
-  <!-- WhatsApp FAB -->
-  <app-whatsapp-fab
-    *ngIf="selectedCar()"
-    [car]="selectedCar()!"
-    [ownerPhone]="null"
-    [ownerName]="selectedCar()?.owner?.full_name || null"
-  />
-
   <!-- Filters FAB (Mobile only) -->
   <button
     type="button"

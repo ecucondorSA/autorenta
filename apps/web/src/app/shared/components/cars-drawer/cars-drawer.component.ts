@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarCardComponent } from '../car-card/car-card.component';
-import { SocialProofIndicatorsComponent } from '../social-proof-indicators/social-proof-indicators.component';
 import { StickyCtaMobileComponent } from '../sticky-cta-mobile/sticky-cta-mobile.component';
 import type { Car } from '../../../core/models';
 
@@ -24,7 +23,6 @@ export interface CarWithDistance extends Car {
   imports: [
     CommonModule,
     CarCardComponent,
-    SocialProofIndicatorsComponent,
     StickyCtaMobileComponent,
   ],
   template: `
@@ -94,7 +92,6 @@ export interface CarWithDistance extends Car {
               (click)="onCarSelected(car.id)"
               class="drawer-card"
             />
-            <app-social-proof-indicators [car]="car" class="mt-2" />
           </div>
         </div>
       </div>

@@ -32,7 +32,6 @@ import {
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 
 import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
-import { WhatsappFabComponent } from '../../shared/components/whatsapp-fab/whatsapp-fab.component';
 
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { BookingsService } from '../../core/services/bookings.service';
@@ -47,20 +46,11 @@ import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
-// DynamicPricingBadgeComponent - available for car cards when needed
 
-import { PriceTransparencyModalComponent } from '../../shared/components/price-transparency-modal/price-transparency-modal.component';
-
-// SkeletonComponent - available for loading states when needed
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
-import {
-  FAQSectionComponent,
-  FinalCTABannerComponent,
-  SocialProofBarComponent,
-  TestimonialsSectionComponent,
-} from './components';
+import { FAQSectionComponent } from './components';
 
 export interface LatLngBoundsLiteral {
   north: number;
@@ -98,23 +88,12 @@ export interface Stat {
     FormsModule,
     RouterModule,
 
-    WhatsappFabComponent,
-
     FloatingActionFabComponent,
-    // NotificationToastComponent, // REMOVED: Using PrimeNG Toast now
 
     DateRangePickerComponent,
-
-    PriceTransparencyModalComponent,
     Car3dViewerComponent,
 
-    // Landing page conversion components
-    SocialProofBarComponent,
     FAQSectionComponent,
-    TestimonialsSectionComponent,
-    FinalCTABannerComponent,
-    // UrgencyBannerComponent - ready for real-time stock alerts
-    // BottomSheetFiltersComponent - ready for mobile filter UX
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
