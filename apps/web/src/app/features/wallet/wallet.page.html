@@ -36,99 +36,82 @@
 
     <!-- Hero Snapshot -->
     <section
-      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+      class="rounded-3xl border border-cta-default/20 dark:border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised dark:from-cta-default/10 dark:to-surface-raised p-8 shadow-soft"
     >
-      <div class="grid gap-6 lg:grid-cols-5 items-start">
-        <div class="lg:col-span-3 flex flex-col gap-4">
+      <div class="grid gap-8 lg:grid-cols-5 items-start">
+        <div class="lg:col-span-3 flex flex-col gap-5">
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+              class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
             >
-              Panel de control
+              💎 Mi Billetera
             </p>
             <h1
-              class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1"
+              class="text-4xl font-bold text-text-primary dark:text-text-primary mt-2"
               data-testid="wallet-page-heading"
             >
-              Mi Wallet
+              Gestiona tu Dinero
             </h1>
-            <p class="text-body text-text-secondary dark:text-text-secondary/80 mt-1">
-              Administra tus fondos, realiza depósitos y consulta tu historial de transacciones en
-              un solo lugar.
+            <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-3 leading-relaxed">
+              Tu espacio seguro para depósitos, transferencias y retiros. Todo en un solo lugar, sin complicaciones.
             </p>
           </div>
-          <div class="space-y-3">
-            <div class="flex flex-wrap gap-2">
+          <div class="space-y-4">
+            <div class="flex flex-wrap gap-3">
               <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-cta-default/20 dark:text-cta-default"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-success-light/15 text-success-light dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
               >
-                <app-icon name="check-circle" [size]="16" cssClass="inline-block" /> Saldo
-                actualizado
+                <app-icon name="check-circle" [size]="16" cssClass="inline-block" /> Saldo Actualizado
               </span>
               <span
                 [ngClass]="{
-                  'bg-success-light/10': protectedCreditStatus() === 'active',
-                  'text-success-light': protectedCreditStatus() === 'active',
-                  'bg-warning-bg': protectedCreditStatus() !== 'active',
-                  'text-warning-strong': protectedCreditStatus() !== 'active',
+                  'bg-success-light/15 text-success-light dark:bg-success-light/20 dark:text-success-400 border border-success-light/30': protectedCreditStatus() === 'active',
+                  'bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border': protectedCreditStatus() !== 'active',
                 }"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"
               >
+                <app-icon [name]="protectedCreditStatus() === 'active' ? 'lock' : 'lock-open'" [size]="16" />
                 {{
                   protectedCreditStatus() === 'active'
-                    ? 'Crédito protegido listo'
-                    : 'Crédito protegido pendiente'
+                    ? 'Crédito Protegido Activo'
+                    : 'Crédito Protegido Pendiente'
                 }}
               </span>
               @if (pendingDepositsCount() > 0) {
                 <span
-                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-200"
+                  class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border animate-pulse"
                 >
-                  {{ pendingDepositsCount() }} depósito(s) pendiente(s)
+                  <app-icon name="clock" [size]="16" /> {{ pendingDepositsCount() }} Depósito(s) Pendiente(s)
                 </span>
               }
             </div>
-            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-wrap gap-3 pt-2">
               <!-- Primary CTA - Contextual based on protected credit status -->
               <button
                 type="button"
                 (click)="openDepositModal()"
                 [title]="primaryDepositCTATooltip()"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition shadow-soft"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-base transition shadow-lg hover:shadow-xl transform hover:scale-105"
                 [ngClass]="primaryDepositCTAClass()"
                 data-testid="deposit-button-hero"
               >
-                <svg
-                  *ngIf="protectedCreditStatus() !== 'active'"
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                <span>{{ primaryDepositCTAText() }}</span>
+                <app-icon name="plus" [size]="18" /> {{ primaryDepositCTAText() }}
               </button>
 
               <!-- Secondary CTAs -->
               <button
                 type="button"
                 (click)="setActiveTab('transactions')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-cta-default text-cta-default dark:text-cta-default font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/10 transition"
               >
-                Ver transacciones
+                <app-icon name="list" [size]="18" /> Transacciones
               </button>
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border-default dark:border-border-default text-text-secondary dark:text-text-secondary font-semibold hover:border-primary-300 transition"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-success-light/40 text-success-light dark:text-success-400 font-semibold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
               >
-                Solicitar retiro
+                <app-icon name="arrow-up" [size]="18" /> Retirar
               </button>
             </div>
             <p
@@ -172,7 +155,7 @@
     <!-- Onboarding Banner (Only for new users with pending protected credit) -->
     @if (protectedCreditStatus() === 'pending' && !onboardingBannerDismissed()) {
       <section
-        class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/40 bg-gradient-to-br from-cta-default/5 to-warning-light/5 dark:from-cta-default/10 dark:to-warning-light/10 p-6 md:p-8 shadow-soft relative overflow-hidden"
+        class="rounded-2xl border-2 border-cta-default/40 dark:border-cta-default/50 bg-gradient-to-br from-cta-default/8 via-cta-default/3 to-success-light/5 dark:from-cta-default/15 dark:via-cta-default/8 dark:to-success-light/10 p-8 md:p-10 shadow-lg relative overflow-hidden"
       >
         <!-- Dismiss Button -->
         <button
@@ -198,94 +181,63 @@
 
         <!-- Content -->
         <div class="grid gap-6 lg:grid-cols-3 items-center pr-8">
-          <div class="lg:col-span-2 space-y-4">
+          <div class="lg:col-span-2 space-y-5">
             <div>
-              <div class="flex items-center gap-2 mb-2">
+              <div class="flex items-center gap-2 mb-3">
                 <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default"
+                  class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-cta-default/25 text-cta-default dark:bg-cta-default/35 dark:text-cta-default border border-cta-default/40"
                 >
-                  <app-icon name="lightning" [size]="16" cssClass="inline-block mr-1" /> Nuevo
+                  ⚡ Configuración Recomendada
                 </span>
               </div>
-              <h2 class="text-2xl md:text-3xl font-bold text-text-primary dark:text-text-primary">
-                Configura tu crédito protegido para reservar sin tarjeta
+              <h2 class="text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary leading-tight">
+                Reserva sin Tarjeta
               </h2>
-              <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-2">
-                Deposita <strong>USD 300 una sola vez</strong> y reserva vehículos sin necesidad de
-                tarjeta de crédito internacional.
+              <p class="text-lg text-text-secondary dark:text-text-secondary/80 mt-3 font-medium">
+                Solo necesitas depositar <strong>USD 300</strong> una sola vez. Simple, seguro y reutilizable en cada viaje.
               </p>
             </div>
 
             <!-- Benefits List -->
-            <div class="grid gap-3 sm:grid-cols-3">
-              <div class="flex items-start gap-2">
-                <svg
-                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div class="flex items-start gap-3 bg-success-light/5 dark:bg-success-light/10 rounded-lg p-3 border border-success-light/20">
+                <div class="flex-shrink-0">
+                  <app-icon name="credit-card" [size]="20" cssClass="text-success-light mt-0.5" />
+                </div>
                 <div>
-                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                    No necesitas tarjeta
+                  <p class="text-sm font-bold text-text-primary dark:text-text-primary">
+                    Sin Tarjeta
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                    Ideal sin tarjeta internacional
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+                    Ideal para tarjetas sin cobertura internacional
                   </p>
                 </div>
               </div>
 
-              <div class="flex items-start gap-2">
-                <svg
-                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              <div class="flex items-start gap-3 bg-primary-50/40 dark:bg-primary-500/10 rounded-lg p-3 border border-primary-200/40 dark:border-primary-500/20">
+                <div class="flex-shrink-0">
+                  <app-icon name="repeat-2" [size]="20" cssClass="text-primary-600 dark:text-primary-400 mt-0.5" />
+                </div>
                 <div>
-                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                    Úsalo en cada reserva
+                  <p class="text-sm font-bold text-text-primary dark:text-text-primary">
+                    Reutilizable
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                    Se reutiliza automáticamente
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+                    Úsalo en cada reserva automáticamente
                   </p>
                 </div>
               </div>
 
-              <div class="flex items-start gap-2">
-                <svg
-                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+              <div class="flex items-start gap-3 bg-cta-default/5 dark:bg-cta-default/15 rounded-lg p-3 border border-cta-default/20">
+                <div class="flex-shrink-0">
+                  <app-icon name="zap" [size]="20" cssClass="text-cta-default mt-0.5" />
+                </div>
                 <div>
-                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                    Se libera después
+                  <p class="text-sm font-bold text-text-primary dark:text-text-primary">
+                    Se Libera Al Instante
                   </p>
-                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                    Vuelve disponible tras el viaje
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
+                    Disponible nuevamente tras finalizar el viaje
                   </p>
                 </div>
               </div>
@@ -293,30 +245,82 @@
           </div>
 
           <!-- CTA -->
-          <div class="lg:col-span-1 flex flex-col gap-3">
+          <div class="lg:col-span-1 flex flex-col gap-4">
             <button
               type="button"
               (click)="openDepositModalForProtectedCredit()"
-              class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
+              class="inline-flex items-center justify-center gap-2 px-8 py-5 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
               data-testid="deposit-button-onboarding"
             >
-              <span>Configurar crédito protegido</span>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
+              <app-icon name="zap" [size]="20" /> Empezar Ahora
             </button>
-            <p class="text-xs text-center text-text-secondary dark:text-text-secondary/60">
-              Configura en 5 minutos
-            </p>
+            <div class="space-y-1 text-center">
+              <p class="text-sm font-semibold text-cta-default">✓ Sin tarjeta requerida</p>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/60">
+                En menos de 5 minutos
+              </p>
+            </div>
           </div>
         </div>
       </section>
     }
+
+    <!-- Security & Features Info Section -->
+    <section class="grid gap-4 lg:grid-cols-2">
+      <div class="rounded-2xl border-2 border-success-light/30 dark:border-success-light/20 bg-success-light/5 dark:bg-success-light/10 p-6 shadow-soft">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0">
+            <app-icon name="shield" [size]="24" cssClass="text-success-light mt-1" />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2">
+              🔒 Seguro & Protegido
+            </h3>
+            <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-success-light flex-shrink-0" />
+                Encriptación de nivel banco
+              </li>
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-success-light flex-shrink-0" />
+                Garantía bilateral en reservas
+              </li>
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-success-light flex-shrink-0" />
+                Verificación de identidad incluida
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/20 bg-cta-default/5 dark:bg-cta-default/10 p-6 shadow-soft">
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0">
+            <app-icon name="zap" [size]="24" cssClass="text-cta-default mt-1" />
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2">
+              ⚡ Rápido & Flexible
+            </h3>
+            <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
+                Inicio instantáneo en minutos
+              </li>
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
+                Retira en cualquier momento
+              </li>
+              <li class="flex items-center gap-2">
+                <app-icon name="check" [size]="16" cssClass="text-cta-default flex-shrink-0" />
+                Transferencias entre usuarios
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Expandable Benefits Section (only for users without active protected credit) -->
     @if (protectedCreditStatus() !== 'active') {
@@ -584,29 +588,31 @@
     <section class="grid gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2 space-y-6">
         <section
-          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+          class="rounded-2xl border-2 border-warning-border/60 dark:border-warning-border/40 bg-gradient-to-br from-warning-bg/30 to-surface-raised dark:from-warning-bg/20 dark:to-surface-raised p-6 shadow-soft"
         >
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p
-                class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-              >
-                Protección de reservas
-              </p>
-              <h2 class="text-2xl font-semibold text-text-primary dark:text-text-primary mt-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xl">🔐</span>
+                <p
+                  class="text-xs uppercase tracking-widest text-warning-strong dark:text-warning-300 font-bold"
+                >
+                  Tu Garantía Principal
+                </p>
+              </div>
+              <h2 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-2">
                 Crédito Autorentar
               </h2>
-              <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-1">
-                Elegí cómo garantizar tus viajes: tarjeta de crédito o crédito protegido dentro de
-                la plataforma.
+              <p class="text-base text-text-secondary dark:text-text-secondary/70 mt-2 max-w-lg">
+                Tu opción de garantía sin tarjeta de crédito. Seguro, flexible y listo en minutos.
               </p>
             </div>
             <button
               type="button"
               (click)="openDepositModal()"
-              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
+              class="px-6 py-3 rounded-xl border-2 border-cta-default bg-cta-default/10 text-cta-default dark:text-cta-default font-bold hover:bg-cta-default/20 dark:hover:bg-cta-default/20 transition shadow-md"
             >
-              Configurar crédito
+              <app-icon name="plus" [size]="16" cssClass="inline-block mr-1" /> Agregar Crédito
             </button>
           </div>
           <div class="mt-5 space-y-4">
@@ -618,62 +624,71 @@
               (openDepositModal)="openDepositModal()"
             ></app-guarantee-options-info>
 
-            <div class="grid gap-3 sm:grid-cols-3">
+            <div class="grid gap-4 sm:grid-cols-3">
               <div
-                class="rounded-xl border border-warning-border bg-warning-bg/70 dark:bg-warning-bg0/10 px-3 py-3"
+                class="rounded-xl border-2 border-warning-border bg-warning-bg/50 dark:bg-warning-bg/20 px-4 py-4 hover:shadow-md transition"
               >
-                <p
-                  class="text-xs uppercase tracking-wide text-warning-strong/90 dark:text-warning-200"
-                >
-                  Crédito protegido
-                </p>
-                <p class="text-lg font-semibold text-text-primary dark:text-warning-50">
+                <div class="flex items-center justify-between mb-2">
+                  <p
+                    class="text-xs uppercase tracking-widest font-bold text-warning-strong dark:text-warning-200"
+                  >
+                    🔒 Protegido
+                  </p>
+                  <app-icon name="lock" [size]="16" cssClass="text-warning-strong" />
+                </div>
+                <p class="text-2xl font-bold text-text-primary dark:text-warning-50">
                   USD {{ protectedCreditBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-warning-strong/80 dark:text-warning-200/80 mt-1">
-                  Meta inicial: USD 300
+                <div class="mt-2 w-full bg-warning-200/30 rounded-full h-2">
+                  <div class="bg-warning-strong h-2 rounded-full transition-all" [style.width.%]="protectedCreditProgress()"></div>
+                </div>
+                <p class="text-xs text-warning-strong/80 dark:text-warning-200/70 mt-2">
+                  Meta: USD 300 ({{ protectedCreditProgress() | number:'1.0-0' }}%)
                 </p>
               </div>
               <div
-                class="rounded-xl border border-success-border bg-success-bg/70 dark:bg-success-bg0/10 px-3 py-3"
+                class="rounded-xl border-2 border-success-border bg-success-bg/50 dark:bg-success-bg/20 px-4 py-4 hover:shadow-md transition"
               >
-                <p
-                  class="text-xs uppercase tracking-wide text-success-strong/90 dark:text-success-200"
-                >
-                  Transferible (in-app)
-                </p>
-                <p class="text-lg font-semibold text-text-primary dark:text-success-50">
+                <div class="flex items-center justify-between mb-2">
+                  <p
+                    class="text-xs uppercase tracking-widest font-bold text-success-strong dark:text-success-200"
+                  >
+                    ↔️ Transferible
+                  </p>
+                  <app-icon name="arrow-right-left" [size]="16" cssClass="text-success-strong" />
+                </div>
+                <p class="text-2xl font-bold text-text-primary dark:text-success-50">
                   USD {{ transferableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p class="text-xs text-success-strong/80 dark:text-success-100/70 mt-1">
-                  Envíalo a otros usuarios
+                <p class="text-xs text-success-strong/80 dark:text-success-100/70 mt-3">
+                  Envíalo a otros usuarios dentro de la app
                 </p>
               </div>
               <div
-                class="rounded-xl border border-border-default dark:border-border-default/60 dark:border-neutral-700 px-3 py-3 bg-surface-raised dark:bg-surface-secondary/80 dark:bg-surface-secondary/80"
+                class="rounded-xl border-2 border-cta-default/40 dark:border-cta-default/30 bg-cta-default/5 dark:bg-cta-default/10 px-4 py-4 hover:shadow-md transition"
               >
-                <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/70"
-                >
-                  Retirable (off-ramp)
-                </p>
-                <p class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                <div class="flex items-center justify-between mb-2">
+                  <p
+                    class="text-xs uppercase tracking-widest font-bold text-cta-default dark:text-cta-default/90"
+                  >
+                    🏦 Retirable
+                  </p>
+                  <app-icon name="arrow-up" [size]="16" cssClass="text-cta-default" />
+                </div>
+                <p class="text-2xl font-bold text-text-primary dark:text-text-primary">
                   USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 mt-1"
-                >
-                  Disponible para tu cuenta bancaria
+                <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-3">
+                  Retira a tu cuenta bancaria
                 </p>
               </div>
             </div>
 
-            <p
-              class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/70"
-            >
-              Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés
-              sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
-            </p>
+            <div class="bg-surface-base/50 dark:bg-surface-secondary/30 rounded-lg p-4 border border-border-default/30">
+              <p class="text-sm text-text-secondary dark:text-text-secondary/80 leading-relaxed">
+                <strong>💡 Cómo funciona:</strong> Tu crédito protegido se "congela" durante cada viaje y se libera automáticamente al finalizarlo. Los fondos transferibles los usas para otros pagos. Retira a tu banco cuando lo necesites.
+              </p>
+            </div>
           </div>
         </section>
       </div>
@@ -688,38 +703,41 @@
         }
 
         <section
-          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-5 shadow-soft"
+          class="rounded-2xl border-2 border-cta-default/20 dark:border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised dark:from-cta-default/10 dark:to-surface-raised p-6 shadow-md"
         >
-          <h3 class="text-base font-semibold text-text-primary dark:text-text-primary mb-2">
-            Acciones rápidas
-          </h3>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-4">
-            Sumá fondos, transfere a otros usuarios o retiralos cuando lo necesites.
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">⚡</span>
+            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">
+              Acciones Rápidas
+            </h3>
+          </div>
+          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-5">
+            Gestiona tu dinero en segundos
           </p>
           <div class="flex flex-col gap-3">
             <button
               type="button"
               (click)="openDepositModal()"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-primary-100 text-primary-700 dark:text-cta-default px-4 py-3 font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg bg-cta-default hover:bg-cta-default/90 text-text-inverse px-5 py-3 font-bold transition shadow-md hover:shadow-lg"
               data-testid="deposit-button-quick"
             >
-              Depositar
+              <app-icon name="plus" [size]="18" cssClass="inline-block" /> Depositar Fondos
               <span aria-hidden="true">→</span>
             </button>
             <button
               type="button"
               (click)="goToTransfer()"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg border-2 border-success-light/40 text-success-light dark:text-success-400 px-5 py-3 font-bold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
             >
-              Transferir
+              <app-icon name="arrow-right-left" [size]="18" cssClass="inline-block" /> Transferir
               <span aria-hidden="true">→</span>
             </button>
             <button
               type="button"
               (click)="setActiveTab('withdrawals')"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
+              class="w-full inline-flex items-center justify-between rounded-lg border-2 border-warning-border/60 text-warning-strong dark:text-warning-300 px-5 py-3 font-bold hover:bg-warning-bg/10 dark:hover:bg-warning-bg/20 transition"
             >
-              Retirar
+              <app-icon name="arrow-up" [size]="18" cssClass="inline-block" /> Retirar a Banco
               <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -729,49 +747,52 @@
 
     <!-- Transactions & Withdrawals -->
     <section
-      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+      class="rounded-3xl border border-border-default/50 dark:border-border-default/30 bg-surface-raised dark:bg-surface-raised p-8 shadow-soft"
     >
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-border-default/30">
         <div>
           <p
-            class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+            class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
           >
-            Movimientos y retiros
+            📊 Historial Completo
           </p>
-          <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
-            Historial y gestión
+          <h2 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-2">
+            Tus Movimientos
           </h2>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-            Consulta depósitos, cargos y gestiona tus solicitudes de retiro desde un mismo lugar.
+          <p class="text-base text-text-secondary dark:text-text-secondary/70 mt-2">
+            Visualiza todos tus depósitos, transferencias y retiros en un mismo lugar.
           </p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap lg:flex-nowrap bg-surface-base/50 dark:bg-surface-secondary/30 p-2 rounded-xl">
           <button
             type="button"
             (click)="setActiveTab('transactions')"
             [class.bg-cta-default]="activeTab() === 'transactions'"
             [class.text-text-inverse]="activeTab() === 'transactions'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+            [class.shadow-md]="activeTab() === 'transactions'"
+            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
           >
-            Transacciones
+            <app-icon name="list" [size]="16" cssClass="inline-block mr-1" /> Transacciones
           </button>
           <button
             type="button"
             (click)="setActiveTab('transfers')"
             [class.bg-cta-default]="activeTab() === 'transfers'"
             [class.text-text-inverse]="activeTab() === 'transfers'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+            [class.shadow-md]="activeTab() === 'transfers'"
+            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
           >
-            Transferencias
+            <app-icon name="arrow-right-left" [size]="16" cssClass="inline-block mr-1" /> Transferencias
           </button>
           <button
             type="button"
             (click)="setActiveTab('withdrawals')"
             [class.bg-cta-default]="activeTab() === 'withdrawals'"
             [class.text-text-inverse]="activeTab() === 'withdrawals'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+            [class.shadow-md]="activeTab() === 'withdrawals'"
+            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
           >
-            Retiros
+            <app-icon name="arrow-up" [size]="16" cssClass="inline-block mr-1" /> Retiros
           </button>
         </div>
       </div>
