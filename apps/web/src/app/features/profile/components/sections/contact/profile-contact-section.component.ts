@@ -49,6 +49,8 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly autoSaving = signal(false);
+  readonly savedRecently = signal(false);
+  private savedTimeout?: ReturnType<typeof setTimeout>;
 
   // Form
   form!: FormGroup;
@@ -77,6 +79,9 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.savedTimeout) {
+      clearTimeout(this.savedTimeout);
+    }
   }
 
   /**
@@ -165,6 +170,7 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
     if (this.loading() || this.autoSaving()) return;
 
     this.autoSaving.set(true);
+    this.savedRecently.set(false);
     this.error.set(null);
 
     try {
@@ -173,6 +179,15 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
 
       // Mark as pristine after successful save
       this.form.markAsPristine();
+
+      // Show "saved" indicator for 3 seconds
+      this.savedRecently.set(true);
+      if (this.savedTimeout) {
+        clearTimeout(this.savedTimeout);
+      }
+      this.savedTimeout = setTimeout(() => {
+        this.savedRecently.set(false);
+      }, 3000);
 
       console.log('✅ Contacto guardado automáticamente');
     } catch (err) {

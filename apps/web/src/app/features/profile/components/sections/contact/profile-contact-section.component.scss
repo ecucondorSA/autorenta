@@ -5,16 +5,32 @@
 /* Auto-save indicator */
 .auto-save-indicator {
   @apply flex items-center gap-3 mb-5 px-5 py-3 rounded-xl
-    bg-gradient-to-r from-blue-50 to-blue-100/50
-    dark:from-blue-500/10 dark:to-blue-600/5
-    border-l-4 border-blue-500 dark:border-blue-400
-    text-blue-700 dark:text-blue-300 text-sm font-medium
-    shadow-sm;
+    text-sm font-medium shadow-sm;
 
   ion-spinner {
     width: 18px;
     height: 18px;
     --color: currentColor;
+  }
+
+  ion-icon {
+    @apply text-xl;
+  }
+
+  /* Saving state */
+  &--saving {
+    @apply bg-gradient-to-r from-blue-50 to-blue-100/50
+      dark:from-blue-500/10 dark:to-blue-600/5
+      border-l-4 border-blue-500 dark:border-blue-400
+      text-blue-700 dark:text-blue-300;
+  }
+
+  /* Saved state */
+  &--saved {
+    @apply bg-gradient-to-r from-green-50 to-green-100/50
+      dark:from-green-500/10 dark:to-green-600/5
+      border-l-4 border-green-500 dark:border-green-400
+      text-green-700 dark:text-green-300;
   }
 }
 

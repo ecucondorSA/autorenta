@@ -13,9 +13,14 @@
 >
   <!-- Auto-save indicator -->
   @if (autoSaving()) {
-    <div class="auto-save-indicator">
+    <div class="auto-save-indicator auto-save-indicator--saving">
       <ion-spinner name="crescent"></ion-spinner>
-      <span>Guardando automáticamente...</span>
+      <span>Guardando...</span>
+    </div>
+  } @else if (savedRecently()) {
+    <div class="auto-save-indicator auto-save-indicator--saved">
+      <ion-icon name="checkmark-circle" class="text-success-light"></ion-icon>
+      <span>Guardado</span>
     </div>
   }
 

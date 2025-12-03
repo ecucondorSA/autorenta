@@ -24,11 +24,14 @@ export class RegisterPage {
   readonly message = signal<string | null>(null);
   readonly error = signal<string | null>(null);
 
+  // Flexible phone pattern: allows spaces, dashes, parentheses
+  private readonly flexiblePhonePattern = /^[\d\s\-().+]{7,20}$/;
+
   readonly form = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
-    phone: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+    phone: ['', [Validators.required, Validators.pattern(this.flexiblePhonePattern)]],
   });
 
   async submit(): Promise<void> {

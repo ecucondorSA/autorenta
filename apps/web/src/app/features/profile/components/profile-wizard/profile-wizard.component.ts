@@ -59,9 +59,12 @@ export class ProfileWizardComponent implements OnInit {
     role: ['renter' as Role, Validators.required],
   });
 
+  // Flexible phone pattern: allows spaces, dashes, parentheses, and 7-15 digits
+  private readonly flexiblePhonePattern = /^[\d\s\-().+]{7,20}$/;
+
   readonly contactForm = this.fb.group({
-    phone: ['', [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
-    whatsapp: ['', [Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+    phone: ['', [Validators.pattern(this.flexiblePhonePattern)]],
+    whatsapp: ['', [Validators.pattern(this.flexiblePhonePattern)]],
   });
 
   readonly addressForm = this.fb.group({

@@ -101,8 +101,9 @@ export class ProfileValidators {
   }
 
   /**
-   * Validates phone number in E.164 format (international format)
-   * Examples: +5491112345678, +12125551234
+   * Validates phone number - accepts multiple common formats
+   * Supports: E.164 format, with/without spaces, dashes, parentheses
+   * Examples: +5491112345678, +54 911 1234 5678, 11-5555-1234, (11) 5555-1234
    * @returns Validator function
    */
   static phone(): ValidatorFn {
@@ -111,13 +112,29 @@ export class ProfileValidators {
 
       const phoneStr = String(control.value).trim();
 
-      // E.164 format: +[country code][number] (1-15 digits total)
-      const e164Regex = /^\+?[1-9]\d{1,14}$/;
+      // Remove all formatting characters (spaces, dashes, parentheses, dots)
+      const digitsOnly = phoneStr.replace(/[\s\-().]/g, '');
 
-      if (!e164Regex.test(phoneStr)) {
+      // If it starts with +, validate E.164 format
+      if (digitsOnly.startsWith('+')) {
+        // E.164 format: +[country code][number] (8-15 digits total including country code)
+        const e164Regex = /^\+[1-9]\d{7,14}$/;
+        if (!e164Regex.test(digitsOnly)) {
+          return {
+            phone: {
+              message: 'Número de teléfono inválido. Formato esperado: +54 911 1234 5678',
+            },
+          };
+        }
+        return null;
+      }
+
+      // Local number without country code - accept 7-15 digits
+      const localRegex = /^[1-9]\d{6,14}$/;
+      if (!localRegex.test(digitsOnly)) {
         return {
           phone: {
-            message: 'Número de teléfono inválido. Debe incluir código de país (ej: +549111234567)',
+            message: 'Número de teléfono inválido. Ingresa al menos 7 dígitos',
           },
         };
       }
