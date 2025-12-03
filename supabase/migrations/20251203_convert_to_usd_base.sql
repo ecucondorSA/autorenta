@@ -1,6 +1,8 @@
 -- Migration: Convert platform to USD base currency
 -- All prices stored in USD, conversion to ARS only at payment time
 -- Rate: Obtained from exchange_rates table (Binance real-time)
+-- IMPORTANT: Ensure exchange_rates.USDARS is current before running!
+-- As of 2025-12-03: Binance USDTARS = 1511.80
 
 -- ============================================
 -- 1. CONVERT CAR PRICES FROM ARS TO USD
@@ -34,20 +36,27 @@ WHERE currency IS NOT NULL AND currency != 'USD' AND currency != 'ARS';
 -- 2. UPDATE WALLET BALANCES TO USD
 -- ============================================
 
--- Convert wallet balances from ARS to USD using current rate
+-- Convert wallet balances from ARS cents to USD cents using current rate
 UPDATE user_wallets
 SET
-  balance = ROUND(balance / (
+  balance_cents = ROUND(balance_cents / (
     SELECT rate FROM exchange_rates WHERE pair = 'USDARS' ORDER BY updated_at DESC LIMIT 1
-  ), 2),
+  )),
+  available_balance_cents = ROUND(available_balance_cents / (
+    SELECT rate FROM exchange_rates WHERE pair = 'USDARS' ORDER BY updated_at DESC LIMIT 1
+  )),
+  locked_balance_cents = ROUND(locked_balance_cents / (
+    SELECT rate FROM exchange_rates WHERE pair = 'USDARS' ORDER BY updated_at DESC LIMIT 1
+  )),
+  autorentar_credit_balance_cents = ROUND(autorentar_credit_balance_cents / (
+    SELECT rate FROM exchange_rates WHERE pair = 'USDARS' ORDER BY updated_at DESC LIMIT 1
+  )),
+  cash_deposit_balance_cents = ROUND(cash_deposit_balance_cents / (
+    SELECT rate FROM exchange_rates WHERE pair = 'USDARS' ORDER BY updated_at DESC LIMIT 1
+  )),
   currency = 'USD',
   updated_at = NOW()
-WHERE currency = 'ARS';
-
--- Ensure all wallets are in USD
-UPDATE user_wallets
-SET currency = 'USD'
-WHERE currency IS NULL OR currency = '';
+WHERE currency = 'ARS' OR currency IS NULL;
 
 -- ============================================
 -- 3. UPDATE DEFAULT COLUMN VALUES

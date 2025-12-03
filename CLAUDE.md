@@ -211,6 +211,29 @@ NG_APP_MERCADOPAGO_PUBLIC_KEY=
 
 Production variables are set in Cloudflare Pages dashboard and Supabase secrets.
 
+## Currency Architecture (USD Base)
+
+**Base Currency:** USD (US Dollars)
+**Payment Currency:** ARS (Argentine Pesos) - via MercadoPago
+
+All prices and wallet balances are stored in USD:
+- `cars.price_per_day` → USD
+- `user_wallets.balance_cents` → USD cents
+- Exchange rate from `exchange_rates` table (Binance API, pair: USDARS ~1512 ARS/USD)
+
+**Conversion Flow:**
+1. Prices displayed throughout the platform in USD
+2. At checkout, USD is converted to ARS using live Binance rate
+3. MercadoPago processes payment in ARS
+4. Settlement recorded in USD in wallet
+
+**Frontend Display:**
+- Car cards: "USD $X"
+- Car detail: "USD X por día"
+- Checkout: Shows USD total with ARS conversion notice
+
+**Migration:** `20251203_convert_to_usd_base.sql`
+
 ## Database Access (Testing/Development)
 
 **Supabase Project:** `pisqjmoklivzpwufhscx`
