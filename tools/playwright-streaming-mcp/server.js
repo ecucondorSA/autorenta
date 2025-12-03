@@ -26,7 +26,119 @@ const CONFIG = {
   viewport: { width: 1280, height: 720 },
   eventBufferSize: 100,  // Max events to keep in buffer
   slowMo: 50,  // Slow down actions for visibility
+  compactOutput: true,  // Return concise formatted output
+  maxEventSummary: 5,  // Max events to include in summaries
 };
+
+// ========== Compact Output Formatting ==========
+function formatCompact(data, type) {
+  if (!CONFIG.compactOutput) {
+    return JSON.stringify(data, null, 2);
+  }
+
+  switch (type) {
+    case 'navigate':
+      return `✅ Navigated to: ${data.url}\n📄 Title: ${data.title}\n📊 Events: ${data.eventsTriggered}`;
+
+    case 'click':
+      return `✅ Clicked: ${data.clicked}\n📊 Events: ${data.eventsTriggered}`;
+
+    case 'type':
+      return `✅ Typed in: ${data.selector}\n📝 Text: "${data.typed.substring(0, 30)}${data.typed.length > 30 ? '...' : ''}"`;
+
+    case 'wait_for':
+      return data.found
+        ? `✅ Found: ${data.selector}`
+        : `❌ Timeout waiting for: ${data.selector}`;
+
+    case 'snapshot': {
+      const elements = extractKeyElements(data.snapshot);
+      return `📍 URL: ${data.url}\n📄 Title: ${data.title}\n\n🔍 Key Elements:\n${elements}\n\n📊 Buffer: ${data.recentEvents?.length || 0} recent events`;
+    }
+
+    case 'events': {
+      if (!data.events?.length) return `📭 No new events (last ID: ${data.lastEventId})`;
+      const summary = summarizeEvents(data.events);
+      return `📊 ${data.count} events since ID ${data.lastEventId - data.count}:\n${summary}`;
+    }
+
+    case 'status':
+      return `🌐 Browser: ${data.browserOpen ? 'Open' : 'Closed'}\n📍 URL: ${data.pageUrl || 'N/A'}\n📊 Buffer: ${data.eventsInBuffer} events`;
+
+    case 'screenshot':
+      return `📸 Screenshot captured (${data.size})\n[base64 data truncated - ${data.data.length} chars]`;
+
+    case 'evaluate':
+      const resultStr = JSON.stringify(data.result);
+      return `📜 Result: ${resultStr.substring(0, 200)}${resultStr.length > 200 ? '...' : ''}`;
+
+    case 'close':
+      return `🔒 Browser closed, events cleared`;
+
+    case 'error':
+      return `❌ Error: ${data.error}\n🔧 Tool: ${data.tool}`;
+
+    default:
+      return JSON.stringify(data, null, 2);
+  }
+}
+
+function extractKeyElements(snapshot, state = { count: 0 }) {
+  const MAX = 15; // Max elements to show
+  if (!snapshot || state.count >= MAX) return '';
+
+  const lines = [];
+  const role = snapshot.role || '';
+  const name = (snapshot.name || '').trim();
+
+  // Only key interactive elements with names
+  if (name && ['button', 'link', 'textbox', 'heading'].includes(role) && state.count < MAX) {
+    const short = name.length > 30 ? name.substring(0, 30) + '…' : name;
+    const icon = role === 'heading' ? '📌' : role === 'button' ? '🔘' : role === 'link' ? '🔗' : '📝';
+    lines.push(`${icon} ${short}`);
+    state.count++;
+  }
+
+  // Shallow recursion only
+  if (snapshot.children && state.count < MAX) {
+    for (const child of snapshot.children.slice(0, 10)) {
+      const r = extractKeyElements(child, state);
+      if (r) lines.push(r);
+    }
+  }
+
+  return lines.filter(l => l).join('\n');
+}
+
+function summarizeEvents(events) {
+  const grouped = {};
+
+  for (const e of events) {
+    grouped[e.type] = grouped[e.type] || [];
+    grouped[e.type].push(e);
+  }
+
+  const lines = [];
+  for (const [type, evts] of Object.entries(grouped)) {
+    if (type === 'network_request' || type === 'network_response') {
+      // Just count network events
+      lines.push(`  📡 ${type}: ${evts.length} requests`);
+    } else if (type === 'dom_change') {
+      lines.push(`  🔄 DOM changes: ${evts.length}`);
+    } else if (type === 'console') {
+      const msgs = evts.slice(-3).map(e => `"${e.data.text?.substring(0, 40)}..."`);
+      lines.push(`  💬 Console (${evts.length}): ${msgs.join(', ')}`);
+    } else if (type === 'navigation') {
+      lines.push(`  🧭 Navigation: ${evts[evts.length - 1].data.url}`);
+    } else if (type === 'error') {
+      lines.push(`  ❌ Errors: ${evts.map(e => e.data.message?.substring(0, 50)).join(', ')}`);
+    } else {
+      lines.push(`  📋 ${type}: ${evts.length}`);
+    }
+  }
+
+  return lines.join('\n');
+}
 
 // ========== Event Types ==========
 const EventType = {
@@ -305,11 +417,12 @@ class PlaywrightStreamingMCP {
         },
         {
           name: 'stream_screenshot',
-          description: 'Take screenshot and return as base64',
+          description: 'Take screenshot - saves to temp file and returns path (compact output)',
           inputSchema: {
             type: 'object',
             properties: {
-              fullPage: { type: 'boolean', description: 'Capture full page (default: false)' }
+              fullPage: { type: 'boolean', description: 'Capture full page (default: false)' },
+              compress: { type: 'boolean', description: 'Compress to JPEG ~10x smaller (default: true)' }
             }
           }
         },
@@ -454,18 +567,67 @@ class PlaywrightStreamingMCP {
 
           case 'stream_screenshot': {
             const { page } = await this.ensureBrowser();
+            const fs = await import('fs');
+            const path = await import('path');
+            const os = await import('os');
+            const { execSync } = await import('child_process');
 
+            const shouldCompress = args?.compress !== false; // Default true
+            const timestamp = Date.now();
+
+            // Take screenshot as PNG first
             const buffer = await page.screenshot({
               fullPage: args?.fullPage || false,
               type: 'png'
             });
 
-            result = {
-              format: 'base64/png',
-              size: `${Math.round(buffer.length / 1024)}KB`,
-              data: buffer.toString('base64'),
+            const originalSizeKB = Math.round(buffer.length / 1024);
+            let filepath;
+            let finalSizeKB = originalSizeKB;
+
+            if (shouldCompress) {
+              // Save PNG temporarily
+              const tempPng = path.join(os.tmpdir(), `screenshot-${timestamp}-temp.png`);
+              fs.writeFileSync(tempPng, buffer);
+
+              // Run Python compression script
+              const scriptPath = path.join(import.meta.dirname, 'compress-screenshot.py');
+              const outputJpg = path.join(os.tmpdir(), `screenshot-${timestamp}.jpg`);
+
+              try {
+                // Compress PNG to JPEG using Python script
+                execSync(`python3 "${scriptPath}" --input "${tempPng}" --output "${outputJpg}" --quality 35 --max-width 1024`, {
+                  timeout: 5000
+                });
+
+                filepath = outputJpg;
+                const stats = fs.statSync(outputJpg);
+                finalSizeKB = Math.round(stats.size / 1024);
+
+                // Clean up temp PNG
+                fs.unlinkSync(tempPng);
+              } catch (compressError) {
+                // Fallback to PNG if compression fails
+                console.error('[MCP] Compression failed, using PNG:', compressError.message);
+                filepath = path.join(os.tmpdir(), `screenshot-${timestamp}.png`);
+                fs.renameSync(tempPng, filepath);
+              }
+            } else {
+              // Save as PNG without compression
+              filepath = path.join(os.tmpdir(), `screenshot-${timestamp}.png`);
+              fs.writeFileSync(filepath, buffer);
+            }
+
+            const elapsed = Date.now() - startTime;
+            const compressionRatio = originalSizeKB / finalSizeKB;
+
+            // Return only path, not the image data
+            return {
+              content: [{
+                type: 'text',
+                text: `📸 Screenshot saved (${finalSizeKB}KB${shouldCompress ? ` ← ${originalSizeKB}KB, ${compressionRatio.toFixed(1)}x` : ''})\n📁 Path: ${filepath}\n⏱️ ${elapsed}ms`
+              }]
             };
-            break;
           }
 
           case 'stream_evaluate': {
@@ -507,10 +669,13 @@ class PlaywrightStreamingMCP {
 
         const elapsed = Date.now() - startTime;
 
+        // Determine the format type based on tool name
+        const formatType = name.replace('stream_', '');
+
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify({ ...result, _elapsed: `${elapsed}ms` }, null, 2)
+            text: formatCompact(result, formatType) + `\n⏱️ ${elapsed}ms`
           }]
         };
 
@@ -518,10 +683,7 @@ class PlaywrightStreamingMCP {
         return {
           content: [{
             type: 'text',
-            text: JSON.stringify({
-              error: error.message,
-              tool: name,
-            }, null, 2)
+            text: formatCompact({ error: error.message, tool: name }, 'error')
           }],
           isError: true
         };
