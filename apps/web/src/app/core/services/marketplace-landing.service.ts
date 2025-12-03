@@ -137,7 +137,7 @@ export class MarketplaceLandingService {
 
     // Apply quick filters
     if (quickFilters.has('verified')) {
-      cars = cars.filter((c) => c.owner?.is_email_verified && c.owner?.is_phone_verified);
+      cars = cars.filter((c) => c.owner?.email_verified && c.owner?.phone_verified);
     }
 
     if (quickFilters.has('electric')) {

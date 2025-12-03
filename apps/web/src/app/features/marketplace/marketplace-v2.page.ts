@@ -317,7 +317,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
     // Client-only filters (can't be done server-side due to nested relations)
     if (quickFilters.has('verified')) {
-      cars = cars.filter((c) => c.owner?.is_email_verified && c.owner?.is_phone_verified);
+      cars = cars.filter((c) => c.owner?.email_verified && c.owner?.phone_verified);
     }
 
     if (quickFilters.has('no-card')) {
@@ -563,8 +563,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
               rating_avg,
               rating_count,
               created_at,
-              is_email_verified,
-              is_phone_verified
+              email_verified,
+              phone_verified
             )
           `,
             { count: 'exact' },

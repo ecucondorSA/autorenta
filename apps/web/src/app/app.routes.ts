@@ -301,6 +301,13 @@ export const routes: Routes = [
           import('./features/profile/location-settings.page').then((m) => m.LocationSettingsPage),
       },
       {
+        path: 'personal',
+        loadComponent: () =>
+          import('./features/profile/personal/profile-personal.page').then(
+            (m) => m.ProfilePersonalPage,
+          ),
+      },
+      {
         path: 'contact',
         loadComponent: () =>
           import('./features/profile/contact/profile-contact.page').then(

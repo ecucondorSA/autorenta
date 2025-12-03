@@ -249,8 +249,94 @@ A pesar de los problemas, los siguientes datos se guardaron correctamente en la 
 
 ---
 
-## 7. Próximos Tests Pendientes
+## 7. Gaps Críticos de Funcionalidad (Encontrados en Segunda Revisión)
 
+### 7.1 Avatar Upload - NO IMPLEMENTADO
+**Archivo:** `profile-expanded.page.ts:188-191`
+```typescript
+onAvatarChange(_event: Event): void {
+  // Placeholder - implement avatar upload logic
+  console.log('Avatar upload not yet implemented');
+}
+```
+**Impacto:** Usuario no puede subir foto de perfil desde la UI
+
+### 7.2 Datos Personales - SIN FORMULARIO DE EDICIÓN
+**Campos faltantes en UI:**
+- `date_of_birth` - No hay campo para ingresar fecha de nacimiento
+- `gov_id_number` - No hay campo para ingresar número de DNI
+- `role` - No hay forma de cambiar entre locatario/locador/ambos
+
+**Rutas de perfil existentes:**
+- `/profile` - Solo muestra datos, no edita
+- `/profile/contact` - Solo teléfono/dirección
+- `/profile/preferences` - Solo idioma/zona horaria
+- `/profile/verification` - Solo documentos
+- `/profile/security` - Solo contraseña
+
+**Falta:** Una ruta `/profile/personal` o similar para editar datos básicos
+
+### 7.3 Verificación de Email - INCONSISTENCIA DE CAMPOS
+**Problema:** El template usa campos diferentes a los de la BD
+
+| Template (profile-expanded.page.html) | BD (profiles) | Match |
+|---------------------------------------|---------------|-------|
+| `is_email_verified` | `email_verified` | ❌ NO |
+| `is_phone_verified` | `phone_verified` | ❌ NO |
+| `is_driver_verified` | `id_verified` | ❌ NO |
+
+**Resultado:** La UI siempre muestra "Sin verificar" aunque la BD tenga `true`
+
+### 7.4 Subida Real de Documentos - NO FUNCIONA
+**Problema:** Los componentes `DniUploaderComponent` y `LicenseUploaderComponent` intentan subir archivos pero:
+1. El `document_kind` enum no tenía los valores correctos (CORREGIDO)
+2. La subida real a Supabase Storage no fue probada
+3. No hay validación de tamaño/formato de imagen
+
+### 7.5 Verificación Facial (Selfie) - NO IMPLEMENTADO
+**Archivo:** `profile-verification.page.html`
+- La sección existe en la UI pero está "Bloqueada"
+- No hay componente `SelfieUploaderComponent`
+- El enum tiene `selfie` pero no hay uploader
+
+### 7.6 Comprobante de Residencia - NO IMPLEMENTADO
+**Enum disponible:** `utility_bill`
+**UI:** No existe uploader para este documento
+
+### 7.7 Documentos de Vehículo - NO IMPLEMENTADOS
+**Enums disponibles (recién agregados):**
+- `vehicle_registration`
+- `vehicle_insurance`
+
+**UI:** No existen uploaders para estos documentos
+
+---
+
+## 8. Estado Real del Usuario de Prueba
+
+| Campo | Valor en BD | Mostrado en UI | Problema |
+|-------|-------------|----------------|----------|
+| full_name | Admin E2E Test | ✓ Correcto | - |
+| email | admin-test@autorenta.com | ✓ Correcto | - |
+| phone | 1155551234 | ✓ Correcto | - |
+| role | `locatario` | "Ambos" | ❌ UI muestra mal |
+| avatar_url | NULL | Iniciales "US" | ❌ No se puede subir |
+| date_of_birth | NULL | No mostrado | ❌ No hay campo |
+| gov_id_number | NULL | No mostrado | ❌ No hay campo |
+| email_verified | true | "Sin verificar" | ❌ Campo incorrecto |
+| phone_verified | true | "Sin verificar" | ❌ Campo incorrecto |
+| id_verified | true | "Sin verificar" | ❌ Campo incorrecto |
+
+---
+
+## 9. Próximos Tests Pendientes
+
+- [ ] Implementar avatar upload
+- [ ] Crear página /profile/personal para datos básicos
+- [ ] Corregir nombres de campos de verificación
+- [ ] Implementar selfie uploader
+- [ ] Implementar utility_bill uploader
+- [ ] Implementar vehicle documents uploaders
 - [ ] Flujo de Wallet (depósitos, retiros)
 - [ ] Flujo de Reservas (búsqueda, booking, pago)
 - [ ] Integración MercadoPago

@@ -175,16 +175,16 @@
                 <span class="flex items-center gap-1">
                   <span
                     [class]="
-                      profile()?.is_email_verified ? 'text-cta-default' : 'text-warning-light'
+                      profile()?.email_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
                     <app-icon
-                      [name]="profile()?.is_email_verified ? 'check' : 'close'"
+                      [name]="profile()?.email_verified ? 'check' : 'close'"
                       [size]="14"
                     />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
-                    {{ profile()?.is_email_verified ? 'Verificado' : 'Pendiente' }}
+                    {{ profile()?.email_verified ? 'Verificado' : 'Pendiente' }}
                   </span>
                 </span>
               </div>
@@ -195,16 +195,16 @@
                 <span class="flex items-center gap-1">
                   <span
                     [class]="
-                      profile()?.is_phone_verified ? 'text-cta-default' : 'text-warning-light'
+                      profile()?.phone_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
                     <app-icon
-                      [name]="profile()?.is_phone_verified ? 'check' : 'close'"
+                      [name]="profile()?.phone_verified ? 'check' : 'close'"
                       [size]="14"
                     />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
-                    {{ profile()?.is_phone_verified ? 'Verificado' : 'Pendiente' }}
+                    {{ profile()?.phone_verified ? 'Verificado' : 'Pendiente' }}
                   </span>
                 </span>
               </div>
@@ -215,16 +215,16 @@
                 <span class="flex items-center gap-1">
                   <span
                     [class]="
-                      profile()?.is_driver_verified ? 'text-cta-default' : 'text-warning-light'
+                      profile()?.id_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
                     <app-icon
-                      [name]="profile()?.is_driver_verified ? 'check' : 'close'"
+                      [name]="profile()?.id_verified ? 'check' : 'close'"
                       [size]="14"
                     />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
-                    {{ profile()?.is_driver_verified ? 'Verificada' : 'Pendiente' }}
+                    {{ profile()?.id_verified ? 'Verificada' : 'Pendiente' }}
                   </span>
                 </span>
               </div>
@@ -484,20 +484,20 @@
                 <div
                   class="w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
                   [class]="
-                    profile()?.is_driver_verified
+                    profile()?.id_verified
                       ? 'bg-green-100 dark:bg-green-900/30'
                       : 'bg-yellow-100 dark:bg-yellow-900/30'
                   "
                 >
                   <span
                     [class]="
-                      profile()?.is_driver_verified
+                      profile()?.id_verified
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-yellow-600 dark:text-yellow-400'
                     "
                   >
                     <app-icon
-                      [name]="profile()?.is_driver_verified ? 'check' : 'alert-triangle'"
+                      [name]="profile()?.id_verified ? 'check' : 'alert-triangle'"
                       [size]="14"
                     />
                   </span>
@@ -521,12 +521,12 @@
                   <p
                     class="text-xs mt-1"
                     [class]="
-                      profile()?.is_driver_verified
+                      profile()?.id_verified
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-yellow-600 dark:text-yellow-400'
                     "
                   >
-                    {{ profile()?.is_driver_verified ? 'Verificada' : 'Pendiente de verificación' }}
+                    {{ profile()?.id_verified ? 'Verificada' : 'Pendiente de verificación' }}
                   </p>
                 </div>
               </div>

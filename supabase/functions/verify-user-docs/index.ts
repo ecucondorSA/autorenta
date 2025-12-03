@@ -92,7 +92,7 @@ serve(async (req) => {
 
   const { data: profile, error: profileError } = await adminClient
     .from('profiles')
-    .select('id, full_name, role, is_driver_verified, kyc')
+    .select('id, full_name, role, id_verified, kyc')
     .eq('id', userId)
     .single();
 
@@ -176,7 +176,7 @@ serve(async (req) => {
 
   const driverResult = results.find((result) => result.role === 'driver');
   if (driverResult) {
-    profileUpdates.is_driver_verified = driverResult.status === 'VERIFICADO';
+    profileUpdates.id_verified = driverResult.status === 'VERIFICADO';
     if (docByKind['driver_license']) {
       updates.push(
         adminClient

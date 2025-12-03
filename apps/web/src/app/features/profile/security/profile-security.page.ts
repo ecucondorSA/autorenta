@@ -206,12 +206,12 @@ import { AuthService } from '../../../core/services/auth.service';
               <span class="text-sm text-text-primary dark:text-text-primary">Email</span>
               <span
                 [class]="
-                  profile()?.is_email_verified
+                  profile()?.email_verified
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
               >
-                {{ profile()?.is_email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                {{ profile()?.email_verified ? '✓ Verificado' : '✗ Sin verificar' }}
               </span>
             </div>
 
@@ -220,12 +220,12 @@ import { AuthService } from '../../../core/services/auth.service';
               <span class="text-sm text-text-primary dark:text-text-primary">Teléfono</span>
               <span
                 [class]="
-                  profile()?.is_phone_verified
+                  profile()?.phone_verified
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
               >
-                {{ profile()?.is_phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                {{ profile()?.phone_verified ? '✓ Verificado' : '✗ Sin verificar' }}
               </span>
             </div>
 
@@ -236,12 +236,12 @@ import { AuthService } from '../../../core/services/auth.service';
               >
               <span
                 [class]="
-                  profile()?.is_driver_verified
+                  profile()?.id_verified
                     ? 'text-success-text font-semibold text-sm'
                     : 'text-text-muted text-sm'
                 "
               >
-                {{ profile()?.is_driver_verified ? '✓ Verificado' : '✗ Sin verificar' }}
+                {{ profile()?.id_verified ? '✓ Verificado' : '✗ Sin verificar' }}
               </span>
             </div>
           </div>

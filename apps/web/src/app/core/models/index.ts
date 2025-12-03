@@ -137,10 +137,10 @@ export interface UserProfile {
   rating_avg: number;
   rating_count: number;
 
-  // Verificaciones
-  is_email_verified: boolean;
-  is_phone_verified: boolean;
-  is_driver_verified: boolean;
+  // Verificaciones (campos de BD: email_verified, phone_verified, id_verified)
+  email_verified: boolean;
+  phone_verified: boolean;
+  id_verified: boolean;
   is_admin?: boolean;
 
   // Permisos derivados (de la vista me_profile)
@@ -207,8 +207,8 @@ export interface CarOwner {
   rating_avg: number;
   rating_count: number;
   created_at: string;
-  is_email_verified: boolean;
-  is_phone_verified: boolean;
+  email_verified: boolean;
+  phone_verified: boolean;
 }
 
 export interface CarBrand {

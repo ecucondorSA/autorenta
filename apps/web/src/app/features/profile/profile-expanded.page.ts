@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProfileStore } from '../../core/stores/profile.store';
@@ -68,11 +68,11 @@ export class ProfileExpandedPage {
 
   // Avatar and user info
   readonly avatarUrl = computed(() => this.profile()?.avatar_url);
-  readonly userEmail = computed(() => this.profile()?.id); // FIXME: Get email from auth service
+  readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? this.profile()?.id);
 
-  // UI state
-  readonly uploadingAvatar = computed(() => false); // FIXME: Implement avatar upload functionality
-  readonly message = computed(() => null as string | null); // FIXME: Implement user messaging
+  // UI state - delegated to ProfileStore
+  readonly uploadingAvatar = this.profileStore.uploadingAvatar;
+  readonly message = signal<string | null>(null);
 
   constructor() {
     // Set page metadata
@@ -182,11 +182,42 @@ export class ProfileExpandedPage {
   }
 
   /**
-   * Handle avatar change
-   * TODO: Implement avatar upload
+   * Handle avatar change - uploads file to Supabase Storage
    */
-  onAvatarChange(_event: Event): void {
-    // Placeholder - implement avatar upload logic
-    console.log('Avatar upload not yet implemented');
+  async onAvatarChange(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      this.message.set('Por favor selecciona una imagen válida');
+      setTimeout(() => this.message.set(null), 3000);
+      return;
+    }
+
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.message.set('La imagen debe ser menor a 2MB');
+      setTimeout(() => this.message.set(null), 3000);
+      return;
+    }
+
+    try {
+      await this.profileStore.uploadAvatar(file);
+      this.message.set('¡Foto de perfil actualizada!');
+      setTimeout(() => this.message.set(null), 3000);
+    } catch (err) {
+      console.error('Error uploading avatar:', err);
+      this.message.set('Error al subir la imagen. Intenta de nuevo.');
+      setTimeout(() => this.message.set(null), 3000);
+    }
+
+    // Clear input value to allow re-selecting same file
+    input.value = '';
   }
 }

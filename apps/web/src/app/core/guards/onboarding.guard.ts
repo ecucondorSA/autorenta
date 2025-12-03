@@ -86,7 +86,7 @@ export const verifiedDriverGuard: CanMatchFn = async () => {
   try {
     const profile = await profileService.getMe();
 
-    if (!profile.is_driver_verified) {
+    if (!profile.id_verified) {
       // Redirigir a perfil tab de verificación
       return router.createUrlTree(['/profile'], {
         queryParams: { tab: 'verification', driver: 'required' },
@@ -122,7 +122,7 @@ export const verifiedEmailGuard: CanMatchFn = async () => {
   try {
     const profile = await profileService.getMe();
 
-    if (!profile.is_email_verified) {
+    if (!profile.email_verified) {
       // Redirigir a perfil tab de seguridad
       return router.createUrlTree(['/profile'], {
         queryParams: { tab: 'security', email: 'required' },
