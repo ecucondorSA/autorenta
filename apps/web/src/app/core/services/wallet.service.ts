@@ -63,7 +63,9 @@ export class WalletService {
     this.error.set(null);
 
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase.rpc('wallet_get_balance');
@@ -86,7 +88,9 @@ export class WalletService {
     this.error.set(null);
 
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
       if (!session?.user) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase
@@ -150,7 +154,7 @@ export class WalletService {
         if (!response.data) throw new Error('No se pudo iniciar el depósito');
         const result = response.data[0];
         if (!result.success) throw new Error(result.message);
-        
+
         if (params.provider === 'mercadopago') {
           const preference = await this.createMercadoPagoPreference(
             result.transaction_id,
@@ -159,7 +163,8 @@ export class WalletService {
           );
           if (preference?.init_point) {
             result.payment_url = preference.init_point;
-            result.payment_mobile_deep_link = preference.sandbox_init_point ?? preference.init_point;
+            result.payment_mobile_deep_link =
+              preference.sandbox_init_point ?? preference.init_point;
           }
         }
         return result;
@@ -168,17 +173,18 @@ export class WalletService {
         this.handleError(err, 'Error al iniciar depósito');
         return throwError(() => err);
       }),
-      tap(() => this.loading.set(false))
+      tap(() => this.loading.set(false)),
     );
   }
 
   /**
    * Alias for initiateDeposit for backward compatibility with deposit.page.ts
    */
-  async createDepositPreference(params: InitiateDepositParams): Promise<WalletInitiateDepositResponse> {
-     return firstValueFrom(this.initiateDeposit(params));
+  async createDepositPreference(
+    params: InitiateDepositParams,
+  ): Promise<WalletInitiateDepositResponse> {
+    return firstValueFrom(this.initiateDeposit(params));
   }
-
 
   async depositFunds(
     userId: string,
@@ -229,7 +235,8 @@ export class WalletService {
       },
     });
 
-    if (response.error) throw new Error(response.error.message ?? 'No se pudo crear la preferencia de pago');
+    if (response.error)
+      throw new Error(response.error.message ?? 'No se pudo crear la preferencia de pago');
 
     return {
       init_point: response.data?.init_point,
@@ -257,7 +264,7 @@ export class WalletService {
         if (response.error) throw response.error;
         this.fetchBalance().catch(() => {});
       }),
-      map((response) => response.data![0] as WalletLockFundsResponse)
+      map((response) => response.data![0] as WalletLockFundsResponse),
     );
   }
 
@@ -272,7 +279,7 @@ export class WalletService {
         if (response.error) throw response.error;
         this.fetchBalance().catch(() => {});
       }),
-      map((response) => response.data![0] as WalletUnlockFundsResponse)
+      map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
   }
 
@@ -292,7 +299,7 @@ export class WalletService {
         if (response.error) throw response.error;
         this.fetchBalance().catch(() => {});
       }),
-      map((response) => response.data![0] as WalletLockRentalAndDepositResponse)
+      map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );
   }
 
@@ -341,7 +348,11 @@ export class WalletService {
   // UTILITY METHODS
   // ============================================================================
 
-  async forcePollPendingPayments(): Promise<{ success: boolean; confirmed: number; message: string }> {
+  async forcePollPendingPayments(): Promise<{
+    success: boolean;
+    confirmed: number;
+    message: string;
+  }> {
     this.loading.set(true);
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
@@ -408,7 +419,9 @@ export class WalletService {
     bookingsNeeded: number;
   }> {
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) throw new Error('Usuario no autenticado');
 
       const { count: completedBookings } = await this.supabase

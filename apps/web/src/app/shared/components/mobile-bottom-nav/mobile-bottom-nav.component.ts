@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
+import { IconComponent } from '../icon/icon.component';
 
 interface NavItem {
   id: string;
@@ -14,7 +15,7 @@ interface NavItem {
 @Component({
   selector: 'app-mobile-bottom-nav',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, IconComponent],
   templateUrl: './mobile-bottom-nav.component.html',
   styleUrls: ['./mobile-bottom-nav.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost

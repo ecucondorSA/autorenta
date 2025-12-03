@@ -171,7 +171,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
       .modal-handle {
         width: 40px;
         height: 4px;
-        background: var(--border-default, #BCBCBC); /* Reemplazado hex con token semántico */
+        background: var(--border-default, #bcbcbc); /* Reemplazado hex con token semántico */
         border-radius: 2px;
         margin: 0.75rem auto 0;
         flex-shrink: 0;
@@ -183,7 +183,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
         align-items: center;
         justify-content: space-between;
         padding: 1.5rem;
-        border-bottom: 1px solid var(--border-default, #BCBCBC); /* Reemplazado hex con token semántico */
+        border-bottom: 1px solid var(--border-default, #bcbcbc); /* Reemplazado hex con token semántico */
         flex-shrink: 0;
       }
 
@@ -202,7 +202,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
         justify-content: center;
         background: transparent;
         border: none;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s ease;
@@ -210,7 +210,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
       }
 
       .close-btn:hover {
-        background: var(--surface-hover-light, #E3E3E3); /* Reemplazado hex con token semántico */
+        background: var(--surface-hover-light, #e3e3e3); /* Reemplazado hex con token semántico */
         color: var(--text-primary, #050505); /* Reemplazado hex con token semántico */
       }
 
@@ -236,7 +236,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
       .modal-footer {
         padding: 1rem 1.5rem;
         padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-        border-top: 1px solid var(--border-default, #BCBCBC); /* Reemplazado hex con token semántico */
+        border-top: 1px solid var(--border-default, #bcbcbc); /* Reemplazado hex con token semántico */
         display: flex;
         gap: 0.75rem;
         flex-shrink: 0;

@@ -93,34 +93,34 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 
       /* Variants */
       button.variant-primary {
-        background: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
+        background: var(--cta-default, #a7d8f4); /* Reemplazado hex con token semántico */
         color: white;
       }
 
       button.variant-primary:hover:not(:disabled) {
-        background: var(--cta-dark, #8EC9EC); /* Reemplazado hex con token semántico */
+        background: var(--cta-dark, #8ec9ec); /* Reemplazado hex con token semántico */
       }
 
       button.variant-secondary {
-        background: var(--surface-light-subtle, #F5F5F5); /* Reemplazado hex con token semántico */
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        background: var(--surface-light-subtle, #f5f5f5); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
       }
 
       button.variant-secondary:hover:not(:disabled) {
-        background: var(--surface-hover-light, #E3E3E3); /* Reemplazado hex con token semántico */
+        background: var(--surface-hover-light, #e3e3e3); /* Reemplazado hex con token semántico */
       }
 
       button.variant-ghost {
         background: transparent;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
       }
 
       button.variant-ghost:hover:not(:disabled) {
-        background: var(--surface-hover-light, #E3E3E3); /* Reemplazado hex con token semántico */
+        background: var(--surface-hover-light, #e3e3e3); /* Reemplazado hex con token semántico */
       }
 
       button.variant-danger {
-        background: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
+        background: var(--error-default, #b25e5e); /* Reemplazado hex con token semántico */
         color: white;
       }
 
@@ -134,7 +134,7 @@ type ButtonSize = 'sm' | 'md' | 'lg';
       }
 
       button.variant-success:hover:not(:disabled) {
-        background: var(--success-dark, #0F9D58); /* Reemplazado hex con token semántico */
+        background: var(--success-dark, #0f9d58); /* Reemplazado hex con token semántico */
       }
 
       /* Full width */

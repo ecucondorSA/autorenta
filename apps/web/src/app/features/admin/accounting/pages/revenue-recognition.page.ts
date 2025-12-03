@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -6,7 +6,6 @@ import {
   AccountingService,
   RevenueRecognition,
 } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-revenue-recognition',
@@ -16,7 +15,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./revenue-recognition.page.scss'],
 })
 export class RevenueRecognitionPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly loading = signal(false);
   readonly revenueRecognition = signal<RevenueRecognition[]>([]);
@@ -26,13 +25,6 @@ export class RevenueRecognitionPage implements OnInit {
     startDate: '',
     endDate: '',
   });
-
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
 
   async ngOnInit(): Promise<void> {
     await this.loadRevenueRecognition();

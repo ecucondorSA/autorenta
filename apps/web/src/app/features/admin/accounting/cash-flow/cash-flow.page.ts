@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { AccountingService, CashFlowEntry } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-cash-flow',
@@ -110,17 +109,12 @@ import { environment } from '../../../../../environments/environment';
   `,
 })
 export class CashFlowPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly cashFlow = signal<CashFlowEntry[]>([]);
   readonly loading = signal(false);
 
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
+  constructor() {}
 
   async ngOnInit(): Promise<void> {
     await this.loadCashFlow();

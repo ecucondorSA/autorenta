@@ -281,7 +281,7 @@ export interface SidebarMenuItem {
       .user-name {
         font-size: 1.125rem;
         font-weight: 700;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin: 0 0 4px 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -290,7 +290,7 @@ export interface SidebarMenuItem {
 
       .user-email {
         font-size: 0.875rem;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
         margin: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -306,7 +306,7 @@ export interface SidebarMenuItem {
         background: rgba(255, 255, 255, 0.2);
         border: none;
         border-radius: 50%;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         cursor: pointer;
         transition: all 0.2s ease;
         flex-shrink: 0;
@@ -377,7 +377,7 @@ export interface SidebarMenuItem {
         flex: 1;
         font-size: 1rem;
         font-weight: 600;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
       }
 
       .menu-badge {
@@ -439,7 +439,7 @@ export interface SidebarMenuItem {
         display: block;
         font-size: 1rem;
         font-weight: 600;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin-bottom: 2px;
       }
 
@@ -481,7 +481,7 @@ export interface SidebarMenuItem {
 
       .footer-btn:hover {
         background: #f5f5f5;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
       }
 
       .footer-btn:active {
@@ -530,7 +530,7 @@ export interface SidebarMenuItem {
       .modal-title {
         font-size: 1.5rem;
         font-weight: 700;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         margin: 0;
       }
 
@@ -543,7 +543,7 @@ export interface SidebarMenuItem {
         background: #f5f5f5;
         border: none;
         border-radius: 50%;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         cursor: pointer;
         transition: all 0.2s ease;
       }
@@ -595,7 +595,7 @@ export interface SidebarMenuItem {
       .dashboard-item-label {
         font-size: 0.8125rem;
         font-weight: 600;
-  color: var(--text-primary); /* Reemplazado hex con token semántico */
+        color: var(--text-primary); /* Reemplazado hex con token semántico */
         text-align: center;
       }
 
@@ -672,35 +672,37 @@ export class FacebookSidebarComponent {
       badge: 3,
       color: 'var(--surface-secondary)', // Reemplazado gradiente con token semántico
     },
-      {
-        id: 'bookings',
-        label: 'Reservas',
-        icon: '📅',
-        route: '/bookings',
-        badge: 2,
-        color: 'var(--surface-info-light, #E0F3FB)',
-      },
-          {
-            id: 'wallet',
-            label: 'Billetera',
-            icon: '💰',
-            route: '/wallet',
-            color: 'var(--success-default, #9DB38B)',
-          },      {
-        id: 'messages',
-        label: 'Mensajes',
-        icon: '💬',
-        route: '/messages',
-        badge: 5,
-        color: 'var(--surface-raised, #F8F4EC)',
-      },
-          {
-            id: 'profile',
-            label: 'Mi Perfil',
-            icon: '👤',
-            route: '/profile',
-            color: 'var(--border-default)', // Reemplazado gradiente con token semántico
-          },  ];
+    {
+      id: 'bookings',
+      label: 'Reservas',
+      icon: '📅',
+      route: '/bookings',
+      badge: 2,
+      color: 'var(--surface-info-light, #E0F3FB)',
+    },
+    {
+      id: 'wallet',
+      label: 'Billetera',
+      icon: '💰',
+      route: '/wallet',
+      color: 'var(--success-default, #9DB38B)',
+    },
+    {
+      id: 'messages',
+      label: 'Mensajes',
+      icon: '💬',
+      route: '/messages',
+      badge: 5,
+      color: 'var(--surface-raised, #F8F4EC)',
+    },
+    {
+      id: 'profile',
+      label: 'Mi Perfil',
+      icon: '👤',
+      route: '/profile',
+      color: 'var(--border-default)', // Reemplazado gradiente con token semántico
+    },
+  ];
 
   // Dashboard Items (12 items en grid 3x4)
   dashboardItems: SidebarMenuItem[] = [

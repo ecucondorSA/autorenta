@@ -50,7 +50,9 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
+          ></div>
         </div>
       } @else if (withdrawals().length === 0) {
         <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
@@ -62,10 +64,13 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
             <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
               <div class="mb-4 flex items-start justify-between">
                 <div>
-                  <h3 class="font-semibold text-text-primary">Solicitud #{{ withdrawal.id.slice(0, 8) }}</h3>
+                  <h3 class="font-semibold text-text-primary">
+                    Solicitud #{{ withdrawal.id.slice(0, 8) }}
+                  </h3>
                   <p class="text-sm text-text-secondary">
-                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... |
-                    Monto: \${{ withdrawal.amount | number: '1.2-2' }}
+                    Usuario: {{ withdrawal.user_id.slice(0, 8) }}... | Monto: \${{
+                      withdrawal.amount | number: '1.2-2'
+                    }}
                   </p>
                   <p class="text-xs text-text-secondary">
                     {{ withdrawal.created_at | date: 'short' }}
@@ -94,7 +99,9 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
               @if (withdrawal.status === 'pending') {
                 <div class="space-y-3">
                   <div>
-                    <label class="block text-sm font-medium text-text-primary">Notas de administración</label>
+                    <label class="block text-sm font-medium text-text-primary"
+                      >Notas de administración</label
+                    >
                     <textarea
                       [(ngModel)]="adminNotes[withdrawal.id]"
                       rows="3"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AutoRenta Logo - Monocromático
+  Ideal para: fondos oscuros, impresión B/N, watermarks
+  Color: currentColor (hereda del padre)
+-->
+<svg width="400" height="80" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logo-mono-title">
+  <title id="logo-mono-title">AutoRenta</title>
+
+  <!-- Ícono de auto con llave -->
+  <g transform="translate(8, 12)" stroke="currentColor" fill="none">
+    <!-- Llave -->
+    <g stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="18" r="6"/>
+      <circle cx="18" cy="18" r="2.5" fill="currentColor"/>
+      <path d="M18 24 L18 35"/>
+      <path d="M18 30 L21 30 L21 32"/>
+      <path d="M18 34 L22 34 L22 36"/>
+    </g>
+
+    <!-- Auto -->
+    <g stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z"/>
+      <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5"/>
+    </g>
+
+    <!-- Ruedas -->
+    <circle cx="18" cy="46" r="5" fill="currentColor"/>
+    <circle cx="38" cy="46" r="5" fill="currentColor"/>
+  </g>
+
+  <!-- Texto -->
+  <text x="72" y="52" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="currentColor">AutoRenta</text>
+
+  <!-- Línea decorativa -->
+  <line x1="72" y1="60" x2="280" y2="60" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+</svg>

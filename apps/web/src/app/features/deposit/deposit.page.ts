@@ -105,12 +105,18 @@ export class DepositPage implements OnInit {
         this.platformRate.set(Number(data.rate));
       } else {
         this.platformRate.set(null);
-        this.toastService.warning('Sin cotización', 'No encontramos la cotización actual. Intenta más tarde.');
+        this.toastService.warning(
+          'Sin cotización',
+          'No encontramos la cotización actual. Intenta más tarde.',
+        );
       }
     } catch (error) {
       console.error('Error loading exchange rate:', error);
       this.platformRate.set(null);
-      this.toastService.error('Error de cotización', 'No pudimos obtener la cotización en tiempo real.');
+      this.toastService.error(
+        'Error de cotización',
+        'No pudimos obtener la cotización en tiempo real.',
+      );
     } finally {
       this.loadingRate.set(false);
     }
@@ -168,7 +174,9 @@ export class DepositPage implements OnInit {
 
     try {
       // 1. Get current user ID
-      const { data: { user } } = await this.supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
       if (!user) {
         throw new Error('Usuario no autenticado');
       }
@@ -207,7 +215,7 @@ export class DepositPage implements OnInit {
               amount: this.arsAmount(), // Amount in ARS for MercadoPago
               description: this.description() || 'Depósito a wallet AutoRentar',
             },
-          }
+          },
         );
 
         if (!prefError && prefData?.preference_id) {
@@ -252,10 +260,7 @@ export class DepositPage implements OnInit {
     this.paymentCompleted.set(true);
     this.showPaymentBrick.set(false);
 
-    this.toastService.success(
-      '¡Depósito exitoso!',
-      'Los fondos se acreditaron a tu wallet.'
-    );
+    this.toastService.success('¡Depósito exitoso!', 'Los fondos se acreditaron a tu wallet.');
 
     // Navigate to wallet after delay
     setTimeout(() => {
@@ -291,10 +296,7 @@ export class DepositPage implements OnInit {
     this.paymentPending.set(true);
     this.showPaymentBrick.set(false);
 
-    this.toastService.info(
-      'Pago pendiente',
-      'Los fondos se acreditarán cuando completes el pago.'
-    );
+    this.toastService.info('Pago pendiente', 'Los fondos se acreditarán cuando completes el pago.');
   }
 
   /**

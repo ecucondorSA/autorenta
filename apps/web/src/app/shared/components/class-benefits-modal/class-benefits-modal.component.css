@@ -40,9 +40,9 @@
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-      background: var(--text-muted); /* Reemplazado hex con token semántico */
-      border-radius: 10px;
-    }
+  background: var(--text-muted); /* Reemplazado hex con token semántico */
+  border-radius: 10px;
+}
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-      background: var(--text-secondary); /* Reemplazado hex con token semántico */
-    }
+  background: var(--text-secondary); /* Reemplazado hex con token semántico */
+}

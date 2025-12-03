@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';
 
@@ -19,7 +20,14 @@ type BookingStatusFilter =
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
-  imports: [CommonModule, MoneyPipe, RouterLink, TranslateModule, DepositStatusBadgeComponent],
+  imports: [
+    CommonModule,
+    MoneyPipe,
+    RouterLink,
+    TranslateModule,
+    DepositStatusBadgeComponent,
+    IconComponent,
+  ],
   templateUrl: './my-bookings.page.html',
   styleUrl: './my-bookings.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -8,7 +8,7 @@ import {
   ViewChild,
   computed,
   inject,
-  signal
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -44,6 +44,7 @@ import { ShareButtonComponent } from './shared/components/share-button/share-but
 import { SplashComponent } from './shared/components/splash/splash.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
+import { IconComponent } from './shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-root',
@@ -69,6 +70,7 @@ import { VerificationPromptBannerComponent } from './shared/components/verificat
     ShareButtonComponent,
     FooterComponent,
     Toast,
+    IconComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

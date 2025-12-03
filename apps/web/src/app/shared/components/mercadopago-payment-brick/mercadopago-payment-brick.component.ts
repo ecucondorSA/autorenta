@@ -60,7 +60,7 @@ interface BricksBuilder {
   create: (
     brick: string,
     container: string,
-    settings: PaymentBrickSettings
+    settings: PaymentBrickSettings,
   ) => Promise<BrickController>;
 }
 
@@ -126,8 +126,19 @@ interface PaymentBrickSettings {
       @if (isInitializing()) {
         <div class="flex flex-col items-center justify-center py-12">
           <svg class="animate-spin h-10 w-10 text-primary-500 mb-4" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
           </svg>
           <p class="text-sm text-text-secondary">Cargando opciones de pago...</p>
         </div>
@@ -136,8 +147,16 @@ interface PaymentBrickSettings {
       @if (errorMessage()) {
         <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-4">
           <div class="flex items-start">
-            <svg class="w-5 h-5 text-error-strong mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            <svg
+              class="w-5 h-5 text-error-strong mt-0.5 flex-shrink-0"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              />
             </svg>
             <div class="ml-3">
               <p class="text-sm font-medium text-error-strong">{{ errorMessage() }}</p>
@@ -161,11 +180,24 @@ interface PaymentBrickSettings {
       ></div>
 
       @if (isProcessingPayment()) {
-        <div class="absolute inset-0 bg-surface-base/80 flex items-center justify-center rounded-xl">
+        <div
+          class="absolute inset-0 bg-surface-base/80 flex items-center justify-center rounded-xl"
+        >
           <div class="flex flex-col items-center">
             <svg class="animate-spin h-8 w-8 text-primary-500 mb-3" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <p class="text-sm text-text-secondary font-medium">Procesando pago...</p>
           </div>
@@ -173,10 +205,20 @@ interface PaymentBrickSettings {
       }
 
       <!-- Security Info -->
-      <div class="mt-4 p-3 bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-400/30 rounded-lg">
+      <div
+        class="mt-4 p-3 bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-400/30 rounded-lg"
+      >
         <div class="flex items-center">
-          <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+          <svg
+            class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+              clip-rule="evenodd"
+            />
           </svg>
           <p class="ml-2 text-xs text-primary-700 dark:text-primary-300">
             Pago seguro procesado por MercadoPago. Tus datos están protegidos.
@@ -185,22 +227,24 @@ interface PaymentBrickSettings {
       </div>
     </div>
   `,
-  styles: [`
-    .payment-brick-container {
-      position: relative;
-      min-height: 200px;
-    }
+  styles: [
+    `
+      .payment-brick-container {
+        position: relative;
+        min-height: 200px;
+      }
 
-    .payment-brick-wrapper {
-      min-height: 350px;
-    }
+      .payment-brick-wrapper {
+        min-height: 350px;
+      }
 
-    /* MercadoPago Brick styling overrides */
-    :host ::ng-deep .mercadopago-button {
-      border-radius: 0.75rem !important;
-      font-weight: 600 !important;
-    }
-  `],
+      /* MercadoPago Brick styling overrides */
+      :host ::ng-deep .mercadopago-button {
+        border-radius: 0.75rem !important;
+        font-weight: 600 !important;
+      }
+    `,
+  ],
 })
 export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
@@ -306,7 +350,9 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
    * Get public key from environment
    */
   private getPublicKey(): string {
-    const globalEnv = (globalThis as Record<string, unknown>).__env as Record<string, unknown> | undefined;
+    const globalEnv = (globalThis as Record<string, unknown>).__env as
+      | Record<string, unknown>
+      | undefined;
     const windowEnvKey = String(globalEnv?.NG_APP_MERCADOPAGO_PUBLIC_KEY ?? '').trim();
 
     const envRecord = environment as Record<string, unknown>;
@@ -435,7 +481,7 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
             depositId: this.depositId,
             description: this.description,
           },
-        }
+        },
       );
 
       if (error) {

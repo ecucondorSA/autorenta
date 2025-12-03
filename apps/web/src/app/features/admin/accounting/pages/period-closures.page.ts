@@ -1,9 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, PeriodClosure } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-period-closures',
@@ -13,7 +12,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./period-closures.page.scss'],
 })
 export class PeriodClosuresPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly loading = signal(false);
   readonly closures = signal<PeriodClosure[]>([]);
@@ -28,13 +27,6 @@ export class PeriodClosuresPage implements OnInit {
     periodType: 'daily' as 'daily' | 'monthly' | 'yearly',
     periodCode: '',
   });
-
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
 
   async ngOnInit(): Promise<void> {
     await this.loadClosures();

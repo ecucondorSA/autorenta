@@ -20,6 +20,7 @@ import {
   BlockedDateRange,
   DateRangePickerComponent,
 } from '../date-range-picker/date-range-picker.component';
+import { IconComponent } from '../icon/icon.component';
 
 // Re-export FilterState for backwards compatibility with existing imports
 export type { FilterState } from '../../../core/models/marketplace.model';
@@ -39,7 +40,7 @@ export type { FilterState } from '../../../core/models/marketplace.model';
 @Component({
   selector: 'app-map-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, DateRangePickerComponent],
+  imports: [CommonModule, FormsModule, DateRangePickerComponent, IconComponent],
   templateUrl: './map-filters.component.html',
   styleUrls: ['./map-filters.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

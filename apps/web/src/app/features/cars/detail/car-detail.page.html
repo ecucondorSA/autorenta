@@ -3,298 +3,383 @@
 <!-- <app-breadcrumbs [items]="breadcrumbItems()" /> -->
 
 <ng-container *ngIf="car(); else loadingOrError">
-  
   <!-- ✅ HEADER & TITLE SECTION (Fuera del grid principal) -->
   <header class="max-w-7xl mx-auto px-4 pt-6 pb-4">
     <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary mb-2">
       {{ car()?.title }}
     </h1>
-    
+
     <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
       <!-- Rating & Location -->
       <div class="flex items-center flex-wrap gap-4">
         <div class="flex items-center gap-1 font-semibold">
-          <svg class="h-4 w-4 text-text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
           <span class="text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
           <span class="text-text-secondary font-normal mx-1">·</span>
-          <a href="#reviews" class="text-text-primary underline font-medium hover:text-text-secondary">{{ car()?.rating_count || 0 }} reseñas</a>
+          <a
+            href="#reviews"
+            class="text-text-primary underline font-medium hover:text-text-secondary"
+            >{{ car()?.rating_count || 0 }} reseñas</a
+          >
         </div>
-        
+
         <div class="hidden sm:block w-1 h-1 bg-text-secondary rounded-full"></div>
-        
-        <div class="flex items-center gap-1 text-text-primary font-medium underline cursor-pointer hover:text-text-secondary">
+
+        <div
+          class="flex items-center gap-1 text-text-primary font-medium underline cursor-pointer hover:text-text-secondary"
+        >
           <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">
-             {{ car()?.location_formatted_address }}
+            {{ car()?.location_formatted_address }}
           </ng-container>
           <ng-template #oldLocation>
-             {{ car()?.location_city }}, {{ car()?.location_state }}
+            {{ car()?.location_city }}, {{ car()?.location_state }}
           </ng-template>
         </div>
 
         @if (distanceKm() !== null && distanceKm() !== undefined) {
-            <span class="px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs text-text-secondary">
-              a {{ distanceKm() | number:'1.1-1' }} km
-            </span>
+          <span
+            class="px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs text-text-secondary"
+          >
+            a {{ distanceKm() | number: '1.1-1' }} km
+          </span>
         }
       </div>
 
       <!-- Share Buttons -->
       <div class="flex items-center gap-2">
-         <button class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-            Compartir
-         </button>
-         <button class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-            Guardar
-         </button>
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary"
+        >
+          <app-icon name="share" [size]="16" />
+          Compartir
+        </button>
+        <button
+          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary"
+        >
+          <app-icon name="heart" [size]="16" />
+          Guardar
+        </button>
       </div>
     </div>
   </header>
 
   <!-- ✅ HERO GALLERY (Grid Mosaico) -->
   <div class="max-w-7xl mx-auto px-4 mb-8">
-     <div class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[300px] md:h-[400px] rounded-2xl overflow-hidden relative">
-        <!-- Foto Principal (Grande) -->
-        <div class="md:col-span-2 md:row-span-2 h-full bg-surface-secondary relative group cursor-pointer">
-           <img 
-             *ngIf="car()?.photos?.[0]?.url" 
-             [src]="car()?.photos?.[0]?.url" 
-             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-             alt="Main photo"
-           />
-        </div>
+    <div
+      class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[300px] md:h-[400px] rounded-2xl overflow-hidden relative"
+    >
+      <!-- Foto Principal (Grande) -->
+      <div
+        class="md:col-span-2 md:row-span-2 h-full bg-surface-secondary relative group cursor-pointer"
+      >
+        <img
+          *ngIf="car()?.photos?.[0]?.url"
+          [src]="car()?.photos?.[0]?.url"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          alt="Main photo"
+        />
+      </div>
 
-        <!-- Fotos Secundarias (Hidden on mobile) -->
-        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
-           <img *ngIf="car()?.photos?.[1]?.url" [src]="car()?.photos?.[1]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 2" />
-        </div>
-        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-tr-2xl">
-           <img *ngIf="car()?.photos?.[2]?.url" [src]="car()?.photos?.[2]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 3" />
-        </div>
-        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
-           <img *ngIf="car()?.photos?.[3]?.url" [src]="car()?.photos?.[3]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 4" />
-        </div>
-        <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-br-2xl">
-           <img *ngIf="car()?.photos?.[4]?.url" [src]="car()?.photos?.[4]?.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Photo 5" />
-           
-           <!-- Botón "Ver todas" -->
-           <button class="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:scale-105 transition-transform flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-              Mostrar todas las fotos
-           </button>
-        </div>
-     </div>
+      <!-- Fotos Secundarias (Hidden on mobile) -->
+      <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
+        <img
+          *ngIf="car()?.photos?.[1]?.url"
+          [src]="car()?.photos?.[1]?.url"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          alt="Photo 2"
+        />
+      </div>
+      <div
+        class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-tr-2xl"
+      >
+        <img
+          *ngIf="car()?.photos?.[2]?.url"
+          [src]="car()?.photos?.[2]?.url"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          alt="Photo 3"
+        />
+      </div>
+      <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
+        <img
+          *ngIf="car()?.photos?.[3]?.url"
+          [src]="car()?.photos?.[3]?.url"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          alt="Photo 4"
+        />
+      </div>
+      <div
+        class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-br-2xl"
+      >
+        <img
+          *ngIf="car()?.photos?.[4]?.url"
+          [src]="car()?.photos?.[4]?.url"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          alt="Photo 5"
+        />
+
+        <!-- Botón "Ver todas" -->
+        <button
+          class="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:scale-105 transition-transform flex items-center gap-2"
+        >
+          <app-icon name="grid" [size]="16" />
+          Mostrar todas las fotos
+        </button>
+      </div>
+    </div>
   </div>
-
 
   <!-- ✅ MAIN CONTENT GRID -->
   <div class="max-w-7xl mx-auto px-4">
     <section class="grid gap-12 lg:grid-cols-[2fr_1fr] pb-[calc(6rem+env(safe-area-inset-bottom))]">
-    
-    <!-- LEFT COLUMN: Details -->
-    <div class="space-y-8">
-      
-      <!-- HOST INFO HEADER -->
-      <div class="flex justify-between items-center pb-6 border-b border-border-default">
-         <div>
+      <!-- LEFT COLUMN: Details -->
+      <div class="space-y-8">
+        <!-- HOST INFO HEADER -->
+        <div class="flex justify-between items-center pb-6 border-b border-border-default">
+          <div>
             <h2 class="text-xl font-semibold text-text-primary mb-1">
-               {{ car()?.title }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
+              {{ car()?.title }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
             </h2>
             <div class="text-text-secondary text-sm">
-               {{ car()?.year }} · {{ car()?.seats }} plazas · {{ car()?.doors }} puertas · {{ car()?.transmission }}
+              {{ car()?.year }} · {{ car()?.seats }} plazas · {{ car()?.doors }} puertas ·
+              {{ car()?.transmission }}
             </div>
-         </div>
-         <!-- Avatar -->
-         <div class="relative">
-            <img 
-               [src]="car()?.owner?.avatar_url" 
-               class="w-14 h-14 rounded-full object-cover border border-border-default shadow-sm"
-               [alt]="car()?.owner?.full_name"
+          </div>
+          <!-- Avatar -->
+          <div class="relative">
+            <img
+              [src]="car()?.owner?.avatar_url"
+              class="w-14 h-14 rounded-full object-cover border border-border-default shadow-sm"
+              [alt]="car()?.owner?.full_name"
             />
-            <div *ngIf="car()?.owner?.is_email_verified" class="absolute bottom-0 right-0 p-1 bg-success-default rounded-full border-2 border-surface-base text-white">
-               <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" /></svg>
+            <div
+              *ngIf="car()?.owner?.is_email_verified"
+              class="absolute bottom-0 right-0 p-1 bg-success-default rounded-full border-2 border-surface-base text-white"
+            >
+              <app-icon name="check" [size]="10" />
             </div>
-         </div>
-      </div>
+          </div>
+        </div>
 
-      <!-- FEATURES GRID -->
-      <div class="py-4">
-         <div class="flex items-start gap-4 mb-6">
-            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+        <!-- FEATURES GRID -->
+        <div class="py-4">
+          <div class="flex items-start gap-4 mb-6">
+            <app-icon name="calendar" [size]="24" cssClass="text-text-primary mt-1" />
             <div>
-               <h3 class="font-semibold text-text-primary">Cancelación gratuita por 24hs</h3>
-               <p class="text-text-secondary text-sm">Tenés un período de gracia para cancelar sin costo.</p>
+              <h3 class="font-semibold text-text-primary">Cancelación gratuita por 24hs</h3>
+              <p class="text-text-secondary text-sm">
+                Tenés un período de gracia para cancelar sin costo.
+              </p>
             </div>
-         </div>
-         <div class="flex items-start gap-4 mb-6">
-            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+          </div>
+          <div class="flex items-start gap-4 mb-6">
+            <app-icon name="lock" [size]="24" cssClass="text-text-primary mt-1" />
             <div>
-               <p class="font-semibold text-text-primary">Check-in autónomo o presencial</p>
-               <p class="text-text-secondary text-sm">Coordina fácilmente la entrega con {{ car()?.owner?.full_name?.split(' ')?.[0] }}.</p>
+              <p class="font-semibold text-text-primary">Check-in autónomo o presencial</p>
+              <p class="text-text-secondary text-sm">
+                Coordina fácilmente la entrega con {{ car()?.owner?.full_name?.split(' ')?.[0] }}.
+              </p>
             </div>
-         </div>
-         <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+          </div>
+          <div class="flex items-start gap-4">
+            <app-icon name="shield" [size]="24" cssClass="text-text-primary mt-1" />
             <div>
-               <p class="font-semibold text-text-primary">Seguro incluído</p>
-               <p class="text-text-secondary text-sm">Viajá tranquilo con nuestra cobertura contra todo riesgo.</p>
+              <p class="font-semibold text-text-primary">Seguro incluído</p>
+              <p class="text-text-secondary text-sm">
+                Viajá tranquilo con nuestra cobertura contra todo riesgo.
+              </p>
             </div>
-         </div>
-      </div>
+          </div>
+        </div>
 
-      <div class="border-t border-border-default my-6"></div>
+        <div class="border-t border-border-default my-6"></div>
 
-      <!-- DESCRIPCION -->
-      <div>
-         <h2 class="text-xl font-semibold text-text-primary mb-4">Sobre este vehículo</h2>
-         <p class="leading-relaxed text-text-primary whitespace-pre-line">
-          {{ car()?.description || 'Sin descripción disponible' }}
-        </p>
-      </div>
+        <!-- DESCRIPCION -->
+        <div>
+          <h2 class="text-xl font-semibold text-text-primary mb-4">Sobre este vehículo</h2>
+          <p class="leading-relaxed text-text-primary whitespace-pre-line">
+            {{ car()?.description || 'Sin descripción disponible' }}
+          </p>
+        </div>
 
-      <div class="border-t border-border-default my-6"></div>
+        <div class="border-t border-border-default my-6"></div>
 
-      <!-- ESPECIFICACIONES (Clean Tags) -->
-      <div>
-        <h2 class="text-xl font-semibold text-text-primary mb-4">Lo que ofrece este auto</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
-               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-               <span>{{ car()?.transmission | titlecase }}</span>
+        <!-- ESPECIFICACIONES (Clean Tags) -->
+        <div>
+          <h2 class="text-xl font-semibold text-text-primary mb-4">Lo que ofrece este auto</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors"
+            >
+              <app-icon name="settings" [size]="24" cssClass="text-text-secondary" />
+              <span>{{ car()?.transmission | titlecase }}</span>
             </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
-               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-               <span>{{ car()?.fuel_type | titlecase }}</span>
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors"
+            >
+              <app-icon name="lightning" [size]="24" cssClass="text-text-secondary" />
+              <span>{{ car()?.fuel_type | titlecase }}</span>
             </div>
-             <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
-               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-               <span>{{ car()?.seats }} Asientos</span>
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors"
+            >
+              <app-icon name="users" [size]="24" cssClass="text-text-secondary" />
+              <span>{{ car()?.seats }} Asientos</span>
             </div>
-            <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
-               <svg class="w-6 h-6 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-               <span>Modelo {{ car()?.year }}</span>
+            <div
+              class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors"
+            >
+              <app-icon name="calendar" [size]="24" cssClass="text-text-secondary" />
+              <span>Modelo {{ car()?.year }}</span>
             </div>
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div id="reviews" class="py-8 border-t border-border-default mt-8">
+          <h2 class="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2">
+            <app-icon name="star-filled" [size]="24" cssClass="text-cta-default" />
+            {{ car()?.rating_avg || 'Nuevo' }} · {{ car()?.rating_count || 0 }} reseñas
+          </h2>
+          <!-- Nuevo componente de reviews -->
+          <app-car-reviews-section *ngIf="car()?.id" [carId]="car()!.id" />
         </div>
       </div>
 
-      <!-- REVIEWS -->
-      <div id="reviews" class="py-8 border-t border-border-default mt-8">
-         <h2 class="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2">
-            <svg class="w-6 h-6 text-cta-default fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            {{ car()?.rating_avg || 'Nuevo' }} · {{ car()?.rating_count || 0 }} reseñas
-         </h2>
-         <!-- Nuevo componente de reviews -->
-        <app-car-reviews-section *ngIf="car()?.id" [carId]="car()!.id" />
-      </div>
-
-    </div>
-
-    <!-- RIGHT COLUMN: Booking Widget -->
-    <aside class="relative hidden lg:block">
-      <div
-        class="sticky top-24 rounded-2xl border border-border-default dark:border-neutral-800 bg-surface-raised dark:bg-surface-raised p-6 shadow-xl"
-      >
-        <!-- Header del Widget -->
-        <div class="flex items-baseline justify-between mb-6">
-           <div class="flex items-baseline gap-1">
+      <!-- RIGHT COLUMN: Booking Widget -->
+      <aside class="relative hidden lg:block">
+        <div
+          class="sticky top-24 rounded-2xl border border-border-default dark:border-neutral-800 bg-surface-raised dark:bg-surface-raised p-6 shadow-xl"
+        >
+          <!-- Header del Widget -->
+          <div class="flex items-baseline justify-between mb-6">
+            <div class="flex items-baseline gap-1">
               <span class="text-2xl font-bold text-text-primary">{{ displayPrice() | money }}</span>
               <span class="text-text-secondary font-normal"> por día</span>
-           </div>
-           <div class="flex items-center gap-1 text-sm">
-              <svg class="w-4 h-4 text-text-primary fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <span class="font-semibold text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
+            </div>
+            <div class="flex items-center gap-1 text-sm">
+              <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
+              <span class="font-semibold text-text-primary">{{
+                car()?.rating_avg || 'Nuevo'
+              }}</span>
               <span class="text-text-secondary">·</span>
-              <span class="text-text-secondary underline">{{ car()?.rating_count || 0 }} reseñas</span>
-           </div>
-        </div>
+              <span class="text-text-secondary underline"
+                >{{ car()?.rating_count || 0 }} reseñas</span
+              >
+            </div>
+          </div>
 
-        <!-- Date Picker Wrapper -->
-        <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
-           <app-date-range-picker
-            [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
-            (rangeChange)="onRangeChange($event)"
-            [initialFrom]="dateRange().from"
-            [initialTo]="dateRange().to"
-            [dailyPrice]="displayPrice()"
-            [showPrices]="!expressMode()"
-            [carId]="car()?.id ?? null"
-            [availabilityChecker]="!expressMode() ? checkAvailability : null"
-            [blockedRanges]="blockedRanges()"
-          ></app-date-range-picker>
-        </div>
+          <!-- Date Picker Wrapper -->
+          <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
+            <app-date-range-picker
+              [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
+              (rangeChange)="onRangeChange($event)"
+              [initialFrom]="dateRange().from"
+              [initialTo]="dateRange().to"
+              [dailyPrice]="displayPrice()"
+              [showPrices]="!expressMode()"
+              [carId]="car()?.id ?? null"
+              [availabilityChecker]="!expressMode() ? checkAvailability : null"
+              [blockedRanges]="blockedRanges()"
+            ></app-date-range-picker>
+          </div>
 
-        <!-- Reserve Button -->
-        <button
+          <!-- Reserve Button -->
+          <button
             id="book-now"
             *ngIf="authService.isAuthenticated()"
             (click)="onBookClick()"
             [disabled]="!canBook() || bookingInProgress()"
             class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mb-4"
-            [ngClass]="{'opacity-50 cursor-not-allowed': !canBook() || bookingInProgress()}"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': !canBook() || bookingInProgress() }"
           >
             <span *ngIf="!bookingInProgress()">
-                {{ canBook() ? 'Reservar Ahora' : 'Ver Disponibilidad' }}
+              {{ canBook() ? 'Reservar Ahora' : 'Ver Disponibilidad' }}
             </span>
             <span *ngIf="bookingInProgress()" class="flex items-center gap-2">
-                <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                Procesando...
+              <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Procesando...
             </span>
-        </button>
+          </button>
 
-        <p *ngIf="canBook()" class="text-center text-xs text-text-secondary mb-6">No se te cobrará nada todavía</p>
+          <p *ngIf="canBook()" class="text-center text-xs text-text-secondary mb-6">
+            No se te cobrará nada todavía
+          </p>
 
-        <!-- Price Breakdown (Only if dates selected) -->
-        <div *ngIf="totalPrice() as total" class="space-y-3 pt-4 border-t border-border-default">
-           <div class="flex justify-between text-text-primary">
-              <span class="underline decoration-text-secondary/30">{{ displayPrice() | money }} x {{ daysCount() }} días</span>
+          <!-- Price Breakdown (Only if dates selected) -->
+          <div *ngIf="totalPrice() as total" class="space-y-3 pt-4 border-t border-border-default">
+            <div class="flex justify-between text-text-primary">
+              <span class="underline decoration-text-secondary/30"
+                >{{ displayPrice() | money }} x {{ daysCount() }} días</span
+              >
               <span>{{ total | money }}</span>
-           </div>
-           <div class="flex justify-between text-text-primary">
+            </div>
+            <div class="flex justify-between text-text-primary">
               <span class="underline decoration-text-secondary/30">Seguro y protección</span>
               <span class="text-success-default">¡Incluido!</span>
-           </div>
-           <div class="border-t border-border-default my-2"></div>
-           <div class="flex justify-between text-lg font-bold text-text-primary">
+            </div>
+            <div class="border-t border-border-default my-2"></div>
+            <div class="flex justify-between text-lg font-bold text-text-primary">
               <span>Total</span>
               <span>{{ total | money }}</span>
-           </div>
+            </div>
+          </div>
         </div>
-        
-      </div>
 
-      <!-- Contact Host (Secondary Action) -->
-       <button
+        <!-- Contact Host (Secondary Action) -->
+        <button
           *ngIf="authService.isAuthenticated() && car() && !isCurrentUserOwner()"
           type="button"
           (click)="onContactOwner()"
           class="w-full mt-4 py-2 text-text-secondary font-medium underline hover:text-text-primary transition-colors text-sm flex items-center justify-center gap-2"
         >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+          <app-icon name="message" [size]="16" />
           Contactar al anfitrión
         </button>
-
-    </aside>
-  </section>
+      </aside>
+    </section>
   </div>
 </ng-container>
 
 <ng-template #loadingOrError>
   <div class="flex flex-col items-center justify-center py-32 space-y-6">
-        <div class="relative">
-          <div class="w-16 h-16 rounded-full border-4 border-primary-100 dark:border-primary-900/30 border-t-primary-600 animate-spin"></div>
-        </div>
-        <div class="text-center space-y-2">
-          <p class="text-text-primary font-medium animate-pulse">Cargando vehículo...</p>
-        </div>
+    <div class="relative">
+      <div
+        class="w-16 h-16 rounded-full border-4 border-primary-100 dark:border-primary-900/30 border-t-primary-600 animate-spin"
+      ></div>
+    </div>
+    <div class="text-center space-y-2">
+      <p class="text-text-primary font-medium animate-pulse">Cargando vehículo...</p>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #errorTpl>
-  <div class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center">
-     <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
-     <p class="text-text-secondary mt-2">{{ error() ?? 'El vehículo no existe o fue eliminado.' }}</p>
-     <a routerLink="/cars" class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base">Volver al catálogo</a>
+  <div
+    class="max-w-2xl mx-auto mt-12 p-8 bg-error-bg/10 border border-error-border/50 rounded-2xl text-center"
+  >
+    <h3 class="text-lg font-bold text-error-strong">No pudimos encontrar este auto</h3>
+    <p class="text-text-secondary mt-2">
+      {{ error() ?? 'El vehículo no existe o fue eliminado.' }}
+    </p>
+    <a
+      routerLink="/cars"
+      class="mt-4 inline-block px-6 py-2 bg-surface-raised border border-border-default rounded-lg font-medium hover:bg-surface-base"
+      >Volver al catálogo</a
+    >
   </div>
 </ng-template>
 

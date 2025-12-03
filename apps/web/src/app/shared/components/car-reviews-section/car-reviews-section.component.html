@@ -12,9 +12,7 @@
     } @else if (reviewsCount() > 0) {
       <div class="stats flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div class="rating flex items-center gap-2">
-          <span class="h3 text-text-primary">{{
-            averageRating() | number: '1.1-1'
-          }}</span>
+          <span class="h3 text-text-primary">{{ averageRating() | number: '1.1-1' }}</span>
           <span class="text-text-secondary dark:text-text-secondary text-lg">/5.0</span>
         </div>
         <div class="stars flex items-center gap-1">

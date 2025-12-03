@@ -11,8 +11,8 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-background: var(--surface-info-dark, #0F0F0F); /* Reemplazado hex con el valor de surface-dark */
-  color: var(--text-light, #F8F4EC); /* Reemplazado hex con el valor de textInverse */
+  background: var(--surface-info-dark, #0f0f0f); /* Reemplazado hex con el valor de surface-dark */
+  color: var(--text-light, #f8f4ec); /* Reemplazado hex con el valor de textInverse */
   border: none;
   border-radius: 10px;
   font-size: 14px;
@@ -53,7 +53,7 @@ background: var(--surface-info-dark, #0F0F0F); /* Reemplazado hex con el valor d
   width: 18px;
   height: 18px;
   border: 2px solid rgba(250, 249, 246, 0.3);
-  border-top-color: var(--text-light, #F8F4EC); /* Reemplazado hex con el valor de textInverse */
+  border-top-color: var(--text-light, #f8f4ec); /* Reemplazado hex con el valor de textInverse */
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -113,14 +113,17 @@ background: var(--surface-info-dark, #0F0F0F); /* Reemplazado hex con el valor d
 }
 
 .share-option:active {
-  background: var(--surface-active-light, #F5F5F5); /* Reemplazado hex con el valor de surfaceElevated */
+  background: var(
+    --surface-active-light,
+    #f5f5f5
+  ); /* Reemplazado hex con el valor de surfaceElevated */
   transform: scale(0.98);
 }
 
 .share-option svg {
   width: 20px;
   height: 20px;
-  color: var(--text-info-dark, #4E4E4E); /* Reemplazado hex con el valor de textSecondary */
+  color: var(--text-info-dark, #4e4e4e); /* Reemplazado hex con el valor de textSecondary */
   flex-shrink: 0;
 }
 
@@ -140,7 +143,7 @@ background: var(--surface-info-dark, #0F0F0F); /* Reemplazado hex con el valor d
 .option-subtitle {
   display: block;
   font-size: 12px;
-  color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con el valor de textSecondary */
+  color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con el valor de textSecondary */
   line-height: 1.4;
 }
 
@@ -151,7 +154,7 @@ background: var(--surface-info-dark, #0F0F0F); /* Reemplazado hex con el valor d
   right: 8px;
   padding: 2px 8px;
   background: var(--surface-info-dark, #2c4a52); /* Replaced gradient with solid color token */
-  color: var(--text-light, #F8F4EC); /* Reemplazado hex con el valor de textInverse */
+  color: var(--text-light, #f8f4ec); /* Reemplazado hex con el valor de textInverse */
   font-size: 10px;
   font-weight: 700;
   border-radius: 4px;

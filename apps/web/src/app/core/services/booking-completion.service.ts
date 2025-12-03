@@ -218,7 +218,9 @@ export class BookingCompletionService {
     // Caso 2: Con cargos - Marcar como pendiente de resolución de disputa
     const descriptionParts = [];
     if (inspectionData.fuelDifferenceCents > 0) {
-      descriptionParts.push(`Combustible: $${(inspectionData.fuelDifferenceCents / 100).toFixed(2)}`);
+      descriptionParts.push(
+        `Combustible: $${(inspectionData.fuelDifferenceCents / 100).toFixed(2)}`,
+      );
     }
     if (inspectionData.damageAmountCents > 0) {
       descriptionParts.push(`Daños: $${(inspectionData.damageAmountCents / 100).toFixed(2)}`);
@@ -245,15 +247,19 @@ export class BookingCompletionService {
       // La deducción/captura real se hará después de la resolución de la disputa
     });
 
-    this.logger.info(`Booking ${booking.id} marked as pending_dispute_resolution with charges.`, 'BookingCompletionService', {
-      totalCharges,
-      description,
-    });
+    this.logger.info(
+      `Booking ${booking.id} marked as pending_dispute_resolution with charges.`,
+      'BookingCompletionService',
+      {
+        totalCharges,
+        description,
+      },
+    );
 
     return {
       success: true,
       error: 'Cargos reportados. Pendiente de resolución de disputa.',
-      remaining_deposit: booking.deposit_amount_cents || 0 // El depósito sigue retenido
+      remaining_deposit: booking.deposit_amount_cents || 0, // El depósito sigue retenido
     };
   }
 }

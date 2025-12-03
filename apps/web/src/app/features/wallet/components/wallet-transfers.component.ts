@@ -9,7 +9,9 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
   standalone: true,
   imports: [CommonModule, IonicModule],
   template: `
-    <div class="rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 space-y-3">
+    <div
+      class="rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
+    >
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-semibold text-text-primary">Transferencias</h3>
@@ -43,14 +45,14 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
           </div>
           <div class="text-right">
             <p
-              [ngClass]="t.from_user === currentUserId() ? 'text-error-strong' : 'text-success-strong'"
+              [ngClass]="
+                t.from_user === currentUserId() ? 'text-error-strong' : 'text-success-strong'
+              "
               class="font-semibold"
             >
               {{ amountLabel(t.amount_cents, t.from_user === currentUserId()) }}
             </p>
-            <p class="text-xs text-text-secondary">
-              Ref: {{ t.ref }}
-            </p>
+            <p class="text-xs text-text-secondary">Ref: {{ t.ref }}</p>
           </div>
         </div>
       </div>
@@ -86,7 +88,12 @@ export class WalletTransfersComponent implements OnInit {
     return outgoing ? `- ${amount}` : `+ ${amount}`;
   }
 
-  directionLabel(t: { from_user: string; to_user: string; from_user_name?: string; to_user_name?: string }): string {
+  directionLabel(t: {
+    from_user: string;
+    to_user: string;
+    from_user_name?: string;
+    to_user_name?: string;
+  }): string {
     const me = this.currentUserId();
     if (me && t.from_user === me) {
       return `Enviada a ${t.to_user_name || t.to_user || 'usuario'}`;

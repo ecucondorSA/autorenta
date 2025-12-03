@@ -92,7 +92,9 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
         <h3 class="mb-4 text-lg font-semibold text-text-primary">Simulador de Impacto</h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-text-primary">Severidad del Siniestro</label>
+            <label class="block text-sm font-medium text-text-primary"
+              >Severidad del Siniestro</label
+            >
             <select
               [(ngModel)]="claimSeverity"
               (change)="calculateImpact()"

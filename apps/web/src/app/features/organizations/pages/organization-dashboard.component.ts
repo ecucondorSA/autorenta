@@ -12,11 +12,7 @@ import { OrganizationService, Organization } from '../services/organization.serv
     <div class="container mx-auto p-6">
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold">Gestión de Flota</h1>
-        <button 
-          class="btn btn-primary" 
-          (click)="startCreating()" 
-          *ngIf="!isCreating()"
-        >
+        <button class="btn btn-primary" (click)="startCreating()" *ngIf="!isCreating()">
           + Nueva Organización
         </button>
       </div>
@@ -25,21 +21,21 @@ import { OrganizationService, Organization } from '../services/organization.serv
       <div *ngIf="isCreating()" class="card bg-base-200 mb-8 p-4 animate-fade-in">
         <h3 class="font-bold mb-2">Crear Nueva Flota</h3>
         <div class="flex gap-2">
-          <input 
-            type="text" 
-            [(ngModel)]="newOrgName" 
-            placeholder="Nombre de la empresa/flota" 
+          <input
+            type="text"
+            [(ngModel)]="newOrgName"
+            placeholder="Nombre de la empresa/flota"
             class="input input-bordered flex-grow"
             [disabled]="creatingLoading()"
-          >
+          />
           <select [(ngModel)]="newOrgType" class="select select-bordered">
             <option value="fleet">Flota Privada</option>
             <option value="agency">Agencia</option>
             <option value="corporate">Corporativo</option>
           </select>
-          <button 
-            class="btn btn-success" 
-            (click)="createOrg()" 
+          <button
+            class="btn btn-success"
+            (click)="createOrg()"
             [disabled]="!newOrgName || creatingLoading()"
           >
             {{ creatingLoading() ? 'Creando...' : 'Confirmar' }}
@@ -52,7 +48,10 @@ import { OrganizationService, Organization } from '../services/organization.serv
 
       <div *ngIf="!loading()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Lista de Organizaciones -->
-        <div *ngFor="let org of orgs()" class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all">
+        <div
+          *ngFor="let org of orgs()"
+          class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all"
+        >
           <div class="card-body">
             <div class="flex justify-between items-start">
               <h2 class="card-title">{{ org.name }}</h2>
@@ -60,10 +59,12 @@ import { OrganizationService, Organization } from '../services/organization.serv
                 {{ org.verified ? 'Verificado' : 'No Verificado' }}
               </div>
             </div>
-            
+
             <p class="text-sm text-gray-500 mt-1">Tipo: {{ org.type | titlecase }}</p>
-            <p class="text-sm font-medium">Tu Rol: <span class="text-primary">{{ org.role | uppercase }}</span></p>
-            
+            <p class="text-sm font-medium">
+              Tu Rol: <span class="text-primary">{{ org.role | uppercase }}</span>
+            </p>
+
             <div class="card-actions justify-end mt-4">
               <button class="btn btn-sm btn-outline">Ver Autos</button>
               <button class="btn btn-sm btn-ghost">Miembros</button>
@@ -76,14 +77,14 @@ import { OrganizationService, Organization } from '../services/organization.serv
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class OrganizationDashboardComponent implements OnInit {
   private orgService = inject(OrganizationService);
-  
+
   orgs = signal<Organization[]>([]);
   loading = signal(true);
-  
+
   // Creation state
   isCreating = signal(false);
   creatingLoading = signal(false);
@@ -117,7 +118,7 @@ export class OrganizationDashboardComponent implements OnInit {
 
   async createOrg() {
     if (!this.newOrgName) return;
-    
+
     this.creatingLoading.set(true);
     try {
       await this.orgService.createOrganization(this.newOrgName, this.newOrgType);

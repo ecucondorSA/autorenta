@@ -44,7 +44,8 @@
       <!-- Content -->
       <div class="flex-1">
         <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1">
-          💳 Tarjeta de Crédito/Débito
+          <app-icon name="credit-card" [size]="16" cssClass="inline-block mr-1" /> Tarjeta de
+          Crédito/Débito
         </h3>
         <p class="text-sm text-text-secondary dark:text-text-secondary">
           Pre-autorización segura con MercadoPago
@@ -108,7 +109,7 @@
       <!-- Content -->
       <div class="flex-1">
         <h3 class="font-semibold text-text-primary dark:text-text-secondary mb-1">
-          🏦 Wallet AutoRenta
+          <app-icon name="bank" [size]="16" cssClass="inline-block mr-1" /> Wallet AutoRenta
         </h3>
         <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
           Pago instantáneo • Sin comisiones • Ideal para locadores y usuarios frecuentes
@@ -118,19 +119,31 @@
         <div class="mb-2 space-y-1">
           <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
             <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>Recibe tus pagos como locador directamente aquí</span>
           </div>
           <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
             <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>Garantía reutilizable en futuras reservas</span>
           </div>
           <div class="flex items-center gap-1 text-xs text-text-secondary dark:text-text-secondary">
             <svg class="w-3 h-3 text-success-light" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              />
             </svg>
             <span>Carga saldo con MercadoPago, transferencia o efectivo</span>
           </div>
@@ -177,7 +190,10 @@
           </div>
 
           <!-- Price Breakdown (if sufficient funds) -->
-          <div *ngIf="hasSufficientFunds()" class="text-xs text-text-secondary dark:text-text-secondary space-y-0.5">
+          <div
+            *ngIf="hasSufficientFunds()"
+            class="text-xs text-text-secondary dark:text-text-secondary space-y-0.5"
+          >
             <div class="flex justify-between">
               <span>Bloqueo de alquiler:</span>
               <span class="font-semibold">{{ rentalAmount | money }}</span>
@@ -186,7 +202,9 @@
               <span>Bloqueo de garantía:</span>
               <span class="font-semibold">{{ depositAmount | money }}</span>
             </div>
-            <div class="flex justify-between pt-1 border-t border-border-default dark:border-border-default">
+            <div
+              class="flex justify-between pt-1 border-t border-border-default dark:border-border-default"
+            >
               <span class="font-semibold">Total bloqueado:</span>
               <span class="font-bold text-cta-default">{{ totalRequired() | money }}</span>
             </div>
@@ -198,7 +216,12 @@
             class="px-3 py-2 bg-error-bg border border-error-border rounded-lg"
           >
             <p class="text-xs text-error-strong">
-              <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                class="inline w-4 h-4 mr-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -211,7 +234,10 @@
           </div>
 
           <!-- Success Badge (if sufficient funds) -->
-          <div *ngIf="hasSufficientFunds()" class="flex items-center gap-1 text-xs text-success-light">
+          <div
+            *ngIf="hasSufficientFunds()"
+            class="flex items-center gap-1 text-xs text-success-light"
+          >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"

@@ -58,6 +58,7 @@ import {
   BookingLocationFormComponent,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 // Temporary interfaces until components are created
 export interface Photo {
@@ -109,6 +110,7 @@ interface CarDetailState {
     PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
     PickupLocationSelectorComponent,
+    IconComponent,
     // TODO: Re-add when components are created
     // PhotoGalleryComponent,
     // BreadcrumbsComponent,

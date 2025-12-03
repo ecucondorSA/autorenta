@@ -26,7 +26,7 @@ export function isValidStatusTransition(
     rejected: [],
     pending_owner_review: [],
     pending_renter_review: [],
-    pending_dispute_resolution: []
+    pending_dispute_resolution: [],
   };
 
   const allowed = validTransitions[from]?.includes(to) ?? false;

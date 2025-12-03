@@ -4,7 +4,11 @@
 >
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-2">
-      <span class="text-warning-text dark:text-warning-400 text-lg">⚠️</span>
+      <app-icon
+        name="alert-circle"
+        [size]="20"
+        cssClass="text-warning-text dark:text-warning-400"
+      />
       <p class="text-sm font-medium text-warning-strong dark:text-warning-200">
         Solo quedan <strong>{{ count }}</strong> {{ count === 1 ? 'auto' : 'autos' }} en {{ zone }}
       </p>

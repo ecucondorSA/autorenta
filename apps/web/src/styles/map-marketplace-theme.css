@@ -12,9 +12,15 @@
 
 /* Neutral map controls - Using tokens */
 .mapboxgl-ctrl-group {
-  background-color: var(--map-control-bg, var(--surface-primary-alpha-95, rgba(255, 255, 255, 0.95)));
+  background-color: var(
+    --map-control-bg,
+    var(--surface-primary-alpha-95, rgba(255, 255, 255, 0.95))
+  );
   border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
-  box-shadow: var(--map-control-shadow, 0 4px 12px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15)));
+  box-shadow: var(
+    --map-control-shadow,
+    0 4px 12px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15))
+  );
   @apply rounded-lg overflow-hidden;
 }
 

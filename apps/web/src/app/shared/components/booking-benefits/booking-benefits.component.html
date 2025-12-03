@@ -24,7 +24,9 @@
       <p class="text-text-primary" [class.text-success-light]="benefit.highlight">
         {{ benefit.title }}
       </p>
-      <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">{{ benefit.description }}</p>
+      <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">
+        {{ benefit.description }}
+      </p>
     </div>
   </div>
 </div>
@@ -37,13 +39,14 @@
     [class.bg-success-light/10]="benefit.highlight"
     [class.border-success-light/40]="benefit.highlight"
     [class.bg-surface-raised dark:bg-surface-secondary]="!benefit.highlight"
-    [class.border-border-default dark:border-border-default]="!benefit.highlight">
+    [class.border-border-default dark:border-border-default]="!benefit.highlight"
+  >
     <!-- Highlight Badge -->
     <div
       *ngIf="benefit.highlight"
-      class="absolute -top-2 -right-2 bg-success-light text-text-inverse text-[10px] font-bold px-2 py-1 rounded-full"
+      class="absolute -top-2 -right-2 bg-success-light text-text-inverse text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1"
     >
-      ⭐ DESTACADO
+      <app-icon name="star" [size]="10" cssClass="text-text-inverse" /> DESTACADO
     </div>
 
     <div class="flex items-start gap-3">

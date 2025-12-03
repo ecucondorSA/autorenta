@@ -19,6 +19,7 @@ import type { UpdateProfileData } from '../../core/services/profile.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { ProfileStore } from '../../core/stores/profile.store';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 const SECTION_ANCHORS = {
   'basic-info': 'basic-info-card',
@@ -59,7 +60,7 @@ const DOC_DEEP_LINKS: Record<
 @Component({
   standalone: true,
   selector: 'app-profile-page',
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, IconComponent],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

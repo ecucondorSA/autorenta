@@ -2,12 +2,16 @@
   <!-- Header -->
   <header class="header">
     <h2 class="h2">Reportar Daños</h2>
-    <button class="close-btn" (click)="cancel()" [disabled]="creating()">✕</button>
+    <button class="close-btn" (click)="cancel()" [disabled]="creating()">
+      <app-icon name="close" [size]="20" />
+    </button>
   </header>
 
   <!-- Error message -->
   @if (error()) {
-    <div class="error-message">⚠️ {{ error() }}</div>
+    <div class="error-message">
+      <app-icon name="alert-circle" [size]="18" cssClass="inline-block mr-2" /> {{ error() }}
+    </div>
   }
 
   <!-- Intro message -->
@@ -34,7 +38,7 @@
               [disabled]="creating()"
               title="Eliminar daño"
             >
-              🗑️ Eliminar
+              <app-icon name="trash" [size]="16" cssClass="inline-block mr-1" /> Eliminar
             </button>
           }
         </div>
@@ -65,7 +69,10 @@
             [disabled]="creating()"
           ></textarea>
           @if (!damage.description.trim()) {
-            <span class="field-hint error">⚠️ La descripción es requerida</span>
+            <span class="field-hint error"
+              ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> La
+              descripción es requerida</span
+            >
           }
         </div>
 
@@ -112,11 +119,14 @@
               [disabled]="creating()"
               title="Calcular estimación automática"
             >
-              🔄 Auto
+              <app-icon name="refresh" [size]="16" cssClass="inline-block mr-1" /> Auto
             </button>
           </div>
           @if (damage.estimatedCostUsd <= 0) {
-            <span class="field-hint error">⚠️ Ingrese el costo estimado</span>
+            <span class="field-hint error"
+              ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Ingrese el
+              costo estimado</span
+            >
           } @else {
             <span class="field-hint">
               Costo sugerido: ${{ estimateCost(damage.type, damage.severity) }}
@@ -128,7 +138,9 @@
         <div class="form-group stack-xs">
           <label [for]="'photos-' + i">Fotos de Evidencia (opcional)</label>
           <div class="photo-upload-wrapper">
-            <label [for]="'photos-' + i" class="upload-photo-btn"> 📷 Subir Fotos </label>
+            <label [for]="'photos-' + i" class="upload-photo-btn">
+              <app-icon name="camera" [size]="16" cssClass="inline-block mr-1" /> Subir Fotos
+            </label>
             <input
               [id]="'photos-' + i"
               type="file"
@@ -149,7 +161,7 @@
                     (click)="removePhoto(i, photoIdx)"
                     [disabled]="creating()"
                   >
-                    ✕
+                    <app-icon name="close" [size]="16" />
                   </button>
                 </div>
               }
@@ -161,7 +173,7 @@
 
     <!-- Add damage button -->
     <button class="add-damage-btn" (click)="addDamage()" [disabled]="creating()">
-      ➕ Agregar Otro Daño
+      <app-icon name="plus" [size]="16" cssClass="inline-block mr-1" /> Agregar Otro Daño
     </button>
   </section>
 
@@ -192,7 +204,10 @@
 
     @if (!isValid()) {
       <div class="validation-warning">
-        <strong>⚠️ Completá todos los campos requeridos:</strong>
+        <strong
+          ><app-icon name="alert-circle" [size]="16" cssClass="inline-block mr-1" /> Completá todos
+          los campos requeridos:</strong
+        >
         <ul>
           @for (damage of damages(); track $index; let i = $index) {
             @if (!damage.description.trim() || damage.estimatedCostUsd <= 0) {
@@ -224,7 +239,7 @@
         <span class="spinner"></span>
         Creando Claim...
       } @else {
-        📋 Crear Claim
+        <app-icon name="clipboard" [size]="16" cssClass="inline-block mr-1" /> Crear Claim
       }
     </button>
   </div>

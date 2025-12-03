@@ -26,9 +26,9 @@ describe('DepositPage', () => {
         eq: jasmine.createSpy('eq').and.returnValue({
           order: jasmine.createSpy('order').and.returnValue({
             limit: jasmine.createSpy('limit').and.returnValue({
-              maybeSingle: jasmine.createSpy('maybeSingle').and.returnValue(
-                Promise.resolve(resolvedValue)
-              ),
+              maybeSingle: jasmine
+                .createSpy('maybeSingle')
+                .and.returnValue(Promise.resolve(resolvedValue)),
             }),
           }),
         }),
@@ -36,9 +36,11 @@ describe('DepositPage', () => {
     });
 
     mockSupabaseClient = {
-      from: jasmine.createSpy('from').and.returnValue(
-        createMockQuery({ data: { rate: 1200, last_updated: '2024-01-01' }, error: null })
-      ),
+      from: jasmine
+        .createSpy('from')
+        .and.returnValue(
+          createMockQuery({ data: { rate: 1200, last_updated: '2024-01-01' }, error: null }),
+        ),
     };
 
     const supabaseClientServiceMock = jasmine.createSpyObj('SupabaseClientService', ['getClient'], {
@@ -47,16 +49,16 @@ describe('DepositPage', () => {
     supabaseClientServiceMock.getClient.and.returnValue(mockSupabaseClient);
 
     walletService = jasmine.createSpyObj('WalletService', ['createDepositPreference']);
-    notificationManagerService = jasmine.createSpyObj('NotificationManagerService', ['success', 'error', 'warning']);
+    notificationManagerService = jasmine.createSpyObj('NotificationManagerService', [
+      'success',
+      'error',
+      'warning',
+    ]);
     analyticsService = jasmine.createSpyObj('AnalyticsService', ['trackEvent']);
     router = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        TranslateModule.forRoot(),
-        FormsModule,
-      ],
+      imports: [RouterTestingModule, TranslateModule.forRoot(), FormsModule],
       providers: [
         { provide: WalletService, useValue: walletService },
         { provide: NotificationManagerService, useValue: notificationManagerService },
@@ -74,13 +76,13 @@ describe('DepositPage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
-    .overrideComponent(DepositPage, {
-      set: {
-        imports: [FormsModule, TranslateModule],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      },
-    })
-    .compileComponents();
+      .overrideComponent(DepositPage, {
+        set: {
+          imports: [FormsModule, TranslateModule],
+          schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DepositPage);
     component = fixture.componentInstance;
@@ -91,14 +93,15 @@ describe('DepositPage', () => {
     fixture.detectChanges();
   });
 
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   describe('Initialization', () => {
     it('should track deposit_page_viewed event on ngOnInit', () => {
-      expect(analyticsService.trackEvent).toHaveBeenCalledWith('deposit_page_viewed', { source: 'test' });
+      expect(analyticsService.trackEvent).toHaveBeenCalledWith('deposit_page_viewed', {
+        source: 'test',
+      });
     });
 
     it('should have correct min/max amounts', () => {
@@ -223,7 +226,7 @@ describe('DepositPage', () => {
       component.updateArsAmount(5000);
       // Return success: false to prevent redirect but still test validation
       walletService.createDepositPreference.and.returnValue(
-        Promise.resolve({ success: false, init_point: null, message: 'Test' } as any)
+        Promise.resolve({ success: false, init_point: null, message: 'Test' } as any),
       );
       await component.onSubmit();
       // The formError will be set from the error handler, but validation passed
@@ -246,7 +249,7 @@ describe('DepositPage', () => {
           init_point: mockInitPoint,
           preference_id: 'pref_123',
           message: null,
-        } as any)
+        } as any),
       );
 
       // Override the onSubmit to capture the redirect URL and prevent actual navigation
@@ -284,7 +287,7 @@ describe('DepositPage', () => {
         'deposit_mercadopago_preference_created',
         jasmine.objectContaining({
           amount_ars: 10000,
-        })
+        }),
       );
       expect(capturedRedirectUrl).toBe(mockInitPoint);
       expect(component.isProcessing()).toBe(false);
@@ -296,7 +299,7 @@ describe('DepositPage', () => {
         Promise.resolve({
           success: true,
           init_point: 'https://mp.com/pay',
-        } as any)
+        } as any),
       );
 
       // Override the onSubmit to prevent redirect
@@ -327,20 +330,23 @@ describe('DepositPage', () => {
           success: false,
           init_point: null,
           message: 'Error de MercadoPago',
-        } as any)
+        } as any),
       );
 
       component.onSubmit();
       tick();
 
       expect(component.formError()).toBe('Error de MercadoPago');
-      expect(notificationManagerService.error).toHaveBeenCalledWith('Error', 'Error de MercadoPago');
+      expect(notificationManagerService.error).toHaveBeenCalledWith(
+        'Error',
+        'Error de MercadoPago',
+      );
       expect(component.isProcessing()).toBe(false);
     }));
 
     it('should handle exception during preference creation', fakeAsync(() => {
       walletService.createDepositPreference.and.returnValue(
-        Promise.reject(new Error('Network error'))
+        Promise.reject(new Error('Network error')),
       );
 
       component.onSubmit();
@@ -350,7 +356,7 @@ describe('DepositPage', () => {
       expect(notificationManagerService.error).toHaveBeenCalled();
       expect(analyticsService.trackEvent).toHaveBeenCalledWith(
         'deposit_error',
-        jasmine.objectContaining({ error: 'Network error' })
+        jasmine.objectContaining({ error: 'Network error' }),
       );
       expect(component.isProcessing()).toBe(false);
     }));
@@ -373,7 +379,7 @@ describe('DepositPage', () => {
       component.onCancel();
       expect(analyticsService.trackEvent).toHaveBeenCalledWith(
         'deposit_cancelled',
-        jasmine.objectContaining({ amount_ars: 5000 })
+        jasmine.objectContaining({ amount_ars: 5000 }),
       );
     });
   });

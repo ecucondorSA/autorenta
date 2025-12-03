@@ -54,7 +54,12 @@
 }
 
 .publish-hero-side {
-  background: linear-gradient(160deg, rgba(16, 185, 129, 0.08), rgba(14, 165, 233, 0.08) 50%, rgba(251, 191, 36, 0.1));
+  background: linear-gradient(
+    160deg,
+    rgba(16, 185, 129, 0.08),
+    rgba(14, 165, 233, 0.08) 50%,
+    rgba(251, 191, 36, 0.1)
+  );
   border-color: transparent;
   box-shadow: 0 12px 30px -18px rgba(17, 94, 89, 0.25);
 }
@@ -144,13 +149,27 @@
     gap: 8px;
     align-items: center;
   }
-  summary::-webkit-details-marker { display: none; }
-  p { margin: 6px 0 0; color: #334155; }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  p {
+    margin: 6px 0 0;
+    color: #334155;
+  }
 }
 
-.notice-card.sky { border-color: #bae6fd; background: #f0f9ff; }
-.notice-card.amber { border-color: #fcd34d; background: #fffbeb; }
-.notice-card.emerald { border-color: #a7f3d0; background: #ecfdf3; }
+.notice-card.sky {
+  border-color: #bae6fd;
+  background: #f0f9ff;
+}
+.notice-card.amber {
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+.notice-card.emerald {
+  border-color: #a7f3d0;
+  background: #ecfdf3;
+}
 
 .notice-action {
   border: 1px solid #cbd5e1;
@@ -170,15 +189,29 @@
 :host-context(.dark) .notice-card {
   background: rgba(15, 23, 42, 0.75);
   border-color: rgba(148, 163, 184, 0.35);
-  summary { color: #e2e8f0; }
-  p { color: #cbd5e1; }
+  summary {
+    color: #e2e8f0;
+  }
+  p {
+    color: #cbd5e1;
+  }
 }
 
-:host-context(.dark) .notice-card.sky { border-color: #38bdf8; background: rgba(14, 165, 233, 0.18); }
-:host-context(.dark) .notice-card.amber { border-color: #f59e0b; background: rgba(245, 158, 11, 0.18); }
-:host-context(.dark) .notice-card.emerald { border-color: #34d399; background: rgba(16, 185, 129, 0.18); }
-.notice-action { color: inherit; }
-
+:host-context(.dark) .notice-card.sky {
+  border-color: #38bdf8;
+  background: rgba(14, 165, 233, 0.18);
+}
+:host-context(.dark) .notice-card.amber {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.18);
+}
+:host-context(.dark) .notice-card.emerald {
+  border-color: #34d399;
+  background: rgba(16, 185, 129, 0.18);
+}
+.notice-action {
+  color: inherit;
+}
 
 :host-context(.dark) .checklist-card {
   background: rgba(15, 23, 42, 0.75);

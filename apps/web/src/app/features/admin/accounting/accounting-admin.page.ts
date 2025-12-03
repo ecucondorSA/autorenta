@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  signal,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -14,7 +21,6 @@ import {
 } from '@core/services/accounting.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
-import { environment } from '../../../../environments/environment';
 
 type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
 
@@ -27,7 +33,7 @@ type ActiveTab = 'ledger' | 'provisions' | 'closures' | 'audit';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountingAdminPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   // Tab management
   readonly activeTab = signal<ActiveTab>('ledger');
@@ -105,12 +111,7 @@ export class AccountingAdminPage implements OnInit {
       .reduce((sum, p) => sum + p.amount, 0),
   );
 
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
+  constructor() {}
 
   async ngOnInit(): Promise<void> {
     await this.loadLedger();

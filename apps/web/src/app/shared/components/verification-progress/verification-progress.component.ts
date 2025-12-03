@@ -7,15 +7,26 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
   selector: 'app-verification-progress',
   imports: [CommonModule],
   template: `
-    <div class="bg-surface-raised rounded-xl shadow-sm border border-border-default overflow-hidden">
+    <div
+      class="bg-surface-raised rounded-xl shadow-sm border border-border-default overflow-hidden"
+    >
       <!-- Compact Header with Progress -->
       <div class="p-4 bg-gradient-to-r from-cta-default/5 to-transparent">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-cta-default/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              <svg
+                class="w-5 h-5 text-cta-default"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
             </div>
             <div>
@@ -40,8 +51,14 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <!-- Milestone markers -->
           <div class="absolute top-0 left-0 right-0 h-2 flex justify-between px-0.5">
             <div class="w-0.5 h-2 bg-transparent"></div>
-            <div class="w-0.5 h-2" [class]="progressPercentage() >= 50 ? 'bg-transparent' : 'bg-border-default/50'"></div>
-            <div class="w-0.5 h-2" [class]="progressPercentage() >= 80 ? 'bg-transparent' : 'bg-border-default/50'"></div>
+            <div
+              class="w-0.5 h-2"
+              [class]="progressPercentage() >= 50 ? 'bg-transparent' : 'bg-border-default/50'"
+            ></div>
+            <div
+              class="w-0.5 h-2"
+              [class]="progressPercentage() >= 80 ? 'bg-transparent' : 'bg-border-default/50'"
+            ></div>
             <div class="w-0.5 h-2 bg-transparent"></div>
           </div>
         </div>
@@ -60,13 +77,24 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
               [class]="getLevelBadgeClass(1)"
             >
               <span *ngIf="!isLevelComplete(1)">1</span>
-              <svg *ngIf="isLevelComplete(1)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              <svg
+                *ngIf="isLevelComplete(1)"
+                class="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </div>
             <div class="flex-1 min-w-0">
               <h4 class="text-sm font-semibold text-text-primary truncate">Contacto</h4>
-              <span class="text-xs" [class]="getLevelStatusTextClass(1)">{{ getLevelStatusLabel(1) }}</span>
+              <span class="text-xs" [class]="getLevelStatusTextClass(1)">{{
+                getLevelStatusLabel(1)
+              }}</span>
             </div>
           </div>
 
@@ -98,13 +126,24 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
               [class]="getLevelBadgeClass(2)"
             >
               <span *ngIf="!isLevelComplete(2)">2</span>
-              <svg *ngIf="isLevelComplete(2)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              <svg
+                *ngIf="isLevelComplete(2)"
+                class="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </div>
             <div class="flex-1 min-w-0">
               <h4 class="text-sm font-semibold text-text-primary truncate">Documentos</h4>
-              <span class="text-xs" [class]="getLevelStatusTextClass(2)">{{ getLevelStatusLabel(2) }}</span>
+              <span class="text-xs" [class]="getLevelStatusTextClass(2)">{{
+                getLevelStatusLabel(2)
+              }}</span>
             </div>
           </div>
 
@@ -130,8 +169,18 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             class="absolute inset-0 bg-surface-base/60 backdrop-blur-[1px] rounded-lg flex items-center justify-center"
           >
             <div class="text-center">
-              <svg class="w-5 h-5 text-text-muted mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              <svg
+                class="w-5 h-5 text-text-muted mx-auto mb-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               <span class="text-xs text-text-muted">Completa Nivel 1</span>
             </div>
@@ -149,13 +198,24 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
               [class]="getLevelBadgeClass(3)"
             >
               <span *ngIf="!isLevelComplete(3)">3</span>
-              <svg *ngIf="isLevelComplete(3)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              <svg
+                *ngIf="isLevelComplete(3)"
+                class="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </div>
             <div class="flex-1 min-w-0">
               <h4 class="text-sm font-semibold text-text-primary truncate">Identidad</h4>
-              <span class="text-xs" [class]="getLevelStatusTextClass(3)">{{ getLevelStatusLabel(3) }}</span>
+              <span class="text-xs" [class]="getLevelStatusTextClass(3)">{{
+                getLevelStatusLabel(3)
+              }}</span>
             </div>
           </div>
 
@@ -175,8 +235,18 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
             class="absolute inset-0 bg-surface-base/60 backdrop-blur-[1px] rounded-lg flex items-center justify-center"
           >
             <div class="text-center">
-              <svg class="w-5 h-5 text-text-muted mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              <svg
+                class="w-5 h-5 text-text-muted mx-auto mb-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               <span class="text-xs text-text-muted">Completa Nivel 2</span>
             </div>
@@ -185,16 +255,21 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
       </div>
 
       <!-- Loading State -->
-      <div *ngIf="loading()" class="absolute inset-0 bg-surface-base/50 flex items-center justify-center rounded-xl">
+      <div
+        *ngIf="loading()"
+        class="absolute inset-0 bg-surface-base/50 flex items-center justify-center rounded-xl"
+      >
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerificationProgressComponent implements OnInit {
@@ -225,9 +300,12 @@ export class VerificationProgressComponent implements OnInit {
     const req = this.requirements();
     if (req) {
       switch (level) {
-        case 1: return req.level_1?.completed ?? false;
-        case 2: return req.level_2?.completed ?? false;
-        case 3: return req.level_3?.completed ?? false;
+        case 1:
+          return req.level_1?.completed ?? false;
+        case 2:
+          return req.level_2?.completed ?? false;
+        case 3:
+          return req.level_3?.completed ?? false;
       }
     }
     return this.currentLevel() > level;
@@ -289,8 +367,6 @@ export class VerificationProgressComponent implements OnInit {
   }
 
   getCheckClass(isComplete: boolean | undefined): string {
-    return isComplete
-      ? 'text-success-light font-bold'
-      : 'text-text-muted';
+    return isComplete ? 'text-success-light font-bold' : 'text-text-muted';
   }
 }

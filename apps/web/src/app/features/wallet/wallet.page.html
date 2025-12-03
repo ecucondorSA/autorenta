@@ -1,40 +1,55 @@
 <div
-  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-section-sm">
+  class="wallet-page min-h-screen bg-surface-base dark:bg-surface-base dark:text-text-secondary py-section-sm"
+>
   <div class="container-page px-container space-y-10">
     <!-- ✅ FIX: Error Alert - Show wallet service errors -->
     @if (walletError(); as error) {
-    <div
-      class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300">
-      <div class="flex items-start space-x-3">
-        <svg class="w-6 h-6 text-error-text flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-            clip-rule="evenodd" />
-        </svg>
-        <div class="flex-1">
-          <p class="text-sm font-medium text-error-strong">Error al cargar el wallet</p>
-          <p class="mt-1 text-sm text-error-strong">{{ error.message }}</p>
-          <button type="button" (click)="refreshWalletData()"
-            class="mt-2 text-sm font-medium text-error-strong hover:text-error-strong dark:hover:text-error-50 underline">
-            Reintentar
-          </button>
+      <div
+        class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4 transition-colors duration-300"
+      >
+        <div class="flex items-start space-x-3">
+          <svg
+            class="w-6 h-6 text-error-text flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-error-strong">Error al cargar el wallet</p>
+            <p class="mt-1 text-sm text-error-strong">{{ error.message }}</p>
+            <button
+              type="button"
+              (click)="refreshWalletData()"
+              class="mt-2 text-sm font-medium text-error-strong hover:text-error-strong dark:hover:text-error-50 underline"
+            >
+              Reintentar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     }
 
     <!-- Hero Snapshot -->
     <section
-      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft">
+      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+    >
       <div class="grid gap-6 lg:grid-cols-5 items-start">
         <div class="lg:col-span-3 flex flex-col gap-4">
           <div>
             <p
-              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60">
+              class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+            >
               Panel de control
             </p>
-            <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1"
-              data-testid="wallet-page-heading">
+            <h1
+              class="text-3xl font-bold text-text-primary dark:text-text-primary mt-1"
+              data-testid="wallet-page-heading"
+            >
               Mi Wallet
             </h1>
             <p class="text-body text-text-secondary dark:text-text-secondary/80 mt-1">
@@ -45,73 +60,105 @@
           <div class="space-y-3">
             <div class="flex flex-wrap gap-2">
               <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-cta-default/20 dark:text-cta-default">
-                ✅ Saldo actualizado
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 dark:bg-cta-default/20 dark:text-cta-default"
+              >
+                <app-icon name="check-circle" [size]="16" cssClass="inline-block" /> Saldo
+                actualizado
               </span>
-              <span [ngClass]="{
+              <span
+                [ngClass]="{
                   'bg-success-light/10': protectedCreditStatus() === 'active',
                   'text-success-light': protectedCreditStatus() === 'active',
                   'bg-warning-bg': protectedCreditStatus() !== 'active',
                   'text-warning-strong': protectedCreditStatus() !== 'active',
                 }"
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold">
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+              >
                 {{
-                protectedCreditStatus() === 'active'
-                ? 'Crédito protegido listo'
-                : 'Crédito protegido pendiente'
+                  protectedCreditStatus() === 'active'
+                    ? 'Crédito protegido listo'
+                    : 'Crédito protegido pendiente'
                 }}
               </span>
               @if (pendingDepositsCount() > 0) {
-              <span
-                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-200">
-                {{ pendingDepositsCount() }} depósito(s) pendiente(s)
-              </span>
+                <span
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-200"
+                >
+                  {{ pendingDepositsCount() }} depósito(s) pendiente(s)
+                </span>
               }
             </div>
             <div class="flex flex-wrap gap-3">
               <!-- Primary CTA - Contextual based on protected credit status -->
-              <button type="button" (click)="openDepositModal()"
+              <button
+                type="button"
+                (click)="openDepositModal()"
                 [title]="primaryDepositCTATooltip()"
                 class="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition shadow-soft"
-                [ngClass]="primaryDepositCTAClass()" data-testid="deposit-button-hero">
-                <svg *ngIf="protectedCreditStatus() !== 'active'" class="w-4 h-4" fill="none"
-                  stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 4v16m8-8H4" />
+                [ngClass]="primaryDepositCTAClass()"
+                data-testid="deposit-button-hero"
+              >
+                <svg
+                  *ngIf="protectedCreditStatus() !== 'active'"
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 <span>{{ primaryDepositCTAText() }}</span>
               </button>
 
               <!-- Secondary CTAs -->
-              <button type="button" (click)="setActiveTab('transactions')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition">
+              <button
+                type="button"
+                (click)="setActiveTab('transactions')"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-primary-100 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
+              >
                 Ver transacciones
               </button>
-              <button type="button" (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border-default dark:border-border-default text-text-secondary dark:text-text-secondary font-semibold hover:border-primary-300 transition">
+              <button
+                type="button"
+                (click)="setActiveTab('withdrawals')"
+                class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-border-default dark:border-border-default text-text-secondary dark:text-text-secondary font-semibold hover:border-primary-300 transition"
+              >
                 Solicitar retiro
               </button>
             </div>
             <p
-              class="text-xs text-text-secondary dark:text-text-secondary/70 flex flex-wrap items-center gap-3">
+              class="text-xs text-text-secondary dark:text-text-secondary/70 flex flex-wrap items-center gap-3"
+            >
               @if (pendingDepositsCount() > 0) {
-              <span>
-                Tienes {{ pendingDepositsCount() }} depósito(s) pendiente(s). Se acreditan
-                automáticamente en unos minutos.
-              </span>
-              <button type="button" (click)="refreshWalletData()"
-                class="inline-flex items-center gap-1 text-primary-700 dark:text-cta-default font-semibold hover:text-primary-900 dark:hover:text-cta-default/80 transition">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 0119 5" />
-                </svg>
-                Actualizar ahora
-              </button>
+                <span>
+                  Tienes {{ pendingDepositsCount() }} depósito(s) pendiente(s). Se acreditan
+                  automáticamente en unos minutos.
+                </span>
+                <button
+                  type="button"
+                  (click)="refreshWalletData()"
+                  class="inline-flex items-center gap-1 text-primary-700 dark:text-cta-default font-semibold hover:text-primary-900 dark:hover:text-cta-default/80 transition"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v6h6M20 20v-6h-6M5 19A9 9 0 0119 5"
+                    />
+                  </svg>
+                  Actualizar ahora
+                </button>
               } @else {
-              <span>
-                Tus depósitos se acreditan automáticamente. Te avisaremos si algún movimiento
-                necesita atención.
-              </span>
+                <span>
+                  Tus depósitos se acreditan automáticamente. Te avisaremos si algún movimiento
+                  necesita atención.
+                </span>
               }
             </p>
           </div>
@@ -124,283 +171,426 @@
 
     <!-- Onboarding Banner (Only for new users with pending protected credit) -->
     @if (protectedCreditStatus() === 'pending' && !onboardingBannerDismissed()) {
-    <section
-      class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/40 bg-gradient-to-br from-cta-default/5 to-warning-light/5 dark:from-cta-default/10 dark:to-warning-light/10 p-6 md:p-8 shadow-soft relative overflow-hidden">
-      <!-- Dismiss Button -->
-      <button type="button" (click)="dismissOnboardingBanner()"
-        class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-surface-raised dark:bg-surface-secondary/50 dark:hover:bg-slate-deep/50 transition"
-        aria-label="Cerrar banner">
-        <svg class="w-5 h-5 text-text-secondary dark:text-text-secondary" fill="none"
-          stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+      <section
+        class="rounded-2xl border-2 border-cta-default/30 dark:border-cta-default/40 bg-gradient-to-br from-cta-default/5 to-warning-light/5 dark:from-cta-default/10 dark:to-warning-light/10 p-6 md:p-8 shadow-soft relative overflow-hidden"
+      >
+        <!-- Dismiss Button -->
+        <button
+          type="button"
+          (click)="dismissOnboardingBanner()"
+          class="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-surface-raised dark:bg-surface-secondary/50 dark:hover:bg-slate-deep/50 transition"
+          aria-label="Cerrar banner"
+        >
+          <svg
+            class="w-5 h-5 text-text-secondary dark:text-text-secondary"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
 
-      <!-- Content -->
-      <div class="grid gap-6 lg:grid-cols-3 items-center pr-8">
-        <div class="lg:col-span-2 space-y-4">
-          <div>
-            <div class="flex items-center gap-2 mb-2">
-              <span
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default">
-                ✨ Nuevo
-              </span>
+        <!-- Content -->
+        <div class="grid gap-6 lg:grid-cols-3 items-center pr-8">
+          <div class="lg:col-span-2 space-y-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cta-default/20 text-cta-default dark:bg-cta-default/30 dark:text-cta-default"
+                >
+                  <app-icon name="lightning" [size]="16" cssClass="inline-block mr-1" /> Nuevo
+                </span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-bold text-text-primary dark:text-text-primary">
+                Configura tu crédito protegido para reservar sin tarjeta
+              </h2>
+              <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-2">
+                Deposita <strong>USD 300 una sola vez</strong> y reserva vehículos sin necesidad de
+                tarjeta de crédito internacional.
+              </p>
             </div>
-            <h2 class="text-2xl md:text-3xl font-bold text-text-primary dark:text-text-primary">
-              Configura tu crédito protegido para reservar sin tarjeta
-            </h2>
-            <p class="text-base text-text-secondary dark:text-text-secondary/80 mt-2">
-              Deposita <strong>USD 300 una sola vez</strong> y reserva vehículos sin necesidad de
-              tarjeta de crédito internacional.
+
+            <!-- Benefits List -->
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
+                    No necesitas tarjeta
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    Ideal sin tarjeta internacional
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
+                    Úsalo en cada reserva
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    Se reutiliza automáticamente
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2">
+                <svg
+                  class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
+                    Se libera después
+                  </p>
+                  <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                    Vuelve disponible tras el viaje
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="lg:col-span-1 flex flex-col gap-3">
+            <button
+              type="button"
+              (click)="openDepositModalForProtectedCredit()"
+              class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
+              data-testid="deposit-button-onboarding"
+            >
+              <span>Configurar crédito protegido</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </button>
+            <p class="text-xs text-center text-text-secondary dark:text-text-secondary/60">
+              Configura en 5 minutos
             </p>
           </div>
-
-          <!-- Benefits List -->
-          <div class="grid gap-3 sm:grid-cols-3">
-            <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                  No necesitas tarjeta
-                </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                  Ideal sin tarjeta internacional
-                </p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                  Úsalo en cada reserva
-                </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                  Se reutiliza automáticamente
-                </p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 13l4 4L19 7" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-text-primary dark:text-text-primary">
-                  Se libera después
-                </p>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-                  Vuelve disponible tras el viaje
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <!-- CTA -->
-        <div class="lg:col-span-1 flex flex-col gap-3">
-          <button type="button" (click)="openDepositModalForProtectedCredit()"
-            class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
-            data-testid="deposit-button-onboarding">
-            <span>Configurar crédito protegido</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
-          <p class="text-xs text-center text-text-secondary dark:text-text-secondary/60">
-            Configura en 5 minutos
-          </p>
-        </div>
-      </div>
-    </section>
+      </section>
     }
 
     <!-- Expandable Benefits Section (only for users without active protected credit) -->
     @if (protectedCreditStatus() !== 'active') {
-    <section
-      class="rounded-2xl border border-cta-default/20 dark:border-cta-default/30 bg-surface-raised dark:bg-surface-raised shadow-soft overflow-hidden">
-      <!-- Collapsible Header -->
-      <button type="button" (click)="toggleBenefitsSection()"
-        class="w-full px-6 py-4 flex items-center justify-between hover:bg-cta-default/5 dark:hover:bg-cta-default/10 transition-colors">
-        <div class="flex items-center gap-3">
-          <svg class="w-6 h-6 text-cta-default" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-          <div class="text-left">
-            <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">
-              ¿Por qué usar Crédito Autorentar?
-            </h3>
-            <p class="text-xs text-text-secondary dark:text-text-secondary/70">
-              Conoce los beneficios y casos de uso
-            </p>
-          </div>
-        </div>
-        <svg class="w-5 h-5 text-text-secondary dark:text-text-secondary transition-transform"
-          [class.rotate-180]="benefitsSectionExpanded()" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      <!-- Expandable Content -->
-      @if (benefitsSectionExpanded()) {
-      <div
-        class="px-6 pb-6 pt-2 space-y-6 border-t border-border-default dark:border-border-default/30 dark:border-neutral-700">
-        <!-- Benefits Grid -->
-        <div>
-          <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
-            Beneficios principales
-          </h4>
-          <div class="grid gap-3 sm:grid-cols-2">
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-success-bg dark:bg-success-bg0/10">
-              <svg class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-success-strong dark:text-success-200">
-                  No necesitas tarjeta internacional
-                </p>
-                <p class="text-xs text-success-strong dark:text-success-300 mt-1">
-                  Ideal para usuarios sin tarjeta habilitada para compras internacionales
-                </p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10">
-              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-primary-800 dark:text-primary-200">
-                  Configúralo una vez, úsalo siempre
-                </p>
-                <p class="text-xs text-primary-700 dark:text-primary-300 mt-1">
-                  Se usa automáticamente en cada reserva sin necesidad de volver a configurar
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="flex items-start gap-3 p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20">
-              <svg class="w-5 h-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-cta-default dark:text-cta-default">
-                  Se libera inmediatamente
-                </p>
-                <p class="text-xs text-cta-default/80 dark:text-cta-default/70 mt-1">
-                  Después de cada viaje completado, el crédito vuelve a estar disponible
-                </p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3 rounded-lg bg-warning-bg dark:bg-warning-bg0/10">
-              <svg class="w-5 h-5 text-warning-text dark:text-warning-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              <div>
-                <p class="text-sm font-semibold text-warning-strong dark:text-warning-200">
-                  Reservas más rápidas
-                </p>
-                <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
-                  Evitas el proceso de verificación de tarjeta en cada reserva
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Use Cases -->
-        <div>
-          <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
-            Casos de uso ideales
-          </h4>
-          <ul class="space-y-2">
-            <li class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary">
-              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-              <span>
-                <strong>Viajeros del exterior:</strong> Si tu tarjeta no está habilitada para
-                compras internacionales
-              </span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary">
-              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-              <span>
-                <strong>Usuarios frecuentes:</strong> Si rentas vehículos regularmente y quieres
-                simplificar el proceso
-              </span>
-            </li>
-            <li class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary">
-              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5l7 7-7 7" />
-              </svg>
-              <span>
-                <strong>Preferencia por no usar tarjeta:</strong> Si prefieres no ingresar datos
-                de tarjeta en cada reserva
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- CTA -->
-        <div class="pt-2">
-          <button type="button" (click)="openDepositModalForProtectedCredit()"
-            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft">
-            <span>Configurar crédito protegido ahora</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      <section
+        class="rounded-2xl border border-cta-default/20 dark:border-cta-default/30 bg-surface-raised dark:bg-surface-raised shadow-soft overflow-hidden"
+      >
+        <!-- Collapsible Header -->
+        <button
+          type="button"
+          (click)="toggleBenefitsSection()"
+          class="w-full px-6 py-4 flex items-center justify-between hover:bg-cta-default/5 dark:hover:bg-cta-default/10 transition-colors"
+        >
+          <div class="flex items-center gap-3">
+            <svg
+              class="w-6 h-6 text-cta-default"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+              />
             </svg>
-          </button>
-        </div>
-      </div>
-      }
-    </section>
+            <div class="text-left">
+              <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">
+                ¿Por qué usar Crédito Autorentar?
+              </h3>
+              <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                Conoce los beneficios y casos de uso
+              </p>
+            </div>
+          </div>
+          <svg
+            class="w-5 h-5 text-text-secondary dark:text-text-secondary transition-transform"
+            [class.rotate-180]="benefitsSectionExpanded()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        <!-- Expandable Content -->
+        @if (benefitsSectionExpanded()) {
+          <div
+            class="px-6 pb-6 pt-2 space-y-6 border-t border-border-default dark:border-border-default/30 dark:border-neutral-700"
+          >
+            <!-- Benefits Grid -->
+            <div>
+              <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
+                Beneficios principales
+              </h4>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-success-bg dark:bg-success-bg0/10"
+                >
+                  <svg
+                    class="w-5 h-5 text-success-text dark:text-success-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-success-strong dark:text-success-200">
+                      No necesitas tarjeta internacional
+                    </p>
+                    <p class="text-xs text-success-strong dark:text-success-300 mt-1">
+                      Ideal para usuarios sin tarjeta habilitada para compras internacionales
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-primary-50 dark:bg-primary-500/10"
+                >
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-primary-800 dark:text-primary-200">
+                      Configúralo una vez, úsalo siempre
+                    </p>
+                    <p class="text-xs text-primary-700 dark:text-primary-300 mt-1">
+                      Se usa automáticamente en cada reserva sin necesidad de volver a configurar
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-cta-default/10 dark:bg-cta-default/20"
+                >
+                  <svg
+                    class="w-5 h-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-cta-default dark:text-cta-default">
+                      Se libera inmediatamente
+                    </p>
+                    <p class="text-xs text-cta-default/80 dark:text-cta-default/70 mt-1">
+                      Después de cada viaje completado, el crédito vuelve a estar disponible
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-start gap-3 p-3 rounded-lg bg-warning-bg dark:bg-warning-bg0/10"
+                >
+                  <svg
+                    class="w-5 h-5 text-warning-text dark:text-warning-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  <div>
+                    <p class="text-sm font-semibold text-warning-strong dark:text-warning-200">
+                      Reservas más rápidas
+                    </p>
+                    <p class="text-xs text-warning-strong dark:text-warning-300 mt-1">
+                      Evitas el proceso de verificación de tarjeta en cada reserva
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Use Cases -->
+            <div>
+              <h4 class="text-sm font-bold text-text-primary dark:text-text-primary mb-3">
+                Casos de uso ideales
+              </h4>
+              <ul class="space-y-2">
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Viajeros del exterior:</strong> Si tu tarjeta no está habilitada para
+                    compras internacionales
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Usuarios frecuentes:</strong> Si rentas vehículos regularmente y quieres
+                    simplificar el proceso
+                  </span>
+                </li>
+                <li
+                  class="flex items-start gap-2 text-sm text-text-secondary dark:text-text-secondary"
+                >
+                  <svg
+                    class="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  <span>
+                    <strong>Preferencia por no usar tarjeta:</strong> Si prefieres no ingresar datos
+                    de tarjeta en cada reserva
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- CTA -->
+            <div class="pt-2">
+              <button
+                type="button"
+                (click)="openDepositModalForProtectedCredit()"
+                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-soft"
+              >
+                <span>Configurar crédito protegido ahora</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        }
+      </section>
     }
 
     <!-- Protection + Quick Info -->
     <section class="grid gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2 space-y-6">
         <section
-          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft">
+          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+        >
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p
-                class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60">
+                class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+              >
                 Protección de reservas
               </p>
               <h2 class="text-2xl font-semibold text-text-primary dark:text-text-primary mt-1">
@@ -411,23 +601,30 @@
                 la plataforma.
               </p>
             </div>
-            <button type="button" (click)="openDepositModal()"
-              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition">
+            <button
+              type="button"
+              (click)="openDepositModal()"
+              class="px-4 py-2 rounded-lg border border-primary-200 text-primary-700 dark:text-cta-default font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
+            >
               Configurar crédito
             </button>
           </div>
           <div class="mt-5 space-y-4">
-            <app-guarantee-options-info [protectedCreditStatus]="protectedCreditStatus()"
+            <app-guarantee-options-info
+              [protectedCreditStatus]="protectedCreditStatus()"
               [protectedCreditBalance]="protectedCreditBalance()"
               [protectedCreditTarget]="protectedCreditTarget"
               [protectedCreditProgress]="protectedCreditProgress()"
-              (openDepositModal)="openDepositModal()"></app-guarantee-options-info>
+              (openDepositModal)="openDepositModal()"
+            ></app-guarantee-options-info>
 
             <div class="grid gap-3 sm:grid-cols-3">
               <div
-                class="rounded-xl border border-warning-border bg-warning-bg/70 dark:bg-warning-bg0/10 px-3 py-3">
+                class="rounded-xl border border-warning-border bg-warning-bg/70 dark:bg-warning-bg0/10 px-3 py-3"
+              >
                 <p
-                  class="text-xs uppercase tracking-wide text-warning-strong/90 dark:text-warning-200">
+                  class="text-xs uppercase tracking-wide text-warning-strong/90 dark:text-warning-200"
+                >
                   Crédito protegido
                 </p>
                 <p class="text-lg font-semibold text-text-primary dark:text-warning-50">
@@ -438,9 +635,11 @@
                 </p>
               </div>
               <div
-                class="rounded-xl border border-success-border bg-success-bg/70 dark:bg-success-bg0/10 px-3 py-3">
+                class="rounded-xl border border-success-border bg-success-bg/70 dark:bg-success-bg0/10 px-3 py-3"
+              >
                 <p
-                  class="text-xs uppercase tracking-wide text-success-strong/90 dark:text-success-200">
+                  class="text-xs uppercase tracking-wide text-success-strong/90 dark:text-success-200"
+                >
                   Transferible (in-app)
                 </p>
                 <p class="text-lg font-semibold text-text-primary dark:text-success-50">
@@ -451,23 +650,27 @@
                 </p>
               </div>
               <div
-                class="rounded-xl border border-border-default dark:border-border-default/60 dark:border-neutral-700 px-3 py-3 bg-surface-raised dark:bg-surface-secondary/80 dark:bg-surface-secondary/80">
+                class="rounded-xl border border-border-default dark:border-border-default/60 dark:border-neutral-700 px-3 py-3 bg-surface-raised dark:bg-surface-secondary/80 dark:bg-surface-secondary/80"
+              >
                 <p
-                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/70">
+                  class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/70"
+                >
                   Retirable (off-ramp)
                 </p>
                 <p class="text-lg font-semibold text-text-primary dark:text-text-primary">
                   USD {{ withdrawableBalance() / 100 | number: '1.2-2' }}
                 </p>
                 <p
-                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 mt-1">
+                  class="text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60 mt-1"
+                >
                   Disponible para tu cuenta bancaria
                 </p>
               </div>
             </div>
 
             <p
-              class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/70">
+              class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/70"
+            >
               Los fondos bloqueados se liberan automáticamente cuando finalizan tus reservas. Podés
               sumar saldo retirables para completar pagos o solicitar retiros cuando quieras.
             </p>
@@ -477,13 +680,16 @@
 
       <aside class="space-y-6">
         @if (walletAccountNumber()) {
-        <app-wallet-account-number-card [walletAccountNumber]="walletAccountNumber()"
-          [copied]="copied()"
-          (copyWAN)="copyWalletAccountNumber()"></app-wallet-account-number-card>
+          <app-wallet-account-number-card
+            [walletAccountNumber]="walletAccountNumber()"
+            [copied]="copied()"
+            (copyWAN)="copyWalletAccountNumber()"
+          ></app-wallet-account-number-card>
         }
 
         <section
-          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-5 shadow-soft">
+          class="rounded-2xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-5 shadow-soft"
+        >
           <h3 class="text-base font-semibold text-text-primary dark:text-text-primary mb-2">
             Acciones rápidas
           </h3>
@@ -491,19 +697,28 @@
             Sumá fondos, transfere a otros usuarios o retiralos cuando lo necesites.
           </p>
           <div class="flex flex-col gap-3">
-            <button type="button" (click)="openDepositModal()"
+            <button
+              type="button"
+              (click)="openDepositModal()"
               class="w-full inline-flex items-center justify-between rounded-lg border border-primary-100 text-primary-700 dark:text-cta-default px-4 py-3 font-semibold hover:bg-primary-50 dark:hover:bg-cta-default/10 transition"
-              data-testid="deposit-button-quick">
+              data-testid="deposit-button-quick"
+            >
               Depositar
               <span aria-hidden="true">→</span>
             </button>
-            <button type="button" (click)="goToTransfer()"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition">
+            <button
+              type="button"
+              (click)="goToTransfer()"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
+            >
               Transferir
               <span aria-hidden="true">→</span>
             </button>
-            <button type="button" (click)="setActiveTab('withdrawals')"
-              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition">
+            <button
+              type="button"
+              (click)="setActiveTab('withdrawals')"
+              class="w-full inline-flex items-center justify-between rounded-lg border border-border-default dark:border-neutral-700 text-text-secondary dark:text-text-secondary px-4 py-3 font-semibold hover:border-primary-300 transition"
+            >
               Retirar
               <span aria-hidden="true">→</span>
             </button>
@@ -514,11 +729,13 @@
 
     <!-- Transactions & Withdrawals -->
     <section
-      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft">
+      class="rounded-3xl border border-border-default dark:border-border-default/70 dark:border-neutral-800/70 bg-surface-raised dark:bg-surface-raised p-6 shadow-soft"
+    >
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <p
-            class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60">
+            class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
+          >
             Movimientos y retiros
           </p>
           <h2 class="text-2xl font-bold text-text-primary dark:text-text-primary">
@@ -529,22 +746,31 @@
           </p>
         </div>
         <div class="flex gap-2">
-          <button type="button" (click)="setActiveTab('transactions')"
+          <button
+            type="button"
+            (click)="setActiveTab('transactions')"
             [class.bg-cta-default]="activeTab() === 'transactions'"
             [class.text-text-inverse]="activeTab() === 'transactions'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+          >
             Transacciones
           </button>
-          <button type="button" (click)="setActiveTab('transfers')"
+          <button
+            type="button"
+            (click)="setActiveTab('transfers')"
             [class.bg-cta-default]="activeTab() === 'transfers'"
             [class.text-text-inverse]="activeTab() === 'transfers'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+          >
             Transferencias
           </button>
-          <button type="button" (click)="setActiveTab('withdrawals')"
+          <button
+            type="button"
+            (click)="setActiveTab('withdrawals')"
             [class.bg-cta-default]="activeTab() === 'withdrawals'"
             [class.text-text-inverse]="activeTab() === 'withdrawals'"
-            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
+            class="px-4 py-2 text-sm font-semibold rounded-xl border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+          >
             Retiros
           </button>
         </div>
@@ -552,95 +778,120 @@
 
       <div class="mt-6">
         @if (activeTab() === 'transactions') {
-        <app-transaction-history></app-transaction-history>
+          <app-transaction-history></app-transaction-history>
         }
 
         @if (activeTab() === 'transfers') {
-        <app-wallet-transfers></app-wallet-transfers>
+          <app-wallet-transfers></app-wallet-transfers>
         }
 
         @if (activeTab() === 'withdrawals') {
-        <div class="space-y-6">
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
-              Gestión de Retiros
-            </h3>
-            <div class="flex gap-2">
-              <button type="button" (click)="setWithdrawalMode('form')"
-                [class.bg-cta-default]="withdrawalMode() === 'form'"
-                [class.text-text-inverse]="withdrawalMode() === 'form'"
-                class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
-                Solicitar retiro
-              </button>
-              <button type="button" (click)="setWithdrawalMode('accounts')"
-                [class.bg-cta-default]="withdrawalMode() === 'accounts'"
-                [class.text-text-inverse]="withdrawalMode() === 'accounts'"
-                class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition">
-                Cuentas bancarias
-              </button>
-            </div>
-          </div>
-
-          @if (withdrawalMode() === 'form') {
           <div class="space-y-6">
-            <app-withdrawal-request-form [availableBalance]="availableBalanceSummary()"
-              [withdrawableBalance]="withdrawableBalance()"
-              [nonWithdrawableBalance]="protectedCreditBalance()" [accounts]="activeBankAccounts()"
-              (submitWithdrawal)="handleWithdrawalRequest($event)"></app-withdrawal-request-form>
-
-            @if (activeBankAccounts().length === 0) {
-            <div class="info-card-warm">
-              <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-warning-light mt-0.5 flex-shrink-0" fill="none"
-                  stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                  </path>
-                </svg>
-                <div class="flex-1">
-                  <p class="text-sm text-text-primary dark:text-text-secondary">
-                    Aún no registraste cuentas bancarias.
-                  </p>
-                  <button type="button" (click)="setWithdrawalMode('accounts')"
-                    class="mt-2 text-sm font-medium text-warning-light dark:text-text-secondary hover:text-cta-default dark:hover:text-ivory-luminous underline transition">
-                    Agregar cuenta bancaria
-                  </button>
-                </div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                Gestión de Retiros
+              </h3>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('form')"
+                  [class.bg-cta-default]="withdrawalMode() === 'form'"
+                  [class.text-text-inverse]="withdrawalMode() === 'form'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+                >
+                  Solicitar retiro
+                </button>
+                <button
+                  type="button"
+                  (click)="setWithdrawalMode('accounts')"
+                  [class.bg-cta-default]="withdrawalMode() === 'accounts'"
+                  [class.text-text-inverse]="withdrawalMode() === 'accounts'"
+                  class="px-3 py-2 text-sm font-medium rounded-lg border border-transparent text-text-secondary dark:text-text-secondary hover:bg-cta-default/10 dark:hover:bg-slate-deep/80 transition"
+                >
+                  Cuentas bancarias
+                </button>
               </div>
             </div>
+
+            @if (withdrawalMode() === 'form') {
+              <div class="space-y-6">
+                <app-withdrawal-request-form
+                  [availableBalance]="availableBalanceSummary()"
+                  [withdrawableBalance]="withdrawableBalance()"
+                  [nonWithdrawableBalance]="protectedCreditBalance()"
+                  [accounts]="activeBankAccounts()"
+                  (submitWithdrawal)="handleWithdrawalRequest($event)"
+                ></app-withdrawal-request-form>
+
+                @if (activeBankAccounts().length === 0) {
+                  <div class="info-card-warm">
+                    <div class="flex items-start gap-3">
+                      <svg
+                        class="w-5 h-5 text-warning-light mt-0.5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        ></path>
+                      </svg>
+                      <div class="flex-1">
+                        <p class="text-sm text-text-primary dark:text-text-secondary">
+                          Aún no registraste cuentas bancarias.
+                        </p>
+                        <button
+                          type="button"
+                          (click)="setWithdrawalMode('accounts')"
+                          class="mt-2 text-sm font-medium text-warning-light dark:text-text-secondary hover:text-cta-default dark:hover:text-ivory-luminous underline transition"
+                        >
+                          Agregar cuenta bancaria
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <div class="border-t border-border-default dark:border-slate-deep pt-6">
+                  <app-withdrawal-history
+                    [requests]="withdrawalRequests()"
+                    [loading]="loading().fetchingRequests"
+                    (cancelRequest)="handleCancelWithdrawal($event)"
+                    (refresh)="handleRefreshWithdrawals()"
+                  ></app-withdrawal-history>
+                </div>
+              </div>
             }
 
-            <div class="border-t border-border-default dark:border-slate-deep pt-6">
-              <app-withdrawal-history [requests]="withdrawalRequests()"
-                [loading]="loading().fetchingRequests"
-                (cancelRequest)="handleCancelWithdrawal($event)"
-                (refresh)="handleRefreshWithdrawals()"></app-withdrawal-history>
-            </div>
-          </div>
-          }
+            @if (withdrawalMode() === 'accounts') {
+              <div class="space-y-6">
+                <app-bank-accounts-list
+                  [accounts]="bankAccounts()"
+                  [loading]="loading().fetchingBankAccounts"
+                  (setDefault)="handleSetDefaultAccount($event)"
+                  (deleteAccount)="handleDeleteAccount($event)"
+                ></app-bank-accounts-list>
 
-          @if (withdrawalMode() === 'accounts') {
-          <div class="space-y-6">
-            <app-bank-accounts-list [accounts]="bankAccounts()"
-              [loading]="loading().fetchingBankAccounts"
-              (setDefault)="handleSetDefaultAccount($event)"
-              (deleteAccount)="handleDeleteAccount($event)"></app-bank-accounts-list>
-
-            <div class="border-t border-border-default dark:border-slate-deep pt-6">
-              <h4 class="text-base font-semibold mb-4">Agregar nueva cuenta</h4>
-              <app-bank-account-form
-                (submitAccount)="handleAddBankAccount($event)"></app-bank-account-form>
-            </div>
+                <div class="border-t border-border-default dark:border-slate-deep pt-6">
+                  <h4 class="text-base font-semibold mb-4">Agregar nueva cuenta</h4>
+                  <app-bank-account-form
+                    (submitAccount)="handleAddBankAccount($event)"
+                  ></app-bank-account-form>
+                </div>
+              </div>
+            }
           </div>
-          }
-        </div>
         }
       </div>
     </section>
 
     <!-- Gradient CTA -->
     <section
-      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-inverse">
+      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-inverse"
+    >
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-bold mb-2">Gestiona tu dinero fácilmente</h2>
@@ -650,17 +901,26 @@
           </p>
         </div>
         <div class="flex flex-wrap gap-3 justify-center md:justify-end">
-          <button type="button" (click)="openDepositModal()"
+          <button
+            type="button"
+            (click)="openDepositModal()"
             class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary text-cta-default font-semibold rounded-xl hover:bg-surface-secondary transition"
-            data-testid="deposit-button-gradient">
+            data-testid="deposit-button-gradient"
+          >
             Depositar
           </button>
-          <button type="button" (click)="goToTransfer()"
-            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-white/40 text-text-inverse font-semibold rounded-xl hover:bg-surface-raised dark:bg-surface-secondary/30 transition">
+          <button
+            type="button"
+            (click)="goToTransfer()"
+            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-white/40 text-text-inverse font-semibold rounded-xl hover:bg-surface-raised dark:bg-surface-secondary/30 transition"
+          >
             Transferir
           </button>
-          <button type="button" (click)="setActiveTab('withdrawals')"
-            class="px-5 py-3 bg-cta-default text-cta-text font-semibold rounded-xl hover:bg-cta-default transition">
+          <button
+            type="button"
+            (click)="setActiveTab('withdrawals')"
+            class="px-5 py-3 bg-cta-default text-cta-text font-semibold rounded-xl hover:bg-cta-default transition"
+          >
             Retirar
           </button>
         </div>
@@ -676,9 +936,11 @@
     <section class="text-center">
       <p class="text-sm text-text-secondary dark:text-text-secondary/70">
         ¿Necesitas más ayuda?
-        <a href="mailto:autorentardev@gmail.com"
-          class="text-cta-default hover:text-warning-light font-semibold ml-1 transition">Contacta a
-          soporte</a>
+        <a
+          href="mailto:autorentardev@gmail.com"
+          class="text-cta-default hover:text-warning-light font-semibold ml-1 transition"
+          >Contacta a soporte</a
+        >
       </p>
     </section>
   </div>

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DisputeEvidenceService {
   private supabase = inject(SupabaseClientService).getClient();
@@ -36,7 +36,7 @@ export class DisputeEvidenceService {
 
   async uploadEvidence(disputeId: string, file: File, note?: string): Promise<string> {
     const filePath = `disputes/${disputeId}/${Date.now()}_${file.name}`;
-    
+
     // 1. Subir archivo al Storage
     const { error: uploadError } = await this.supabase.storage
       .from('evidence') // Asumiendo bucket 'evidence'
@@ -45,19 +45,16 @@ export class DisputeEvidenceService {
     if (uploadError) throw uploadError;
 
     // 2. Registrar en BD
-    const { error: dbError } = await this.supabase
-      .from('dispute_evidence')
-      .insert({
-        dispute_id: disputeId,
-        path: filePath,
-        note: note
-      });
+    const { error: dbError } = await this.supabase.from('dispute_evidence').insert({
+      dispute_id: disputeId,
+      path: filePath,
+      note: note,
+    });
 
     if (dbError) throw dbError;
 
     return filePath;
   }
-
 }
 export interface EvidenceItem {
   id: string;

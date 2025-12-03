@@ -27,9 +27,7 @@ import type { ReviewSummary } from '../../../core/models';
             </div>
             <div class="rounded-lg bg-success-light/10 p-4">
               <p class="text-sm font-medium text-success-light">Promedio</p>
-              <p class="h4 text-success-light">
-                {{ formatRating(s.average_rating) }} ⭐
-              </p>
+              <p class="h4 text-success-light">{{ formatRating(s.average_rating) }} ⭐</p>
             </div>
           </div>
 
@@ -72,39 +70,39 @@ import type { ReviewSummary } from '../../../core/models';
               <div class="grid grid-cols-2 gap-3">
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Limpieza</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.cleanliness) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.cleanliness) }} ⭐
+                  </p>
                 </div>
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Comunicación</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.communication) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.communication) }} ⭐
+                  </p>
                 </div>
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Precisión</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.accuracy) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.accuracy) }} ⭐
+                  </p>
                 </div>
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Ubicación</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.location) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.location) }} ⭐
+                  </p>
                 </div>
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Check-in</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.checkin) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.checkin) }} ⭐
+                  </p>
                 </div>
                 <div class="rounded-lg border border-border-default p-3">
                   <p class="text-xs font-medium text-text-secondary">Valor</p>
-              <p class="h5 text-text-primary">
-                {{ formatRating(s.category_averages.value) }} ⭐
-              </p>
+                  <p class="h5 text-text-primary">
+                    {{ formatRating(s.category_averages.value) }} ⭐
+                  </p>
                 </div>
               </div>
             </div>

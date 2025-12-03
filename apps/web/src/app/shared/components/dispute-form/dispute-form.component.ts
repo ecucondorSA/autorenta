@@ -44,7 +44,11 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
         <!-- Content -->
         <div class="space-y-4">
           <p class="text-sm text-text-secondary dark:text-text-secondary">
-            {{ createdDisputeId() ? 'Ahora puedes subir archivos para respaldar tu disputa.' : 'Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.' }}
+            {{
+              createdDisputeId()
+                ? 'Ahora puedes subir archivos para respaldar tu disputa.'
+                : 'Si tienes un problema con esta reserva, puedes crear una disputa. Nuestro equipo la revisará y te ayudará a resolverla.'
+            }}
           </p>
 
           <div *ngIf="!createdDisputeId()">
@@ -193,10 +197,7 @@ export class DisputeFormComponent {
       });
       this.createdDisputeId.set(newDispute.id); // Almacenar el ID de la disputa creada
 
-      this.toastService.success(
-        'Disputa creada exitosamente. Ahora puedes añadir evidencias.',
-        '',
-      );
+      this.toastService.success('Disputa creada exitosamente. Ahora puedes añadir evidencias.', '');
       // No cerramos el modal, permitimos subir evidencia
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al crear la disputa');

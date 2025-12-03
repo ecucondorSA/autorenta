@@ -89,17 +89,17 @@
                 (change)="onAvatarChange($event)"
                 [disabled]="uploadingAvatar()"
               />
-              📷 Cambiar foto
+              <app-icon name="camera" [size]="16" cssClass="inline-block mr-1" /> Cambiar foto
             </label>
             <button
               *ngIf="!editMode()"
               (click)="toggleEditMode()"
               class="btn-secondary px-4 py-2 text-sm font-medium"
             >
-              ✏️ Editar perfil
+              <app-icon name="edit" [size]="16" cssClass="inline-block mr-1" /> Editar perfil
             </button>
             <button (click)="signOut()" class="btn-secondary px-4 py-2 text-sm font-medium">
-              🚪 Cerrar sesión
+              <app-icon name="logout" [size]="16" cssClass="inline-block mr-1" /> Cerrar sesión
             </button>
           </div>
         </div>
@@ -135,7 +135,7 @@
             <h3
               class="text-lg font-semibold text-text-primary dark:text-text-primary mb-3 flex items-center gap-2"
             >
-              💳 Wallet
+              <app-icon name="wallet" [size]="20" cssClass="inline-block" /> Wallet
             </h3>
             <div class="space-y-3">
               <div class="flex items-center justify-between">
@@ -167,7 +167,7 @@
             <h3
               class="text-lg font-semibold text-text-primary dark:text-text-primary mb-3 flex items-center gap-2"
             >
-              ✅ Verificaciones
+              <app-icon name="verified" [size]="20" cssClass="inline-block" /> Verificaciones
             </h3>
             <div class="space-y-3">
               <div class="flex items-center justify-between">
@@ -178,7 +178,10 @@
                       profile()?.is_email_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
-                    {{ profile()?.is_email_verified ? '✓' : '✗' }}
+                    <app-icon
+                      [name]="profile()?.is_email_verified ? 'check' : 'close'"
+                      [size]="14"
+                    />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
                     {{ profile()?.is_email_verified ? 'Verificado' : 'Pendiente' }}
@@ -195,7 +198,10 @@
                       profile()?.is_phone_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
-                    {{ profile()?.is_phone_verified ? '✓' : '✗' }}
+                    <app-icon
+                      [name]="profile()?.is_phone_verified ? 'check' : 'close'"
+                      [size]="14"
+                    />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
                     {{ profile()?.is_phone_verified ? 'Verificado' : 'Pendiente' }}
@@ -212,7 +218,10 @@
                       profile()?.is_driver_verified ? 'text-cta-default' : 'text-warning-light'
                     "
                   >
-                    {{ profile()?.is_driver_verified ? '✓' : '✗' }}
+                    <app-icon
+                      [name]="profile()?.is_driver_verified ? 'check' : 'close'"
+                      [size]="14"
+                    />
                   </span>
                   <span class="text-xs text-text-muted dark:text-text-secondary/60">
                     {{ profile()?.is_driver_verified ? 'Verificada' : 'Pendiente' }}
@@ -234,7 +243,7 @@
             <h3
               class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
             >
-              👤 Información básica
+              <app-icon name="user" [size]="20" cssClass="inline-block" /> Información básica
             </h3>
             <div class="grid gap-4 sm:grid-cols-2">
               <div>
@@ -273,12 +282,12 @@
                 >
                   {{
                     profile()?.role === 'owner'
-                      ? '🏢 Locador'
+                      ? 'Locador'
                       : profile()?.role === 'renter'
-                        ? '🚗 Locatario'
+                        ? 'Locatario'
                         : profile()?.role === 'both'
-                          ? '🔄 Ambos'
-                          : '👑 Admin'
+                          ? 'Ambos'
+                          : 'Admin'
                   }}
                 </span>
               </div>
@@ -304,19 +313,22 @@
                   *ngIf="canPublishCars()"
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-cta-default/10 text-cta-default border border-cta-default/20"
                 >
-                  ✅ Puede publicar autos
+                  <app-icon name="check" [size]="14" cssClass="inline-block mr-1" /> Puede publicar
+                  autos
                 </span>
                 <span
                   *ngIf="canBookCars()"
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-success-bg/10 text-success-strong border border-success-bg/20"
                 >
-                  ✅ Puede reservar autos
+                  <app-icon name="check" [size]="14" cssClass="inline-block mr-1" /> Puede reservar
+                  autos
                 </span>
                 <span
                   *ngIf="!canPublishCars() && !canBookCars()"
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-warning-bg/10 text-warning-strong border border-warning-bg/20"
                 >
-                  ⏳ Verificación pendiente
+                  <app-icon name="clock" [size]="14" cssClass="inline-block mr-1" /> Verificación
+                  pendiente
                 </span>
               </div>
             </div>
@@ -327,7 +339,7 @@
             <h3
               class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
             >
-              📋 Detalles del perfil
+              <app-icon name="clipboard" [size]="20" cssClass="inline-block" /> Detalles del perfil
             </h3>
 
             <!-- Contact Info -->
@@ -337,7 +349,7 @@
               [class.profile-section-highlight]="highlightedSection() === 'contact'"
             >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
-                📞 Contacto
+                <app-icon name="phone" [size]="18" cssClass="inline-block mr-1" /> Contacto
               </h4>
               <div class="grid gap-3 sm:grid-cols-2">
                 <div *ngIf="profile()?.phone" class="flex items-center gap-3">
@@ -402,7 +414,7 @@
               [class.profile-section-highlight]="highlightedSection() === 'address'"
             >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
-                📍 Dirección
+                <app-icon name="location" [size]="18" cssClass="inline-block mr-1" /> Dirección
               </h4>
               <div *ngIf="profile()?.address_line1" class="flex items-start gap-3">
                 <div
@@ -465,7 +477,8 @@
               [class.profile-section-highlight]="highlightedSection() === 'license'"
             >
               <h4 class="text-lg font-medium text-text-primary dark:text-text-primary mb-3">
-                🚗 Licencia de conducir
+                <app-icon name="car" [size]="18" cssClass="inline-block mr-1" /> Licencia de
+                conducir
               </h4>
               <div *ngIf="profile()?.driver_license_number" class="flex items-start gap-3">
                 <div
@@ -483,7 +496,10 @@
                         : 'text-yellow-600 dark:text-yellow-400'
                     "
                   >
-                    {{ profile()?.is_driver_verified ? '✓' : '⚠' }}
+                    <app-icon
+                      [name]="profile()?.is_driver_verified ? 'check' : 'alert-triangle'"
+                      [size]="14"
+                    />
                   </span>
                 </div>
                 <div>
@@ -510,11 +526,7 @@
                         : 'text-yellow-600 dark:text-yellow-400'
                     "
                   >
-                    {{
-                      profile()?.is_driver_verified
-                        ? '✓ Verificada'
-                        : '⚠ Pendiente de verificación'
-                    }}
+                    {{ profile()?.is_driver_verified ? 'Verificada' : 'Pendiente de verificación' }}
                   </p>
                 </div>
               </div>
@@ -535,7 +547,7 @@
             <h3
               class="text-xl font-semibold text-text-primary dark:text-text-primary mb-4 flex items-center gap-2"
             >
-              💳 Número de cuenta
+              <app-icon name="credit-card" [size]="20" cssClass="inline-block" /> Número de cuenta
             </h3>
             <div
               class="bg-cta-default/5 dark:bg-cta-default/10 rounded-xl p-4 border border-cta-default/20 dark:border-cta-default/30"

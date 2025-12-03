@@ -304,7 +304,10 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
       }
 
       .price-row.total {
-        background: var(--accent-pink-default, #f093fb); /* Replaced gradient with solid color token */
+        background: var(
+          --accent-pink-default,
+          #f093fb
+        ); /* Replaced gradient with solid color token */
         color: white;
         font-weight: 700;
         font-size: 18px;
@@ -407,7 +410,10 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
       }
 
       .final-price {
-        background: var(--surface-cta-alpha-15, rgba(102, 126, 234, 0.15)); /* Replaced gradient with solid color token */
+        background: var(
+          --surface-cta-alpha-15,
+          rgba(102, 126, 234, 0.15)
+        ); /* Replaced gradient with solid color token */
         padding: 16px;
         border-radius: 12px;
         border: 2px solid #667eea;

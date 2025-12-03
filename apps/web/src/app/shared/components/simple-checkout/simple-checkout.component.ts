@@ -30,6 +30,7 @@ import type { Car } from '../../../core/models';
 
 // Utils
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
+import { IconComponent } from '../icon/icon.component';
 
 interface CheckoutStep {
   id: string;
@@ -40,7 +41,7 @@ interface CheckoutStep {
 @Component({
   standalone: true,
   selector: 'app-simple-checkout',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, IconComponent],
   templateUrl: './simple-checkout.component.html',
   styleUrls: ['./simple-checkout.component.css'],
 })

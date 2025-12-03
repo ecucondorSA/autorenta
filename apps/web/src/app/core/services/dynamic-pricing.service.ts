@@ -607,9 +607,8 @@ export class DynamicPricingService {
       return '00:00';
     }
 
-    const { calculateLockExpiresIn, formatLockCountdown } = await import(
-      '../models/dynamic-pricing.model'
-    );
+    const { calculateLockExpiresIn, formatLockCountdown } =
+      await import('../models/dynamic-pricing.model');
     const seconds = calculateLockExpiresIn(priceLock);
     return formatLockCountdown(seconds);
   }
@@ -642,9 +641,8 @@ export class DynamicPricingService {
       return null;
     }
 
-    const { calculatePriceComparison, generatePriceComparisonMessage } = await import(
-      '../models/dynamic-pricing.model'
-    );
+    const { calculatePriceComparison, generatePriceComparisonMessage } =
+      await import('../models/dynamic-pricing.model');
 
     const comparison = calculatePriceComparison(fixedPrice, priceLock.totalPrice);
     const message = generatePriceComparisonMessage(comparison);

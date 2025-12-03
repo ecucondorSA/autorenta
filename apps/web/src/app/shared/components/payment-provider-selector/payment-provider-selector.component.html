@@ -2,7 +2,9 @@
   <!-- Header -->
   <div class="mb-4">
     <h3 class="text-lg font-semibold text-text-primary mb-1">Proveedor de Pago</h3>
-    <p class="text-sm text-text-secondary dark:text-text-secondary">Selecciona tu método de pago preferido</p>
+    <p class="text-sm text-text-secondary dark:text-text-secondary">
+      Selecciona tu método de pago preferido
+    </p>
   </div>
 
   <!-- Loading State -->
@@ -10,7 +12,9 @@
     <div
       class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cta-default"
     ></div>
-    <p class="text-sm text-text-secondary dark:text-text-secondary mt-2">Cargando opciones de pago...</p>
+    <p class="text-sm text-text-secondary dark:text-text-secondary mt-2">
+      Cargando opciones de pago...
+    </p>
   </div>
 
   <!-- Provider Options -->
@@ -39,7 +43,8 @@
           <div class="flex items-center justify-between mb-1">
             <div class="flex items-center gap-2">
               <span class="font-medium text-text-primary">MercadoPago</span>
-              <span class="text-xs px-2 py-1 bg-cta-default/20 text-cta-default rounded-full font-semibold"
+              <span
+                class="text-xs px-2 py-1 bg-cta-default/20 text-cta-default rounded-full font-semibold"
                 >ARS</span
               >
             </div>
@@ -53,10 +58,18 @@
           </p>
 
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Débito</span>
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Crédito</span>
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Efectivo</span>
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Saldo MP</span>
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >Débito</span
+            >
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >Crédito</span
+            >
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >Efectivo</span
+            >
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >Saldo MP</span
+            >
           </div>
 
           <div
@@ -65,7 +78,10 @@
           >
             <p class="text-sm font-medium text-text-primary">Total a pagar:</p>
             <p class="h4 text-cta-default">{{ formatCurrency(amountARS(), 'ARS') }}</p>
-            <p *ngIf="currency === 'USD'" class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+            <p
+              *ngIf="currency === 'USD'"
+              class="text-xs text-text-secondary dark:text-text-secondary mt-1"
+            >
               ≈ {{ formatCurrency(amount, 'USD') }} × {{ exchangeRate() | number: '1.2-2' }}
             </p>
           </div>
@@ -115,9 +131,13 @@
 
           <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Visa</span>
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Mastercard</span>
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >Mastercard</span
+            >
             <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">Amex</span>
-            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded">PayPal</span>
+            <span class="text-xs px-2 py-1 bg-surface-raised text-text-primary rounded"
+              >PayPal</span
+            >
           </div>
 
           <div
@@ -128,7 +148,10 @@
             <p class="h4 text-cta-default">
               {{ formatCurrency(amountUSD(), 'USD') }}
             </p>
-            <p *ngIf="currency === 'ARS'" class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+            <p
+              *ngIf="currency === 'ARS'"
+              class="text-xs text-text-secondary dark:text-text-secondary mt-1"
+            >
               ≈ {{ formatCurrency(amount, 'ARS') }} ÷ {{ exchangeRate() | number: '1.2-2' }}
             </p>
           </div>
@@ -138,7 +161,10 @@
   </div>
 
   <!-- Info Banner -->
-  <div *ngIf="!isLoading()" class="mt-4 p-3 bg-surface-base rounded-lg border border-border-default">
+  <div
+    *ngIf="!isLoading()"
+    class="mt-4 p-3 bg-surface-base rounded-lg border border-border-default"
+  >
     <div class="flex items-start gap-2">
       <svg
         class="w-5 h-5 text-text-secondary dark:text-text-secondary flex-shrink-0 mt-0.5"

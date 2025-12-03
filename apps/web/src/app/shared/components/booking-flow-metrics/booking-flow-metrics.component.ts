@@ -120,9 +120,7 @@ import { RouterLink } from '@angular/router';
             </p>
           </div>
           <div class="text-right">
-          <p class="h3 text-text-primary dark:text-text-primary">
-            {{ conversionRate() }}%
-          </p>
+            <p class="h3 text-text-primary dark:text-text-primary">{{ conversionRate() }}%</p>
             <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-1">
               {{ completedCount() }} / {{ totalCount() }}
             </p>

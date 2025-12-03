@@ -116,7 +116,10 @@ export class LocationMapPickerComponent implements OnInit, AfterViewInit, OnDest
   // Helper to get CSS variable value
   private getCssVariableValue(variableName: string, defaultValue: string): string {
     if (typeof document === 'undefined') return defaultValue; // Server-side rendering check
-    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
+    return (
+      getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() ||
+      defaultValue
+    );
   }
 
   isLoading = signal(true);

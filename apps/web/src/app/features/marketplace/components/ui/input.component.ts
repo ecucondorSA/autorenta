@@ -118,14 +118,14 @@ import { FormsModule } from '@angular/forms';
       .label {
         font-size: 0.875rem;
         font-weight: 600;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
         display: flex;
         align-items: center;
         gap: 0.25rem;
       }
 
       .required {
-        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
+        color: var(--error-default, #b25e5e); /* Reemplazado hex con token semántico */
       }
 
       .input-container {
@@ -139,12 +139,12 @@ import { FormsModule } from '@angular/forms';
       }
 
       .input-container:focus-within {
-        border-color: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
+        border-color: var(--cta-default, #a7d8f4); /* Reemplazado hex con token semántico */
         box-shadow: 0 0 0 3px rgba(167, 216, 244, 0.1); /* Reemplazado rgb con token semántico */
       }
 
       .input-wrapper.has-error .input-container {
-        border-color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
+        border-color: var(--error-default, #b25e5e); /* Reemplazado hex con token semántico */
       }
 
       .input-wrapper.has-error .input-container:focus-within {
@@ -156,7 +156,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .input-wrapper.is-disabled .input-container {
-        background: var(--surface-light-subtle, #F5F5F5); /* Reemplazado hex con token semántico */
+        background: var(--surface-light-subtle, #f5f5f5); /* Reemplazado hex con token semántico */
         opacity: 0.6;
       }
 
@@ -173,7 +173,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .input-field::placeholder {
-        color: var(--text-muted, #7B7B7B); /* Reemplazado hex con token semántico */
+        color: var(--text-muted, #7b7b7b); /* Reemplazado hex con token semántico */
       }
 
       .textarea-field {
@@ -188,7 +188,7 @@ import { FormsModule } from '@angular/forms';
         justify-content: center;
         width: 20px;
         height: 20px;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
       }
 
       .icon-leading {
@@ -208,7 +208,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .clear-btn:hover {
-        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
+        color: var(--error-default, #b25e5e); /* Reemplazado hex con token semántico */
       }
 
       .icon :global(svg) {
@@ -225,16 +225,16 @@ import { FormsModule } from '@angular/forms';
       }
 
       .helper-text {
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
       }
 
       .error-text {
-        color: var(--error-default, #B25E5E); /* Reemplazado hex con token semántico */
+        color: var(--error-default, #b25e5e); /* Reemplazado hex con token semántico */
         font-weight: 500;
       }
 
       .char-counter {
-        color: var(--text-muted, #7B7B7B); /* Reemplazado hex con token semántico */
+        color: var(--text-muted, #7b7b7b); /* Reemplazado hex con token semántico */
         margin-left: auto;
       }
 

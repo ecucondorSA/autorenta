@@ -78,7 +78,7 @@ export class PublishCarLocationService {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({}),
-            }
+            },
           );
           if (response.ok) {
             const data = await response.json();
@@ -150,10 +150,14 @@ export class PublishCarLocationService {
       const timeoutId = setTimeout(() => {
         cleanup();
         if (bestPosition) {
-          console.log(`[Geolocation] Timeout reached. Best accuracy: ${bestPosition.coords.accuracy}m`);
+          console.log(
+            `[Geolocation] Timeout reached. Best accuracy: ${bestPosition.coords.accuracy}m`,
+          );
           resolve(bestPosition);
         } else {
-          reject(new Error('No pudimos obtener tu ubicación. Intenta en un lugar con mejor señal.'));
+          reject(
+            new Error('No pudimos obtener tu ubicación. Intenta en un lugar con mejor señal.'),
+          );
         }
       }, maxWait);
 
@@ -184,7 +188,7 @@ export class PublishCarLocationService {
           enableHighAccuracy: true,
           timeout: maxWait,
           maximumAge: 0,
-        }
+        },
       );
     });
   }

@@ -238,9 +238,9 @@
   .touch-target,
   button,
   a,
-  [role="button"],
-  [type="button"],
-  [type="submit"] {
+  [role='button'],
+  [type='button'],
+  [type='submit'] {
     min-height: 44px;
     min-width: 44px;
   }
@@ -573,7 +573,7 @@
   }
 
   a[href]:after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
 }
 

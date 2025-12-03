@@ -46,6 +46,7 @@ import { WithdrawalRequestFormComponent } from '../../shared/components/withdraw
  * Ruta: /wallet
  */
 import { GuaranteeOptionsInfoComponent } from '../../shared/components/guarantee-options-info/guarantee-options-info.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 import { WalletAccountNumberCardComponent } from '../../shared/components/wallet-account-number-card/wallet-account-number-card.component';
 import { WalletFaqComponent } from './components/wallet-faq.component';
 import { WalletTransfersComponent } from './components/wallet-transfers.component';
@@ -66,6 +67,7 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
     GuaranteeOptionsInfoComponent,
     WalletFaqComponent,
     WalletTransfersComponent,
+    IconComponent,
   ],
   templateUrl: './wallet.page.html',
   styleUrls: ['./wallet.page.css'],
@@ -75,8 +77,6 @@ export class WalletPage implements AfterViewInit, OnInit {
    * Referencia al componente de balance card
    */
   @ViewChild('balanceCard') balanceCard?: WalletBalanceCardComponent;
-
-
 
   /**
    * Tab activa (transactions | withdrawals)
@@ -343,7 +343,6 @@ export class WalletPage implements AfterViewInit, OnInit {
       });
     }
   }
-
 
   /**
    * Cambia el tab activo

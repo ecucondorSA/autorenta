@@ -115,9 +115,9 @@
               </p>
               <p
                 *ngIf="simulationResult()!.withProtector.protected"
-                class="text-sm text-success-light"
+                class="text-sm text-success-light flex items-center gap-1"
               >
-                ✓ Protegido
+                <app-icon name="check-circle" [size]="16" /> Protegido
               </p>
             </div>
           </ion-card-content>
@@ -176,15 +176,15 @@
                 <strong>${{ potentialSavings()!.totalSavings.toFixed(2) }} USD</strong>
               </p>
               <p
-                class="text-sm"
+                class="text-sm flex items-center gap-1"
                 [class.text-success-light]="potentialSavings()!.isWorthIt"
                 [class.text-warning-text]="!potentialSavings()!.isWorthIt"
               >
-                {{
-                  potentialSavings()!.isWorthIt
-                    ? '✓ Vale la pena comprar'
-                    : '⚠ Considera si realmente lo necesitas'
-                }}
+                @if (potentialSavings()!.isWorthIt) {
+                  <app-icon name="check-circle" [size]="16" /> Vale la pena comprar
+                } @else {
+                  <app-icon name="alert-circle" [size]="16" /> Considera si realmente lo necesitas
+                }
               </p>
             </div>
           </ion-card-content>

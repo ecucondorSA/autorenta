@@ -15,6 +15,7 @@ import type { Booking, Car } from '../../../core/models';
 
 // Utils
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
+import { IconComponent } from '../icon/icon.component';
 
 interface DashboardStats {
   activeBookings: number;
@@ -39,7 +40,7 @@ interface QuickAction {
 @Component({
   standalone: true,
   selector: 'app-personalized-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './personalized-dashboard.component.html',
   styleUrls: ['./personalized-dashboard.component.css'],
 })

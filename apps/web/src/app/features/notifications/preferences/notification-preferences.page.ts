@@ -441,16 +441,17 @@ export class NotificationPreferencesPage implements OnInit {
       };
 
       // Persistencia en Supabase (si la tabla está disponible)
-      const { error } = await this.supabase
-        .from('notification_settings')
-        .upsert({
-          user_id: user.id,
-          preferences: prefsToSave,
-          updated_at: new Date().toISOString(),
-        });
+      const { error } = await this.supabase.from('notification_settings').upsert({
+        user_id: user.id,
+        preferences: prefsToSave,
+        updated_at: new Date().toISOString(),
+      });
 
       if (error) {
-        console.warn('Supabase notification_settings upsert failed, fallback to localStorage', error);
+        console.warn(
+          'Supabase notification_settings upsert failed, fallback to localStorage',
+          error,
+        );
       }
 
       // Fallback localStorage para resiliencia offline

@@ -33,21 +33,20 @@ export class MyCarsPage {
 
   constructor() {
     this.loading.set(true);
-    Promise.all([
-      this.carsService.listMyCars(),
-      this.orgService.getMyOrganizations()
-    ]).then(async ([cars, orgs]) => {
-      this.cars.set(cars);
-      this.organizations.set(orgs);
-      
-      // Fetch bonuses if org exists
-      if (orgs.length > 0) {
-        const bonuses = await this.orgService.getBonusesProgress(orgs[0].id);
-        this.bonuses.set(bonuses);
-      }
-      
-      this.loading.set(false);
-    });
+    Promise.all([this.carsService.listMyCars(), this.orgService.getMyOrganizations()]).then(
+      async ([cars, orgs]) => {
+        this.cars.set(cars);
+        this.organizations.set(orgs);
+
+        // Fetch bonuses if org exists
+        if (orgs.length > 0) {
+          const bonuses = await this.orgService.getBonusesProgress(orgs[0].id);
+          this.bonuses.set(bonuses);
+        }
+
+        this.loading.set(false);
+      },
+    );
   }
 
   readonly countActive = computed(

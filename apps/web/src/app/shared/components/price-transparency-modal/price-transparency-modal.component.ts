@@ -31,12 +31,14 @@ import { CommonModule } from '@angular/common';
           class="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-full bg-surface-default/90 text-text-secondary hover:text-text-primary hover:bg-surface-default transition-all shadow-sm"
           aria-label="Cerrar"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
@@ -178,9 +180,21 @@ import { CommonModule } from '@angular/common';
 
         <!-- Footer note - visually separated -->
         <div class="mt-6 pt-4 border-t border-border-muted">
-          <p class="text-base text-text-primary/90 text-center flex items-center justify-center gap-2">
-            <svg class="w-5 h-5 flex-shrink-0 text-text-primary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <p
+            class="text-base text-text-primary/90 text-center flex items-center justify-center gap-2"
+          >
+            <svg
+              class="w-5 h-5 flex-shrink-0 text-text-primary/70"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Los extras opcionales se cobran por separado</span>
           </p>

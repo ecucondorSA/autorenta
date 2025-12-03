@@ -112,7 +112,6 @@ export interface CarPartInfo {
         <span class="mode-icon">{{ getViewModeIcon() }}</span>
         <span>{{ getViewModeLabel() }}</span>
       </div>
-
     </div>
   `,
   styles: [
@@ -307,7 +306,9 @@ export interface CarPartInfo {
       }
 
       /* Hover Glow Effect - Celeste Autorentar */
-      .hover-glow { display: none; }
+      .hover-glow {
+        display: none;
+      }
 
       /* Part Tooltip */
       .part-tooltip {
@@ -431,7 +432,6 @@ export interface CarPartInfo {
           padding: 0.375rem 0.75rem;
           font-size: 0.6875rem;
         }
-
       }
     `,
   ],

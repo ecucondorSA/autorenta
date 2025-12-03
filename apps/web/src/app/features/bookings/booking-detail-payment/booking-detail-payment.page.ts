@@ -31,7 +31,12 @@ interface DualRateFxSnapshot extends FxSnapshot {
 @Component({
   selector: 'app-booking-detail-payment',
   standalone: true,
-  imports: [CommonModule, MercadopagoCardFormComponent, BookingPricingBreakdownComponent, BookingInsuranceSummaryComponent],
+  imports: [
+    CommonModule,
+    MercadopagoCardFormComponent,
+    BookingPricingBreakdownComponent,
+    BookingInsuranceSummaryComponent,
+  ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
 })
@@ -73,32 +78,27 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     return Math.max(1, diffDays); // At least 1 day
   });
 
-  // Computed - Rental cost in ARS
-  readonly rentalCostArs = computed(() => {
+  // Computed - Rental cost in USD (platform base currency)
+  readonly rentalCostUsd = computed(() => {
     const car = this.car();
     const days = this.rentalDays();
-    const fx = this.fxSnapshot();
 
-    if (!car || !fx || days === 0) return 0;
+    if (!car || days === 0) return 0;
 
+    // All prices are now stored in USD
     const dailyRate = car.price_per_day;
-
-    // Handle different currencies
-    if (car.currency === 'ARS' || !car.currency) {
-      // Already in ARS, just multiply by days
-      return dailyRate * days;
-    } else if (car.currency === 'USD') {
-      // Convert USD to ARS using Binance rate (NO margin)
-      // User explicitly said: "al pasar de pesos a dolares, se utiliza el precio normal de binance SIN LOS 10%"
-      return dailyRate * fx.binanceRate * days;
-    } else if (car.currency === 'BRL' || car.currency === 'UYU') {
-      // For other currencies, convert to USD first, then to ARS
-      // For now, just log warning - proper implementation requires BRL/UYU rates
-      this.logger.warn(`Currency ${car.currency} not fully supported yet. Showing as ARS.`);
-      return dailyRate * days;
-    }
-
     return dailyRate * days;
+  });
+
+  // Computed - Rental cost in ARS (for MercadoPago payment)
+  readonly rentalCostArs = computed(() => {
+    const fx = this.fxSnapshot();
+    const usdCost = this.rentalCostUsd();
+
+    if (!fx || usdCost === 0) return 0;
+
+    // Convert USD to ARS using Binance rate (NO margin for rental)
+    return usdCost * fx.binanceRate;
   });
 
   // Computed - Total guarantee + rental in ARS

@@ -9,31 +9,40 @@ import { VerificationService } from '../../../../core/services/verification.serv
   template: `
     <div class="space-y-6">
       <h3 class="text-lg font-bold">Licencia de Conducir</h3>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- FRENTE -->
         <div class="card bg-base-100 border border-base-300">
           <div class="card-body items-center text-center">
             <h4 class="card-title text-sm">Frente</h4>
-            <div class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative">
-              <img *ngIf="frontPreview()" [src]="frontPreview()" class="object-cover w-full h-full">
+            <div
+              class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative"
+            >
+              <img
+                *ngIf="frontPreview()"
+                [src]="frontPreview()"
+                class="object-cover w-full h-full"
+              />
               <span *ngIf="!frontPreview()" class="text-4xl text-base-content/20">🪪</span>
-              
+
               <!-- Loading Overlay -->
-              <div *ngIf="uploadingFront()" class="absolute inset-0 bg-base-100/50 flex items-center justify-center">
+              <div
+                *ngIf="uploadingFront()"
+                class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
+              >
                 <span class="loading loading-spinner"></span>
               </div>
             </div>
-            
-            <input 
+
+            <input
               #frontInput
-              type="file" 
-              hidden 
+              type="file"
+              hidden
               accept="image/*"
               (change)="onFileSelected($event, 'license_front')"
-            >
-            <button 
-              class="btn btn-sm btn-outline mt-2" 
+            />
+            <button
+              class="btn btn-sm btn-outline mt-2"
               (click)="frontInput.click()"
               [disabled]="uploadingFront()"
             >
@@ -46,25 +55,30 @@ import { VerificationService } from '../../../../core/services/verification.serv
         <div class="card bg-base-100 border border-base-300">
           <div class="card-body items-center text-center">
             <h4 class="card-title text-sm">Dorso</h4>
-            <div class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative">
-              <img *ngIf="backPreview()" [src]="backPreview()" class="object-cover w-full h-full">
+            <div
+              class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative"
+            >
+              <img *ngIf="backPreview()" [src]="backPreview()" class="object-cover w-full h-full" />
               <span *ngIf="!backPreview()" class="text-4xl text-base-content/20">🔄</span>
 
               <!-- Loading Overlay -->
-              <div *ngIf="uploadingBack()" class="absolute inset-0 bg-base-100/50 flex items-center justify-center">
+              <div
+                *ngIf="uploadingBack()"
+                class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
+              >
                 <span class="loading loading-spinner"></span>
               </div>
             </div>
-            
-            <input 
+
+            <input
               #backInput
-              type="file" 
-              hidden 
+              type="file"
+              hidden
               accept="image/*"
               (change)="onFileSelected($event, 'license_back')"
-            >
-            <button 
-              class="btn btn-sm btn-outline mt-2" 
+            />
+            <button
+              class="btn btn-sm btn-outline mt-2"
               (click)="backInput.click()"
               [disabled]="uploadingBack()"
             >
@@ -75,18 +89,30 @@ import { VerificationService } from '../../../../core/services/verification.serv
       </div>
 
       <div class="alert alert-info text-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="stroke-current shrink-0 w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
         <span>Asegúrate de que el texto sea legible y no haya reflejos.</span>
       </div>
     </div>
-  `
+  `,
 })
 export class LicenseUploaderComponent {
   private verificationService = inject(VerificationService);
 
   uploadingFront = signal(false);
   uploadingBack = signal(false);
-  
+
   frontPreview = signal<string | null>(null);
   backPreview = signal<string | null>(null);
 

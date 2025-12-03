@@ -20,13 +20,12 @@ import { NotificationManagerService } from '../../../core/services/notification-
 import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { MoneyPipe } from '../../pipes/money.pipe';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
 @Component({
   selector: 'app-car-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe, TranslateModule, NgOptimizedImage],
+  imports: [CommonModule, RouterLink, TranslateModule, NgOptimizedImage],
   templateUrl: './car-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

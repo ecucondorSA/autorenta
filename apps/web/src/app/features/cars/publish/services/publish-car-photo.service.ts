@@ -165,7 +165,8 @@ export class PublishCarPhotoService {
 
             const inlineData = googleResult?.candidates?.[0]?.content?.parts?.[0]?.inlineData;
             if (!googleResponse.ok || !inlineData?.data) {
-              const message = googleResult?.error?.message || googleResult?.error || googleResponse.statusText;
+              const message =
+                googleResult?.error?.message || googleResult?.error || googleResponse.statusText;
               throw new Error(message || 'Respuesta inesperada de Gemini (imagen)');
             }
 
@@ -181,7 +182,9 @@ export class PublishCarPhotoService {
             remainingSlots--;
           } catch (error) {
             console.error('Error generando foto con Google AI:', error);
-            errors.push(`Gemini #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`);
+            errors.push(
+              `Gemini #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`,
+            );
           }
         }
       }
@@ -481,7 +484,7 @@ export class PublishCarPhotoService {
 
   // Genera prompts variados para evitar imágenes repetidas
   private buildGeminiPrompts(brand: string, model: string, year: number): string[] {
-    const pick = <T,>(list: T[]): T => list[Math.floor(Math.random() * list.length)];
+    const pick = <T>(list: T[]): T => list[Math.floor(Math.random() * list.length)];
 
     const weather = pick([
       'bright sunny day with soft shadows',
@@ -546,7 +549,9 @@ export class PublishCarPhotoService {
           const response = await fetch(photo.url);
           if (!response.ok) throw new Error('No se pudo descargar la foto existente');
           const blob = await response.blob();
-          const file = new File([blob], `photo-${photo.position || 0}.jpg`, { type: blob.type || 'image/jpeg' });
+          const file = new File([blob], `photo-${photo.position || 0}.jpg`, {
+            type: blob.type || 'image/jpeg',
+          });
           return { file, preview: photo.url };
         }),
       );

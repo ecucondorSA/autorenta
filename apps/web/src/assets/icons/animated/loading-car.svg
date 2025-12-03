@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Loading Car
+  Animación: Auto moviéndose con ruedas girando
+  Ideal para estados de carga en booking/reservas
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" fill="none">
+  <title>Procesando tu reserva...</title>
+
+  <style>
+    .car-body {
+      fill: #F8F4EC;
+      stroke: #DFD2BF;
+      stroke-width: 1.5;
+    }
+    .car-window {
+      fill: #A7D8F4;
+      opacity: 0.6;
+    }
+    .wheel {
+      fill: #4E4E4E;
+      transform-origin: center;
+      animation: wheel-spin 0.5s linear infinite;
+    }
+    .wheel-inner {
+      fill: #7B7B7B;
+    }
+    .car-group {
+      animation: car-bounce 0.8s ease-in-out infinite;
+    }
+    .road-line {
+      stroke: #DFD2BF;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 8 6;
+      animation: road-move 0.5s linear infinite;
+    }
+    .dust {
+      fill: #DFD2BF;
+      animation: dust-fade 0.6s ease-out infinite;
+    }
+
+    @keyframes wheel-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes car-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+    @keyframes road-move {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: -14; }
+    }
+    @keyframes dust-fade {
+      0% { opacity: 0.6; transform: translate(0, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-15px, 0) scale(0.5); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .wheel, .car-group, .road-line, .dust {
+        animation: none;
+      }
+      .car-group {
+        opacity: 1;
+        animation: simple-pulse 2s ease-in-out infinite;
+      }
+      @keyframes simple-pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+      }
+    }
+  </style>
+
+  <!-- Línea de carretera -->
+  <line class="road-line" x1="0" y1="52" x2="120" y2="52"/>
+
+  <!-- Polvo/partículas traseras -->
+  <g class="dust">
+    <circle cx="15" cy="45" r="3"/>
+    <circle cx="8" cy="42" r="2"/>
+    <circle cx="5" cy="48" r="2.5"/>
+  </g>
+
+  <!-- Auto -->
+  <g class="car-group" transform="translate(25, 0)">
+    <!-- Cuerpo del auto -->
+    <path class="car-body"
+          d="M10 35 L15 22 L28 15 L62 15 L75 22 L80 35 L80 42 L10 42 Z"/>
+
+    <!-- Ventanas -->
+    <path class="car-window" d="M30 22 L33 17 L52 17 L52 22 Z"/>
+    <path class="car-window" d="M54 22 L54 17 L65 17 L70 22 Z"/>
+
+    <!-- Faros -->
+    <ellipse cx="14" cy="32" rx="2.5" ry="2" fill="#A7D8F4"/>
+    <ellipse cx="76" cy="32" rx="2.5" ry="2" fill="#A7D8F4"/>
+
+    <!-- Rueda trasera -->
+    <g transform="translate(25, 42)">
+      <circle class="wheel" cx="0" cy="0" r="8"/>
+      <circle class="wheel-inner" cx="0" cy="0" r="4"/>
+    </g>
+
+    <!-- Rueda delantera -->
+    <g transform="translate(65, 42)">
+      <circle class="wheel" cx="0" cy="0" r="8"/>
+      <circle class="wheel-inner" cx="0" cy="0" r="4"/>
+    </g>
+  </g>
+
+  <!-- Líneas de velocidad -->
+  <g stroke="#BCBCBC" stroke-width="1" stroke-linecap="round" opacity="0.5">
+    <line x1="5" y1="30" x2="20" y2="30"/>
+    <line x1="0" y1="35" x2="18" y2="35"/>
+    <line x1="8" y1="40" x2="22" y2="40"/>
+  </g>
+</svg>

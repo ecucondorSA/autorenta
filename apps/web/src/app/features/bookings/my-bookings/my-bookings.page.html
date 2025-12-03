@@ -180,7 +180,8 @@
                 data-tour-step="complete-payment-btn"
                 class="flex-1 px-4 py-3 bg-gradient-to-r from-cta-default to-warning-light text-text-inverse rounded-xl font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105 order-1"
               >
-                💳 Completar Pago
+                <app-icon name="credit-card" [size]="20" cssClass="inline-block mr-1" /> Completar
+                Pago
               </button>
 
               <!-- Ver Detalle (secundario) -->
@@ -190,7 +191,7 @@
                 data-tour-step="view-detail-btn"
                 class="px-4 py-3 border-2 border-cta-default/30 dark:border-cta-default/50 text-cta-default dark:text-warning-light rounded-xl font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base order-2 sm:flex-none sm:w-auto"
               >
-                📄 Ver Detalle
+                <app-icon name="clipboard" [size]="20" cssClass="inline-block mr-1" /> Ver Detalle
               </button>
 
               <!-- Cancelar (siempre visible) -->
@@ -198,7 +199,7 @@
                 (click)="$event.preventDefault(); cancelBooking(booking.id)"
                 class="px-4 py-3 border-2 border-border-default dark:border-border-default/60 dark:border-neutral-700 text-text-secondary dark:text-text-secondary rounded-xl font-semibold hover:bg-border-default/20 dark:hover:bg-neutral-800 transition-base order-3 sm:flex-none sm:w-auto"
               >
-                🗑️ Cancelar
+                <app-icon name="close-circle" [size]="20" cssClass="inline-block mr-1" /> Cancelar
               </button>
             </div>
           </div>
@@ -206,7 +207,7 @@
           <!-- Confirmed: Show Next Steps -->
           <div *ngIf="booking.status === 'confirmed'" class="space-y-3">
             <p class="text-sm font-medium text-text-primary dark:text-text-primary mb-2">
-              📋 Próximos pasos:
+              <app-icon name="clipboard" [size]="18" cssClass="inline-block mr-1" /> Próximos pasos:
             </p>
 
             <!-- Main actions grid -->
@@ -217,7 +218,7 @@
                 data-tour-step="view-detail-confirmed-btn"
                 class="flex flex-col items-center gap-1 p-3 rounded-lg border-2 border-cta-default/30 dark:border-cta-default/50 bg-cta-default/5 dark:bg-cta-default/10 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
-                <span class="text-2xl">📄</span>
+                <app-icon name="clipboard" [size]="32" cssClass="inline-block" />
                 <span class="text-xs font-medium text-cta-default dark:text-warning-light"
                   >Ver Detalle</span
                 >
@@ -228,7 +229,7 @@
                 data-tour-step="view-instructions-btn"
                 class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
-                <span class="text-2xl">📋</span>
+                <app-icon name="clipboard" [size]="32" cssClass="inline-block" />
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
                   >Instrucciones</span
                 >
@@ -238,7 +239,7 @@
                 data-tour-step="chat-btn"
                 class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
-                <span class="text-2xl">💬</span>
+                <app-icon name="message" [size]="32" cssClass="inline-block" />
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
                   >Chat</span
                 >
@@ -248,7 +249,7 @@
                 data-tour-step="map-btn"
                 class="flex flex-col items-center gap-1 p-3 rounded-lg border border-border-default dark:border-border-default/40 dark:border-neutral-700 hover:bg-cta-default/10 dark:hover:bg-cta-default/20 transition-base"
               >
-                <span class="text-2xl">🗺️</span>
+                <app-icon name="location" [size]="32" cssClass="inline-block" />
                 <span class="text-xs font-medium text-text-secondary dark:text-text-secondary"
                   >Mapa</span
                 >

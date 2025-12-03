@@ -141,10 +141,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
     'NG_APP_CLOUDFLARE_WORKER_URL',
     defaults.cloudflareWorkerUrl ?? 'http://localhost:8787',
   ),
-  googleAiImageUrl: resolve(
-    'NG_APP_GOOGLE_AI_IMAGE_URL',
-    defaults.googleAiImageUrl,
-  ),
+  googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),
   sentryEnvironment: resolve(
     'NG_APP_SENTRY_ENVIRONMENT',

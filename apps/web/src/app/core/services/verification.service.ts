@@ -13,7 +13,7 @@ type UserVerificationRow = Database['public']['Tables']['user_verifications']['R
 type UserDocumentRow = Database['public']['Tables']['user_documents']['Row'];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VerificationService {
   private supabase = inject(SupabaseClientService).getClient();
@@ -27,8 +27,13 @@ export class VerificationService {
   /**
    * Sube una imagen de documento al bucket seguro
    */
-  async uploadDocument(file: File, docType: 'license_front' | 'license_back' | 'dni_front' | 'dni_back'): Promise<string> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+  async uploadDocument(
+    file: File,
+    docType: 'license_front' | 'license_back' | 'dni_front' | 'dni_back',
+  ): Promise<string> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) throw new Error('No autenticado');
 
     const fileExt = file.name.split('.').pop();
@@ -48,7 +53,9 @@ export class VerificationService {
    * Carga el estado de verificación del usuario (driver/owner) y actualiza la señal reactiva.
    */
   async loadStatuses(): Promise<UserVerificationStatus[]> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) {
       this.statuses.set([]);
       return [];
@@ -91,7 +98,9 @@ export class VerificationService {
    * Obtiene los documentos subidos por el usuario y los expone vía señal reactiva.
    */
   async loadDocuments(): Promise<UserDocument[]> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) {
       this.documents.set([]);
       return [];
@@ -102,7 +111,9 @@ export class VerificationService {
     try {
       const { data, error } = await this.supabase
         .from('user_documents')
-        .select('id, user_id, kind, storage_path, status, notes, reviewed_at, reviewed_by, created_at, analyzed_at')
+        .select(
+          'id, user_id, kind, storage_path, status, notes, reviewed_at, reviewed_by, created_at, analyzed_at',
+        )
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -147,17 +158,17 @@ export class VerificationService {
    * Registra el intento de verificación en la tabla
    */
   async submitVerification(role: 'driver' | 'owner' = 'driver'): Promise<void> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) throw new Error('No autenticado');
 
-    const { error } = await this.supabase
-      .from('user_verifications')
-      .upsert({
-        user_id: user.id,
-        role,
-        status: 'PENDIENTE',
-        updated_at: new Date().toISOString()
-      });
+    const { error } = await this.supabase.from('user_verifications').upsert({
+      user_id: user.id,
+      role,
+      status: 'PENDIENTE',
+      updated_at: new Date().toISOString(),
+    });
 
     if (error) throw error;
   }
@@ -166,7 +177,9 @@ export class VerificationService {
    * Obtiene el estado actual
    */
   async getStatus(role: 'driver' | 'owner' = 'driver'): Promise<VerificationStatus | null> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) return null;
 
     const { data, error } = await this.supabase
@@ -177,7 +190,7 @@ export class VerificationService {
       .single();
 
     if (error && error.code !== 'PGRST116') throw error; // Ignorar "no encontrado"
-    
+
     return data as VerificationStatus;
   }
 }

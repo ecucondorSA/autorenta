@@ -242,7 +242,9 @@ export interface ChatContext {
       </div>
 
       <!-- Input estilo WhatsApp -->
-      <div class="whatsapp-input flex items-center gap-2 bg-surface-elevated px-3 py-2 dark:bg-surface-secondary">
+      <div
+        class="whatsapp-input flex items-center gap-2 bg-surface-elevated px-3 py-2 dark:bg-surface-secondary"
+      >
         <!-- Emoji button -->
         <button
           type="button"

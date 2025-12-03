@@ -10,6 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconComponent } from '../icon/icon.component';
 import { firstValueFrom } from 'rxjs';
 import {
   BookingInspection,
@@ -50,7 +51,7 @@ interface WindowWithInspectionCallback extends Window {
 @Component({
   selector: 'app-inspection-uploader',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './inspection-uploader.component.html',
   styleUrl: './inspection-uploader.component.css',
 })

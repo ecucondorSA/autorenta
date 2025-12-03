@@ -16,7 +16,7 @@ svg {
 
 /* Hover effect para transaction items */
 .transaction-item:hover {
-  background-color: #F5F5F5; /* Reemplazado hex con el valor de surfaceElevated */
+  background-color: #f5f5f5; /* Reemplazado hex con el valor de surfaceElevated */
 }
 
 /* Animación para el panel de detalles expandibles */

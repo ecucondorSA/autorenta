@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { AccountingService } from '../../../../core/services/accounting.service';
 import type { AuditLog, PaginatedResult } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-audit-logs',
@@ -72,7 +71,9 @@ import { environment } from '../../../../../environments/environment';
 
       @if (loading()) {
         <div class="flex items-center justify-center py-12">
-          <div class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"></div>
+          <div
+            class="h-8 w-8 animate-spin rounded-full border-4 border-cta-default border-t-transparent"
+          ></div>
         </div>
       } @else if (logs().data.length === 0) {
         <div class="rounded-lg border border-border-default bg-surface-base p-8 text-center">
@@ -131,7 +132,9 @@ import { environment } from '../../../../../environments/environment';
 
           <!-- Paginación -->
           @if (logs().totalPages > 1) {
-            <div class="flex items-center justify-between rounded-lg border border-border-default bg-surface-raised p-4">
+            <div
+              class="flex items-center justify-between rounded-lg border border-border-default bg-surface-raised p-4"
+            >
               <button
                 (click)="previousPage()"
                 [disabled]="currentPage() === 1"
@@ -157,7 +160,7 @@ import { environment } from '../../../../../environments/environment';
   `,
 })
 export class AuditLogsPage implements OnInit {
-  private accountingService!: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly logs = signal<PaginatedResult<AuditLog>>({
     data: [],
@@ -176,10 +179,6 @@ export class AuditLogsPage implements OnInit {
   };
 
   async ngOnInit(): Promise<void> {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
     await this.loadLogs();
   }
 

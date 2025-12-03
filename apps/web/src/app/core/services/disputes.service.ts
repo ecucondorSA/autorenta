@@ -101,7 +101,11 @@ export class DisputesService {
   async updateStatus(disputeId: string, status: DisputeStatus): Promise<void> {
     const { error } = await this.supabase
       .from('disputes')
-      .update({ status, resolved_at: new Date().toISOString(), resolved_by: (await this.supabase.auth.getUser()).data.user?.id })
+      .update({
+        status,
+        resolved_at: new Date().toISOString(),
+        resolved_by: (await this.supabase.auth.getUser()).data.user?.id,
+      })
       .eq('id', disputeId);
     if (error) throw error;
   }

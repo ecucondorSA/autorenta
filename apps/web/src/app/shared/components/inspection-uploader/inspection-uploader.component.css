@@ -274,7 +274,9 @@
 
 .fuel-bar {
   height: 100%;
-  background: var(--success-default); /* Reemplazado gradiente con token semántico para barra de combustible */
+  background: var(
+    --success-default
+  ); /* Reemplazado gradiente con token semántico para barra de combustible */
   transition: width 0.3s ease;
 }
 

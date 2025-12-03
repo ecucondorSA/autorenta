@@ -129,14 +129,17 @@ export class CarAvailabilityService {
 
     if (manualRows.length) {
       ranges.push(
-        ...manualRows.map((b) => ({
-          from: b.blocked_from,
-          to: b.blocked_to,
-          type: 'manual_block' as const,
-          reason: b.reason,
-          notes: b.notes || null,
-          block_id: b.id,
-        } as DetailedBlockedRange)),
+        ...manualRows.map(
+          (b) =>
+            ({
+              from: b.blocked_from,
+              to: b.blocked_to,
+              type: 'manual_block' as const,
+              reason: b.reason,
+              notes: b.notes || null,
+              block_id: b.id,
+            }) as DetailedBlockedRange,
+        ),
       );
     }
 

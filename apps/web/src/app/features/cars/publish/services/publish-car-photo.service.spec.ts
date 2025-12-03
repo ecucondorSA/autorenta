@@ -46,7 +46,9 @@ describe('PublishCarPhotoService', () => {
 
   it('muestra advertencia si fetch falla', async () => {
     const carId = 'test-car-id';
-    carsServiceSpy.getCarPhotos.and.resolveTo([{ url: 'https://bad.com/a.jpg', position: 1 } as any]);
+    carsServiceSpy.getCarPhotos.and.resolveTo([
+      { url: 'https://bad.com/a.jpg', position: 1 } as any,
+    ]);
     spyOn(window, 'fetch').and.resolveTo(new Response(null, { status: 500 }));
 
     await service.loadExistingPhotos(carId);

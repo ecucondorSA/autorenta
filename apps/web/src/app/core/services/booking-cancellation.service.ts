@@ -148,7 +148,11 @@ export class BookingCancellationService {
 
       // Si no hay monto a reembolsar, salir
       if (!refundAmount || refundAmount <= 0) {
-        this.logger.info('No refund amount calculated, skipping refund process', 'BookingCancellationService', { bookingId: booking.id });
+        this.logger.info(
+          'No refund amount calculated, skipping refund process',
+          'BookingCancellationService',
+          { bookingId: booking.id },
+        );
         return;
       }
 
@@ -164,7 +168,11 @@ export class BookingCancellationService {
           `Reembolso por cancelación de reserva ${booking.id.substring(0, 8)}`,
           booking.id, // referenceId
         );
-        this.logger.info(`Refunded ${refundAmount} ${booking.currency} to user wallet`, 'BookingCancellationService', { bookingId: booking.id });
+        this.logger.info(
+          `Refunded ${refundAmount} ${booking.currency} to user wallet`,
+          'BookingCancellationService',
+          { bookingId: booking.id },
+        );
       } else {
         // Reembolsar a la tarjeta (MercadoPago)
         const metadata = booking.metadata;

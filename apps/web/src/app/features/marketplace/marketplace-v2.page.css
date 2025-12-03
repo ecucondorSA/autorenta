@@ -1508,10 +1508,12 @@
   .hero-immersive {
     min-height: 100svh;
     padding-bottom: clamp(4rem, 10vh, 6rem);
+    overflow-x: hidden; /* Critical for preventing horizontal scroll */
   }
 
   .hero-immersive .max-w-2xl {
     max-width: 100%;
+    padding-right: 1rem; /* Prevent text touching edge */
   }
 
   /* Hide desktop stats on mobile */
@@ -1519,22 +1521,31 @@
     display: none;
   }
 
-  /* Search Card - More compact */
+  /* Search Card - Stack vertically on mobile */
   .search-card-premium {
-    padding: 1rem;
-    border-radius: 1rem;
-    margin: 0 -0.5rem; /* Extend slightly beyond container */
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    margin: 0;
+    width: 100%;
   }
 
   .search-card-premium .grid {
-    gap: 1rem !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem !important;
   }
 
-  /* Input fields */
+  /* Input fields - Full width */
   .input-premium,
-  .select-premium {
-    padding: 0.75rem 1rem;
-    font-size: 1rem; /* Prevent iOS zoom */
+  .select-premium,
+  app-date-range-picker {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .input-premium {
+    font-size: 16px; /* Prevent iOS zoom */
+    padding: 0.875rem 1rem;
   }
 
   /* Buttons - Full width on mobile */
@@ -1543,100 +1554,40 @@
   .btn-primary-autorentar {
     width: 100%;
     justify-content: center;
-    padding: 1rem 1.5rem;
+    padding: 1rem;
+    height: 3.5rem; /* Fixed height for consistency */
   }
 
-  /* Feature pills - wrap better */
-  .feature-pill {
-    font-size: 0.8125rem;
-    padding: 0.5rem 0.75rem;
-  }
-
-  /* 3D View Controls - Bottom bar optimized */
-  .mobile-3d-controls {
-    padding: 0.625rem 0.5rem;
-    padding-bottom: calc(0.625rem + env(safe-area-inset-bottom));
-    gap: 0.25rem;
-  }
-
-  .mobile-view-btn {
-    min-width: 60px;
-    padding: 0.5rem 0.375rem;
-  }
-
-  .mobile-view-btn span {
-    font-size: 0.625rem;
-  }
-
-  /* Partners Grid - 2 columns on mobile */
+  /* Partners Grid - The fix requested by user */
+  /* Force 1 column for very small screens, 2 for mobile */
   .partners-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 columns on mobile */
+    gap: 1rem !important;
+    width: 100%;
+  }
+
+  /* For very small screens (like iPhone SE) */
+  @media (max-width: 360px) {
+    .partners-grid {
+      grid-template-columns: 1fr !important; /* 1 column on tiny screens */
+    }
   }
 
   .partner-card {
-    padding: 0.75rem;
+    padding: 1rem;
+    min-height: 100px; /* Ensure sufficient touch target */
   }
 
-  .partner-icon-wrapper {
-    width: 40px;
-    height: 40px;
-  }
-
-  /* Steps - Single column, more compact */
-  .step-card-premium {
-    padding: 1.5rem 1rem;
-  }
-
-  .step-icon-premium {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 1rem;
-  }
-
-  .step-number-badge {
-    top: 0.75rem;
-    right: 0.75rem;
-    width: 32px;
-    height: 32px;
+  /* Steps - Single column */
+  .steps-section .grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
   }
 
   /* Trust Cards - Stack vertically */
-  .trust-card-premium {
-    margin-bottom: 1rem;
-  }
-
-  .trust-icon-premium {
-    width: 56px;
-    height: 56px;
-  }
-
-  /* Car Cards - Optimized for mobile */
-  .car-card-premium {
-    border-radius: 1rem;
-  }
-
-  .car-card-image {
-    height: 180px;
-  }
-
-  .car-card-content {
-    padding: 0.875rem;
-  }
-
-  /* Car card specs - smaller icons */
-  .car-spec svg {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  .car-spec {
-    font-size: 0.6875rem;
-  }
-
-  /* Empty states - more compact */
-  .empty-state-card {
-    padding: 2rem 1rem;
+  .trust-section .grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -1647,39 +1598,12 @@
 @media (max-width: 375px) {
   /* Even more compact hero */
   .hero-immersive h2 {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
-  }
-
-  /* Eyebrow badge smaller */
-  .hero-immersive .inline-flex {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.75rem;
-  }
-
-  /* Feature pills - stack if needed */
-  .hero-immersive .flex-wrap {
-    gap: 0.5rem !important;
+    font-size: 2rem;
   }
 
   /* Search card - minimal padding */
   .search-card-premium {
-    padding: 0.875rem;
-  }
-
-  /* Partners - larger touch targets */
-  .partners-grid {
-    gap: 0.5rem !important;
-  }
-
-  /* Mobile controls - even more compact */
-  .mobile-view-btn {
-    min-width: 50px;
-    padding: 0.375rem 0.25rem;
-  }
-
-  .mobile-view-btn svg {
-    width: 1rem;
-    height: 1rem;
+    padding: 1rem;
   }
 }
 
@@ -1688,38 +1612,25 @@
    ───────────────────────────────────────────────────────────── */
 
 @media (min-width: 641px) and (max-width: 768px) {
-  /* Hero - better use of space */
-  .hero-immersive .max-w-2xl {
-    max-width: 90%;
-  }
-
   /* Search card - 2 column layout for inputs */
   .search-card-premium .grid {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
-  .search-card-premium .lg\:col-span-5 {
-    grid-column: span 2;
+  .search-card-premium .lg\:col-span-5,
+  .search-card-premium .lg\:col-span-4 {
+    grid-column: span 1;
+  }
+
+  .search-card-premium .lg\:col-span-3 {
+    grid-column: span 2; /* Button full width on tablet portrait */
   }
 
   /* Partners - 3 columns */
   .partners-grid {
     grid-template-columns: repeat(3, 1fr) !important;
-  }
-
-  /* Steps - 2 columns */
-  .steps-section .grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  /* Trust features - 2 columns */
-  .trust-section .grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  /* Car cards - 2 columns */
-  .car-card-premium {
-    display: grid;
   }
 }
 
@@ -1728,11 +1639,6 @@
    ───────────────────────────────────────────────────────────── */
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  /* Hero - optimal reading width */
-  .hero-immersive .max-w-2xl {
-    max-width: 75%;
-  }
-
   /* Search card - full 3-column layout */
   .search-card-premium .grid {
     grid-template-columns: 2fr 1.5fr 1fr;
@@ -1742,96 +1648,16 @@
   .partners-grid {
     grid-template-columns: repeat(4, 1fr) !important;
   }
-
-  /* Steps - 2 or 4 depending on content */
-  .steps-section .lg\:grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  /* Trust - 2 columns for better readability */
-  .trust-section .lg\:grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  /* Side-by-side map view starts here */
-  .lg\:col-span-5 {
-    grid-column: span 6;
-  }
-
-  .lg\:col-span-7 {
-    grid-column: span 6;
-  }
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Desktop Small (1025px - 1280px)
+   Desktop (1025px+)
    ───────────────────────────────────────────────────────────── */
 
-@media (min-width: 1025px) and (max-width: 1280px) {
-  /* Full desktop layout kicks in */
-  .hero-immersive {
-    min-height: clamp(100vh, 100svh, 1000px);
-  }
-
-  /* Partners - full 5 columns */
+@media (min-width: 1025px) {
+  /* Partners - 4 columns standard */
   .partners-grid {
-    grid-template-columns: repeat(5, 1fr) !important;
-  }
-
-  /* Steps - 4 columns */
-  .steps-section .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, 1fr) !important;
-  }
-
-  /* Trust - 4 columns */
-  .trust-section .lg\:grid-cols-4 {
-    grid-template-columns: repeat(4, 1fr) !important;
-  }
-
-  /* Car listing split view */
-  .lg\:col-span-5 {
-    grid-column: span 5;
-  }
-
-  .lg\:col-span-7 {
-    grid-column: span 7;
-  }
-
-  /* Car cards - comfortable 2 columns in left panel */
-  .car-card-premium {
-    aspect-ratio: auto;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Desktop Large (1281px+)
-   ───────────────────────────────────────────────────────────── */
-
-@media (min-width: 1281px) {
-  /* XL breakpoint optimizations */
-  .xl\:col-span-4 {
-    grid-column: span 4;
-  }
-
-  .xl\:col-span-8 {
-    grid-column: span 8;
-  }
-
-  /* Wider car cards can be 2 up */
-  .car-card-premium {
-    max-width: none;
-  }
-
-  /* Larger interactive elements */
-  .view-control-btn {
-    width: 48px;
-    height: 48px;
-  }
-
-  /* 3D hover info panel - more spacious */
-  .part-info-panel {
-    min-width: 280px;
-    right: 32px;
   }
 }
 

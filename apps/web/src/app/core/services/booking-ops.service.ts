@@ -80,7 +80,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_insurance')
       .select(
-        'booking_id, insurance_coverage_id, insurance_premium_total, guarantee_type, guarantee_amount_cents, coverage_upgrade'
+        'booking_id, insurance_coverage_id, insurance_premium_total, guarantee_type, guarantee_amount_cents, coverage_upgrade',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();
@@ -113,7 +113,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_confirmation')
       .select(
-        'booking_id, pickup_confirmed_at, pickup_confirmed_by, dropoff_confirmed_at, dropoff_confirmed_by, owner_confirmation_at, renter_confirmation_at, returned_at, funds_released_at, created_at, updated_at'
+        'booking_id, pickup_confirmed_at, pickup_confirmed_by, dropoff_confirmed_at, dropoff_confirmed_by, owner_confirmation_at, renter_confirmation_at, returned_at, funds_released_at, created_at, updated_at',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();
@@ -125,7 +125,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_cancellation')
       .select(
-        'booking_id, cancellation_reason, cancellation_fee_cents, cancelled_at, cancel_policy_id'
+        'booking_id, cancellation_reason, cancellation_fee_cents, cancelled_at, cancel_policy_id',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();
@@ -137,7 +137,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_payment')
       .select(
-        'booking_id, paid_at, payment_method, payment_mode, wallet_status, deposit_status, wallet_charged_at'
+        'booking_id, paid_at, payment_method, payment_mode, wallet_status, deposit_status, wallet_charged_at',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();

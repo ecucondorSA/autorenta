@@ -11,19 +11,22 @@ export interface Organization {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrganizationService {
   private supabase = inject(SupabaseClientService).getClient();
 
   async getMyOrganizations(): Promise<Organization[]> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) throw new Error('No autenticado');
 
     // Consultar organizaciones donde soy miembro
     const { data, error } = await this.supabase
       .from('organization_members')
-      .select(`
+      .select(
+        `
         role,
         organization:organizations (
           id,
@@ -32,7 +35,8 @@ export class OrganizationService {
           verified,
           owner_id
         )
-      `)
+      `,
+      )
       .eq('user_id', user.id);
 
     if (error) throw error;
@@ -54,8 +58,13 @@ export class OrganizationService {
     });
   }
 
-  async createOrganization(name: string, type: 'fleet' | 'corporate' | 'agency' = 'fleet'): Promise<Organization> {
-    const { data: { user } } = await this.supabase.auth.getUser();
+  async createOrganization(
+    name: string,
+    type: 'fleet' | 'corporate' | 'agency' = 'fleet',
+  ): Promise<Organization> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
     if (!user) throw new Error('No autenticado');
 
     // 1. Crear Organización
@@ -65,7 +74,7 @@ export class OrganizationService {
         name,
         type,
         owner_id: user.id,
-        verified: false // Default
+        verified: false, // Default
       })
       .select()
       .single();
@@ -73,17 +82,18 @@ export class OrganizationService {
     if (orgError) throw orgError;
 
     // 2. Añadirme como miembro (Owner)
-    const { error: memberError } = await this.supabase
-      .from('organization_members')
-      .insert({
-        organization_id: org.id,
-        user_id: user.id,
-        role: 'owner'
-      });
+    const { error: memberError } = await this.supabase.from('organization_members').insert({
+      organization_id: org.id,
+      user_id: user.id,
+      role: 'owner',
+    });
 
     if (memberError) {
       // Rollback manual si falla el miembro (idealmente esto sería una función RPC transaction)
-      console.error('Error añadiendo miembro owner, intentando borrar org huérfana...', memberError);
+      console.error(
+        'Error añadiendo miembro owner, intentando borrar org huérfana...',
+        memberError,
+      );
       await this.supabase.from('organizations').delete().eq('id', org.id);
       throw memberError;
     }

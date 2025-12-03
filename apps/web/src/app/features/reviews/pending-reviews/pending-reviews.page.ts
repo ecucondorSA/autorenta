@@ -21,7 +21,9 @@ interface PendingReview {
       <div class="max-w-4xl mx-auto px-4">
         <!-- Header -->
         <div class="mb-8">
-          <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse mb-2">Reseñas Pendientes</h1>
+          <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse mb-2">
+            Reseñas Pendientes
+          </h1>
           <p class="text-text-secondary dark:text-text-secondary">
             Tienes {{ pendingReviews().length }}
             {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
@@ -92,7 +94,9 @@ interface PendingReview {
                     <p class="text-sm text-text-secondary dark:text-text-secondary mb-2">
                       Califica a: <span class="font-medium">{{ review.reviewee_name }}</span>
                     </p>
-                    <div class="flex items-center gap-4 text-sm text-text-secondary dark:text-text-muted">
+                    <div
+                      class="flex items-center gap-4 text-sm text-text-secondary dark:text-text-muted"
+                    >
                       <span> Finalizó: {{ formatDate(review.checkout_date) }} </span>
                       <span
                         class="px-2 py-1 rounded-full text-xs font-medium"

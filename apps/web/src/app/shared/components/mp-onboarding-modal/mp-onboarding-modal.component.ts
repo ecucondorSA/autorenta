@@ -56,9 +56,17 @@ import {
             <!-- Mercado Pago -->
             <div class="payment-logo-item">
               <svg width="60" height="60" viewBox="0 0 80 80" fill="none">
-                <rect width="80" height="80" rx="16" fill="var(--brand-mercadopago-default, #00B4E5)" />
+                <rect
+                  width="80"
+                  height="80"
+                  rx="16"
+                  fill="var(--brand-mercadopago-default, #00B4E5)"
+                />
                 <path d="M20 20h40v40H20z" fill="white" />
-                <path d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z" fill="var(--brand-mercadopago-default, #00B4E5)" />
+                <path
+                  d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z"
+                  fill="var(--brand-mercadopago-default, #00B4E5)"
+                />
               </svg>
               <span class="logo-label">Mercado Pago</span>
             </div>
@@ -274,7 +282,10 @@ import {
         display: flex;
         align-items: center;
         gap: 1rem;
-        background: var(--surface-info-light, #f0f9ff); /* Replaced gradient with solid color token */
+        background: var(
+          --surface-info-light,
+          #f0f9ff
+        ); /* Replaced gradient with solid color token */
         border: 1px solid var(--border-info-default, #0ea5e9);
         border-radius: 12px;
         padding: 1.25rem;
@@ -375,7 +386,10 @@ import {
       .primary-cta {
         --border-radius: 12px;
         --background: var(--cta-default, #00b4e5); /* Replaced gradient with solid color token */
-        --background-activated: var(--cta-hover, #0099cc); /* Replaced gradient with solid color token */
+        --background-activated: var(
+          --cta-hover,
+          #0099cc
+        ); /* Replaced gradient with solid color token */
         --color: white;
         font-weight: 600;
         font-size: 1.1rem;

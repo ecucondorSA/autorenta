@@ -12,6 +12,7 @@ import { interval, Subscription } from 'rxjs';
 import { Car } from '../../../core/models';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
+import { IconComponent } from '../icon/icon.component';
 
 export interface SocialProofData {
   currentViewers: number;
@@ -23,7 +24,7 @@ export interface SocialProofData {
 @Component({
   selector: 'app-social-proof-indicators',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './social-proof-indicators.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

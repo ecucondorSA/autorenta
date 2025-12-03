@@ -1,8 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, FinancialHealth } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-financial-health',
@@ -12,18 +11,13 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./financial-health.page.scss'],
 })
 export class FinancialHealthPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly loading = signal(false);
   readonly health = signal<FinancialHealth | null>(null);
   readonly lastChecked = signal<Date | null>(null);
 
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
+  constructor() {}
 
   async ngOnInit(): Promise<void> {
     await this.checkHealth();

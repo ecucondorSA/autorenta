@@ -96,7 +96,7 @@
       />
     </svg>
     <span class="text-xs font-semibold">Fechas</span>
-    <span *ngIf="dateRange()" class="badge">✓</span>
+    <span *ngIf="dateRange()" class="badge"><app-icon name="check" [size]="16" /></span>
   </button>
 
   <!-- Price Chip -->
@@ -115,7 +115,7 @@
       />
     </svg>
     <span class="text-xs font-semibold">Precio</span>
-    <span *ngIf="priceRange()" class="badge">✓</span>
+    <span *ngIf="priceRange()" class="badge"><app-icon name="check" [size]="16" /></span>
   </button>
 
   <!-- Type Chip -->
@@ -271,8 +271,9 @@
       class="filter-chip filter-chip--mobile"
       type="button"
     >
-      <span class="text-xs font-semibold whitespace-nowrap">📅 Fechas</span>
-      <span *ngIf="dateRange()" class="badge">✓</span>
+      <app-icon name="calendar" [size]="14" cssClass="inline-block mr-1" />
+      <span class="text-xs font-semibold whitespace-nowrap">Fechas</span>
+      <app-icon *ngIf="dateRange()" name="check" [size]="14" cssClass="badge" />
     </button>
 
     <!-- Price Chip -->
@@ -282,8 +283,9 @@
       class="filter-chip filter-chip--mobile"
       type="button"
     >
-      <span class="text-xs font-semibold whitespace-nowrap">💰 Precio</span>
-      <span *ngIf="priceRange()" class="badge">✓</span>
+      <app-icon name="wallet" [size]="14" cssClass="inline-block mr-1" />
+      <span class="text-xs font-semibold whitespace-nowrap">Precio</span>
+      <app-icon *ngIf="priceRange()" name="check" [size]="14" cssClass="badge" />
     </button>
 
     <!-- Type Chip -->
@@ -293,7 +295,8 @@
       class="filter-chip filter-chip--mobile"
       type="button"
     >
-      <span class="text-xs font-semibold whitespace-nowrap">🚗 Tipo</span>
+      <app-icon name="car" [size]="14" cssClass="inline-block mr-1" />
+      <span class="text-xs font-semibold whitespace-nowrap">Tipo</span>
       <span *ngIf="vehicleTypes().length > 0" class="badge">{{ vehicleTypes().length }}</span>
     </button>
 
@@ -304,7 +307,8 @@
       class="filter-chip filter-chip--mobile"
       type="button"
     >
-      <span class="text-xs font-semibold whitespace-nowrap">⚡ Hoy</span>
+      <app-icon name="lightning" [size]="14" cssClass="inline-block mr-1" />
+      <span class="text-xs font-semibold whitespace-nowrap">Hoy</span>
     </button>
 
     <!-- Clear Button -->

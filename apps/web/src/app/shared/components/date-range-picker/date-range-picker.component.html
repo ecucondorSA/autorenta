@@ -67,7 +67,9 @@
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             />
           </svg>
-          <span class="date-to" data-testid="date-to">{{ to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin' }}</span>
+          <span class="date-to" data-testid="date-to">{{
+            to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
+          }}</span>
         </div>
         <span class="duration-badge" *ngIf="selectedDays()">
           {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}

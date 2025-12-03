@@ -35,7 +35,8 @@
   -webkit-backdrop-filter: blur(10px);
   border-radius: 12px;
   box-shadow: var(--map-control-shadow, 0 4px 12px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
-  border: 1px solid var(--map-control-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
+  border: 1px solid
+    var(--map-control-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
 }
 
 .mapboxgl-ctrl-group button {
@@ -46,7 +47,7 @@
 
 .mapboxgl-ctrl-group button:hover {
   background: var(--map-control-hover-bg, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
-  color: var(--map-control-text, var(--surface-primary, var(--surface-primary, #ffffff)fff));
+  color: var(--map-control-text, var(--surface-primary, var(--surface-primary, #ffffff) fff));
 }
 
 .mapboxgl-ctrl-group button:active {
@@ -169,7 +170,10 @@
 .marker-overlay {
   position: absolute;
   inset: 0;
-  background-color: var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4)); /* Replaced gradient with solid color token */
+  background-color: var(
+    --shadow-dark-alpha-40,
+    rgba(0, 0, 0, 0.4)
+  ); /* Replaced gradient with solid color token */
   pointer-events: none;
 }
 
@@ -341,7 +345,7 @@
 }
 
 .mapboxgl-popup-content h3 {
-  color: var(--surface-primary, var(--surface-primary, #ffffff)fff);
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff);
   margin: 0 0 8px 0;
   font-size: 1rem;
   font-weight: 600;
@@ -360,7 +364,7 @@
 }
 
 .mapboxgl-popup-close-button:hover {
-  color: var(--surface-primary, var(--surface-primary, #ffffff)fff);
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff);
   background: var(--border-light-alpha-10, rgba(255, 255, 255, 0.1));
 }
 
@@ -425,7 +429,7 @@
 
 .mapboxgl-ctrl-geocoder .suggestions > .active > a {
   background-color: rgba(79, 70, 229, 0.3) !important;
-  color: var(--surface-primary, var(--surface-primary, #ffffff)fff) !important;
+  color: var(--surface-primary, var(--surface-primary, #ffffff) fff) !important;
 }
 
 /* ============================================================================
@@ -476,7 +480,10 @@
   }
 
   .mapboxgl-control-container .mapboxgl-ctrl-group {
-    background-color: var(--map-control-bg, var(--surface-primary-alpha-95, rgba(255, 255, 255, 0.95)));
+    background-color: var(
+      --map-control-bg,
+      var(--surface-primary-alpha-95, rgba(255, 255, 255, 0.95))
+    );
     border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
   }
 
@@ -605,7 +612,9 @@
 }
 
 .map-carousel-heading__pill.recommended {
-  background-color: var(--warning-default) !important; /* Replaced gradient with solid color token */
+  background-color: var(
+    --warning-default
+  ) !important; /* Replaced gradient with solid color token */
   color: var(--text-primary, #1f2937) !important;
   border: 1px solid var(--warning-alpha-30, rgba(245, 158, 11, 0.3)) !important;
   box-shadow: 0 4px 12px var(--warning-alpha-30, rgba(245, 158, 11, 0.3)) !important;

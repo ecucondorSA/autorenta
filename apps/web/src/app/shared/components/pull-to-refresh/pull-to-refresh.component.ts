@@ -120,10 +120,11 @@ import { CommonModule } from '@angular/common';
       }
 
       .refresh-indicator.refreshing {
-            background: var(--surface-info-dark-alpha-05); /* Reemplazado gradiente con color sólido */
-          }:host-context(.dark) .refresh-indicator.refreshing {
-      background: var(--surface-info-light-alpha-08); /* Reemplazado gradiente con color sólido */
-    }
+        background: var(--surface-info-dark-alpha-05); /* Reemplazado gradiente con color sólido */
+      }
+      :host-context(.dark) .refresh-indicator.refreshing {
+        background: var(--surface-info-light-alpha-08); /* Reemplazado gradiente con color sólido */
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

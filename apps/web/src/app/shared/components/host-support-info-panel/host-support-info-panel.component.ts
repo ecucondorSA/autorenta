@@ -29,9 +29,7 @@ import { TranslateModule } from '@ngx-translate/core';
         <div class="flex items-start gap-3 flex-1">
           <div class="flex-shrink-0 w-10 h-10 bg-cta-default text-cta-text text-xl">💡</div>
           <div class="flex-1 stack-xs">
-            <h3 class="h4 text-text-primary dark:text-text-primary">
-              Guía para Anfitriones
-            </h3>
+            <h3 class="h4 text-text-primary dark:text-text-primary">Guía para Anfitriones</h3>
             <p class="text-sm text-text-secondary dark:text-text-secondary/75">
               Todo lo que necesitás saber para tener éxito en AutoRenta
             </p>
@@ -76,9 +74,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <div
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
           >
-            <div class="h4 text-warning-light dark:text-warning-light/90">
-              15-25%
-            </div>
+            <div class="h4 text-warning-light dark:text-warning-light/90">15-25%</div>
             <div class="text-xs text-text-secondary dark:text-text-secondary/75">
               Comisión de la plataforma
             </div>
@@ -342,9 +338,7 @@ import { TranslateModule } from '@ngx-translate/core';
             *ngIf="activeTab() === 'calculator'"
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-6 border border-border-default dark:border-border-muted stack-md"
           >
-            <h4 class="h4 text-text-primary dark:text-text-primary">
-              Calculadora de Ganancias
-            </h4>
+            <h4 class="h4 text-text-primary dark:text-text-primary">Calculadora de Ganancias</h4>
 
             <div class="stack-md">
               <div class="stack-xs">
@@ -454,17 +448,13 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-2">
                   <span class="text-xl">🚗</span>
-                  <h5 class="h5 text-text-primary dark:text-text-primary">
-                    Compacto/Económico
-                  </h5>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">Compacto/Económico</h5>
                 </div>
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Chevrolet Onix, Fiat Cronos
                 </p>
                 <div class="h4 text-cta-default dark:text-cta-default/80">$25-35</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
-                  USD por día
-                </p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
 
               <div
@@ -472,17 +462,13 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-2">
                   <span class="text-xl">🚙</span>
-                  <h5 class="h5 text-text-primary dark:text-text-primary">
-                    Sedán Mediano
-                  </h5>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">Sedán Mediano</h5>
                 </div>
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Toyota Corolla, Volkswagen Vento
                 </p>
                 <div class="h4 text-warning-light dark:text-warning-light/90">$40-55</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
-                  USD por día
-                </p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
 
               <div
@@ -490,17 +476,13 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-2">
                   <span class="text-xl">🚐</span>
-                  <h5 class="h5 text-text-primary dark:text-text-primary">
-                    SUV/Camioneta
-                  </h5>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">SUV/Camioneta</h5>
                 </div>
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Ford Ranger, Chevrolet Tracker
                 </p>
                 <div class="h4 text-cta-default dark:text-cta-default/80">$60-85</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
-                  USD por día
-                </p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
 
               <div
@@ -508,17 +490,13 @@ import { TranslateModule } from '@ngx-translate/core';
               >
                 <div class="flex items-center gap-2">
                   <span class="text-xl">🏎️</span>
-                  <h5 class="h5 text-text-primary dark:text-text-primary">
-                    Premium/Lujo
-                  </h5>
+                  <h5 class="h5 text-text-primary dark:text-text-primary">Premium/Lujo</h5>
                 </div>
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Audi A4, BMW Serie 3
                 </p>
                 <div class="h4 text-warning-light dark:text-warning-light/90">$90-150+</div>
-                <p class="text-xs text-text-secondary dark:text-text-secondary/75">
-                  USD por día
-                </p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
             </div>
 

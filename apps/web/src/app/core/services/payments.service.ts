@@ -37,19 +37,23 @@ export class PaymentsService {
     });
   }
 
-  async createPaymentIntent(params: {
-    bookingId?: string;
-    userId?: string;
-    amount: number;
-    currency: string;
-    intentType: 'booking' | 'security_deposit' | 'fine';
-    isPreAuth?: boolean;
-    description?: string;
-  } | string, _provider?: string): Promise<PaymentIntent> {
-    
+  async createPaymentIntent(
+    params:
+      | {
+          bookingId?: string;
+          userId?: string;
+          amount: number;
+          currency: string;
+          intentType: 'booking' | 'security_deposit' | 'fine';
+          isPreAuth?: boolean;
+          description?: string;
+        }
+      | string,
+    _provider?: string,
+  ): Promise<PaymentIntent> {
     // Overload handler: if string, it's the old signature (bookingId, provider)
     if (typeof params === 'string') {
-        return this.createIntent(params);
+      return this.createIntent(params);
     }
 
     // Normal generic implementation
@@ -96,55 +100,99 @@ export class PaymentsService {
   }
 
   // ... (Other methods: createMpPreAuthOrder, markAsPaid, getStatus, triggerMockPayment, capture, release, cancel) ...
-  
-  async createMpPreAuthOrder(intentId: string, amountCents: number, description: string, bookingId?: string): Promise<PaymentIntent> {
-      // (Implementation preserved from previous read)
-      const { data, error } = await this.supabase.rpc('create_mp_preauth_order', { p_intent_id: intentId, p_amount_cents: amountCents, p_description: description, p_booking_id: bookingId });
-      if (error) throw new Error(error.message);
-      return data as unknown as PaymentIntent; 
+
+  async createMpPreAuthOrder(
+    intentId: string,
+    amountCents: number,
+    description: string,
+    bookingId?: string,
+  ): Promise<PaymentIntent> {
+    // (Implementation preserved from previous read)
+    const { data, error } = await this.supabase.rpc('create_mp_preauth_order', {
+      p_intent_id: intentId,
+      p_amount_cents: amountCents,
+      p_description: description,
+      p_booking_id: bookingId,
+    });
+    if (error) throw new Error(error.message);
+    return data as unknown as PaymentIntent;
   }
 
   async markAsPaid(intentId: string): Promise<void> {
     if (environment.production) throw new Error('Not allowed in prod');
     const workerUrl = environment.paymentsWebhookUrl;
-    await fetch(workerUrl, { method: 'POST', body: JSON.stringify({ provider: 'mock', intent_id: intentId, status: 'approved' }) });
+    await fetch(workerUrl, {
+      method: 'POST',
+      body: JSON.stringify({ provider: 'mock', intent_id: intentId, status: 'approved' }),
+    });
   }
 
   async getStatus(intentId: string): Promise<PaymentIntent | null> {
-    const { data } = await this.supabase.from('payment_intents').select('*').eq('id', intentId).single();
+    const { data } = await this.supabase
+      .from('payment_intents')
+      .select('*')
+      .eq('id', intentId)
+      .single();
     return data as PaymentIntent;
   }
 
   async triggerMockPayment(bookingId: string, status: 'approved' | 'rejected'): Promise<void> {
-     if (environment.production) throw new Error('Not allowed in prod');
-     const workerUrl = environment.paymentsWebhookUrl;
-     await fetch(workerUrl, { method: 'POST', body: JSON.stringify({ provider: 'mock', booking_id: bookingId, status }) });
+    if (environment.production) throw new Error('Not allowed in prod');
+    const workerUrl = environment.paymentsWebhookUrl;
+    await fetch(workerUrl, {
+      method: 'POST',
+      body: JSON.stringify({ provider: 'mock', booking_id: bookingId, status }),
+    });
   }
 
-  async createPaymentIntentWithDetails(details: { booking_id: string; payment_method: string; amount_cents: number; status: string; }): Promise<PaymentIntent> {
-    const { data, error } = await this.supabase.from('payment_intents').insert({
+  async createPaymentIntentWithDetails(details: {
+    booking_id: string;
+    payment_method: string;
+    amount_cents: number;
+    status: string;
+  }): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase
+      .from('payment_intents')
+      .insert({
         booking_id: details.booking_id,
         provider: details.payment_method === 'wallet' ? 'wallet' : 'mercadopago',
         status: details.status,
-      }).select().single();
+      })
+      .select()
+      .single();
     if (error) throw error;
     return data as PaymentIntent;
   }
 
-  async simulateWebhook(__provider: string, intentId: string, _status: 'approved' | 'rejected'): Promise<void> {
+  async simulateWebhook(
+    __provider: string,
+    intentId: string,
+    _status: 'approved' | 'rejected',
+  ): Promise<void> {
     return this.markAsPaid(intentId);
   }
 
-  async captureMpPreAuth(mpOrderId: string, amountCents: number, description: string): Promise<PaymentIntent> {
-      const { data, error } = await this.supabase.rpc('capture_mp_preauth_order', { p_mp_order_id: mpOrderId, p_amount_cents: amountCents, p_description: description });
-      if (error) throw new Error(error.message);
-      return data as unknown as PaymentIntent;
+  async captureMpPreAuth(
+    mpOrderId: string,
+    amountCents: number,
+    description: string,
+  ): Promise<PaymentIntent> {
+    const { data, error } = await this.supabase.rpc('capture_mp_preauth_order', {
+      p_mp_order_id: mpOrderId,
+      p_amount_cents: amountCents,
+      p_description: description,
+    });
+    if (error) throw new Error(error.message);
+    return data as unknown as PaymentIntent;
   }
 
   async releaseMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {
-      const { data, error } = await this.supabase.rpc('release_mp_preauth_order', { p_mp_order_id: mpOrderId, p_description: description });
-      if (error) throw new Error(error.message);
-      return data as unknown as PaymentIntent;
+    const { data, error } = await this.supabase.rpc('release_mp_preauth_order', {
+      p_mp_order_id: mpOrderId,
+      p_description: description,
+    });
+    if (error) throw new Error(error.message);
+    return data as unknown as PaymentIntent;
   }
 
   async cancelMpPreAuth(mpOrderId: string, description: string): Promise<PaymentIntent> {
@@ -184,7 +232,7 @@ export class PaymentsService {
       throw new Error('El pago no se completó correctamente');
     } catch (error: unknown) {
       if (retryCount < MAX_RETRIES) {
-        await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * (retryCount + 1)));
         return this.processPayment(bookingId, retryCount + 1);
       }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -7,7 +7,6 @@ import {
   LedgerEntry,
   PaginatedResult,
 } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-ledger',
@@ -17,7 +16,7 @@ import { environment } from '../../../../../environments/environment';
   styleUrls: ['./ledger.page.scss'],
 })
 export class LedgerPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
 
   readonly loading = signal(false);
   readonly ledgerData = signal<PaginatedResult<LedgerEntry>>({
@@ -37,12 +36,7 @@ export class LedgerPage implements OnInit {
   readonly currentPage = signal(1);
   readonly pageSize = signal(50);
 
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
+  constructor() {}
 
   async ngOnInit(): Promise<void> {
     await this.loadLedger();

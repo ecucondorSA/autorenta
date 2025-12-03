@@ -43,8 +43,12 @@ import { CarChatComponent } from './components/car-chat.component';
             </button>
 
             <div>
-              <h1 class="text-xl font-semibold text-text-primary dark:text-text-inverse">Mensajes</h1>
-              <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+              <h1 class="text-xl font-semibold text-text-primary dark:text-text-inverse">
+                Mensajes
+              </h1>
+              <p
+                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+              >
                 @if (bookingId()) {
                   Conversación sobre reserva
                 } @else if (carId()) {
@@ -126,7 +130,9 @@ import { CarChatComponent } from './components/car-chat.component';
               <div
                 class="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-border-muted border-t-blue-500"
               ></div>
-              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">Cargando chat...</p>
+              <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
+                Cargando chat...
+              </p>
             </div>
           </div>
         } @else if (error()) {

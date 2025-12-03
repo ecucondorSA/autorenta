@@ -37,13 +37,17 @@
             <option value="distance">Más cercanos</option>
             <option value="newest">Más recientes</option>
           </select>
-          <svg class="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
+          <app-icon
+            name="chevron-down"
+            [size]="16"
+            cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+          />
         </div>
 
         <!-- View Toggle (Mobile: Map/List, Desktop: hidden - always split) -->
-        <div class="lg:hidden bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700">
+        <div
+          class="lg:hidden bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700"
+        >
           <button
             data-testid="view-map"
             [class.bg-white]="viewMode() === 'map'"
@@ -56,9 +60,7 @@
             class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
             title="Vista Mapa"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
+            <app-icon name="map" [size]="16" />
             <span>Mapa</span>
           </button>
           <button
@@ -73,9 +75,7 @@
             class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
             title="Vista Lista"
           >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <app-icon name="menu" [size]="16" />
             <span>Lista</span>
           </button>
         </div>
@@ -85,360 +85,404 @@
 
   <!-- 🎯 SPLIT VIEW CONTAINER (Desktop: side-by-side, Mobile: toggle) -->
   <div class="flex flex-col lg:flex-row h-[calc(100vh-4rem)]">
-
     <!-- 📦 LEFT PANEL: Lista de Autos (scrollable) -->
     <div
       class="w-full lg:w-1/2 xl:w-[55%] overflow-y-auto px-4 sm:px-6 py-6"
       [class.hidden]="viewMode() === 'map'"
       [class.lg:block]="true"
     >
-    <!-- 🔎 SEARCH BAR -->
-    <div class="mb-4">
-      <div class="relative">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <input
-          type="text"
-          data-testid="search-input"
-          [value]="searchQuery()"
-          (input)="onSearchInput($event)"
-          (keyup.enter)="onSearchSubmit()"
-          placeholder="Buscar por marca, modelo o ciudad..."
-          class="w-full pl-10 pr-10 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-slate-400"
-        />
-        <button
-          *ngIf="searchQuery()"
-          data-testid="search-clear"
-          (click)="clearSearch()"
-          class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-500 dark:text-slate-300 transition-colors"
-          title="Limpiar búsqueda"
-        >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- 🔍 FILTROS -->
-    <div class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
-      <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">Filtros de búsqueda</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Filtro por distancia -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
-            Distancia máxima (km)
-          </label>
+      <!-- 🔎 SEARCH BAR -->
+      <div class="mb-4">
+        <div class="relative">
+          <app-icon
+            name="search"
+            [size]="20"
+            cssClass="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+          />
           <input
-            type="number"
-            data-testid="filter-max-distance"
-            [value]="maxDistance() ?? ''"
-            (input)="maxDistance.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-            placeholder="Sin límite"
-            min="0"
-            step="1"
-            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+            type="text"
+            data-testid="search-input"
+            [value]="searchQuery()"
+            (input)="onSearchInput($event)"
+            (keyup.enter)="onSearchSubmit()"
+            placeholder="Buscar por marca, modelo o ciudad..."
+            class="w-full pl-10 pr-10 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-slate-400"
           />
-        </div>
-
-        <!-- Filtro por precio mínimo -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
-            Precio mínimo ($/día)
-          </label>
-          <input
-            type="number"
-            data-testid="filter-min-price"
-            [value]="minPrice() ?? ''"
-            (input)="minPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-            placeholder="Sin mínimo"
-            min="0"
-            step="100"
-            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-          />
-        </div>
-
-        <!-- Filtro por precio máximo -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
-            Precio máximo ($/día)
-          </label>
-          <input
-            type="number"
-            data-testid="filter-max-price"
-            [value]="maxPrice() ?? ''"
-            (input)="maxPrice.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-            placeholder="Sin máximo"
-            min="0"
-            step="100"
-            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-          />
-        </div>
-
-        <!-- Filtro por rating mínimo -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
-            Calificación mínima (⭐)
-          </label>
-          <input
-            type="number"
-            data-testid="filter-min-rating"
-            [value]="minRating() ?? ''"
-            (input)="minRating.set($any($event.target).value ? parseFloat($any($event.target).value) : null)"
-            placeholder="Sin mínimo"
-            min="0"
-            max="5"
-            step="0.1"
-            class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-          />
-        </div>
-      </div>
-
-      <!-- Botón limpiar filtros -->
-      <div class="mt-4 flex justify-end">
-        <button
-          *ngIf="maxDistance() !== null || minPrice() !== null || maxPrice() !== null || minRating() !== null"
-          data-testid="clear-filters"
-          (click)="clearFilters()"
-          class="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium"
-        >
-          Limpiar filtros
-        </button>
-      </div>
-    </div>
-
-    <!-- SKELETON LOADING -->
-    <div
-      *ngIf="loading() && viewMode() === 'grid'"
-      class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8"
-    >
-      <div *ngFor="let _ of [1,2,3,4,5,6]" class="animate-pulse">
-        <!-- Image Skeleton -->
-        <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
-        <!-- Content Skeleton -->
-        <div class="space-y-2">
-          <div class="flex justify-between">
-            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
-          </div>
-          <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
-          <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GRID VIEW - Airbnb Style (adjusted for split view) -->
-    <div
-      *ngIf="!loading() && viewMode() === 'grid'"
-      class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8 grid-view"
-    >
-      <a
-        *ngFor="let car of premiumCars(); trackBy: trackByCar"
-        [routerLink]="['/cars', car.id]"
-        [attr.data-car-id]="car.id"
-        data-testid="car-card"
-        class="airbnb-card group block cursor-pointer transition-transform duration-200"
-        [class.ring-2]="activeMapCarId() === car.id"
-        [class.ring-cyan-500]="activeMapCarId() === car.id"
-        [class.ring-offset-2]="activeMapCarId() === car.id"
-        [class.scale-[1.02]]="hoveredCarId() === car.id"
-        (mouseenter)="onCardMouseEnter(car.id)"
-        (mouseleave)="onCardMouseLeave()"
-      >
-        <!-- Image Container - Airbnb style -->
-        <div class="aspect-[4/3] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3">
-          <img
-            [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-            [alt]="car.brand + ' ' + car.model"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-
-          <!-- Favorite Heart Button - Top Left -->
           <button
-            type="button"
-            (click)="toggleFavorite($event, car.id)"
-            class="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm transition-all hover:scale-110"
-            [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+            *ngIf="searchQuery()"
+            data-testid="search-clear"
+            (click)="clearSearch()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-500 dark:text-slate-300 transition-colors"
+            title="Limpiar búsqueda"
           >
-            <svg
-              class="w-5 h-5 transition-colors"
-              [class.text-rose-500]="isFavorite(car.id)"
-              [class.fill-rose-500]="isFavorite(car.id)"
-              [class.text-slate-600]="!isFavorite(car.id)"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-            </svg>
+            <app-icon name="close" [size]="12" />
           </button>
-
-          <!-- Trust Badges - Top Right -->
-          <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
-            <!-- Superhost Badge (rating >= 4.5 AND rating_count >= 5) -->
-            <span
-              *ngIf="isTopRated(car)"
-              class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md"
-            >
-              🏆 Superanfitrión
-            </span>
-            <!-- Instant Book Badge (rating >= 4.0 AND rating_count >= 3) -->
-            <span
-              *ngIf="hasInstantBooking(car) && !isTopRated(car)"
-              class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md"
-            >
-              ⚡ Reserva inmediata
-            </span>
-            <!-- Popular Badge (rating_count >= 10) -->
-            <span
-              *ngIf="isPopular(car)"
-              class="px-2 py-1 bg-rose-500 text-white text-[10px] font-semibold rounded-full shadow-md"
-            >
-              🔥 Popular
-            </span>
-          </div>
-
-          <!-- Image Carousel Dots (if multiple photos) -->
-          <div *ngIf="car.photos?.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-            <span
-              *ngFor="let photo of car.photos?.slice(0, 5); let i = index"
-              class="w-1.5 h-1.5 rounded-full transition-all"
-              [class.bg-white]="i === 0"
-              [class.w-2]="i === 0"
-              [class.bg-white/60]="i !== 0"
-            ></span>
-          </div>
         </div>
-
-        <!-- Content - Airbnb style -->
-        <div class="space-y-1">
-          <!-- Location & Rating Row -->
-          <div class="flex items-center justify-between">
-            <p class="text-sm font-semibold text-slate-900 dark:text-white truncate" data-testid="car-location">
-              {{ car.location_city || car.location_state || 'Argentina' }}
-            </p>
-            <div *ngIf="car.rating_avg" class="flex items-center gap-1 flex-shrink-0">
-              <svg class="w-4 h-4 text-slate-900 dark:text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              <span class="text-sm font-medium text-slate-900 dark:text-white">{{ car.rating_avg | number:'1.1-1' }}</span>
-            </div>
-          </div>
-
-          <!-- Car Title -->
-          <h3 class="text-sm text-slate-500 dark:text-slate-400 truncate" data-testid="car-title">
-            {{ car.brand }} {{ car.model }} {{ car.year }}
-          </h3>
-
-          <!-- Specs Row -->
-          <p class="text-sm text-slate-500 dark:text-slate-400">
-            {{ car.transmission | titlecase }} · {{ car.seats }} asientos · {{ car.fuel_type | titlecase }}
-          </p>
-
-          <!-- Price -->
-          <p class="pt-1">
-            <span class="font-semibold text-slate-900 dark:text-white" data-testid="car-price">${{ car.price_per_day | number:'1.0-0' }}</span>
-            <span class="text-slate-500 dark:text-slate-400"> / día</span>
-          </p>
-
-          <!-- Social Proof: Viewing Now -->
-          <p class="text-xs text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1" *ngIf="getViewingCount(car.id) > 0">
-            <span class="inline-block w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
-            {{ getViewingCount(car.id) }} personas mirando ahora
-          </p>
-        </div>
-      </a>
-    </div>
-
-    <!-- LIST VIEW -->
-    <div *ngIf="viewMode() === 'list'" class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
-      <a
-        *ngFor="let car of premiumCars(); trackBy: trackByCar"
-        [routerLink]="['/cars', car.id]"
-        [attr.data-car-id]="car.id"
-        data-testid="car-card"
-        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
-        [class.ring-2]="activeMapCarId() === car.id"
-        [class.ring-cyan-500]="activeMapCarId() === car.id"
-        (mouseenter)="onCardMouseEnter(car.id)"
-        (mouseleave)="onCardMouseLeave()"
-      >
-        <!-- Image -->
-        <div
-          class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0"
-        >
-          <img
-            [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-            [alt]="car.brand + ' ' + car.model"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </div>
-
-        <!-- Content -->
-        <div class="p-5 flex-1 flex flex-col justify-between">
-          <div>
-            <div class="flex justify-between items-start mb-2">
-              <div>
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white" data-testid="car-title">
-                  {{ car.brand }} {{ car.model }}
-                </h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1" data-testid="car-location">
-                  📍 {{ car.location_city || 'Ubicación no disponible' }}
-                </p>
-              </div>
-              <div class="text-right">
-                <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400" data-testid="car-price">
-                  ${{ car.price_per_day | number: '1.0-0' }}
-                </div>
-                <div class="text-xs text-slate-500">por día</div>
-              </div>
-            </div>
-
-            <p
-              *ngIf="car.description"
-              class="text-slate-600 dark:text-slate-300 text-sm line-clamp-2 mb-4"
-            >
-              {{ car.description }}
-            </p>
-
-            <div class="flex flex-wrap gap-3">
-              <span
-                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
-              >
-                ⚙️ {{ car.transmission || 'Manual' }}
-              </span>
-              <span
-                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
-              >
-                ⛽ {{ car.fuel_type || 'Nafta' }}
-              </span>
-              <span
-                class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
-              >
-                👥 {{ car.seats || 5 }} asientos
-              </span>
-            </div>
-          </div>
-        </div>
-      </a>
-    </div>
-
-    <!-- Empty State -->
-    <div *ngIf="premiumCars().length === 0" class="text-center py-20" data-testid="empty-state">
-      <div
-        class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl"
-      >
-        🔍
       </div>
-      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-        No encontramos vehículos
-      </h3>
-      <p class="text-slate-500 dark:text-slate-400">Intenta ajustar tu búsqueda o filtros.</p>
-    </div>
+
+      <!-- 🔍 FILTROS -->
+      <div
+        class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700"
+      >
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">
+          Filtros de búsqueda
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Filtro por distancia -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+              Distancia máxima (km)
+            </label>
+            <input
+              type="number"
+              data-testid="filter-max-distance"
+              [value]="maxDistance() ?? ''"
+              (input)="
+                maxDistance.set(
+                  $any($event.target).value ? parseFloat($any($event.target).value) : null
+                )
+              "
+              placeholder="Sin límite"
+              min="0"
+              step="1"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+            />
+          </div>
+
+          <!-- Filtro por precio mínimo -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+              Precio mínimo ($/día)
+            </label>
+            <input
+              type="number"
+              data-testid="filter-min-price"
+              [value]="minPrice() ?? ''"
+              (input)="
+                minPrice.set(
+                  $any($event.target).value ? parseFloat($any($event.target).value) : null
+                )
+              "
+              placeholder="Sin mínimo"
+              min="0"
+              step="100"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+            />
+          </div>
+
+          <!-- Filtro por precio máximo -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+              Precio máximo ($/día)
+            </label>
+            <input
+              type="number"
+              data-testid="filter-max-price"
+              [value]="maxPrice() ?? ''"
+              (input)="
+                maxPrice.set(
+                  $any($event.target).value ? parseFloat($any($event.target).value) : null
+                )
+              "
+              placeholder="Sin máximo"
+              min="0"
+              step="100"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+            />
+          </div>
+
+          <!-- Filtro por rating mínimo -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+              Calificación mínima (⭐)
+            </label>
+            <input
+              type="number"
+              data-testid="filter-min-rating"
+              [value]="minRating() ?? ''"
+              (input)="
+                minRating.set(
+                  $any($event.target).value ? parseFloat($any($event.target).value) : null
+                )
+              "
+              placeholder="Sin mínimo"
+              min="0"
+              max="5"
+              step="0.1"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+            />
+          </div>
+        </div>
+
+        <!-- Botón limpiar filtros -->
+        <div class="mt-4 flex justify-end">
+          <button
+            *ngIf="
+              maxDistance() !== null ||
+              minPrice() !== null ||
+              maxPrice() !== null ||
+              minRating() !== null
+            "
+            data-testid="clear-filters"
+            (click)="clearFilters()"
+            class="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium"
+          >
+            Limpiar filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- SKELETON LOADING -->
+      <div
+        *ngIf="loading() && viewMode() === 'grid'"
+        class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8"
+      >
+        <div *ngFor="let _ of [1, 2, 3, 4, 5, 6]" class="animate-pulse">
+          <!-- Image Skeleton -->
+          <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
+          <!-- Content Skeleton -->
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
+            </div>
+            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID VIEW - Airbnb Style (adjusted for split view) -->
+      <div
+        *ngIf="!loading() && viewMode() === 'grid'"
+        class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8 grid-view"
+      >
+        <a
+          *ngFor="let car of premiumCars(); trackBy: trackByCar"
+          [routerLink]="['/cars', car.id]"
+          [attr.data-car-id]="car.id"
+          data-testid="car-card"
+          class="airbnb-card group block cursor-pointer transition-transform duration-200"
+          [class.ring-2]="activeMapCarId() === car.id"
+          [class.ring-cyan-500]="activeMapCarId() === car.id"
+          [class.ring-offset-2]="activeMapCarId() === car.id"
+          [class.scale-[1.02]]="hoveredCarId() === car.id"
+          (mouseenter)="onCardMouseEnter(car.id)"
+          (mouseleave)="onCardMouseLeave()"
+        >
+          <!-- Image Container - Airbnb style -->
+          <div
+            class="aspect-[4/3] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3"
+          >
+            <img
+              [src]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            />
+
+            <!-- Favorite Heart Button - Top Left -->
+            <button
+              type="button"
+              (click)="toggleFavorite($event, car.id)"
+              class="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm transition-all hover:scale-110"
+              [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+            >
+              <app-icon
+                [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'"
+                [size]="20"
+                [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-slate-600'"
+              />
+            </button>
+
+            <!-- Trust Badges - Top Right -->
+            <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+              <!-- Superhost Badge (rating >= 4.5 AND rating_count >= 5) -->
+              <span
+                *ngIf="isTopRated(car)"
+                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md"
+              >
+                🏆 Superanfitrión
+              </span>
+              <!-- Instant Book Badge (rating >= 4.0 AND rating_count >= 3) -->
+              <span
+                *ngIf="hasInstantBooking(car) && !isTopRated(car)"
+                class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md"
+              >
+                ⚡ Reserva inmediata
+              </span>
+              <!-- Popular Badge (rating_count >= 10) -->
+              <span
+                *ngIf="isPopular(car)"
+                class="px-2 py-1 bg-rose-500 text-white text-[10px] font-semibold rounded-full shadow-md"
+              >
+                🔥 Popular
+              </span>
+            </div>
+
+            <!-- Image Carousel Dots (if multiple photos) -->
+            <div
+              *ngIf="car.photos?.length > 1"
+              class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5"
+            >
+              <span
+                *ngFor="let photo of car.photos?.slice(0, 5); let i = index"
+                class="w-1.5 h-1.5 rounded-full transition-all"
+                [class.bg-white]="i === 0"
+                [class.w-2]="i === 0"
+                [class.bg-white/60]="i !== 0"
+              ></span>
+            </div>
+          </div>
+
+          <!-- Content - Airbnb style -->
+          <div class="space-y-1">
+            <!-- Location & Rating Row -->
+            <div class="flex items-center justify-between">
+              <p
+                class="text-sm font-semibold text-slate-900 dark:text-white truncate"
+                data-testid="car-location"
+              >
+                {{ car.location_city || car.location_state || 'Argentina' }}
+              </p>
+              <div *ngIf="car.rating_avg" class="flex items-center gap-1 flex-shrink-0">
+                <app-icon
+                  name="star-filled"
+                  [size]="16"
+                  cssClass="text-slate-900 dark:text-white"
+                />
+                <span class="text-sm font-medium text-slate-900 dark:text-white">{{
+                  car.rating_avg | number: '1.1-1'
+                }}</span>
+              </div>
+            </div>
+
+            <!-- Car Title -->
+            <h3 class="text-sm text-slate-500 dark:text-slate-400 truncate" data-testid="car-title">
+              {{ car.brand }} {{ car.model }} {{ car.year }}
+            </h3>
+
+            <!-- Specs Row -->
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              {{ car.transmission | titlecase }} · {{ car.seats }} asientos ·
+              {{ car.fuel_type | titlecase }}
+            </p>
+
+            <!-- Price -->
+            <p class="pt-1">
+              <span class="font-semibold text-slate-900 dark:text-white" data-testid="car-price"
+                >${{ car.price_per_day | number: '1.0-0' }}</span
+              >
+              <span class="text-slate-500 dark:text-slate-400"> / día</span>
+            </p>
+
+            <!-- Social Proof: Viewing Now -->
+            <p
+              class="text-xs text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1"
+              *ngIf="getViewingCount(car.id) > 0"
+            >
+              <span class="inline-block w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
+              {{ getViewingCount(car.id) }} personas mirando ahora
+            </p>
+          </div>
+        </a>
+      </div>
+
+      <!-- LIST VIEW -->
+      <div *ngIf="viewMode() === 'list'" class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
+        <a
+          *ngFor="let car of premiumCars(); trackBy: trackByCar"
+          [routerLink]="['/cars', car.id]"
+          [attr.data-car-id]="car.id"
+          data-testid="car-card"
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
+          [class.ring-2]="activeMapCarId() === car.id"
+          [class.ring-cyan-500]="activeMapCarId() === car.id"
+          (mouseenter)="onCardMouseEnter(car.id)"
+          (mouseleave)="onCardMouseLeave()"
+        >
+          <!-- Image -->
+          <div
+            class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0"
+          >
+            <img
+              [src]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Content -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3
+                    class="text-xl font-bold text-slate-900 dark:text-white"
+                    data-testid="car-title"
+                  >
+                    {{ car.brand }} {{ car.model }}
+                  </h3>
+                  <p
+                    class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1"
+                    data-testid="car-location"
+                  >
+                    📍 {{ car.location_city || 'Ubicación no disponible' }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <div
+                    class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
+                    data-testid="car-price"
+                  >
+                    ${{ car.price_per_day | number: '1.0-0' }}
+                  </div>
+                  <div class="text-xs text-slate-500">por día</div>
+                </div>
+              </div>
+
+              <p
+                *ngIf="car.description"
+                class="text-slate-600 dark:text-slate-300 text-sm line-clamp-2 mb-4"
+              >
+                {{ car.description }}
+              </p>
+
+              <div class="flex flex-wrap gap-3">
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                >
+                  ⚙️ {{ car.transmission || 'Manual' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                >
+                  ⛽ {{ car.fuel_type || 'Nafta' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                >
+                  👥 {{ car.seats || 5 }} asientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="premiumCars().length === 0" class="text-center py-20" data-testid="empty-state">
+        <div
+          class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl"
+        >
+          🔍
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+          No encontramos vehículos
+        </h3>
+        <p class="text-slate-500 dark:text-slate-400">Intenta ajustar tu búsqueda o filtros.</p>
+      </div>
     </div>
     <!-- END LEFT PANEL -->
 
@@ -480,15 +524,11 @@
           (click)="centerOnUserLocation()"
           title="Mi ubicación"
         >
-          <svg class="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-300" />
         </button>
       </div>
     </div>
     <!-- END RIGHT PANEL -->
-
   </div>
   <!-- END SPLIT VIEW CONTAINER -->
 
@@ -516,13 +556,6 @@
     (click)="toggleFiltersDrawer()"
     aria-label="Abrir filtros"
   >
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-      />
-    </svg>
+    <app-icon name="filter" [size]="24" />
   </button>
 </section>

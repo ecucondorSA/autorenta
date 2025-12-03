@@ -20,7 +20,9 @@ export interface BookingOpsData {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-4">
+    <div
+      class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-4"
+    >
       <h3 class="text-sm font-semibold text-text-primary">Operaciones</h3>
 
       <div class="space-y-3 text-sm">
@@ -37,13 +39,23 @@ export interface BookingOpsData {
         </ng-container>
       </div>
 
-      <div *ngIf="data.cancellation_reason || data.cancellation_fee_cents" class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm">
+      <div
+        *ngIf="data.cancellation_reason || data.cancellation_fee_cents"
+        class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm"
+      >
         <p class="font-semibold text-error-strong">Cancelación</p>
-        <p *ngIf="data.cancellation_reason" class="text-text-secondary">Motivo: {{ data.cancellation_reason }}</p>
-        <p *ngIf="data.cancellation_fee_cents !== null && data.cancellation_fee_cents !== undefined" class="text-text-secondary">
+        <p *ngIf="data.cancellation_reason" class="text-text-secondary">
+          Motivo: {{ data.cancellation_reason }}
+        </p>
+        <p
+          *ngIf="data.cancellation_fee_cents !== null && data.cancellation_fee_cents !== undefined"
+          class="text-text-secondary"
+        >
           Fee: {{ formatCents(data.cancellation_fee_cents) }}
         </p>
-        <p *ngIf="data.cancelled_at" class="text-xs text-text-secondary/80">Cancelado: {{ data.cancelled_at }}</p>
+        <p *ngIf="data.cancelled_at" class="text-xs text-text-secondary/80">
+          Cancelado: {{ data.cancelled_at }}
+        </p>
       </div>
     </div>
   `,

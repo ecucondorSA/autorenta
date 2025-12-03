@@ -168,8 +168,9 @@ export class WalletLedgerService {
     return (data?.[0] as Record<string, unknown>) || null;
   }
 
-  formatAmount(cents: number, currency = 'ARS'): string {
-    return new Intl.NumberFormat('es-AR', {
+  formatAmount(cents: number, currency = 'USD'): string {
+    const locale = currency === 'ARS' ? 'es-AR' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
       minimumFractionDigits: 2,

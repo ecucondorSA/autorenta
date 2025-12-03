@@ -9,27 +9,27 @@ import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evi
   template: `
     <div class="evidence-upload p-4 border rounded-lg bg-base-100">
       <h3 class="font-bold mb-2">Evidencia (Fotos/Docs)</h3>
-      
-      <input 
-        type="file" 
-        (change)="onFileSelected($event)" 
-        class="file-input file-input-bordered w-full max-w-xs" 
+
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        class="file-input file-input-bordered w-full max-w-xs"
         [disabled]="uploading()"
       />
-      
+
       <div *ngIf="uploading()" class="mt-2">Subiendo...</div>
-      
+
       <ul class="mt-4 list-disc pl-4">
         <li *ngFor="let item of evidenceList()">
           <a [href]="item.path" target="_blank" class="link">{{ item.path }}</a>
         </li>
       </ul>
     </div>
-  `
+  `,
 })
 export class EvidenceUploaderComponent {
   @Input({ required: true }) disputeId!: string;
-  
+
   private evidenceService = inject(DisputeEvidenceService);
   uploading = signal(false);
   evidenceList = signal<EvidenceItem[]>([]);

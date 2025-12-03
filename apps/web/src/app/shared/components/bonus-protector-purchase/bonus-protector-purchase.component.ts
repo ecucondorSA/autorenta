@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
+import { IconComponent } from '../icon/icon.component';
 
 /**
  * BonusProtectorPurchaseComponent
@@ -31,7 +32,7 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
 @Component({
   selector: 'app-bonus-protector-purchase',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, IconComponent],
   template: `
     <ion-card>
       <ion-card-header>

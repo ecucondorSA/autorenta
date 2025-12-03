@@ -36,6 +36,7 @@ import { WhatsappFabComponent } from '../../../shared/components/whatsapp-fab/wh
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 // Temporary BreadcrumbItem interface
 interface BreadcrumbItem {
@@ -78,6 +79,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     // FiltersDrawerComponent,
     // BreadcrumbsComponent,
     TranslateModule,
+    IconComponent,
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
@@ -138,14 +140,15 @@ export class CarsListPage implements OnInit, OnDestroy {
     }),
   );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
-  readonly hasFilters = computed(() =>
-    !!this.city() ||
-    !!this.dateRange().from ||
-    !!this.searchQuery() ||
-    this.maxDistance() !== null ||
-    this.minPrice() !== null ||
-    this.maxPrice() !== null ||
-    this.minRating() !== null
+  readonly hasFilters = computed(
+    () =>
+      !!this.city() ||
+      !!this.dateRange().from ||
+      !!this.searchQuery() ||
+      this.maxDistance() !== null ||
+      this.minPrice() !== null ||
+      this.maxPrice() !== null ||
+      this.minRating() !== null,
   );
   readonly selectedCarId = signal<string | null>(null);
   readonly hoveredCarId = signal<string | null>(null); // For card ↔ map hover sync
@@ -639,7 +642,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         },
         (error) => {
           console.warn('Error getting user location:', error);
-        }
+        },
       );
     }
   }
@@ -952,7 +955,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     // Simulate viewing count based on car ID hash
     // Shows 0-5 viewers, with ~30% of cars having viewers
     const hash = carId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const seed = (hash % 100);
+    const seed = hash % 100;
     if (seed < 30) return 0; // 30% have no viewers
     if (seed < 50) return 1;
     if (seed < 70) return 2;
@@ -995,7 +998,6 @@ export class CarsListPage implements OnInit, OnDestroy {
     // Check urgent availability for selected car
     void this.checkUrgentAvailability(carId);
   }
-
 
   /**
    * Handle drawer close

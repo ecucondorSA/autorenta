@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Car } from '../../../core/models';
+import { IconComponent } from '../icon/icon.component';
 
 export interface BookingBenefit {
   icon: string;
@@ -12,7 +13,7 @@ export interface BookingBenefit {
 @Component({
   selector: 'app-booking-benefits',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './booking-benefits.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

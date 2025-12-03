@@ -36,7 +36,10 @@ import { PwaInstallService } from '../../../core/services/pwa-install.service';
         right: 16px;
         max-width: 400px;
         margin: 0 auto;
-        background: var(--surface-info-dark, #2c4a52); /* Replaced gradient with solid color token */
+        background: var(
+          --surface-info-dark,
+          #2c4a52
+        ); /* Replaced gradient with solid color token */
         color: white;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);

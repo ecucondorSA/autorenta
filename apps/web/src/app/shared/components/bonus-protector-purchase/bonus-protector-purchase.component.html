@@ -1,4 +1,7 @@
-<div class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-md p-6" [class.p-4]="compact">
+<div
+  class="bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-md p-6"
+  [class.p-4]="compact"
+>
   <!-- Header -->
   <div class="mb-6">
     <div class="flex items-center mb-2">
@@ -19,7 +22,10 @@
   </div>
 
   <!-- Active Protector Notice -->
-  <div *ngIf="hasActiveProtector()" class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6">
+  <div
+    *ngIf="hasActiveProtector()"
+    class="bg-success-light/10 border border-success-light/40 rounded-lg p-4 mb-6"
+  >
     <div class="flex items-start">
       <svg
         class="w-6 h-6 text-success-light mr-3 flex-shrink-0"
@@ -72,7 +78,9 @@
           />
           <div class="ml-3">
             <p class="text-sm font-semibold text-text-primary">{{ level.name }}</p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">Nivel {{ level.level }}</p>
+            <p class="text-xs text-text-secondary dark:text-text-secondary">
+              Nivel {{ level.level }}
+            </p>
           </div>
         </div>
 
@@ -156,7 +164,9 @@
           *ngIf="getSelectedLevel() && canAfford(getSelectedLevel()!.priceCents)"
           class="text-right"
         >
-          <p class="text-sm font-medium text-success-light">✓ Saldo suficiente</p>
+          <p class="text-sm font-medium text-success-light flex items-center justify-end gap-1">
+            <app-icon name="check" [size]="16" cssClass="text-success-light" /> Saldo suficiente
+          </p>
         </div>
       </div>
     </div>
@@ -198,7 +208,8 @@
       [class.bg-success-light/10]="purchaseMessage.includes('exitosamente')"
       [class.border-success-light/40]="purchaseMessage.includes('exitosamente')"
       [class.bg-error-bg]="!purchaseMessage.includes('exitosamente')"
-      [class.border-error-border]="!purchaseMessage.includes('exitosamente')">
+      [class.border-error-border]="!purchaseMessage.includes('exitosamente')"
+    >
       <p
         class="text-sm"
         [class.text-success-light]="purchaseMessage.includes('exitosamente')"

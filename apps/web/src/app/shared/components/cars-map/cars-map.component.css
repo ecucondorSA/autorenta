@@ -292,10 +292,11 @@
 .user-location-marker {
   width: 20px;
   height: 20px;
-  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff));
+  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff) fff));
   border: 3px solid var(--system-blue-default, var(--system-blue-default, #4285f4));
   border-radius: 50%;
-  box-shadow: 0 2px 8px var(--system-blue-alpha-40, var(--system-blue-alpha-40, rgba(66, 133, 244, 0.4)));
+  box-shadow: 0 2px 8px
+    var(--system-blue-alpha-40, var(--system-blue-alpha-40, rgba(66, 133, 244, 0.4)));
   position: relative;
 }
 
@@ -314,7 +315,8 @@
 /* Pulse effect for user location */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 var(--system-blue-alpha-70, var(--system-blue-alpha-70, rgba(66, 133, 244, 0.7)));
+    box-shadow: 0 0 0 0
+      var(--system-blue-alpha-70, var(--system-blue-alpha-70, rgba(66, 133, 244, 0.7)));
   }
   70% {
     box-shadow: 0 0 0 15px var(--system-blue-alpha-0, rgba(66, 133, 244, 0));
@@ -354,9 +356,15 @@
   padding: 3px 4px !important; /* Reducido 4x (antes 12px 16px) */
   border-radius: 4px !important; /* Reducido 4x (antes 16px) */
   -webkit-border-radius: 4px !important;
-  background-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important; /* Fondo blanco en light mode */
+  background-color: var(
+    --surface-primary,
+    var(--surface-primary, var(--surface-primary, #ffffff) fff)
+  ) !important; /* Fondo blanco en light mode */
   color: var(--text-dark, #1a1a1a) !important; /* Texto oscuro para contraste */
-  box-shadow: var(--shadow-sm-dark, 0 1px 3px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))) !important; /* Reducido 4x */
+  box-shadow: var(
+    --shadow-sm-dark,
+    0 1px 3px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))
+  ) !important; /* Reducido 4x */
   z-index: 1000 !important; /* Asegurar que esté por encima */
   border: none !important; /* Eliminar cualquier borde que pueda interferir */
   overflow: hidden !important; /* Asegurar que el contenido respete los bordes redondeados */
@@ -369,8 +377,12 @@
 .dark .car-popup .mapboxgl-popup-content {
   background-color: var(--surface-dark, #1e1e1e) !important; /* Fondo gris oscuro en dark mode */
   color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
-  box-shadow: var(--shadow-lg-dark, 0 6px 20px var(--shadow-dark-alpha-80, rgba(0, 0, 0, 0.8))) !important; /* Sombra más intensa */
-  border: 1px solid var(--border-light-alpha-15, var(--border-light-alpha-15, rgba(255, 255, 255, 0.15))) !important; /* Borde sutil */
+  box-shadow: var(
+    --shadow-lg-dark,
+    0 6px 20px var(--shadow-dark-alpha-80, rgba(0, 0, 0, 0.8))
+  ) !important; /* Sombra más intensa */
+  border: 1px solid
+    var(--border-light-alpha-15, var(--border-light-alpha-15, rgba(255, 255, 255, 0.15))) !important; /* Borde sutil */
 }
 
 .car-popup-content {
@@ -469,7 +481,10 @@ img.car-popup-image {
 }
 
 .dark .car-popup-info p:not(.car-popup-price) {
-  color: var(--text-light-muted, #e5e3dd) !important; /* Gris claro para texto secundario en dark mode */
+  color: var(
+    --text-light-muted,
+    #e5e3dd
+  ) !important; /* Gris claro para texto secundario en dark mode */
 }
 
 .car-popup-price {
@@ -573,8 +588,14 @@ img.car-popup-image {
 
 /* Tip del popup - Light mode */
 .car-popup .mapboxgl-popup-tip {
-  border-top-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important;
-  border-bottom-color: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff)) !important;
+  border-top-color: var(
+    --surface-primary,
+    var(--surface-primary, var(--surface-primary, #ffffff) fff)
+  ) !important;
+  border-bottom-color: var(
+    --surface-primary,
+    var(--surface-primary, var(--surface-primary, #ffffff) fff)
+  ) !important;
 }
 
 /* Tip del popup - Dark mode */
@@ -593,7 +614,10 @@ img.car-popup-image {
 
   .dark .car-popup .mapboxgl-popup-content {
     background-color: var(--surface-dark, #1e1e1e) !important;
-    box-shadow: var(--shadow-md-dark, 0 2px 6px var(--shadow-dark-alpha-90, rgba(0, 0, 0, 0.9))) !important; /* Reducido 4x */
+    box-shadow: var(
+      --shadow-md-dark,
+      0 2px 6px var(--shadow-dark-alpha-90, rgba(0, 0, 0, 0.9))
+    ) !important; /* Reducido 4x */
   }
 
   .car-popup-info h4,
@@ -602,8 +626,8 @@ img.car-popup-image {
     font-weight: 700;
   }
 
-.dark .car-popup-info h4,
-.dark .car-popup-title {
+  .dark .car-popup-info h4,
+  .dark .car-popup-title {
     font-size: 3.75px; /* Reducido 4x (antes 15px) */
     font-weight: 700;
     color: var(--text-white, #ffffff) !important;
@@ -628,7 +652,7 @@ img.car-popup-image {
   height: 36px;
   border-radius: 6px;
   border: 1px solid var(--border-dark-alpha-10, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
-  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff)fff));
+  background: var(--surface-primary, var(--surface-primary, var(--surface-primary, #ffffff) fff));
   color: var(--text-dark-muted, var(--text-dark-muted, #222));
   cursor: pointer;
   transition: all 0.2s ease;
@@ -651,14 +675,23 @@ img.car-popup-image {
 /* Dark mode para botón de geolocalización */
 .dark .mapbox-ctrl-geolocate {
   background: var(--surface-dark, #1e1e1e) !important;
-  border-color: var(--border-light-alpha-20, var(--border-light-alpha-20, rgba(255, 255, 255, 0.2))) !important;
+  border-color: var(
+    --border-light-alpha-20,
+    var(--border-light-alpha-20, rgba(255, 255, 255, 0.2))
+  ) !important;
   color: var(--text-white, #ffffff) !important;
-  box-shadow: var(--shadow-md-dark, 0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))) !important;
+  box-shadow: var(
+    --shadow-md-dark,
+    0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))
+  ) !important;
 }
 
 .dark .mapbox-ctrl-geolocate:hover {
   background: var(--surface-hover-dark, #2a2a2a) !important;
-  box-shadow: var(--shadow-lg-dark, 0 4px 12px var(--shadow-dark-alpha-60, rgba(0, 0, 0, 0.6))) !important;
+  box-shadow: var(
+    --shadow-lg-dark,
+    0 4px 12px var(--shadow-dark-alpha-60, rgba(0, 0, 0, 0.6))
+  ) !important;
 }
 
 .mapbox-ctrl-geolocate svg {
@@ -682,8 +715,10 @@ img.car-popup-image {
   transform: scale(1.2);
   box-shadow:
     0 0 0 4px var(--cta-alpha-30, var(--cta-alpha-30, rgba(167, 216, 244, 0.3))),
-    /* cta-default con opacidad */ 0 4px 12px var(--cta-alpha-60, var(--cta-alpha-60, rgba(167, 216, 244, 0.6))),
-    /* cta-default con opacidad */ 0 8px 24px var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
+    /* cta-default con opacidad */ 0 4px 12px
+      var(--cta-alpha-60, var(--cta-alpha-60, rgba(167, 216, 244, 0.6))),
+    /* cta-default con opacidad */ 0 8px 24px
+      var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -705,7 +740,10 @@ img.car-popup-image {
   height: var(--map-marker-photo-size, 80px);
   border-radius: 50%;
   border: var(--map-marker-photo-border, 3px) solid var(--map-marker-photo-border-color, white);
-  box-shadow: var(--map-marker-photo-shadow, 0 6px 20px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
+  box-shadow: var(
+    --map-marker-photo-shadow,
+    0 6px 20px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3))
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -762,23 +800,23 @@ img.car-popup-image {
 
 /* Price badge on photo marker - Marketplace style */
 .marker-photo-price-badge {
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
-      white-space: nowrap;
-      box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
-      border: 2px solid white;
-      z-index: 15;
-      pointer-events: none;
-      letter-spacing: 0.3px;
-    }
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+  border: 2px solid white;
+  z-index: 15;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
 .car-marker-simple:hover .marker-photo-price-badge {
   transform: translateX(-50%) scale(1.1);
   box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
@@ -787,7 +825,10 @@ img.car-popup-image {
 /* Hover effects for photo marker - Using Tokens */
 .car-marker-simple:hover .marker-circle-photo {
   transform: scale(var(--map-marker-photo-hover-scale, 1.12));
-  box-shadow: var(--map-marker-photo-hover-shadow, 0 8px 16px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
+  box-shadow: var(
+    --map-marker-photo-hover-shadow,
+    0 8px 16px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3))
+  );
   border-width: calc(var(--map-marker-photo-border, 2.5px) * 1.6);
 }
 
@@ -823,19 +864,21 @@ img.car-popup-image {
 
 /* Gradient border effect for photo marker */
 .marker-circle-photo::before {
-      content: '';
-      position: absolute;
-      inset: -3px;
-      border-radius: 50%;
-      padding: 3px;
-      background: var(--cta-default); /* Reemplazado gradiente con color sólido */
-      -webkit-mask: var(--surface-primary) content-box, var(--surface-primary); /* Reemplazado gradiente con color sólido */
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  padding: 3px;
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+  -webkit-mask:
+    var(--surface-primary) content-box,
+    var(--surface-primary); /* Reemplazado gradiente con color sólido */
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
 .car-marker-simple:hover .marker-circle-photo::before,
 .car-marker-simple.car-marker--selected .marker-circle-photo::before {
   opacity: 1;

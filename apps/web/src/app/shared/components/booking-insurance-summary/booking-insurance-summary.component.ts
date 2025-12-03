@@ -15,7 +15,9 @@ export interface InsuranceSummaryInput {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-3">
+    <div
+      class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
+    >
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-text-primary">Cobertura y garantía</h3>
         <span class="text-xs text-text-secondary">{{ currencyLabel }}</span>
@@ -37,7 +39,10 @@ export interface InsuranceSummaryInput {
           <span class="font-semibold">{{ format(data.guaranteeAmount) }}</span>
         </div>
 
-        <div *ngIf="data.notes" class="text-xs text-text-secondary pt-2 border-t border-border-default/60 dark:border-neutral-700">
+        <div
+          *ngIf="data.notes"
+          class="text-xs text-text-secondary pt-2 border-t border-border-default/60 dark:border-neutral-700"
+        >
           {{ data.notes }}
         </div>
       </div>

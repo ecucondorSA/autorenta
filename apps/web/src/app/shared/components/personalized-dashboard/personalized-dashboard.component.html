@@ -43,7 +43,7 @@
   <div class="stats-grid">
     <!-- Wallet Balance -->
     <div class="stat-card wallet">
-      <div class="stat-icon">💰</div>
+      <div class="stat-icon"><app-icon name="wallet" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">${{ stats().walletBalance.toLocaleString() }}</div>
         <div class="stat-label">Saldo Wallet</div>
@@ -53,7 +53,7 @@
 
     <!-- Notifications -->
     <div class="stat-card notifications" [class.has-unread]="stats().unreadNotifications > 0">
-      <div class="stat-icon">🔔</div>
+      <div class="stat-icon"><app-icon name="bell" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().unreadNotifications }}</div>
         <div class="stat-label">Notificaciones</div>
@@ -63,7 +63,7 @@
 
     <!-- Role-specific stats -->
     <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card cars">
-      <div class="stat-icon">🚗</div>
+      <div class="stat-icon"><app-icon name="car" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().availableCars }}</div>
         <div class="stat-label">Autos Activos</div>
@@ -72,7 +72,7 @@
     </div>
 
     <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card earnings">
-      <div class="stat-icon">📈</div>
+      <div class="stat-icon"><app-icon name="trending-up" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">${{ stats().totalEarnings.toLocaleString() }}</div>
         <div class="stat-label">Ganancias Totales</div>
@@ -81,7 +81,7 @@
     </div>
 
     <div *ngIf="userRole() === 'renter' || userRole() === 'both'" class="stat-card bookings">
-      <div class="stat-icon">📅</div>
+      <div class="stat-icon"><app-icon name="calendar" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().activeBookings }}</div>
         <div class="stat-label">Reservas Activas</div>
@@ -90,7 +90,7 @@
     </div>
 
     <div *ngIf="userRole() === 'owner' || userRole() === 'both'" class="stat-card pending">
-      <div class="stat-icon">⏳</div>
+      <div class="stat-icon"><app-icon name="clock" [size]="28" /></div>
       <div class="stat-content">
         <div class="stat-value">{{ stats().pendingBookings }}</div>
         <div class="stat-label">Reservas Pendientes</div>
@@ -198,7 +198,7 @@
 
     <!-- Empty states -->
     <div *ngIf="recentCars().length === 0 && recentBookings().length === 0" class="empty-state">
-      <div class="empty-icon">📊</div>
+      <div class="empty-icon"><app-icon name="bar-chart" [size]="48" /></div>
       <h3>No hay actividad reciente</h3>
       <p>¡Comienza publicando un auto o haciendo una reserva!</p>
       <button

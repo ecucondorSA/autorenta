@@ -14,7 +14,7 @@
       [style.transition-delay.ms]="expanded() ? i * 50 : 0"
       [attr.aria-label]="action.label"
     >
-      <span class="text-xl">{{ action.icon }}</span>
+      <app-icon [name]="action.icon" [size]="22" />
     </button>
   </div>
 

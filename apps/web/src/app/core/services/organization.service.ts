@@ -37,7 +37,9 @@ export class OrganizationService {
   /**
    * Get bonus progress for cars in an organization
    */
-  async getBonusesProgress(organizationId: string): Promise<import('../models/organization.model').BonusProgress[]> {
+  async getBonusesProgress(
+    organizationId: string,
+  ): Promise<import('../models/organization.model').BonusProgress[]> {
     const { data, error } = await this.supabase
       .from('fleet_bonuses')
       .select('*')

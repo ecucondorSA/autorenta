@@ -10,32 +10,28 @@ import { PromotionService, PromoCode } from '../../../core/services/promotion.se
   template: `
     <div class="promo-container">
       <div class="flex gap-2">
-        <input 
-          type="text" 
-          [(ngModel)]="code" 
+        <input
+          type="text"
+          [(ngModel)]="code"
           placeholder="Código de descuento"
           class="input input-bordered w-full"
           [disabled]="loading()"
         />
-        <button 
-          class="btn btn-outline" 
-          (click)="apply()"
-          [disabled]="!code || loading()"
-        >
+        <button class="btn btn-outline" (click)="apply()" [disabled]="!code || loading()">
           {{ loading() ? '...' : 'Aplicar' }}
         </button>
       </div>
-      
+
       <p *ngIf="error()" class="text-error text-sm mt-1">{{ error() }}</p>
       <p *ngIf="success()" class="text-success text-sm mt-1">
         ¡Cupón aplicado! Ahorras {{ success()?.percent_off }}%
       </p>
     </div>
-  `
+  `,
 })
 export class PromoCodeInputComponent {
   private promoService = inject(PromotionService);
-  
+
   code = '';
   loading = signal(false);
   error = signal<string | null>(null);
@@ -46,7 +42,7 @@ export class PromoCodeInputComponent {
   async apply() {
     this.loading.set(true);
     this.error.set(null);
-    
+
     try {
       const result = await this.promoService.validatePromoCode(this.code);
       if (result.valid && result.promo) {

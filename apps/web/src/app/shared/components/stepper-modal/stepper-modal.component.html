@@ -12,9 +12,7 @@
     <!-- Header with Progress -->
     <div class="stepper-header px-6 py-4 border-b border-border-default dark:border-border-default">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="h2 text-text-primary dark:text-text-inverse-pure">
-          Reservar en 3 pasos
-        </h2>
+        <h2 class="h2 text-text-primary dark:text-text-inverse-pure">Reservar en 3 pasos</h2>
         <button
           type="button"
           (click)="onCancel()"
@@ -59,9 +57,7 @@
     <div class="stepper-content flex-1 overflow-y-auto px-6 py-6">
       <!-- Step 1: Verify Profile -->
       <div *ngIf="currentStep() === 1" class="step-content stack-md">
-        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
-          Verifica tu perfil
-        </h3>
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">Verifica tu perfil</h3>
         <div class="stack-md">
           <div class="stack-xs">
             <label class="block text-sm font-medium text-text-secondary dark:text-text-secondary">
@@ -101,9 +97,7 @@
 
       <!-- Step 2: Choose Schedule & Delivery -->
       <div *ngIf="currentStep() === 2" class="step-content stack-md">
-        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
-          Elige horario y entrega
-        </h3>
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">Elige horario y entrega</h3>
         <div class="stack-md">
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -174,9 +168,7 @@
 
       <!-- Step 3: Confirm & Payment -->
       <div *ngIf="currentStep() === 3" class="step-content stack-md">
-        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">
-          Confirma y pacta el pago
-        </h3>
+        <h3 class="h3 text-text-primary dark:text-text-inverse-pure">Confirma y pacta el pago</h3>
         <div class="stack-md">
           <!-- Info Banner -->
           <div

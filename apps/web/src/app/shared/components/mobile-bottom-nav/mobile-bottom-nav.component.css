@@ -238,7 +238,7 @@
   width: 32px;
   height: 4px;
 
-        background: var(--cta-default); /* Reemplazado gradiente con color sólido */
+  background: var(--cta-default); /* Reemplazado gradiente con color sólido */
   border-radius: 0 0 4px 4px;
 
   box-shadow:
@@ -276,7 +276,8 @@
   height: 18px;
   padding: 0 5px;
 
-        background: var(--error-default); /* Reemplazado gradiente con color sólido */  color: #ffffff;
+  background: var(--error-default); /* Reemplazado gradiente con color sólido */
+  color: #ffffff;
 
   font-size: 10px;
   font-weight: 800;
@@ -320,19 +321,20 @@
   right: 0;
   height: 24px;
 
-        background: var(--surface-primary-alpha-60); /* Reemplazado gradiente con color sólido */
+  background: var(--surface-primary-alpha-60); /* Reemplazado gradiente con color sólido */
   pointer-events: none;
 }
 
 .dark .nav-shadow {
-      background: var(--surface-dark-alpha-70); /* Reemplazado gradiente con color sólido */
-    }
+  background: var(--surface-dark-alpha-70); /* Reemplazado gradiente con color sólido */
+}
 /* ─────────────────────────────────────────────────────────────
    Estados especiales del item activo
    ───────────────────────────────────────────────────────────── */
 
 .nav-item--active {
-        background: var(--cta-alpha-15); /* Reemplazado gradiente con color sólido */  border-radius: 16px;
+  background: var(--cta-alpha-15); /* Reemplazado gradiente con color sólido */
+  border-radius: 16px;
   box-shadow:
     inset 0 2px 8px rgba(167, 216, 244, 0.1),
     0 4px 12px rgba(167, 216, 244, 0.15);

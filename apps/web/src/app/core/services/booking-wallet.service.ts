@@ -181,7 +181,8 @@ export class BookingWalletService {
           currency: booking.currency || 'ARS',
           intentType: 'security_deposit',
           isPreAuth: true,
-          description: description || `Pre-autorización Garantía Reserva ${booking.id.substring(0, 8)}`,
+          description:
+            description || `Pre-autorización Garantía Reserva ${booking.id.substring(0, 8)}`,
         });
 
         // Llamar a la RPC de Supabase para crear la pre-autorización en MP
@@ -194,7 +195,7 @@ export class BookingWalletService {
 
         // Actualizar el booking con el ID de la orden de MP
         await this.supabase
-          
+
           .from('bookings')
           .update({
             mp_security_deposit_order_id: updatedIntent.mp_order_id,

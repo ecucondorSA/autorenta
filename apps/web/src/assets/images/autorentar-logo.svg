@@ -1,23 +1,51 @@
-<svg width="400" height="80" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Ícono de auto con llave -->
-  <g transform="translate(10, 15)">
-    <!-- Llave -->
-    <path d="M15 20 L20 15 L25 20 M20 15 L20 30" stroke="#C4A77D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="20" cy="33" r="3" fill="#C4A77D"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AutoRenta Logo - Full Version
+  Paleta: Black (#050505), Blue Pastel (#A7D8F4), Beige (#DFD2BF)
+  Optimizado con SVGO best practices
+-->
+<svg width="400" height="80" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">AutoRenta - Alquiler de autos entre personas</title>
 
-    <!-- Auto -->
-    <path d="M5 35 L8 28 L14 28 L14 25 L26 25 L26 28 L32 28 L35 35 L35 42 L33 42 L33 45 L30 45 L30 42 L10 42 L10 45 L7 45 L7 42 L5 42 Z"
-          fill="none" stroke="#C4A77D" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Ícono de auto con llave - Rediseñado -->
+  <g transform="translate(8, 12)">
+    <!-- Fondo circular sutil -->
+    <circle cx="25" cy="30" r="28" fill="#A7D8F4" opacity="0.15"/>
+
+    <!-- Llave integrada -->
+    <g stroke="#A7D8F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <circle cx="18" cy="18" r="6"/>
+      <circle cx="18" cy="18" r="2.5" fill="#A7D8F4"/>
+      <path d="M18 24 L18 35"/>
+      <path d="M18 30 L21 30 L21 32"/>
+      <path d="M18 34 L22 34 L22 36"/>
+    </g>
+
+    <!-- Auto moderno -->
+    <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <!-- Carrocería -->
+      <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z"/>
+      <!-- Ventanas -->
+      <path d="M22 32 L24 26 L33 26 L33 32 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
+      <path d="M35 32 L35 26 L40 26 L42 32 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
+      <!-- Línea de ventanas -->
+      <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5"/>
+    </g>
     <!-- Ruedas -->
-    <circle cx="12" cy="42" r="3" fill="#C4A77D"/>
-    <circle cx="28" cy="42" r="3" fill="#C4A77D"/>
-    <!-- Ventanas -->
-    <rect x="16" y="28" width="8" height="5" fill="none" stroke="#C4A77D" stroke-width="1.5"/>
+    <circle cx="18" cy="46" r="5" fill="#050505"/>
+    <circle cx="18" cy="46" r="2" fill="#F8F4EC"/>
+    <circle cx="38" cy="46" r="5" fill="#050505"/>
+    <circle cx="38" cy="46" r="2" fill="#F8F4EC"/>
+    <!-- Faro -->
+    <ellipse cx="11" cy="38" rx="2" ry="1.5" fill="#A7D8F4"/>
   </g>
 
-  <!-- Texto "Auto" - Gris oscuro -->
-  <text x="70" y="55" font-family="'Arial', 'Helvetica', sans-serif" font-size="42" font-weight="700" fill="#2a2a2a">Auto</text>
+  <!-- Texto "Auto" - Negro principal -->
+  <text x="72" y="52" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#050505">Auto</text>
 
-  <!-- Texto "rentar" - Beige/Dorado -->
-  <text x="185" y="55" font-family="'Arial', 'Helvetica', sans-serif" font-size="42" font-weight="700" fill="#C4A77D">rentar</text>
+  <!-- Texto "Renta" - Blue Pastel accent -->
+  <text x="178" y="52" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#A7D8F4">Renta</text>
+
+  <!-- Línea decorativa bajo el texto -->
+  <line x1="72" y1="60" x2="280" y2="60" stroke="#DFD2BF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
 </svg>

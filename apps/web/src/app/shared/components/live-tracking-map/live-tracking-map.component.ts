@@ -514,7 +514,10 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
    */
   private getCssVariableValue(variableName: string, defaultValue: string): string {
     if (!isPlatformBrowser(this.platformId)) return defaultValue;
-    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
+    return (
+      getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() ||
+      defaultValue
+    );
   }
 
   /**

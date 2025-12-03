@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Empty State: Sin Reservas
+  Concepto: Auto con calendario vacío
+  Paleta: Ivory, Beige, Blue Pastel
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <title>No tienes reservas activas</title>
+  <defs>
+    <!-- Gradiente de fondo suave -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8F4EC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DFD2BF;stop-opacity:0.3" />
+    </linearGradient>
+    <!-- Sombra suave -->
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#050505" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Fondo circular decorativo -->
+  <circle cx="100" cy="100" r="85" fill="url(#bg-gradient)" opacity="0.6"/>
+
+  <!-- Auto simplificado -->
+  <g filter="url(#soft-shadow)">
+    <!-- Cuerpo del auto -->
+    <path d="M45 115 L50 95 L65 85 L135 85 L150 95 L155 115 L155 130 L45 130 Z"
+          fill="#F8F4EC" stroke="#DFD2BF" stroke-width="2"/>
+    <!-- Ventanas -->
+    <path d="M68 95 L72 88 L98 88 L98 95 Z" fill="#A7D8F4" opacity="0.6"/>
+    <path d="M102 95 L102 88 L128 88 L132 95 Z" fill="#A7D8F4" opacity="0.6"/>
+    <!-- Línea divisoria -->
+    <line x1="100" y1="88" x2="100" y2="95" stroke="#DFD2BF" stroke-width="1.5"/>
+    <!-- Ruedas -->
+    <circle cx="70" cy="130" r="12" fill="#4E4E4E"/>
+    <circle cx="70" cy="130" r="6" fill="#7B7B7B"/>
+    <circle cx="130" cy="130" r="12" fill="#4E4E4E"/>
+    <circle cx="130" cy="130" r="6" fill="#7B7B7B"/>
+    <!-- Faros -->
+    <ellipse cx="52" cy="110" rx="4" ry="3" fill="#A7D8F4"/>
+    <ellipse cx="148" cy="110" rx="4" ry="3" fill="#A7D8F4"/>
+  </g>
+
+  <!-- Calendario flotante -->
+  <g transform="translate(120, 40)" filter="url(#soft-shadow)">
+    <!-- Base del calendario -->
+    <rect x="0" y="8" width="50" height="45" rx="4" fill="#FFFFFF" stroke="#DFD2BF" stroke-width="1.5"/>
+    <!-- Header del calendario -->
+    <rect x="0" y="8" width="50" height="14" rx="4" fill="#A7D8F4"/>
+    <rect x="0" y="18" width="50" height="4" fill="#A7D8F4"/>
+    <!-- Argollas -->
+    <rect x="12" y="2" width="4" height="12" rx="2" fill="#7B7B7B"/>
+    <rect x="34" y="2" width="4" height="12" rx="2" fill="#7B7B7B"/>
+    <!-- Cuadrícula vacía (días) con signos de interrogación -->
+    <g fill="none" stroke="#E3E3E3" stroke-width="1">
+      <rect x="6" y="28" width="10" height="8" rx="1"/>
+      <rect x="20" y="28" width="10" height="8" rx="1"/>
+      <rect x="34" y="28" width="10" height="8" rx="1"/>
+      <rect x="6" y="40" width="10" height="8" rx="1"/>
+      <rect x="20" y="40" width="10" height="8" rx="1"/>
+      <rect x="34" y="40" width="10" height="8" rx="1"/>
+    </g>
+    <!-- Signo de interrogación grande -->
+    <text x="25" y="44" font-family="system-ui, sans-serif" font-size="18" font-weight="600" fill="#BCBCBC" text-anchor="middle">?</text>
+  </g>
+
+  <!-- Líneas decorativas de movimiento (auto estático) -->
+  <g stroke="#DFD2BF" stroke-width="1.5" stroke-linecap="round" opacity="0.5">
+    <line x1="25" y1="110" x2="35" y2="110"/>
+    <line x1="28" y1="118" x2="38" y2="118"/>
+    <line x1="25" y1="126" x2="35" y2="126"/>
+  </g>
+
+  <!-- Puntos decorativos -->
+  <circle cx="165" cy="150" r="3" fill="#A7D8F4" opacity="0.6"/>
+  <circle cx="175" cy="140" r="2" fill="#DFD2BF"/>
+  <circle cx="30" cy="70" r="2.5" fill="#A7D8F4" opacity="0.5"/>
+  <circle cx="45" cy="60" r="1.5" fill="#DFD2BF"/>
+
+  <!-- Texto decorativo (opcional, puede quitarse) -->
+  <g opacity="0.4">
+    <circle cx="100" cy="160" r="1.5" fill="#7B7B7B"/>
+    <circle cx="110" cy="160" r="1.5" fill="#7B7B7B"/>
+    <circle cx="120" cy="160" r="1.5" fill="#7B7B7B"/>
+  </g>
+</svg>

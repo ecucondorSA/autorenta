@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AutoRenta Icon Sprite Sheet
+  Uso: <use href="assets/icons/sprite.svg#nombre-icono" />
+
+  Convenciones:
+  - viewBox: 0 0 24 24
+  - stroke: currentColor
+  - stroke-width: 1.5
+  - stroke-linecap: round
+  - stroke-linejoin: round
+  - fill: none (excepto iconos sólidos)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       COMODIDADES
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Aire Acondicionado -->
+  <symbol id="ac" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Aire Acondicionado</title>
+    <path d="M12 3v18"/>
+    <path d="M12 7c-2.5 2-4.5 2-7 0"/>
+    <path d="M12 7c2.5 2 4.5 2 7 0"/>
+    <path d="M12 12c-2.5 2-4.5 2-7 0"/>
+    <path d="M12 12c2.5 2 4.5 2 7 0"/>
+    <path d="M12 17c-2.5 2-4.5 2-7 0"/>
+    <path d="M12 17c2.5 2 4.5 2 7 0"/>
+  </symbol>
+
+  <!-- Bluetooth -->
+  <symbol id="bluetooth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Bluetooth</title>
+    <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/>
+  </symbol>
+
+  <!-- GPS / Navegación -->
+  <symbol id="gps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>GPS / Navegación</title>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M12 2v2"/>
+    <path d="M12 20v2"/>
+    <path d="M2 12h2"/>
+    <path d="M20 12h2"/>
+    <circle cx="12" cy="12" r="8"/>
+  </symbol>
+
+  <!-- Puerto USB -->
+  <symbol id="usb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Puerto USB</title>
+    <path d="M12 18v-6"/>
+    <path d="M8 14l4-4 4 4"/>
+    <circle cx="7" cy="18" r="2"/>
+    <circle cx="17" cy="14" r="2"/>
+    <path d="M12 12V6"/>
+    <circle cx="12" cy="4" r="2"/>
+    <path d="M7 16v-2h10v-2"/>
+  </symbol>
+
+  <!-- WiFi -->
+  <symbol id="wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>WiFi</title>
+    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+    <circle cx="12" cy="20" r="1"/>
+  </symbol>
+
+  <!-- Techo Solar -->
+  <symbol id="sunroof" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Techo Solar</title>
+    <rect x="3" y="8" width="18" height="12" rx="2"/>
+    <rect x="6" y="11" width="12" height="6" rx="1"/>
+    <circle cx="12" cy="4" r="2"/>
+    <path d="M12 6v2"/>
+    <path d="M8 4h-2"/>
+    <path d="M18 4h-2"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       FEEDBACK / ESTADO
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Rayo / Lightning (entrega rápida) -->
+  <symbol id="lightning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Entrega Rápida</title>
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+  </symbol>
+
+  <!-- Batería / Battery (eléctrico) -->
+  <symbol id="battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Batería / Eléctrico</title>
+    <rect x="2" y="7" width="18" height="10" rx="2" ry="2"/>
+    <path d="M22 11v2"/>
+    <path d="M6 11v2"/>
+    <path d="M10 11v2"/>
+    <path d="M14 11v2"/>
+  </symbol>
+
+  <!-- Batería Cargando (EV) -->
+  <symbol id="battery-charging" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Vehículo Eléctrico</title>
+    <rect x="2" y="7" width="18" height="10" rx="2" ry="2"/>
+    <path d="M22 11v2"/>
+    <path d="M12 10l-2 4h4l-2 4"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       SEGURIDAD
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Airbag -->
+  <symbol id="airbag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Airbag</title>
+    <circle cx="12" cy="10" r="6"/>
+    <path d="M12 16v4"/>
+    <path d="M8 20h8"/>
+    <circle cx="12" cy="10" r="2"/>
+  </symbol>
+
+  <!-- Frenos ABS -->
+  <symbol id="abs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Frenos ABS</title>
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M8 9v6l2-3 2 3V9"/>
+    <path d="M14 9h2c1 0 1.5.5 1.5 1.5s-.5 1.5-1.5 1.5h-1"/>
+    <path d="M14 12h2c1 0 1.5.5 1.5 1.5S17 15 16 15h-2"/>
+  </symbol>
+
+  <!-- Cámara de Reversa -->
+  <symbol id="camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Cámara de Reversa</title>
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/>
+    <circle cx="12" cy="13" r="3"/>
+  </symbol>
+
+  <!-- Sensores de Estacionamiento -->
+  <symbol id="sensors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Sensores de Estacionamiento</title>
+    <rect x="4" y="14" width="16" height="6" rx="2"/>
+    <path d="M7 14v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+    <path d="M10 8c-1.5-1.5-1.5-4 0-5.5"/>
+    <path d="M14 8c1.5-1.5 1.5-4 0-5.5"/>
+    <path d="M7 7c-2-2-2-5 0-7"/>
+    <path d="M17 7c2-2 2-5 0-7"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       CAPACIDAD - ASIENTOS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- 2 Asientos -->
+  <symbol id="seats-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>2 Asientos</title>
+    <circle cx="8" cy="6" r="3"/>
+    <circle cx="16" cy="6" r="3"/>
+    <path d="M5 21v-2a4 4 0 0 1 4-4h2"/>
+    <path d="M19 21v-2a4 4 0 0 0-4-4h-2"/>
+  </symbol>
+
+  <!-- 4 Asientos -->
+  <symbol id="seats-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>4 Asientos</title>
+    <circle cx="6" cy="5" r="2.5"/>
+    <circle cx="18" cy="5" r="2.5"/>
+    <circle cx="6" cy="14" r="2.5"/>
+    <circle cx="18" cy="14" r="2.5"/>
+    <path d="M6 17v4"/>
+    <path d="M18 17v4"/>
+  </symbol>
+
+  <!-- 5 Asientos -->
+  <symbol id="seats-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>5 Asientos</title>
+    <circle cx="6" cy="5" r="2"/>
+    <circle cx="18" cy="5" r="2"/>
+    <circle cx="5" cy="14" r="2"/>
+    <circle cx="12" cy="14" r="2"/>
+    <circle cx="19" cy="14" r="2"/>
+    <path d="M5 17v4"/>
+    <path d="M12 17v4"/>
+    <path d="M19 17v4"/>
+  </symbol>
+
+  <!-- 7 Asientos -->
+  <symbol id="seats-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>7 Asientos</title>
+    <circle cx="6" cy="4" r="1.8"/>
+    <circle cx="18" cy="4" r="1.8"/>
+    <circle cx="5" cy="11" r="1.8"/>
+    <circle cx="12" cy="11" r="1.8"/>
+    <circle cx="19" cy="11" r="1.8"/>
+    <circle cx="8" cy="18" r="1.8"/>
+    <circle cx="16" cy="18" r="1.8"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       CAPACIDAD - PUERTAS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- 2 Puertas -->
+  <symbol id="doors-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>2 Puertas</title>
+    <rect x="3" y="6" width="18" height="12" rx="2"/>
+    <path d="M12 6v12"/>
+    <circle cx="7" cy="12" r="1"/>
+    <circle cx="17" cy="12" r="1"/>
+  </symbol>
+
+  <!-- 4 Puertas -->
+  <symbol id="doors-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>4 Puertas</title>
+    <rect x="2" y="6" width="20" height="12" rx="2"/>
+    <path d="M8 6v12"/>
+    <path d="M16 6v12"/>
+    <circle cx="5" cy="12" r="0.8"/>
+    <circle cx="12" cy="12" r="0.8"/>
+    <circle cx="19" cy="12" r="0.8"/>
+  </symbol>
+
+  <!-- 5 Puertas -->
+  <symbol id="doors-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>5 Puertas</title>
+    <rect x="2" y="6" width="20" height="12" rx="2"/>
+    <path d="M8 6v12"/>
+    <path d="M16 6v12"/>
+    <circle cx="5" cy="12" r="0.8"/>
+    <circle cx="12" cy="12" r="0.8"/>
+    <circle cx="19" cy="12" r="0.8"/>
+    <path d="M12 2v4"/>
+    <path d="M10 3h4"/>
+  </symbol>
+
+  <!-- Equipaje / Baúl -->
+  <symbol id="luggage" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Capacidad de Equipaje</title>
+    <rect x="4" y="7" width="16" height="13" rx="2"/>
+    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+    <path d="M12 11v4"/>
+    <path d="M10 13h4"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       TRANSMISIÓN / MOTOR
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Transmisión Manual -->
+  <symbol id="manual" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Transmisión Manual</title>
+    <circle cx="6" cy="6" r="2"/>
+    <circle cx="12" cy="6" r="2"/>
+    <circle cx="18" cy="6" r="2"/>
+    <circle cx="6" cy="18" r="2"/>
+    <circle cx="12" cy="18" r="2"/>
+    <path d="M6 8v8"/>
+    <path d="M12 8v8"/>
+    <path d="M18 8v4a2 2 0 0 1-2 2h-4"/>
+  </symbol>
+
+  <!-- Transmisión Automática -->
+  <symbol id="automatic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Transmisión Automática</title>
+    <path d="M12 4L6 20"/>
+    <path d="M12 4l6 16"/>
+    <path d="M8 14h8"/>
+    <circle cx="12" cy="4" r="2"/>
+  </symbol>
+
+  <!-- Motor Eléctrico -->
+  <symbol id="electric" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Motor Eléctrico</title>
+    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+  </symbol>
+
+  <!-- Motor Híbrido -->
+  <symbol id="hybrid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Motor Híbrido</title>
+    <path d="M11 2L5 10h5l-1 6 8-10h-5l1-4z"/>
+    <circle cx="17" cy="17" r="4"/>
+    <path d="M15 17h4"/>
+    <path d="M17 15v4"/>
+  </symbol>
+
+  <!-- Diesel -->
+  <symbol id="diesel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Motor Diesel</title>
+    <path d="M6 20V10a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v10"/>
+    <path d="M6 14h12"/>
+    <rect x="4" y="20" width="16" height="2" rx="1"/>
+    <path d="M12 2v4"/>
+  </symbol>
+
+  <!-- Nafta / Gas -->
+  <symbol id="gas" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Nafta</title>
+    <path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    <path d="M3 10h12"/>
+    <path d="M15 10h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2v0"/>
+    <path d="M18 22v-7"/>
+    <rect x="6" y="6" width="6" height="4" rx="1"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       INTERFAZ / ACCIONES
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Cerrar -->
+  <symbol id="close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Cerrar</title>
+    <path d="M18 6L6 18"/>
+    <path d="M6 6l12 12"/>
+  </symbol>
+
+  <!-- Menú -->
+  <symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Menú</title>
+    <path d="M4 6h16"/>
+    <path d="M4 12h16"/>
+    <path d="M4 18h16"/>
+  </symbol>
+
+  <!-- Flecha Izquierda -->
+  <symbol id="arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Volver</title>
+    <path d="M19 12H5"/>
+    <path d="M12 19l-7-7 7-7"/>
+  </symbol>
+
+  <!-- Flecha Derecha -->
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Siguiente</title>
+    <path d="M5 12h14"/>
+    <path d="M12 5l7 7-7 7"/>
+  </symbol>
+
+  <!-- Chevron Abajo -->
+  <symbol id="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Expandir</title>
+    <path d="M6 9l6 6 6-6"/>
+  </symbol>
+
+  <!-- Chevron Arriba -->
+  <symbol id="chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Colapsar</title>
+    <path d="M18 15l-6-6-6 6"/>
+  </symbol>
+
+  <!-- Check / Éxito -->
+  <symbol id="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Completado</title>
+    <path d="M20 6L9 17l-5-5"/>
+  </symbol>
+
+  <!-- Error / X -->
+  <symbol id="error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Error</title>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M15 9l-6 6"/>
+    <path d="M9 9l6 6"/>
+  </symbol>
+
+  <!-- Warning / Alerta -->
+  <symbol id="warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Advertencia</title>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+    <path d="M12 9v4"/>
+    <circle cx="12" cy="17" r="1"/>
+  </symbol>
+
+  <!-- Info -->
+  <symbol id="info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Información</title>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 16v-4"/>
+    <circle cx="12" cy="8" r="1"/>
+  </symbol>
+
+  <!-- Buscar -->
+  <symbol id="search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Buscar</title>
+    <circle cx="11" cy="11" r="8"/>
+    <path d="M21 21l-4.35-4.35"/>
+  </symbol>
+
+  <!-- Filtrar -->
+  <symbol id="filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Filtrar</title>
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+  </symbol>
+
+  <!-- Ordenar -->
+  <symbol id="sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ordenar</title>
+    <path d="M11 5h10"/>
+    <path d="M11 9h7"/>
+    <path d="M11 13h4"/>
+    <path d="M3 17l3 3 3-3"/>
+    <path d="M6 18V4"/>
+  </symbol>
+
+  <!-- Clipboard / Portapapeles -->
+  <symbol id="clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Comparar</title>
+    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+    <rect x="9" y="3" width="6" height="4" rx="1"/>
+  </symbol>
+
+  <!-- Ubicación -->
+  <symbol id="location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ubicación</title>
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+    <circle cx="12" cy="10" r="3"/>
+  </symbol>
+
+  <!-- Calendario -->
+  <symbol id="calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Calendario</title>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+    <path d="M16 2v4"/>
+    <path d="M8 2v4"/>
+    <path d="M3 10h18"/>
+  </symbol>
+
+  <!-- Reloj -->
+  <symbol id="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Hora</title>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v6l4 2"/>
+  </symbol>
+
+  <!-- Usuario -->
+  <symbol id="user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Usuario</title>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </symbol>
+
+  <!-- Usuarios (múltiples) -->
+  <symbol id="users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Usuarios</title>
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </symbol>
+
+  <!-- Corazón / Favorito -->
+  <symbol id="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Favorito</title>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+
+  <!-- Corazón relleno / Favorito activo -->
+  <symbol id="heart-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Favorito activo</title>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+
+  <!-- Compartir -->
+  <symbol id="share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Compartir</title>
+    <circle cx="18" cy="5" r="3"/>
+    <circle cx="6" cy="12" r="3"/>
+    <circle cx="18" cy="19" r="3"/>
+    <path d="M8.59 13.51l6.83 3.98"/>
+    <path d="M15.41 6.51l-6.82 3.98"/>
+  </symbol>
+
+  <!-- Editar -->
+  <symbol id="edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Editar</title>
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </symbol>
+
+  <!-- Eliminar -->
+  <symbol id="trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Eliminar</title>
+    <polyline points="3 6 5 6 21 6"/>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+    <path d="M10 11v6"/>
+    <path d="M14 11v6"/>
+  </symbol>
+
+  <!-- Más opciones -->
+  <symbol id="more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Más opciones</title>
+    <circle cx="12" cy="12" r="1"/>
+    <circle cx="12" cy="5" r="1"/>
+    <circle cx="12" cy="19" r="1"/>
+  </symbol>
+
+  <!-- Configuración -->
+  <symbol id="settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Configuración</title>
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </symbol>
+
+  <!-- Notificación / Campana -->
+  <symbol id="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Notificaciones</title>
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+  </symbol>
+
+  <!-- Mensaje -->
+  <symbol id="message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Mensaje</title>
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </symbol>
+
+  <!-- Teléfono -->
+  <symbol id="phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Teléfono</title>
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+
+  <!-- Email -->
+  <symbol id="email" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Email</title>
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       WALLET / PAGOS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Wallet -->
+  <symbol id="wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Billetera</title>
+    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+    <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+  </symbol>
+
+  <!-- Tarjeta de Crédito -->
+  <symbol id="credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Tarjeta de Crédito</title>
+    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+    <path d="M1 10h22"/>
+  </symbol>
+
+  <!-- Dinero -->
+  <symbol id="money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Dinero</title>
+    <path d="M12 1v22"/>
+    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+  </symbol>
+
+  <!-- Chevron Right -->
+  <symbol id="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Siguiente</title>
+    <path d="M9 5l7 7-7 7"/>
+  </symbol>
+
+  <!-- Chevron Left -->
+  <symbol id="chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Anterior</title>
+    <path d="M15 19l-7-7 7-7"/>
+  </symbol>
+
+  <!-- Chevron Down -->
+  <symbol id="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Expandir</title>
+    <path d="M6 9l6 6 6-6"/>
+  </symbol>
+
+  <!-- Chevron Up -->
+  <symbol id="chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Colapsar</title>
+    <path d="M18 15l-6-6-6 6"/>
+  </symbol>
+
+  <!-- Archive / Caja -->
+  <symbol id="archive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Archivo</title>
+    <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M7 7h10"/>
+  </symbol>
+
+  <!-- Logout / Cerrar Sesión -->
+  <symbol id="logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Cerrar Sesión</title>
+    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1"/>
+  </symbol>
+
+  <!-- Grid / Mosaico -->
+  <symbol id="grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ver todo</title>
+    <rect x="3" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="3" width="7" height="7" rx="1"/>
+    <rect x="3" y="14" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="7" height="7" rx="1"/>
+  </symbol>
+
+  <!-- Lock / Candado -->
+  <symbol id="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Seguridad</title>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       AUTOS / VEHÍCULOS
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Auto -->
+  <symbol id="car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Auto</title>
+    <path d="M19 17h2V9l-3-6H6L3 9v8h2"/>
+    <circle cx="7" cy="17" r="2"/>
+    <circle cx="17" cy="17" r="2"/>
+    <path d="M9 17h6"/>
+    <path d="M3 9h18"/>
+  </symbol>
+
+  <!-- Llave -->
+  <symbol id="key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Llave</title>
+    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+  </symbol>
+
+  <!-- Velocímetro -->
+  <symbol id="speedometer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Kilometraje</title>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M12 6v2"/>
+    <path d="M16.24 7.76l-1.42 1.42"/>
+    <path d="M18 12h-2"/>
+    <path d="M16.24 16.24l-1.42-1.42"/>
+    <path d="M12 18v-2"/>
+    <path d="M7.76 16.24l1.42-1.42"/>
+    <path d="M6 12h2"/>
+    <path d="M7.76 7.76l1.42 1.42"/>
+    <circle cx="12" cy="12" r="2"/>
+  </symbol>
+
+  <!-- Combustible -->
+  <symbol id="fuel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Combustible</title>
+    <path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    <path d="M3 10h12"/>
+    <path d="M15 10h2a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2v0"/>
+    <path d="M18 22v-7"/>
+    <rect x="6" y="6" width="6" height="4" rx="1"/>
+    <path d="M21 5l-2 2"/>
+  </symbol>
+
+  <!-- Escudo / Seguro -->
+  <symbol id="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Seguro</title>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </symbol>
+
+  <!-- Verificado -->
+  <symbol id="verified" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Verificado</title>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    <path d="M9 12l2 2 4-4"/>
+  </symbol>
+
+  <!-- Estrella -->
+  <symbol id="star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Calificación</title>
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </symbol>
+
+  <!-- Estrella Rellena -->
+  <symbol id="star-filled" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Calificación</title>
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </symbol>
+
+  <!-- Foto / Imagen -->
+  <symbol id="image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Imagen</title>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+    <circle cx="8.5" cy="8.5" r="1.5"/>
+    <polyline points="21 15 16 10 5 21"/>
+  </symbol>
+
+  <!-- Subir -->
+  <symbol id="upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Subir</title>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </symbol>
+
+  <!-- Descargar -->
+  <symbol id="download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Descargar</title>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </symbol>
+
+  <!-- Refrescar -->
+  <symbol id="refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Refrescar</title>
+    <polyline points="23 4 23 10 17 10"/>
+    <polyline points="1 20 1 14 7 14"/>
+    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+  </symbol>
+
+  <!-- Copiar -->
+  <symbol id="copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Copiar</title>
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+  </symbol>
+
+  <!-- WhatsApp -->
+  <symbol id="whatsapp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>WhatsApp</title>
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </symbol>
+
+  <!-- Ojo / Ver -->
+  <symbol id="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ver</title>
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </symbol>
+
+  <!-- Ojo Cerrado / Ocultar -->
+  <symbol id="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ocultar</title>
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+    <line x1="1" y1="1" x2="23" y2="23"/>
+  </symbol>
+
+  <!-- Documento -->
+  <symbol id="document" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Documento</title>
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+    <polyline points="10 9 9 9 8 9"/>
+  </symbol>
+
+  <!-- Mapa -->
+  <symbol id="map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Mapa</title>
+    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+    <line x1="8" y1="2" x2="8" y2="18"/>
+    <line x1="16" y1="6" x2="16" y2="22"/>
+  </symbol>
+
+  <!-- Plus / Agregar -->
+  <symbol id="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Agregar</title>
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+
+  <!-- Minus / Quitar -->
+  <symbol id="minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Quitar</title>
+    <line x1="5" y1="12" x2="19" y2="12"/>
+  </symbol>
+
+</svg>

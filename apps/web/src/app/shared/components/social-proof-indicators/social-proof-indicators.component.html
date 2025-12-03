@@ -12,8 +12,10 @@
         clip-rule="evenodd"
       />
     </svg>
-    <span class="text-warning-strong font-medium">
-      <ng-container *ngIf="isHighDemand">🔥 </ng-container>
+    <span class="text-warning-strong font-medium flex items-center gap-1">
+      @if (isHighDemand) {
+        <app-icon name="fire" [size]="16" />
+      }
       <span class="font-bold">{{ socialProof().currentViewers }}</span>
       {{ socialProof().currentViewers === 1 ? 'persona viendo' : 'personas viendo' }} este auto
       ahora
@@ -38,8 +40,10 @@
         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
-    <span class="text-success-light font-medium">
-      <ng-container *ngIf="isPopularRental">⚡ </ng-container>
+    <span class="text-success-light font-medium flex items-center gap-1">
+      @if (isPopularRental) {
+        <app-icon name="lightning" [size]="16" />
+      }
       Reservado <span class="font-bold">{{ socialProof().totalBookings }}</span>
       {{ socialProof().totalBookings === 1 ? 'vez' : 'veces' }} en los últimos 30 días
     </span>
@@ -63,8 +67,9 @@
         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
       />
     </svg>
-    <span class="text-error-strong font-medium">
-      📅 Solo disponible <span class="font-bold">{{ socialProof().availableDays }}</span>
+    <span class="text-error-strong font-medium flex items-center gap-1">
+      <app-icon name="clipboard" [size]="16" />
+      Solo disponible <span class="font-bold">{{ socialProof().availableDays }}</span>
       {{ socialProof().availableDays === 1 ? 'día' : 'días' }} este mes
     </span>
   </div>

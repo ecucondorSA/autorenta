@@ -358,7 +358,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    */
   private getCssVariableValue(variableName: string, defaultValue: string): string {
     if (!this.isBrowser) return defaultValue;
-    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() || defaultValue;
+    return (
+      getComputedStyle(document.documentElement).getPropertyValue(variableName).trim() ||
+      defaultValue
+    );
   }
 
   /**
@@ -1623,9 +1626,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-      Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -1875,7 +1878,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =

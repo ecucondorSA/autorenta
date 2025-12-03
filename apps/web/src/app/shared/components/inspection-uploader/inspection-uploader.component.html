@@ -2,12 +2,16 @@
   <!-- Header -->
   <div class="header">
     <h2>{{ stageLabel() }} del Vehículo</h2>
-    <button class="close-btn" (click)="cancel()" [disabled]="saving()">✕</button>
+    <button class="close-btn" (click)="cancel()" [disabled]="saving()">
+      <app-icon name="close" [size]="20" />
+    </button>
   </div>
 
   <!-- Error message -->
   @if (error()) {
-    <div class="error-message">⚠️ {{ error() }}</div>
+    <div class="error-message">
+      <app-icon name="alert-circle" [size]="18" cssClass="inline-block mr-2" /> {{ error() }}
+    </div>
   }
 
   <!-- Photo upload section -->
@@ -25,7 +29,7 @@
           <span class="spinner"></span>
           Subiendo...
         } @else {
-          📸 Subir Fotos
+          <app-icon name="camera" [size]="16" cssClass="inline-block mr-1" /> Subir Fotos
         }
       </label>
       <input
@@ -41,10 +45,14 @@
     <!-- Photo count indicator -->
     <div class="photo-count">
       @if (photoCount() >= 8) {
-        <span class="success">✅ {{ photoCount() }} fotos subidas</span>
+        <span class="success"
+          ><app-icon name="check-circle" [size]="16" cssClass="inline-block mr-1" />
+          {{ photoCount() }} fotos subidas</span
+        >
       } @else {
         <span class="warning">
-          ⚠️ {{ photoCount() }} / 8 fotos (faltan {{ missingPhotos() }})
+          <app-icon name="alert-circle" [size]="16" cssClass="inline-block mr-1" />
+          {{ photoCount() }} / 8 fotos (faltan {{ missingPhotos() }})
         </span>
       }
     </div>
@@ -55,7 +63,9 @@
         @for (photo of photos(); track photo.url; let i = $index) {
           <div class="photo-item">
             <img [src]="photo.url" [alt]="'Foto ' + (i + 1)" />
-            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">🗑️</button>
+            <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
+              <app-icon name="trash" [size]="18" />
+            </button>
           </div>
         }
       </div>
@@ -79,7 +89,10 @@
         [disabled]="saving()"
       />
       @if (odometer <= 0) {
-        <span class="field-hint error">⚠️ Ingrese el kilometraje</span>
+        <span class="field-hint error"
+          ><app-icon name="alert-circle" [size]="14" cssClass="inline-block mr-1" /> Ingrese el
+          kilometraje</span
+        >
       }
     </div>
 
@@ -113,7 +126,7 @@
         <span class="spinner"></span>
         Guardando...
       } @else {
-        ✅ Guardar y Firmar
+        <app-icon name="check" [size]="16" cssClass="inline-block mr-1" /> Guardar y Firmar
       }
     </button>
   </div>
@@ -124,18 +137,33 @@
       <h4>Para continuar necesitás:</h4>
       <ul>
         @if (photoCount() < 8) {
-          <li>❌ Subir al menos 8 fotos (tenés {{ photoCount() }})</li>
+          <li>
+            <app-icon name="close-circle" [size]="14" cssClass="inline-block mr-1" /> Subir al menos
+            8 fotos (tenés {{ photoCount() }})
+          </li>
         } @else {
-          <li>✅ Fotos completas</li>
+          <li>
+            <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Fotos
+            completas
+          </li>
         }
 
         @if (odometer <= 0) {
-          <li>❌ Ingresar el kilometraje</li>
+          <li>
+            <app-icon name="close-circle" [size]="14" cssClass="inline-block mr-1" /> Ingresar el
+            kilometraje
+          </li>
         } @else {
-          <li>✅ Kilometraje registrado</li>
+          <li>
+            <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Kilometraje
+            registrado
+          </li>
         }
 
-        <li>✅ Nivel de combustible: {{ fuelLevel }}%</li>
+        <li>
+          <app-icon name="check-circle" [size]="14" cssClass="inline-block mr-1" /> Nivel de
+          combustible: {{ fuelLevel }}%
+        </li>
       </ul>
     </div>
   }

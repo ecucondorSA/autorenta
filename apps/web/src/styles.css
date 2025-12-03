@@ -349,8 +349,6 @@ body.no-scroll {
     --card-gap: 1.5rem; /* 24px - Gap entre cards */
   }
 
-
-
   /* ─── Responsive Spacing Adjustments ─── */
   @media (min-width: 768px) {
     :root {
@@ -444,8 +442,6 @@ body.no-scroll {
     font-family: inherit !important;
   }
 
-
-
   /* Dark mode text-primary y bg-surface-secondary eliminados para evitar circular dependency */
   /* Tailwind maneja el dark mode automáticamente a través de las variables CSS */
   /* Las variables CSS ya están definidas en :root y .dark, por lo que no necesitamos reglas adicionales */
@@ -508,8 +504,6 @@ body.no-scroll {
     letter-spacing: 0em; /* Neutral */
     margin: 0;
   }
-
-
 
   /* ─────────────────────────────────────────────────────────────
      Micro-tipografía CSS Moderna - Calidad Editorial
@@ -899,8 +893,6 @@ body.no-scroll {
     letter-spacing: 0.08em;
   }
 
-
-
   /* ─────────────────────────────────────────────────────────────
      Sistema de Contenedores
      ───────────────────────────────────────────────────────────── */
@@ -962,8 +954,6 @@ body.no-scroll {
   .btn-secondary:hover {
     border-color: var(--text-secondary);
   }
-
-
 
   .btn-accent {
     @apply btn-base active:scale-95;
@@ -1030,15 +1020,11 @@ body.no-scroll {
     transition-timing-function: var(--easing-standard);
   }
 
-
-
   .card-premium:hover {
     @apply shadow-elevated;
     border-color: rgba(196, 168, 130, 0.5); /* warning-light con opacidad */
     transform: translateY(-4px);
   }
-
-
 
   .card-premium.selected {
     @apply shadow-elevated ring-4;
@@ -1076,13 +1062,9 @@ body.no-scroll {
     --tw-ring-color: rgba(167, 216, 244, 0.15);
   }
 
-
-
   .input-premium:hover {
     border-color: rgba(78, 78, 78, 0.3); /* text-secondary con opacidad */
   }
-
-
 
   /* ─────────────────────────────────────────────────────────────
      Badges y Status - Sistema Neutral Premium
@@ -1151,8 +1133,6 @@ body.no-scroll {
     transform: translateY(-2px);
   }
 
-
-
   /* Info card cta variant */
   .info-card-petrol {
     @apply info-card;
@@ -1166,8 +1146,6 @@ body.no-scroll {
     background-color: rgba(196, 168, 130, 0.05); /* warning-light/5 */
     border-color: rgba(196, 168, 130, 0.2); /* warning-light/20 */
   }
-
-
 
   /* ─────────────────────────────────────────────────────────────
      Transiciones y Animaciones
@@ -1376,14 +1354,10 @@ body.no-scroll {
     background-color: var(--border-default);
   }
 
-
-
   .divider-vertical {
     @apply w-px;
     background-color: var(--border-default);
   }
-
-
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1417,10 +1391,7 @@ body.no-scroll {
    Ver: src/config/theme/colors.ts para valores fuente
    ═══════════════════════════════════════════════════════════════ */
 
-
-
 /* Dark Mode Overrides */
-
 
 /* Scroll suave para el área de mensajes */
 .whatsapp-bg {
@@ -1463,7 +1434,6 @@ body.no-scroll {
 }
 
 /* Fondo de chat similar a WhatsApp */
-
 
 /* Hide PWA install banner */
 app-pwa-install-banner,

@@ -32,7 +32,9 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
       <!-- Empty State -->
       @if (!loading() && disputes().length === 0) {
         <div class="bg-surface-base dark:bg-surface-base rounded-lg p-6 text-center">
-          <p class="text-text-secondary dark:text-text-secondary">No hay disputas para esta reserva.</p>
+          <p class="text-text-secondary dark:text-text-secondary">
+            No hay disputas para esta reserva.
+          </p>
         </div>
       }
 

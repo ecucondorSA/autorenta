@@ -124,7 +124,8 @@
                       'bg-warning-light text-primary':
                         event.status === 'pending' || event.status === 'pending_payment',
                       'bg-primary-600 text-white': event.status === 'confirmed',
-                      'bg-gray-500 text-white': event.status === 'completed' || event.status === 'cancelled',
+                      'bg-gray-500 text-white':
+                        event.status === 'completed' || event.status === 'cancelled',
                     }"
                     [title]="event.title"
                   >

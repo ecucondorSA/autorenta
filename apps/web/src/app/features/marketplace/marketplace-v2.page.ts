@@ -12,6 +12,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
@@ -94,6 +95,7 @@ export interface Stat {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
 
     WhatsappFabComponent,
@@ -149,6 +151,17 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
   readonly latestLocations = signal<Record<string, CarLatestLocation>>({});
+
+  // Calculator State
+  readonly calculatorCarValue = signal(15000000);
+  readonly calculatorDays = signal(15);
+  readonly calculatorEarnings = computed(() => {
+    // Estimación: 0.2% del valor del auto por día (tarifa promedio)
+    // Ejemplo: Auto de 15M -> 30.000 por día
+    // Ganancia mensual = tarifa * días
+    const dailyRate = this.calculatorCarValue() * 0.002;
+    return Math.round(dailyRate * this.calculatorDays());
+  });
 
   // Pagination
   readonly currentPage = signal(1);
@@ -224,17 +237,16 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   });
 
   readonly quickFilters: QuickFilter[] = [
-    { id: 'immediate', label: 'Entrega inmediata', icon: '⚡' },
-    { id: 'verified', label: 'Dueño verificado', icon: '✓' },
-    { id: 'no-card', label: 'Sin tarjeta', icon: '💳' },
-    { id: 'near-me', label: 'Cerca de mí', icon: '📍' },
-    { id: 'electric', label: 'Eléctrico', icon: '🔋' },
+    { id: 'immediate', label: 'Entrega inmediata', icon: 'lightning' },
+    { id: 'verified', label: 'Dueño verificado', icon: 'verified' },
+    { id: 'no-card', label: 'Sin tarjeta', icon: 'credit-card' },
+    { id: 'near-me', label: 'Cerca de mí', icon: 'location' },
+    { id: 'electric', label: 'Eléctrico', icon: 'battery-charging' },
   ];
 
   readonly fabActions: FabAction[] = [
-    { id: 'filter', label: 'Filtros', icon: '🔍', color: 'primary' },
-
-    { id: 'location', label: 'Mi ubicación', icon: '📍', color: 'secondary' },
+    { id: 'filter', label: 'Filtros', icon: 'filter', color: 'primary' },
+    { id: 'location', label: 'Mi ubicación', icon: 'location', color: 'secondary' },
   ];
 
   readonly carsWithDistance = computed<CarWithDistance[]>(() => {
@@ -301,9 +313,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     const availableNow = this.carsWithDistance().filter((c) => c.distance && c.distance < 5).length;
     const avgPrice = this.calculateAveragePrice();
     return [
-      { label: 'Autos disponibles', value: totalCars, icon: '🚗' },
-      { label: 'Cerca de ti', value: availableNow, icon: '📍' },
-      { label: 'Desde', value: `$${avgPrice}/día`, icon: '💰' },
+      { label: 'Autos disponibles', value: totalCars, icon: 'car' },
+      { label: 'Cerca de ti', value: availableNow, icon: 'location' },
+      { label: 'Desde', value: `$${avgPrice}/día`, icon: 'money' },
     ];
   });
 

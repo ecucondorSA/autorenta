@@ -487,7 +487,11 @@ export class CarsService {
       city?: string;
     } = {},
   ): Promise<Car[]> {
-    const available = await this.carAvailabilityService.getAvailableCars(startDate, endDate, options);
+    const available = await this.carAvailabilityService.getAvailableCars(
+      startDate,
+      endDate,
+      options,
+    );
     // Map to Car model if needed (Supabase returns `cars` rows already compatible with `Car`).
     return available as Car[];
   }

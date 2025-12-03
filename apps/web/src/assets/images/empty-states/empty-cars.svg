@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Empty State: Sin Autos Publicados
+  Concepto: Garage vacío con llave flotando
+  Paleta: Ivory, Beige, Blue Pastel
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <title>No tienes autos publicados</title>
+  <defs>
+    <linearGradient id="garage-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8F4EC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E3E3E3;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow-soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#050505" flood-opacity="0.1"/>
+    </filter>
+    <!-- Patrón de rayas para puerta de garage -->
+    <pattern id="garage-lines" patternUnits="userSpaceOnUse" width="200" height="8">
+      <line x1="0" y1="4" x2="200" y2="4" stroke="#DFD2BF" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Fondo decorativo -->
+  <circle cx="100" cy="110" r="80" fill="#F8F4EC" opacity="0.5"/>
+
+  <!-- Estructura del garage -->
+  <g filter="url(#shadow-soft)">
+    <!-- Techo -->
+    <path d="M30 75 L100 35 L170 75 L170 80 L30 80 Z" fill="#DFD2BF" stroke="#BCBCBC" stroke-width="1"/>
+    <!-- Paredes laterales -->
+    <rect x="35" y="80" width="12" height="85" fill="#F8F4EC" stroke="#DFD2BF" stroke-width="1"/>
+    <rect x="153" y="80" width="12" height="85" fill="#F8F4EC" stroke="#DFD2BF" stroke-width="1"/>
+    <!-- Puerta del garage -->
+    <rect x="47" y="80" width="106" height="85" fill="url(#garage-gradient)" stroke="#DFD2BF" stroke-width="1.5"/>
+    <!-- Líneas de la puerta -->
+    <g stroke="#DFD2BF" stroke-width="1" opacity="0.7">
+      <line x1="47" y1="97" x2="153" y2="97"/>
+      <line x1="47" y1="114" x2="153" y2="114"/>
+      <line x1="47" y1="131" x2="153" y2="131"/>
+      <line x1="47" y1="148" x2="153" y2="148"/>
+    </g>
+    <!-- Ventanitas del garage -->
+    <g fill="#A7D8F4" opacity="0.5">
+      <rect x="60" y="85" width="18" height="8" rx="1"/>
+      <rect x="91" y="85" width="18" height="8" rx="1"/>
+      <rect x="122" y="85" width="18" height="8" rx="1"/>
+    </g>
+    <!-- Piso -->
+    <rect x="35" y="165" width="130" height="8" fill="#E3E3E3"/>
+  </g>
+
+  <!-- Llave flotando con brillo -->
+  <g transform="translate(85, 105)" filter="url(#shadow-soft)">
+    <!-- Sombra de la llave en el piso -->
+    <ellipse cx="15" cy="58" rx="20" ry="5" fill="#050505" opacity="0.08"/>
+
+    <!-- Llave grande -->
+    <g transform="rotate(-30, 15, 25)">
+      <!-- Cabeza de la llave -->
+      <circle cx="15" cy="12" r="12" fill="#A7D8F4" stroke="#8EC9EC" stroke-width="2"/>
+      <circle cx="15" cy="12" r="6" fill="#F8F4EC"/>
+      <!-- Cuerpo de la llave -->
+      <rect x="12" y="22" width="6" height="30" rx="2" fill="#A7D8F4" stroke="#8EC9EC" stroke-width="1.5"/>
+      <!-- Dientes de la llave -->
+      <path d="M12 45 L8 45 L8 48 L12 48 M12 38 L6 38 L6 42 L12 42" fill="#A7D8F4" stroke="#8EC9EC" stroke-width="1"/>
+    </g>
+
+    <!-- Brillos -->
+    <circle cx="5" cy="5" r="2" fill="#FFFFFF" opacity="0.8"/>
+    <circle cx="28" cy="18" r="1.5" fill="#FFFFFF" opacity="0.6"/>
+  </g>
+
+  <!-- Señales de vacío (líneas punteadas donde iría el auto) -->
+  <g stroke="#BCBCBC" stroke-width="1" stroke-dasharray="4 3" opacity="0.5">
+    <path d="M70 155 Q100 145 130 155"/>
+  </g>
+
+  <!-- Puntos decorativos -->
+  <circle cx="175" cy="60" r="3" fill="#A7D8F4" opacity="0.5"/>
+  <circle cx="25" cy="65" r="2" fill="#DFD2BF"/>
+  <circle cx="180" cy="140" r="2" fill="#A7D8F4" opacity="0.4"/>
+
+  <!-- Signo + para agregar -->
+  <g transform="translate(155, 105)" opacity="0.6">
+    <circle cx="12" cy="12" r="12" fill="#9DB38B" opacity="0.2"/>
+    <line x1="12" y1="6" x2="12" y2="18" stroke="#9DB38B" stroke-width="2" stroke-linecap="round"/>
+    <line x1="6" y1="12" x2="18" y2="12" stroke="#9DB38B" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

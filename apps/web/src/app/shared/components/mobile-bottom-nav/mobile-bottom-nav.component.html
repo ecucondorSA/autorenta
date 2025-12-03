@@ -14,23 +14,14 @@
       [attr.aria-label]="item.label"
       [attr.aria-current]="isActive(item.route) ? 'page' : null"
     >
-      <!-- Icono SVG -->
+      <!-- Icono SVG del sprite -->
       <div class="nav-item__icon-wrapper">
-        <svg
+        <app-icon
+          [name]="item.icon"
+          [size]="24"
           class="nav-item__icon"
           [class.nav-item__icon--active]="isActive(item.route)"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            [attr.d]="getIcon(item.icon)"
-          ></path>
-        </svg>
+        />
 
         <!-- Badge de notificaciones -->
         <span

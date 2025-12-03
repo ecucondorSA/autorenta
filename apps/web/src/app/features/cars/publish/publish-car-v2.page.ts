@@ -165,10 +165,20 @@ export class PublishCarV2Page implements OnInit {
 
     const hasDescription = !!(description && description.trim().length >= 40);
     const hasAvailability =
-      !!availabilityStart && !!availabilityEnd && new Date(availabilityStart) <= new Date(availabilityEnd);
+      !!availabilityStart &&
+      !!availabilityEnd &&
+      new Date(availabilityStart) <= new Date(availabilityEnd);
 
     // Bloquear si falta alguno de los requisitos
-    return !!(hasBrand && hasModel && year && hasPhotos && hasLocation && hasDescription && hasAvailability);
+    return !!(
+      hasBrand &&
+      hasModel &&
+      year &&
+      hasPhotos &&
+      hasLocation &&
+      hasDescription &&
+      hasAvailability
+    );
   });
 
   // ✅ NEW: Check if we have valid location coordinates
@@ -200,7 +210,8 @@ export class PublishCarV2Page implements OnInit {
     if (!year) missing.push('Año');
     if (!this.photoService.hasMinimumPhotos()) missing.push('Mínimo 3 fotos');
     if (!this.hasValidLocation()) missing.push('Ubicación en el mapa');
-    if (!description || description.trim().length < 40) missing.push('Descripción (min. 40 caracteres)');
+    if (!description || description.trim().length < 40)
+      missing.push('Descripción (min. 40 caracteres)');
     if (!availabilityStart || !availabilityEnd) {
       missing.push('Rango de disponibilidad');
     } else if (!this.isAvailabilityRangeValid()) {
@@ -962,11 +973,14 @@ export class PublishCarV2Page implements OnInit {
           location_state: address.state,
           location_country: address.country,
         });
-        this.notificationManager.success('Ubicación actualizada', 'Se completó la dirección automáticamente.');
+        this.notificationManager.success(
+          'Ubicación actualizada',
+          'Se completó la dirección automáticamente.',
+        );
       } else {
         this.notificationManager.warning(
           'Ubicación detectada',
-          'Tenemos tus coordenadas, pero no pudimos encontrar la dirección exacta. Por favor completa los campos manualmente.'
+          'Tenemos tus coordenadas, pero no pudimos encontrar la dirección exacta. Por favor completa los campos manualmente.',
         );
       }
     }
@@ -1025,7 +1039,10 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    if (!this.publishForm.get('availability_start_date')?.value || !this.publishForm.get('availability_end_date')?.value) {
+    if (
+      !this.publishForm.get('availability_start_date')?.value ||
+      !this.publishForm.get('availability_end_date')?.value
+    ) {
       this.notificationManager.error(
         'Disponibilidad faltante',
         'Indicá desde cuándo y hasta cuándo está disponible el auto.',

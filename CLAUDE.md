@@ -210,3 +210,21 @@ NG_APP_MERCADOPAGO_PUBLIC_KEY=
 ```
 
 Production variables are set in Cloudflare Pages dashboard and Supabase secrets.
+
+## Database Access (Testing/Development)
+
+**Supabase Project:** `pisqjmoklivzpwufhscx`
+**Dashboard:** https://supabase.com/dashboard/project/pisqjmoklivzpwufhscx
+
+**Direct PostgreSQL Connection:**
+```bash
+PGPASSWORD="Ab.12345" psql -h aws-1-sa-east-1.pooler.supabase.com -p 6543 -U postgres.pisqjmoklivzpwufhscx -d postgres
+```
+
+**Service Role Key:** `sb_secret_qRFh5RZGAEyJgVf9B4HwQQ_91fSDRoF`
+
+## Test Users
+
+| Role | Email | Password | User ID |
+|------|-------|----------|---------|
+| Super Admin | admin-test@autorenta.com | AdminTest123! | f7c68d1d-b514-4204-b022-9b3b7731b41e |

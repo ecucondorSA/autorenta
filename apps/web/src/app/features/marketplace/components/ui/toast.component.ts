@@ -228,7 +228,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
 
       .toast-message {
         margin: 0.25rem 0 0;
-        color: var(--text-secondary, #4E4E4E); /* Reemplazado hex con token semántico */
+        color: var(--text-secondary, #4e4e4e); /* Reemplazado hex con token semántico */
         line-height: 1.4;
       }
 
@@ -238,7 +238,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 0.5rem 0.75rem;
         background: transparent;
         border: none;
-        color: var(--cta-default, #A7D8F4); /* Reemplazado hex con token semántico */
+        color: var(--cta-default, #a7d8f4); /* Reemplazado hex con token semántico */
         font-size: 0.875rem;
         font-weight: 600;
         font-family: inherit;
@@ -259,13 +259,13 @@ import { Component, effect, input, output, signal } from '@angular/core';
         padding: 0;
         background: transparent;
         border: none;
-        color: var(--text-secondary, #4E4E4E);
+        color: var(--text-secondary, #4e4e4e);
         cursor: pointer;
         transition: color 0.2s ease;
       }
 
       .toast-close:hover {
-        color: var(--text-secondary, #4E4E4E);
+        color: var(--text-secondary, #4e4e4e);
       }
 
       .toast-close svg {

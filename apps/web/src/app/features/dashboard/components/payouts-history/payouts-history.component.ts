@@ -12,7 +12,9 @@ import { AuthService } from '../../../../core/services/auth.service';
     <div class="space-y-4">
       <!-- Header -->
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse">Historial de Ingresos</h3>
+        <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
+          Historial de Ingresos
+        </h3>
         <button
           (click)="loadPayouts()"
           [disabled]="loading()"
@@ -108,9 +110,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                     </p>
                   }
                   @if (payout.failureReason) {
-                    <p class="text-xs text-error-text mt-2">
-                      Razón: {{ payout.failureReason }}
-                    </p>
+                    <p class="text-xs text-error-text mt-2">Razón: {{ payout.failureReason }}</p>
                   }
                   @if (payout.completedAt) {
                     <p class="text-xs text-text-secondary dark:text-text-muted mt-1">

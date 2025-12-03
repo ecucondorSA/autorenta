@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Error X
+  Animación: Círculo que se dibuja + X que aparece con shake
+  Color: Rust red (#B25E5E)
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <title>Error</title>
+
+  <style>
+    .error-circle {
+      fill: none;
+      stroke: #B25E5E;
+      stroke-width: 3;
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      animation: circle-draw 0.6s ease-out forwards;
+    }
+    .error-circle-bg {
+      fill: #B25E5E;
+      opacity: 0;
+      animation: circle-fill 0.3s ease-out 0.5s forwards;
+    }
+    .error-x {
+      stroke: #FFFFFF;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .error-x-1 {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      animation: x-draw 0.3s ease-out 0.6s forwards;
+    }
+    .error-x-2 {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      animation: x-draw 0.3s ease-out 0.75s forwards;
+    }
+    .error-group {
+      animation: shake 0.4s ease-out 0.9s;
+    }
+
+    @keyframes circle-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes circle-fill {
+      to { opacity: 0.15; }
+    }
+    @keyframes x-draw {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-3px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .error-circle {
+        stroke-dashoffset: 0;
+        animation: none;
+      }
+      .error-circle-bg {
+        opacity: 0.15;
+        animation: none;
+      }
+      .error-x-1, .error-x-2 {
+        stroke-dashoffset: 0;
+        animation: none;
+        stroke: #B25E5E;
+      }
+      .error-group {
+        animation: none;
+      }
+    }
+  </style>
+
+  <g class="error-group">
+    <!-- Fondo del círculo -->
+    <circle class="error-circle-bg" cx="30" cy="30" r="26"/>
+
+    <!-- Borde del círculo -->
+    <circle class="error-circle" cx="30" cy="30" r="26"/>
+
+    <!-- X mark -->
+    <line class="error-x error-x-1" x1="21" y1="21" x2="39" y2="39"/>
+    <line class="error-x error-x-2" x1="39" y1="21" x2="21" y2="39"/>
+  </g>
+</svg>

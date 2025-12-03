@@ -249,7 +249,11 @@
           class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 shadow-sm"
           (change)="onSortChange($any($event.target).value)"
         >
-          <option *ngFor="let option of sortOptions" [value]="option.value" [selected]="sortOrder() === option.value">
+          <option
+            *ngFor="let option of sortOptions"
+            [value]="option.value"
+            [selected]="sortOrder() === option.value"
+          >
             {{ option.label }}
           </option>
         </select>

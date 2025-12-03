@@ -1,11 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import {
   AccountingService,
   WalletReconciliation,
 } from '../../../../core/services/accounting.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-reconciliation',
@@ -39,15 +38,8 @@ import { environment } from '../../../../../environments/environment';
   `,
 })
 export class ReconciliationPage implements OnInit {
-  private readonly accountingService: AccountingService;
+  private readonly accountingService = inject(AccountingService);
   reconciliation = signal<WalletReconciliation[]>([]);
-
-  constructor() {
-    this.accountingService = new AccountingService(
-      environment.supabaseUrl,
-      environment.supabaseAnonKey,
-    );
-  }
 
   async ngOnInit(): Promise<void> {
     try {

@@ -12,6 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import type { SocialProofStat } from '../../../../core/models/marketplace.model';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 /**
  * SocialProofBarComponent - Animated stats counter bar
@@ -25,7 +26,7 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
 @Component({
   selector: 'app-social-proof-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   template: `
     <section
       #container
@@ -36,6 +37,9 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
       <div class="stats-container">
         @for (stat of stats; track stat.id) {
           <div class="stat-item">
+            <div class="stat-icon">
+              <app-icon [name]="stat.icon" [size]="28" [label]="stat.label" />
+            </div>
             <div class="stat-value">
               @if (stat.prefix) {
                 <span class="stat-prefix">{{ stat.prefix }}</span>
@@ -80,6 +84,17 @@ import type { SocialProofStat } from '../../../../core/models/marketplace.model'
         text-align: center;
         min-width: 100px;
         padding: var(--space-2);
+      }
+
+      .stat-icon {
+        display: flex;
+        justify-content: center;
+        margin-bottom: var(--space-2);
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .stat-icon app-icon {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
       }
 
       .stat-value {
@@ -157,10 +172,10 @@ export class SocialProofBarComponent implements OnInit, OnDestroy {
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   @Input() stats: SocialProofStat[] = [
-    { id: 'cars', value: 500, label: 'Autos disponibles', icon: '🚗', suffix: '+' },
-    { id: 'users', value: 10000, label: 'Usuarios activos', icon: '👥', suffix: '+' },
-    { id: 'rentals', value: 25000, label: 'Alquileres completados', icon: '✅', suffix: '+' },
-    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: '⭐', prefix: '' },
+    { id: 'cars', value: 500, label: 'Autos disponibles', icon: 'car', suffix: '+' },
+    { id: 'users', value: 10000, label: 'Usuarios activos', icon: 'users', suffix: '+' },
+    { id: 'rentals', value: 25000, label: 'Alquileres completados', icon: 'verified', suffix: '+' },
+    { id: 'rating', value: 4.8, label: 'Calificación promedio', icon: 'star-filled', prefix: '' },
   ];
 
   @Input() animationDuration = 2000; // ms

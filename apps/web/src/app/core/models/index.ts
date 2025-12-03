@@ -437,7 +437,6 @@ export interface Booking {
   wallet_refunded_at?: string | null;
   mp_security_deposit_order_id?: string | null; // NUEVO: ID de la pre-autorización de MP para el depósito
 
-
   // Dual payment system (rental + deposit)
   rental_amount_cents?: number | null;
   deposit_amount_cents?: number | null;

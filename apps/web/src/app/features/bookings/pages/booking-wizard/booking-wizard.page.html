@@ -104,7 +104,12 @@
         }
       </ion-button>
     } @else {
-      <ion-button [disabled]="!canProceed()" (click)="nextStep()" class="nav-button next-button" data-testid="booking-next-button">
+      <ion-button
+        [disabled]="!canProceed()"
+        (click)="nextStep()"
+        class="nav-button next-button"
+        data-testid="booking-next-button"
+      >
         Siguiente
         <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
       </ion-button>

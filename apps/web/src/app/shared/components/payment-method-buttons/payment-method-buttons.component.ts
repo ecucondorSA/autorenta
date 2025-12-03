@@ -13,6 +13,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
+import { IconComponent } from '../icon/icon.component';
 
 export type PaymentMethod = 'credit_card' | 'wallet';
 
@@ -42,7 +43,7 @@ export type PaymentMethod = 'credit_card' | 'wallet';
 @Component({
   selector: 'app-payment-method-buttons',
   standalone: true,
-  imports: [CommonModule, TranslateModule, MoneyPipe],
+  imports: [CommonModule, TranslateModule, MoneyPipe, IconComponent],
   templateUrl: './payment-method-buttons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

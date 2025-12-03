@@ -62,7 +62,9 @@ interface DurationOption {
         (click)="$event.stopPropagation()"
       >
         <!-- Header -->
-        <div class="sticky top-0 bg-surface-raised border-b border-border-default px-6 py-4 flex items-center justify-between z-10">
+        <div
+          class="sticky top-0 bg-surface-raised border-b border-border-default px-6 py-4 flex items-center justify-between z-10"
+        >
           <h2 class="h3 text-text-primary">Reserva rápida</h2>
           <button
             type="button"
@@ -95,7 +97,7 @@ interface DurationOption {
                 {{ carTitle() }}
               </h3>
               <p class="text-sm text-text-secondary">
-                {{ car.price_per_day | money: (car.currency || 'ARS') }}/día
+                {{ car.price_per_day | money: car.currency || 'ARS' }}/día
               </p>
             </div>
           </div>
@@ -122,7 +124,7 @@ interface DurationOption {
                   </div>
                   <div class="text-right">
                     <p class="text-sm font-bold text-text-primary">
-                      {{ calculatePrice(option.hours) | money: (car.currency || 'ARS') }}
+                      {{ calculatePrice(option.hours) | money: car.currency || 'ARS' }}
                     </p>
                     <p class="text-xs text-text-secondary">{{ option.hours }}h</p>
                   </div>
@@ -147,15 +149,14 @@ interface DurationOption {
               <span class="font-semibold">Saldo insuficiente</span>
             </div>
             <p class="mt-1 text-xs">
-              Necesitas al menos 300 USD en tu wallet para continuar. Serás redirigido para cargar fondos.
+              Necesitas al menos 300 USD en tu wallet para continuar. Serás redirigido para cargar
+              fondos.
             </p>
           </div>
 
           <!-- Payment Method -->
           <div class="stack-xs">
-            <label class="block text-sm font-semibold text-text-primary">
-              Método de pago
-            </label>
+            <label class="block text-sm font-semibold text-text-primary"> Método de pago </label>
             <div class="stack-sm">
               <!-- Wallet -->
               <button
@@ -171,11 +172,15 @@ interface DurationOption {
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-success-light/20 flex items-center justify-center">
-                      <svg class="w-5 h-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"
-                        />
+                    <div
+                      class="w-10 h-10 rounded-full bg-success-light/20 flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-5 h-5 text-success-light"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                         <path
                           fill-rule="evenodd"
                           d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
@@ -183,10 +188,10 @@ interface DurationOption {
                         />
                       </svg>
                     </div>
-                  <div class="stack-xs">
-                    <p class="text-sm font-semibold text-text-primary">Wallet AutoRenta</p>
-                    <p class="text-xs text-text-secondary">
-                      Saldo: {{ walletBalance() | money: (car.currency || 'ARS') }}
+                    <div class="stack-xs">
+                      <p class="text-sm font-semibold text-text-primary">Wallet AutoRenta</p>
+                      <p class="text-xs text-text-secondary">
+                        Saldo: {{ walletBalance() | money: car.currency || 'ARS' }}
                       </p>
                     </div>
                   </div>
@@ -215,7 +220,9 @@ interface DurationOption {
                 class="w-full text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
+                  <div
+                    class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center"
+                  >
                     <svg class="w-5 h-5 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fill-rule="evenodd"
@@ -241,11 +248,11 @@ interface DurationOption {
                 class="w-full text-left p-3 rounded-lg border border-border-default hover:border-cta-default/50 transition-all"
               >
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center">
+                  <div
+                    class="w-10 h-10 rounded-full bg-cta-default/20 flex items-center justify-center"
+                  >
                     <svg class="w-5 h-5 text-cta-default" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"
-                      />
+                      <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                       <path
                         fill-rule="evenodd"
                         d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"
@@ -267,27 +274,29 @@ interface DurationOption {
             <div class="flex items-center justify-between text-sm">
               <span class="text-text-secondary">Subtotal</span>
               <span class="font-semibold text-text-primary">
-                {{ totalPrice() | money: (car.currency || 'ARS') }}
+                {{ totalPrice() | money: car.currency || 'ARS' }}
               </span>
             </div>
             <div class="flex items-center justify-between text-sm">
               <span class="text-text-secondary">Comisión (10%)</span>
               <span class="font-semibold text-text-primary">
-                {{ platformFee() | money: (car.currency || 'ARS') }}
+                {{ platformFee() | money: car.currency || 'ARS' }}
               </span>
             </div>
             <div class="border-t border-border-default pt-2 mt-2">
               <div class="flex items-center justify-between">
                 <span class="text-base font-bold text-text-primary">Total</span>
                 <span class="h4 text-cta-default">
-                  {{ totalWithFees() | money: (car.currency || 'ARS') }}
+                  {{ totalWithFees() | money: car.currency || 'ARS' }}
                 </span>
               </div>
             </div>
           </div>
 
           <!-- No Credit Card Badge -->
-          <div class="flex items-center justify-center gap-2 text-sm text-text-secondary py-2 bg-success-light/10 rounded-lg">
+          <div
+            class="flex items-center justify-center gap-2 text-sm text-text-secondary py-2 bg-success-light/10 rounded-lg"
+          >
             <svg class="w-5 h-5 text-success-light" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
@@ -308,7 +317,9 @@ interface DurationOption {
         </div>
 
         <!-- Footer -->
-        <div class="sticky bottom-0 bg-surface-raised border-t border-border-default px-6 py-4 flex gap-3">
+        <div
+          class="sticky bottom-0 bg-surface-raised border-t border-border-default px-6 py-4 flex gap-3"
+        >
           <button
             type="button"
             (click)="handleCancel()"
@@ -324,12 +335,7 @@ interface DurationOption {
             [class.cursor-not-allowed]="!canConfirm() || loading()"
             class="flex-1 py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-default text-cta-text font-semibold transition-colors shadow-sm hover:shadow-md flex items-center justify-center gap-2"
           >
-            <svg
-              *ngIf="loading()"
-              class="animate-spin h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
+            <svg *ngIf="loading()" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
               <circle
                 class="opacity-25"
                 cx="12"

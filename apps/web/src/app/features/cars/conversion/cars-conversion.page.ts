@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 // TODO: Re-add when marketplace components are created
 // import { HeroSearchComponent } from '../../../shared/components/marketplace/hero-search/hero-search.component';
 // import { TrustBadgesComponent } from '../../../shared/components/marketplace/trust-badges/trust-badges.component';
@@ -13,7 +14,7 @@ interface SearchQuery {
 @Component({
   selector: 'app-cars-conversion',
   standalone: true,
-  imports: [RouterLink], // TODO: Re-add HeroSearchComponent, TrustBadgesComponent
+  imports: [RouterLink, IconComponent], // TODO: Re-add HeroSearchComponent, TrustBadgesComponent
   templateUrl: './cars-conversion.page.html',
   styleUrls: ['./cars-conversion.page.css'],
 })

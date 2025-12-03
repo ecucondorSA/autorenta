@@ -1,10 +1,13 @@
-<div class="min-h-screen bg-gray-50/50 dark:bg-[#0f1117] py-8 px-4 transition-colors duration-300 text-slate-800 dark:text-slate-200 font-sans">
+<div
+  class="min-h-screen bg-gray-50/50 dark:bg-[#0f1117] py-8 px-4 transition-colors duration-300 text-slate-800 dark:text-slate-200 font-sans"
+>
   <div class="max-w-5xl mx-auto">
-    
     <!-- 1. Header Minimalista e Inspirador -->
     <header class="mb-10 text-center sm:text-left sm:flex sm:items-end sm:justify-between">
       <div>
-        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2">
+        <h1
+          class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2"
+        >
           {{ editMode() ? 'Tu auto, mejorado.' : 'Rentabilizá tu auto.' }}
         </h1>
         <p class="text-lg text-slate-500 dark:text-slate-400 font-medium">
@@ -13,9 +16,13 @@
       </div>
       <!-- Indicador de Progreso Sutil -->
       <div class="hidden sm:block text-right">
-        <div class="inline-flex items-center gap-2 bg-white dark:bg-neutral-800 px-4 py-2 rounded-full shadow-sm border border-slate-100 dark:border-neutral-700">
+        <div
+          class="inline-flex items-center gap-2 bg-white dark:bg-neutral-800 px-4 py-2 rounded-full shadow-sm border border-slate-100 dark:border-neutral-700"
+        >
           <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"
+            ></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
           </span>
           <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">
@@ -26,28 +33,49 @@
     </header>
 
     <div class="grid gap-8 lg:grid-cols-12 items-start">
-      
       <!-- COLUMNA PRINCIPAL (Formulario) -->
       <div class="lg:col-span-8 space-y-8">
-
-        <form [formGroup]="publishForm" (ngSubmit)="onSubmit()" class="space-y-8" data-testid="publish-form">
-
+        <form
+          [formGroup]="publishForm"
+          (ngSubmit)="onSubmit()"
+          class="space-y-8"
+          data-testid="publish-form"
+        >
           <!-- SECCIÓN 1: IDENTIDAD DEL VEHÍCULO (El "Qué") -->
-          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800">
+          <section
+            class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800"
+          >
             <div class="p-8">
               <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                <div
+                  class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
                   </svg>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">¿Qué auto vas a publicar?</h2>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">
+                  ¿Qué auto vas a publicar?
+                </h2>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Marca -->
                 <div class="md:col-span-2 relative z-20">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Marca</label>
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                    >Marca</label
+                  >
                   <app-fipe-autocomplete
                     [placeholder]="'Ej: Toyota, Ford, BMW...'"
                     [options]="fipeBrands()"
@@ -56,9 +84,20 @@
                     [minChars]="2"
                     (optionSelected)="onFIPEBrandSelected($event)"
                   ></app-fipe-autocomplete>
-                  @if (publishForm.get('brand_text_backup')?.invalid && (publishForm.get('brand_text_backup')?.dirty || publishForm.get('brand_text_backup')?.touched)) {
+                  @if (
+                    publishForm.get('brand_text_backup')?.invalid &&
+                    (publishForm.get('brand_text_backup')?.dirty ||
+                      publishForm.get('brand_text_backup')?.touched)
+                  ) {
                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       Seleccioná una marca
                     </p>
                   }
@@ -66,7 +105,9 @@
 
                 <!-- Año -->
                 <div class="relative z-10">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Año</label>
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                    >Año</label
+                  >
                   <select
                     formControlName="year"
                     (change)="onYearChange()"
@@ -78,9 +119,19 @@
                       <option [ngValue]="year">{{ year }}</option>
                     }
                   </select>
-                  @if (publishForm.get('year')?.invalid && (publishForm.get('year')?.dirty || publishForm.get('year')?.touched)) {
+                  @if (
+                    publishForm.get('year')?.invalid &&
+                    (publishForm.get('year')?.dirty || publishForm.get('year')?.touched)
+                  ) {
                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       Seleccioná un año
                     </p>
                   }
@@ -88,7 +139,9 @@
 
                 <!-- Modelo -->
                 <div class="relative z-10">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Modelo</label>
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                    >Modelo</label
+                  >
                   <app-fipe-autocomplete
                     [placeholder]="'Ej: Corolla, Focus...'"
                     [options]="fipeModels()"
@@ -98,35 +151,77 @@
                     [minChars]="2"
                     (optionSelected)="onFIPEModelSelected($event)"
                   ></app-fipe-autocomplete>
-                  @if (publishForm.get('model_text_backup')?.invalid && (publishForm.get('model_text_backup')?.dirty || publishForm.get('model_text_backup')?.touched)) {
+                  @if (
+                    publishForm.get('model_text_backup')?.invalid &&
+                    (publishForm.get('model_text_backup')?.dirty ||
+                      publishForm.get('model_text_backup')?.touched)
+                  ) {
                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
                       Seleccioná un modelo
                     </p>
                   }
                 </div>
               </div>
             </div>
-            
+
             <!-- Barra "Smart" de estimación -->
-            <div *ngIf="valueAutoCalculated()" class="bg-emerald-50/50 dark:bg-emerald-900/10 px-8 py-4 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3">
-              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div
+              *ngIf="valueAutoCalculated()"
+              class="bg-emerald-50/50 dark:bg-emerald-900/10 px-8 py-4 border-t border-emerald-100 dark:border-emerald-900/30 flex items-center gap-3"
+            >
+              <span
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
               </span>
               <div>
-                <p class="text-sm font-bold text-emerald-900 dark:text-emerald-100">Vehículo reconocido</p>
-                <p class="text-xs text-emerald-700 dark:text-emerald-300">Valor de mercado aprox: USD {{ publishForm.get('value_usd')?.value | number }}</p>
+                <p class="text-sm font-bold text-emerald-900 dark:text-emerald-100">
+                  Vehículo reconocido
+                </p>
+                <p class="text-xs text-emerald-700 dark:text-emerald-300">
+                  Valor de mercado aprox: USD {{ publishForm.get('value_usd')?.value | number }}
+                </p>
               </div>
             </div>
           </section>
 
           <!-- SECCIÓN 2: FOTOS (El "Wow" Visual) -->
-          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+          <section
+            class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8"
+          >
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <div
+                  class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-500/10 flex items-center justify-center text-purple-600 dark:text-purple-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                 </div>
                 <div>
@@ -134,15 +229,22 @@
                   <p class="text-sm text-slate-500">La clave para alquilar más rápido.</p>
                 </div>
               </div>
-              
+
               <!-- Botón WOW de IA -->
-              <button 
-                type="button" 
+              <button
+                type="button"
                 (click)="showAIPhotosModal.set(true)"
                 [disabled]="!selectedFIPEModel() || uploadedPhotos().length >= 10"
                 class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
               >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
                 Generar con IA
               </button>
             </div>
@@ -150,41 +252,90 @@
             <!-- Área de Carga Visual -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <!-- Upload Button Slot -->
-              <label class="aspect-[4/3] relative flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-neutral-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer group">
-                <div class="p-3 bg-indigo-50 dark:bg-indigo-500/20 rounded-full group-hover:scale-110 transition-transform">
-                   <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+              <label
+                class="aspect-[4/3] relative flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-neutral-700 rounded-2xl hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer group"
+              >
+                <div
+                  class="p-3 bg-indigo-50 dark:bg-indigo-500/20 rounded-full group-hover:scale-110 transition-transform"
+                >
+                  <svg
+                    class="w-6 h-6 text-indigo-600 dark:text-indigo-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
                 </div>
-                <span class="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-400">Subir fotos</span>
-                <input type="file" accept="image/*" multiple (change)="onPhotoSelected($event)" class="hidden" />
+                <span class="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-400"
+                  >Subir fotos</span
+                >
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  (change)="onPhotoSelected($event)"
+                  class="hidden"
+                />
               </label>
 
               <!-- Thumbnails -->
-              <div *ngFor="let photo of uploadedPhotos(); let i = index" class="relative group aspect-[4/3] rounded-2xl overflow-hidden shadow-sm">
+              <div
+                *ngFor="let photo of uploadedPhotos(); let i = index"
+                class="relative group aspect-[4/3] rounded-2xl overflow-hidden shadow-sm"
+              >
                 <img [src]="photo.preview" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button type="button" (click)="removePhoto(i)" class="p-2 bg-white/90 text-rose-600 rounded-full hover:bg-white">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                <div
+                  class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
+                >
+                  <button
+                    type="button"
+                    (click)="removePhoto(i)"
+                    class="p-2 bg-white/90 text-rose-600 rounded-full hover:bg-white"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
                   </button>
                 </div>
-                <div *ngIf="i === 0" class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md">
-                   <span class="text-[10px] font-bold text-white uppercase tracking-wider">Portada</span>
+                <div
+                  *ngIf="i === 0"
+                  class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded-md"
+                >
+                  <span class="text-[10px] font-bold text-white uppercase tracking-wider"
+                    >Portada</span
+                  >
                 </div>
               </div>
 
-               <!-- Empty Slots (Visual placeholders) -->
-               <ng-container *ngIf="uploadedPhotos().length === 0">
-                 <div class="aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 flex items-center justify-center border border-slate-100 dark:border-neutral-800">
-                    <span class="text-xs text-slate-300 dark:text-neutral-600">Foto lateral</span>
-                 </div>
-                 <div class="hidden md:flex aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 items-center justify-center border border-slate-100 dark:border-neutral-800">
-                    <span class="text-xs text-slate-300 dark:text-neutral-600">Interior</span>
-                 </div>
-               </ng-container>
+              <!-- Empty Slots (Visual placeholders) -->
+              <ng-container *ngIf="uploadedPhotos().length === 0">
+                <div
+                  class="aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 flex items-center justify-center border border-slate-100 dark:border-neutral-800"
+                >
+                  <span class="text-xs text-slate-300 dark:text-neutral-600">Foto lateral</span>
+                </div>
+                <div
+                  class="hidden md:flex aspect-[4/3] rounded-2xl bg-slate-50 dark:bg-neutral-800/50 items-center justify-center border border-slate-100 dark:border-neutral-800"
+                >
+                  <span class="text-xs text-slate-300 dark:text-neutral-600">Interior</span>
+                </div>
+              </ng-container>
             </div>
 
             <!-- Mobile AI Button -->
-            <button 
-              type="button" 
+            <button
+              type="button"
               (click)="showAIPhotosModal.set(true)"
               class="w-full sm:hidden flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl font-bold mb-4"
             >
@@ -193,297 +344,572 @@
 
             <!-- Tip sutil -->
             <p class="text-sm text-slate-500 dark:text-slate-400 flex gap-2">
-              <span class="text-indigo-600">💡</span> 
-              <span>Las publicaciones con más de 5 fotos reciben un <strong>40% más de reservas</strong>.</span>
+              <span class="text-indigo-600">💡</span>
+              <span
+                >Las publicaciones con más de 5 fotos reciben un
+                <strong>40% más de reservas</strong>.</span
+              >
             </p>
           </section>
 
           <!-- SECCIÓN 3: DETALLES TÉCNICOS (Colapsados visualmente en grid) -->
-          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+          <section
+            class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8"
+          >
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Detalles básicos</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-               <div>
-                  <label class="label-text">Kilometraje</label>
-                  <div class="relative">
-                    <input type="number" formControlName="mileage" class="input-modern pl-10" placeholder="Ej: 45000">
-                    <span class="absolute left-3.5 top-3.5 text-slate-400 text-xs font-bold">KM</span>
-                  </div>
-                  @if (publishForm.get('mileage')?.invalid && (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)) {
-                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      Ingresá el kilometraje (mínimo 0).
-                    </p>
-                  }
-               </div>
-               <div>
-                  <label class="label-text">Transmisión</label>
-                  <div class="grid grid-cols-2 gap-2">
-                    <label class="cursor-pointer">
-                      <input type="radio" formControlName="transmission" value="manual" class="peer hidden">
-                      <div class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
-                        Manual
-                      </div>
-                    </label>
-                    <label class="cursor-pointer">
-                      <input type="radio" formControlName="transmission" value="automatic" class="peer hidden">
-                      <div class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600">
-                        Automática
-                      </div>
-                    </label>
-                  </div>
-                  @if (publishForm.get('transmission')?.invalid && (publishForm.get('transmission')?.dirty || publishForm.get('transmission')?.touched)) {
-                    <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                      Seleccioná la transmisión.
-                    </p>
-                  }
-               </div>
-               <div>
-                 <label class="label-text">Combustible</label>
-                 <select formControlName="fuel" class="input-modern">
-                   <option value="" disabled>Seleccionar</option>
-                   <option value="nafta">Nafta</option>
-                   <option value="gasoil">Diesel</option>
-                   <option value="electrico">Eléctrico</option>
-                   <option value="hibrido">Híbrido</option>
-                 </select>
-                 @if (publishForm.get('fuel')?.invalid && (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)) {
-                   <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                     Seleccioná el tipo de combustible.
-                   </p>
-                 }
-               </div>
-               <div>
-                 <label class="label-text">Color</label>
-                 <input type="text" formControlName="color" class="input-modern" placeholder="Ej: Blanco Perla">
-                 @if (publishForm.get('color')?.invalid && (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)) {
-                   <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                     Ingresá el color del auto.
-                   </p>
-                 }
-               </div>
+              <div>
+                <label class="label-text">Kilometraje</label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    formControlName="mileage"
+                    class="input-modern pl-10"
+                    placeholder="Ej: 45000"
+                  />
+                  <span class="absolute left-3.5 top-3.5 text-slate-400 text-xs font-bold">KM</span>
+                </div>
+                @if (
+                  publishForm.get('mileage')?.invalid &&
+                  (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá el kilometraje (mínimo 0).
+                  </p>
+                }
+              </div>
+              <div>
+                <label class="label-text">Transmisión</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="cursor-pointer">
+                    <input
+                      type="radio"
+                      formControlName="transmission"
+                      value="manual"
+                      class="peer hidden"
+                    />
+                    <div
+                      class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600"
+                    >
+                      Manual
+                    </div>
+                  </label>
+                  <label class="cursor-pointer">
+                    <input
+                      type="radio"
+                      formControlName="transmission"
+                      value="automatic"
+                      class="peer hidden"
+                    />
+                    <div
+                      class="radio-card peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-600"
+                    >
+                      Automática
+                    </div>
+                  </label>
+                </div>
+                @if (
+                  publishForm.get('transmission')?.invalid &&
+                  (publishForm.get('transmission')?.dirty ||
+                    publishForm.get('transmission')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Seleccioná la transmisión.
+                  </p>
+                }
+              </div>
+              <div>
+                <label class="label-text">Combustible</label>
+                <select formControlName="fuel" class="input-modern">
+                  <option value="" disabled>Seleccionar</option>
+                  <option value="nafta">Nafta</option>
+                  <option value="gasoil">Diesel</option>
+                  <option value="electrico">Eléctrico</option>
+                  <option value="hibrido">Híbrido</option>
+                </select>
+                @if (
+                  publishForm.get('fuel')?.invalid &&
+                  (publishForm.get('fuel')?.dirty || publishForm.get('fuel')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Seleccioná el tipo de combustible.
+                  </p>
+                }
+              </div>
+              <div>
+                <label class="label-text">Color</label>
+                <input
+                  type="text"
+                  formControlName="color"
+                  class="input-modern"
+                  placeholder="Ej: Blanco Perla"
+                />
+                @if (
+                  publishForm.get('color')?.invalid &&
+                  (publishForm.get('color')?.dirty || publishForm.get('color')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá el color del auto.
+                  </p>
+                }
+              </div>
             </div>
-            
+
             <div class="mt-6">
               <label class="label-text">Descripción para el viajero</label>
-              <textarea 
-                formControlName="description" 
-                rows="3" 
-                class="input-modern w-full resize-none" 
+              <textarea
+                formControlName="description"
+                rows="3"
+                class="input-modern w-full resize-none"
                 placeholder="Contanos qué hace especial a tu auto. Ej: 'Ideal para ruta, bajo consumo, baúl amplio...'"
               ></textarea>
               <div class="flex justify-between mt-1">
-                 <p class="text-xs text-slate-400">Mínimo 40 caracteres.</p>
-                 @if (publishForm.get('description')?.hasError('required') && (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)) {
-                   <p class="text-xs text-rose-500">La descripción es obligatoria.</p>
-                 } @else if (publishForm.get('description')?.hasError('minlength') && (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)) {
-                   <p class="text-xs text-rose-500">Faltan al menos {{ 40 - (publishForm.get('description')?.value?.length || 0) }} caracteres.</p>
-                 }
+                <p class="text-xs text-slate-400">Mínimo 40 caracteres.</p>
+                @if (
+                  publishForm.get('description')?.hasError('required') &&
+                  (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
+                ) {
+                  <p class="text-xs text-rose-500">La descripción es obligatoria.</p>
+                } @else if (
+                  publishForm.get('description')?.hasError('minlength') &&
+                  (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
+                ) {
+                  <p class="text-xs text-rose-500">
+                    Faltan al menos
+                    {{ 40 - (publishForm.get('description')?.value?.length || 0) }} caracteres.
+                  </p>
+                }
               </div>
             </div>
           </section>
 
           <!-- SECCIÓN 4: PRECIO Y GANANCIA (El "Why") -->
-          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
+          <section
+            class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8"
+          >
             <div class="flex items-center gap-3 mb-6">
-               <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                  <span class="text-lg font-bold">$</span>
-               </div>
-               <div>
-                 <h2 class="text-xl font-bold text-slate-900 dark:text-white">Precio y Ganancias</h2>
-               </div>
+              <div
+                class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400"
+              >
+                <span class="text-lg font-bold">$</span>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Precio y Ganancias</h2>
+              </div>
             </div>
 
             <!-- Selector de Estrategia -->
             <div class="bg-slate-50 dark:bg-neutral-800/50 p-1.5 rounded-xl flex gap-2 mb-6">
-               <button type="button" (click)="setPricingStrategy('dynamic')" 
-                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
-                 [class.bg-white]="isDynamicPricingSignal()"
-                 [class.shadow-sm]="isDynamicPricingSignal()"
-                 [class.text-indigo-600]="isDynamicPricingSignal()"
-                 [class.text-slate-500]="!isDynamicPricingSignal()"
-               >
-                 ⚡ Precio Dinámico (Recomendado)
-               </button>
-               <button type="button" (click)="setPricingStrategy('custom')"
-                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
-                 [class.bg-white]="!isDynamicPricingSignal()"
-                 [class.shadow-sm]="!isDynamicPricingSignal()"
-                 [class.text-slate-900]="!isDynamicPricingSignal()"
-                 [class.text-slate-500]="isDynamicPricingSignal()"
-               >
-                 Precio Fijo
-               </button>
+              <button
+                type="button"
+                (click)="setPricingStrategy('dynamic')"
+                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                [class.bg-white]="isDynamicPricingSignal()"
+                [class.shadow-sm]="isDynamicPricingSignal()"
+                [class.text-indigo-600]="isDynamicPricingSignal()"
+                [class.text-slate-500]="!isDynamicPricingSignal()"
+              >
+                ⚡ Precio Dinámico (Recomendado)
+              </button>
+              <button
+                type="button"
+                (click)="setPricingStrategy('custom')"
+                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                [class.bg-white]="!isDynamicPricingSignal()"
+                [class.shadow-sm]="!isDynamicPricingSignal()"
+                [class.text-slate-900]="!isDynamicPricingSignal()"
+                [class.text-slate-500]="isDynamicPricingSignal()"
+              >
+                Precio Fijo
+              </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
-                <label class="label-text">Precio por día ({{ publishForm.get('currency')?.value }})</label>
+                <label class="label-text"
+                  >Precio por día ({{ publishForm.get('currency')?.value }})</label
+                >
                 <div class="relative">
-                   <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                   <input 
-                      type="number" 
-                      formControlName="price_per_day" 
-                      class="input-modern pl-8 text-2xl font-bold text-slate-900 dark:text-white h-14" 
-                      [readonly]="isDynamicPricingSignal()"
-                   >
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold"
+                    >$</span
+                  >
+                  <input
+                    type="number"
+                    formControlName="price_per_day"
+                    class="input-modern pl-8 text-2xl font-bold text-slate-900 dark:text-white h-14"
+                    [readonly]="isDynamicPricingSignal()"
+                  />
                 </div>
-                @if (publishForm.get('price_per_day')?.invalid && (publishForm.get('price_per_day')?.dirty || publishForm.get('price_per_day')?.touched)) {
+                @if (
+                  publishForm.get('price_per_day')?.invalid &&
+                  (publishForm.get('price_per_day')?.dirty ||
+                    publishForm.get('price_per_day')?.touched)
+                ) {
                   <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
                     Ingresá un precio por día válido (mínimo $1).
                   </p>
                 }
-                <p *ngIf="isDynamicPricingSignal()" class="text-xs text-indigo-600 mt-2 font-medium">
+                <p
+                  *ngIf="isDynamicPricingSignal()"
+                  class="text-xs text-indigo-600 mt-2 font-medium"
+                >
                   🤖 Ajustado automáticamente según demanda
                 </p>
               </div>
-              
-              <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30">
-                 <p class="text-sm text-indigo-900 dark:text-indigo-200 font-medium mb-1">Potencial mensual estimado</p>
-                 <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400">
-                    {{ (publishForm.get('price_per_day')?.value || 0) * 10 | currency:publishForm.get('currency')?.value:'symbol':'1.0-0' }}
-                 </div>
-                 <p class="text-xs text-indigo-700/70 dark:text-indigo-300/70 mt-1">Calculado con 10 días de alquiler/mes</p>
+
+              <div
+                class="bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30"
+              >
+                <p class="text-sm text-indigo-900 dark:text-indigo-200 font-medium mb-1">
+                  Potencial mensual estimado
+                </p>
+                <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400">
+                  {{
+                    (publishForm.get('price_per_day')?.value || 0) * 10
+                      | currency: publishForm.get('currency')?.value : 'symbol' : '1.0-0'
+                  }}
+                </div>
+                <p class="text-xs text-indigo-700/70 dark:text-indigo-300/70 mt-1">
+                  Calculado con 10 días de alquiler/mes
+                </p>
               </div>
             </div>
-            
+
             <!-- Configuraciones avanzadas (Depósito, Seguros) colapsadas o simplificadas -->
-            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-neutral-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-               <label class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition">
-                  <input type="checkbox" formControlName="deposit_required" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
-                  <div class="ml-3">
-                     <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Solicitar Depósito</span>
-                     <span class="block text-xs text-slate-500">Garantía para el anfitrión</span>
-                  </div>
-               </label>
-               <label class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition">
-                  <input type="checkbox" formControlName="auto_approval" class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500">
-                  <div class="ml-3">
-                     <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Reserva Inmediata</span>
-                     <span class="block text-xs text-slate-500">Acepta viajes automáticamente</span>
-                  </div>
-               </label>
+            <div
+              class="mt-8 pt-6 border-t border-slate-100 dark:border-neutral-800 grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              <label
+                class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition"
+              >
+                <input
+                  type="checkbox"
+                  formControlName="deposit_required"
+                  class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3">
+                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                    >Solicitar Depósito</span
+                  >
+                  <span class="block text-xs text-slate-500">Garantía para el anfitrión</span>
+                </div>
+              </label>
+              <label
+                class="flex items-center p-4 border border-slate-200 dark:border-neutral-700 rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-neutral-800 transition"
+              >
+                <input
+                  type="checkbox"
+                  formControlName="auto_approval"
+                  class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3">
+                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                    >Reserva Inmediata</span
+                  >
+                  <span class="block text-xs text-slate-500">Acepta viajes automáticamente</span>
+                </div>
+              </label>
             </div>
           </section>
 
           <!-- SECCIÓN 5: UBICACIÓN -->
-          <section class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8">
-             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Ubicación del auto</h2>
-                <button type="button" (click)="useCurrentLocation()" class="text-indigo-600 text-sm font-bold hover:underline flex items-center gap-1">
-                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                   Usar mi ubicación actual
-                </button>
-             </div>
-             
-             <div class="grid grid-cols-2 gap-4">
-                <div class="col-span-2">
-                   <input type="text" formControlName="location_street" placeholder="Dirección / Calle" class="input-modern" data-testid="location-street-input">
-                   @if (publishForm.get('location_street')?.invalid && (publishForm.get('location_street')?.dirty || publishForm.get('location_street')?.touched)) {
-                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                       Ingresá la dirección.
-                     </p>
-                   }
-                </div>
-                <div>
-                   <input type="text" formControlName="location_city" placeholder="Ciudad" class="input-modern" data-testid="location-city-input">
-                   @if (publishForm.get('location_city')?.invalid && (publishForm.get('location_city')?.dirty || publishForm.get('location_city')?.touched)) {
-                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                       Ingresá la ciudad.
-                     </p>
-                   }
-                </div>
-                <div>
-                   <input type="text" formControlName="location_state" placeholder="Provincia" class="input-modern" data-testid="location-state-input">
-                   @if (publishForm.get('location_state')?.invalid && (publishForm.get('location_state')?.dirty || publishForm.get('location_state')?.touched)) {
-                     <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
-                       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                       Ingresá la provincia.
-                     </p>
-                   }
-                </div>
-                <div class="col-span-2 text-xs text-slate-400">
-                   * Tu dirección exacta solo se comparte al confirmar una reserva.
-                </div>
-             </div>
+          <section
+            class="bg-white dark:bg-[#161821] rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-none border border-slate-100 dark:border-neutral-800 p-8"
+          >
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-bold text-slate-900 dark:text-white">Ubicación del auto</h2>
+              <button
+                type="button"
+                (click)="useCurrentLocation()"
+                class="text-indigo-600 text-sm font-bold hover:underline flex items-center gap-1"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                Usar mi ubicación actual
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="col-span-2">
+                <input
+                  type="text"
+                  formControlName="location_street"
+                  placeholder="Dirección / Calle"
+                  class="input-modern"
+                  data-testid="location-street-input"
+                />
+                @if (
+                  publishForm.get('location_street')?.invalid &&
+                  (publishForm.get('location_street')?.dirty ||
+                    publishForm.get('location_street')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la dirección.
+                  </p>
+                }
+              </div>
+              <div>
+                <input
+                  type="text"
+                  formControlName="location_city"
+                  placeholder="Ciudad"
+                  class="input-modern"
+                  data-testid="location-city-input"
+                />
+                @if (
+                  publishForm.get('location_city')?.invalid &&
+                  (publishForm.get('location_city')?.dirty ||
+                    publishForm.get('location_city')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la ciudad.
+                  </p>
+                }
+              </div>
+              <div>
+                <input
+                  type="text"
+                  formControlName="location_state"
+                  placeholder="Provincia"
+                  class="input-modern"
+                  data-testid="location-state-input"
+                />
+                @if (
+                  publishForm.get('location_state')?.invalid &&
+                  (publishForm.get('location_state')?.dirty ||
+                    publishForm.get('location_state')?.touched)
+                ) {
+                  <p class="mt-2 text-sm text-rose-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Ingresá la provincia.
+                  </p>
+                }
+              </div>
+              <div class="col-span-2 text-xs text-slate-400">
+                * Tu dirección exacta solo se comparte al confirmar una reserva.
+              </div>
+            </div>
           </section>
 
           <!-- BOTONES DE ACCIÓN FLOTANTES O FINALES -->
           <div class="pt-6 flex flex-col sm:flex-row items-center gap-4">
-             <button 
-                type="submit" 
-                [disabled]="isSubmitting() || !canSubmit()"
-                class="w-full sm:w-auto px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-                data-testid="publish-submit"
-              >
-                <span *ngIf="isSubmitting()" class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full"></span>
-                {{ editMode() ? 'Guardar Cambios' : 'Publicar Vehículo' }}
-             </button>
-             
-             <button type="button" (click)="goBack()" class="text-slate-500 font-medium hover:text-slate-800 transition">
-                Cancelar
-             </button>
+            <button
+              type="submit"
+              [disabled]="isSubmitting() || !canSubmit()"
+              class="w-full sm:w-auto px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              data-testid="publish-submit"
+            >
+              <span
+                *ngIf="isSubmitting()"
+                class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full"
+              ></span>
+              {{ editMode() ? 'Guardar Cambios' : 'Publicar Vehículo' }}
+            </button>
+
+            <button
+              type="button"
+              (click)="goBack()"
+              class="text-slate-500 font-medium hover:text-slate-800 transition"
+            >
+              Cancelar
+            </button>
           </div>
-          
         </form>
       </div>
 
       <!-- COLUMNA LATERAL (Trust & Preview) -->
       <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
-        
         <!-- Tarjeta de Confianza -->
-        <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-           <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
-           <h3 class="font-bold text-lg mb-4 relative z-10">Tu seguridad es primero</h3>
-           <ul class="space-y-3 text-sm text-indigo-100 relative z-10">
-              <li class="flex gap-2">
-                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                 Cobertura de seguro incluida en cada viaje.
-              </li>
-              <li class="flex gap-2">
-                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                 Pagos protegidos hasta finalizar el alquiler.
-              </li>
-              <li class="flex gap-2">
-                 <svg class="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                 Conductores verificados con biometría.
-              </li>
-           </ul>
+        <div
+          class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
+        >
+          <div
+            class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
+          ></div>
+          <h3 class="font-bold text-lg mb-4 relative z-10">Tu seguridad es primero</h3>
+          <ul class="space-y-3 text-sm text-indigo-100 relative z-10">
+            <li class="flex gap-2">
+              <svg
+                class="w-5 h-5 text-indigo-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Cobertura de seguro incluida en cada viaje.
+            </li>
+            <li class="flex gap-2">
+              <svg
+                class="w-5 h-5 text-indigo-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              Pagos protegidos hasta finalizar el alquiler.
+            </li>
+            <li class="flex gap-2">
+              <svg
+                class="w-5 h-5 text-indigo-300"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              Conductores verificados con biometría.
+            </li>
+          </ul>
         </div>
 
         <!-- Preview Simplificado -->
-        <div class="bg-white dark:bg-[#161821] rounded-3xl shadow-soft p-6 border border-slate-100 dark:border-neutral-800">
-           <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Vista Previa</h4>
-           <div class="aspect-[4/3] bg-slate-100 dark:bg-neutral-800 rounded-xl mb-4 overflow-hidden relative">
-              <img *ngIf="uploadedPhotos().length > 0" [src]="uploadedPhotos()[0].preview" class="w-full h-full object-cover">
-              <div *ngIf="uploadedPhotos().length === 0" class="flex items-center justify-center h-full text-slate-300">
-                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-              </div>
-           </div>
-           <div>
-              <p class="font-bold text-slate-900 dark:text-white truncate">
-                 {{ getCurrentBrand() || 'Marca' }} {{ getCurrentModel() || 'Modelo' }} {{ getCurrentYear() }}
-              </p>
-              <p class="text-sm text-slate-500 truncate">{{ publishForm.get('location_city')?.value || 'Ubicación' }}</p>
-              <div class="mt-3 flex items-baseline gap-1">
-                 <span class="text-lg font-bold text-indigo-600">${{ publishForm.get('price_per_day')?.value || 0 }}</span>
-                 <span class="text-xs text-slate-400">/ día</span>
-              </div>
-           </div>
+        <div
+          class="bg-white dark:bg-[#161821] rounded-3xl shadow-soft p-6 border border-slate-100 dark:border-neutral-800"
+        >
+          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+            Vista Previa
+          </h4>
+          <div
+            class="aspect-[4/3] bg-slate-100 dark:bg-neutral-800 rounded-xl mb-4 overflow-hidden relative"
+          >
+            <img
+              *ngIf="uploadedPhotos().length > 0"
+              [src]="uploadedPhotos()[0].preview"
+              class="w-full h-full object-cover"
+            />
+            <div
+              *ngIf="uploadedPhotos().length === 0"
+              class="flex items-center justify-center h-full text-slate-300"
+            >
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <p class="font-bold text-slate-900 dark:text-white truncate">
+              {{ getCurrentBrand() || 'Marca' }} {{ getCurrentModel() || 'Modelo' }}
+              {{ getCurrentYear() }}
+            </p>
+            <p class="text-sm text-slate-500 truncate">
+              {{ publishForm.get('location_city')?.value || 'Ubicación' }}
+            </p>
+            <div class="mt-3 flex items-baseline gap-1">
+              <span class="text-lg font-bold text-indigo-600"
+                >${{ publishForm.get('price_per_day')?.value || 0 }}</span
+              >
+              <span class="text-xs text-slate-400">/ día</span>
+            </div>
+          </div>
         </div>
-
       </aside>
     </div>
 
     <!-- Modals (Sin cambios estructurales profundos, solo wrappers) -->
     @if (showStockPhotosModal()) {
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-        <div class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      >
+        <div
+          class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+        >
           <app-stock-photos-selector
             [brand]="getCurrentBrand()"
             [model]="getCurrentModel()"
@@ -491,15 +917,24 @@
             (photosSelected)="onStockPhotosSelected($event)"
           ></app-stock-photos-selector>
           <div class="p-4 border-t border-slate-100 dark:border-neutral-800 text-right">
-             <button (click)="showStockPhotosModal.set(false)" class="text-slate-500 font-bold hover:text-slate-800">Cerrar</button>
+            <button
+              (click)="showStockPhotosModal.set(false)"
+              class="text-slate-500 font-bold hover:text-slate-800"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
     }
 
     @if (showAIPhotosModal()) {
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-        <div class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      >
+        <div
+          class="bg-white dark:bg-[#161821] rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+        >
           <app-ai-photo-generator
             [brand]="getCurrentBrand()"
             [model]="getCurrentModel()"
@@ -507,12 +942,16 @@
             (photosGenerated)="onAIPhotosGenerated($event)"
           ></app-ai-photo-generator>
           <div class="p-4 border-t border-slate-100 dark:border-neutral-800 text-right">
-             <button (click)="showAIPhotosModal.set(false)" class="text-slate-500 font-bold hover:text-slate-800">Cerrar</button>
+            <button
+              (click)="showAIPhotosModal.set(false)"
+              class="text-slate-500 font-bold hover:text-slate-800"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
     }
-
   </div>
 </div>
 

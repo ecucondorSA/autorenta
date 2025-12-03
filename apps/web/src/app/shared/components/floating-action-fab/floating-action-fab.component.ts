@@ -8,6 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../icon/icon.component';
 
 export interface FabAction {
   id: string;
@@ -19,7 +20,7 @@ export interface FabAction {
 @Component({
   selector: 'app-floating-action-fab',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './floating-action-fab.component.html',
   styleUrls: ['./floating-action-fab.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

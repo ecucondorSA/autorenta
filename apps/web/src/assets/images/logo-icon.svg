@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AutoRenta Logo - Icon Only (Isotipo)
+  Ideal para: favicon, app icons, espacios reducidos
+  Tamaño recomendado: 32x32, 64x64, 128x128, 512x512
+-->
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="icon-title">
+  <title id="icon-title">AutoRenta</title>
+
+  <!-- Fondo circular -->
+  <circle cx="32" cy="32" r="30" fill="#F8F4EC"/>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#DFD2BF" stroke-width="2"/>
+
+  <!-- Llave -->
+  <g stroke="#A7D8F4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <circle cx="24" cy="18" r="6"/>
+    <circle cx="24" cy="18" r="2.5" fill="#A7D8F4"/>
+    <path d="M24 24 L24 38"/>
+    <path d="M24 30 L28 30 L28 33"/>
+    <path d="M24 36 L29 36 L29 39"/>
+  </g>
+
+  <!-- Auto -->
+  <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Carrocería -->
+    <path d="M14 42 L18 34 L25 30 L45 30 L52 34 L56 42 L56 50 L14 50 Z"/>
+    <!-- Ventanas con relleno -->
+    <path d="M27 38 L29 32 L38 32 L38 38 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
+    <path d="M40 38 L40 32 L47 32 L50 38 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
+    <!-- Línea de ventanas -->
+    <line x1="20" y1="38" x2="54" y2="38" stroke-width="1.5"/>
+  </g>
+
+  <!-- Ruedas -->
+  <circle cx="24" cy="50" r="5" fill="#050505"/>
+  <circle cx="24" cy="50" r="2" fill="#F8F4EC"/>
+  <circle cx="46" cy="50" r="5" fill="#050505"/>
+  <circle cx="46" cy="50" r="2" fill="#F8F4EC"/>
+
+  <!-- Faro -->
+  <ellipse cx="17" cy="42" rx="2" ry="1.5" fill="#A7D8F4"/>
+</svg>

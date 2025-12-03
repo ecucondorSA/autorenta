@@ -7,7 +7,11 @@
       [disabled]="loading"
       class="px-3 py-1 text-sm border border-border-muted dark:border-border-default text-text-primary rounded-lg hover:bg-surface-base dark:bg-surface-base disabled:opacity-50 disabled:cursor-not-allowed transition"
     >
-      {{ loading ? 'Actualizando...' : '🔄 Actualizar' }}
+      @if (loading) {
+        Actualizando...
+      } @else {
+        <app-icon name="refresh" [size]="16" cssClass="inline-block mr-1" /> Actualizar
+      }
     </button>
   </div>
 
@@ -134,13 +138,22 @@
                 class="mt-2 flex flex-wrap gap-4 text-xs text-text-secondary dark:text-text-secondary"
               >
                 @if (request.approved_at) {
-                  <span>✓ Aprobado: {{ formatDate(request.approved_at) }}</span>
+                  <span
+                    ><app-icon name="check-circle" [size]="16" cssClass="inline-block mr-1" />
+                    Aprobado: {{ formatDate(request.approved_at) }}</span
+                  >
                 }
                 @if (request.processed_at) {
-                  <span>⚙️ Procesado: {{ formatDate(request.processed_at) }}</span>
+                  <span
+                    ><app-icon name="refresh" [size]="16" cssClass="inline-block mr-1" /> Procesado:
+                    {{ formatDate(request.processed_at) }}</span
+                  >
                 }
                 @if (request.completed_at) {
-                  <span>✅ Completado: {{ formatDate(request.completed_at) }}</span>
+                  <span
+                    ><app-icon name="check-circle" [size]="16" cssClass="inline-block mr-1" />
+                    Completado: {{ formatDate(request.completed_at) }}</span
+                  >
                 }
               </div>
             </div>

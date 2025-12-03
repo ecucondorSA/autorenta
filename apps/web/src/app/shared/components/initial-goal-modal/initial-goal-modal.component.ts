@@ -32,12 +32,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
           class="absolute top-4 right-4 text-text-muted hover:text-text-secondary transition"
           aria-label="Cerrar"
         >
-          <svg
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -64,12 +59,8 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
               />
             </svg>
           </div>
-          <h2 class="h2 text-text-primary mb-2">
-            ¡Bienvenido a AutoRenta!
-          </h2>
-          <p class="text-text-secondary text-lg">
-            ¿Qué querés hacer primero?
-          </p>
+          <h2 class="h2 text-text-primary mb-2">¡Bienvenido a AutoRenta!</h2>
+          <p class="text-text-secondary text-lg">¿Qué querés hacer primero?</p>
         </div>
 
         <!-- Goal Options -->
@@ -102,12 +93,8 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="h4 text-text-primary mb-1">
-                  Publicar mi auto
-                </h3>
-                <p class="text-text-secondary">
-                  Quiero generar ingresos alquilando mi vehículo
-                </p>
+                <h3 class="h4 text-text-primary mb-1">Publicar mi auto</h3>
+                <p class="text-text-secondary">Quiero generar ingresos alquilando mi vehículo</p>
               </div>
             </div>
           </button>
@@ -140,12 +127,8 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="h4 text-text-primary mb-1">
-                  Alquilar un auto
-                </h3>
-                <p class="text-text-secondary">
-                  Necesito un vehículo para mis viajes
-                </p>
+                <h3 class="h4 text-text-primary mb-1">Alquilar un auto</h3>
+                <p class="text-text-secondary">Necesito un vehículo para mis viajes</p>
               </div>
             </div>
           </button>
@@ -178,9 +161,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
                 </svg>
               </div>
               <div class="flex-1">
-                <h3 class="text-xl font-semibold text-text-primary mb-1">
-                  Ambos
-                </h3>
+                <h3 class="text-xl font-semibold text-text-primary mb-1">Ambos</h3>
                 <p class="text-text-secondary">
                   Quiero publicar mi auto Y alquilar otros vehículos
                 </p>
@@ -191,19 +172,19 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
 
         <!-- Loading state -->
         @if (isLoading()) {
-        <div class="text-center py-4">
-          <div
-            class="inline-block w-8 h-8 border-4 border-cta-default border-t-transparent rounded-full animate-spin"
-          ></div>
-          <p class="text-text-secondary mt-2">Configurando tu cuenta...</p>
-        </div>
+          <div class="text-center py-4">
+            <div
+              class="inline-block w-8 h-8 border-4 border-cta-default border-t-transparent rounded-full animate-spin"
+            ></div>
+            <p class="text-text-secondary mt-2">Configurando tu cuenta...</p>
+          </div>
         }
 
         <!-- Error state -->
         @if (error()) {
-        <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-4">
-          <p class="text-error-text text-sm">{{ error() }}</p>
-        </div>
+          <div class="bg-error-bg border border-error-border rounded-lg p-4 mb-4">
+            <p class="text-error-text text-sm">{{ error() }}</p>
+          </div>
         }
 
         <!-- Footer -->

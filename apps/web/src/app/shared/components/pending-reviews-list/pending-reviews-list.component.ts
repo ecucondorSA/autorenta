@@ -38,7 +38,9 @@ import { ReviewsService } from '../../../core/services/reviews.service';
                     class="rounded-full px-3 py-1 text-xs font-medium"
                     [class.bg-warning-bg-hover]="review.days_remaining > 7"
                     [class.text-warning-strong]="review.days_remaining > 7"
-                    [class.bg-warning-light/20]="review.days_remaining <= 7 && review.days_remaining > 3"
+                    [class.bg-warning-light/20]="
+                      review.days_remaining <= 7 && review.days_remaining > 3
+                    "
                     [class.text-warning-light]="
                       review.days_remaining <= 7 && review.days_remaining > 3
                     "

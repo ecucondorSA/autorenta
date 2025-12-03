@@ -1,219 +1,226 @@
 <div class="transaction-history-container p-4" data-testid="transaction-history">
   <!-- Table wrapper for transaction list -->
   <div *ngIf="!isLoading() && filteredTransactions().length > 0" data-testid="transaction-table">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="h2 text-text-primary dark:text-pearl-white">
-      Historial de Transacciones
-    </h2>
-    <button
-      (click)="retry()"
-      [disabled]="isLoading()"
-      class="px-4 py-2 bg-ferrari-red text-text-inverse rounded-lg hover:bg-ferrari-red/90 disabled:opacity-50"
-    >
-      Actualizar
-    </button>
-  </div>
-
-  <!-- Filters -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
-      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
-        Filtrar por tipo
-      </label>
-      <select
-        [value]="filterType()"
-        (change)="onFilterTypeChange($any($event.target).value)"
-        class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
-      >
-        <option *ngFor="let type of transactionTypes" [value]="type.value">
-          {{ type.label }}
-        </option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
-        Filtrar por estado
-      </label>
-      <select
-        [value]="filterStatus()"
-        (change)="onFilterStatusChange($any($event.target).value)"
-        class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
-      >
-        <option *ngFor="let status of transactionStatuses" [value]="status.value">
-          {{ status.label }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading()" class="text-center py-12">
-    <div
-      class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ferrari-red border-t-transparent"
-    ></div>
-    <p class="mt-4 text-text-secondary dark:text-text-secondary/70">Cargando transacciones...</p>
-  </div>
-
-  <!-- Error State -->
-  <div
-    *ngIf="error() && !isLoading()"
-    class="bg-error-bg-hover dark:bg-error-bg0/20 border border-error-300 dark:border-error-border/50 rounded-lg p-4 mb-4"
-  >
-    <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-error-strong font-semibold">Error al cargar transacciones</h3>
-        <p class="text-error-strong text-sm mt-1">{{ error()?.message }}</p>
-      </div>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="h2 text-text-primary dark:text-pearl-white">Historial de Transacciones</h2>
       <button
         (click)="retry()"
-        class="px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700"
+        [disabled]="isLoading()"
+        class="px-4 py-2 bg-ferrari-red text-text-inverse rounded-lg hover:bg-ferrari-red/90 disabled:opacity-50"
       >
-        Reintentar
+        Actualizar
       </button>
     </div>
-  </div>
 
-  <!-- Empty State -->
-  <div
-    *ngIf="!isLoading() && filteredTransactions().length === 0"
-    class="text-center py-12"
-    data-testid="empty-transactions"
-  >
-    <svg
-      class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary dark:text-text-secondary"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-      />
-    </svg>
-    <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-text-secondary">
-      No hay transacciones
-    </h3>
-    <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
-      No se encontraron transacciones con los filtros aplicados.
-    </p>
-  </div>
-
-  <!-- Transactions List -->
-  <div *ngIf="!isLoading() && filteredTransactions().length > 0" class="space-y-4" data-testid="transaction-table">
-    <div
-      *ngFor="let transaction of filteredTransactions(); trackBy: trackByTransactionId"
-      class="bg-surface-raised dark:bg-charcoal-dark rounded-lg border border-ash-gray dark:border-charcoal-medium hover:shadow-lg transition-shadow"
-      data-testid="transaction-item"
-    >
-      <div class="p-4 cursor-pointer" (click)="toggleTransactionDetails(transaction.id)">
-        <div class="flex items-center justify-between">
-          <!-- Left: Type and Date -->
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-xl">{{ getTypeIcon(getTransactionType(transaction)) }}</span>
-              <span class="font-semibold text-text-primary dark:text-pearl-white">
-                {{ translateType(getTransactionType(transaction)) }}
-              </span>
-              <span
-                class="px-2 py-1 rounded-full text-xs font-medium"
-                [ngClass]="getTypeColor(getTransactionType(transaction))"
-              >
-                {{ translateType(getTransactionType(transaction)) }}
-              </span>
-            </div>
-            <p class="text-sm text-text-secondary dark:text-text-secondary/70" data-testid="transaction-date">
-              {{ formatDate(transaction.transaction_date) }}
-            </p>
-          </div>
-
-          <!-- Right: Amount and Status -->
-          <div class="text-right">
-            <div
-              class="text-lg font-bold"
-              [ngClass]="{
-                'text-success-text dark:text-success-400': !isOutgoingTransaction(
-                  getTransactionType(transaction)
-                ),
-                'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
-              }"
-              data-testid="transaction-amount"
-            >
-              {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}
-              {{ formatCurrency(transaction.amount_cents, transaction.currency) }}
-            </div>
-            <span
-              class="inline-block px-2 py-1 rounded-full text-xs font-medium mt-1"
-              [ngClass]="getStatusColor(getTransactionStatus(transaction))"
-              data-testid="transaction-status"
-            >
-              {{ translateStatus(getTransactionStatus(transaction)) }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Description -->
-        <div
-          *ngIf="transaction.metadata?.['description']"
-          class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70"
+    <!-- Filters -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div>
+        <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
+          Filtrar por tipo
+        </label>
+        <select
+          [value]="filterType()"
+          (change)="onFilterTypeChange($any($event.target).value)"
+          class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
         >
-          {{ transaction.metadata['description'] }}
-        </div>
+          <option *ngFor="let type of transactionTypes" [value]="type.value">
+            {{ type.label }}
+          </option>
+        </select>
       </div>
 
-      <!-- Expanded Details -->
+      <div>
+        <label class="block text-sm font-medium mb-2 text-charcoal-dark dark:text-text-secondary">
+          Filtrar por estado
+        </label>
+        <select
+          [value]="filterStatus()"
+          (change)="onFilterStatusChange($any($event.target).value)"
+          class="w-full px-4 py-2 rounded-lg border border-ash-gray dark:border-charcoal-medium bg-surface-raised dark:bg-charcoal-dark text-text-primary dark:text-pearl-white"
+        >
+          <option *ngFor="let status of transactionStatuses" [value]="status.value">
+            {{ status.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="text-center py-12">
       <div
-        *ngIf="expandedTransactionId() === transaction.id"
-        class="px-4 pb-4 border-t border-ash-gray dark:border-charcoal-medium"
+        class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-ferrari-red border-t-transparent"
+      ></div>
+      <p class="mt-4 text-text-secondary dark:text-text-secondary/70">Cargando transacciones...</p>
+    </div>
+
+    <!-- Error State -->
+    <div
+      *ngIf="error() && !isLoading()"
+      class="bg-error-bg-hover dark:bg-error-bg0/20 border border-error-300 dark:border-error-border/50 rounded-lg p-4 mb-4"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-error-strong font-semibold">Error al cargar transacciones</h3>
+          <p class="text-error-strong text-sm mt-1">{{ error()?.message }}</p>
+        </div>
+        <button
+          (click)="retry()"
+          class="px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700"
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="!isLoading() && filteredTransactions().length === 0"
+      class="text-center py-12"
+      data-testid="empty-transactions"
+    >
+      <svg
+        class="mx-auto h-16 w-16 text-text-muted dark:text-text-secondary dark:text-text-secondary"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
       >
-        <div class="mt-4 space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span class="text-text-secondary dark:text-text-secondary/70">ID:</span>
-            <span class="font-mono text-xs text-text-primary dark:text-pearl-white">{{
-              transaction.id
-            }}</span>
-          </div>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-charcoal-dark dark:text-text-secondary">
+        No hay transacciones
+      </h3>
+      <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
+        No se encontraron transacciones con los filtros aplicados.
+      </p>
+    </div>
 
-          <div *ngIf="transaction.booking_id">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-text-secondary dark:text-text-secondary/70">Reserva:</span>
-              <a
-                [routerLink]="['/bookings', transaction.booking_id]"
-                class="font-mono text-xs text-cta-default hover:text-warning-light transition-colors underline"
+    <!-- Transactions List -->
+    <div
+      *ngIf="!isLoading() && filteredTransactions().length > 0"
+      class="space-y-4"
+      data-testid="transaction-table"
+    >
+      <div
+        *ngFor="let transaction of filteredTransactions(); trackBy: trackByTransactionId"
+        class="bg-surface-raised dark:bg-charcoal-dark rounded-lg border border-ash-gray dark:border-charcoal-medium hover:shadow-lg transition-shadow"
+        data-testid="transaction-item"
+      >
+        <div class="p-4 cursor-pointer" (click)="toggleTransactionDetails(transaction.id)">
+          <div class="flex items-center justify-between">
+            <!-- Left: Type and Date -->
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xl">{{ getTypeIcon(getTransactionType(transaction)) }}</span>
+                <span class="font-semibold text-text-primary dark:text-pearl-white">
+                  {{ translateType(getTransactionType(transaction)) }}
+                </span>
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-medium"
+                  [ngClass]="getTypeColor(getTransactionType(transaction))"
+                >
+                  {{ translateType(getTransactionType(transaction)) }}
+                </span>
+              </div>
+              <p
+                class="text-sm text-text-secondary dark:text-text-secondary/70"
+                data-testid="transaction-date"
               >
-                {{ transaction.booking_id | slice: 0 : 8 }}...
-              </a>
+                {{ formatDate(transaction.transaction_date) }}
+              </p>
             </div>
-            <div
-              *ngIf="
-                isDepositRelatedTransaction(transaction) && getDepositStatus(transaction.booking_id)
-              "
-              class="flex justify-between items-center"
-            >
-              <span class="text-text-secondary dark:text-text-secondary/70"
-                >Estado del depósito:</span
+
+            <!-- Right: Amount and Status -->
+            <div class="text-right">
+              <div
+                class="text-lg font-bold"
+                [ngClass]="{
+                  'text-success-text dark:text-success-400': !isOutgoingTransaction(
+                    getTransactionType(transaction)
+                  ),
+                  'text-error-text': isOutgoingTransaction(getTransactionType(transaction)),
+                }"
+                data-testid="transaction-amount"
               >
-              <app-deposit-status-badge
-                [status]="getDepositStatus(transaction.booking_id)!"
-              ></app-deposit-status-badge>
+                {{ isOutgoingTransaction(getTransactionType(transaction)) ? '-' : '+' }}
+                {{ formatCurrency(transaction.amount_cents, transaction.currency) }}
+              </div>
+              <span
+                class="inline-block px-2 py-1 rounded-full text-xs font-medium mt-1"
+                [ngClass]="getStatusColor(getTransactionStatus(transaction))"
+                data-testid="transaction-status"
+              >
+                {{ translateStatus(getTransactionStatus(transaction)) }}
+              </span>
             </div>
           </div>
 
-          <div class="flex justify-between">
-            <span class="text-text-secondary dark:text-text-secondary/70">Sistema:</span>
-            <span class="text-text-primary dark:text-pearl-white">{{
-              transaction.source_system
-            }}</span>
+          <!-- Description -->
+          <div
+            *ngIf="transaction.metadata?.['description']"
+            class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70"
+          >
+            {{ transaction.metadata['description'] }}
           </div>
+        </div>
 
-          <div class="flex justify-between" *ngIf="transaction.metadata?.['provider']">
-            <span class="text-text-secondary dark:text-text-secondary/70">Proveedor:</span>
-            <span class="text-text-primary dark:text-pearl-white">{{
-              transaction.metadata['provider']
-            }}</span>
+        <!-- Expanded Details -->
+        <div
+          *ngIf="expandedTransactionId() === transaction.id"
+          class="px-4 pb-4 border-t border-ash-gray dark:border-charcoal-medium"
+        >
+          <div class="mt-4 space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-text-secondary dark:text-text-secondary/70">ID:</span>
+              <span class="font-mono text-xs text-text-primary dark:text-pearl-white">{{
+                transaction.id
+              }}</span>
+            </div>
+
+            <div *ngIf="transaction.booking_id">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-text-secondary dark:text-text-secondary/70">Reserva:</span>
+                <a
+                  [routerLink]="['/bookings', transaction.booking_id]"
+                  class="font-mono text-xs text-cta-default hover:text-warning-light transition-colors underline"
+                >
+                  {{ transaction.booking_id | slice: 0 : 8 }}...
+                </a>
+              </div>
+              <div
+                *ngIf="
+                  isDepositRelatedTransaction(transaction) &&
+                  getDepositStatus(transaction.booking_id)
+                "
+                class="flex justify-between items-center"
+              >
+                <span class="text-text-secondary dark:text-text-secondary/70"
+                  >Estado del depósito:</span
+                >
+                <app-deposit-status-badge
+                  [status]="getDepositStatus(transaction.booking_id)!"
+                ></app-deposit-status-badge>
+              </div>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-text-secondary dark:text-text-secondary/70">Sistema:</span>
+              <span class="text-text-primary dark:text-pearl-white">{{
+                transaction.source_system
+              }}</span>
+            </div>
+
+            <div class="flex justify-between" *ngIf="transaction.metadata?.['provider']">
+              <span class="text-text-secondary dark:text-text-secondary/70">Proveedor:</span>
+              <span class="text-text-primary dark:text-pearl-white">{{
+                transaction.metadata['provider']
+              }}</span>
+            </div>
           </div>
         </div>
       </div>

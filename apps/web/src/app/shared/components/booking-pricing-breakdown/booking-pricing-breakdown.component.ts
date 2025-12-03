@@ -16,7 +16,9 @@ export interface PricingBreakdownInput {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-3">
+    <div
+      class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
+    >
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-semibold text-text-primary">Detalle de tarifa</h3>
         <span class="text-xs text-text-secondary">{{ currencyLabel }}</span>

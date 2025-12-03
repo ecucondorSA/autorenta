@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import type { Testimonial } from '../../../../core/models/marketplace.model';
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 
 /**
  * TestimonialsSectionComponent - User reviews carousel
@@ -14,7 +15,7 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
 @Component({
   selector: 'app-testimonials-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   template: `
     <section class="testimonials-section" aria-labelledby="testimonials-title">
       <header class="section-header">
@@ -69,7 +70,9 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
                   </div>
                 }
                 @if (testimonial.verified) {
-                  <span class="verified-badge" title="Usuario verificado">✓</span>
+                  <span class="verified-badge" title="Usuario verificado">
+                    <app-icon name="check" [size]="10" />
+                  </span>
                 }
               </div>
               <div class="user-info">
@@ -86,7 +89,12 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
             <!-- Rating -->
             <div class="rating" [attr.aria-label]="testimonial.rating + ' de 5 estrellas'">
               @for (star of [1, 2, 3, 4, 5]; track star) {
-                <span class="star" [class.filled]="star <= testimonial.rating">★</span>
+                <span class="star" [class.filled]="star <= testimonial.rating">
+                  <app-icon
+                    [name]="star <= testimonial.rating ? 'star-filled' : 'star'"
+                    [size]="18"
+                  />
+                </span>
               }
             </div>
 
@@ -276,7 +284,7 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--surface-info-light, #EFF6FF); /* Reemplazado hex con token semántico */
+        background: var(--surface-info-light, #eff6ff); /* Reemplazado hex con token semántico */
 
         color: var(--system-blue-dark); /* Reemplazado hex con token semántico */
         font-weight: 700;
@@ -284,7 +292,10 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
       }
 
       :host-context(.dark) .avatar-placeholder {
-        background: var(--surface-info-dark, var(--system-blue-dark)); /* Reemplazado hex con token semántico */
+        background: var(
+          --surface-info-dark,
+          var(--system-blue-dark)
+        ); /* Reemplazado hex con token semántico */
         color: var(--system-blue-light); /* Reemplazado hex con token semántico */
       }
 
@@ -294,15 +305,18 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
         right: -4px;
         width: 20px;
         height: 20px;
-        background: var(--success-default); /* Reemplazado hex con token semántico */
+        background: var(--success-default, #9db38b);
         color: white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 10px;
         border: 2px solid var(--card-bg);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .verified-badge app-icon {
+        stroke-width: 3;
       }
 
       .user-info {
@@ -337,11 +351,15 @@ import type { Testimonial } from '../../../../core/models/marketplace.model';
 
       .star {
         color: var(--text-muted, #e5e7eb);
-        font-size: 1.125rem;
+        display: inline-flex;
       }
 
       .star.filled {
         color: var(--warning-default, #f59e0b);
+      }
+
+      .star app-icon {
+        display: block;
       }
 
       /* Quote */

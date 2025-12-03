@@ -63,10 +63,14 @@ describe('WalletPage', () => {
 
     // Create writable signals for mocking
     walletServiceMock = {
-      refreshPendingDepositsCount: jasmine.createSpy('refreshPendingDepositsCount').and.returnValue(Promise.resolve()),
+      refreshPendingDepositsCount: jasmine
+        .createSpy('refreshPendingDepositsCount')
+        .and.returnValue(Promise.resolve()),
       refreshBalance: jasmine.createSpy('refreshBalance').and.returnValue(Promise.resolve()),
       unsubscribeFromWalletChanges: jasmine.createSpy('unsubscribeFromWalletChanges'),
-      subscribeToWalletChanges: jasmine.createSpy('subscribeToWalletChanges').and.returnValue(Promise.resolve()),
+      subscribeToWalletChanges: jasmine
+        .createSpy('subscribeToWalletChanges')
+        .and.returnValue(Promise.resolve()),
       availableBalance: signal(0),
       transferableBalance: signal(0),
       withdrawableBalance: signal(0),
@@ -80,17 +84,29 @@ describe('WalletPage', () => {
     });
     supabaseClientServiceMock.getClient.and.returnValue({
       auth: { getUser: () => Promise.resolve({ data: { user: null }, error: null }) },
-      from: () => ({ select: () => ({ eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }) }) }),
+      from: () => ({
+        select: () => ({
+          eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+        }),
+      }),
     } as any);
 
     withdrawalServiceMock = {
       getBankAccounts: jasmine.createSpy('getBankAccounts').and.returnValue(Promise.resolve()),
-      getWithdrawalRequests: jasmine.createSpy('getWithdrawalRequests').and.returnValue(Promise.resolve()),
+      getWithdrawalRequests: jasmine
+        .createSpy('getWithdrawalRequests')
+        .and.returnValue(Promise.resolve()),
       addBankAccount: jasmine.createSpy('addBankAccount').and.returnValue(Promise.resolve()),
-      requestWithdrawal: jasmine.createSpy('requestWithdrawal').and.returnValue(Promise.resolve({ success: true, fee_amount: 10, net_amount: 90 })),
-      setDefaultBankAccount: jasmine.createSpy('setDefaultBankAccount').and.returnValue(Promise.resolve()),
+      requestWithdrawal: jasmine
+        .createSpy('requestWithdrawal')
+        .and.returnValue(Promise.resolve({ success: true, fee_amount: 10, net_amount: 90 })),
+      setDefaultBankAccount: jasmine
+        .createSpy('setDefaultBankAccount')
+        .and.returnValue(Promise.resolve()),
       deleteBankAccount: jasmine.createSpy('deleteBankAccount').and.returnValue(Promise.resolve()),
-      cancelWithdrawalRequest: jasmine.createSpy('cancelWithdrawalRequest').and.returnValue(Promise.resolve()),
+      cancelWithdrawalRequest: jasmine
+        .createSpy('cancelWithdrawalRequest')
+        .and.returnValue(Promise.resolve()),
       bankAccounts: signal([]),
       activeBankAccounts: signal([]),
       defaultBankAccount: signal(null),
@@ -98,33 +114,35 @@ describe('WalletPage', () => {
       loading: signal(false),
     };
 
-    notificationManagerService = jasmine.createSpyObj('NotificationManagerService', ['success', 'error']);
+    notificationManagerService = jasmine.createSpyObj('NotificationManagerService', [
+      'success',
+      'error',
+    ]);
     profileService = jasmine.createSpyObj('ProfileService', ['getCurrentProfile']);
     analyticsService = jasmine.createSpyObj('AnalyticsService', ['trackEvent']);
     metaService = jasmine.createSpyObj('MetaService', ['updateWalletMeta']);
 
-    profileService.getCurrentProfile.and.returnValue(Promise.resolve({
-      id: 'user-123',
-      full_name: 'Test User',
-      role: 'user',
-      timezone: 'America/Buenos_Aires',
-      email: 'test@example.com',
-      phone: '+5411234567',
-      avatar_url: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      onboarding_completed: true,
-      identity_level: 1,
-      is_active: true,
-      preferred_language: 'es',
-      wallet_account_number: 'AR-12345678',
-    } as any));
+    profileService.getCurrentProfile.and.returnValue(
+      Promise.resolve({
+        id: 'user-123',
+        full_name: 'Test User',
+        role: 'user',
+        timezone: 'America/Buenos_Aires',
+        email: 'test@example.com',
+        phone: '+5411234567',
+        avatar_url: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        onboarding_completed: true,
+        identity_level: 1,
+        is_active: true,
+        preferred_language: 'es',
+        wallet_account_number: 'AR-12345678',
+      } as any),
+    );
 
     await TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot(),
-        RouterTestingModule,
-      ],
+      imports: [TranslateModule.forRoot(), RouterTestingModule],
       providers: [
         { provide: WalletService, useValue: walletServiceMock },
         { provide: NotificationManagerService, useValue: notificationManagerService },
@@ -136,16 +154,16 @@ describe('WalletPage', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
-    .overrideComponent(WalletPage, {
-      set: {
-        imports: [CommonModule, TranslateModule],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      },
-    })
-    .compileComponents();
+      .overrideComponent(WalletPage, {
+        set: {
+          imports: [CommonModule, TranslateModule],
+          schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        },
+      })
+      .compileComponents();
 
     // Spy on prototype BEFORE creating component
-    spyOn(WalletPage.prototype, 'ngAfterViewInit').and.callFake(function(this: WalletPage) {
+    spyOn(WalletPage.prototype, 'ngAfterViewInit').and.callFake(function (this: WalletPage) {
       // Safe implementation - balanceCard may be undefined in tests
       if ((this as any).balanceCard?.setDepositClickHandler) {
         (this as any).balanceCard.setDepositClickHandler(() => this.navigateToDeposit());
@@ -175,10 +193,13 @@ describe('WalletPage', () => {
     });
 
     it('should track wallet page view on construction', () => {
-      expect(analyticsService.trackEvent).toHaveBeenCalledWith('wallet_page_viewed', jasmine.objectContaining({
-        protected_credit_balance: jasmine.any(Number),
-        protected_credit_progress: jasmine.any(Number),
-      }));
+      expect(analyticsService.trackEvent).toHaveBeenCalledWith(
+        'wallet_page_viewed',
+        jasmine.objectContaining({
+          protected_credit_balance: jasmine.any(Number),
+          protected_credit_progress: jasmine.any(Number),
+        }),
+      );
     });
 
     it('should call refreshPendingDepositsCount on ngOnInit', async () => {
@@ -209,7 +230,10 @@ describe('WalletPage', () => {
     it('should track analytics and navigate on openDepositModalForProtectedCredit', () => {
       spyOn(router, 'navigate');
       component.openDepositModalForProtectedCredit();
-      expect(analyticsService.trackEvent).toHaveBeenCalledWith('wallet_onboarding_cta_clicked', jasmine.any(Object));
+      expect(analyticsService.trackEvent).toHaveBeenCalledWith(
+        'wallet_onboarding_cta_clicked',
+        jasmine.any(Object),
+      );
       expect(router.navigate).toHaveBeenCalledWith(['/wallet/deposit']);
     });
   });
@@ -298,13 +322,17 @@ describe('WalletPage', () => {
     it('should show deposit instruction when pending', () => {
       walletServiceMock.protectedCreditBalance.set(0);
       fixture.detectChanges();
-      expect(component.primaryDepositCTATooltip()).toBe('Deposita USD 300 para reservar sin tarjeta');
+      expect(component.primaryDepositCTATooltip()).toBe(
+        'Deposita USD 300 para reservar sin tarjeta',
+      );
     });
 
     it('should show completion instruction when partial', () => {
       walletServiceMock.protectedCreditBalance.set(15000);
       fixture.detectChanges();
-      expect(component.primaryDepositCTATooltip()).toBe('Completa tu crédito protegido para reservar sin tarjeta');
+      expect(component.primaryDepositCTATooltip()).toBe(
+        'Completa tu crédito protegido para reservar sin tarjeta',
+      );
     });
 
     it('should show generic add funds when active', () => {
@@ -318,19 +346,25 @@ describe('WalletPage', () => {
     it('should return CTA default class when pending', () => {
       walletServiceMock.protectedCreditBalance.set(0);
       fixture.detectChanges();
-      expect(component.primaryDepositCTAClass()).toBe('bg-cta-default text-cta-text hover:bg-cta-default/90');
+      expect(component.primaryDepositCTAClass()).toBe(
+        'bg-cta-default text-cta-text hover:bg-cta-default/90',
+      );
     });
 
     it('should return warning class when partial', () => {
       walletServiceMock.protectedCreditBalance.set(15000);
       fixture.detectChanges();
-      expect(component.primaryDepositCTAClass()).toBe('bg-warning-600 text-text-inverse hover:bg-warning-700');
+      expect(component.primaryDepositCTAClass()).toBe(
+        'bg-warning-600 text-text-inverse hover:bg-warning-700',
+      );
     });
 
     it('should return primary class when active', () => {
       walletServiceMock.protectedCreditBalance.set(30000);
       fixture.detectChanges();
-      expect(component.primaryDepositCTAClass()).toBe('bg-primary-600 text-text-inverse hover:bg-primary-700');
+      expect(component.primaryDepositCTAClass()).toBe(
+        'bg-primary-600 text-text-inverse hover:bg-primary-700',
+      );
     });
   });
 
@@ -364,9 +398,12 @@ describe('WalletPage', () => {
 
     it('should track analytics on banner dismissal', () => {
       component.dismissOnboardingBanner();
-      expect(analyticsService.trackEvent).toHaveBeenCalledWith('wallet_onboarding_banner_viewed', jasmine.objectContaining({
-        action: 'dismissed',
-      }));
+      expect(analyticsService.trackEvent).toHaveBeenCalledWith(
+        'wallet_onboarding_banner_viewed',
+        jasmine.objectContaining({
+          action: 'dismissed',
+        }),
+      );
     });
   });
 
@@ -381,7 +418,10 @@ describe('WalletPage', () => {
 
     it('should track analytics when benefits section is expanded', () => {
       component.toggleBenefitsSection();
-      expect(analyticsService.trackEvent).toHaveBeenCalledWith('wallet_benefits_section_expanded', jasmine.any(Object));
+      expect(analyticsService.trackEvent).toHaveBeenCalledWith(
+        'wallet_benefits_section_expanded',
+        jasmine.any(Object),
+      );
     });
   });
 
@@ -393,12 +433,17 @@ describe('WalletPage', () => {
         account_holder_name: 'Test User',
         account_holder_document: '12345678',
       });
-      expect(notificationManagerService.success).toHaveBeenCalledWith('Éxito', 'Cuenta bancaria agregada exitosamente');
+      expect(notificationManagerService.success).toHaveBeenCalledWith(
+        'Éxito',
+        'Cuenta bancaria agregada exitosamente',
+      );
       expect(component.withdrawalMode()).toBe('form');
     });
 
     it('should handle add bank account error', async () => {
-      withdrawalServiceMock.addBankAccount.and.returnValue(Promise.reject({ message: 'Error de prueba' }));
+      withdrawalServiceMock.addBankAccount.and.returnValue(
+        Promise.reject({ message: 'Error de prueba' }),
+      );
       await component.handleAddBankAccount({
         account_type: 'cbu',
         account_number: '1234567890123456789012',
@@ -410,18 +455,26 @@ describe('WalletPage', () => {
 
     it('should handle set default account success', async () => {
       await component.handleSetDefaultAccount('account-123');
-      expect(notificationManagerService.success).toHaveBeenCalledWith('Éxito', 'Cuenta establecida como predeterminada');
+      expect(notificationManagerService.success).toHaveBeenCalledWith(
+        'Éxito',
+        'Cuenta establecida como predeterminada',
+      );
     });
 
     it('should handle set default account error', async () => {
-      withdrawalServiceMock.setDefaultBankAccount.and.returnValue(Promise.reject({ message: 'Error' }));
+      withdrawalServiceMock.setDefaultBankAccount.and.returnValue(
+        Promise.reject({ message: 'Error' }),
+      );
       await component.handleSetDefaultAccount('account-123');
       expect(notificationManagerService.error).toHaveBeenCalled();
     });
 
     it('should handle delete account success', async () => {
       await component.handleDeleteAccount('account-123');
-      expect(notificationManagerService.success).toHaveBeenCalledWith('Éxito', 'Cuenta eliminada exitosamente');
+      expect(notificationManagerService.success).toHaveBeenCalledWith(
+        'Éxito',
+        'Cuenta eliminada exitosamente',
+      );
     });
 
     it('should handle delete account error', async () => {
@@ -439,24 +492,36 @@ describe('WalletPage', () => {
     });
 
     it('should handle withdrawal request failure (success: false)', async () => {
-      withdrawalServiceMock.requestWithdrawal.and.returnValue(Promise.resolve({ success: false, message: 'Fondos insuficientes' }));
+      withdrawalServiceMock.requestWithdrawal.and.returnValue(
+        Promise.resolve({ success: false, message: 'Fondos insuficientes' }),
+      );
       await component.handleWithdrawalRequest({ bank_account_id: 'acc-123', amount: 100 });
-      expect(notificationManagerService.error).toHaveBeenCalledWith('Error', 'Error: Fondos insuficientes');
+      expect(notificationManagerService.error).toHaveBeenCalledWith(
+        'Error',
+        'Error: Fondos insuficientes',
+      );
     });
 
     it('should handle withdrawal request exception', async () => {
-      withdrawalServiceMock.requestWithdrawal.and.returnValue(Promise.reject({ message: 'Network error' }));
+      withdrawalServiceMock.requestWithdrawal.and.returnValue(
+        Promise.reject({ message: 'Network error' }),
+      );
       await component.handleWithdrawalRequest({ bank_account_id: 'acc-123', amount: 100 });
       expect(notificationManagerService.error).toHaveBeenCalled();
     });
 
     it('should handle cancel withdrawal success', async () => {
       await component.handleCancelWithdrawal('req-123');
-      expect(notificationManagerService.success).toHaveBeenCalledWith('Éxito', 'Solicitud de retiro cancelada');
+      expect(notificationManagerService.success).toHaveBeenCalledWith(
+        'Éxito',
+        'Solicitud de retiro cancelada',
+      );
     });
 
     it('should handle cancel withdrawal error', async () => {
-      withdrawalServiceMock.cancelWithdrawalRequest.and.returnValue(Promise.reject({ message: 'Error' }));
+      withdrawalServiceMock.cancelWithdrawalRequest.and.returnValue(
+        Promise.reject({ message: 'Error' }),
+      );
       await component.handleCancelWithdrawal('req-123');
       expect(notificationManagerService.error).toHaveBeenCalled();
     });
@@ -469,7 +534,9 @@ describe('WalletPage', () => {
 
   describe('Clipboard', () => {
     it('should copy wallet account number to clipboard', async () => {
-      const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.resolve());
+      const writeTextSpy = spyOn(navigator.clipboard, 'writeText').and.returnValue(
+        Promise.resolve(),
+      );
       await component.copyWalletAccountNumber();
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('AR-12345678');
       expect(component.copied()).toBe(true);
@@ -478,7 +545,10 @@ describe('WalletPage', () => {
     it('should handle clipboard error', async () => {
       spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.reject());
       await component.copyWalletAccountNumber();
-      expect(notificationManagerService.error).toHaveBeenCalledWith('Error', 'Error al copiar el número de cuenta');
+      expect(notificationManagerService.error).toHaveBeenCalledWith(
+        'Error',
+        'Error al copiar el número de cuenta',
+      );
       expect(component.copied()).toBe(false);
     });
 

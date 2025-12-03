@@ -8,12 +8,14 @@ export interface PromoCode {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PromotionService {
   private supabase = inject(SupabaseClientService).getClient();
 
-  async validatePromoCode(code: string): Promise<{ valid: boolean; promo?: PromoCode; error?: string }> {
+  async validatePromoCode(
+    code: string,
+  ): Promise<{ valid: boolean; promo?: PromoCode; error?: string }> {
     const { data, error } = await this.supabase
       .from('promos')
       .select('code, percent_off, amount_off, valid_from, valid_to')

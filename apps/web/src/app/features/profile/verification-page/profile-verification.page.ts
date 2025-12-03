@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -24,7 +31,7 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
     PhoneVerificationComponent,
     SelfieCaptureComponent,
     LicenseUploaderComponent,
-    DniUploaderComponent
+    DniUploaderComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -48,7 +55,6 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
         <!-- Verification Steps -->
         <div class="space-y-3">
-
           <!-- LEVEL 1: Contact -->
           <div
             class="rounded-xl border overflow-hidden transition-all duration-300"
@@ -65,8 +71,17 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                   class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
                   [class]="getStepBadgeClass(1)"
                 >
-                  <svg *ngIf="isLevelComplete(1)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  <svg
+                    *ngIf="isLevelComplete(1)"
+                    class="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                   <span *ngIf="!isLevelComplete(1)">1</span>
                 </div>
@@ -82,9 +97,16 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                 <svg
                   class="w-5 h-5 text-text-muted transition-transform duration-200"
                   [class.rotate-180]="expandedSections().has(1)"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </button>
@@ -92,7 +114,9 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
             <!-- Content - Collapsible -->
             <div
               class="overflow-hidden transition-all duration-300"
-              [class]="expandedSections().has(1) ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'"
+              [class]="
+                expandedSections().has(1) ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
+              "
             >
               <div class="p-4 pt-0 space-y-4 border-t border-border-default/50">
                 <app-email-verification></app-email-verification>
@@ -103,7 +127,10 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
           <!-- Connector Line -->
           <div class="flex justify-center">
-            <div class="w-0.5 h-4 rounded-full" [class]="isLevelComplete(1) ? 'bg-success-light' : 'bg-border-default'"></div>
+            <div
+              class="w-0.5 h-4 rounded-full"
+              [class]="isLevelComplete(1) ? 'bg-success-light' : 'bg-border-default'"
+            ></div>
           </div>
 
           <!-- LEVEL 2: Documents -->
@@ -123,17 +150,47 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                   class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
                   [class]="getStepBadgeClass(2)"
                 >
-                  <svg *ngIf="isLevelComplete(2)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  <svg
+                    *ngIf="isLevelComplete(2)"
+                    class="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
-                  <svg *ngIf="!isLevelComplete(2) && !canAccessLevel(2)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  <svg
+                    *ngIf="!isLevelComplete(2) && !canAccessLevel(2)"
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                   <span *ngIf="!isLevelComplete(2) && canAccessLevel(2)">2</span>
                 </div>
                 <div>
-                  <h3 class="font-semibold" [class]="canAccessLevel(2) ? 'text-text-primary' : 'text-text-muted'">Documentación</h3>
-                  <p class="text-xs" [class]="canAccessLevel(2) ? 'text-text-secondary' : 'text-text-muted'">DNI y licencia de conducir</p>
+                  <h3
+                    class="font-semibold"
+                    [class]="canAccessLevel(2) ? 'text-text-primary' : 'text-text-muted'"
+                  >
+                    Documentación
+                  </h3>
+                  <p
+                    class="text-xs"
+                    [class]="canAccessLevel(2) ? 'text-text-secondary' : 'text-text-muted'"
+                  >
+                    DNI y licencia de conducir
+                  </p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -144,9 +201,16 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                   *ngIf="canAccessLevel(2)"
                   class="w-5 h-5 text-text-muted transition-transform duration-200"
                   [class.rotate-180]="expandedSections().has(2)"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </button>
@@ -154,7 +218,11 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
             <!-- Content -->
             <div
               class="overflow-hidden transition-all duration-300"
-              [class]="expandedSections().has(2) && canAccessLevel(2) ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'"
+              [class]="
+                expandedSections().has(2) && canAccessLevel(2)
+                  ? 'max-h-[1200px] opacity-100'
+                  : 'max-h-0 opacity-0'
+              "
             >
               <div class="p-4 pt-0 space-y-4 border-t border-border-default/50">
                 <!-- DNI Section -->
@@ -169,7 +237,11 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                     </div>
                     <span
                       class="text-xs px-2 py-1 rounded-full"
-                      [class]="isDniVerified() ? 'bg-success-light/20 text-success-light' : 'bg-surface-hover text-text-muted'"
+                      [class]="
+                        isDniVerified()
+                          ? 'bg-success-light/20 text-success-light'
+                          : 'bg-surface-hover text-text-muted'
+                      "
                     >
                       {{ isDniVerified() ? '✓ Verificado' : 'Pendiente' }}
                     </span>
@@ -182,7 +254,12 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                       class="w-full py-3 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-semibold transition-all flex items-center justify-center gap-2"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        />
                       </svg>
                       Subir DNI
                     </button>
@@ -205,13 +282,19 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                     <div class="flex items-center gap-2">
                       <span class="text-lg">🚗</span>
                       <div>
-                        <h4 class="text-sm font-semibold text-text-primary">Licencia de Conducir</h4>
+                        <h4 class="text-sm font-semibold text-text-primary">
+                          Licencia de Conducir
+                        </h4>
                         <p class="text-xs text-text-secondary">Frente y dorso</p>
                       </div>
                     </div>
                     <span
                       class="text-xs px-2 py-1 rounded-full"
-                      [class]="isLicenseVerified() ? 'bg-success-light/20 text-success-light' : 'bg-surface-hover text-text-muted'"
+                      [class]="
+                        isLicenseVerified()
+                          ? 'bg-success-light/20 text-success-light'
+                          : 'bg-surface-hover text-text-muted'
+                      "
                     >
                       {{ isLicenseVerified() ? '✓ Verificado' : 'Pendiente' }}
                     </span>
@@ -224,7 +307,12 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                       class="w-full py-3 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text text-sm font-semibold transition-all flex items-center justify-center gap-2"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        />
                       </svg>
                       Subir Licencia
                     </button>
@@ -246,7 +334,10 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
           <!-- Connector Line -->
           <div class="flex justify-center">
-            <div class="w-0.5 h-4 rounded-full" [class]="isLevelComplete(2) ? 'bg-success-light' : 'bg-border-default'"></div>
+            <div
+              class="w-0.5 h-4 rounded-full"
+              [class]="isLevelComplete(2) ? 'bg-success-light' : 'bg-border-default'"
+            ></div>
           </div>
 
           <!-- LEVEL 3: Selfie -->
@@ -266,17 +357,47 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                   class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all"
                   [class]="getStepBadgeClass(3)"
                 >
-                  <svg *ngIf="isLevelComplete(3)" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  <svg
+                    *ngIf="isLevelComplete(3)"
+                    class="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
-                  <svg *ngIf="!isLevelComplete(3) && !canAccessLevel(3)" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  <svg
+                    *ngIf="!isLevelComplete(3) && !canAccessLevel(3)"
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
                   </svg>
                   <span *ngIf="!isLevelComplete(3) && canAccessLevel(3)">3</span>
                 </div>
                 <div>
-                  <h3 class="font-semibold" [class]="canAccessLevel(3) ? 'text-text-primary' : 'text-text-muted'">Verificación Facial</h3>
-                  <p class="text-xs" [class]="canAccessLevel(3) ? 'text-text-secondary' : 'text-text-muted'">Selfie para confirmar identidad</p>
+                  <h3
+                    class="font-semibold"
+                    [class]="canAccessLevel(3) ? 'text-text-primary' : 'text-text-muted'"
+                  >
+                    Verificación Facial
+                  </h3>
+                  <p
+                    class="text-xs"
+                    [class]="canAccessLevel(3) ? 'text-text-secondary' : 'text-text-muted'"
+                  >
+                    Selfie para confirmar identidad
+                  </p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
@@ -287,9 +408,16 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                   *ngIf="canAccessLevel(3)"
                   class="w-5 h-5 text-text-muted transition-transform duration-200"
                   [class.rotate-180]="expandedSections().has(3)"
-                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </button>
@@ -297,7 +425,11 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
             <!-- Content -->
             <div
               class="overflow-hidden transition-all duration-300"
-              [class]="expandedSections().has(3) && canAccessLevel(3) ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'"
+              [class]="
+                expandedSections().has(3) && canAccessLevel(3)
+                  ? 'max-h-[600px] opacity-100'
+                  : 'max-h-0 opacity-0'
+              "
             >
               <div class="p-4 pt-0 border-t border-border-default/50">
                 <app-selfie-capture></app-selfie-capture>
@@ -308,15 +440,32 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
 
         <!-- Help Section - Compact -->
         <details class="mt-4 group">
-          <summary class="p-3 rounded-lg bg-info-bg/50 border border-info-border/30 cursor-pointer list-none flex items-center justify-between text-sm text-info-text hover:bg-info-bg transition-colors">
+          <summary
+            class="p-3 rounded-lg bg-info-bg/50 border border-info-border/30 cursor-pointer list-none flex items-center justify-between text-sm text-info-text hover:bg-info-bg transition-colors"
+          >
             <span class="flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               ¿Por qué verificamos tu identidad?
             </span>
-            <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg
+              class="w-4 h-4 transition-transform group-open:rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </summary>
           <div class="mt-2 p-3 rounded-lg bg-info-bg/30 text-xs text-info-text space-y-1">
@@ -329,25 +478,33 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
       </div>
     </ion-content>
   `,
-  styles: [`
-    :host {
-      display: block;
-      height: 100%;
-    }
+  styles: [
+    `
+      :host {
+        display: block;
+        height: 100%;
+      }
 
-    ion-content {
-      --background: var(--color-surface-base);
-    }
+      ion-content {
+        --background: var(--color-surface-base);
+      }
 
-    .animate-fadeIn {
-      animation: fadeIn 0.3s ease-out;
-    }
+      .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+      }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  `],
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `,
+  ],
 })
 export class ProfileVerificationPage implements OnInit {
   private readonly profileStore = inject(ProfileStore);
@@ -411,10 +568,14 @@ export class ProfileVerificationPage implements OnInit {
     if (!req) return false;
 
     switch (level) {
-      case 1: return req.level_1?.completed ?? false;
-      case 2: return req.level_2?.completed ?? false;
-      case 3: return req.level_3?.completed ?? false;
-      default: return false;
+      case 1:
+        return req.level_1?.completed ?? false;
+      case 2:
+        return req.level_2?.completed ?? false;
+      case 3:
+        return req.level_3?.completed ?? false;
+      default:
+        return false;
     }
   }
 

@@ -224,8 +224,8 @@ export class AuthService implements OnDestroy {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${environment.supabaseAnonKey}`,
-            'apikey': environment.supabaseAnonKey,
+            Authorization: `Bearer ${environment.supabaseAnonKey}`,
+            apikey: environment.supabaseAnonKey,
           },
           body: JSON.stringify({ code }),
         },

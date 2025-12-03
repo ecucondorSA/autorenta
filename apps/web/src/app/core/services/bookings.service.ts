@@ -839,10 +839,13 @@ export class BookingsService {
         booking.id,
       );
 
-      this.logger.info(`Car rejected at pickup for booking ${booking.id}`, JSON.stringify({
-        reason,
-        photos: evidencePhotos.length,
-      }));
+      this.logger.info(
+        `Car rejected at pickup for booking ${booking.id}`,
+        JSON.stringify({
+          reason,
+          photos: evidencePhotos.length,
+        }),
+      );
 
       return { success: true };
     } catch (error) {

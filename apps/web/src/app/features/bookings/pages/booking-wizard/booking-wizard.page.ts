@@ -192,7 +192,7 @@ export class BookingWizardPage implements OnInit {
     private bookingsService: BookingsService,
     private errorHandler: ErrorHandlerService,
     private emailVerificationService: EmailVerificationService,
-    private distanceCalculator: DistanceCalculatorService
+    private distanceCalculator: DistanceCalculatorService,
   ) {}
 
   async ngOnInit() {
@@ -309,10 +309,11 @@ export class BookingWizardPage implements OnInit {
       }
 
       // Calculate distance and delivery fee
-      const distanceKm = this.distanceCalculator.calculateDistanceBetweenLocations(
-        { lat: bookingData.pickup_location.lat, lng: bookingData.pickup_location.lng },
-        { lat: car.location_lat ?? 0, lng: car.location_lng ?? 0 }
-      ) || 0;
+      const distanceKm =
+        this.distanceCalculator.calculateDistanceBetweenLocations(
+          { lat: bookingData.pickup_location.lat, lng: bookingData.pickup_location.lng },
+          { lat: car.location_lat ?? 0, lng: car.location_lng ?? 0 },
+        ) || 0;
 
       const distanceMetadata = this.distanceCalculator.calculateDistanceMetadata(distanceKm);
 

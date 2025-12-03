@@ -36,14 +36,14 @@
 
   <!-- Error State -->
   <div *ngIf="error() && !loading()" class="error-state">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon"><app-icon name="alert-triangle" [size]="32" /></div>
     <h3>No disponible</h3>
     <p class="error-message">{{ error() }}</p>
 
     <!-- Opción de Waitlist cuando hay conflicto de constraint -->
     <div *ngIf="canWaitlist()" class="waitlist-option">
       <div class="waitlist-info">
-        <div class="waitlist-icon">📋</div>
+        <div class="waitlist-icon"><app-icon name="clipboard" [size]="24" /></div>
         <div class="waitlist-text">
           <h4>¿Quieres que te notifiquemos cuando esté disponible?</h4>
           <p>
@@ -55,7 +55,7 @@
       </div>
       <button class="waitlist-button" (click)="addToWaitlist()" [disabled]="addingToWaitlist()">
         <span *ngIf="!addingToWaitlist()">
-          <span class="button-icon">🔔</span>
+          <app-icon name="bell" [size]="16" cssClass="inline-block mr-1" />
           Agregar a lista de espera
         </span>
         <span *ngIf="addingToWaitlist()">
@@ -111,7 +111,7 @@
       </div>
 
       <div *ngIf="availabilityInfo()" class="availability-hint">
-        <div class="hint-icon">🔄</div>
+        <div class="hint-icon"><app-icon name="refresh" [size]="20" /></div>
         <div>
           <p>{{ availabilityInfo() }}</p>
           <small *ngIf="availabilitySuggestion()">
@@ -208,7 +208,7 @@
           [class.selected]="paymentMethod() === 'wallet'"
           (click)="paymentMethod.set('wallet')"
         >
-          <div class="payment-icon">💰</div>
+          <div class="payment-icon"><app-icon name="wallet" [size]="24" /></div>
           <div class="payment-info">
             <h4>Wallet AutoRenta</h4>
             <p>Saldo disponible: {{ walletBalance() | currency: 'ARS' : 'symbol' : '1.0-0' }}</p>
@@ -216,9 +216,18 @@
               <strong>¡Alquila sin tarjeta de crédito!</strong> Pago instantáneo y sin comisiones
             </p>
             <div class="wallet-benefits">
-              <span class="benefit-badge">✓ Sin tarjeta</span>
-              <span class="benefit-badge">✓ Sin comisiones</span>
-              <span class="benefit-badge">✓ Instantáneo</span>
+              <span class="benefit-badge"
+                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
+                tarjeta</span
+              >
+              <span class="benefit-badge"
+                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
+                comisiones</span
+              >
+              <span class="benefit-badge"
+                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" />
+                Instantáneo</span
+              >
             </div>
           </div>
           <div class="payment-radio">
@@ -232,7 +241,7 @@
           [class.selected]="paymentMethod() === 'cash'"
           (click)="paymentMethod.set('cash')"
         >
-          <div class="payment-icon">💵</div>
+          <div class="payment-icon"><app-icon name="dollar" [size]="24" /></div>
           <div class="payment-info">
             <h4>Efectivo</h4>
             <p>Paga al retirar el auto</p>
@@ -251,7 +260,7 @@
           [class.selected]="paymentMethod() === 'card'"
           (click)="paymentMethod.set('card')"
         >
-          <div class="payment-icon">💳</div>
+          <div class="payment-icon"><app-icon name="credit-card" [size]="24" /></div>
           <div class="payment-info">
             <h4>Tarjeta de Crédito/Débito</h4>
             <p>A través de MercadoPago</p>
@@ -264,7 +273,7 @@
       </div>
 
       <div class="payment-notice wallet-highlight">
-        <div class="notice-icon">💡</div>
+        <div class="notice-icon"><app-icon name="lightbulb" [size]="24" /></div>
         <div class="notice-text">
           <h4>¿Sabías que con Wallet AutoRenta no necesitas tarjeta de crédito?</h4>
           <p>
