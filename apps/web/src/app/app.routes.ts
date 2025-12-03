@@ -370,8 +370,38 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canMatch: [AuthGuard, onboardingGuard],
-    loadComponent: () =>
-      import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/dashboard/owner-dashboard.page').then((m) => m.OwnerDashboardPage),
+      },
+      {
+        path: 'earnings',
+        loadComponent: () =>
+          import('./features/dashboard/earnings/earnings.page').then((m) => m.EarningsPage),
+      },
+      {
+        path: 'stats',
+        loadComponent: () =>
+          import('./features/dashboard/stats/stats.page').then((m) => m.StatsPage),
+      },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./features/dashboard/reviews/reviews.page').then((m) => m.ReviewsPage),
+      },
+      {
+        path: 'insurance',
+        loadComponent: () =>
+          import('./features/dashboard/insurance/insurance.page').then((m) => m.InsurancePage),
+      },
+      {
+        path: 'calendar',
+        loadComponent: () =>
+          import('./features/dashboard/calendar/calendar.page').then((m) => m.DashboardCalendarPage),
+      },
+    ],
   },
   {
     path: 'calendar-demo',

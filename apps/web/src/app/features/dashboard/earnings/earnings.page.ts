@@ -1,8 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ChartConfiguration, ChartData } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+// import { ChartConfiguration, ChartData } from 'chart.js';
+// import { BaseChartDirective } from 'ng2-charts';
 import type { Car } from '../../../core/models';
 import type { DashboardStats } from '../../../core/models/dashboard.model';
 import { CarsService } from '../../../core/services/cars.service';
@@ -14,7 +14,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 @Component({
   selector: 'app-earnings-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe, BaseChartDirective, DatePipe],
+  imports: [CommonModule, RouterLink, MoneyPipe, DatePipe],
   templateUrl: './earnings.page.html',
   styleUrls: ['./earnings.page.css'],
 })
@@ -102,64 +102,8 @@ export class EarningsPage implements OnInit {
     return startDate;
   });
 
-  // Chart configurations
-  depreciationChartData: ChartData<'line'> = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    datasets: [
-      {
-        label: 'Depreciación Acumulada (ARS)',
-        data: [],
-        borderColor: 'rgb(239, 68, 68)', // Red
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-        tension: 0.4,
-        fill: true,
-      },
-    ],
-  };
-
-  incomeChartData: ChartData<'line'> = {
-    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    datasets: [
-      {
-        label: 'Ingresos Acumulados (ARS)',
-        data: [],
-        borderColor: 'rgb(34, 197, 94)', // Green
-        backgroundColor: 'rgba(34, 197, 94, 0.1)',
-        tension: 0.4,
-        fill: true,
-      },
-    ],
-  };
-
-  chartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function (value) {
-            return new Intl.NumberFormat('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(Number(value));
-          },
-        },
-      },
-    },
-  };
+  // Chart configurations - TODO: Re-enable when ng2-charts is properly configured
+  // depreciationChartData and incomeChartData temporarily disabled
 
   async ngOnInit(): Promise<void> {
     await Promise.all([this.loadData(), this.loadCars(), this.loadExchangeRate()]);
@@ -172,10 +116,7 @@ export class EarningsPage implements OnInit {
     this.dashboardService.getDashboardStats(false).subscribe({
       next: (stats) => {
         this.stats.set(stats);
-        // Actualizar gráficos después de que todos los datos estén cargados
-        setTimeout(() => {
-          this.updateCharts();
-        }, 100);
+        // TODO: Re-enable charts: this.updateCharts();
         this.loading.set(false);
       },
       error: (_err) => {
@@ -189,11 +130,7 @@ export class EarningsPage implements OnInit {
     try {
       const cars = await this.carsService.listMyCars();
       this.cars.set(cars);
-
-      // Actualizar gráficos después de cargar autos
-      setTimeout(() => {
-        this.updateCharts();
-      }, 100);
+      // TODO: Re-enable charts: this.updateCharts();
     } catch (error) {
       console.error('Error loading cars:', error);
     }
@@ -209,53 +146,6 @@ export class EarningsPage implements OnInit {
     }
   }
 
-  private updateCharts(): void {
-    const annualDepreciation = this.totalAnnualDepreciation();
-    const monthlyDepreciation = annualDepreciation / 12;
-
-    // Calcular depreciación acumulada mes a mes
-    const depreciationData: number[] = [];
-    for (let i = 1; i <= 12; i++) {
-      depreciationData.push(monthlyDepreciation * i);
-    }
-
-    // Crear nuevo objeto para forzar actualización del gráfico
-    this.depreciationChartData = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [
-        {
-          label: 'Depreciación Acumulada (ARS)',
-          data: depreciationData,
-          borderColor: 'rgb(239, 68, 68)', // Red
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          tension: 0.4,
-          fill: true,
-        },
-      ],
-    };
-
-    // Calcular ingresos acumulados (estimación basada en ganancias mensuales)
-    const monthlyIncome =
-      this.thisMonthEarnings() ||
-      (this.totalAnnualIncome() > 0 ? this.totalAnnualIncome() / 12 : 0);
-    const incomeData: number[] = [];
-    for (let i = 1; i <= 12; i++) {
-      incomeData.push(monthlyIncome * i);
-    }
-
-    // Crear nuevo objeto para forzar actualización del gráfico
-    this.incomeChartData = {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [
-        {
-          label: 'Ingresos Acumulados (ARS)',
-          data: incomeData,
-          borderColor: 'rgb(34, 197, 94)', // Green
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          tension: 0.4,
-          fill: true,
-        },
-      ],
-    };
-  }
+  // TODO: Re-enable updateCharts when ng2-charts is properly configured
+  // private updateCharts(): void { ... }
 }

@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <!-- Depreciation & Income Charts -->
+      <!-- Depreciation & Income Charts - TODO: Re-enable when ng2-charts is configured -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Depreciation Chart -->
         <div
@@ -157,16 +157,11 @@
             📉 Depreciación Anual del Auto
           </h2>
           <div class="h-64 relative">
-            @if (totalAnnualDepreciation() > 0) {
-              <canvas baseChart [data]="depreciationChartData" [options]="chartOptions" type="line">
-              </canvas>
-            } @else {
-              <div
-                class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
-              >
-                <p class="text-sm">No hay datos de depreciación disponibles</p>
-              </div>
-            }
+            <div
+              class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
+            >
+              <p class="text-sm">Gráficos próximamente disponibles</p>
+            </div>
           </div>
           <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
             Depreciación acumulada estimada durante el año
@@ -181,16 +176,11 @@
             📈 Ingresos Proyectados
           </h2>
           <div class="h-64 relative">
-            @if (thisMonthEarnings() > 0 || totalAnnualIncome() > 0) {
-              <canvas baseChart [data]="incomeChartData" [options]="chartOptions" type="line">
-              </canvas>
-            } @else {
-              <div
-                class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
-              >
-                <p class="text-sm">No hay datos de ingresos disponibles</p>
-              </div>
-            }
+            <div
+              class="flex items-center justify-center h-full text-text-secondary dark:text-text-secondary/70"
+            >
+              <p class="text-sm">Gráficos próximamente disponibles</p>
+            </div>
           </div>
           <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-4">
             Ingresos acumulados estimados durante el año
