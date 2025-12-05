@@ -1,7 +1,8 @@
-<!-- Splash Loader -->
-@if (showSplash()) {
-  <app-splash></app-splash>
-}
+<!-- Smart Splash Screen: Shows intro video + loop until app is ready -->
+<app-splash
+  [appReady]="!showSplash()"
+  (dismissed)="onSplashDismissed()"
+></app-splash>
 
 <!-- PWA Components -->
 <app-pwa-titlebar></app-pwa-titlebar>

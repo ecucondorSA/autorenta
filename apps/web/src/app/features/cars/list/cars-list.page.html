@@ -488,7 +488,7 @@
 
     <!-- 🗺️ RIGHT PANEL: Mapa Sticky (Desktop: always visible, Mobile: toggle) -->
     <div
-      class="w-full lg:w-1/2 xl:w-[45%] h-[50vh] lg:h-full lg:sticky lg:top-16 relative"
+      class="w-full lg:w-1/2 xl:w-[45%] h-[calc(100vh-8rem)] lg:h-full lg:sticky lg:top-16 relative"
       [class.hidden]="viewMode() !== 'map'"
       [class.lg:block]="true"
       data-testid="cars-map"
@@ -527,10 +527,88 @@
           <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-300" />
         </button>
       </div>
+
     </div>
     <!-- END RIGHT PANEL -->
   </div>
   <!-- END SPLIT VIEW CONTAINER -->
+
+  <!-- 📱 Mobile Car Carousel (Bottom of Map) - Airbnb Style -->
+  <div
+    *ngIf="viewMode() === 'map'"
+    class="fixed bottom-[65px] left-0 right-0 z-[100] lg:hidden"
+    style="top: auto; max-height: 140px;"
+    data-testid="mobile-car-carousel"
+  >
+    <!-- Results Count Badge -->
+    <div class="flex justify-center mb-2">
+      <span class="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200 dark:border-slate-700">
+        {{ premiumCars().length }} autos en esta zona
+      </span>
+    </div>
+
+    <!-- Carousel Container -->
+    <div
+      class="flex flex-nowrap gap-3 overflow-x-auto snap-x snap-mandatory px-4 pb-3 scrollbar-hide"
+      style="-webkit-overflow-scrolling: touch; height: 96px;"
+    >
+      <a
+        *ngFor="let car of premiumCars(); trackBy: trackByCar"
+        [routerLink]="['/cars', car.id]"
+        [attr.data-car-id]="car.id"
+        class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98]"
+        [class.ring-2]="activeMapCarId() === car.id"
+        [class.ring-cyan-500]="activeMapCarId() === car.id"
+        [class.shadow-cyan-200]="activeMapCarId() === car.id"
+      >
+        <div class="flex h-[88px]">
+          <!-- Car Image -->
+          <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
+            <img
+              [src]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [alt]="car.brand + ' ' + car.model"
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <!-- Superhost Badge -->
+            <span
+              *ngIf="isTopRated(car)"
+              class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded"
+            >
+              🏆
+            </span>
+          </div>
+          <!-- Car Info -->
+          <div class="flex-1 p-2.5 min-w-0 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1">
+                <h4 class="font-semibold text-[13px] text-slate-900 dark:text-white truncate leading-tight">
+                  {{ car.brand }} {{ car.model }}
+                </h4>
+                <div *ngIf="car.rating_avg" class="flex items-center gap-0.5 flex-shrink-0">
+                  <app-icon name="star-filled" [size]="11" cssClass="text-slate-900 dark:text-white" />
+                  <span class="text-[11px] font-medium text-slate-900 dark:text-white">
+                    {{ car.rating_avg | number: '1.1-1' }}
+                  </span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
+              </p>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-[15px] text-slate-900 dark:text-white">
+                ${{ car.price_per_day | number: '1.0-0' }}<span class="text-[11px] font-normal text-slate-500">/día</span>
+              </span>
+              <span class="text-cyan-600 dark:text-cyan-400 text-[11px] font-medium">
+                Ver →
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
 
   <!-- Sticky CTA Mobile -->
   <app-sticky-cta-mobile

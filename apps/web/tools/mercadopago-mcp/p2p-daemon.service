@@ -1,0 +1,15 @@
+[Unit]
+Description=P2P Automation Daemon (Binance + MercadoPago)
+After=network.target
+
+[Service]
+Type=simple
+User=edu
+WorkingDirectory=/home/edu/autorenta/apps/web/tools/mercadopago-mcp
+Environment=DISPLAY=:0
+ExecStart=/home/edu/autorenta/apps/web/tools/mercadopago-mcp/venv/bin/python /home/edu/autorenta/apps/web/tools/mercadopago-mcp/p2p_daemon.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

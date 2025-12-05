@@ -88,29 +88,30 @@ export interface CarPartInfo {
         </div>
       }
 
-      <!-- Interaction Hints -->
-      @if (!isLoading && showHints) {
-        <div class="interaction-hints" [class.fade-out]="hintsHiding">
-          <div class="hint-item">
-            <span class="hint-icon">🖱️</span>
-            <span>Arrastra para rotar</span>
-          </div>
-          <div class="hint-item">
-            <span class="hint-icon">🔍</span>
-            <span>Scroll para zoom</span>
-          </div>
-          <div class="hint-item">
-            <span class="hint-icon">👆</span>
-            <span>Doble click para reset</span>
-          </div>
-        </div>
-      }
-
       <!-- View Mode Indicator -->
       <div class="view-mode-indicator">
         <span class="mode-icon">{{ getViewModeIcon() }}</span>
         <span>{{ getViewModeLabel() }}</span>
       </div>
+
+      <!-- Swipe Gesture Hint (appears after first click) -->
+      @if (showSwipeHint && !isLoading) {
+        <div class="swipe-hint" [class.hiding]="swipeHintHiding">
+          <div class="swipe-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+              <!-- Hand icon -->
+              <path d="M32 48c-8 0-14-6-14-14v-8c0-2 1.6-3.6 3.6-3.6s3.6 1.6 3.6 3.6v6"/>
+              <path d="M25.2 32v-6c0-2 1.6-3.6 3.6-3.6s3.6 1.6 3.6 3.6v6"/>
+              <path d="M32.4 32v-8c0-2 1.6-3.6 3.6-3.6s3.6 1.6 3.6 3.6v8"/>
+              <path d="M39.6 34v-4c0-2 1.6-3.6 3.6-3.6s3.6 1.6 3.6 3.6v4c0 8-6 14-14 14"/>
+              <!-- Swipe arrows -->
+              <path class="swipe-arrow-left" d="M12 32l-6 0m0 0l3-3m-3 3l3 3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="swipe-arrow-right" d="M52 32l6 0m0 0l-3-3m3 3l-3 3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="swipe-text">Arrastra para rotar</span>
+        </div>
+      }
     </div>
   `,
   styles: [
@@ -214,57 +215,6 @@ export interface CarPartInfo {
         font-size: 0.875rem;
         font-weight: 500;
         letter-spacing: 0.05em;
-      }
-
-      /* Interaction Hints - Autorentar Style */
-      .interaction-hints {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 1.5rem;
-        padding: 0.75rem 1.5rem;
-        background: var(--surface-raised); /* Use CSS variable */
-        backdrop-filter: blur(12px);
-        border-radius: 9999px;
-        border: 1px solid var(--border-default); /* Use CSS variable */
-        box-shadow: var(--elevation-2); /* Use CSS variable */
-        z-index: 5;
-        animation: hintsSlideUp 0.5s ease-out;
-        transition:
-          opacity 0.5s ease,
-          transform 0.5s ease;
-      }
-
-      .interaction-hints.fade-out {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-      }
-
-      @keyframes hintsSlideUp {
-        from {
-          opacity: 0;
-          transform: translateX(-50%) translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(-50%) translateY(0);
-        }
-      }
-
-      .hint-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-primary); /* Use CSS variable */
-        font-size: 0.75rem;
-        font-weight: 500;
-        white-space: nowrap;
-      }
-
-      .hint-icon {
-        font-size: 1rem;
       }
 
       /* View Mode Indicator - Autorentar Style */
@@ -412,24 +362,121 @@ export interface CarPartInfo {
         color: var(--text-primary); /* Use CSS variable */
       }
 
+      /* Swipe Gesture Hint */
+      .swipe-hint {
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        background: var(--surface-raised);
+        backdrop-filter: blur(12px);
+        border-radius: 1rem;
+        border: 1px solid var(--border-default);
+        box-shadow: var(--elevation-4);
+        z-index: 15;
+        animation: swipeHintAppear 0.4s ease-out;
+        pointer-events: none;
+      }
+
+      .swipe-hint.hiding {
+        animation: swipeHintDisappear 0.4s ease-out forwards;
+      }
+
+      @keyframes swipeHintAppear {
+        from {
+          opacity: 0;
+          transform: translate(-50%, 50%) scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, 50%) scale(1);
+        }
+      }
+
+      @keyframes swipeHintDisappear {
+        from {
+          opacity: 1;
+          transform: translate(-50%, 50%) scale(1);
+        }
+        to {
+          opacity: 0;
+          transform: translate(-50%, 50%) scale(0.8);
+        }
+      }
+
+      .swipe-icon {
+        width: 64px;
+        height: 64px;
+        color: var(--cta-default);
+      }
+
+      .swipe-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .swipe-icon .swipe-arrow-left {
+        animation: swipeArrowLeft 1.2s ease-in-out infinite;
+      }
+
+      .swipe-icon .swipe-arrow-right {
+        animation: swipeArrowRight 1.2s ease-in-out infinite;
+      }
+
+      @keyframes swipeArrowLeft {
+        0%, 100% {
+          transform: translateX(0);
+          opacity: 0.5;
+        }
+        50% {
+          transform: translateX(-4px);
+          opacity: 1;
+        }
+      }
+
+      @keyframes swipeArrowRight {
+        0%, 100% {
+          transform: translateX(0);
+          opacity: 0.5;
+        }
+        50% {
+          transform: translateX(4px);
+          opacity: 1;
+        }
+      }
+
+      .swipe-text {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: 0.01em;
+      }
+
       /* Mobile Responsive */
       @media (max-width: 768px) {
-        .interaction-hints {
-          flex-direction: column;
-          gap: 0.5rem;
-          bottom: 1rem;
-          padding: 0.75rem 1rem;
-        }
-
-        .hint-item {
-          font-size: 0.6875rem;
-        }
-
         .view-mode-indicator {
           top: 1rem;
           right: 1rem;
           padding: 0.375rem 0.75rem;
           font-size: 0.6875rem;
+        }
+
+        .swipe-hint {
+          padding: 1rem 1.25rem;
+        }
+
+        .swipe-icon {
+          width: 48px;
+          height: 48px;
+        }
+
+        .swipe-text {
+          font-size: 0.75rem;
         }
       }
     `,
@@ -471,20 +518,20 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
   isLoading = true;
   isHovered = false;
-  showHints = false;
-  hintsHiding = false;
   currentViewMode: 'default' | 'front' | 'side' | 'interior' | 'top' = 'default';
   headlightsOn = false;
   private headlightSpots: import('three').Object3D[] = [];
+
+  // Swipe hint state (appears after first click to teach interaction)
+  showSwipeHint = false;
+  swipeHintHiding = false;
+  private swipeHintShown = false; // Track if hint was already shown (only show once)
+  private swipeHintTimeout: ReturnType<typeof setTimeout> | null = null;
 
   // Part interaction state (public for template)
   hoveredPartInfo: CarPartInfo | null = null;
   selectedPartInfo: CarPartInfo | null = null;
   tooltipPosition = { x: 0, y: 0 };
-
-  // Hint timeout
-  private hintsTimeout: ReturnType<typeof setTimeout> | null = null;
-  private interactionTimeout: ReturnType<typeof setTimeout> | null = null;
 
   // Camera presets for different views
   private readonly cameraPresets = {
@@ -699,8 +746,8 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (this.mouseMoveThrottle) {
       clearTimeout(this.mouseMoveThrottle);
     }
-    if (this.hintsTimeout) {
-      clearTimeout(this.hintsTimeout);
+    if (this.swipeHintTimeout) {
+      clearTimeout(this.swipeHintTimeout);
     }
     if (this.themeChangeListener) {
       window.removeEventListener('autorenta:theme-change', this.themeChangeListener);
@@ -776,11 +823,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     this.controls.minAzimuthAngle = -this.THREE.MathUtils.degToRad(135); // Limitar rotación horizontal (-135 grados)
     this.controls.maxAzimuthAngle = this.THREE.MathUtils.degToRad(135);  // Limitar rotación horizontal (+135 grados)
     this.controls.target.set(0, 0.5, 0); // Centrado en el origen
-    this.controls.autoRotate = false; // Vista fija - sin rotación automática
-    this.controls.autoRotateSpeed = 0; // Desactivado
-    this.controls.enableRotate = false; // DESACTIVAR rotación manual completamente
+    this.controls.autoRotate = true; // Rotación automática suave
+    this.controls.autoRotateSpeed = 0.5; // Velocidad lenta y elegante
+    this.controls.enableRotate = true; // Permitir rotación manual
     this.controls.zoomSpeed = 0.6; // Zoom más lento y controlado
-    this.controls.rotateSpeed = 0; // Sin rotación
+    this.controls.rotateSpeed = 0.5; // Rotación manual suave
   }
 
   private setupLights(): void {
@@ -1198,15 +1245,6 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (!this.enableInteraction) return;
     this.isHovered = true;
 
-    // Show hints on first hover (only once)
-    if (!this.showHints && !this.isLoading) {
-      this.showHints = true;
-      // Auto-hide hints after 5 seconds
-      this.hintsTimeout = setTimeout(() => {
-        this.hideHints();
-      }, 5000);
-    }
-
     // Slightly increase auto-rotate speed on hover
     if (this.controls) {
       this.controls.autoRotateSpeed = 0.8;
@@ -1226,16 +1264,49 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (!this.enableInteraction) return;
     this.modelClicked.emit();
 
-    // Hide hints on any interaction
-    if (this.showHints) {
-      this.hideHints();
-    }
-
     // Toggle headlights and start car movement animation when clicking on the car
     if (this.hoveredMesh || this.carModel) {
       this.toggleHeadlights();
       this.startCarMovementAnimation();
+
+      // Show swipe hint on first click (only once per session)
+      if (!this.swipeHintShown && !this.isLoading) {
+        this.showSwipeHintOnClick();
+      }
     }
+  }
+
+  /** Show swipe gesture hint when user first clicks on the car */
+  private showSwipeHintOnClick(): void {
+    this.swipeHintShown = true;
+    this.showSwipeHint = true;
+    this.swipeHintHiding = false;
+
+    // Stop auto-rotate when showing hint
+    if (this.controls) {
+      this.controls.autoRotate = false;
+    }
+
+    // Auto-hide hint after 3 seconds
+    this.swipeHintTimeout = setTimeout(() => {
+      this.hideSwipeHint();
+    }, 3000);
+  }
+
+  /** Hide swipe hint with fade animation */
+  private hideSwipeHint(): void {
+    if (this.swipeHintTimeout) {
+      clearTimeout(this.swipeHintTimeout);
+      this.swipeHintTimeout = null;
+    }
+
+    this.swipeHintHiding = true;
+
+    // Remove from DOM after animation completes
+    setTimeout(() => {
+      this.showSwipeHint = false;
+      this.swipeHintHiding = false;
+    }, 400);
   }
 
   /** Start car forward/backward movement animation (como si arrancara) */
@@ -1282,18 +1353,6 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     // Reset to default view
     this.setViewMode('default');
-  }
-
-  private hideHints(): void {
-    if (this.hintsTimeout) {
-      clearTimeout(this.hintsTimeout);
-      this.hintsTimeout = null;
-    }
-    this.hintsHiding = true;
-    setTimeout(() => {
-      this.showHints = false;
-      this.hintsHiding = false;
-    }, 500);
   }
 
   /** Set camera to a preset view with smooth animation */

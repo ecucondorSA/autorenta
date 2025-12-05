@@ -5,6 +5,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '../../../core/services/auth.service';
 import { Message, MessagesService } from '../../../core/services/messages.service';
 import { NotificationSoundService } from '../../../core/services/notification-sound.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 /**
  * Contexto del chat (booking o car)
@@ -324,6 +325,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   protected readonly messagesService = inject(MessagesService);
   protected readonly authService = inject(AuthService);
   protected readonly notificationSound = inject(NotificationSoundService);
+  protected readonly toastService = inject(ToastService);
 
   // State
   readonly messages = signal<Message[]>([]);
@@ -477,6 +479,9 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     const text = this.newMessage().trim();
     if (!text) return;
 
+    // Guardar el texto actual por si falla
+    const draft = text;
+
     this.sending.set(true);
     this.error.set(null);
 
@@ -498,6 +503,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       car_id: ctx.type === 'car' ? ctx.contextId : null,
     };
 
+    // Agregar optimistic y limpiar input visualmente
     this.messages.update((prev) => [...prev, optimisticMessage]);
     this.newMessage.set('');
 
@@ -513,8 +519,17 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       // Ver subscribeToMessages() para la lógica de deduplicación
       this.messageSent.emit({ messageId: optimisticId, context: ctx });
     } catch {
-      // Remover mensaje optimistic en caso de error
+      // Error: Remover mensaje optimistic
       this.messages.update((prev) => prev.filter((m) => m.id !== optimisticId));
+      
+      // Restaurar el texto en el input
+      this.newMessage.set(draft);
+      
+      // Mostrar toast
+      this.toastService.error(
+        'Error al enviar', 
+        'No pudimos enviar el mensaje. Inténtalo de nuevo.'
+      );
       this.error.set('No pudimos enviar el mensaje. Intentá de nuevo.');
     } finally {
       this.sending.set(false);

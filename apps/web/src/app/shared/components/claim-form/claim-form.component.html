@@ -155,7 +155,7 @@
             <div class="photo-preview">
               @for (photo of damage.photos; track photo; let photoIdx = $index) {
                 <div class="photo-thumb">
-                  <img [src]="photo" alt="Evidencia" />
+                  <img [src]="photo" [alt]="'Foto de evidencia del daño #' + (i + 1) + ', imagen ' + (photoIdx + 1)" />
                   <button
                     class="remove-photo"
                     (click)="removePhoto(i, photoIdx)"

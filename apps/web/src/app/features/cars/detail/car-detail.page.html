@@ -76,7 +76,7 @@
           *ngIf="car()?.photos?.[0]?.url"
           [src]="car()?.photos?.[0]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="Main photo"
+          [alt]="car()?.title + ' - Vista principal'"
         />
       </div>
 
@@ -86,7 +86,7 @@
           *ngIf="car()?.photos?.[1]?.url"
           [src]="car()?.photos?.[1]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="Photo 2"
+          [alt]="car()?.title + ' - Vista 2'"
         />
       </div>
       <div
@@ -96,7 +96,7 @@
           *ngIf="car()?.photos?.[2]?.url"
           [src]="car()?.photos?.[2]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="Photo 3"
+          [alt]="car()?.title + ' - Vista 3'"
         />
       </div>
       <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
@@ -104,7 +104,7 @@
           *ngIf="car()?.photos?.[3]?.url"
           [src]="car()?.photos?.[3]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="Photo 4"
+          [alt]="car()?.title + ' - Vista 4'"
         />
       </div>
       <div
@@ -114,7 +114,7 @@
           *ngIf="car()?.photos?.[4]?.url"
           [src]="car()?.photos?.[4]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          alt="Photo 5"
+          [alt]="car()?.title + ' - Vista 5'"
         />
 
         <!-- Botón "Ver todas" -->

@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProfileStore } from '../../core/stores/profile.store';
+import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
 import { AuthService } from '../../core/services/auth.service';
 import { MetaService } from '../../core/services/meta.service';
 import { VerificationStateService } from '../../core/services/verification-state.service';
+import { VerificationService } from '../../core/services/verification.service';
 import { ReviewsService } from '../../core/services/reviews.service';
 import { KycStatus } from '../../core/models';
 
@@ -15,14 +17,14 @@ import { KycStatus } from '../../core/models';
  * - Avatar and basic info
  * - Stats (ratings, bookings, etc.)
  * - Verification status card
- * - Quick action: Publish Car
+ * - Quick actions: Dashboard, Wallet, Publish Car
  *
  * All detailed sections moved to dedicated pages accessible via dropdown menu
  */
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DocumentUploadModalComponent],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,8 +33,15 @@ export class ProfileExpandedPage {
   private readonly authService = inject(AuthService);
   private readonly metaService = inject(MetaService);
   private readonly verificationStateService = inject(VerificationStateService);
+  private readonly verificationService = inject(VerificationService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   readonly profileStore = inject(ProfileStore);
   private readonly reviewsService = inject(ReviewsService);
+
+  // Document upload modal state
+  readonly showDocumentModal = signal(false);
+  readonly documentType = signal<string | null>(null);
 
   // Profile signals from store
   readonly profile = this.profileStore.profile;
@@ -45,11 +54,41 @@ export class ProfileExpandedPage {
   // Wallet balance - TODO: needs to be fetched from wallet_balances table
   readonly walletBalance = computed(() => 0); // Placeholder until wallet integration
 
-  // Verification status
-  readonly driverLicenseStatus = computed(() => this.getDocumentStatus('driver_license'));
-  readonly vehicleRegistrationStatus = computed(() =>
-    this.getDocumentStatus('vehicle_registration'),
-  );
+  // Verification status from VerificationStateService
+  readonly verificationProgress = this.verificationStateService.verificationProgress;
+
+  // User documents from VerificationService
+  readonly userDocuments = this.verificationService.documents;
+
+  readonly driverLicenseStatus = computed(() => {
+    const docs = this.userDocuments();
+    // Check for license_front and license_back (DB enum values)
+    const frontDoc = docs.find(d => d.kind === 'license_front');
+    const backDoc = docs.find(d => d.kind === 'license_back');
+
+    // Both must be uploaded and verified
+    if (!frontDoc && !backDoc) return 'not_started' as KycStatus;
+
+    const frontStatus = frontDoc?.status;
+    const backStatus = backDoc?.status;
+
+    // If either is verified, show as verified (relaxed check)
+    if (frontStatus === 'verified' || backStatus === 'verified') return 'verified' as KycStatus;
+    // If either is pending, show as pending
+    if (frontStatus === 'pending' || backStatus === 'pending') return 'pending' as KycStatus;
+
+    return 'not_started' as KycStatus;
+  });
+
+  readonly vehicleRegistrationStatus = computed(() => {
+    const docs = this.userDocuments();
+    const vehicleDoc = docs.find(d => d.kind === 'vehicle_registration');
+    if (!vehicleDoc) return 'not_started' as KycStatus;
+    if (vehicleDoc.status === 'verified') return 'verified' as KycStatus;
+    if (vehicleDoc.status === 'pending') return 'pending' as KycStatus;
+    return 'not_started' as KycStatus;
+  });
+
   readonly kycStatus = computed(() => this.calculateKycStatus());
 
   // Computed stats from userStats
@@ -83,6 +122,21 @@ export class ProfileExpandedPage {
 
     // Load profile data
     void this.profileStore.loadProfile();
+
+    // Initialize verification state service
+    void this.verificationStateService.initialize();
+
+    // Load user documents for verification status
+    void this.verificationService.loadDocuments();
+
+    // Handle document upload query param
+    this.route.queryParams.subscribe((params) => {
+      const docType = params['doc'];
+      if (docType) {
+        this.documentType.set(docType);
+        this.showDocumentModal.set(true);
+      }
+    });
 
     // Load user stats when profile is available
     effect(() => {
@@ -120,15 +174,6 @@ export class ProfileExpandedPage {
   canBookCars(): boolean {
     const role = this.profile()?.role;
     return role === 'renter' || role === 'both';
-  }
-
-  /**
-   * Get document status by kind
-   * TODO: This needs to fetch from user_documents table
-   */
-  private getDocumentStatus(_kind: string): KycStatus {
-    // Temporarily return not_started until we integrate user_documents
-    return 'not_started';
   }
 
   /**
@@ -219,5 +264,27 @@ export class ProfileExpandedPage {
 
     // Clear input value to allow re-selecting same file
     input.value = '';
+  }
+
+  /**
+   * Close document upload modal and clear query param
+   */
+  closeDocumentModal(): void {
+    this.showDocumentModal.set(false);
+    this.documentType.set(null);
+    // Remove query param from URL without navigation
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true,
+    });
+  }
+
+  /**
+   * Handle document uploaded successfully
+   */
+  onDocumentUploaded(): void {
+    // Reload documents to update status
+    void this.verificationService.loadDocuments();
   }
 }

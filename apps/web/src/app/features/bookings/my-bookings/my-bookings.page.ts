@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -73,7 +74,11 @@ export class MyBookingsPage implements OnInit {
     };
   });
 
-  constructor(private readonly bookingsService: BookingsService) {}
+  constructor(
+    private readonly bookingsService: BookingsService,
+    private readonly router: Router,
+    private readonly toastService: ToastService,
+  ) {}
 
   ngOnInit(): void {
     void this.loadBookings();
@@ -219,14 +224,14 @@ export class MyBookingsPage implements OnInit {
       const result = await this.bookingsService.cancelBooking(bookingId);
 
       if (!result.success) {
-        alert(`❌ Error: ${result.error}`);
+        this.toastService.error('Error', result.error || 'No se pudo cancelar la reserva');
         return;
       }
 
-      alert('✅ Reserva cancelada exitosamente');
+      this.toastService.success('Reserva cancelada', 'La reserva ha sido cancelada exitosamente.');
       await this.loadBookings(); // Recargar lista
     } catch {
-      alert('❌ Error inesperado al cancelar la reserva');
+      this.toastService.error('Error', 'Ocurrió un error inesperado al cancelar la reserva');
     } finally {
       this.loading.set(false);
     }
@@ -237,52 +242,33 @@ export class MyBookingsPage implements OnInit {
       booking.car_city && booking.car_province
         ? `${booking.car_city}, ${booking.car_province}`
         : 'Ver en detalle';
-    // FIXME: Replace alert with modal component for check-in instructions
-    alert(
-      `📋 Instrucciones para ${booking.car_title}\n\n1. Documentos: DNI y Licencia\n2. Ubicación: ${location}\n3. Hora: ${booking.start_at}\n\n[En próxima actualización: Modal completo con checklist]`,
+    
+    // Usar Toast info en lugar de alert
+    this.toastService.info(
+      'Instrucciones de Retiro',
+      `Ubicación: ${location}. Recordá llevar tu DNI y Licencia de Conducir.`, 
+      8000
     );
   }
 
   /**
-   * ✅ SPRINT 3: Abrir chat/contacto con propietario
-   * Opción A: WhatsApp redirect (implementado)
-   * Opción B: Chat in-app (TODO futuro)
+   * ✅ SPRINT 3: Abrir chat interno
+   * Navega al sistema de mensajería de la plataforma
    */
-  async openChat(booking: Booking): Promise<void> {
+  openChat(booking: Booking): void {
     if (!booking.owner_id) {
-      alert('❌ No se pudo obtener información del propietario');
+      this.toastService.error('Error', 'No se pudo obtener información del propietario');
       return;
     }
 
-    this.loading.set(true);
-    try {
-      const contact = await this.bookingsService.getOwnerContact(booking.owner_id);
-
-      if (!contact.success || !contact.phone) {
-        // Fallback: mostrar email
-        alert(
-          `📧 Contacto del propietario:\n\n` +
-            `${contact.name || 'Propietario'}\n` +
-            `Email: ${contact.email || 'No disponible'}\n\n` +
-            `Puedes contactarlo por email para coordinar el retiro.`,
-        );
-        return;
-      }
-
-      // Si tiene teléfono, abrir WhatsApp
-      const carInfo = `${booking.car_title || 'auto'}`;
-      const dates = this.rangeLabel(booking);
-      const message = encodeURIComponent(
-        `Hola! Te contacto por la reserva del ${carInfo} para ${dates}.`,
-      );
-
-      const whatsappUrl = `https://wa.me/${contact.phone}?text=${message}`;
-      window.open(whatsappUrl, '_blank');
-    } catch {
-      alert('❌ Error al obtener información de contacto');
-    } finally {
-      this.loading.set(false);
-    }
+    // Navegar al chat interno pasando el contexto
+    this.router.navigate(['/messages/chat'], {
+      queryParams: {
+        bookingId: booking.id,
+        userId: booking.owner_id,
+        userName: booking.car?.owner?.full_name || 'Propietario', // Intentar obtener nombre real
+      },
+    });
   }
 
   /**
@@ -299,7 +285,7 @@ export class MyBookingsPage implements OnInit {
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
       window.open(mapsUrl, '_blank');
     } else {
-      alert('🗺️ Ubicación no disponible para esta reserva.');
+      this.toastService.warning('Ubicación no disponible', 'No tenemos la ubicación exacta para esta reserva.');
     }
   }
 

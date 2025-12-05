@@ -17,6 +17,7 @@ import {
   withPreloading,
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
@@ -44,6 +45,7 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideIonicAngular({ mode: 'md' }),
     provideRouter(
       routes,
       // Cambiamos a NoPreloading para reducir descarga inicial en móvil; prefetch selectivo se puede habilitar con quicklink

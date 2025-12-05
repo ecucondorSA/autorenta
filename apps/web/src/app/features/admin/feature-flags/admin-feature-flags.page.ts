@@ -46,37 +46,37 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
         <p-card>
           <div class="text-center">
-            <div class="text-3xl font-bold text-blue-500">{{ totalFlags() }}</div>
-            <div class="text-gray-500">Total Flags</div>
+            <div class="text-2xl md:text-3xl font-bold text-blue-500">{{ totalFlags() }}</div>
+            <div class="text-gray-500 text-sm md:text-base">Total</div>
           </div>
         </p-card>
         <p-card>
           <div class="text-center">
-            <div class="text-3xl font-bold text-green-500">{{ enabledFlags() }}</div>
-            <div class="text-gray-500">Habilitadas</div>
+            <div class="text-2xl md:text-3xl font-bold text-green-500">{{ enabledFlags() }}</div>
+            <div class="text-gray-500 text-sm md:text-base">Habilitadas</div>
           </div>
         </p-card>
         <p-card>
           <div class="text-center">
-            <div class="text-3xl font-bold text-red-500">{{ disabledFlags() }}</div>
-            <div class="text-gray-500">Deshabilitadas</div>
+            <div class="text-2xl md:text-3xl font-bold text-red-500">{{ disabledFlags() }}</div>
+            <div class="text-gray-500 text-sm md:text-base">Deshabilitadas</div>
           </div>
         </p-card>
         <p-card>
           <div class="text-center">
-            <div class="text-3xl font-bold text-orange-500">
+            <div class="text-2xl md:text-3xl font-bold text-orange-500">
               {{ partialRolloutFlags() }}
             </div>
-            <div class="text-gray-500">Rollout Parcial</div>
+            <div class="text-gray-500 text-sm md:text-base">Parcial</div>
           </div>
         </p-card>
       </div>
 
-      <!-- Flags Table -->
-      <p-card header="Feature Flags">
+      <!-- Desktop: Table View -->
+      <p-card header="Feature Flags" class="hidden md:block">
         <p-table
           [value]="flags()"
           [loading]="loading()"
@@ -139,8 +139,80 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
         </p-table>
       </p-card>
 
-      <!-- Audit Log -->
-      <p-card header="Historial de Cambios" class="mt-4">
+      <!-- Mobile: Card View -->
+      <div class="md:hidden space-y-3">
+        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Feature Flags</h2>
+
+        @if (loading()) {
+          <div class="flex justify-center py-8">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        } @else if (flags().length === 0) {
+          <div class="text-center py-8 text-gray-500">
+            No hay feature flags configuradas
+          </div>
+        } @else {
+          @for (flag of flags(); track flag.id) {
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+              <!-- Header: Name + Toggle -->
+              <div class="flex items-center justify-between mb-3">
+                <span class="font-mono text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-[60%]">
+                  {{ flag.name }}
+                </span>
+                <p-toggleswitch
+                  [(ngModel)]="flag.enabled"
+                  (onChange)="toggleFlag(flag)"
+                ></p-toggleswitch>
+              </div>
+
+              <!-- Description -->
+              @if (flag.description) {
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                  {{ flag.description }}
+                </p>
+              }
+
+              <!-- Meta row -->
+              <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2">
+                  <p-tag
+                    [value]="flag.rollout_percentage + '%'"
+                    [severity]="getRolloutSeverity(flag.rollout_percentage)"
+                  ></p-tag>
+                  <span class="text-gray-500 text-xs">
+                    {{ flag.updated_at | date: 'shortDate' }}
+                  </span>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-1">
+                  <button
+                    class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    (click)="editFlag(flag)"
+                    aria-label="Editar"
+                  >
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    class="p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    (click)="confirmDelete(flag)"
+                    aria-label="Eliminar"
+                  >
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Audit Log - Desktop Table -->
+      <p-card header="Historial de Cambios" class="mt-4 hidden md:block">
         <p-table
           [value]="auditLog()"
           [loading]="loadingAudit()"
@@ -185,6 +257,43 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
           </ng-template>
         </p-table>
       </p-card>
+
+      <!-- Audit Log - Mobile Cards -->
+      <div class="mt-4 md:hidden">
+        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Historial de Cambios</h2>
+
+        @if (loadingAudit()) {
+          <div class="flex justify-center py-4">
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          </div>
+        } @else {
+          <div class="space-y-2">
+            @for (log of auditLog().slice(0, 5); track log.id) {
+              <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-mono text-xs text-gray-900 dark:text-gray-100">
+                    {{ log.feature_flag_name }}
+                  </span>
+                  <p-tag [value]="log.action" [severity]="getActionSeverity(log.action)" styleClass="text-xs"></p-tag>
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{ log.changed_at | date: 'short' }}
+                </div>
+                @if (log.action === 'updated' && log.old_value && log.new_value) {
+                  <div class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                    @if (log.old_value.enabled !== log.new_value.enabled) {
+                      enabled: {{ log.old_value.enabled }} → {{ log.new_value.enabled }}
+                    }
+                    @if (log.old_value.rollout_percentage !== log.new_value.rollout_percentage) {
+                      rollout: {{ log.old_value.rollout_percentage }}% → {{ log.new_value.rollout_percentage }}%
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
 
     <!-- Create / Edit Dialog -->

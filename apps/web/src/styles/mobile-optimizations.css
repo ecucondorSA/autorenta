@@ -4,6 +4,24 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────────────────
+   DESIGN TOKENS - CSS Custom Properties
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* Layout */
+  --hero-min-height-mobile: 85svh;
+  --hero-min-height-desktop: 100svh;
+  --content-max-width: 80rem; /* 1280px */
+
+  /* Touch */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+
+  /* Spacing */
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-top: env(safe-area-inset-top, 0px);
+}
+
+/* ─────────────────────────────────────────────────────────────
    OVERFLOW FIX - Prevenir desbordamiento horizontal
    ───────────────────────────────────────────────────────────── */
 
@@ -18,7 +36,8 @@
   }
 
   body {
-    padding-bottom: var(--safe-area-bottom);
+    /* Safe area se maneja en el bottom-nav, no en el body */
+    padding-bottom: 0;
   }
 
   /* Contenedores principales */
@@ -166,10 +185,7 @@
     padding-top: max(0px, var(--safe-area-top));
   }
 
-  .mobile-bottom-nav {
-    padding-bottom: calc(16px + var(--safe-area-bottom));
-    padding-top: 12px;
-  }
+  /* Bottom nav styles están en el componente - no duplicar aquí */
 
   /* Padding horizontal consistente */
   .app-main[class*='px-container'] {
@@ -318,11 +334,11 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Touch Targets - Mínimo 44x44px
+   Touch Targets - Mínimo 44x44px (WCAG 2.5.5)
    ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
-  /* Asegurar touch targets mínimos */
+  /* Asegurar touch targets mínimos para botones */
   button,
   a.btn,
   a.icon-button,
@@ -331,8 +347,44 @@
     min-width: 44px;
   }
 
+  /* Touch-friendly form inputs - 44px minimum height */
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='password'],
+  input[type='search'],
+  input[type='url'],
+  input[type='date'],
+  input[type='time'],
+  textarea,
+  select,
+  .input-premium,
+  .form-control {
+    min-height: 44px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    touch-action: manipulation;
+    -webkit-appearance: none;
+  }
+
   /* Aumentar área táctil de links */
   a:not(.btn):not(.icon-button) {
+    padding: 4px 0;
+  }
+
+  /* Checkboxes and radios - larger touch targets */
+  input[type='checkbox'],
+  input[type='radio'] {
+    width: 24px;
+    height: 24px;
+    margin: 2px 8px 2px 0;
+    cursor: pointer;
+  }
+
+  /* Labels should be tappable */
+  label {
+    cursor: pointer;
     padding: 4px 0;
   }
 }
@@ -527,17 +579,7 @@
     height: 32px !important;
   }
 
-  /* Bottom nav más pequeña o auto-oculta */
-  .mobile-bottom-nav {
-    height: 56px;
-    padding: 0.5rem 0;
-    padding-bottom: calc(0.5rem + var(--safe-area-bottom));
-  }
-
-  .mobile-bottom-nav a {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-  }
+  /* Bottom nav styles están en el componente - no duplicar aquí */
 
   /* Reducir padding vertical agresivamente */
   .app-main {

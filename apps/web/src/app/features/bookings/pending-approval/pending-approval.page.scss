@@ -176,6 +176,23 @@
       }
     }
 
+    .renter-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: #fafafa;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+
+      .renter-label {
+        font-size: 0.875rem;
+        color: #666;
+        white-space: nowrap;
+      }
+    }
+
     .booking-details {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

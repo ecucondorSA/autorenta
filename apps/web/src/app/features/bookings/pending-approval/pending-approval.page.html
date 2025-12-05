@@ -4,10 +4,9 @@
     <p class="subtitle">{{ 'PENDING_APPROVALS.SUBTITLE' | translate }}</p>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading()" class="loading-container">
-    <div class="spinner"></div>
-    <p>{{ 'PENDING_APPROVALS.LOADING' | translate }}</p>
+  <!-- Loading State - Skeleton List -->
+  <div *ngIf="loading()" class="bookings-list">
+    <app-skeleton-loader type="list" [count]="3"></app-skeleton-loader>
   </div>
 
   <!-- Empty State -->
@@ -45,6 +44,12 @@
           </span>
           <span class="days-count">{{ booking.days_count }} días</span>
         </div>
+      </div>
+
+      <!-- Renter Profile Badge -->
+      <div class="renter-info">
+        <span class="renter-label">Solicitante:</span>
+        <app-renter-profile-badge [renterId]="booking.renter_id"></app-renter-profile-badge>
       </div>
 
       <!-- Booking Details -->

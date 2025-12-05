@@ -63,6 +63,8 @@ export type DocumentKind =
   | 'gov_id_front'
   | 'gov_id_back'
   | 'driver_license'
+  | 'license_front'
+  | 'license_back'
   | 'vehicle_registration'
   | 'vehicle_insurance'
   | 'utility_bill'

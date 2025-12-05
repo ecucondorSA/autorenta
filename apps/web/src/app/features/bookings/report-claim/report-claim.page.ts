@@ -271,6 +271,16 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
   `,
   styles: [
     `
+      :host {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        contain: layout size style;
+      }
+
       ion-content {
         --background: var(--ion-color-light);
       }

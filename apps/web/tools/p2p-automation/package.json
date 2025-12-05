@@ -1,0 +1,37 @@
+{
+  "name": "p2p-automation",
+  "version": "1.0.0",
+  "description": "Binance P2P + MercadoPago automation system",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "detector": "node dist/services/detector.js",
+    "executor": "node dist/services/executor.js",
+    "migrate": "tsx scripts/migrate.ts",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.3.1",
+    "patchright": "^1.57.0",
+    "playwright": "^1.40.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "tsx": "^4.6.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -5,6 +5,8 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { RenterProfileBadgeComponent } from '../../../shared/components/renter-profile-badge/renter-profile-badge.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 interface PendingApproval {
   booking_id: string;
@@ -25,7 +27,7 @@ interface PendingApproval {
 @Component({
   selector: 'app-pending-approval',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, RenterProfileBadgeComponent, SkeletonLoaderComponent],
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })

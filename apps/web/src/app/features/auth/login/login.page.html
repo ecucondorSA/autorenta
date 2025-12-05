@@ -1,279 +1,250 @@
-<div
-  class="min-h-screen bg-surface-base dark:bg-surface-base flex items-center justify-center py-12 px-4"
->
-  <div class="w-full max-w-md">
-    <!-- Logo -->
-    <div class="text-center mb-8">
-      <div class="h-20 flex items-center justify-center mb-4">
+<div class="min-h-screen bg-surface-base flex">
+  <!-- Left Panel - Visual (hidden on mobile) -->
+  <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 flex flex-col justify-between p-12 w-full">
+      <!-- Logo -->
+      <div>
+        <img src="/assets/images/autorentar-logo.png" alt="Autorentar" class="h-10 w-auto brightness-0 invert" />
+      </div>
+
+      <!-- Main Visual -->
+      <div class="flex-1 flex items-center justify-center">
+        <div class="text-center">
+          <div class="mb-8">
+            <svg class="w-32 h-32 mx-auto text-cta-default opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-white mb-4">
+            Manejá tu próxima aventura
+          </h2>
+          <p class="text-slate-400 text-lg max-w-md mx-auto">
+            +500 autos disponibles en todo el país. Reservá en minutos, retirá cuando quieras.
+          </p>
+        </div>
+      </div>
+
+      <!-- Testimonial -->
+      <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cta-default to-blue-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+            M
+          </div>
+          <div>
+            <p class="text-white/90 mb-3 leading-relaxed">
+              "Reservé un auto en 10 minutos para un viaje de última hora. El dueño fue súper amable y todo salió perfecto."
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="text-white font-medium">Martín G.</span>
+              <span class="text-slate-500">·</span>
+              <div class="flex text-amber-400">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel - Form -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md">
+      <!-- Mobile Logo -->
+      <div class="text-center mb-8 lg:hidden">
         <img
           ngSrc="/assets/images/autorentar-logo.png"
           alt="Autorentar"
           width="500"
           height="500"
           priority
-          class="h-full w-auto object-contain"
+          class="h-16 w-auto object-contain mx-auto"
         />
       </div>
-      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary mb-2">
-        Bienvenido de vuelta
-      </h1>
-      <p class="text-text-secondary dark:text-text-secondary">Ingresá a tu cuenta de Autorentar</p>
-    </div>
 
-    <!-- Card -->
-    <div class="card-premium p-8 bg-surface-raised dark:bg-surface-raised">
-      <!-- Google Sign In Button -->
-      <button
-        type="button"
-        (click)="signInWithGoogle()"
-        [disabled]="loading()"
-        class="w-full flex items-center justify-center gap-3 rounded-lg border-2 border-border-default dark:border-slate-deep bg-surface-raised dark:bg-surface-secondary px-6 py-3 text-sm font-semibold text-text-primary dark:text-text-inverse hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
-      >
-        <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="#4285F4"
-            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-          />
-          <path
-            fill="#34A853"
-            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-          />
-          <path
-            fill="#FBBC05"
-            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-          />
-          <path
-            fill="#EA4335"
-            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-          />
-        </svg>
-        <span *ngIf="!loading()">Continuar con Google</span>
-        <span *ngIf="loading()">Conectando...</span>
-      </button>
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-text-primary mb-2">
+          Hola de nuevo
+        </h1>
+        <p class="text-text-secondary">
+          Ingresá a tu cuenta para seguir manejando
+        </p>
+      </div>
 
-      <!-- TikTok Sign In Button -->
-      <button
-        type="button"
-        (click)="signInWithTikTok()"
-        [disabled]="loading()"
-        class="w-full mt-3 flex items-center justify-center gap-3 rounded-lg border-2 border-border-default dark:border-slate-deep bg-surface-raised dark:bg-surface-secondary px-6 py-3 text-sm font-semibold text-text-primary dark:text-text-inverse hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
-      >
-        <svg class="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
-          <path
-            fill="#25F4EE"
-            d="M21.5 19.5v15.3c0 3-2.4 5.4-5.4 5.4-2.3 0-4.3-1.5-5-3.6-.2-.6-.3-1.3-.3-2 0-.4 0-.8.1-1.1 0-.2.1-.4.1-.6.2-.8.5-1.5 1-2.1.9-1.2 2.3-2 3.8-2 .4 0 .8 0 1.1.1v-4.8c-.4-.1-.8-.1-1.2-.1-.7 0-1.4.1-2 .2-4.8.9-8.5 5.1-8.5 10.2C5.2 39.9 10.3 45 16.7 45c6.1 0 11.1-4.7 11.6-10.7V19.5h-6.8Z"
-          />
-          <path
-            fill="#FE2C55"
-            d="M42.7 18.7v-5.1c-1.5 0-3-.3-4.4-.9-1.9-.8-3.5-2.1-4.6-3.8-1.3-1.8-2-4.1-2-6.5h-6.5v25.2c-.2-.1-.4-.1-.7-.1-.4 0-.8 0-1.1.1v4.8c.4 0 .8.1 1.1.1.4 0 .7-.1 1.1-.1.6-.1 1.1-.2 1.6-.4 3.4-1.1 5.9-4.3 6.1-8 .1-.3.1-.6.1-.9v-9.6c1.1 1.7 2.8 3.1 4.6 3.8 1.4.6 2.9.9 4.4.9Z"
-          />
-          <path
-            fill="#000"
-            d="M38.3 12.7c-1.9-.8-3.5-2.1-4.6-3.8-1.3-1.8-2-4.1-2-6.5H25v25.2c-.2-.1-.4-.1-.7-.1-.4 0-.8 0-1.1.1v4.8c.4 0 .8.1 1.1.1.4 0 .7-.1 1.1-.1.6-.1 1.1-.2 1.6-.4 3.4-1.1 5.9-4.3 6.1-8 .1-.3.1-.6.1-.9v-9.6c1.1 1.7 2.8 3.1 4.6 3.8V12.7Z"
-          />
-        </svg>
-        <span *ngIf="!loading()">Continuar con TikTok</span>
-        <span *ngIf="loading()">Conectando...</span>
-      </button>
+      <!-- Card -->
+      <div class="bg-surface-raised rounded-2xl p-8 shadow-sm border border-border-default">
+        <!-- Google Sign In Button -->
+        <button
+          type="button"
+          (click)="signInWithGoogle()"
+          [disabled]="loading()"
+          class="w-full flex items-center justify-center gap-3 rounded-xl border-2 border-border-default bg-surface-base px-6 py-3.5 text-sm font-semibold text-text-primary hover:bg-surface-secondary hover:border-gray-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span *ngIf="!loading()">Continuar con Google</span>
+          <span *ngIf="loading()">Conectando...</span>
+        </button>
 
-      <!-- Divider -->
-      <div class="relative my-6">
-        <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-border-default dark:border-charcoal-medium"></div>
+        <!-- Divider -->
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-border-default"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-4 bg-surface-raised text-text-secondary">o con tu email</span>
+          </div>
         </div>
-        <div class="relative flex justify-center text-sm">
-          <span
-            class="px-4 bg-surface-raised dark:bg-surface-raised text-text-secondary dark:text-text-secondary"
-            >O continuar con email</span
+
+        <form class="space-y-5" [formGroup]="form" (ngSubmit)="submit()">
+          <!-- Email -->
+          <div>
+            <label for="login-email" class="block text-sm font-medium text-text-primary mb-2">
+              Email
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+              </div>
+              <input
+                id="login-email"
+                name="email"
+                type="email"
+                formControlName="email"
+                autocomplete="username email"
+                placeholder="tu@email.com"
+                required
+                data-testid="login-email-input"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary"
+                [class.border-border-default]="!form.controls.email.touched || !form.controls.email.invalid"
+                [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
+                [class.focus:ring-cta-default]="!form.controls.email.touched || !form.controls.email.invalid"
+                [class.focus:border-cta-default]="!form.controls.email.touched || !form.controls.email.invalid"
+              />
+            </div>
+            <p *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']" class="mt-2 text-xs text-error-text" role="alert">
+              El email es obligatorio
+            </p>
+            <p *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']" class="mt-2 text-xs text-error-text" role="alert">
+              Formato de email inválido
+            </p>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="login-password" class="block text-sm font-medium text-text-primary mb-2">
+              Contraseña
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+              <input
+                id="login-password"
+                name="password"
+                type="password"
+                formControlName="password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                required
+                data-testid="login-password-input"
+                class="w-full pl-11 pr-4 py-3 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 bg-surface-base text-text-primary"
+                [class.border-border-default]="!form.controls.password.touched || !form.controls.password.invalid"
+                [class.border-error-border]="form.controls.password.touched && form.controls.password.invalid"
+                [class.focus:ring-cta-default]="!form.controls.password.touched || !form.controls.password.invalid"
+                [class.focus:border-cta-default]="!form.controls.password.touched || !form.controls.password.invalid"
+              />
+            </div>
+            <p *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']" class="mt-2 text-xs text-error-text" role="alert">
+              La contraseña es obligatoria
+            </p>
+          </div>
+
+          <!-- Forgot Password Link -->
+          <div class="flex justify-end">
+            <a routerLink="/auth/reset-password" class="text-sm text-cta-default hover:underline">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="error()" class="bg-error-bg border border-error-border rounded-xl p-4" role="alert">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-error-strong flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              <p class="text-sm text-error-strong">{{ error() }}</p>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full py-3.5 rounded-xl bg-cta-default text-cta-text font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cta-default/25"
+            [disabled]="form.invalid || loading()"
+            data-testid="login-button"
           >
+            <span *ngIf="!loading()">Ingresar</span>
+            <span *ngIf="loading()" class="flex items-center justify-center gap-2">
+              <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Ingresando...
+            </span>
+          </button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="mt-6 text-center text-sm">
+          <span class="text-text-secondary">¿Primera vez acá?</span>
+          <a routerLink="/auth/register" class="text-cta-default hover:underline font-semibold ml-1">
+            Creá tu cuenta
+          </a>
         </div>
       </div>
 
-      <form class="space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-        <!-- Email -->
-        <div>
-          <label
-            for="login-email"
-            class="block text-sm font-medium text-text-primary dark:text-text-primary mb-2"
-          >
-            Email<span aria-hidden="true"> *</span>
-          </label>
-          <input
-            id="login-email"
-            name="email"
-            type="email"
-            formControlName="email"
-            autocomplete="username email"
-            placeholder="tu@email.com"
-            required
-            aria-required="true"
-            data-testid="login-email-input"
-            [attr.aria-invalid]="
-              form.controls.email.touched && form.controls.email.invalid ? 'true' : null
-            "
-            [attr.aria-describedby]="
-              form.controls.email.touched && form.controls.email.invalid
-                ? 'login-email-error'
-                : null
-            "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
-            [class.border-border-default]="
-              !form.controls.email.touched || !form.controls.email.invalid
-            "
-            [class.dark:border-border-default]="
-              !form.controls.email.touched || !form.controls.email.invalid
-            "
-            [class.dark:border-charcoal-medium]="
-              !form.controls.email.touched || !form.controls.email.invalid
-            "
-            [class.border-error-border]="form.controls.email.touched && form.controls.email.invalid"
-            [class.focus:ring-cta-default]="
-              !form.controls.email.touched || !form.controls.email.invalid
-            "
-            [class.focus:border-cta-default]="
-              !form.controls.email.touched || !form.controls.email.invalid
-            "
-          />
-          <p
-            *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
-            id="login-email-error"
-            class="mt-2 text-xs text-error-text"
-            role="alert"
-          >
-            El email es obligatorio
-          </p>
-          <p
-            *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
-            id="login-email-error"
-            class="mt-2 text-xs text-error-text"
-            role="alert"
-          >
-            Formato de email inválido
-          </p>
+      <!-- Trust Signals -->
+      <div class="mt-8 flex items-center justify-center gap-6 text-xs text-text-muted">
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+          </svg>
+          <span>Datos protegidos</span>
         </div>
-
-        <!-- Password -->
-        <div>
-          <label
-            for="login-password"
-            class="block text-sm font-medium text-text-primary dark:text-text-primary mb-2"
-          >
-            Contraseña<span aria-hidden="true"> *</span>
-          </label>
-          <input
-            id="login-password"
-            name="password"
-            type="password"
-            formControlName="password"
-            autocomplete="current-password"
-            placeholder="••••••••"
-            required
-            aria-required="true"
-            data-testid="login-password-input"
-            [attr.aria-invalid]="
-              form.controls.password.touched && form.controls.password.invalid ? 'true' : null
-            "
-            [attr.aria-describedby]="
-              form.controls.password.touched && form.controls.password.invalid
-                ? 'login-password-error'
-                : null
-            "
-            class="w-full rounded-lg border px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 bg-surface-raised dark:bg-surface-secondary text-text-primary dark:text-text-primary"
-            [class.border-border-default]="
-              !form.controls.password.touched || !form.controls.password.invalid
-            "
-            [class.dark:border-border-default]="
-              !form.controls.password.touched || !form.controls.password.invalid
-            "
-            [class.dark:border-charcoal-medium]="
-              !form.controls.password.touched || !form.controls.password.invalid
-            "
-            [class.border-error-border]="
-              form.controls.password.touched && form.controls.password.invalid
-            "
-            [class.focus:ring-cta-default]="
-              !form.controls.password.touched || !form.controls.password.invalid
-            "
-            [class.focus:border-cta-default]="
-              !form.controls.password.touched || !form.controls.password.invalid
-            "
-          />
-          <p
-            *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']"
-            id="login-password-error"
-            class="mt-2 text-xs text-error-text"
-            role="alert"
-          >
-            La contraseña es obligatoria
-          </p>
-          <p
-            *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']"
-            id="login-password-error"
-            class="mt-2 text-xs text-error-text"
-            role="alert"
-          >
-            La contraseña debe tener al menos 6 caracteres
-          </p>
+        <div class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+          <span>Conexión segura</span>
         </div>
-
-        <!-- Error Message -->
-        <div
-          *ngIf="error()"
-          class="bg-error-bg border border-error-border rounded-lg p-3"
-          role="alert"
-          aria-live="polite"
-        >
-          <p class="text-sm text-error-strong">{{ error() }}</p>
-        </div>
-
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="w-full rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
-          [disabled]="form.invalid || loading()"
-          data-testid="login-button"
-        >
-          <span *ngIf="!loading()">Ingresar</span>
-          <span *ngIf="loading()" class="flex items-center justify-center gap-2">
-            <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Ingresando...
-          </span>
-        </button>
-
-        <!-- Links -->
-        <div class="flex justify-between items-center text-sm pt-2">
-          <a routerLink="/auth/register" class="text-cta-default hover:underline font-medium">
-            Crear cuenta
-          </a>
-          <a
-            routerLink="/auth/reset-password"
-            class="text-text-secondary dark:text-text-secondary hover:text-cta-default transition-colors"
-          >
-            ¿Olvidaste tu contraseña?
-          </a>
-        </div>
-      </form>
+      </div>
     </div>
-
-    <!-- Footer Info -->
-    <p
-      class="text-center text-xs text-text-muted dark:text-text-secondary dark:text-text-secondary mt-6"
-    >
-      Al ingresar, aceptás nuestros Términos y Condiciones
-    </p>
   </div>
 </div>

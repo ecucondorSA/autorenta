@@ -575,3 +575,59 @@ app-map-filters,
 .map-filters-mobile {
   display: none !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 Mobile Map Carousel - Airbnb Style
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Smooth scroll snap for carousel */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* Highlight selected card in carousel */
+.car-carousel-card.selected {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Hide map details panel on mobile when using carousel */
+@media (max-width: 1023px) {
+  app-cars-map app-map-details-panel {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 Mobile Car Carousel - Fixed positioning fixes
+   ═══════════════════════════════════════════════════════════════ */
+[data-testid="mobile-car-carousel"] {
+  top: auto !important;
+  max-height: 140px;
+}
+
+[data-testid="mobile-car-carousel"] .snap-x {
+  height: 96px;
+  align-items: center;
+  flex-wrap: nowrap !important;
+}
+
+[data-testid="mobile-car-carousel"] a {
+  height: 88px !important;
+  min-height: 88px;
+  max-height: 88px;
+}

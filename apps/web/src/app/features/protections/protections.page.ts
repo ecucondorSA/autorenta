@@ -1,9 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, computed } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { BonusProtectorPurchaseComponent } from '../../shared/components/bonus-protector-purchase/bonus-protector-purchase.component';
 import { MetaService } from '../../core/services/meta.service';
+import { WalletService } from '../../core/services/wallet.service';
 
 /**
  * ProtectionsPage
@@ -20,7 +21,7 @@ import { MetaService } from '../../core/services/meta.service';
 @Component({
   standalone: true,
   selector: 'app-protections-page',
-  imports: [CommonModule, IonicModule, RouterLink, BonusProtectorPurchaseComponent],
+  imports: [CommonModule, IonicModule, RouterLink, BonusProtectorPurchaseComponent, CurrencyPipe],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -38,6 +39,27 @@ import { MetaService } from '../../core/services/meta.service';
         <p class="subtitle">
           Protege tu clase de conductor y tu vehículo con nuestras opciones de cobertura.
         </p>
+      </div>
+
+      <!-- Wallet Balance Card -->
+      <div class="wallet-balance-section">
+        <ion-card class="wallet-card">
+          <ion-card-content>
+            <div class="wallet-info">
+              <div class="wallet-icon">
+                <ion-icon name="wallet-outline" color="primary"></ion-icon>
+              </div>
+              <div class="wallet-details">
+                <span class="wallet-label">Saldo disponible</span>
+                <span class="wallet-amount">{{ walletBalance() | currency:'USD':'symbol':'1.2-2' }}</span>
+              </div>
+              <ion-button size="small" fill="outline" [routerLink]="['/wallet']">
+                <ion-icon slot="start" name="add-outline"></ion-icon>
+                Depositar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
       </div>
 
       <!-- Bonus Protector Section -->
@@ -154,6 +176,16 @@ import { MetaService } from '../../core/services/meta.service';
   `,
   styles: [
     `
+      :host {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        contain: layout size style;
+      }
+
       ion-header ion-toolbar {
         --background: var(--ion-color-primary);
         --color: white;
@@ -185,6 +217,54 @@ import { MetaService } from '../../core/services/meta.service';
         line-height: 1.5;
         max-width: 600px;
         margin: 0 auto;
+      }
+
+      .wallet-balance-section {
+        padding: 0 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .wallet-card {
+        margin: 0;
+        background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        border: 1px solid #0ea5e9;
+      }
+
+      .wallet-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .wallet-icon {
+        width: 48px;
+        height: 48px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wallet-icon ion-icon {
+        font-size: 1.5rem;
+      }
+
+      .wallet-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .wallet-label {
+        font-size: 0.85rem;
+        color: #0369a1;
+      }
+
+      .wallet-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0c4a6e;
       }
 
       .section-container {
@@ -323,9 +403,21 @@ import { MetaService } from '../../core/services/meta.service';
 })
 export class ProtectionsPage implements OnInit {
   private readonly metaService = inject(MetaService);
+  private readonly walletService = inject(WalletService);
+
+  readonly walletBalance = computed(() => this.walletService.availableBalance());
 
   ngOnInit(): void {
     this.updateMeta();
+    this.loadWalletBalance();
+  }
+
+  private async loadWalletBalance(): Promise<void> {
+    try {
+      await this.walletService.fetchBalance();
+    } catch {
+      // Silently fail - balance will show as 0
+    }
   }
 
   private updateMeta(): void {

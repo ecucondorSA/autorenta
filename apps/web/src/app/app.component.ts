@@ -24,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Toast } from 'primeng/toast';
 import { filter } from 'rxjs';
 import { GuidedTourService } from './core/guided-tour';
+import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { LocaleManagerService } from './core/services/locale-manager.service';
@@ -177,6 +178,7 @@ import { IconComponent } from './shared/components/icon/icon.component';
 export class AppComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
+  private readonly assetPreloader = inject(AssetPreloaderService);
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
@@ -208,8 +210,10 @@ export class AppComponent implements OnInit {
 
   year = new Date().getFullYear();
 
-  // Splash loader state
+  // Smart Splash: Controls when app initialization completes
+  // Splash component handles video intro + loop animation
   showSplash = signal(true);
+  splashDismissed = signal(false);
 
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
@@ -264,31 +268,78 @@ export class AppComponent implements OnInit {
     this.destroyRef.onDestroy(() => this.mobileBottomNavPortal.destroy());
   }
 
-  // ...
+  /**
+   * Called when splash screen finishes its exit animation
+   */
+  onSplashDismissed(): void {
+    this.splashDismissed.set(true);
+  }
 
+  /**
+   * Initialize splash screen timing
+   * Uses splash time to preload heavy assets (Three.js, 3D models)
+   * Signals appReady=true when critical initialization completes
+   */
   private initializeSplash(): void {
-    // Hide splash when critical initialization completes (min 1s, max 3s)
-    const minDisplayTime = 1000;
-    const maxDisplayTime = 3000;
-    const startTime = Date.now();
+    const startTime = performance.now();
 
-    // Load critical resources
-    Promise.all([
+    // Critical initialization tasks (must complete before showing app)
+    const criticalTasks = Promise.all([
       this.loadUserProfile(),
-      // Add other critical initialization here if needed
+      this.waitForInitialRoute(),
+    ]);
+
+    // Background preloading (nice to have, don't block on it)
+    // These load during splash animation time
+    const preloadTasks = this.assetPreloader.preloadCriticalAssets();
+
+    // Wait for critical tasks, but also give preload a chance
+    // If critical finishes fast, wait up to 800ms for preload to make progress
+    Promise.all([
+      criticalTasks,
+      Promise.race([
+        preloadTasks,
+        new Promise(resolve => setTimeout(resolve, 800)), // Don't wait forever
+      ]),
     ]).finally(() => {
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, minDisplayTime - elapsed);
-
-      setTimeout(() => {
-        this.showSplash.set(false);
-      }, remaining);
-    });
-
-    // Fallback: force hide after max time
-    setTimeout(() => {
+      // Signal to splash that app is ready
+      // Splash will finish current animation state before dismissing
       this.showSplash.set(false);
-    }, maxDisplayTime);
+
+      const elapsed = performance.now() - startTime;
+      const preloadProgress = this.assetPreloader.progress();
+      console.log(
+        `[App] Ready in ${elapsed.toFixed(0)}ms (preload: ${preloadProgress}%)`
+      );
+    });
+  }
+
+  /**
+   * Wait for initial route to resolve
+   * Ensures content is ready before hiding splash
+   */
+  private waitForInitialRoute(): Promise<void> {
+    return new Promise((resolve) => {
+      // If already on a route, resolve immediately
+      if (this.router.url !== '/') {
+        resolve();
+        return;
+      }
+
+      // Wait for first navigation to complete
+      const subscription = this.router.events
+        .pipe(
+          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe(() => {
+          subscription.unsubscribe();
+          resolve();
+        });
+
+      // Fallback timeout
+      setTimeout(resolve, 2000);
+    });
   }
 
   private initializeTheme(): void {

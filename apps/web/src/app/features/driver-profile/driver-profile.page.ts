@@ -1576,7 +1576,9 @@ export class DriverProfilePage implements OnInit {
     if (this.bonusProtectorService.error()) {
       return false;
     }
-    return !this.hasActiveProtector() && this.driverClass() <= 7;
+    // Permitir protección para cualquier clase (0-10)
+    // Los conductores de alto riesgo también necesitan proteger su clase
+    return !this.hasActiveProtector();
   }
 
   // Score helpers
@@ -1606,15 +1608,15 @@ export class DriverProfilePage implements OnInit {
 
   // Mock score breakdown (would come from service in real app)
   getSpeedScore(): number {
-    return Math.min(100, this.driverScore() + Math.random() * 20 - 10);
+    return Math.round(Math.min(100, this.driverScore() + Math.random() * 20 - 10));
   }
 
   getBrakingScore(): number {
-    return Math.min(100, this.driverScore() + Math.random() * 20 - 10);
+    return Math.round(Math.min(100, this.driverScore() + Math.random() * 20 - 10));
   }
 
   getAccelerationScore(): number {
-    return Math.min(100, this.driverScore() + Math.random() * 20 - 10);
+    return Math.round(Math.min(100, this.driverScore() + Math.random() * 20 - 10));
   }
 
   // Benefit helpers
@@ -1691,11 +1693,30 @@ export class DriverProfilePage implements OnInit {
   formatDate(dateString: string | null | undefined): string {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-AR', {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    let relativeTime = '';
+    if (diffYears >= 1) {
+      relativeTime = `Hace ${diffYears} año${diffYears > 1 ? 's' : ''}`;
+    } else if (diffMonths >= 1) {
+      relativeTime = `Hace ${diffMonths} mes${diffMonths > 1 ? 'es' : ''}`;
+    } else if (diffDays >= 1) {
+      relativeTime = `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+    } else {
+      relativeTime = 'Hoy';
+    }
+
+    const formattedDate = date.toLocaleDateString('es-AR', {
       day: 'numeric',
-      month: 'long',
+      month: 'short',
       year: 'numeric',
     });
+
+    return `${relativeTime} (${formattedDate})`;
   }
 
   private updateMeta(): void {

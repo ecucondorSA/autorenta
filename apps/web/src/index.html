@@ -28,21 +28,20 @@
     <!-- Preconnect for external APIs (performance optimization) -->
     <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
     <link rel="preconnect" href="https://sdk.mercadopago.com" crossorigin />
+    <link rel="preconnect" href="https://pisqjmoklivzpwufhscx.supabase.co" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://api.mapbox.com" />
     <link rel="dns-prefetch" href="https://sdk.mercadopago.com" />
     <link rel="dns-prefetch" href="https://events.mapbox.com" />
+    <link rel="dns-prefetch" href="https://pisqjmoklivzpwufhscx.supabase.co" />
 
     <!-- Mapbox GL CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.css" rel="stylesheet" />
 
-    <!-- Ionicons -->
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Ionicons - Loaded async to not block LCP -->
+    <script type="module" async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule async src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -101,14 +100,14 @@
       fetchpriority="high"
     />
 
-    <!-- Preload splash video for instant playback -->
+    <!-- Preload splash video for instant playback (optimized: 147KB, 2s, 9:16) -->
     <link
       rel="preload"
-      href="/assets/videos/volvo-c-recharge-splash.mp4"
+      href="/assets/splash/splash-mobile.mp4"
       as="video"
       type="video/mp4"
     />
-    <link rel="prefetch" href="/assets/images/volvo-c-recharge-splash-poster.jpg" as="image" />
+    <link rel="preload" href="/assets/splash/splash-mobile-poster.webp" as="image" type="image/webp" />
 
     <!-- PWA Manifests -->
     <link rel="manifest" href="manifest.webmanifest" />
@@ -116,6 +115,11 @@
   </head>
 
   <body>
+    <!-- Skip Link - Accessibility (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">
+      Saltar al contenido principal
+    </a>
+
     <!-- Runtime environment configuration (loaded before Angular) -->
     <script src="env.js?v=20251024"></script>
     <app-root></app-root>

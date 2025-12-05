@@ -14,6 +14,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { HapticFeedbackService } from '../../../core/services/haptic-feedback.service';
 
 export type BottomSheetHeight = 'peek' | 'half' | 'full';
 
@@ -38,6 +39,7 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
 
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly haptic = inject(HapticFeedbackService);
 
   readonly currentHeight = signal<BottomSheetHeight>(this.initialHeight);
   readonly isDragging = signal(false);
@@ -80,6 +82,7 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
     const y = 'touches' in event ? event.touches[0].clientY : event.clientY;
     this.startY.set(y);
     this.touchStartY = y;
+    this.haptic.light(); // Subtle feedback when starting drag
     event.preventDefault();
   }
 
@@ -132,11 +135,23 @@ export class BottomSheetComponent implements OnInit, OnDestroy {
   }
 
   setHeight(height: BottomSheetHeight): void {
+    const previousHeight = this.currentHeight();
+
+    // Haptic feedback when snapping to a new height
+    if (previousHeight !== height) {
+      if (height === 'full') {
+        this.haptic.medium(); // Stronger feedback for full expansion
+      } else {
+        this.haptic.selection(); // Light feedback for other snaps
+      }
+    }
+
     this.currentHeight.set(height);
     this.sheetHeightChange.emit(height);
   }
 
   onClose(): void {
+    this.haptic.light();
     this.closeSheet.emit();
   }
 

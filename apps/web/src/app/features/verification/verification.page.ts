@@ -145,7 +145,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
       </section>
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         @if (currentStatus(); as status) {
-          <section class="grid gap-4 md:grid-cols-3">
+          <section class="grid gap-4 md:grid-cols-3 mb-8">
             <div
               class="rounded-2xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised p-6 shadow-sm"
             >
@@ -231,7 +231,8 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
               </p>
             </div>
           </section>
-          <section id="verification-docs" class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
+        }
+        <section id="verification-docs" class="mt-10 grid gap-8 lg:grid-cols-[2fr_1fr]">
             <div class="space-y-6">
               @for (category of docCategories; track category.id) {
                 <div
@@ -396,25 +397,6 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
               </div>
             </section>
           }
-        } @else {
-          <div class="flex justify-center items-center py-12">
-            <svg class="animate-spin h-12 w-12 text-primary-600" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </div>
-        }
       </div>
     </div>
   `,
@@ -595,7 +577,12 @@ export class VerificationPage implements OnInit {
       return 'missing';
     }
 
-    return docRecord ? 'in_review' : 'approved';
+    // If no document record exists and not explicitly missing, treat as missing (not approved)
+    if (!docRecord) {
+      return 'missing';
+    }
+
+    return 'in_review';
   }
 
   getDocStatusLabel(docId: string): string {

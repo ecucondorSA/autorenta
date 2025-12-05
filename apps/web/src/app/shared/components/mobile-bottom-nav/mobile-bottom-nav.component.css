@@ -51,18 +51,20 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 4px;
 
-  background-color: var(--surface-primary, #ffffff); /* Replaced gradient with solid color token */
+  background-color: var(--surface-primary, #ffffff);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
 
-  border-top: 1px solid rgba(167, 216, 244, 0.2); /* cta-default con opacidad */
-  border-radius: 16px 16px 0 0;
+  border-top: 1px solid rgba(167, 216, 244, 0.2);
+  /* Sin border-radius - pegado al borde inferior */
+  border-radius: 0;
 
-  padding: 8px 8px max(4px, env(safe-area-inset-bottom));
+  /* Padding: arriba 8px, lados 8px, abajo = safe area o 0 */
+  padding: 8px 8px env(safe-area-inset-bottom, 0px);
 
   box-shadow:
     0 -8px 32px rgba(167, 216, 244, 0.15),
-    /* cta-default glow */ 0 -4px 16px rgba(0, 0, 0, 0.08),
+    0 -4px 16px rgba(0, 0, 0, 0.08),
     0 -1px 4px rgba(0, 0, 0, 0.04);
 
   /* Efecto glassmorphism mejorado */
@@ -383,8 +385,9 @@
    Soporte para notch/safe area en iPhone
    ───────────────────────────────────────────────────────────── */
 
-@supports (padding: max(0px)) {
+@supports (padding: env(safe-area-inset-bottom)) {
   .nav-container {
-    padding-bottom: max(4px, env(safe-area-inset-bottom));
+    /* Solo usar safe-area si existe, sino 0 */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }

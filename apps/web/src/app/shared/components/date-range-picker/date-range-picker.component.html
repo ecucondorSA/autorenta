@@ -2,7 +2,7 @@
   <!-- Header with icon and label -->
   <div class="date-picker-header">
     <div class="header-content">
-      <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -14,7 +14,7 @@
     </div>
 
     <button type="button" *ngIf="from() || to()" (click)="clearRange()" class="clear-button">
-      <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -43,8 +43,8 @@
 
     <div class="date-display">
       <div class="date-placeholder" *ngIf="!from() && !to()">
-        <span class="placeholder-text">¿Cuándo lo necesitas?</span>
-        <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span class="placeholder-text">Recogida y Devolución</span>
+        <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -59,7 +59,7 @@
           <span class="date-from" data-testid="date-from">{{
             from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
           }}</span>
-          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -85,7 +85,7 @@
       *ngIf="isCheckingAvailability()"
       class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary"
     >
-      <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+      <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation">
         <circle
           class="opacity-25"
           cx="12"

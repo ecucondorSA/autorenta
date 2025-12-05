@@ -582,6 +582,11 @@ export class CarsListPage implements OnInit, OnDestroy {
           // Invalid JSON, ignore
         }
       }
+
+      // 📱 Default to map view on mobile for better UX (Airbnb-style)
+      if (this.isMobile()) {
+        this.viewMode.set('map');
+      }
     }
 
     this.sortInitialized = true;

@@ -9514,7 +9514,7 @@ export type Database = {
         | 'no_show'
         | 'expired';
       car_status: 'draft' | 'pending' | 'active' | 'suspended' | 'deleted';
-      document_kind: 'gov_id_front' | 'gov_id_back' | 'driver_license' | 'utility_bill' | 'selfie';
+      document_kind: 'gov_id_front' | 'gov_id_back' | 'driver_license' | 'utility_bill' | 'selfie' | 'license_front' | 'license_back' | 'vehicle_registration' | 'vehicle_insurance';
       kyc_status: 'not_started' | 'pending' | 'verified' | 'rejected';
       notification_type:
         | 'new_booking_for_owner'
@@ -9674,7 +9674,7 @@ export const Constants = {
         'expired',
       ],
       car_status: ['draft', 'pending', 'active', 'suspended', 'deleted'],
-      document_kind: ['gov_id_front', 'gov_id_back', 'driver_license', 'utility_bill', 'selfie'],
+      document_kind: ['gov_id_front', 'gov_id_back', 'driver_license', 'utility_bill', 'selfie', 'license_front', 'license_back', 'vehicle_registration', 'vehicle_insurance'],
       kyc_status: ['not_started', 'pending', 'verified', 'rejected'],
       notification_type: [
         'new_booking_for_owner',

@@ -62,7 +62,7 @@
       <div class="photo-grid">
         @for (photo of photos(); track photo.url; let i = $index) {
           <div class="photo-item">
-            <img [src]="photo.url" [alt]="'Foto ' + (i + 1)" />
+            <img [src]="photo.url" [alt]="'Foto de inspección del vehículo ' + (i + 1) + ' de ' + photos().length" />
             <button class="remove-photo" (click)="removePhoto(i)" [disabled]="saving()">
               <app-icon name="trash" [size]="18" />
             </button>

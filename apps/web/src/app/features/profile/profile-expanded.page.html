@@ -373,6 +373,105 @@
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+      <!-- Dashboard / Ganancias -->
+      <a
+        routerLink="/dashboard/earnings"
+        class="group card-premium p-4 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex-shrink-0 h-12 w-12 rounded-lg bg-success-light/10 flex items-center justify-center group-hover:bg-success-light group-hover:scale-110 transition-all"
+          >
+            <svg
+              class="h-6 w-6 text-success-light group-hover:text-text-inverse-pure transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-sm font-bold text-text-primary dark:text-text-primary group-hover:text-success-light transition-colors"
+            >
+              Ganancias
+            </h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">
+              Ver ingresos y estadísticas
+            </p>
+          </div>
+          <svg
+            class="h-4 w-4 text-text-secondary dark:text-text-secondary/70 group-hover:text-success-light group-hover:translate-x-1 transition-all"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      </a>
+
+      <!-- Wallet -->
+      <a
+        routerLink="/wallet"
+        class="group card-premium p-4 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="flex-shrink-0 h-12 w-12 rounded-lg bg-warning-light/10 flex items-center justify-center group-hover:bg-warning-light group-hover:scale-110 transition-all"
+          >
+            <svg
+              class="h-6 w-6 text-warning-light group-hover:text-text-inverse-pure transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-sm font-bold text-text-primary dark:text-text-primary group-hover:text-warning-light transition-colors"
+            >
+              Wallet
+            </h3>
+            <p class="text-xs text-text-secondary dark:text-text-secondary/70 mt-0.5">
+              Balance y movimientos
+            </p>
+          </div>
+          <svg
+            class="h-4 w-4 text-text-secondary dark:text-text-secondary/70 group-hover:text-warning-light group-hover:translate-x-1 transition-all"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      </a>
+
+      <!-- Publicar Auto -->
       <a
         routerLink="/cars/publish"
         class="group card-premium p-4 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
@@ -423,3 +522,12 @@
     </div>
   </div>
 </div>
+
+<!-- Document Upload Modal -->
+@if (showDocumentModal() && documentType()) {
+  <app-document-upload-modal
+    [docType]="documentType()!"
+    (close)="closeDocumentModal()"
+    (uploaded)="onDocumentUploaded()"
+  />
+}

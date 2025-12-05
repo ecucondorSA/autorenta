@@ -1,0 +1,24 @@
+{
+  "name": "mercadopago-mcp",
+  "version": "1.0.0",
+  "description": "MercadoPago automation with persistent browser sessions for P2P transfers",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "mcp",
+    "playwright",
+    "mercadopago",
+    "transfers",
+    "automation"
+  ],
+  "author": "AutoRenta",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "playwright": "^1.40.0"
+  }
+}

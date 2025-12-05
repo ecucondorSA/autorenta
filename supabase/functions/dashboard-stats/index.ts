@@ -5,7 +5,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
-import { corsHeaders } from '../_shared/cors.ts';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 // ============================================================================
 // TYPES
@@ -44,6 +44,8 @@ interface DashboardStats {
 // ============================================================================
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -105,11 +107,11 @@ serve(async (req) => {
         .select('id, status')
         .eq('owner_id', user.id),
 
-      // 3. Get all bookings for earnings calculation
+      // 3. Get all bookings for earnings calculation (join through cars)
       supabase
         .from('bookings')
-        .select('id, status, start_at, total_amount, updated_at, created_at')
-        .eq('owner_id', user.id),
+        .select('id, status, start_at, total_amount, updated_at, created_at, car:cars!inner(owner_id)')
+        .eq('car.owner_id', user.id),
     ]);
 
     // Handle errors

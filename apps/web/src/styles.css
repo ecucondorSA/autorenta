@@ -29,6 +29,9 @@
 /* 📦 Container Queries - Component-level responsive design */
 @import './styles/container-queries.css';
 
+/* 🎬 Animation System - Enter/leave transitions */
+@import './styles/animations.css';
+
 /* ============================================ */
 /* CSS RULES START HERE */
 /* ============================================ */
@@ -85,6 +88,85 @@ body.no-scroll {
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ♿ ACCESSIBILITY - SKIP LINK & FOCUS MANAGEMENT (WCAG 2.4.1)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Skip Link - Hidden until focused */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 9999;
+  padding: 1rem 1.5rem;
+  background-color: var(--cta-default);
+  color: var(--cta-text);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-4);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 50%;
+  top: 1rem;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Make focusable but visually hidden */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Decorative SVG icons should be hidden from assistive tech */
+svg[aria-hidden="true"],
+.icon-decorative {
+  pointer-events: none;
+}
+
+/* Focus visible enhancement for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 @tailwind base;
@@ -162,13 +244,13 @@ body.no-scroll {
     --border-success: #9db38b; /* Olive */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #a7d8f4; /* Blue primary */
-    --cta-hover: #8ec9ec; /* Blue hover */
-    --cta-pressed: #a7d8f4; /* Blue primary */
-    --cta-text: #050505; /* Black */
-    --cta-secondary: #dfd2bf; /* Beige */
-    --cta-secondary-hover: #c9bea8; /* Beige hover */
-    --cta-secondary-text: #050505; /* Black */
+    --cta-default: #4F46E5; /* Índigo profundo - Sofisticado y moderno */
+    --cta-hover: #4338CA; /* Índigo hover */
+    --cta-pressed: #3730A3; /* Índigo pressed */
+    --cta-text: #FFFFFF; /* White text on dark bg */
+    --cta-secondary: #FBBF24; /* Amarillo Ámbar/Oro - Cálido y premium */
+    --cta-secondary-hover: #F59E0B; /* Amber hover */
+    --cta-secondary-text: #1F2937; /* Gris carbón para contraste */
 
     /* ─── Estados y Feedback ─── */
     --info-50: #eff6ff;
@@ -1439,4 +1521,16 @@ body.no-scroll {
 app-pwa-install-banner,
 app-pwa-install-banner > div {
   display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   📱 CARS LIST MAP VIEW - Hide details panel on mobile
+   Show horizontal carousel instead
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) {
+  /* Hide the left-side details panel when mobile carousel is shown */
+  app-cars-list-page app-cars-map .absolute.top-0.left-0.h-full.w-96,
+  app-cars-list-page app-cars-map app-map-details-panel {
+    display: none !important;
+  }
 }

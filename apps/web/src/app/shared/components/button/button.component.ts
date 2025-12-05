@@ -1,17 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { HapticFeedbackService } from '../../../core/services/haptic-feedback.service';
 
 /**
- * ButtonComponent - Sistema de botones unificado
+ * ButtonComponent - Sistema de botones unificado Mobile-First
  *
  * Implementa el patrón de diseño del documento de propuestas (docs/design-proposals.md)
  * con 5 variantes y soporte completo de estados (loading, disabled, hover, active).
  *
  * Features:
  * - 5 variantes: primary, secondary, danger, ghost, outline
- * - 3 tamaños: sm, md, lg
+ * - 3 tamaños: sm, md, lg (touch-friendly: 44px+ para md/lg)
  * - Estado de loading con spinner
  * - Full width opcional
+ * - Haptic feedback en mobile
+ * - WCAG 2.5.5 compliant (44px touch targets para md/lg)
  * - WCAG AA compliant (focus rings, contraste validado)
  *
  * @example
@@ -38,6 +41,7 @@ import { Component, computed, input, output } from '@angular/core';
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <circle
             class="opacity-25"
@@ -63,10 +67,28 @@ import { Component, computed, input, output } from '@angular/core';
       :host {
         display: inline-block;
       }
+
+      :host(.full-width) {
+        display: block;
+        width: 100%;
+      }
+
+      /* Touch-friendly tap highlight removal */
+      button {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      /* Active state micro-interaction */
+      button:active:not(:disabled) {
+        transform: scale(0.97);
+      }
     `,
   ],
 })
 export class ButtonComponent {
+  private readonly hapticService = inject(HapticFeedbackService);
+
   // Inputs
   variant = input<'primary' | 'secondary' | 'danger' | 'ghost' | 'outline'>('primary');
   size = input<'sm' | 'md' | 'lg'>('md');
@@ -74,6 +96,7 @@ export class ButtonComponent {
   disabled = input(false);
   type = input<'button' | 'submit' | 'reset'>('button');
   fullWidth = input(false);
+  haptic = input(true); // Enable haptic feedback by default
 
   // Output
   clicked = output<MouseEvent>();
@@ -95,10 +118,11 @@ export class ButtonComponent {
         'border-2 border-cta-default text-cta-default hover:bg-cta-default hover:text-white focus-visible:ring-border-focus',
     };
 
+    // Touch-friendly sizes: WCAG 2.5.5 requires 44x44px minimum for md/lg
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm gap-1.5',
-      md: 'px-4 py-2 text-base gap-2',
-      lg: 'px-6 py-3 text-lg gap-3',
+      sm: 'px-3 py-1.5 text-sm gap-1.5 min-h-[36px] min-w-[44px]',
+      md: 'px-4 py-2.5 text-base gap-2 min-h-[44px] min-w-[44px]',
+      lg: 'px-6 py-3.5 text-lg gap-3 min-h-[52px] min-w-[52px]',
     };
 
     const width = this.fullWidth() ? 'w-full' : '';
@@ -107,8 +131,38 @@ export class ButtonComponent {
   });
 
   handleClick(event: MouseEvent): void {
-    if (!this.disabled() && !this.loading()) {
-      this.clicked.emit(event);
+    if (this.disabled() || this.loading()) {
+      return;
+    }
+
+    // Trigger haptic feedback if enabled
+    if (this.haptic()) {
+      this.triggerHapticFeedback();
+    }
+
+    this.clicked.emit(event);
+  }
+
+  private triggerHapticFeedback(): void {
+    // Use contextual haptic feedback based on button variant
+    const variant = this.variant();
+
+    switch (variant) {
+      case 'primary':
+        this.hapticService.medium();
+        break;
+      case 'danger':
+        this.hapticService.heavy();
+        break;
+      case 'secondary':
+      case 'outline':
+        this.hapticService.light();
+        break;
+      case 'ghost':
+        this.hapticService.selection();
+        break;
+      default:
+        this.hapticService.light();
     }
   }
 }

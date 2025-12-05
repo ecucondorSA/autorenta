@@ -1,0 +1,14 @@
+{
+  "name": "patchright-streaming-mcp",
+  "version": "1.0.0",
+  "description": "Patchright MCP Server with CDP bypass for anti-bot detection",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "patchright": "^1.49.1"
+  }
+}

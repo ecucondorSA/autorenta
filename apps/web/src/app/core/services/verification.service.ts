@@ -12,6 +12,37 @@ export interface VerificationStatus {
 type UserVerificationRow = Database['public']['Tables']['user_verifications']['Row'];
 type UserDocumentRow = Database['public']['Tables']['user_documents']['Row'];
 
+/**
+ * Tipos de documento válidos según el enum de la base de datos.
+ * SECURITY: Previene SQL injection validando contra whitelist.
+ */
+const VALID_DOC_TYPES = [
+  'gov_id_front',
+  'gov_id_back',
+  'driver_license',
+  'license_front',
+  'license_back',
+  'vehicle_registration',
+  'vehicle_insurance',
+  'utility_bill',
+  'selfie',
+] as const;
+
+type ValidDocType = (typeof VALID_DOC_TYPES)[number];
+
+/**
+ * Valida que el tipo de documento sea uno de los permitidos.
+ * @throws Error si el tipo no es válido
+ */
+function validateDocType(docType: string): asserts docType is ValidDocType {
+  if (!VALID_DOC_TYPES.includes(docType as ValidDocType)) {
+    throw new Error(
+      `Tipo de documento inválido: "${docType}". ` +
+      `Tipos válidos: ${VALID_DOC_TYPES.join(', ')}`
+    );
+  }
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,12 +56,24 @@ export class VerificationService {
   readonly loadingDocuments = signal(false);
 
   /**
-   * Sube una imagen de documento al bucket seguro
+   * Sube una imagen de documento al bucket seguro y crea/actualiza el registro en user_documents.
+   *
+   * SECURITY:
+   * - Valida docType contra whitelist antes de usar en queries
+   * - Rollback automático: si el registro en DB falla, elimina el archivo subido
+   *
+   * @param file - Archivo de imagen a subir
+   * @param docType - Tipo de documento (debe ser uno de VALID_DOC_TYPES)
+   * @returns Path del archivo subido
+   * @throws Error si el tipo de documento es inválido o si falla la operación
    */
   async uploadDocument(
     file: File,
-    docType: 'license_front' | 'license_back' | 'dni_front' | 'dni_back',
+    docType: string,
   ): Promise<string> {
+    // SECURITY FIX #1: Validar docType contra whitelist antes de usar
+    validateDocType(docType);
+
     const {
       data: { user },
     } = await this.supabase.auth.getUser();
@@ -45,6 +88,40 @@ export class VerificationService {
       .upload(filePath, file);
 
     if (uploadError) throw uploadError;
+
+    // Create or update user_documents record
+    const { error: upsertError } = await this.supabase
+      .from('user_documents')
+      .upsert(
+        {
+          user_id: user.id,
+          kind: docType,
+          file_url: filePath,
+          status: 'pending',
+          uploaded_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,kind' }
+      );
+
+    // SECURITY FIX #2: Rollback - eliminar archivo si el registro en DB falla
+    if (upsertError) {
+      console.error('Error creating document record, rolling back file upload:', upsertError);
+
+      // Intentar eliminar el archivo subido para mantener consistencia
+      try {
+        await this.supabase.storage
+          .from('verification-docs')
+          .remove([filePath]);
+        console.log('Rollback successful: file removed from storage');
+      } catch (rollbackError) {
+        // Log pero no fallar - el archivo huérfano se puede limpiar después
+        console.error('Rollback failed: could not remove uploaded file:', rollbackError);
+      }
+
+      throw new Error(
+        'Error al registrar documento. El archivo fue eliminado. Por favor, intenta de nuevo.'
+      );
+    }
 
     return filePath;
   }
@@ -192,5 +269,20 @@ export class VerificationService {
     if (error && error.code !== 'PGRST116') throw error; // Ignorar "no encontrado"
 
     return data as VerificationStatus;
+  }
+
+  /**
+   * Obtiene la lista de tipos de documento válidos.
+   * Útil para UI que necesita mostrar opciones disponibles.
+   */
+  getValidDocTypes(): readonly string[] {
+    return VALID_DOC_TYPES;
+  }
+
+  /**
+   * Verifica si un tipo de documento es válido.
+   */
+  isValidDocType(docType: string): boolean {
+    return VALID_DOC_TYPES.includes(docType as ValidDocType);
   }
 }
