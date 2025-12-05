@@ -142,3 +142,4 @@ playwright-report/
 .wrangler/
 *.log
 *_output*.txt
+apps/web/tools/binance-p2p-mcp/
