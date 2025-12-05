@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -38,25 +38,13 @@ import {
   DateRange,
   DateRangePickerComponent,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
-import { DistanceBadgeComponent } from '../../../shared/components/distance-badge/distance-badge.component';
-import {
-  PaymentMethodButtonsComponent,
-  type PaymentMethod,
-} from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
-import {
-  PickupLocationSelection,
-  PickupLocationSelectorComponent,
-} from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
-import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
-import { ShareMenuComponent } from '../../../shared/components/share-menu/share-menu.component';
+import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
+import { PickupLocationSelection } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
-import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-rental-banner/urgent-rental-banner.component';
-import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import {
   BookingLocationData,
   BookingLocationFormComponent,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
-import { CarChatComponent } from '../../messages/components/car-chat.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
 import { RiskCalculatorService, RiskCalculation } from '../../../core/services/risk-calculator.service';
@@ -95,26 +83,14 @@ interface CarDetailState {
   selector: 'app-car-detail-page',
   imports: [
     CommonModule,
-    NgOptimizedImage,
     RouterLink,
     DateRangePickerComponent,
-    MoneyPipe,
     CarReviewsSectionComponent,
-    ShareMenuComponent,
-    ShareButtonComponent,
     TranslateModule,
-    UrgentRentalBannerComponent,
     StickyCtaMobileComponent,
-    DistanceBadgeComponent,
-    CarChatComponent,
-    PaymentMethodButtonsComponent,
     BookingLocationFormComponent,
-    PickupLocationSelectorComponent,
     IconComponent,
     RiskCalculatorViewerComponent,
-    // TODO: Re-add when components are created
-    // PhotoGalleryComponent,
-    // BreadcrumbsComponent,
   ],
   templateUrl: './car-detail.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -9,7 +9,6 @@ import { PricingService } from '../../../core/services/pricing.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { AiPhotoGeneratorComponent } from '../../../shared/components/ai-photo-generator/ai-photo-generator.component';
 import { FipeAutocompleteComponent } from '../../../shared/components/fipe-autocomplete/fipe-autocomplete.component';
-import { HostSupportInfoPanelComponent } from '../../../shared/components/host-support-info-panel/host-support-info-panel.component';
 import { StockPhotosSelectorComponent } from '../../../shared/components/stock-photos-selector/stock-photos-selector.component';
 
 // ✅ NEW: Extracted services
@@ -42,7 +41,6 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
     CommonModule,
     ReactiveFormsModule,
     TranslateModule,
-    HostSupportInfoPanelComponent,
     StockPhotosSelectorComponent,
     AiPhotoGeneratorComponent,
     FipeAutocompleteComponent,

@@ -50,7 +50,6 @@ import {
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
-import { FAQSectionComponent } from './components';
 
 export interface LatLngBoundsLiteral {
   north: number;
@@ -92,8 +91,6 @@ export interface Stat {
 
     DateRangePickerComponent,
     Car3dViewerComponent,
-
-    FAQSectionComponent,
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],

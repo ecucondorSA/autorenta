@@ -15,8 +15,6 @@ import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booki
 
 // Components
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
-import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
-import { BookingInsuranceSummaryComponent } from '../../../shared/components/booking-insurance-summary/booking-insurance-summary.component';
 
 // Models
 import { Car } from '../../../core/models';
@@ -34,8 +32,6 @@ interface DualRateFxSnapshot extends FxSnapshot {
   imports: [
     CommonModule,
     MercadopagoCardFormComponent,
-    BookingPricingBreakdownComponent,
-    BookingInsuranceSummaryComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
