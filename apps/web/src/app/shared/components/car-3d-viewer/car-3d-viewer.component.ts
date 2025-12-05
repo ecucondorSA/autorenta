@@ -14,6 +14,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { Model3DCacheService } from '../../../core/services/model-3d-cache.service';
 
 /**
  * ✅ OPTIMIZED: Dynamic imports for Three.js
@@ -505,6 +506,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly ngZone = inject(NgZone);
+  private readonly modelCache = inject(Model3DCacheService);
 
   // ===== MOBILE PERFORMANCE OPTIMIZATION =====
   private readonly isMobile =
@@ -985,6 +987,17 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private loadCar(): void {
     if (!this.THREE || !this.GLTFLoader || !this.DRACOLoader || !this.scene) return;
 
+    // ===== CHECK CACHE FIRST =====
+    // If model is cached, use it immediately for instant display
+    const cachedModel = this.modelCache.getCachedModel(this.src);
+    if (cachedModel) {
+      console.log('[Car3dViewer] Using cached model:', this.src);
+      this.setupLoadedModel(cachedModel);
+      return;
+    }
+
+    console.log('[Car3dViewer] Loading model from network:', this.src);
+
     // Configure DRACO loader for compressed models
     const dracoLoader = new this.DRACOLoader();
     // Use local path for DRACO decoder instead of CDN to avoid 504 Gateway Timeout
@@ -999,84 +1012,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
       (gltf) => {
         if (!this.THREE || !this.scene) return;
 
-        this.carModel = gltf.scene;
+        // Cache the model for future use
+        this.modelCache.setThreeModule(this.THREE);
+        this.modelCache.cacheModel(this.src, gltf.scene.clone());
 
-        // Center the model
-        const box = new this.THREE.Box3().setFromObject(this.carModel);
-        const center = box.getCenter(new this.THREE.Vector3());
-        const size = box.getSize(new this.THREE.Vector3());
-
-        // Adjust position so it sits on the ground
-        this.carModel.position.x += this.carModel.position.x - center.x;
-        this.carModel.position.y = 0;
-        this.carModel.position.z += this.carModel.position.z - center.z;
-
-        // Escalar el modelo para que ocupe bien el espacio
-        // Tamaño objetivo: ~6 unidades para que sea prominente
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 8; // Más grande para efecto inmersivo
-        const scale = targetSize / maxDim;
-        this.carModel.scale.set(scale, scale, scale);
-
-        // Reposicionar después de escalar para centrar correctamente
-        const scaledBox = new this.THREE.Box3().setFromObject(this.carModel);
-        const scaledCenter = scaledBox.getCenter(new this.THREE.Vector3());
-        this.carModel.position.x = -scaledCenter.x - 2; // Mover auto hacia la derecha
-        this.carModel.position.z = -scaledCenter.z;
-        // Ajustar Y para que el modelo esté sobre el suelo
-        // const scaledSize = scaledBox.getSize(new this.THREE.Vector3());
-        this.carModel.position.y = -scaledBox.min.y;
-
-        // Enable shadows, enhance materials, and add edge outlines
-        this.carModel.traverse((child) => {
-          if (!this.THREE) return;
-          const mesh = child as import('three').Mesh;
-          if (mesh.isMesh) {
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-
-            if (mesh.material instanceof this.THREE.MeshStandardMaterial) {
-              mesh.material.envMapIntensity = 2.5; // AUMENTADO para mayor reflectividad
-              mesh.material.metalness = Math.max(mesh.material.metalness, 0.6); // Asegurar metallic
-              mesh.material.roughness = Math.min(mesh.material.roughness, 0.4); // Menos rugoso para brillo
-              mesh.material.needsUpdate = true;
-            }
-
-            // Remove edge outlines for photorealistic look
-            // if (mesh.geometry) {
-            //   const edges = new this.THREE.EdgesGeometry(mesh.geometry, 25);
-            //   const lineMaterial = new this.THREE.LineBasicMaterial({
-            //     color: 0x2b5f72,
-            //     transparent: true,
-            //     opacity: 0.35,
-            //     linewidth: 1,
-            //   });
-            //   const edgeLines = new this.THREE.LineSegments(edges, lineMaterial);
-            //   edgeLines.userData['isEdgeLine'] = true;
-            //   mesh.add(edgeLines);
-            // }
-          }
-        });
-
-        // Setup animations
-        if (gltf.animations && gltf.animations.length > 0) {
-          this.mixer = new this.THREE.AnimationMixer(this.carModel);
-          const clip = gltf.animations[0]; // "Base Stack" animation
-          const action = this.mixer.clipAction(clip);
-          action.loop = this.THREE.LoopRepeat; // Loop the animation
-          action.play();
-
-          // Start at sequence 3 (13.91 seconds / 27.83 seconds total)
-          // This position will be set in the animation loop
-          this.mixer.timeScale = 1; // Normal speed
-        }
-
-        this.scene.add(this.carModel);
-        this.isLoading = false;
-        this.modelLoaded.emit();
-
-        // Apply initial color if set, or default to Negro Piano
-        this.applyColor(this.selectedColor ?? 'Negro Piano');
+        this.setupLoadedModel(gltf.scene);
       },
       (_xhr) => {
         // Progress callback - could add progress indicator
@@ -1086,6 +1026,68 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
         this.isLoading = false;
       },
     );
+  }
+
+  /**
+   * Setup a loaded model (either from cache or network)
+   * Extracted to avoid code duplication
+   */
+  private setupLoadedModel(model: import('three').Group): void {
+    if (!this.THREE || !this.scene) return;
+
+    this.carModel = model;
+
+    // Center the model
+    const box = new this.THREE.Box3().setFromObject(this.carModel);
+    const center = box.getCenter(new this.THREE.Vector3());
+    const size = box.getSize(new this.THREE.Vector3());
+
+    // Adjust position so it sits on the ground
+    this.carModel.position.x += this.carModel.position.x - center.x;
+    this.carModel.position.y = 0;
+    this.carModel.position.z += this.carModel.position.z - center.z;
+
+    // Escalar el modelo para que ocupe bien el espacio
+    // Tamaño objetivo: ~6 unidades para que sea prominente
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const targetSize = 8; // Más grande para efecto inmersivo
+    const scale = targetSize / maxDim;
+    this.carModel.scale.set(scale, scale, scale);
+
+    // Reposicionar después de escalar para centrar correctamente
+    const scaledBox = new this.THREE.Box3().setFromObject(this.carModel);
+    const scaledCenter = scaledBox.getCenter(new this.THREE.Vector3());
+    this.carModel.position.x = -scaledCenter.x - 2; // Mover auto hacia la derecha
+    this.carModel.position.z = -scaledCenter.z;
+    // Ajustar Y para que el modelo esté sobre el suelo
+    this.carModel.position.y = -scaledBox.min.y;
+
+    // Enable shadows, enhance materials
+    this.carModel.traverse((child) => {
+      if (!this.THREE) return;
+      const mesh = child as import('three').Mesh;
+      if (mesh.isMesh) {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        if (mesh.material instanceof this.THREE.MeshStandardMaterial) {
+          mesh.material.envMapIntensity = 2.5;
+          mesh.material.metalness = Math.max(mesh.material.metalness, 0.6);
+          mesh.material.roughness = Math.min(mesh.material.roughness, 0.4);
+          mesh.material.needsUpdate = true;
+        }
+      }
+    });
+
+    // Note: Animations are not cached - only the geometry/materials
+    // If you need animations, the original loader.load path handles them
+
+    this.scene.add(this.carModel);
+    this.isLoading = false;
+    this.modelLoaded.emit();
+
+    // Apply initial color if set, or default to Negro Piano
+    this.applyColor(this.selectedColor ?? 'Negro Piano');
   }
 
   private startAnimationLoop(): void {

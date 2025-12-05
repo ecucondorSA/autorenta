@@ -47,6 +47,7 @@ import {
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 
+import { AssetPreloaderService } from '../../core/services/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
@@ -119,6 +120,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly titleService = inject(Title);
   private readonly seoSchemaService = inject(SeoSchemaService);
   readonly themeService = inject(ThemeService);
+  private readonly assetPreloader = inject(AssetPreloaderService);
   private locationSearchTimeout?: ReturnType<typeof setTimeout>;
 
   // State
@@ -1248,6 +1250,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
           this.hideClickHint();
         }, 2500);
       }, 300);
+    }
+
+    // ===== PRELOAD MAPBOX AFTER MODEL LOADS =====
+    // This improves map loading speed when user navigates to /cars/list
+    // Runs in background, non-blocking
+    if (this.isBrowser) {
+      // Small delay to ensure model rendering is complete first
+      setTimeout(() => {
+        this.assetPreloader.preloadMapbox().then(() => {
+          console.log('[Marketplace] Mapbox SDK preloaded for faster map experience');
+        });
+      }, 500);
     }
   }
 
