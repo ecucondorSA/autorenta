@@ -683,7 +683,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private themeChangeListener: ((event: Event) => void) | null = null;
   private readonly showHdriBackground = true; // Mostrar el HDRI como fondo (con blur controlado)
   private contactShadowMesh: import('three').Mesh | null = null;
-  private readonly hdriPath = '/assets/hdri/rural_asphalt_road_4k.exr'; // nuevo entorno EXR
+  private readonly hdriPath = '/assets/hdri/goegap_road_2k.hdr'; // nuevo entorno HDR optimized
   // Rotación base del HDRI para alinear la carretera con el Camaro (fase 2)
   private hdriRotationY = 3.85; // Valor estimado para alinear la carretera rural con el eje Z
 
