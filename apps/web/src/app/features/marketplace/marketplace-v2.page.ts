@@ -49,6 +49,7 @@ import {
 
 import { AssetPreloaderService } from '../../core/services/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
+import { MapboxPreloaderService } from '../../core/services/mapbox-preloader.service';
 import { SeoSchemaService } from '../../core/services/seo-schema.service';
 import { ThemeService } from '../../core/services/theme.service';
 
@@ -121,6 +122,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   private readonly seoSchemaService = inject(SeoSchemaService);
   readonly themeService = inject(ThemeService);
   private readonly assetPreloader = inject(AssetPreloaderService);
+  private readonly mapboxPreloader = inject(MapboxPreloaderService);
   private locationSearchTimeout?: ReturnType<typeof setTimeout>;
 
   // State
@@ -1252,16 +1254,18 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       }, 300);
     }
 
-    // ===== PRELOAD MAPBOX AFTER MODEL LOADS =====
-    // This improves map loading speed when user navigates to /cars/list
+    // ===== PRELOAD COMPLETE MAP AFTER MODEL LOADS =====
+    // This initializes the full Mapbox map in a hidden container
+    // When user navigates to /cars/list, map is ALREADY READY
     // Runs in background, non-blocking
     if (this.isBrowser) {
       // Small delay to ensure model rendering is complete first
       setTimeout(() => {
-        this.assetPreloader.preloadMapbox().then(() => {
-          console.log('[Marketplace] Mapbox SDK preloaded for faster map experience');
+        // Preload the FULL map (not just SDK) - includes tiles, style, etc.
+        this.mapboxPreloader.preloadMap().then(() => {
+          console.log('[Marketplace] Mapbox map fully preloaded - /cars/list will load instantly');
         });
-      }, 500);
+      }, 1000); // Wait 1 second after 3D model to not compete for bandwidth
     }
   }
 

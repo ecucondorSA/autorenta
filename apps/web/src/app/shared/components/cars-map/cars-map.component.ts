@@ -24,6 +24,7 @@ import {
 import { environment } from '../../../../environments/environment';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
+import { MapboxPreloaderService } from '../../../core/services/mapbox-preloader.service';
 import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';
@@ -231,6 +232,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private readonly applicationRef = inject(ApplicationRef);
   private readonly injector = inject(EnvironmentInjector);
   private readonly directionsService = inject(MapboxDirectionsService);
+  private readonly mapboxPreloader = inject(MapboxPreloaderService);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -439,14 +441,24 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   /**
    * Initialize Mapbox map with neutral light style
+   * Uses preloaded Mapbox GL module if available for faster initialization
    */
   private async initializeMap(): Promise<void> {
     try {
       this.loading.set(true);
 
-      // Lazy load Mapbox GL
-      const mapboxModule = await import('mapbox-gl');
-      this.mapboxgl = mapboxModule.default;
+      // Check if we have a preloaded Mapbox GL module (from MapboxPreloaderService)
+      const preloadedMapboxGL = this.mapboxPreloader.getMapboxGL();
+
+      if (preloadedMapboxGL) {
+        console.log('[CarsMap] Using preloaded Mapbox GL module - faster initialization!');
+        this.mapboxgl = preloadedMapboxGL;
+      } else {
+        // Fallback: Lazy load Mapbox GL if not preloaded
+        console.log('[CarsMap] Mapbox GL not preloaded, loading dynamically...');
+        const mapboxModule = await import('mapbox-gl');
+        this.mapboxgl = mapboxModule.default;
+      }
 
       if (!this.mapboxgl) {
         throw new Error('Mapbox GL library failed to load');
@@ -2300,7 +2312,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           type: 'line',
           source: this.routeSourceId,
           paint: {
-            'line-color': 'var(--surface-primary, var(--surface-primary, #ffffff)fff)',
+            'line-color': '#ffffff',
             'line-width': 20, // THICK outline to occupy whole street
             'line-opacity': 0.8, // High visibility for 3D effect
           },

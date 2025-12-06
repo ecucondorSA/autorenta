@@ -96,9 +96,8 @@ export class VerificationService {
         {
           user_id: user.id,
           kind: docType,
-          file_url: filePath,
+          storage_path: filePath,
           status: 'pending',
-          uploaded_at: new Date().toISOString(),
         },
         { onConflict: 'user_id,kind' }
       );

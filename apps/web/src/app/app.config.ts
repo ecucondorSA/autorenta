@@ -29,6 +29,7 @@ import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.inter
 import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SupabaseClientService } from './core/services/supabase-client.service';
+import { routeReuseStrategyProvider } from './core/strategies/custom-route-reuse.strategy';
 
 /**
  * Inicializa el servicio de monitoreo de performance
@@ -80,6 +81,8 @@ export const appConfig: ApplicationConfig = {
     }),
     // ✅ PrimeNG MessageService for notifications
     MessageService,
+    // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation
+    routeReuseStrategyProvider,
     // ✅ Global Error Handler (handles Sentry internally)
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     // ✅ Performance Monitoring (solo en desarrollo)

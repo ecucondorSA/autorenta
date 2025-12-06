@@ -100,14 +100,9 @@
       fetchpriority="high"
     />
 
-    <!-- Preload splash video for instant playback (optimized: 147KB, 2s, 9:16) -->
-    <link
-      rel="preload"
-      href="/assets/splash/splash-mobile.mp4"
-      as="video"
-      type="video/mp4"
-    />
-    <link rel="preload" href="/assets/splash/splash-mobile-poster.webp" as="image" type="image/webp" />
+    <!-- Prefetch splash assets (avoid preload warnings when not used immediately) -->
+    <link rel="prefetch" href="/assets/splash/splash-mobile.mp4" as="video" type="video/mp4" />
+    <link rel="prefetch" href="/assets/splash/splash-mobile-poster.webp" as="image" type="image/webp" />
 
     <!-- PWA Manifests -->
     <link rel="manifest" href="manifest.webmanifest" />

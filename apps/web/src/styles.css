@@ -244,10 +244,10 @@ svg[aria-hidden="true"],
     --border-success: #9db38b; /* Olive */
 
     /* ─── CTAs y Acciones ─── */
-    --cta-default: #4F46E5; /* Índigo profundo - Sofisticado y moderno */
-    --cta-hover: #4338CA; /* Índigo hover */
-    --cta-pressed: #3730A3; /* Índigo pressed */
-    --cta-text: #FFFFFF; /* White text on dark bg */
+    --cta-default: #39FF14; /* RADIOACTIVE NEON GREEN - Maximum Impact */
+    --cta-hover: #32E610; /* Slightly darker neon */
+    --cta-pressed: #2BD00E; /* Pressed state */
+    --cta-text: #000000; /* BLACK text for maximum contrast on neon */
     --cta-secondary: #FBBF24; /* Amarillo Ámbar/Oro - Cálido y premium */
     --cta-secondary-hover: #F59E0B; /* Amber hover */
     --cta-secondary-text: #1F2937; /* Gris carbón para contraste */

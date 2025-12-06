@@ -28,6 +28,7 @@ import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { LocaleManagerService } from './core/services/locale-manager.service';
+import { MapboxPreloaderService } from './core/services/mapbox-preloader.service';
 import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-portal.service';
 import { ProfileService, UserProfile } from './core/services/profile.service';
 import { PushNotificationService } from './core/services/push-notification.service';
@@ -179,6 +180,7 @@ export class AppComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
   private readonly assetPreloader = inject(AssetPreloaderService);
+  private readonly mapboxPreloader = inject(MapboxPreloaderService);
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
@@ -277,8 +279,11 @@ export class AppComponent implements OnInit {
 
   /**
    * Initialize splash screen timing
-   * Uses splash time to preload heavy assets (Three.js, 3D models)
+   * Uses splash time to preload heavy assets (Three.js, 3D models, Mapbox)
    * Signals appReady=true when critical initialization completes
+   *
+   * OPTIMIZATION: Preloads BOTH 3D model AND Mapbox map during splash
+   * so when user navigates to /cars/list, the map is already ready
    */
   private initializeSplash(): void {
     const startTime = performance.now();
@@ -293,13 +298,29 @@ export class AppComponent implements OnInit {
     // These load during splash animation time
     const preloadTasks = this.assetPreloader.preloadCriticalAssets();
 
-    // Wait for critical tasks, but also give preload a chance
-    // If critical finishes fast, wait up to 800ms for preload to make progress
+    // Start Mapbox preloading in parallel
+    // This creates a hidden map that will be ready when user visits /cars/list
+    const mapPreloadPromise = this.mapboxPreloader.preloadMap().catch(err => {
+      console.warn('[App] Map preload failed (non-critical):', err);
+    });
+
+    // Minimum splash duration to allow heavy assets to load
+    // Video is ~8 seconds, 3D model + Map tiles load during this time
+    const MIN_SPLASH_DURATION = 6000; // 6 seconds (video is 7.8s, so this gives buffer)
+    const minSplashPromise = new Promise(resolve => setTimeout(resolve, MIN_SPLASH_DURATION));
+
+    // Wait for:
+    // 1. Critical tasks (profile, route)
+    // 2. Either preload completes OR minimum splash duration (whichever is longer)
     Promise.all([
       criticalTasks,
-      Promise.race([
-        preloadTasks,
-        new Promise(resolve => setTimeout(resolve, 800)), // Don't wait forever
+      Promise.all([
+        // Give both preloads time to complete, but don't wait forever
+        Promise.race([
+          Promise.all([preloadTasks, mapPreloadPromise]),
+          new Promise(resolve => setTimeout(resolve, 5000)), // Max 5s wait
+        ]),
+        minSplashPromise, // Always wait minimum duration
       ]),
     ]).finally(() => {
       // Signal to splash that app is ready
@@ -308,8 +329,9 @@ export class AppComponent implements OnInit {
 
       const elapsed = performance.now() - startTime;
       const preloadProgress = this.assetPreloader.progress();
+      const mapReady = this.mapboxPreloader.isMapReady();
       console.log(
-        `[App] Ready in ${elapsed.toFixed(0)}ms (preload: ${preloadProgress}%)`
+        `[App] Ready in ${elapsed.toFixed(0)}ms (assets: ${preloadProgress}%, map: ${mapReady ? '✓' : '○'})`
       );
     });
   }

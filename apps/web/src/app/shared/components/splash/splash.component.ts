@@ -61,10 +61,10 @@ export class SplashComponent implements AfterViewInit, OnDestroy {
   private animationFrame?: number;
 
   // Timing constants
-  private readonly INTRO_DURATION = 2000; // Video intro duration
+  private readonly INTRO_DURATION = 7800; // Video intro duration (~8 seconds)
   private readonly FADE_DURATION = 400;
-  private readonly MIN_DISPLAY = 800; // Minimum time to show splash
-  private readonly MAX_WAIT = 5000; // Maximum wait before forced exit
+  private readonly MIN_DISPLAY = 5000; // Minimum time to show splash (gives time for 3D + map preload)
+  private readonly MAX_WAIT = 10000; // Maximum wait before forced exit (allows heavy assets to load)
 
   private startTime = 0;
   private maxWaitTimeout?: ReturnType<typeof setTimeout>;

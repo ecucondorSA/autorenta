@@ -1,73 +1,57 @@
 <header
   class="app-header fixed top-0 left-0 right-0 z-50 bg-surface-raised dark:bg-surface-secondary border-b border-border-default dark:border-border-default transition-all duration-300 shadow-sm"
-  [class.app-header--scrolled]="isScrolled()"
->
+  [class.app-header--scrolled]="isScrolled()">
   <div class="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
     <!-- Logo -->
-    <a
-      routerLink="/"
+    <a routerLink="/"
       class="flex items-center gap-2 flex-shrink-0 hover:opacity-90 transition-opacity"
-      aria-label="Ir al inicio"
-    >
-<!-- Logo Original - Actualizado a Índigo -->
-      <svg
-        class="h-10 w-auto"
-        viewBox="0 0 400 80"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="AutoRenta"
-      >
+      aria-label="Ir al inicio">
+      <!-- Logo Original - Actualizado a Índigo -->
+      <svg class="h-10 w-auto" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+        aria-label="AutoRenta">
         <!-- Ícono de auto con llave -->
         <g transform="translate(8, 12)">
-          <circle cx="25" cy="30" r="28" fill="#4F46E5" opacity="0.15"/>
-          <g stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
-            <circle cx="18" cy="18" r="6"/>
-            <circle cx="18" cy="18" r="2.5" fill="#4F46E5"/>
-            <path d="M18 24 L18 35"/>
-            <path d="M18 30 L21 30 L21 32"/>
-            <path d="M18 34 L22 34 L22 36"/>
+          <circle cx="25" cy="30" r="28" fill="#39FF14" opacity="0.15" />
+          <g stroke="#39FF14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            fill="none">
+            <circle cx="18" cy="18" r="6" />
+            <circle cx="18" cy="18" r="2.5" fill="#39FF14" />
+            <path d="M18 24 L18 35" />
+            <path d="M18 30 L21 30 L21 32" />
+            <path d="M18 34 L22 34 L22 36" />
           </g>
-          <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" class="dark:stroke-white">
-            <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z"/>
-            <path d="M22 32 L24 26 L33 26 L33 32 Z" fill="#4F46E5" opacity="0.5" stroke="none"/>
-            <path d="M35 32 L35 26 L40 26 L42 32 Z" fill="#4F46E5" opacity="0.5" stroke="none"/>
-            <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5"/>
+          <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round"
+            stroke-linecap="round" class="dark:stroke-white">
+            <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z" />
+            <path d="M22 32 L24 26 L33 26 L33 32 Z" fill="#39FF14" opacity="0.5" stroke="none" />
+            <path d="M35 32 L35 26 L40 26 L42 32 Z" fill="#39FF14" opacity="0.5" stroke="none" />
+            <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5" />
           </g>
-          <circle cx="18" cy="46" r="5" class="fill-text-primary dark:fill-white"/>
-          <circle cx="18" cy="46" r="2" fill="#F8F4EC"/>
-          <circle cx="38" cy="46" r="5" class="fill-text-primary dark:fill-white"/>
-          <circle cx="38" cy="46" r="2" fill="#F8F4EC"/>
-          <ellipse cx="11" cy="38" rx="2" ry="1.5" fill="#4F46E5"/>
+          <circle cx="18" cy="46" r="5" class="fill-text-primary dark:fill-white" />
+          <circle cx="18" cy="46" r="2" fill="#F8F4EC" />
+          <circle cx="38" cy="46" r="5" class="fill-text-primary dark:fill-white" />
+          <circle cx="38" cy="46" r="2" fill="#F8F4EC" />
+          <ellipse cx="11" cy="38" rx="2" ry="1.5" fill="#39FF14" />
         </g>
-        <text x="72" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="700" class="fill-text-primary dark:fill-white">Auto</text>
-        <text x="178" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="700" fill="#4F46E5">Renta</text>
+        <text x="72" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38"
+          font-weight="700" class="fill-text-primary dark:fill-white">Auto</text>
+        <text x="178" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38"
+          font-weight="700" fill="#39FF14">Renta</text>
       </svg>
     </a>
 
     <!-- Search Input (compact when compact=true) -->
     <div *ngIf="showSearch" class="flex-1 max-w-md mx-4" [class.max-w-xs]="compact">
       <div class="relative">
-        <input
-          type="text"
-          [value]="searchInputValue()"
+        <input type="text" [value]="searchInputValue()"
           (input)="onSearchInput($any($event.target).value)"
-          (keydown.enter)="onSearchSubmit(searchInputValue())"
-          placeholder="Buscar autos..."
-          class="w-full h-10 pl-10 pr-4 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-elevated text-text-primary dark:text-text-inverse placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all"
-        />
+          (keydown.enter)="onSearchSubmit(searchInputValue())" placeholder="Buscar autos..."
+          class="w-full h-10 pl-10 pr-4 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-elevated text-text-primary dark:text-text-inverse placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all" />
         <svg
           class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted pointer-events-none"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
+          fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
     </div>
@@ -75,20 +59,14 @@
     <!-- CTAs -->
     <div class="flex items-center gap-2 flex-shrink-0">
       <!-- Secondary CTA: ¿Cómo funciona? -->
-      <button
-        type="button"
-        (click)="navigateToHowItWorks()"
-        class="hidden md:flex items-center px-4 py-2 text-sm font-medium text-text-primary dark:text-text-inverse hover:text-cta-default transition-colors"
-      >
+      <button type="button" (click)="navigateToHowItWorks()"
+        class="hidden md:flex items-center px-4 py-2 text-sm font-medium text-text-primary dark:text-text-inverse hover:text-cta-default transition-colors">
         ¿Cómo funciona?
       </button>
 
       <!-- Secondary CTA: Publica tu auto (más sutil para no competir con Buscar) -->
-      <button
-        type="button"
-        (click)="navigateToPublish()"
-        class="px-4 py-2 text-sm font-bold text-cta-default hover:text-white border-2 border-cta-default hover:bg-cta-default rounded-lg transition-all"
-      >
+      <button type="button" (click)="navigateToPublish()"
+        class="px-4 py-2 text-sm font-bold text-cta-default hover:text-white border-2 border-cta-default hover:bg-cta-default rounded-lg transition-all">
         Publica tu auto
       </button>
     </div>

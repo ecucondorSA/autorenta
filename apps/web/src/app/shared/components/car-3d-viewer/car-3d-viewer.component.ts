@@ -24,6 +24,7 @@ import { Model3DCacheService } from '../../../core/services/model-3d-cache.servi
 type THREE = typeof import('three');
 type GLTFLoaderType = typeof import('three/examples/jsm/loaders/GLTFLoader.js').GLTFLoader;
 type DRACOLoaderType = typeof import('three/examples/jsm/loaders/DRACOLoader.js').DRACOLoader;
+type RGBELoaderType = typeof import('three/examples/jsm/loaders/RGBELoader.js').RGBELoader;
 type OrbitControlsType =
   typeof import('three/examples/jsm/controls/OrbitControls.js').OrbitControls;
 
@@ -551,6 +552,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private THREE: THREE | null = null;
   private GLTFLoader: GLTFLoaderType | null = null;
   private DRACOLoader: DRACOLoaderType | null = null;
+  private RGBELoader: RGBELoaderType | null = null;
   private OrbitControls: OrbitControlsType | null = null;
 
   // Three.js objects (typed as any since we load dynamically)
@@ -581,6 +583,7 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   private selectedMesh: import('three').Mesh | null = null;
   private mouseMoveThrottle: ReturnType<typeof setTimeout> | null = null;
   private lastMouseEvent: MouseEvent | null = null;
+  private wheelListener: ((event: WheelEvent) => void) | null = null;
 
   // Main directional light reference for dynamic shadows
   private mainLight: import('three').DirectionalLight | null = null;
@@ -678,6 +681,11 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
   ];
 
   private themeChangeListener: ((event: Event) => void) | null = null;
+  private readonly showHdriBackground = true; // Mostrar el HDRI como fondo (con blur controlado)
+  private contactShadowMesh: import('three').Mesh | null = null;
+  private readonly hdriPath = '/assets/hdri/rural_asphalt_road_4k.exr'; // nuevo entorno EXR
+  // Rotación base del HDRI para alinear la carretera con el Camaro (fase 2)
+  private hdriRotationY = 3.85; // Valor estimado para alinear la carretera rural con el eje Z
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.isBrowser) {
@@ -686,18 +694,57 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     try {
-      // ✅ OPTIMIZED: Dynamic import of Three.js
-      const [threeModule, gltfModule, dracoModule, orbitModule] = await Promise.all([
+      // Permite ajustar la rotación del HDRI sin recompilar: ?hdriY=90 (grados)
+      const params = new URLSearchParams(window.location.search);
+      const hdriY = params.get('hdriY');
+      if (hdriY) {
+        const deg = Number(hdriY);
+        if (!Number.isNaN(deg)) {
+          this.hdriRotationY = (deg * Math.PI) / 180;
+        }
+      }
+
+      // Selección de modelo según dispositivo (solo si usa el default)
+      if (this.src === 'assets/models/car-model.glb') {
+        if (this.isLowEndDevice) {
+          this.src = 'assets/models/car-model.glb'; // 623 KB
+        } else if (this.isMobile) {
+          this.src = 'assets/models/car-3d-model-optimized.glb'; // ~825 KB
+        } else {
+          this.src = 'assets/models/car-3d-model-pbr-optimized.glb'; // ~4.1 MB
+        }
+      }
+
+      // ✅ OPTIMIZED: Dynamic import of Three.js with robust error handling
+      console.log('[Car3dViewer] Starting dynamic imports...');
+
+      const [threeModule, gltfModule, dracoModule, rgbeModule, orbitModule, exrModule] = await Promise.all([
         import('three'),
         import('three/examples/jsm/loaders/GLTFLoader.js'),
         import('three/examples/jsm/loaders/DRACOLoader.js'),
+        import('three/examples/jsm/loaders/RGBELoader.js'),
         import('three/examples/jsm/controls/OrbitControls.js'),
+        import('three/examples/jsm/loaders/EXRLoader.js'),
       ]);
+
+      console.log('[Car3dViewer] Modules imported.');
 
       this.THREE = threeModule;
       this.GLTFLoader = gltfModule.GLTFLoader;
       this.DRACOLoader = dracoModule.DRACOLoader;
-      this.OrbitControls = orbitModule.OrbitControls;
+      this.RGBELoader = rgbeModule.RGBELoader;
+      const EXRLoaderClass = (exrModule as any).EXRLoader;
+      (this as any).EXRLoader = EXRLoaderClass;
+
+      // Robust OrbitControls extraction
+      // Try named export first, then default
+      this.OrbitControls = (orbitModule as any).OrbitControls || (orbitModule as any).default;
+
+      if (!this.OrbitControls) {
+        console.error('[Car3dViewer] CRITICAL: Could not find OrbitControls in module:', orbitModule);
+      } else {
+        console.log('[Car3dViewer] OrbitControls loaded successfully.');
+      }
 
       // Initialize Raycaster for part detection
       this.raycaster = new this.THREE.Raycaster();
@@ -705,6 +752,14 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
       this.initScene();
       this.setupOrbitControls();
+
+      // Fix for OrbitControls zoom being blocked by passive listeners
+      this.wheelListener = (event: WheelEvent) => {
+        event.preventDefault();
+      };
+      this.rendererCanvas.nativeElement.addEventListener('wheel', this.wheelListener, {
+        passive: false,
+      });
       this.setupLights();
       this.createRoad();
       this.loadCar();
@@ -751,6 +806,9 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (this.swipeHintTimeout) {
       clearTimeout(this.swipeHintTimeout);
     }
+    if (this.wheelListener && this.rendererCanvas) {
+      this.rendererCanvas.nativeElement.removeEventListener('wheel', this.wheelListener);
+    }
     if (this.themeChangeListener) {
       window.removeEventListener('autorenta:theme-change', this.themeChangeListener);
     }
@@ -761,36 +819,55 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     this.scene = new this.THREE.Scene();
 
-    // Initial theme colors update
-    this.updateThemeColors();
-
     // 2. Camera - Vista 3/4 trasera fija (estilo showroom)
     const width = this.rendererCanvas.nativeElement.clientWidth;
     const height = this.rendererCanvas.nativeElement.clientHeight;
-    this.camera = new this.THREE.PerspectiveCamera(45, width / height, 0.1, 1000); // FOV 45 (lente fotográfica ~50mm)
-    // Posición de cámara 3/4 trasera - vista clásica de showroom
-    this.camera.position.set(4.5, 1.5, -5.0); // Cámara atrás-derecha del auto
-    this.camera.lookAt(0, 0.5, 0); // Centrada en el origen
+    // Avoid zero-sized framebuffer when the canvas is hidden/collapsed
+    const safeWidth = Math.max(width, 1);
+    const safeHeight = Math.max(height, 1);
+    // FOV más estrecho en móvil (35) para reducir distorsión "ojo de pez" y dar look más "teleobjetivo" premium
+    const fov = this.isMobile ? 35 : 45;
+    this.camera = new this.THREE.PerspectiveCamera(fov, width / height, 0.1, 1000);
+
+    // Posición de cámara: Vista FRONTAL desde ARRIBA (delante y encima del auto)
+    // X = lateral, Y = altura, Z positivo = delante del auto
+    if (this.isMobile) {
+      this.camera.position.set(0, 4.0, 6.0); // Frente-arriba móvil
+      this.camera.lookAt(0, 0.3, 0); // Mirar al centro del auto
+    } else {
+      this.camera.position.set(0, 3.5, 5.5); // Frente-arriba desktop
+      this.camera.lookAt(0, 0.3, 0);
+    }
 
     // 3. Renderer - OPTIMIZED for mobile performance
     this.renderer = new this.THREE.WebGLRenderer({
       canvas: this.rendererCanvas.nativeElement,
-      antialias: !this.isMobile, // Disable antialiasing on mobile for performance
-      alpha: true,
-      powerPreference: this.isMobile ? 'low-power' : 'high-performance',
+      antialias: true, // Reactivado antialias en móvil para bordes suaves (crucial para calidad percibida)
+      alpha: false, // fondo opaco para que el HDRI sea visible
+      powerPreference: 'high-performance', // Forzar GPU para evitar texturas borrosas
+      precision: 'mediump' // Balance calidad/perf
     });
-    this.renderer.setSize(width, height);
-    // Limit pixel ratio: mobile max 1.5, desktop max 2
-    const maxPixelRatio = this.isMobile ? 1.5 : Math.min(window.devicePixelRatio, 2);
+    this.renderer.setSize(safeWidth, safeHeight);
+    // Limit pixel ratio: mobile max 2.0 for sharp retina displays (subido de 1.5)
+    const maxPixelRatio = Math.min(window.devicePixelRatio, this.isMobile ? 1.25 : 1.5);
     this.renderer.setPixelRatio(maxPixelRatio);
-    // Disable shadows on mobile for major performance gain
-    this.renderer.shadowMap.enabled = !this.isMobile;
-    if (!this.isMobile) {
-      this.renderer.shadowMap.type = this.THREE.PCFSoftShadowMap;
-    }
+
+    // Shadows config - ACTIVADO siempre para contact shadows (Grounding)
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = this.THREE.PCFSoftShadowMap;
+
     this.renderer.outputColorSpace = this.THREE.SRGBColorSpace;
     this.renderer.toneMapping = this.THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = this.isMobile ? 2.0 : 1.8; // Slightly brighter on mobile to compensate for fewer lights
+    this.renderer.toneMappingExposure = this.isMobile ? 1.65 : 1.85; // subir leve para look cálido
+
+    // DEBUG: Add AxesHelper to visualize origin
+    if (this.debugMode) {
+      const axesHelper = new this.THREE.AxesHelper(5);
+      this.scene.add(axesHelper);
+    }
+
+    // Initial theme colors + HDRI environment (renderer is ready now)
+    this.updateThemeColors();
   }
 
   private updateThemeColors(): void {
@@ -800,11 +877,15 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     const surfaceBase = styles.getPropertyValue('--surface-base').trim();
     const surfaceSecondary = styles.getPropertyValue('--surface-secondary').trim();
 
-    // Fondo transparente - usa el fondo del HTML (marfil)
-    this.scene.background = null;
-    this.renderer.setClearColor(0x000000, 0); // Transparente
+    // Fondo: si showHdriBackground es true, dejamos que el HDRI sea visible; si no, fondo plano
+    if (this.showHdriBackground) {
+      this.renderer.setClearColor(0x000000, 1); // opaco, no transparente
+    } else {
+      this.scene.background = null;
+      this.renderer.setClearColor(0x000000, 0); // vuelve a modo transparente
+    }
 
-    // Update environment for reflections
+    // Update environment for reflections y (opcional) fondo
     this.createStudioEnvironment(surfaceBase, surfaceSecondary);
   }
 
@@ -813,67 +894,120 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
 
     this.controls = new this.OrbitControls(this.camera, this.renderer.domElement);
 
-    // Configuración para experiencia inmersiva - entrar/salir del auto
+    // --- A. EL OBJETIVO (Target) ---
+    // La cámara rota alrededor del "corazón" del auto (altura del capó/ventanillas).
+    this.controls.target.set(0, 0.85, 0);
+
+    // --- B. EL TACTO (Inercia/Damping) ---
+    // CRUCIAL: Esto da la sensación de "peso". Si lo apagas, se siente robótico.
     this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.02; // Movimiento aún más suave y pesado
+    this.controls.dampingFactor = 0.05; // Valores bajos (0.05 - 0.1) se sienten más "premium".
+    this.controls.rotateSpeed = 0.7; // Velocidad de rotación natural.
+
+    // --- C. LOS LÍMITES DE MOVIMIENTO (El Corralito de Inmersión) ---
+
+    // 1. ZOOM (Distancia)
     this.controls.enableZoom = true;
-    this.controls.enablePan = false; // Desactivar pan para mantener centrado
-    this.controls.minDistance = 5; // Ajustado a 5
-    this.controls.maxDistance = 7; // Ajustado a 7
-    this.controls.minPolarAngle = 0; // Puede ver desde arriba
-    this.controls.maxPolarAngle = this.THREE.MathUtils.degToRad(80); // Evita mirar por debajo del suelo
-    this.controls.minAzimuthAngle = -this.THREE.MathUtils.degToRad(135); // Limitar rotación horizontal (-135 grados)
-    this.controls.maxAzimuthAngle = this.THREE.MathUtils.degToRad(135);  // Limitar rotación horizontal (+135 grados)
-    this.controls.target.set(0, 0.5, 0); // Centrado en el origen
-    this.controls.autoRotate = true; // Rotación automática suave
+    this.controls.zoomSpeed = 0.8;
+    // minDistance: Qué tan cerca puedes llegar. Evita atravesar la chapa.
+    // 2.5 metros es suficiente para ver el detalle de un faro o rueda.
+    this.controls.minDistance = 2.5;
+    // maxDistance: Qué tan lejos. Evita que el auto se vuelva un punto lejano.
+    // 8 metros mantiene el auto como protagonista del paisaje.
+    this.controls.maxDistance = 8.0;
+
+    // 2. ÁNGULO VERTICAL (Polar Angle) - El más importante para el realismo
+    // 0 radianes es vista cenital (desde arriba).
+    // Math.PI (3.14) es desde abajo del todo.
+    // Math.PI / 2 (1.57) es el horizonte exacto.
+    this.controls.minPolarAngle = 0.1; // Permite mirar casi desde arriba (vista de dron).
+
+    // maxPolarAngle: EL LÍMITE DEL SUELO.
+    // 1.5 radianes es un poco por encima del horizonte (~85 grados).
+    // Permite "agacharse" para ver las ruedas, pero impide que la cámara
+    // se meta bajo tierra, rompiendo la ilusión.
+    this.controls.maxPolarAngle = 1.5;
+
+    // 3. ÁNGULO HORIZONTAL (Azimuth Angle)
+    // Permitimos 360 grados de libertad para rodear el auto.
+    this.controls.minAzimuthAngle = -Infinity;
+    this.controls.maxAzimuthAngle = Infinity;
+
+    // Desactivar el "Pan" (mover la cámara lateralmente sin rotar)
+    // Mantiene el auto siempre en el centro de atención.
+    this.controls.enablePan = false;
+
+    // Rotación automática suave (opcional, desactivada al interactuar)
+    this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 0.5; // Velocidad lenta y elegante
-    this.controls.enableRotate = true; // Permitir rotación manual
-    this.controls.zoomSpeed = 0.6; // Zoom más lento y controlado
-    this.controls.rotateSpeed = 0.5; // Rotación manual suave
+
+    // === DEBUG LOGS ===
+    console.log('[OrbitControls] ✅ Initialized successfully');
+    console.log('[OrbitControls] enableZoom:', this.controls.enableZoom);
+    console.log('[OrbitControls] enableRotate:', this.controls.enableRotate);
+    console.log('[OrbitControls] enableDamping:', this.controls.enableDamping);
+    console.log('[OrbitControls] minDistance:', this.controls.minDistance);
+    console.log('[OrbitControls] maxDistance:', this.controls.maxDistance);
+    console.log('[OrbitControls] target:', this.controls.target);
+    if (this.camera) {
+      const dist = this.camera.position.distanceTo(this.controls.target);
+      console.log('[OrbitControls] Camera distance to target:', dist.toFixed(2));
+      console.log('[OrbitControls] Camera position:', this.camera.position);
+    }
+
+    // Listen for control changes to confirm events are working
+    this.controls.addEventListener('change', () => {
+      console.log('[OrbitControls] 🎯 change event fired');
+    });
+    this.controls.addEventListener('start', () => {
+      console.log('[OrbitControls] 🟢 interaction START');
+    });
+    this.controls.addEventListener('end', () => {
+      console.log('[OrbitControls] 🔴 interaction END');
+    });
   }
 
   private setupLights(): void {
     if (!this.THREE || !this.scene) return;
 
-    // ===== MOBILE OPTIMIZED LIGHTING =====
-    // Mobile: 2 lights (ambient + directional) vs Desktop: 5 lights
+    // ===== LIGHTING SETUP (Mobile & Desktop) =====
 
-    // Ambient Light - Higher intensity on mobile to compensate for fewer lights
-    const ambientLight = new this.THREE.AmbientLight(0xffffff, this.isMobile ? 1.8 : 1.2);
+    // 1. Ambient Light - Base suave
+    const ambientLight = new this.THREE.AmbientLight(0xffffff, 0.8);
     this.scene.add(ambientLight);
 
-    // Main Directional Light (Sun/Key Light)
-    this.mainLight = new this.THREE.DirectionalLight(0xffffff, this.isMobile ? 3.5 : 4.0);
-    this.mainLight.position.set(8, 12, 10);
-    // Shadows only on desktop
-    this.mainLight.castShadow = !this.isMobile;
-    if (!this.isMobile) {
-      this.mainLight.shadow.mapSize.width = 2048;
-      this.mainLight.shadow.mapSize.height = 2048;
-      this.mainLight.shadow.camera.near = 0.1;
-      this.mainLight.shadow.camera.far = 50;
-      this.mainLight.shadow.bias = -0.0001;
-      this.mainLight.shadow.radius = 2;
-    }
+    // 2. Main Key Light (Sol/Estudio principal)
+    this.mainLight = new this.THREE.DirectionalLight(0xffffff, 3.0);
+    this.mainLight.position.set(6, 12, 6);
+    this.mainLight.castShadow = true; // Sombras activas siempre para grounding
+
+    // Configuración de sombras optimizada para contacto
+    this.mainLight.shadow.mapSize.width = this.isMobile ? 1024 : 2048;
+    this.mainLight.shadow.mapSize.height = this.isMobile ? 1024 : 2048;
+    this.mainLight.shadow.camera.near = 0.5;
+    this.mainLight.shadow.camera.far = 40;
+    this.mainLight.shadow.camera.left = -10;
+    this.mainLight.shadow.camera.right = 10;
+    this.mainLight.shadow.camera.top = 10;
+    this.mainLight.shadow.camera.bottom = -10;
+    this.mainLight.shadow.bias = -0.00025;
+    this.mainLight.shadow.radius = 2; // Bordes duros para sol fuerte
+
     this.scene.add(this.mainLight);
 
-    // Additional lights ONLY on desktop for premium look
-    if (!this.isMobile) {
-      // Fill Light (Cooler, from opposite side)
-      const fillLight = new this.THREE.DirectionalLight(0xddeeff, 1.8);
-      fillLight.position.set(-8, 4, -8);
+    // 3. Rim Light (Crucial para autos oscuros en fondo oscuro)
+    // Luz trasera fuerte para recortar la silueta
+    const rimLight = new this.THREE.SpotLight(0xddeeff, 5.0);
+    rimLight.position.set(0, 5, -10); // Atrás y arriba
+    rimLight.lookAt(0, 0, 0);
+    rimLight.penumbra = 0.5;
+    this.scene.add(rimLight);
+
+    // 4. Fill Light (Solo desktop o móviles potentes)
+    if (!this.isLowEndDevice) {
+      const fillLight = new this.THREE.DirectionalLight(0xe8f4ff, 1.0);
+      fillLight.position.set(-8, 2, -5);
       this.scene.add(fillLight);
-
-      // Rim Light (Backlight for edge definition)
-      const rimLight = new this.THREE.SpotLight(0xffffff, 5.0);
-      rimLight.position.set(0, 8, -12);
-      rimLight.lookAt(0, 0, 0);
-      this.scene.add(rimLight);
-
-      // Highlight Light for detail emphasis
-      const highlightLight = new this.THREE.DirectionalLight(0xffffff, 2.0);
-      highlightLight.position.set(10, 5, 0);
-      this.scene.add(highlightLight);
     }
   }
 
@@ -881,15 +1015,61 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     if (!this.THREE || !this.scene) return;
 
     // Shadow Catcher Plane
-    const geometry = new this.THREE.PlaneGeometry(100, 100);
+    const geometry = new this.THREE.PlaneGeometry(50, 50);
     const material = new this.THREE.ShadowMaterial({
-      opacity: 0.5, // AUMENTADO de 0.3 a 0.5 para sombras de contacto más negras
+      opacity: 0.65, // Más oscuro porque el asfalto es gris oscuro
+      color: 0x000000,
     });
 
     const plane = new this.THREE.Mesh(geometry, material);
     plane.rotation.x = -Math.PI / 2;
+    plane.position.y = -0.01; // pequeño offset evita z-fighting
     plane.receiveShadow = true;
     this.scene.add(plane);
+
+    // Contact shadow fakey (radial blur) para mejorar realismo
+    const contactSize = 12; // área más amplia (match scale 12)
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 1024;
+    shadowCanvas.height = 1024;
+    const ctx = shadowCanvas.getContext('2d');
+    if (ctx) {
+      const mid = shadowCanvas.width / 2;
+      const gradient = ctx.createRadialGradient(mid, mid, 20, mid, mid, 360);
+      gradient.addColorStop(0.0, 'rgba(0,0,0,0.6)');
+      gradient.addColorStop(0.20, 'rgba(0,0,0,0.35)');
+      gradient.addColorStop(0.50, 'rgba(0,0,0,0.14)');
+      gradient.addColorStop(1.0, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, shadowCanvas.width, shadowCanvas.height);
+    }
+    const shadowTexture = new this.THREE.CanvasTexture(shadowCanvas);
+    shadowTexture.needsUpdate = true;
+    const shadowMat = new this.THREE.MeshBasicMaterial({
+      map: shadowTexture,
+      transparent: true,
+      depthWrite: false,
+    });
+    const shadowGeo = new this.THREE.PlaneGeometry(contactSize, contactSize);
+    this.contactShadowMesh = new this.THREE.Mesh(shadowGeo, shadowMat);
+    this.contactShadowMesh.rotation.x = -Math.PI / 2;
+    this.contactShadowMesh.position.y = 0.01; // apenas sobre el ground
+    this.scene.add(this.contactShadowMesh);
+  }
+
+  /** Apply HDRI rotation to both environment lighting and background */
+  private applyHdriRotation(): void {
+    if (!this.scene || !this.THREE) return;
+    const sceneAny = this.scene as any;
+    if (!sceneAny.environmentRotation) {
+      sceneAny.environmentRotation = new this.THREE.Euler();
+    }
+    sceneAny.environmentRotation.y = this.hdriRotationY;
+
+    if (!sceneAny.backgroundRotation) {
+      sceneAny.backgroundRotation = new this.THREE.Euler();
+    }
+    sceneAny.backgroundRotation.y = this.hdriRotationY;
   }
 
   /** Create procedural studio environment for realistic reflections */
@@ -897,90 +1077,96 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     baseColor: string = '#f8f4ec',
     _secondaryColor: string = '#dfd2bf',
   ): void {
+    if (!this.THREE || !this.scene || !this.renderer || !this.RGBELoader) return;
+
+    // Use HDRI loader (EXR preferred for this map)
+    const useExr = this.hdriPath.toLowerCase().endsWith('.exr') && (this as any).EXRLoader;
+    const loader = useExr ? new (this as any).EXRLoader() : new this.RGBELoader();
+    const hdriPath = this.hdriPath; // '/assets/hdri/rural_asphalt_road_4k.exr';
+
+    console.log('[Car3dViewer] Loading HDRI from:', hdriPath);
+
+    loader.load(
+      hdriPath,
+      (texture) => {
+        console.log('[Car3dViewer] HDRI loaded successfully');
+        if (!this.THREE || !this.scene || !this.renderer) return;
+
+        // ✅ CRITICAL: Process HDRI with PMREMGenerator for realistic PBR reflections
+        texture.mapping = this.THREE.EquirectangularReflectionMapping;
+        texture.needsUpdate = true;
+        const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
+        pmremGenerator.compileEquirectangularShader();
+
+        const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+        this.scene.environment = envMap;
+        const sceneAny = this.scene as any;
+        this.applyHdriRotation();
+
+        // Fondo HDRI opcional
+        if (this.showHdriBackground) {
+          this.scene.background = texture; // mantener resolución completa del backplate
+          this.applyHdriRotation();
+          this.scene.backgroundBlurriness = 0.02; // Casi nítido para que el cerebro conecte la rueda con la piedra del suelo
+        } else {
+          this.scene.background = null;
+          texture.dispose();
+        }
+
+        console.log('[Car3dViewer] HDRI Environment & Background set!');
+
+        // Clean up original texture to save memory
+        pmremGenerator.dispose();
+
+        if (this.renderer) {
+          this.renderer.toneMappingExposure = this.isMobile ? 1.65 : 1.85;
+
+          // Forzar actualización de materiales
+          if (this.carModel) {
+            console.log('[Car3dViewer] Updating car materials for HDRI...');
+            this.carModel.traverse((child) => {
+              if ((child as any).isMesh) {
+                const mesh = child as any;
+                if (mesh.material) {
+                  // Boost environment intensity for visible effect
+                  mesh.material.envMapIntensity = 1.8; // más contenido con el nuevo EXR
+                  mesh.material.needsUpdate = true;
+                }
+              }
+            });
+          }
+        }
+      },
+      undefined,
+      (error) => {
+        console.error('[Car3dViewer] Error loading HDRI:', error);
+        this.createSimpleEnvironment();
+      }
+    );
+  }
+
+  private createSimpleEnvironment(): void {
     if (!this.THREE || !this.scene || !this.renderer) return;
 
-    // ===== MOBILE OPTIMIZATION: Skip complex environment map =====
-    // On mobile, environment reflections are expensive - use simpler approach
-    if (this.isMobile) {
-      // Simple solid color environment for basic reflections
-      const simpleEnvCanvas = document.createElement('canvas');
-      simpleEnvCanvas.width = 64; // Much smaller texture
-      simpleEnvCanvas.height = 32;
-      const ctx = simpleEnvCanvas.getContext('2d');
-      if (ctx) {
-        // Simple gradient: light top, slightly darker bottom
-        const grd = ctx.createLinearGradient(0, 32, 0, 0);
-        grd.addColorStop(0, '#e0e0e0');
-        grd.addColorStop(1, '#ffffff');
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 64, 32);
-      }
-      const simpleEnvTexture = new this.THREE.CanvasTexture(simpleEnvCanvas);
-      simpleEnvTexture.mapping = this.THREE.EquirectangularReflectionMapping;
-
-      const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
-      const renderTarget = pmremGenerator.fromEquirectangular(simpleEnvTexture);
-      this.scene.environment = renderTarget.texture;
-      simpleEnvTexture.dispose();
-      pmremGenerator.dispose();
-      return;
+    // Simple solid color environment for basic reflections (Fallback)
+    const simpleEnvCanvas = document.createElement('canvas');
+    simpleEnvCanvas.width = 64;
+    simpleEnvCanvas.height = 32;
+    const ctx = simpleEnvCanvas.getContext('2d');
+    if (ctx) {
+      const grd = ctx.createLinearGradient(0, 32, 0, 0);
+      grd.addColorStop(0, '#e0e0e0');
+      grd.addColorStop(1, '#ffffff');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, 64, 32);
     }
+    const simpleEnvTexture = new this.THREE.CanvasTexture(simpleEnvCanvas);
+    simpleEnvTexture.mapping = this.THREE.EquirectangularReflectionMapping;
 
-    // ===== DESKTOP: Full quality environment map =====
-    // Create a simple environment scene for reflections
     const pmremGenerator = new this.THREE.PMREMGenerator(this.renderer);
-    pmremGenerator.compileEquirectangularShader();
-
-    // Create a soft, flat environment texture (sin gradientes)
-    const envCanvas = document.createElement('canvas');
-    envCanvas.width = 256;
-    envCanvas.height = 128;
-    const envCtx = envCanvas.getContext('2d');
-
-    if (envCtx) {
-      // 1. Base Gradient (Horizon to Zenith) - Suelo más oscuro, cielo más claro
-      const grd = envCtx.createLinearGradient(0, 128, 0, 0);
-      grd.addColorStop(0, '#d0d0d0'); // Suelo gris claro
-      grd.addColorStop(0.5, '#e8e8e8'); // Horizonte
-      grd.addColorStop(1, '#ffffff'); // Zenit blanco
-      envCtx.fillStyle = grd;
-      envCtx.fillRect(0, 0, 256, 128);
-
-      // 2. Overhead Softbox (Luz cenital principal) - Gran reflejo en techo/capó
-      const ceilingGrd = envCtx.createRadialGradient(128, 0, 10, 128, 0, 100);
-      ceilingGrd.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
-      ceilingGrd.addColorStop(0.5, 'rgba(255, 255, 255, 0.8)');
-      ceilingGrd.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
-      envCtx.fillStyle = ceilingGrd;
-      envCtx.fillRect(0, 0, 256, 64);
-
-      // 3. Side Softboxes (Luces laterales) - Para definir las curvas laterales
-      // Luz izquierda
-      envCtx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-      envCtx.shadowBlur = 20;
-      envCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      envCtx.fillRect(20, 40, 40, 60);
-
-      // Luz derecha
-      envCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      envCtx.fillRect(196, 40, 40, 60);
-      envCtx.shadowBlur = 0; // Reset shadow
-
-      // 4. Highlight Accent (Toque sutil de color CTA)
-      envCtx.fillStyle = 'rgba(167, 216, 244, 0.3)'; // Celeste muy suave
-      envCtx.fillRect(100, 100, 56, 20); // Reflejo bajo
-    }
-
-    const envTexture = new this.THREE.CanvasTexture(envCanvas);
-    envTexture.mapping = this.THREE.EquirectangularReflectionMapping;
-    envTexture.needsUpdate = true;
-
-    // Generate environment map from texture
-    const renderTarget = pmremGenerator.fromEquirectangular(envTexture);
+    const renderTarget = pmremGenerator.fromEquirectangular(simpleEnvTexture);
     this.scene.environment = renderTarget.texture;
-
-    // Cleanup
-    envTexture.dispose();
+    simpleEnvTexture.dispose();
     pmremGenerator.dispose();
   }
 
@@ -1050,17 +1236,32 @@ export class Car3dViewerComponent implements AfterViewInit, OnDestroy, OnChanges
     // Escalar el modelo para que ocupe bien el espacio
     // Tamaño objetivo: ~6 unidades para que sea prominente
     const maxDim = Math.max(size.x, size.y, size.z);
-    const targetSize = 8; // Más grande para efecto inmersivo
+    const targetSize = 9.0;
     const scale = targetSize / maxDim;
     this.carModel.scale.set(scale, scale, scale);
 
     // Reposicionar después de escalar para centrar correctamente
     const scaledBox = new this.THREE.Box3().setFromObject(this.carModel);
     const scaledCenter = scaledBox.getCenter(new this.THREE.Vector3());
-    this.carModel.position.x = -scaledCenter.x - 2; // Mover auto hacia la derecha
-    this.carModel.position.z = -scaledCenter.z;
-    // Ajustar Y para que el modelo esté sobre el suelo
-    this.carModel.position.y = -scaledBox.min.y;
+
+    this.carModel.position.x = 2.5; // Desplaza a la derecha para dejar espacio al texto
+    this.carModel.position.z = -scaledCenter.z; // Centrado en Z
+    this.carModel.position.y = -scaledBox.min.y - 2.2; // Bajar 2.2 (extremadamente agresivo)
+
+    // Orientar el frente del auto hacia la cámara (3/4 frontal)
+    this.carModel.rotation.y = -Math.PI / 6;
+
+    // Alinear sombra de contacto con el auto
+    if (this.contactShadowMesh) {
+      this.contactShadowMesh.position.x = this.carModel.position.x;
+      this.contactShadowMesh.position.z = this.carModel.position.z;
+    }
+
+    // Re-centrar el target de la cámara en el nuevo posicionamiento
+    if (this.controls) {
+      this.controls.target.set(this.carModel.position.x, 0.9, this.carModel.position.z);
+      this.controls.update();
+    }
 
     // Enable shadows, enhance materials
     this.carModel.traverse((child) => {
