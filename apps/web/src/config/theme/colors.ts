@@ -39,7 +39,14 @@ export const palette = {
       primary: '#A7D8F4', // CTAs, enlaces activos, badges informativos
       hover: '#8EC9EC', // Estado hover de acentos azules
     },
+    // ─── Verde Neón / Radioactivo ───
+    neon: {
+      primary: '#00D95F', // CTA principal, botones de acción destacados
+      hover: '#00C553', // Estado hover
+      pressed: '#00B048', // Estado pressed/active
+    },
   },
+
 
   // ─── Colores de Feedback (Opcionales, baja saturación) ───
   feedback: {

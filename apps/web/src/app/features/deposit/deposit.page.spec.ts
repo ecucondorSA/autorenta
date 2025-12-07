@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DepositPage } from './deposit.page';
 import { WalletService } from '../../core/services/wallet.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { DepositPage } from './deposit.page';
 
 describe('DepositPage', () => {
   let component: DepositPage;

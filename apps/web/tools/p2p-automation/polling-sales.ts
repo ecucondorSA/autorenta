@@ -4,12 +4,12 @@ import { BinancePage } from './src/browser/binance-page.js';
 import { createServiceLogger } from './src/utils/logger.js';
 import { sleep } from './src/utils/retry.js';
 import { db } from './src/db/client.js';
+import { exec } from 'child_process';
 
 const logger = createServiceLogger('sales-daemon');
 
-async function playNotification() {
-  const { exec } = require('child_process');
-  exec('paplay /usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga 2>/dev/null || echo -e "\a"');
+function playNotification() {
+  exec('paplay /usr/share/sounds/freedesktop/stereo/phone-incoming-call.oga 2>/dev/null || echo -e "\\a"');
 }
 
 async function main() {
@@ -54,15 +54,21 @@ async function main() {
         // 1. Check Binance Orders
         // Navigate to "Pending" orders tab to save bandwidth
         const orders = await binancePage.extractOrders();
-        
-        // Filter for SALES that are marked as PAID by buyer
-        const pendingReleaseOrders = orders.filter(o => 
-            o.orderType === 'sell' && 
-            (o.binanceStatus === 'paid' || o.binanceStatus === 'completed')
+
+        // Log all sell orders with their status for debugging
+        const sellOrders = orders.filter(o => o.orderType === 'sell');
+        if (sellOrders.length > 0) {
+            logger.info(`Sell orders: ${sellOrders.map(o => `${o.orderNumber.slice(-6)}:${o.binanceStatus}`).join(', ')}`);
+        }
+
+        // Filter for SALES that are marked as PAID by buyer (NOT completed - those are already released)
+        const pendingReleaseOrders = orders.filter(o =>
+            o.orderType === 'sell' &&
+            o.binanceStatus === 'paid'
         );
 
         if (pendingReleaseOrders.length > 0) {
-            logger.info(`Found ${pendingReleaseOrders.length} potential orders to release.`);
+            logger.info(`Found ${pendingReleaseOrders.length} PAID orders to release.`);
         } else {
             process.stdout.write('.'); // Heartbeat
         }
@@ -87,12 +93,12 @@ async function main() {
                 logger.info(`New order detected in Binance: ${orderNumber}`);
                 await db.insertOrder({
                     order_number: orderNumber,
-                    status: 'pending_verification',
+                    status: 'detected',
                     order_type: 'sell',
                     amount_fiat: order.amountFiat,
                     amount_crypto: order.amountCrypto,
                     currency: order.currency,
-                    counterparty: order.counterparty,
+                    counterparty_name: order.counterparty,
                     detected_at: new Date().toISOString(),
                     retry_count: 0,
                     max_retries: 3
@@ -138,7 +144,7 @@ async function main() {
 
             if (verification.verified) {
                 logger.info(`✅ PAYMENT CONFIRMED! Releasing order...`);
-                await db.transitionStatus(orderNumber, 'verified', 'sales-daemon');
+                await db.transitionStatus(orderNumber, 'confirming', 'sales-daemon');
                 
                 // 3. Release
                 const releaseResult = await binancePage.releaseOrder(order.href);

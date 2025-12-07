@@ -10,8 +10,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IconComponent } from '../icon/icon.component';
 import { firstValueFrom } from 'rxjs';
+import { IconComponent } from '../icon/icon.component';
 import {
   BookingInspection,
   InspectionPhoto,

@@ -18,7 +18,6 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { chromium } from 'playwright';
 
 // ========== Configuration ==========
 const CONFIG = {
@@ -63,7 +62,7 @@ function formatCompact(data, type) {
     }
 
     case 'status':
-      return `🌐 Browser: ${data.browserOpen ? 'Open' : 'Closed'}\n📍 URL: ${data.pageUrl || 'N/A'}\n📊 Buffer: ${data.eventsInBuffer} events`;
+      return `🌐 Browser: ${data.browserOpen ? 'Open' : 'Closed'}\n🧭 Driver: ${data.driver || 'playwright'}\n📍 URL: ${data.pageUrl || 'N/A'}\n📊 Buffer: ${data.eventsInBuffer} events`;
 
     case 'screenshot':
       return `📸 Screenshot captured (${data.size})\n[base64 data truncated - ${data.data.length} chars]`;
@@ -165,6 +164,8 @@ class PlaywrightStreamingMCP {
     this.context = null;
     this.page = null;
     this.cdpSession = null;
+    this.chromium = null; // lazily loaded driver (playwright or patchright)
+    this.driverName = 'playwright';
 
     // Event streaming
     this.eventBuffer = [];
@@ -212,6 +213,45 @@ class PlaywrightStreamingMCP {
 
   // ========== Browser Lifecycle ==========
 
+  async loadDriver() {
+    if (this.chromium) {
+      return this.chromium;
+    }
+
+    const preferPatchright = process.env.MCP_PATCHRIGHT === '1' || process.env.PATCHRIGHT === '1';
+
+    // Try patchright first when requested/available (better CDP evasion)
+    if (preferPatchright) {
+      try {
+        const mod = await import('patchright');
+        this.chromium = mod.chromium;
+        this.driverName = 'patchright';
+        console.error('[MCP] Using patchright (CDP bypass)');
+        return this.chromium;
+      } catch (err) {
+        console.error('[MCP] MCP_PATCHRIGHT=1 but patchright is not installed, falling back to Playwright:', err.message);
+      }
+    }
+
+    // Automatic detection: use patchright if present even without env flag
+    try {
+      const mod = await import('patchright');
+      this.chromium = mod.chromium;
+      this.driverName = 'patchright';
+      console.error('[MCP] patchright detected; enabling Chrome CDP bypass');
+      return this.chromium;
+    } catch (err) {
+      // Ignore and fall back
+    }
+
+    // Default to Playwright
+    const mod = await import('playwright');
+    this.chromium = mod.chromium;
+    this.driverName = 'playwright';
+    console.error('[MCP] Using Playwright chromium');
+    return this.chromium;
+  }
+
   async ensureBrowser() {
     if (this.browser && this.page) {
       return { browser: this.browser, page: this.page };
@@ -223,11 +263,15 @@ class PlaywrightStreamingMCP {
     console.error('[MCP] Launching PERSISTENT browser for MercadoPago...');
     console.error(`[MCP] Session data saved in: ${userDataDir}`);
 
+    const chromium = await this.loadDriver();
+    const usingPatchright = this.driverName === 'patchright';
+
     // Use launchPersistentContext to save cookies, localStorage, session
     this.context = await chromium.launchPersistentContext(userDataDir, {
       headless: CONFIG.headless,
       slowMo: CONFIG.slowMo,
-      viewport: CONFIG.viewport,
+      // patchright recommends leaving viewport null to mirror Chrome defaults
+      viewport: usingPatchright ? null : CONFIG.viewport,
       args: ['--start-maximized'],
     });
 
@@ -490,6 +534,7 @@ class PlaywrightStreamingMCP {
               pageUrl: this.page?.url() || null,
               eventsInBuffer: this.eventBuffer.length,
               lastEventId: this.lastEventId,
+              driver: this.driverName,
               config: CONFIG,
             };
             break;

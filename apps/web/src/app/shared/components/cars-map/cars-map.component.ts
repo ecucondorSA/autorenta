@@ -570,7 +570,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     } catch (err) {
       console.error('[CarsMap] Initialization error:', err);
-      this.error.set(err instanceof Error ? err.message : 'Error al inicializar el mapa');
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      
+      if (errorMessage.includes('WebGL')) {
+        this.error.set('El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.');
+      } else {
+        this.error.set(errorMessage || 'Error al inicializar el mapa');
+      }
       this.loading.set(false);
     }
   }

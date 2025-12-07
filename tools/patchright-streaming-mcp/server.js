@@ -134,7 +134,7 @@ async function mpTransfer(page, alias, amount, expectedName) {
 
 // ========== Configuration ==========
 const CONFIG = {
-  headless: false,
+  headless: true,
   profilePath: process.env.BROWSER_PROFILE || '/home/edu/.mercadopago-browser-profile',
   eventBufferSize: 100,
   compactOutput: true,
@@ -408,7 +408,7 @@ class PatchrightStreamingMCP {
 
   async closeBrowser() {
     if (this.context) {
-      await this.context.close().catch(() => {});
+      await this.context.close().catch(() => { });
       this.context = null;
       this.page = null;
     }

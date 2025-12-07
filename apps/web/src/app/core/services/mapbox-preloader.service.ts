@@ -73,6 +73,11 @@ export class MapboxPreloaderService {
       const mapboxModule = await import('mapbox-gl');
       this.mapboxgl = mapboxModule.default;
 
+      // Check for WebGL support
+      if (!this.mapboxgl.supported()) {
+        throw new Error('Mapbox GL requires WebGL support');
+      }
+
       // 2. Set access token
       this.mapboxgl.accessToken = environment.mapboxAccessToken;
 
@@ -103,8 +108,8 @@ export class MapboxPreloaderService {
       // 5. Wait for map to fully load (tiles, style, etc.)
       await new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(() => {
-          reject(new Error('Map load timeout'));
-        }, 15000);
+          reject(new Error('Map load timeout (slow connection or headless env)'));
+        }, 30000); // Increased to 30s for headless environments
 
         this.preloadedMap!.on('load', () => {
           clearTimeout(timeout);
@@ -128,8 +133,12 @@ export class MapboxPreloaderService {
       this.isPreloading = false;
 
       console.log('[MapboxPreloader] Map preload complete');
-    } catch (error) {
-      console.error('[MapboxPreloader] Failed to preload map:', error);
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message?.includes('timeout')) {
+        console.warn('[MapboxPreloader] Skipping map preload due to timeout (non-critical)');
+      } else {
+        console.error('[MapboxPreloader] Failed to preload map:', error);
+      }
       this._error.set(error instanceof Error ? error.message : 'Unknown error');
       this._isLoading.set(false);
       this.isPreloading = false;
@@ -181,8 +190,7 @@ export class MapboxPreloaderService {
     }
 
     try {
-      // Get the canvas element from the preloaded map
-      const canvas = this.preloadedMap.getCanvas();
+
       const mapContainer = this.preloadedMap.getContainer();
 
       // Move the map container to the target

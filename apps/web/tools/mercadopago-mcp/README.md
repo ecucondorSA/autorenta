@@ -1,6 +1,6 @@
-# Playwright Streaming MCP Server
+# Streaming MCP Server (Playwright / Patchright)
 
-Real-time browser automation with live event streaming via Chrome DevTools Protocol (CDP).
+Real-time browser automation with live event streaming via Chrome DevTools Protocol (CDP). Supports Playwright by default and Patchright (Chrome CDP bypass) when you need MercadoPago to behave like a real user session.
 
 ## Features
 
@@ -14,16 +14,23 @@ Real-time browser automation with live event streaming via Chrome DevTools Proto
 ## Installation
 
 ```bash
-cd /home/edu/autorenta/tools/playwright-streaming-mcp
+cd /home/edu/autorenta/apps/web/tools/mercadopago-mcp
 npm install
-npx playwright install chromium
+# Optional: Patchright mode (uses your installed Google Chrome)
+npm run start:patchright   # or MCP_PATCHRIGHT=1 node server.js
 ```
 
 ## Register with Claude Code
 
 ```bash
-claude mcp add playwright-streaming node /home/edu/autorenta/tools/playwright-streaming-mcp/server.js
+claude mcp add playwright-streaming node /home/edu/autorenta/apps/web/tools/mercadopago-mcp/server.js
 ```
+
+## Patchright mode (MercadoPago-safe)
+
+- Uses `patchright` and your persistent profile at `/home/edu/.mercadopago-browser-profile` to reuse the logged-in session.
+- Start it with `npm run start:patchright` or `MCP_PATCHRIGHT=1 node server.js`.
+- Falls back to Playwright automatically if Patchright is not installed.
 
 ## Available Tools
 

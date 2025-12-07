@@ -38,14 +38,15 @@ import { BookingsService } from '../../core/services/bookings.service';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
-import {
-  Car3dViewerComponent,
-  CarPartInfo,
-} from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
+
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
+import {
+  Car3dViewerComponent,
+  CarPartInfo,
+} from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 
 import { AssetPreloaderService } from '../../core/services/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
@@ -90,9 +91,10 @@ export interface Stat {
     RouterModule,
 
     FloatingActionFabComponent,
-
     DateRangePickerComponent,
     Car3dViewerComponent,
+
+
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -101,6 +103,7 @@ export interface Stat {
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
   @ViewChild('carViewer') carViewer?: Car3dViewerComponent;
+
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -242,6 +245,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly clickHintFading = signal(false);
   private clickHintTimeout?: ReturnType<typeof setTimeout>;
   private clickHintShownSession = false;
+
+
+
 
   // Computed - Ahora usa BreakpointService
   readonly isMobile = this.breakpoint.isMobile;
@@ -495,9 +501,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.locationWatchId !== null) {
       this.locationService.clearWatch(this.locationWatchId);
-    }
-    if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
     }
     if (this.clickHintTimeout) {
       clearTimeout(this.clickHintTimeout);
@@ -982,6 +985,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.showFilters.set(false);
   }
 
+  onPublishClick(): void {
+    void this.router.navigate(['/cars/publish']);
+  }
+
   /**
    * Abre el selector de fechas
    */
@@ -1351,19 +1358,16 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.selectedPart.set(null);
   }
 
-  onPublishClick(): void {
-    void this.router.navigate(['/cars/publish']);
-  }
 
-  /**
-   * Close the selected part panel
-   */
+
   closePartPanel(): void {
     this.selectedPart.set(null);
     if (this.carViewer) {
       this.carViewer.deselectPart();
     }
   }
+
+
 
   /**
    * Check if a quick filter is active

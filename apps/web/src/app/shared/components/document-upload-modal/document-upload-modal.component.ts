@@ -91,7 +91,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
             </div>
           </div>
           <button
-            (click)="close.emit()"
+            (click)="closed.emit()"
             class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,7 +225,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
         <!-- Footer -->
         <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
           <button
-            (click)="close.emit()"
+            (click)="closed.emit()"
             class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             Cerrar
@@ -237,7 +237,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 })
 export class DocumentUploadModalComponent {
   @Input() docType: string = '';
-  @Output() close = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
   @Output() uploaded = new EventEmitter<void>();
 
   private verificationService = inject(VerificationService);
@@ -259,7 +259,7 @@ export class DocumentUploadModalComponent {
 
   onBackdropClick(event: Event) {
     if (event.target === event.currentTarget) {
-      this.close.emit();
+      this.closed.emit();
     }
   }
 

@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { config } from '../utils/config.js';
 import { createServiceLogger } from '../utils/logger.js';
-import type { P2POrder, P2PEvent, OrderStatus, PaymentDetails } from '../types/index.js';
+import type { P2POrder, P2PEvent, OrderStatus, PaymentDetails, MarketPrice, P2PConfig } from '../types/index.js';
 
 const logger = createServiceLogger('db');
 
@@ -235,6 +235,99 @@ class SupabaseDB {
     if (error) {
       logger.error(`Error logging event: ${error.message}`);
     }
+  }
+
+  // ============ Market Prices ============
+
+  async recordMarketPrices(prices: MarketPrice[]): Promise<boolean> {
+    if (prices.length === 0) return true;
+
+    const records = prices.map(p => ({
+      crypto_currency: p.cryptoCurrency,
+      fiat_currency: p.fiatCurrency,
+      order_type: p.orderType,
+      price_per_unit: p.pricePerUnit,
+      min_order_limit: p.minOrderLimit,
+      max_order_limit: p.maxOrderLimit,
+      available_amount: p.availableAmount,
+      payment_methods: JSON.stringify(p.paymentMethods),
+      source_user_id: p.sourceUserId,
+      source_user_name: p.sourceUserName,
+      source_user_trades: p.sourceUserTrades,
+      source_user_completion_rate: p.sourceUserCompletionRate,
+      ranking_position: p.rankingPosition,
+    }));
+
+    const { error } = await this.client
+      .from('p2p_market_prices')
+      .insert(records);
+
+    if (error) {
+      logger.error(`Error recording market prices: ${error.message}`);
+      return false;
+    }
+
+    logger.info(`Recorded ${prices.length} market prices for ${prices[0]?.fiatCurrency}`);
+    return true;
+  }
+
+  async getLatestPrices(fiatCurrency: string, orderType: 'buy' | 'sell', limit: number = 10): Promise<MarketPrice[]> {
+    const { data, error } = await this.client
+      .from('p2p_market_prices')
+      .select('*')
+      .eq('fiat_currency', fiatCurrency)
+      .eq('order_type', orderType)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      logger.error(`Error fetching latest prices: ${error.message}`);
+      return [];
+    }
+
+    return (data || []).map(d => ({
+      cryptoCurrency: d.crypto_currency,
+      fiatCurrency: d.fiat_currency,
+      orderType: d.order_type as 'buy' | 'sell',
+      pricePerUnit: parseFloat(d.price_per_unit),
+      minOrderLimit: parseFloat(d.min_order_limit),
+      maxOrderLimit: parseFloat(d.max_order_limit),
+      availableAmount: d.available_amount ? parseFloat(d.available_amount) : undefined,
+      paymentMethods: JSON.parse(d.payment_methods || '[]'),
+      sourceUserId: d.source_user_id,
+      sourceUserName: d.source_user_name,
+      sourceUserTrades: d.source_user_trades,
+      sourceUserCompletionRate: d.source_user_completion_rate ? parseFloat(d.source_user_completion_rate) : undefined,
+      rankingPosition: d.ranking_position,
+    }));
+  }
+
+  // ============ P2P Config ============
+
+  async getActiveConfigs(): Promise<P2PConfig[]> {
+    const { data, error } = await this.client
+      .from('p2p_config')
+      .select('*')
+      .eq('is_active', true);
+
+    if (error) {
+      logger.error(`Error fetching configs: ${error.message}`);
+      return [];
+    }
+
+    return (data || []).map(d => ({
+      countryCode: d.country_code,
+      countryName: d.country_name,
+      fiatCurrency: d.fiat_currency,
+      binanceTradeUrl: d.binance_trade_url,
+      paymentMethods: JSON.parse(d.payment_methods || '[]'),
+      minOrderFiat: parseFloat(d.min_order_fiat),
+      maxOrderFiat: parseFloat(d.max_order_fiat),
+      priceUpdateIntervalMinutes: d.price_update_interval_minutes,
+      priceMarginPercentage: parseFloat(d.price_margin_percentage),
+      isActive: d.is_active,
+      timezone: d.timezone,
+    }));
   }
 
   // ============ Health ============

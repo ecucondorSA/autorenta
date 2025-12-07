@@ -236,6 +236,8 @@ export type AsciiEffectOptions = {
 };
 
 export class AsciiEffect extends Effect {
+  public declare uniforms: Map<string, Uniform>;
+
   constructor(opts: AsciiEffectOptions = {}) {
     const {
       cellSize = 4,
@@ -282,29 +284,40 @@ export class AsciiEffect extends Effect {
         ['contrastAdjust', new Uniform(postfx.contrastAdjust || 1)],
       ]),
     });
+    
+    // Asignar manualmente la referencia a uniforms ya que la clase base no la expone en su tipo público pero sí la usa
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.uniforms = (this as any).uniforms as unknown as Map<string, Uniform>;
+    if (!this.uniforms) {
+      // Fallback por si la implementación interna cambia (sin @ts-expect-error)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const anySelf = this as any;
+      const maybeUniforms = anySelf.nav?.uniforms as Map<string, Uniform> | undefined;
+      this.uniforms = maybeUniforms ?? new Map();
+    }
   }
 
   // Helpers to update uniforms from the host app
   setResolution(v: Vector2) {
-    this.uniforms.get('resolution').value = v;
+    this.uniforms.get('resolution')!.value = v;
   }
   setMousePos(v: Vector2) {
-    this.uniforms.get('mousePos').value = v;
+    this.uniforms.get('mousePos')!.value = v;
   }
   setCellSize(n: number) {
-    this.uniforms.get('cellSize').value = n;
+    this.uniforms.get('cellSize')!.value = n;
   }
   setInvert(b: boolean) {
-    this.uniforms.get('invert').value = b;
+    this.uniforms.get('invert')!.value = b;
   }
   setColorMode(b: boolean) {
-    this.uniforms.get('colorMode').value = b;
+    this.uniforms.get('colorMode')!.value = b;
   }
   setAsciiStyle(i: number) {
-    this.uniforms.get('asciiStyle').value = i;
+    this.uniforms.get('asciiStyle')!.value = i;
   }
   addTime(dt: number) {
-    this.uniforms.get('time').value += dt;
+    this.uniforms.get('time')!.value += dt;
   }
 }
 

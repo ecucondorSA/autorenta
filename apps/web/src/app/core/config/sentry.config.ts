@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/angular';
-import type { Breadcrumb } from '@sentry/types';
-import type { ErrorEvent, EventHint } from '@sentry/core';
+import type { Breadcrumb, Event, EventHint } from '@sentry/types';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -92,9 +91,9 @@ export function initializeSentry(): void {
 
     // Configure what data to send
     beforeSend(
-      event: ErrorEvent,
+      event: Event,
       hint: EventHint,
-    ): ErrorEvent | PromiseLike<ErrorEvent | null> | null {
+    ): Event | PromiseLike<Event | null> | null {
       // Don't send errors in development unless explicitly testing
       const testMode =
         typeof localStorage !== 'undefined' ? localStorage.getItem('sentry-test-mode') : null;

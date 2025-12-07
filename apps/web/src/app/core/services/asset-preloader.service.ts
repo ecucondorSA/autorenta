@@ -133,7 +133,6 @@ export class AssetPreloaderService {
   private preloadCriticalImages(): Promise<void> {
     const criticalImages = [
       '/assets/images/autorentar-logo.png',
-      '/assets/images/hero-car.webp',
     ];
 
     const promises = criticalImages.map((src) => {

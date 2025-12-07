@@ -27,7 +27,13 @@ const palette = {
       primary: '#2563EB', // Blue 600 - WCAG AA Compliant
       hover: '#1D4ED8',   // Blue 700
     },
+    neon: {
+      primary: '#00D95F', // Verde neón radioactivo - CTA principal
+      hover: '#00C553',   // Estado hover
+      pressed: '#00B048', // Estado pressed/active
+    },
   },
+
   feedback: {
     error: {
       rust: '#B25E5E',
@@ -94,7 +100,13 @@ module.exports = {
       DEFAULT: palette.accent.blue.primary,
       hover: palette.accent.blue.hover,
     },
+    neon: {
+      DEFAULT: palette.accent.neon.primary,
+      hover: palette.accent.neon.hover,
+      pressed: palette.accent.neon.pressed,
+    },
   },
+
 
   // Tokens semánticos (para uso directo en Tailwind)
   surface: {

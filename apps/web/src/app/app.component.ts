@@ -113,15 +113,7 @@ import { IconComponent } from './shared/components/icon/icon.component';
         background: rgba(0, 0, 0, 0.3);
       }
 
-      @media (prefers-color-scheme: dark) {
-        [data-profile-menu]::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.2);
-        }
 
-        [data-profile-menu]::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.3);
-        }
-      }
 
       /* Firefox scrollbar */
       [data-profile-menu] {
@@ -129,17 +121,15 @@ import { IconComponent } from './shared/components/icon/icon.component';
         scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
       }
 
-      @media (prefers-color-scheme: dark) {
-        [data-profile-menu] {
-          scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-      }
+
 
       /* Header en home: usa colores de tokens, sin forzar blanco ni gradientes */
       .header-transparent {
         color: var(--text-primary) !important;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
       }
 
       .header-transparent * {
@@ -201,7 +191,10 @@ export class AppComponent implements OnInit {
   readonly compareCountSig = computed(() => this.compareService.count());
   readonly sidebarOpen = signal(false);
   readonly profileMenuOpen = signal(false);
-  readonly darkMode = signal(false);
+
+  // Legacy binding placeholder: UI no longer uses dark mode toggle, keep for template compatibility
+  readonly darkMode = false;
+
   readonly fullBleedLayout = signal(false);
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
@@ -239,13 +232,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  toggleDarkMode(): void {
-    const newMode = !this.darkMode();
-    this.darkMode.set(newMode);
-    localStorage.setItem('theme', newMode ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark', newMode);
-    window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: newMode } }));
-  }
+
 
   toggleProfileMenu(): void {
     this.profileMenuOpen.update((v) => !v);
@@ -368,17 +355,9 @@ export class AppComponent implements OnInit {
     if (!this.isBrowser) {
       return;
     }
-
-    const stored = localStorage.getItem('theme');
-    const useDark = stored ? stored === 'dark' : false;
-
-    if (!stored) {
-      localStorage.setItem('theme', 'light');
-    }
-
-    this.darkMode.set(useDark);
-    document.documentElement.classList.toggle('dark', useDark);
-    window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: useDark } }));
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+    window.dispatchEvent(new CustomEvent('autorenta:theme-change', { detail: { dark: false } }));
   }
 
   private initializeLayoutWatcher(): void {

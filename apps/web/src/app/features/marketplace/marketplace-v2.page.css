@@ -76,10 +76,10 @@
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* Glass Effect - Enhanced */
-  --glass-bg: rgba(255, 255, 255, 0.65); /* More translucent */
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --glass-blur: blur(24px); /* Stronger blur */
+  /* Glass Effect - Highly transparent (only border is prominent) */
+  --glass-bg: rgba(255, 255, 255, 0.005); /* ~0.5% opacity */
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-blur: blur(18px);
 }
 
 /* ===========================================
@@ -96,7 +96,7 @@
    =========================================== */
 .hero-immersive {
   position: relative;
-  background: var(--surface-base);
+  background: transparent;
 }
 
 .hero-immersive h2 {
@@ -126,6 +126,7 @@
   -webkit-text-fill-color: #0891b2;
 }
 
+/* Left glass panel only under text: keeps contrast without covering the car */
 /* Hero Text Contrast - ensures readability against rotating 3D car */
 .hero-text-contrast {
   text-shadow:
@@ -143,30 +144,87 @@
   }
 }
 
-/* Hero Fade In Animations - Simplified */
+/* Hero Fade In Animations - Enhanced */
 .hero-fade-in {
-  animation: heroFadeIn 0.6s ease-out both;
+  animation: heroFadeIn 0.8s ease-out both;
 }
 
 .hero-delay-1 {
-  animation-delay: 0.1s;
+  animation-delay: 0.15s;
 }
 .hero-delay-2 {
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 }
 .hero-delay-3 {
-  animation-delay: 0.3s;
+  animation-delay: 0.45s;
+}
+.hero-delay-4 {
+  animation-delay: 0.6s;
 }
 
 @keyframes heroFadeIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Float Animation - For decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Glow Pulse - For CTA buttons */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 217, 95, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 217, 95, 0.5);
+  }
+}
+
+.animate-glow {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Gradient Shift - For animated backgrounds */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Scale on Hover - Smooth interaction */
+.hover-scale {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale:active {
+  transform: scale(0.98);
 }
 
 /* Skeleton Shimmer Animation */
@@ -2163,4 +2221,47 @@
   app-floating-action-fab {
     display: none !important;
   }
+}
+
+/* Search Input Highlights */
+.search-input-wrapper {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.search-input-wrapper:focus-within {
+  background-color: rgba(0, 217, 95, 0.05);
+}
+
+.search-input-wrapper:focus-within svg {
+  color: #00D95F;
+  filter: drop-shadow(0 0 5px rgba(0, 217, 95, 0.4));
+  transform: scale(1.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrapper input {
+  transition: color 0.2s ease;
+}
+
+.search-input-wrapper:focus-within input {
+  color: #111827; /* Gray 900 */
+}
+
+.search-input-wrapper:focus-within label {
+  color: #00D95F;
+}
+
+/* Text Shimmer Effect */
+@keyframes textShimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: textShimmer 4s linear infinite;
 }

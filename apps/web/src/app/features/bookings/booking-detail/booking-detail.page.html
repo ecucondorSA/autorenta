@@ -678,7 +678,11 @@
                 </svg>
                 Comparación de Inspecciones
               </h3>
-              <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
+              @defer (on viewport) {
+                <app-damage-comparison [bookingId]="booking()!.id"></app-damage-comparison>
+              } @placeholder {
+                <div class="h-64 bg-surface-base animate-pulse rounded-xl"></div>
+              }
             </div>
 
             <!-- Settlement Simulator - Only for owners on completed bookings -->
@@ -695,7 +699,11 @@
               <p class="text-sm text-text-secondary mb-4">
                 Calculá cómo se distribuirían los fondos en caso de un siniestro o daño reportado.
               </p>
-              <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
+              @defer (on viewport) {
+                <app-settlement-simulator [bookingId]="booking()!.id"></app-settlement-simulator>
+              } @placeholder {
+                <div class="h-48 bg-surface-base animate-pulse rounded-xl"></div>
+              }
             </div>
 
             <!-- Claims/Siniestros Section -->
@@ -866,11 +874,15 @@
         <!-- Disputes Section -->
         @if (canCreateDispute() || booking()?.status === 'completed') {
           <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
-            <app-disputes-list
-              [bookingId]="booking()!.id"
-              [showCreateButton]="canCreateDispute()"
-              (createDispute)="showDisputeForm.set(true)"
-            ></app-disputes-list>
+            @defer (on viewport) {
+              <app-disputes-list
+                [bookingId]="booking()!.id"
+                [showCreateButton]="canCreateDispute()"
+                (createDispute)="showDisputeForm.set(true)"
+              ></app-disputes-list>
+            } @placeholder {
+              <div class="h-32 bg-surface-base animate-pulse rounded-xl"></div>
+            }
           </div>
         }
 
@@ -897,24 +909,34 @@
         }
 
         <!-- Dispute Form Modal -->
-        <app-dispute-form
-          [isOpen]="showDisputeForm()"
-          [bookingId]="booking()!.id"
-          (closeModal)="showDisputeForm.set(false)"
-          (disputeCreated)="onDisputeCreated()"
-        ></app-dispute-form>
+        @defer (when showDisputeForm()) {
+          <app-dispute-form
+            [isOpen]="showDisputeForm()"
+            [bookingId]="booking()!.id"
+            (closeModal)="showDisputeForm.set(false)"
+            (disputeCreated)="onDisputeCreated()"
+          ></app-dispute-form>
+        }
 
         <!-- Refund Request Modal -->
-        <app-refund-request
-          [isOpen]="showRefundForm()"
-          [bookingId]="booking()!.id"
-          (closeModal)="showRefundForm.set(false)"
-          (refundRequested)="onRefundRequested()"
-        ></app-refund-request>
+        @defer (when showRefundForm()) {
+          <app-refund-request
+            [isOpen]="showRefundForm()"
+            [bookingId]="booking()!.id"
+            (closeModal)="showRefundForm.set(false)"
+            (refundRequested)="onRefundRequested()"
+          ></app-refund-request>
+        } @placeholder {
+          <div class="h-10 bg-surface-base animate-pulse rounded-lg border border-border-default"></div>
+        }
 
         <!-- Contract Section -->
         <div class="mt-6" *ngIf="booking()">
-          <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
+          @defer (on viewport) {
+            <app-booking-contract [bookingId]="booking()!.id"></app-booking-contract>
+          } @placeholder {
+            <div class="h-16 bg-surface-base animate-pulse rounded-xl border border-border-default"></div>
+          }
         </div>
 
         <!-- Refund Status -->
@@ -1121,11 +1143,15 @@
             <h2 class="mb-4 text-xl font-bold text-text-primary dark:text-text-primary">
               Chat con el anfitrión
             </h2>
-            <app-booking-chat
-              [bookingId]="booking()!.id"
-              [recipientId]="carOwnerId()!"
-              [recipientName]="carOwnerName()"
-            ></app-booking-chat>
+            @defer (on viewport) {
+              <app-booking-chat
+                [bookingId]="booking()!.id"
+                [recipientId]="carOwnerId()!"
+                [recipientName]="carOwnerName()"
+              ></app-booking-chat>
+            } @placeholder {
+              <div class="h-96 bg-surface-base animate-pulse rounded-xl border border-border-default"></div>
+            }
           </div>
 
           <!-- ✅ Show payment reminder for pending payment -->
@@ -1236,18 +1262,22 @@
               }"
             ></app-booking-ops-timeline>
 
-            <app-booking-tracking
-              [session]="
-                tracking()
-                  ? {
-                      active: tracking()!.active,
-                      started_at: tracking()!.started_at,
-                      ended_at: tracking()!.ended_at,
-                      points_count: tracking()!.points,
-                    }
-                  : null
-              "
-            ></app-booking-tracking>
+            @defer (on viewport) {
+              <app-booking-tracking
+                [session]="
+                  tracking()
+                    ? {
+                        active: tracking()!.active,
+                        started_at: tracking()!.started_at,
+                        ended_at: tracking()!.ended_at,
+                        points_count: tracking()!.points,
+                      }
+                    : null
+                "
+              ></app-booking-tracking>
+            } @placeholder {
+              <div class="h-64 bg-surface-base animate-pulse rounded-xl border border-border-default"></div>
+            }
           </div>
         </div>
         <!-- End Right Column -->

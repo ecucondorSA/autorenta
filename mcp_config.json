@@ -54,6 +54,13 @@
         "GEMINI_API_KEY": "AIzaSyCJIdveA5iCElCbfkBC9gXv24VktHRjftU"
       },
       "description": "Gemini AI Suite - Code Review, Test Generation, UI Analysis, Code Comparison powered by Gemini 2.5 Pro"
+    },
+    "patchright-streaming": {
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/patchright-streaming-mcp/server.js"
+      ],
+      "description": "Patchright Streaming MCP - Stealth automation for MercadoPago"
     }
   }
 }

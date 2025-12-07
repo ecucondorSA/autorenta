@@ -13,7 +13,7 @@ import { ServiceResponse, ServiceErrorResponse, ServiceSuccessResponse } from '.
  * @returns {Promise<ServiceResponse<T>>} A promise that resolves to a ServiceResponse.
  */
 export async function wrapSupabaseCall<T>(
-  apiCall: () => PromiseLike<{ data: T | null; error: any }>
+  apiCall: () => PromiseLike<{ data: T | null; error: import('@supabase/supabase-js').PostgrestError | null }>
 ): Promise<ServiceResponse<T>> {
   try {
     const { data, error } = await apiCall();
@@ -24,7 +24,7 @@ export async function wrapSupabaseCall<T>(
         success: false,
         message: error.message || 'An unexpected error occurred from Supabase.',
         errorCode: error.code || 'SUPABASE_ERROR',
-        statusCode: error.status || 500,
+        statusCode: (error as { status?: number })?.status ?? 500,
       } as ServiceErrorResponse;
     }
 
@@ -37,11 +37,12 @@ export async function wrapSupabaseCall<T>(
       statusCode: 200, // Assuming 200 for successful operations
     } as ServiceSuccessResponse<T>;
 
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('Unexpected API Call Exception:', e);
+    const message = e instanceof Error ? e.message : 'An unexpected client-side error occurred.';
     return {
       success: false,
-      message: e.message || 'An unexpected client-side error occurred.',
+      message,
       errorCode: 'CLIENT_ERROR',
       statusCode: 500,
     } as ServiceErrorResponse;

@@ -99,3 +99,34 @@ export interface Config {
   logLevel: string;
   logFile: string;
 }
+
+// Market Price types for price monitoring
+export interface MarketPrice {
+  cryptoCurrency: string;
+  fiatCurrency: string;
+  orderType: 'buy' | 'sell';
+  pricePerUnit: number;
+  minOrderLimit: number;
+  maxOrderLimit: number;
+  availableAmount?: number;
+  paymentMethods: string[];
+  sourceUserId?: string;
+  sourceUserName?: string;
+  sourceUserTrades?: number;
+  sourceUserCompletionRate?: number;
+  rankingPosition: number;
+}
+
+export interface P2PConfig {
+  countryCode: string;
+  countryName: string;
+  fiatCurrency: string;
+  binanceTradeUrl: string;
+  paymentMethods: string[];
+  minOrderFiat: number;
+  maxOrderFiat: number;
+  priceUpdateIntervalMinutes: number;
+  priceMarginPercentage: number;
+  isActive: boolean;
+  timezone: string;
+}

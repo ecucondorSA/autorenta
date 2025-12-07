@@ -51,7 +51,8 @@ export class PublishCarLocationService {
             throw new Error('Permiso de ubicación denegado. Habilítalo en la barra de dirección.');
           }
         }
-      } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_e) {
         // Ignore permission query errors (some browsers don't support it well)
       }
 
