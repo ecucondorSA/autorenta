@@ -21,7 +21,6 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Toast } from 'primeng/toast';
 import { filter } from 'rxjs';
 import { GuidedTourService } from './core/guided-tour';
 import { AssetPreloaderService } from './core/services/asset-preloader.service';
@@ -71,7 +70,6 @@ import { IconComponent } from './shared/components/icon/icon.component';
     NotificationsComponent,
     ShareButtonComponent,
     FooterComponent,
-    Toast,
     IconComponent,
   ],
   templateUrl: './app.component.html',
@@ -88,11 +86,6 @@ import { IconComponent } from './shared/components/icon/icon.component';
       /* Fix for bottom nav bar - ensure body doesn't have transform */
       :host-context(body) {
         transform: none !important;
-      }
-
-      /* Fix: Disable pointer-events for empty PrimeNG Toast to prevent click blocking */
-      p-toast:not(:has(.p-toast-message)) {
-        pointer-events: none !important;
       }
 
       /* Custom scrollbar para el dropdown del perfil */
@@ -205,12 +198,6 @@ export class AppComponent implements OnInit {
 
   year = new Date().getFullYear();
 
-  // Smart Splash: Controls when app initialization completes
-  // Splash component handles video intro + loop animation
-  // Estado de Splash
-  // NOTA: Splash desactivado por solicitud del usuario (era signal(true))
-  showSplash = signal(false);
-  splashDismissed = signal(false);
 
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
@@ -246,7 +233,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.handleOAuthCallbackRedirect();
-    this.initializeSplash();
     this.initializeTheme();
     this.initializeLayoutWatcher();
     this.loadUserProfile();
@@ -257,100 +243,6 @@ export class AppComponent implements OnInit {
     // Renderizar barra inferior móvil directamente en body para evitar issues de stacking
     this.mobileBottomNavPortal.create();
     this.destroyRef.onDestroy(() => this.mobileBottomNavPortal.destroy());
-  }
-
-  /**
-   * Called when splash screen finishes its exit animation
-   */
-  onSplashDismissed(): void {
-    this.splashDismissed.set(true);
-  }
-
-  /**
-   * Initialize splash screen timing
-   * Uses splash time to preload heavy assets (Three.js, 3D models, Mapbox)
-   * Signals appReady=true when critical initialization completes
-   *
-   * OPTIMIZATION: Preloads BOTH 3D model AND Mapbox map during splash
-   * so when user navigates to /cars/list, the map is already ready
-   */
-  private initializeSplash(): void {
-    const startTime = performance.now();
-
-    // Critical initialization tasks (must complete before showing app)
-    const criticalTasks = Promise.all([
-      this.loadUserProfile(),
-      this.waitForInitialRoute(),
-    ]);
-
-    // Background preloading (nice to have, don't block on it)
-    // These load during splash animation time
-    const preloadTasks = this.assetPreloader.preloadCriticalAssets();
-
-    // Start Mapbox preloading in parallel
-    // This creates a hidden map that will be ready when user visits /cars/list
-    const mapPreloadPromise = this.mapboxPreloader.preloadMap().catch(err => {
-      console.warn('[App] Map preload failed (non-critical):', err);
-    });
-
-    // Minimum splash duration to allow heavy assets to load
-    // Video is ~8 seconds, 3D model + Map tiles load during this time
-    const MIN_SPLASH_DURATION = 6000; // 6 seconds (video is 7.8s, so this gives buffer)
-    const minSplashPromise = new Promise(resolve => setTimeout(resolve, MIN_SPLASH_DURATION));
-
-    // Wait for:
-    // 1. Critical tasks (profile, route)
-    // 2. Either preload completes OR minimum splash duration (whichever is longer)
-    Promise.all([
-      criticalTasks,
-      Promise.all([
-        // Give both preloads time to complete, but don't wait forever
-        Promise.race([
-          Promise.all([preloadTasks, mapPreloadPromise]),
-          new Promise(resolve => setTimeout(resolve, 5000)), // Max 5s wait
-        ]),
-        minSplashPromise, // Always wait minimum duration
-      ]),
-    ]).finally(() => {
-      // Signal to splash that app is ready
-      // Splash will finish current animation state before dismissing
-      this.showSplash.set(false);
-
-      const elapsed = performance.now() - startTime;
-      const preloadProgress = this.assetPreloader.progress();
-      const mapReady = this.mapboxPreloader.isMapReady();
-      console.log(
-        `[App] Ready in ${elapsed.toFixed(0)}ms (assets: ${preloadProgress}%, map: ${mapReady ? '✓' : '○'})`
-      );
-    });
-  }
-
-  /**
-   * Wait for initial route to resolve
-   * Ensures content is ready before hiding splash
-   */
-  private waitForInitialRoute(): Promise<void> {
-    return new Promise((resolve) => {
-      // If already on a route, resolve immediately
-      if (this.router.url !== '/') {
-        resolve();
-        return;
-      }
-
-      // Wait for first navigation to complete
-      const subscription = this.router.events
-        .pipe(
-          filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-          takeUntilDestroyed(this.destroyRef)
-        )
-        .subscribe(() => {
-          subscription.unsubscribe();
-          resolve();
-        });
-
-      // Fallback timeout
-      setTimeout(resolve, 2000);
-    });
   }
 
   private initializeTheme(): void {

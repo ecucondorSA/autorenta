@@ -39,8 +39,7 @@ import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
 
-import type { CarPartInfo } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
-import { Car3dViewerComponent } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
+import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import {
   DateRange,
   DateRangePickerComponent,
@@ -90,7 +89,7 @@ export interface Stat {
 
     FloatingActionFabComponent,
     DateRangePickerComponent,
-    Car3dViewerComponent,
+    HdriBackgroundComponent,
 
   ],
   templateUrl: './marketplace-v2.page.html',
@@ -99,7 +98,7 @@ export interface Stat {
 })
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
-  @ViewChild('carViewer') carViewer?: Car3dViewerComponent;
+  @ViewChild('hdriViewer') hdriViewer?: HdriBackgroundComponent;
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -223,14 +222,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     return 'Dejá todo listo para mañana.';
   });
 
-  // 3D Model State
-  current3DView: 'default' | 'front' | 'side' | 'interior' | 'top' = 'default';
-  modelLoaded = false;
-
-  // 3D Part Interaction State
-  readonly hoveredPart = signal<CarPartInfo | null>(null);
-  readonly hoveredPartPosition = signal<{ x: number; y: number } | null>(null);
-  readonly selectedPart = signal<CarPartInfo | null>(null);
+  // HDRI Background State
+  hdriLoaded = false;
 
   // Quick Booking State
   readonly quickBookingCar = signal<Car | null>(null);
@@ -290,6 +283,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       this.loadingInterval = undefined;
     }
 
+    // Mark HDRI as loaded
+    this.hdriLoaded = true;
+
     // Force completion
     this.loadingProgress.set(100);
     this.loadingText.set(this.loadingMessages[5]);
@@ -298,6 +294,26 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showSplash.set(false);
     }, 600);
+
+    // Show click hint after HDRI loads (only once per session)
+    if (!this.clickHintShownSession && this.isBrowser) {
+      this.clickHintShownSession = true;
+      setTimeout(() => {
+        this.showClickHint.set(true);
+        this.clickHintTimeout = setTimeout(() => {
+          this.hideClickHint();
+        }, 2500);
+      }, 900);
+    }
+
+    // Preload Mapbox map after HDRI loads
+    if (this.isBrowser) {
+      setTimeout(() => {
+        this.mapboxPreloader.preloadMap().then(() => {
+          console.log('[Marketplace] Mapbox map fully preloaded');
+        });
+      }, 1000);
+    }
   }
 
   scrollToHowItWorks(): void {
@@ -1302,54 +1318,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     }
   }
 
-  // ===== 3D MODEL CONTROLS =====
-
-  /**
-   * Set 3D view mode
-   */
-  set3DView(view: 'default' | 'front' | 'side' | 'interior' | 'top'): void {
-    this.current3DView = view;
-    if (this.carViewer) {
-      this.carViewer.setViewMode(view);
-    }
-  }
-
-  /**
-   * Handle model loaded event
-   */
-  onModelLoaded(): void {
-    this.modelLoaded = true;
-
-    // Show click hint after model loads (only once per session)
-    if (!this.clickHintShownSession && this.isBrowser) {
-      this.clickHintShownSession = true;
-
-      // Show hint quickly after model loads
-      setTimeout(() => {
-        this.showClickHint.set(true);
-
-        // Auto-hide after 2.5 seconds
-        this.clickHintTimeout = setTimeout(() => {
-          this.hideClickHint();
-        }, 2500);
-      }, 300);
-    }
-
-    // ===== PRELOAD COMPLETE MAP AFTER MODEL LOADS =====
-    // This initializes the full Mapbox map in a hidden container
-    // When user navigates to /cars/list, map is ALREADY READY
-    // Runs in background, non-blocking
-    if (this.isBrowser) {
-      // Small delay to ensure model rendering is complete first
-      setTimeout(() => {
-        // Preload the FULL map (not just SDK) - includes tiles, style, etc.
-        this.mapboxPreloader.preloadMap().then(() => {
-          console.log('[Marketplace] Mapbox map fully preloaded - /cars/list will load instantly');
-        });
-      }, 1000); // Wait 1 second after 3D model to not compete for bandwidth
-    }
-  }
-
   /**
    * Hide click hint with fade animation
    */
@@ -1386,62 +1354,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       destination: '/cars/list',
     });
   }
-
-  /**
-   * Handle view mode change from 3D viewer
-   */
-  onViewModeChange(mode: string): void {
-    this.current3DView = mode as 'default' | 'front' | 'side' | 'interior' | 'top';
-  }
-
-  /**
-   * Handle part hover from 3D viewer
-   */
-  onPartHovered(event: {
-    part: string;
-    info: CarPartInfo | undefined;
-    position: { x: number; y: number };
-  }): void {
-    if (event.info) {
-      this.hoveredPart.set(event.info);
-      this.hoveredPartPosition.set(event.position);
-    } else {
-      this.hoveredPart.set(null);
-      this.hoveredPartPosition.set(null);
-    }
-  }
-
-  /**
-   * Handle part selection from 3D viewer
-   */
-  onPartSelected(event: { part: string; info: CarPartInfo | undefined }): void {
-    if (event.info) {
-      this.selectedPart.set(event.info);
-      // Track analytics - using cta_clicked for 3D part interaction
-      this.analyticsService.trackEvent('cta_clicked', {
-        cta_type: '3d_part_selected',
-        source: event.part,
-      });
-    }
-  }
-
-  /**
-   * Handle part deselection from 3D viewer
-   */
-  onPartDeselected(): void {
-    this.selectedPart.set(null);
-  }
-
-
-
-  closePartPanel(): void {
-    this.selectedPart.set(null);
-    if (this.carViewer) {
-      this.carViewer.deselectPart();
-    }
-  }
-
-
 
   /**
    * Check if a quick filter is active

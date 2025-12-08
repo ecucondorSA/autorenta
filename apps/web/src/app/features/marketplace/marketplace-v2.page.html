@@ -1,5 +1,6 @@
 <!-- 🎨 HERO SECTION - MINIMAL OVERLAY STYLE -->
-<section class="hero-minimal relative h-screen w-full overflow-hidden bg-black">
+<!-- Hero section with scroll-through enabled - overflow visible allows parent scroll -->
+<section class="hero-minimal relative h-screen w-full bg-black" style="overflow: clip; overflow-clip-margin: content-box;">
 
   <!-- SPLASH SCREEN OVERLAY (Concept 1: Minimalist & Tech) -->
   <!-- Se muestra mientras carga el HDRI y desaparece con fade-out -->
@@ -39,13 +40,16 @@
     </div>
   </div>
 
-  <!-- 3D Car Viewer - Full Screen Background (Lazy Loaded) -->
+  <!-- HDRI Background - Full Screen (Lazy Loaded, WebGL Pure) -->
   <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
     @defer (on viewport) {
-      <app-car-3d-viewer #carViewer alt="Autorentar HDRI Background"
-        class="w-full h-full" [showHdriBackground]="true" [lockToCar]="true"
-        [enableInteraction]="true" [showModel]="false" (hdriLoaded)="onHdriLoaded()">
-      </app-car-3d-viewer>
+      <app-hdri-background #hdriViewer
+        src="assets/hdri/suburban_parking_area_8k.webp"
+        [autoRotate]="true"
+        [enableInteraction]="true"
+        (hdriLoaded)="onHdriLoaded()"
+        class="w-full h-full">
+      </app-hdri-background>
     } @placeholder {
       <div class="w-full h-full bg-[#050505]"></div>
     }

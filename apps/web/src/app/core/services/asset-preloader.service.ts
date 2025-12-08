@@ -3,19 +3,12 @@ import { Injectable, signal } from '@angular/core';
 /**
  * Asset Preloader Service
  *
- * Preloads heavy assets during splash screen:
- * - Three.js library (~500KB)
- * - GLTF/DRACO loaders
+ * Preloads heavy assets for better performance:
  * - Mapbox GL JS SDK (~500KB)
  * - Critical images
  *
  * This improves perceived performance by loading assets
- * while the user watches the splash animation.
- *
- * PRELOAD STRATEGY:
- * 1. Three.js + loaders (for 3D model on splash/marketplace)
- * 2. After model loads: Preload Mapbox SDK (for /cars/list)
- * 3. Critical images
+ * while the user views the initial content.
  */
 @Injectable({
   providedIn: 'root',
@@ -40,7 +33,6 @@ export class AssetPreloaderService {
 
   private preloadPromise: Promise<void> | null = null;
   private mapboxPreloadPromise: Promise<void> | null = null;
-  private threeModule: typeof import('three') | null = null;
 
   /**
    * Start preloading critical assets
@@ -60,46 +52,11 @@ export class AssetPreloaderService {
     return this.preloadPromise;
   }
 
-  /**
-   * Get cached Three.js module (if already loaded)
-   */
-  getThreeModule(): typeof import('three') | null {
-    return this.threeModule;
-  }
-
   private async runPreload(): Promise<void> {
     const tasks: Array<{ name: string; task: () => Promise<void>; weight: number }> = [
       {
-        name: 'Three.js Core',
-        weight: 40,
-        task: async () => {
-          this.threeModule = await import('three');
-        },
-      },
-      {
-        name: 'GLTF Loader',
-        weight: 20,
-        task: async () => {
-          await import('three/examples/jsm/loaders/GLTFLoader.js');
-        },
-      },
-      {
-        name: 'DRACO Loader',
-        weight: 20,
-        task: async () => {
-          await import('three/examples/jsm/loaders/DRACOLoader.js');
-        },
-      },
-      {
-        name: 'Orbit Controls',
-        weight: 10,
-        task: async () => {
-          await import('three/examples/jsm/controls/OrbitControls.js');
-        },
-      },
-      {
         name: 'Critical Images',
-        weight: 10,
+        weight: 100,
         task: () => this.preloadCriticalImages(),
       },
     ];
@@ -131,9 +88,7 @@ export class AssetPreloaderService {
    * Preload critical images using link preload
    */
   private preloadCriticalImages(): Promise<void> {
-    const criticalImages = [
-      '/assets/images/autorentar-logo.png',
-    ];
+    const criticalImages = ['/assets/images/autorentar-logo.png'];
 
     const promises = criticalImages.map((src) => {
       return new Promise<void>((resolve) => {
@@ -162,23 +117,8 @@ export class AssetPreloaderService {
   }
 
   /**
-   * Preload a specific 3D model (optional, for known models)
-   */
-  async preloadModel(modelUrl: string): Promise<void> {
-    if (typeof window === 'undefined') return;
-
-    try {
-      // Use fetch to cache the model file
-      await fetch(modelUrl, { method: 'GET', cache: 'force-cache' });
-      console.log(`[Preloader] Model cached: ${modelUrl}`);
-    } catch (error) {
-      console.warn(`[Preloader] Failed to cache model: ${modelUrl}`, error);
-    }
-  }
-
-  /**
    * Preload Mapbox GL JS SDK
-   * Call this AFTER splash/3D model loads to preload map for /cars/list
+   * Call this to preload map for /cars/list
    * This runs in background and doesn't block the UI
    */
   preloadMapbox(): Promise<void> {
@@ -281,11 +221,8 @@ export class AssetPreloaderService {
 
   private async prefetchMapTiles(): Promise<void> {
     // Prefetch common map tile resources for Buenos Aires area
-    // These URLs are typically accessed when loading the map
     const tilesToPrefetch = [
-      // Mapbox style
       'https://api.mapbox.com/styles/v1/mapbox/streets-v12?access_token=',
-      // Common sprite/glyph resources
       'https://api.mapbox.com/fonts/v1/mapbox/',
     ];
 

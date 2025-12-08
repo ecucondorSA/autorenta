@@ -20,7 +20,6 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
-import { MessageService } from 'primeng/api';
 import { routes } from './app.routes';
 import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
 import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
@@ -79,8 +78,6 @@ export const appConfig: ApplicationConfig = {
       prefix: './assets/i18n/',
       suffix: '.json',
     }),
-    // ✅ PrimeNG MessageService for notifications
-    MessageService,
     // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation
     routeReuseStrategyProvider,
     // ✅ Global Error Handler (handles Sentry internally)

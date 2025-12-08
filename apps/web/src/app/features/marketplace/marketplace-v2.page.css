@@ -6,19 +6,19 @@
    CSS CUSTOM PROPERTIES (Design Tokens)
    =========================================== */
 :host {
-  /* Colors - Brand (RADIOACTIVE NEON GREEN - MAXIMUM SATURATION) */
-  --color-primary: 57 255 20; /* #39FF14 - Pure Radioactive Neon */
-  --color-primary-light: 127 255 0; /* Chartreuse #7FFF00 */
-  --color-primary-dark: 0 255 0; /* Pure Green #00FF00 */
+  /* Colors - Brand (Verde Neón - Synced with colors.ts accent.neon) */
+  --color-primary: 0 217 95; /* #00D95F - Verde Neón */
+  --color-primary-light: 0 197 83; /* #00C553 - Hover */
+  --color-primary-dark: 0 176 72; /* #00B048 - Pressed */
 
-  /* Override Global CTA for this page - RADIOACTIVE GREEN */
-  --cta-default: #39FF14; /* PURE NEON - Radioactive Green */
-  --cta-hover: #32E610; /* Slightly darker neon */
-  --cta-pressed: #2BD00E; /* Pressed state */
-  --cta-text: #000000; /* BLACK text for maximum contrast */
+  /* Override Global CTA for Hero Section - Verde Neón Alto Impacto */
+  --cta-default: var(--cta-neon, #00D95F); /* Verde Neón - uses global token */
+  --cta-hover: var(--cta-neon-hover, #00C553); /* Estado hover */
+  --cta-pressed: var(--cta-neon-pressed, #00B048); /* Estado pressed */
+  --cta-text: var(--cta-neon-text, #000000); /* Negro para contraste */
 
-  /* Glow Effect - Radioactive */
-  --glow-neon: 0 0 15px rgba(57, 255, 20, 0.6), 0 0 30px rgba(57, 255, 20, 0.4), 0 0 60px rgba(57, 255, 20, 0.2);
+  /* Glow Effect - Neon Green */
+  --glow-neon: 0 0 15px rgba(0, 217, 95, 0.6), 0 0 30px rgba(0, 217, 95, 0.4), 0 0 60px rgba(0, 217, 95, 0.2);
 
   /* Colors - Accent */
   --color-accent-emerald: 16 185 129;

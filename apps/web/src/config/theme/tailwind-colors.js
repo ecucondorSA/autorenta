@@ -169,11 +169,22 @@ module.exports = {
     light: lightTheme.errorLight,
   },
 
+  // ─── CTA Neon (Verde Neón - Alto Impacto) ───
+  'cta-neon': {
+    DEFAULT: palette.accent.neon.primary,  // #00D95F
+    hover: palette.accent.neon.hover,      // #00C553
+    pressed: palette.accent.neon.pressed,  // #00B048
+    text: '#000000',                        // Negro para contraste
+  },
+
   // ─── Clases planas para uso con @apply ───
   // Estas clases permiten usar bg-cta-default, border-border-default, etc. en @apply
   'cta-default': lightTheme.ctaDefault,
   'cta-hover': lightTheme.ctaHover,
   'cta-text': lightTheme.ctaText,
+  'cta-neon-default': palette.accent.neon.primary,
+  'cta-neon-hover': palette.accent.neon.hover,
+  'cta-neon-pressed': palette.accent.neon.pressed,
   'border-default': lightTheme.borderDefault,
   'border-muted': lightTheme.borderMuted,
   'border-focus': lightTheme.borderFocus,

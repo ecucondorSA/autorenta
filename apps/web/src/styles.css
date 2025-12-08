@@ -243,11 +243,19 @@ svg[aria-hidden="true"],
     --border-error: #b25e5e; /* Rust */
     --border-success: #9db38b; /* Olive */
 
-    /* ─── CTAs y Acciones ─── */
-    --cta-default: #39FF14; /* RADIOACTIVE NEON GREEN - Maximum Impact */
-    --cta-hover: #32E610; /* Slightly darker neon */
-    --cta-pressed: #2BD00E; /* Pressed state */
-    --cta-text: #000000; /* BLACK text for maximum contrast on neon */
+    /* ─── CTAs y Acciones (Azul Pastel - Default) ─── */
+    --cta-default: #A7D8F4; /* Azul Pastel - Synced with colors.ts */
+    --cta-hover: #8EC9EC; /* Estado hover */
+    --cta-pressed: #7DBDE3; /* Estado pressed */
+    --cta-text: #050505; /* Negro para contraste sobre azul pastel */
+
+    /* ─── CTA Neon (Verde Neón - Alto Impacto) ─── */
+    --cta-neon: #00D95F; /* Verde Neón - Synced with colors.ts accent.neon.primary */
+    --cta-neon-hover: #00C553; /* Estado hover */
+    --cta-neon-pressed: #00B048; /* Estado pressed/active */
+    --cta-neon-text: #000000; /* Negro para máximo contraste */
+
+    /* ─── CTA Secondary (Amarillo) ─── */
     --cta-secondary: #FBBF24; /* Amarillo Ámbar/Oro - Cálido y premium */
     --cta-secondary-hover: #F59E0B; /* Amber hover */
     --cta-secondary-text: #1F2937; /* Gris carbón para contraste */
