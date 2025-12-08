@@ -1,372 +1,165 @@
-<!-- 🎨 MARKETPLACE V2 - IMMERSIVE 3D EXPERIENCE -->
+<!-- 🎨 HERO SECTION - MINIMAL OVERLAY STYLE -->
+<section class="hero-minimal relative h-screen w-full overflow-hidden bg-black">
 
-<!-- Hero Header - Full 3D Immersion -->
-<div
-  class="hero-immersive relative z-30 overflow-visible min-h-[110vh] flex flex-col bg-surface-base font-sans">
+  <!-- SPLASH SCREEN OVERLAY (Concept 1: Minimalist & Tech) -->
+  <!-- Se muestra mientras carga el HDRI y desaparece con fade-out -->
+  <!-- Moved to ROOT of section with z-[100] to correctly cover header -->
+  <div
+    class="absolute inset-0 z-[100] flex items-center justify-center bg-[#050505] transition-opacity duration-700 ease-out"
+    [class.opacity-0]="!showSplash()" [class.pointer-events-none]="!showSplash()">
 
-  <!-- FLOATING HEADER - Light Theme -->
-  <header class="fixed top-0 left-0 right-0 z-50 pointer-events-auto">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <!-- Logo -->
-      <div class="flex items-center gap-3 cursor-pointer group">
-        <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00D95F] to-[#00B048] flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-          <span class="text-white font-bold text-lg">A</span>
+    <div class="flex flex-col items-center gap-8 min-w-[280px]">
+      <!-- Logo Animation: Fade In + Scale Up -->
+      <div class="animate-splash-entrance relative">
+        <!-- Glow effect behind logo -->
+        <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-150 animate-pulse">
         </div>
-        <span
-          class="text-gray-900 font-semibold text-lg tracking-wide hidden sm:block">Autorentar</span>
+
+        <img src="/assets/images/autorentar-logo.svg" alt="Autorentar Loading"
+          class="h-16 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
       </div>
 
-      <!-- Center Nav -->
-      <nav
-        class="hidden lg:flex items-center gap-1 bg-white/80 backdrop-blur-md rounded-full px-1.5 py-1.5 border border-gray-200 shadow-sm">
-        <a href="#"
-          class="px-5 py-2 rounded-full text-sm font-medium bg-[#00D95F] text-white shadow-sm">Vehículos</a>
-        <a href="#"
-          class="px-5 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Experiencias</a>
-        <a href="#"
-          class="px-5 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">Ser
-          Anfitrión</a>
+      <!-- NEW: Dynamic Loading Bar & Text -->
+      <div class="w-full flex flex-col items-center gap-3 animate-fade-in-up">
+        <!-- Text -->
+        <p class="text-white/70 text-xs font-mono tracking-widest uppercase h-4">
+          {{ loadingText() }}
+        </p>
+
+        <!-- Progress Bar Container -->
+        <div class="w-full h-[2px] bg-white/10 rounded-full overflow-hidden relative">
+          <!-- Filling Bar -->
+          <div
+            class="h-full bg-gradient-to-r from-[#00D95F] to-emerald-400 shadow-[0_0_10px_rgba(0,217,95,0.6)] transition-all ease-out duration-300 relative"
+            [style.width.%]="loadingProgress()">
+            <div class="absolute right-0 top-0 bottom-0 w-[20px] bg-white/50 blur-[4px]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Car Viewer - Full Screen Background (Lazy Loaded) -->
+  <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
+    @defer (on viewport) {
+      <app-car-3d-viewer #carViewer alt="Autorentar HDRI Background"
+        class="w-full h-full" [showHdriBackground]="true" [lockToCar]="true"
+        [enableInteraction]="true" [showModel]="false" (hdriLoaded)="onHdriLoaded()">
+      </app-car-3d-viewer>
+    } @placeholder {
+      <div class="w-full h-full bg-[#050505]"></div>
+    }
+
+    <!-- CSS Contact Shadow (Fake Grounding) -->
+    <div
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[20vh] w-[60vw] md:w-[40vw] h-[15vh] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-black/90 via-black/20 to-transparent blur-3xl opacity-80 pointer-events-none mix-blend-multiply z-0">
+    </div>
+  </div>
+
+  <!-- Floating Header -->
+  <header
+    class="absolute top-0 left-0 right-0 z-50 px-6 py-4 pointer-events-none transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
+
+      <!-- Left: Logo Autorentar -->
+      <div class="flex items-center gap-2 cursor-pointer group flex-shrink-0"
+        (click)="onLogoClick()">
+        <img src="/assets/images/autorentar-logo.svg" alt="Autorentar Logo"
+          class="h-10 w-auto group-hover:scale-105 transition-transform drop-shadow-lg">
+      </div>
+
+      <!-- Center: Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a (click)="scrollToHowItWorks()"
+          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors drop-shadow-lg cursor-pointer">Cómo
+          funciona</a>
+        <a routerLink="/cars"
+          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors drop-shadow-lg cursor-pointer">Explorar</a>
       </nav>
 
-      <!-- Right Actions -->
-      <div class="flex items-center gap-3">
-        <button
-          class="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white transition-colors shadow-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <path
-              d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-          </svg>
-          ES
+      <!-- Right: Actions -->
+      <div class="flex items-center gap-4">
+        <!-- Secondary: Publicar auto -->
+        <button routerLink="/cars/publish"
+          class="hidden sm:inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#FFFF00] hover:bg-[#FFEA00] text-black font-black text-base tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,0,0.4)] hover:shadow-[0_0_30px_rgba(255,255,0,0.6)] hover:scale-105 active:scale-95 border-2 border-transparent">
+          Publicar auto
         </button>
-        <button
-          class="flex items-center gap-2 px-3 py-2 rounded-full bg-white/80 backdrop-blur-md border border-gray-200 text-gray-700 hover:bg-white transition-colors shadow-sm">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-            stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-          <div
-            class="w-7 h-7 rounded-full bg-gradient-to-br from-[#00D95F] to-[#00B048] flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="2">
-              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
+        <!-- Primary: Ingresar -->
+        <button routerLink="/auth/login"
+          class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00D95F] hover:bg-[#00B048] text-white font-bold transition-all shadow-lg shadow-[#00D95F]/30 hover:scale-105 active:scale-95">
+          Ingresar
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- MAIN HERO CONTENT -->
-  <div class="flex-1 flex flex-col lg:flex-row lg:items-center relative z-20">
+  <!-- Minimal Content Overlay - Bottom Left -->
+  <div class="absolute bottom-0 left-0 right-0 z-40 p-6 sm:p-10 lg:p-16 pointer-events-none">
+    <div class="max-w-md pointer-events-auto">
 
-    <!-- LAYER 2: HERO CONTENT (Overlay) -->
-    <div
-      class="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-12 lg:px-24 pointer-events-none">
-      <div class="max-w-4xl w-full pointer-events-auto">
+      <!-- Headline -->
+      <h1
+        class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[0.95] tracking-tight mb-6 drop-shadow-2xl text-glow hero-text-contrast">
+        <span class="text-[#FFFF00]">Alquiler</span> de autos<br />
+        <span class="block text-2xl sm:text-3xl lg:text-4xl font-bold mt-2 text-white/90">entre
+          <span class="text-[#FFFF00]">vecinos</span>:</span>
+        <span class="text-white">Simple, cercano y seguro.</span>
+      </h1>
 
-        <!-- Animated Badge with Sparkle -->
-        <div class="inline-flex items-center gap-3 mb-6 hero-fade-in">
-          <span
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-gray-200 text-gray-700 text-sm font-medium shadow-sm hover:shadow-md transition-shadow">
-            <svg class="w-4 h-4 text-[#00D95F]" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2Z" />
-            </svg>
-            <span class="text-[#00D95F] font-bold">{{ totalCarsCount() }}+</span> autos disponibles
-          </span>
-        </div>
+      <!-- Subtext -->
+      <p
+        class="text-white/80 text-lg sm:text-xl mb-8 max-w-lg leading-relaxed font-medium drop-shadow-md">
+        ¿Por qué ir lejos? Hay autos increíbles estacionados muy cerca tuyo...
+      </p>
 
-        <!-- Headline -->
-        <h1
-          class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 leading-[0.95] tracking-tighter mb-6 max-w-4xl hero-fade-in hero-delay-1">
-          Alquila autos<br class="hidden sm:block" />
-          <span
-            class="text-transparent bg-clip-text bg-[linear-gradient(110deg,#15803d,45%,#00D95F,55%,#15803d)] animate-text-shimmer">increíbles</span>
-        </h1>
+      <!-- CTA Button -->
+      <a routerLink="/cars"
+        class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30">
+        Ver autos de vecinos
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
 
-        <!-- Subheadline -->
-        <p
-          class="text-lg md:text-xl lg:text-2xl text-gray-600 font-light leading-relaxed max-w-xl mb-10 hero-fade-in hero-delay-2">
-          Conectá directamente con propietarios locales.<br class="hidden md:block" />
-          Sin filas. Sin letra chica. 100% asegurado.
-        </p>
-
-        <!-- UNIFIED SEARCH CAPSULE -->
-        <div
-          class="group relative w-full max-w-3xl bg-white backdrop-blur-xl border border-gray-200 shadow-lg shadow-gray-200/50 rounded-3xl lg:rounded-full p-2 flex flex-col lg:flex-row gap-0 transition-all hover:shadow-xl hover:shadow-[#00D95F]/10 hover:border-gray-300 hero-fade-in hero-delay-3">
-
-          <!-- Location Input Wrapper -->
-          <div
-            class="flex-1 relative flex items-center px-5 py-4 lg:py-5 border-b lg:border-b-0 lg:border-r border-gray-200 transition-colors hover:bg-gray-50/50 search-input-wrapper">
-            <svg class="w-5 h-5 text-[#00D95F] mr-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            <div class="flex flex-col w-full relative">
-              <label
-                class="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-1">Ubicación</label>
-              <input type="text" [value]="selectedLocation() || searchValue()"
-                (input)="onLocationInputChange($event)" (focus)="showLocationSuggestions.set(true)"
-                (blur)="onLocationInputBlur()" (keydown.escape)="closeLocationSuggestions()"
-                class="bg-transparent border-none p-0 text-gray-900 placeholder-gray-400 focus:ring-0 focus:outline-none text-base font-medium w-full truncate"
-                placeholder="¿A dónde vas?" />
-
-              <!-- Location Suggestions Block (Light Theme) -->
-              <div *ngIf="showLocationSuggestions() && locationSuggestions().length > 0"
-                class="absolute z-50 min-w-[300px] left-0 top-full mt-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-100 max-h-80 overflow-y-auto shadow-2xl p-2 animate-in fade-in slide-in-from-top-2 duration-200">
-
-                <div class="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  Sugerencias</div>
-
-                <div *ngFor="let suggestion of locationSuggestions(); trackBy: trackBySuggestion">
-                  <button (click)="onLocationSuggestionSelect(suggestion)"
-                    class="w-full text-left px-3 py-3 hover:bg-gray-50 rounded-xl transition-all border-b border-gray-50 last:border-0 group/item flex items-start gap-3">
-                    <div
-                      class="mt-0.5 p-2 rounded-full bg-gray-100 text-gray-400 group-hover/item:bg-[#00D95F]/10 group-hover/item:text-[#00D95F] transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p
-                        class="font-bold text-gray-900 group-hover/item:text-[#00D95F] transition-colors text-sm">
-                        {{ suggestion.placeName }}</p>
-                      <p class="text-xs text-gray-500 mt-0.5 leading-snug">{{ suggestion.fullAddress
-                        }}</p>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Date Input Wrapper -->
-          <div
-            class="flex-1 relative flex items-center px-5 py-4 lg:py-5 hover:bg-gray-50/50 transition-colors search-input-wrapper">
-            <svg class="w-5 h-5 text-[#00D95F] mr-4 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <div class="flex flex-col w-full">
-              <label
-                class="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-1">Fechas</label>
-              <!-- Date Picker Integration -->
-              <div
-                class="text-gray-900 font-medium text-base truncate cursor-pointer hover:text-[#00D95F] transition-colors outline-none"
-                tabindex="0" (click)="openDatePicker()" (keydown.enter)="openDatePicker()"
-                (keydown.space)="openDatePicker()">
-                {{ dateRange().from ? (dateRange().from | date:'dd MMM') + ' - ' + (dateRange().to |
-                date:'dd MMM') : 'Agregar fechas' }}
-              </div>
-              <!-- Hidden actual picker for logic -->
-              <div class="absolute opacity-0 pointer-events-none">
-                <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
-                  (rangeChange)="onDateRangeChange($event)" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Search Button -->
-          <div class="p-2 lg:p-2">
-            <button (click)="onSearchSubmit(searchValue())" [disabled]="loading()"
-              class="w-full lg:w-14 lg:h-14 bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-black font-bold text-lg rounded-2xl lg:rounded-full px-6 py-4 lg:p-0 transition-all transform active:scale-95 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 whitespace-nowrap animate-glow">
-              @if (loading()) {
-              <div
-                class="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent">
-              </div>
-              } @else {
-              <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <span class="lg:hidden">Buscar</span>
-              }
-            </button>
-          </div>
-
-        </div>
-
-        <!-- QUICK FILTERS - Light Theme -->
-        <div class="flex flex-wrap items-center gap-2 mt-6">
-          <span class="text-gray-500 text-sm mr-2 hidden sm:inline">Popular:</span>
-
-          <!-- SUV -->
-          <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all hover:scale-105 active:scale-95 hero-fade-in"
-            style="animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-            </svg>
-            SUV
-          </button>
-
-          <!-- Deportivo -->
-          <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all hover:scale-105 active:scale-95 hero-fade-in"
-            style="animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013-2.386V4.5A1.5 1.5 0 0113.5 3h1A1.5 1.5 0 0116 4.5v.714z" />
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M18.75 10.5h.008v.008h-.008V10.5z" />
-            </svg>
-            Deportivo
-          </button>
-
-          <!-- Familiar -->
-          <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all hover:scale-105 active:scale-95 hero-fade-in"
-            style="animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-            </svg>
-            Familiar
-          </button>
-
-          <!-- Eléctrico -->
-          <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all hover:scale-105 active:scale-95 hidden sm:inline-flex hero-fade-in"
-            style="animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
-            Eléctrico
-          </button>
-
-          <!-- Ejecutivo -->
-          <button
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-700 text-sm font-medium hover:bg-white hover:border-gray-300 hover:shadow-sm transition-all hover:scale-105 active:scale-95 hidden md:inline-flex hero-fade-in"
-            style="animation-delay: 0.9s; opacity: 0; animation-fill-mode: forwards;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
-            </svg>
-            Ejecutivo
-          </button>
-        </div>
-
-        <!-- TRUST BADGES - Light Theme -->
-        <div class="flex flex-wrap items-center gap-4 md:gap-6 mt-8 hero-fade-in hero-delay-4">
-          <div class="flex items-center gap-2 text-gray-600 text-sm">
-            <svg class="w-5 h-5 text-[#00D95F]" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            <span>100% Asegurado</span>
-          </div>
-          <div class="flex items-center gap-2 text-gray-600 text-sm">
-            <svg class="w-5 h-5 text-[#00D95F]" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Cancelación gratis</span>
-          </div>
-          <div class="flex items-center gap-2 text-gray-600 text-sm hidden sm:flex">
-            <svg class="w-5 h-5 text-[#00D95F]" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            <span>Soporte 24/7</span>
-          </div>
-        </div>
-
-        <!-- Mobile Bottom Nav Hint -->
-        <div class="block lg:hidden mt-8 text-center">
-          <p class="text-gray-400 text-xs uppercase tracking-widest font-bold">Desliza para ver más
-          </p>
-          <div class="w-0.5 h-8 bg-gradient-to-b from-gray-300 to-transparent mx-auto mt-2"></div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 3D Car Viewer - Fondo HDRI visible con iluminación realista -->
-    <div class="absolute inset-0 z-0 w-full h-full">
-      <app-car-3d-viewer #carViewer src="/camaro.glb" alt="Chevrolet Camaro ZL1 3D"
-        class="w-full h-full min-h-[110vh]" [showHdriBackground]="true" [lockToCar]="true"
-        [enableInteraction]="true"></app-car-3d-viewer>
-
-      <!-- LAYER 1: GRADIENT SCRIM - Light Theme -->
-      <div class="absolute inset-0 pointer-events-none z-10">
-        <!-- Left gradient (text area) - Ivory/Cream -->
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-[#F8F4EC]/95 via-[#F8F4EC]/70 via-50% to-transparent">
-        </div>
-        <!-- Top gradient (header area) -->
-        <div
-          class="absolute inset-0 bg-gradient-to-b from-[#F8F4EC]/60 via-transparent to-transparent">
-        </div>
-        <!-- Bottom vignette -->
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-[#F8F4EC]/40 via-transparent to-transparent">
-        </div>
-      </div>
-    </div>
-
-    <!-- 3D Part Info Overlay -->
-    @if (selectedPart()) {
-    <div class="part-info-panel">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <span class="text-xl">{{ selectedPart()!.icon }}</span>
-          <h4 class="font-bold text-lg text-primary">{{ selectedPart()!.name }}</h4>
-        </div>
-        <button (click)="closePartPanel()"
-          class="p-1.5 rounded-lg hover:bg-surface-raised transition-colors"
-          aria-label="Cerrar panel">
-          <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M6 18L18 6M6 6l12 12" />
+      <!-- Trust Badges - Compact -->
+      <div class="flex items-center gap-4 mt-6 text-white/50 text-xs">
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-[#00D95F]" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
-        </button>
+          100% Asegurado
+        </span>
+        <span class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-[#00D95F]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Cancelación gratis
+        </span>
       </div>
-      <p class="text-sm text-secondary leading-relaxed">{{ selectedPart()!.description }}</p>
     </div>
-    }
-
   </div>
 
-</div>
-
-<!-- SCROLL INDICATOR - Bottom Center (Light Theme) -->
-<div
-  class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 hidden lg:flex flex-col items-center gap-2 animate-bounce pointer-events-none">
-  <span class="text-gray-400 text-xs uppercase tracking-widest font-semibold">Explorar</span>
-  <div class="w-6 h-10 rounded-full border-2 border-gray-300 flex justify-center pt-2">
-    <div class="w-1.5 h-3 bg-gray-400 rounded-full animate-pulse"></div>
+  <!-- Scroll Indicator - Center Bottom -->
+  <div
+    class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 hidden lg:flex flex-col items-center gap-1 animate-bounce pointer-events-none opacity-50">
+    <div class="w-5 h-8 rounded-full border-2 border-white/40 flex justify-center pt-1.5">
+      <div class="w-1 h-2 bg-white/60 rounded-full"></div>
+    </div>
   </div>
-</div>
+
+  <!-- Gradient Overlay - Subtle bottom fade for text legibility -->
+  <div
+    class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#020617] via-[#0f172a]/20 to-transparent">
+  </div>
+
+</section>
+
 
 <!-- PARTNERS SECTION - Minimalista -->
-<section class="py-6 md:py-10 lg:pt-40 border-b border-border-default/30 bg-surface-base">
+<section class="py-10 md:py-16 border-b border-border-default/30 bg-surface-base">
   <div class="max-w-5xl mx-auto px-4">
     <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10 lg:gap-14">
       <!-- MercadoPago - Icon only (handshake in circle) -->
@@ -495,7 +288,7 @@
 </section>
 
 <!-- 1. CÓMO FUNCIONA (VISUAL JOURNEY) -->
-<section class="py-20 bg-surface-base relative overflow-hidden">
+<section id="how-it-works" class="py-20 bg-surface-base relative overflow-hidden">
   <!-- Decorative Line -->
   <div
     class="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-border-default to-transparent -z-10">

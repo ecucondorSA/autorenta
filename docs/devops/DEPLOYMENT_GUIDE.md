@@ -148,3 +148,4 @@ El proyecto está configurado con:
 - **Cloudflare Dashboard**: Ver analytics y logs
 - **Sentry**: Ver errores en producción (si está configurado)
 
+

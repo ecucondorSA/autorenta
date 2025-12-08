@@ -39,14 +39,12 @@ import { BreakpointService } from '../../core/services/breakpoint.service';
 import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { TikTokEventsService } from '../../core/services/tiktok-events.service';
 
+import type { CarPartInfo } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
+import { Car3dViewerComponent } from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
-import {
-  Car3dViewerComponent,
-  CarPartInfo,
-} from '../../shared/components/car-3d-viewer/car-3d-viewer.component';
 
 import { AssetPreloaderService } from '../../core/services/asset-preloader.service';
 import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
@@ -94,7 +92,6 @@ export interface Stat {
     DateRangePickerComponent,
     Car3dViewerComponent,
 
-
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
@@ -103,7 +100,6 @@ export interface Stat {
 export class MarketplaceV2Page implements OnInit, OnDestroy {
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
   @ViewChild('carViewer') carViewer?: Car3dViewerComponent;
-
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -245,6 +241,73 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly clickHintFading = signal(false);
   private clickHintTimeout?: ReturnType<typeof setTimeout>;
   private clickHintShownSession = false;
+
+  // Splash Screen State
+  readonly showSplash = signal(true);
+  readonly loadingProgress = signal(0);
+  readonly loadingText = signal('Inicializando...');
+
+  // Loading Sequence
+  private readonly loadingMessages = [
+    'Conectando al servidor...',
+    'Cargando flota de vehículos...',
+    'Verificando perfiles...',
+    'Sincronizando wallet...',
+    'Optimizando experiencia...',
+    'Todo listo',
+  ];
+
+  constructor() {
+    this.simulateLoading();
+  }
+
+  private simulateLoading() {
+    const intervalTime = 50; // Update every 50ms
+
+    this.loadingInterval = setInterval(() => {
+      // Increment progress
+      if (this.loadingProgress() < 90) {
+        // Slow down as we get closer to 90%
+        const increment = Math.max(0.5, (90 - this.loadingProgress()) / 20);
+        this.loadingProgress.update((p) => Math.min(90, p + increment));
+      }
+
+      // Cycle text based on progress thresholds
+      const progress = this.loadingProgress();
+      if (progress < 20) this.loadingText.set(this.loadingMessages[0]);
+      else if (progress < 40) this.loadingText.set(this.loadingMessages[1]);
+      else if (progress < 60) this.loadingText.set(this.loadingMessages[2]);
+      else if (progress < 80) this.loadingText.set(this.loadingMessages[3]);
+      else this.loadingText.set(this.loadingMessages[4]);
+
+    }, intervalTime);
+  }
+
+  onHdriLoaded(): void {
+    // Clear loading interval
+    if (this.loadingInterval) {
+      clearInterval(this.loadingInterval);
+      this.loadingInterval = undefined;
+    }
+
+    // Force completion
+    this.loadingProgress.set(100);
+    this.loadingText.set(this.loadingMessages[5]);
+
+    // Pequeño delay artificial para asegurar transición suave si carga muy rápido
+    setTimeout(() => {
+      this.showSplash.set(false);
+    }, 600);
+  }
+
+  scrollToHowItWorks(): void {
+    if (this.isBrowser) {
+      const element = document.getElementById('how-it-works');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
 
 
 
@@ -432,6 +495,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   // Realtime
   private realtimeChannel?: RealtimeChannel;
+  private loadingInterval?: ReturnType<typeof setInterval>;
 
   // Effects
   private readonly filtersEffect = effect(() => {
@@ -499,14 +563,24 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Cleanup location watch
     if (this.locationWatchId !== null) {
       this.locationService.clearWatch(this.locationWatchId);
     }
+    // Cleanup timeouts
     if (this.clickHintTimeout) {
       clearTimeout(this.clickHintTimeout);
     }
     if (this.locationSearchTimeout) {
       clearTimeout(this.locationSearchTimeout);
+    }
+    // Cleanup loading interval
+    if (this.loadingInterval) {
+      clearInterval(this.loadingInterval);
+    }
+    // Cleanup realtime channel
+    if (this.realtimeChannel) {
+      this.supabase.removeChannel(this.realtimeChannel);
     }
   }
 

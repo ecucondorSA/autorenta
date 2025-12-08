@@ -42,7 +42,12 @@
                   "**/models/car-negro-final.glb",
                   "**/models/user-car-model.glb",
                   "**/models/*.blend",
-                  "**/models/*.blend1"
+                  "**/models/*.blend1",
+                  "**/env_maps/sunny_country_road_4k.hdr",
+                  "**/hdri/goegap_road_8k.exr",
+                  "**/hdri/suburban_parking_area_8k.hdr",
+                  "**/hdri/tiber_2_4k.hdr",
+                  "**/hdri/suburban_parking_area_4k.hdr"
                 ]
               },
               {
@@ -77,12 +82,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2.5MB",
-                  "maximumError": "3MB"
+                  "maximumWarning": "1.5MB",
+                  "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "100kB",
+                  "maximumWarning": "50kB",
                   "maximumError": "100kB"
                 }
               ],

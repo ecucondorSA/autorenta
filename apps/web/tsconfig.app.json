@@ -4,6 +4,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
+    "tsBuildInfoFile": "../../node_modules/.cache/web-app.tsbuildinfo",
     "types": [
       "node"
     ]

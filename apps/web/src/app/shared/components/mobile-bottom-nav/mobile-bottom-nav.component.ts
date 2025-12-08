@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
 import { IconComponent } from '../icon/icon.component';
 
@@ -19,9 +20,11 @@ interface NavItem {
   templateUrl: './mobile-bottom-nav.component.html',
   styleUrls: ['./mobile-bottom-nav.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost
+  host: { class: 'block md:hidden' },
 })
-export class MobileBottomNavComponent {
+export class MobileBottomNavComponent implements OnDestroy {
   private readonly unreadMessagesService = inject(UnreadMessagesService);
+  private readonly destroy$ = new Subject<void>();
   readonly currentRoute = signal<string>('');
 
   readonly navItems: NavItem[] = [
@@ -59,10 +62,15 @@ export class MobileBottomNavComponent {
   ];
 
   constructor(private router: Router) {
-    // Detectar ruta actual
-    this.router.events.subscribe(() => {
+    // Detectar ruta actual con cleanup automático
+    this.router.events.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.currentRoute.set(this.router.url);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   isActive(route: string): boolean {

@@ -43,7 +43,7 @@ import { PwaInstallPromptComponent } from './shared/components/pwa-install-promp
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
-import { SplashComponent } from './shared/components/splash/splash.component';
+
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { IconComponent } from './shared/components/icon/icon.component';
@@ -60,7 +60,7 @@ import { IconComponent } from './shared/components/icon/icon.component';
     TranslateModule,
     PendingReviewsBannerComponent,
     VerificationPromptBannerComponent,
-    SplashComponent,
+
     PwaInstallPromptComponent,
     PwaInstallBannerComponent,
     PwaUpdatePromptComponent,
@@ -207,7 +207,9 @@ export class AppComponent implements OnInit {
 
   // Smart Splash: Controls when app initialization completes
   // Splash component handles video intro + loop animation
-  showSplash = signal(true);
+  // Estado de Splash
+  // NOTA: Splash desactivado por solicitud del usuario (era signal(true))
+  showSplash = signal(false);
   splashDismissed = signal(false);
 
   toggleSidebar(): void {

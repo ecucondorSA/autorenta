@@ -18,15 +18,15 @@
   --cta-text: #000000; /* BLACK text for maximum contrast */
 
   /* Glow Effect - Radioactive */
-  --glow-neon: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 40px #39FF14, 0 0 80px #39FF14;
+  --glow-neon: 0 0 15px rgba(57, 255, 20, 0.6), 0 0 30px rgba(57, 255, 20, 0.4), 0 0 60px rgba(57, 255, 20, 0.2);
 
   /* Colors - Accent */
   --color-accent-emerald: 16 185 129;
   --color-accent-amber: 245 158 11;
   --color-accent-blue: 59 130 246;
 
-  /* Colors - Neutral */
-  --color-slate-950: 2 6 23;
+  /* Colors - Neutral / Deep Space */
+  --color-deep-space: #020617; /* Very Dark Slate */
   --color-slate-900: 15 23 42;
   --color-slate-800: 30 41 59;
 
@@ -77,9 +77,9 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Glass Effect - Highly transparent (only border is prominent) */
-  --glass-bg: rgba(255, 255, 255, 0.005); /* ~0.5% opacity */
-  --glass-border: rgba(255, 255, 255, 0.35);
-  --glass-blur: blur(18px);
+  --glass-bg: rgba(2, 6, 23, 0.6); /* Darker glass for better contrast */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: blur(20px);
 }
 
 /* ===========================================
@@ -88,7 +88,7 @@
 .font-display {
   font-family: var(--font-display);
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 /* ===========================================
@@ -128,19 +128,20 @@
 
 /* Left glass panel only under text: keeps contrast without covering the car */
 /* Hero Text Contrast - ensures readability against rotating 3D car */
+/* Left glass panel only under text: keeps contrast without covering the car */
+/* Hero Text Contrast - ensures readability against rotating 3D car */
 .hero-text-contrast {
-  text-shadow:
-    0 0 20px var(--surface-base),
-    0 0 40px var(--surface-base),
-    2px 2px 4px rgba(255, 255, 255, 0.8);
+  /* Using a subtle drop shadow to lift text off the background without being muddy */
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.text-glow {
+    text-shadow: 0 0 40px rgba(255,255,255,0.4), 0 0 80px rgba(255,255,255,0.2);
 }
 
 @media (min-width: 1024px) {
   .hero-text-contrast {
-    text-shadow:
-      0 0 30px var(--surface-base),
-      0 0 60px var(--surface-base),
-      0 0 80px var(--surface-base);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0,0,0,0.5);
   }
 }
 
@@ -2264,4 +2265,36 @@
 .animate-text-shimmer {
   background-size: 200% auto;
   animation: textShimmer 4s linear infinite;
+}
+
+/* Splash Screen Animations */
+@keyframes splashEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-splash-entrance {
+  animation: splashEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out 0.2s forwards;
+  opacity: 0;
 }
