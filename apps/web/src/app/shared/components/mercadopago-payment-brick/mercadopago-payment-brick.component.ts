@@ -299,7 +299,8 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
   private ngZone = inject(NgZone);
   private supabase = injectSupabase();
   private initAttempts = 0;
-  private maxInitAttempts = 3;
+  private maxInitAttempts = 5;
+  private baseRetryDelay = 200; // Base delay for exponential backoff
 
   ngOnInit(): void {
     // Preload SDK script early
@@ -379,15 +380,17 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
 
       console.log('🔑 MercadoPago public key:', `${publicKey.slice(0, 20)}...`);
 
-      // Check if container exists
-      const container = document.getElementById('paymentBrick_container');
+      // Check if container exists using ViewChild (more reliable than getElementById)
+      const container = this.containerRef?.nativeElement;
       if (!container) {
         if (this.initAttempts < this.maxInitAttempts) {
-          console.warn('⚠️ Container not found, retrying...');
-          setTimeout(() => this.initializePaymentBrick(), 300);
+          // Exponential backoff: 200ms, 400ms, 800ms, 1600ms, 3200ms
+          const delay = this.baseRetryDelay * Math.pow(2, this.initAttempts - 1);
+          console.warn(`⚠️ Container not found, retrying in ${delay}ms (attempt ${this.initAttempts}/${this.maxInitAttempts})...`);
+          setTimeout(() => this.initializePaymentBrick(), delay);
           return;
         }
-        throw new Error('Payment Brick container not found');
+        throw new Error('Payment Brick container not found after maximum retries');
       }
 
       // Load MercadoPago SDK

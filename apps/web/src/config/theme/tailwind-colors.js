@@ -24,8 +24,8 @@ const palette = {
   },
   accent: {
     blue: {
-      primary: '#2563EB', // Blue 600 - WCAG AA Compliant
-      hover: '#1D4ED8',   // Blue 700
+      primary: '#A7D8F4', // Azul pastel - Synced with colors.ts
+      hover: '#8EC9EC',   // Estado hover - Synced with colors.ts
     },
     neon: {
       primary: '#00D95F', // Verde neón radioactivo - CTA principal
@@ -44,28 +44,43 @@ const palette = {
   },
 };
 
+/**
+ * Light Theme - Synced with colors.ts
+ * Source of truth: src/config/theme/colors.ts
+ */
 const lightTheme = {
-  surfaceBase: palette.neutral.ivory,
+  // Surfaces
+  surfaceBase: palette.neutral.ivory,        // #F8F4EC
   surfaceRaised: '#FFFFFF',
-  surfaceSecondary: '#F2EFE9', // Slightly darker beige for better separation
-  surfaceElevated: palette.gray.G05,
-  textPrimary: '#000000', // Pure black for maximum contrast
-  textSecondary: '#333333', // Darker gray for better readability
-  textMuted: '#555555', // Darker muted text
-  textInverse: '#FFFFFF',
-  borderDefault: '#D1D5DB', // Gray-300 equivalent for better visibility
-  borderMuted: '#E5E7EB',
-  borderFocus: '#2563EB', // Stronger blue
-  ctaDefault: '#2563EB', // Stronger blue for primary actions
-  ctaHover: '#1D4ED8', // Darker blue on hover
-  ctaText: '#FFFFFF', // White text on primary buttons
-  infoLight: '#3B82F6',
-  infoDark: '#1D4ED8',
-  successLight: '#15803D', // Darker green for text readability
-  warningLight: '#854D0E', // Darker yellow/brown (Yellow 800)
-  errorLight: '#B91C1C', // Darker red
-  overlayDark: 'rgba(0, 0, 0, 0.7)',
-  overlayLight: 'rgba(255, 255, 255, 0.9)',
+  surfaceSecondary: palette.neutral.beige,   // #DFD2BF - Synced with colors.ts
+  surfaceElevated: palette.gray.G05,         // #F5F5F5
+
+  // Text - Synced with colors.ts
+  textPrimary: palette.neutral.black,        // #050505
+  textSecondary: palette.gray.G60,           // #4E4E4E
+  textMuted: palette.gray.G40,               // #7B7B7B
+  textInverse: palette.neutral.ivory,        // #F8F4EC
+
+  // Borders - Synced with colors.ts
+  borderDefault: palette.gray.G20,           // #BCBCBC
+  borderMuted: palette.gray.G10,             // #E3E3E3
+  borderFocus: '#3B6E8F',                    // Azul más saturado para contraste
+
+  // CTA - Azul pastel (synced with colors.ts)
+  ctaDefault: palette.accent.blue.primary,   // #A7D8F4
+  ctaHover: palette.accent.blue.hover,       // #8EC9EC
+  ctaText: palette.neutral.black,            // #050505 - Negro sobre azul pastel
+
+  // Feedback states
+  infoLight: palette.accent.blue.primary,    // #A7D8F4
+  infoDark: '#6BA8D4',
+  successLight: palette.feedback.success.olive, // #9DB38B
+  warningLight: '#C4A882',                   // Beige cálido
+  errorLight: palette.feedback.error.rust,   // #B25E5E
+
+  // Overlays
+  overlayDark: 'rgba(5, 5, 5, 0.7)',
+  overlayLight: 'rgba(248, 244, 236, 0.9)',
 };
 
 /**
