@@ -1,10 +1,19 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { from, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../services/auth.service';
 
 export const SupabaseAuthInterceptor: HttpInterceptorFn = (req, next) => {
+  const platformId = inject(PLATFORM_ID);
+  const isBrowser = isPlatformBrowser(platformId);
+
+  // SSR-safe: Skip auth interception during prerendering
+  if (!isBrowser) {
+    return next(req);
+  }
+
   const auth = inject(AuthService);
 
   // Helper to add headers

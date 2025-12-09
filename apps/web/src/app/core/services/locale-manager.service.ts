@@ -26,7 +26,7 @@ export class LocaleManagerService {
   private currentLocale: string = 'es-AR';
 
   constructor() {
-    // Registrar todos los locales soportados
+    // Registrar todos los locales soportados (safe during SSR)
     registerLocaleData(localeEsAr, 'es-AR');
     registerLocaleData(localePtBr, 'pt-BR');
     registerLocaleData(localeEn, 'en-US');
@@ -34,14 +34,20 @@ export class LocaleManagerService {
     // Configurar idioma por defecto (fallback)
     this.translateService.setDefaultLang('es');
 
-    // Cargar idioma guardado o usar default
-    const savedLang = this.getSavedLanguage();
-    this.setLanguage(savedLang);
+    // SSR-safe: Only load saved language and subscribe in browser
+    if (this.isBrowser) {
+      // Cargar idioma guardado o usar default
+      const savedLang = this.getSavedLanguage();
+      this.setLanguage(savedLang);
 
-    // Escuchar cambios de idioma
-    this.translateService.onLangChange.subscribe((event) => {
-      this.currentLocale = this.getLocaleFromLang(event.lang);
-    });
+      // Escuchar cambios de idioma
+      this.translateService.onLangChange.subscribe((event) => {
+        this.currentLocale = this.getLocaleFromLang(event.lang);
+      });
+    } else {
+      // Durante SSR usar idioma default
+      this.translateService.use('es');
+    }
   }
 
   /**

@@ -12,13 +12,15 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
  * - Use Prerender for SEO-critical public pages
  * - Use Client for everything else (auth-protected, dynamic content)
  *
- * NOTE: Prerendering disabled due to Angular Zone.js timeout issues during build.
- * The SSR stub client is in place for when prerendering is re-enabled.
- * To re-enable, change the paths from Client to Prerender.
+ * NOTE: Prerendering temporarily disabled due to Zone.js timeout during build.
+ * All SSR-safe infrastructure is in place (stub clients, platform checks, etc.)
+ * To re-enable, change specific paths from Client to Prerender.
+ *
+ * Known blocker: Ionic Angular or TranslateModule initialization causes timeout.
+ * TODO: Investigate Ionic SSR compatibility or use zoneless rendering.
  */
 export const serverRoutes: ServerRoute[] = [
-  // All routes use Client rendering for now
-  // Prerendering will be enabled after resolving Zone.js timeout
+  // All routes use Client rendering (SPA mode)
   {
     path: '**',
     renderMode: RenderMode.Client,

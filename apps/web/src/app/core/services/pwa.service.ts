@@ -74,10 +74,13 @@ export class PwaService implements OnDestroy {
   };
 
   constructor(@Optional() private swUpdate: SwUpdate | null) {
-    if (this.isBrowser) {
-      this.initPwa();
-      this.checkStandaloneMode();
+    // SSR-safe: Only initialize PWA features in browser
+    if (!this.isBrowser) {
+      return;
     }
+
+    this.initPwa();
+    this.checkStandaloneMode();
     this.listenForUpdates();
   }
 

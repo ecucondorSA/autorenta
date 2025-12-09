@@ -1,5 +1,6 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, catchError, filter, from, switchMap, take, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../services/auth.service';
@@ -9,6 +10,14 @@ let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
+  const platformId = inject(PLATFORM_ID);
+  const isBrowser = isPlatformBrowser(platformId);
+
+  // SSR-safe: Skip auth refresh during prerendering
+  if (!isBrowser) {
+    return next(req);
+  }
+
   const auth = inject(AuthService);
 
   const addToken = (request: typeof req, token: string) => {

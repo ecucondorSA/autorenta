@@ -1,11 +1,14 @@
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
   ErrorHandler,
   importProvidersFrom,
+  inject,
   isDevMode,
   LOCALE_ID,
+  PLATFORM_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -18,8 +21,8 @@ import {
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
-import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { routes } from './app.routes';
 import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
 import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
@@ -50,7 +53,7 @@ export const appConfig: ApplicationConfig = {
       routes,
       // Cambiamos a NoPreloading para reducir descarga inicial en móvil; prefetch selectivo se puede habilitar con quicklink
       withPreloading(NoPreloading),
-      withEnabledBlockingInitialNavigation(),
+      // Note: withEnabledBlockingInitialNavigation removed - can cause SSR timeout
       withInMemoryScrolling({
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
@@ -73,11 +76,30 @@ export const appConfig: ApplicationConfig = {
     }),
     SupabaseClientService.forRoot(),
     { provide: LOCALE_ID, useValue: 'es-AR' },
-    importProvidersFrom(TranslateModule.forRoot()),
-    provideTranslateHttpLoader({
-      prefix: './assets/i18n/',
-      suffix: '.json',
-    }),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: () => {
+            const http = inject(HttpClient);
+            const platformId = inject(PLATFORM_ID);
+            const isBrowser = isPlatformBrowser(platformId);
+
+            return {
+              getTranslation: (lang: string) => {
+                // During SSR, return empty translations to avoid HTTP timeout
+                if (!isBrowser) {
+                  return of({});
+                }
+                // In browser, load translations via HTTP
+                return http.get(`./assets/i18n/${lang}.json`);
+              },
+            };
+          },
+        },
+        defaultLanguage: 'es',
+      })
+    ),
     // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation
     routeReuseStrategyProvider,
     // ✅ Global Error Handler (handles Sentry internally)

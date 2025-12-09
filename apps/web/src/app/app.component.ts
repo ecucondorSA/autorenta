@@ -234,6 +234,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // SSR-safe: Only run browser-specific initialization in browser
+    if (!this.isBrowser) {
+      return;
+    }
+
     this.handleOAuthCallbackRedirect();
     this.initializeTheme();
     this.initializeLayoutWatcher();
