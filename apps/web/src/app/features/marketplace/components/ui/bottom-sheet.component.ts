@@ -1,4 +1,4 @@
-import { Component, input, output, signal, ElementRef, ViewChild, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, ElementRef, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -18,6 +18,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 @Component({
   selector: 'app-bottom-sheet',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   animations: [
     trigger('backdrop', [

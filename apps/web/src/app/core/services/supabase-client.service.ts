@@ -1,4 +1,4 @@
-import { isPlatformServer } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   EnvironmentProviders,
   inject,
@@ -68,14 +68,81 @@ const createResilientLock = (): SupabaseLock => {
   };
 };
 
+/**
+ * Creates a stub Supabase client for SSR that returns empty results
+ * This prevents errors during prerendering while maintaining type safety
+ */
+function createSSRStubClient(): SupabaseClient {
+  // Create a proxy that returns safe stubs for any property access
+  const createChainableStub = (): unknown => {
+    const stub = new Proxy(() => createChainableStub(), {
+      get: (_target, prop) => {
+        // Handle common async methods
+        if (prop === 'then' || prop === 'catch' || prop === 'finally') {
+          return undefined; // Not a promise
+        }
+        // Return empty data for terminal methods
+        if (prop === 'single' || prop === 'maybeSingle') {
+          return () => Promise.resolve({ data: null, error: null });
+        }
+        // Auth state methods
+        if (prop === 'getSession' || prop === 'getUser') {
+          return () => Promise.resolve({ data: { session: null, user: null }, error: null });
+        }
+        if (prop === 'onAuthStateChange') {
+          return () => ({ data: { subscription: { unsubscribe: () => {} } } });
+        }
+        // RPC calls
+        if (typeof prop === 'string' && prop.startsWith('rpc')) {
+          return () => Promise.resolve({ data: null, error: null });
+        }
+        // Realtime channel
+        if (prop === 'subscribe') {
+          return () => ({ unsubscribe: () => {} });
+        }
+        if (prop === 'unsubscribe') {
+          return () => {};
+        }
+        // Default: return chainable stub
+        return createChainableStub();
+      },
+      apply: () => {
+        // When called as function, return promise with empty result
+        return Promise.resolve({ data: [], error: null, count: 0 });
+      },
+    });
+    return stub;
+  };
+
+  return createChainableStub() as unknown as SupabaseClient;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class SupabaseClientService {
-  private readonly client: SupabaseClient;
+  private client: SupabaseClient | null = null;
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   constructor() {
+    // SSR-safe: Don't initialize Supabase during server-side rendering
+    // The client will be created lazily on first getClient() call in browser
+    if (!this.isBrowser) {
+      console.log('[SupabaseClientService] SSR mode - skipping initialization');
+      return;
+    }
+
+    // Initialize immediately in browser for better performance
+    this.initializeClient();
+  }
+
+  /**
+   * Initialize the Supabase client (only in browser)
+   */
+  private initializeClient(): void {
+    if (this.client) return; // Already initialized
+
     console.log('[SupabaseClientService] Initializing...');
     const supabaseUrl = environment.supabaseUrl;
     const supabaseAnonKey = environment.supabaseAnonKey;
@@ -86,23 +153,18 @@ export class SupabaseClientService {
       throw new Error(message);
     }
 
-    const isServer = isPlatformServer(this.platformId);
-
     this.client = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
-        persistSession: !isServer, // Disable persistence on server
-        autoRefreshToken: !isServer,
-        lock: isServer ? undefined : createResilientLock(), // No locks on server
-        detectSessionInUrl: !isServer,
+        persistSession: true,
+        autoRefreshToken: true,
+        lock: createResilientLock(),
+        detectSessionInUrl: true,
       },
       db: {
         schema: 'public',
       },
-      // ⚠️ REMOVED: global pooling header causes CORS errors with Edge Functions
-      // Pooling should be handled by Supabase connection string configuration instead
       realtime: {
         params: {
-          // Limitar eventos realtime para no saturar cliente
           eventsPerSecond: 10,
         },
       },
@@ -118,11 +180,40 @@ export class SupabaseClientService {
     ]);
   }
 
+  /**
+   * Get the Supabase client instance
+   * Returns a stub client during SSR that safely returns empty results
+   */
   getClient(): SupabaseClient {
+    if (!this.client) {
+      if (!this.isBrowser) {
+        // Return stub client during SSR instead of throwing
+        return createSSRStubClient();
+      }
+      // Lazy init if not done yet
+      this.initializeClient();
+    }
+    return this.client!;
+  }
+
+  /**
+   * Check if Supabase is available (only true in browser)
+   */
+  isAvailable(): boolean {
+    return this.isBrowser && this.client !== null;
+  }
+
+  /**
+   * Get client or null (SSR-safe alternative to getClient())
+   */
+  getClientOrNull(): SupabaseClient | null {
+    if (!this.isBrowser) return null;
+    if (!this.client) this.initializeClient();
     return this.client;
   }
 
   async healthCheck(): Promise<boolean> {
+    if (!this.isBrowser || !this.client) return false;
     try {
       const { error } = await this.client.from('profiles').select('id').limit(1);
       return !error;
@@ -139,4 +230,19 @@ export class SupabaseClientService {
   }
 }
 
-export const injectSupabase = (): SupabaseClient => inject(SupabaseClientService).getClient();
+/**
+ * Inject Supabase client - SSR-safe
+ * Returns a stub client during SSR that returns empty results
+ * Returns the real client in browser
+ */
+export const injectSupabase = (): SupabaseClient => {
+  const service = inject(SupabaseClientService);
+  const platformId = inject(PLATFORM_ID);
+
+  // During SSR, return a stub client that doesn't throw
+  if (!isPlatformBrowser(platformId)) {
+    return createSSRStubClient();
+  }
+
+  return service.getClient();
+};

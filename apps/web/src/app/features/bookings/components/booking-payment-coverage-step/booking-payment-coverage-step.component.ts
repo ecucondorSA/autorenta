@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WizardStepComponent } from '../../../../shared/components/wizard-step/wizard-step.component';
@@ -24,6 +24,7 @@ export interface BookingPaymentCoverage {
   selector: 'app-booking-payment-coverage-step',
   standalone: true,
   imports: [CommonModule, FormsModule, WizardStepComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-wizard-step
       title="Pago y Cobertura"

@@ -46,6 +46,7 @@ import { ShareButtonComponent } from './shared/components/share-button/share-but
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { IconComponent } from './shared/components/icon/icon.component';
+import { SplashScreenComponent } from './shared/components/splash-screen/splash-screen.component';
 
 @Component({
   selector: 'app-root',
@@ -71,6 +72,7 @@ import { IconComponent } from './shared/components/icon/icon.component';
     ShareButtonComponent,
     FooterComponent,
     IconComponent,
+    SplashScreenComponent,
   ],
   templateUrl: './app.component.html',
   styles: [

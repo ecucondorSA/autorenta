@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Car } from '../../../../core/models';
@@ -9,6 +9,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
   selector: 'app-booking-payment-step',
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="payment-step-container">
       <div class="step-header">

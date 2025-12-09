@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
@@ -19,6 +19,7 @@ interface Extra {
   selector: 'app-booking-extras-step',
   standalone: true,
   imports: [CommonModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="extras-step-container">
       <div class="step-header">

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -21,6 +21,7 @@ interface InsuranceOption {
   selector: 'app-booking-insurance-step',
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './booking-insurance-step.component.html',
   styleUrls: ['./booking-insurance-step.component.scss'],
 })

@@ -281,17 +281,17 @@
 }
 
 .car-marker-price:hover {
-  border-color: var(--cta-default, #4f46e5);
+  border-color: var(--cta-default, #A7D8F4);
   box-shadow:
-    0 4px 12px rgba(79, 70, 229, 0.3),
+    0 4px 12px rgba(167, 216, 244, 0.3),
     0 2px 6px var(--shadow-dark-alpha-15, rgba(0, 0, 0, 0.15));
   transform: scale(1.08);
 }
 
 .car-marker-price--active {
-  background: var(--cta-default, #4f46e5);
-  color: white;
-  border-color: var(--cta-default, #4f46e5);
+  background: var(--cta-default, #A7D8F4);
+  color: var(--cta-text, #050505);
+  border-color: var(--cta-default, #A7D8F4);
   transform: scale(1.1);
 }
 
@@ -341,7 +341,7 @@
   padding: 12px 16px;
   box-shadow: var(--map-popup-shadow, 0 4px 12px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4)));
   border: 1px solid var(--map-popup-border, var(--border-light-alpha-10, rgba(255, 255, 255, 0.1)));
-  border-top: 3px solid var(--cta-default, #4f46e5);
+  border-top: 3px solid var(--cta-default, #A7D8F4);
 }
 
 .mapboxgl-popup-content h3 {

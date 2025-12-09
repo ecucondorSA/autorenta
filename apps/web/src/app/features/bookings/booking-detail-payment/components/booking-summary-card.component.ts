@@ -1,4 +1,4 @@
-import { Component, Input, computed } from '@angular/core';
+import { Component, Input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   PriceBreakdown,
@@ -18,6 +18,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 @Component({
   selector: 'app-booking-summary-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div

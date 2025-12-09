@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <!-- Gradientes Premium - Negro -->
+    <linearGradient id="carBodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#374151"/>
+      <stop offset="30%" style="stop-color:#1f2937"/>
+      <stop offset="70%" style="stop-color:#111827"/>
+      <stop offset="100%" style="stop-color:#030712"/>
+    </linearGradient>
+    <linearGradient id="carHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff;stop-opacity:0.5"/>
+      <stop offset="20%" style="stop-color:#fff;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#fff;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0f2fe"/>
+      <stop offset="50%" style="stop-color:#bae6fd"/>
+      <stop offset="100%" style="stop-color:#7dd3fc"/>
+    </linearGradient>
+    <linearGradient id="rimGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#94a3b8"/>
+      <stop offset="50%" style="stop-color:#64748b"/>
+      <stop offset="100%" style="stop-color:#475569"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo amarillo radioactivo -->
+  <rect width="64" height="64" rx="12" fill="#d4f542"/>
+
+  <!-- AUTO PREMIUM DETALLADO - Escalado -->
+  <g transform="translate(4, 16) scale(0.12)">
+    <!-- Sombra -->
+    <ellipse cx="250" cy="180" rx="200" ry="15" fill="#000" opacity="0.15"/>
+
+    <!-- Faldones -->
+    <path fill="#030712" d="
+      M 40,160 Q 35,162 35,165 L 35,168 Q 35,172 45,172 L 85,172
+      Q 80,155 125,155 Q 170,155 175,172 L 325,172
+      Q 330,155 375,155 Q 420,155 415,172 L 460,172
+      Q 470,172 470,165 L 470,160 Z"/>
+
+    <!-- Carrocería principal -->
+    <path fill="url(#carBodyGradient)" d="
+      M 45,155 C 45,140 50,125 70,115 L 120,105
+      C 135,100 145,85 160,65 C 170,52 185,45 210,45
+      L 330,47 C 360,47 380,55 395,75 L 420,105
+      C 440,108 458,120 462,140 L 462,155
+      C 462,158 460,160 455,160 L 420,160
+      C 415,140 390,135 375,135 C 345,135 330,155 325,160
+      L 175,160 C 170,155 155,135 125,135
+      C 95,135 85,155 80,160 L 50,160
+      C 45,160 42,158 42,155 Z"/>
+
+    <!-- Capó -->
+    <path fill="#111827" d="
+      M 395,75 C 410,80 430,95 445,110 L 462,140 L 462,125
+      C 460,110 445,95 420,90 L 395,75 Z"/>
+
+    <!-- Techo -->
+    <path fill="#030712" d="
+      M 160,65 C 170,52 185,45 210,45 L 330,47
+      C 350,47 365,52 380,65 L 330,50 L 210,48
+      C 190,48 175,52 160,65 Z"/>
+
+    <!-- Reflejo superior -->
+    <path fill="url(#carHighlight)" d="
+      M 165,55 C 180,50 200,47 230,47 L 320,49
+      C 345,50 365,58 380,75 L 400,95 L 130,95
+      C 145,75 155,60 165,55 Z"/>
+
+    <!-- Ventana trasera -->
+    <path fill="url(#windowGradient)" stroke="#4b5563" stroke-width="1.5" d="
+      M 168,58 C 160,70 155,82 152,95 L 195,95 L 195,60
+      C 185,58 175,57 168,58 Z"/>
+
+    <!-- Parabrisas -->
+    <path fill="url(#windowGradient)" stroke="#4b5563" stroke-width="1.5" d="
+      M 202,58 L 315,60 C 340,62 360,75 378,95 L 202,95 Z"/>
+
+    <!-- Reflejo parabrisas -->
+    <path fill="#fff" opacity="0.5" d="
+      M 210,62 C 240,60 280,62 300,65 L 280,85 L 210,85 Z"/>
+
+    <!-- Pilar B -->
+    <path fill="#1f2937" d="M 195,58 L 202,58 L 202,95 L 195,95 Z"/>
+    <path fill="#6b7280" opacity="0.5" d="M 196,60 L 199,60 L 199,93 L 196,93 Z"/>
+
+    <!-- Línea cromada -->
+    <path fill="none" stroke="#9ca3af" stroke-width="1" opacity="0.8" d="
+      M 60,140 C 150,138 300,138 450,150"/>
+
+    <!-- Espejo -->
+    <g transform="translate(145, 82)">
+      <path d="M -5,-10 C 5,-12 15,-8 18,-2 L 18,6 C 15,10 5,12 -5,8 C -10,5 -10,-5 -5,-10 Z" fill="#1f2937"/>
+      <ellipse cx="6" cy="0" rx="5" ry="4" fill="#9ca3af" opacity="0.7"/>
+    </g>
+
+    <!-- Rueda trasera -->
+    <g transform="translate(125, 168)">
+      <circle r="35" fill="#0f172a"/>
+      <circle r="33" fill="#1e293b"/>
+      <circle r="26" fill="#374151"/>
+      <circle r="24" fill="url(#rimGradient)"/>
+      <g fill="#64748b">
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(72)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(144)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(216)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(288)"/>
+      </g>
+      <circle r="10" fill="#475569"/>
+      <circle r="7" fill="#64748b"/>
+      <circle r="3" fill="#cbd5e1"/>
+    </g>
+
+    <!-- Rueda delantera -->
+    <g transform="translate(375, 168)">
+      <circle r="35" fill="#0f172a"/>
+      <circle r="33" fill="#1e293b"/>
+      <circle r="26" fill="#374151"/>
+      <circle r="24" fill="url(#rimGradient)"/>
+      <g fill="#64748b">
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(72)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(144)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(216)"/>
+        <path d="M -4,-20 L 4,-20 L 6,-6 L -6,-6 Z" transform="rotate(288)"/>
+      </g>
+      <circle r="10" fill="#475569"/>
+      <circle r="7" fill="#64748b"/>
+      <circle r="3" fill="#cbd5e1"/>
+    </g>
+
+    <!-- Luz trasera LED -->
+    <g transform="translate(42, 118)">
+      <path d="M 0,0 L 8,2 L 8,32 L 0,35 Z" fill="#7f1d1d"/>
+      <path d="M 1,4 L 7,5 L 7,15 L 1,16 Z" fill="#dc2626"/>
+      <path d="M 2,6 L 6,7 L 6,12 L 2,13 Z" fill="#f87171"/>
+    </g>
+
+    <!-- Faro delantero LED -->
+    <g transform="translate(455, 105)">
+      <path d="M 0,5 C 5,0 15,0 18,10 L 18,35 C 15,40 5,42 0,38 Z" fill="#fefce8"/>
+      <path d="M 3,10 C 6,6 12,6 15,12 L 15,30 C 12,34 6,35 3,32 Z" fill="#fef08a"/>
+      <ellipse cx="9" cy="18" rx="4" ry="8" fill="#fff"/>
+    </g>
+
+    <!-- Badge amarillo -->
+    <circle cx="465" cy="135" r="8" fill="#111827"/>
+    <circle cx="465" cy="135" r="6" fill="#d4f542"/>
+    <circle cx="465" cy="135" r="3" fill="#ecfccb"/>
+  </g>
+</svg>

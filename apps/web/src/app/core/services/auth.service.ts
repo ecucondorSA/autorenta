@@ -1,11 +1,11 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import { AuthChangeEvent, Session, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
-import { injectSupabase } from './supabase-client.service';
+import { SupabaseClientService } from './supabase-client.service';
 import { RateLimiterService } from './rate-limiter.service';
 
 interface AuthState {
@@ -17,7 +17,7 @@ interface AuthState {
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  private readonly supabase = injectSupabase();
+  private readonly supabaseService = inject(SupabaseClientService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly TIKTOK_STATE_KEY = 'tiktok_oauth_state';
@@ -27,8 +27,19 @@ export class AuthService implements OnDestroy {
     private readonly logger: LoggerService,
     private readonly rateLimiter: RateLimiterService,
   ) {
-    void this.ensureSession();
-    this.listenToAuthChanges();
+    // SSR-safe: Only initialize auth in browser
+    if (this.isBrowser) {
+      void this.ensureSession();
+      this.listenToAuthChanges();
+    }
+  }
+
+  /**
+   * Get Supabase client - only available in browser
+   * @throws Error if called during SSR
+   */
+  private get supabase(): SupabaseClient {
+    return this.supabaseService.getClient();
   }
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;

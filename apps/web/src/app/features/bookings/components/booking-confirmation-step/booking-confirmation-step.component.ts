@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { WizardStepComponent } from '../../../../shared/components/wizard-step/wizard-step.component';
 import { BookingDatesLocation } from '../booking-dates-location-step/booking-dates-location-step.component';
 import { BookingPaymentCoverage } from '../booking-payment-coverage-step/booking-payment-coverage-step.component';
@@ -27,6 +27,7 @@ interface BookingDataSummary {
   selector: 'app-booking-confirmation-step',
   standalone: true,
   imports: [CommonModule, WizardStepComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-wizard-step
       title="Confirmación"

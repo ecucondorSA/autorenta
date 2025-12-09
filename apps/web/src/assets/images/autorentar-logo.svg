@@ -1,51 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  AutoRenta Logo - Full Version
-  Paleta: Black (#050505), Blue Pastel (#A7D8F4), Beige (#DFD2BF)
-  Optimizado con SVGO best practices
+  AutoRentar Logo - Premium Version con Auto Negro
+  Optimizado para uso en headers y branding
 -->
-<svg width="400" height="80" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logo-title">
-  <title id="logo-title">AutoRenta - Alquiler de autos entre personas</title>
+<svg width="320" height="80" viewBox="0 0 320 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">AutoRentar - Alquiler de autos entre personas</title>
 
-  <!-- Ícono de auto con llave - Rediseñado -->
-  <g transform="translate(8, 12)">
-    <!-- Fondo circular sutil -->
-    <circle cx="25" cy="30" r="28" fill="#A7D8F4" opacity="0.15"/>
+  <defs>
+    <!-- Gradiente negro premium para el auto -->
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#374151"/>
+      <stop offset="50%" style="stop-color:#1f2937"/>
+      <stop offset="100%" style="stop-color:#111827"/>
+    </linearGradient>
+    <!-- Gradiente para ventanas -->
+    <linearGradient id="windowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#e0f2fe"/>
+      <stop offset="100%" style="stop-color:#7dd3fc"/>
+    </linearGradient>
+  </defs>
 
-    <!-- Llave integrada -->
-    <g stroke="#A7D8F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
-      <circle cx="18" cy="18" r="6"/>
-      <circle cx="18" cy="18" r="2.5" fill="#A7D8F4"/>
-      <path d="M18 24 L18 35"/>
-      <path d="M18 30 L21 30 L21 32"/>
-      <path d="M18 34 L22 34 L22 36"/>
+  <!-- Auto premium compacto -->
+  <g transform="translate(5, 15)">
+    <!-- Sombra -->
+    <ellipse cx="35" cy="48" rx="28" ry="4" fill="#000" opacity="0.15"/>
+
+    <!-- Carrocería principal -->
+    <path fill="url(#carGradient)" d="
+      M 8,42
+      C 8,38 10,32 15,28
+      L 22,24
+      C 26,21 30,17 35,14
+      C 38,12 42,11 48,11
+      L 58,11
+      C 62,11 65,13 68,17
+      L 72,24
+      C 74,25 76,28 76,32
+      L 76,42
+      C 76,44 75,45 73,45
+      L 68,45
+      C 67,40 64,38 60,38
+      C 55,38 52,42 51,45
+      L 23,45
+      C 22,42 19,38 14,38
+      C 9,38 7,42 6,45
+      L 5,45
+      C 3,45 2,44 2,42
+      Z"/>
+
+    <!-- Techo oscuro -->
+    <path fill="#111827" d="
+      M 35,14
+      C 38,12 42,11 48,11
+      L 58,11
+      C 60,11 63,12 66,15
+      L 58,12
+      L 48,12
+      C 43,12 39,13 35,14
+      Z"/>
+
+    <!-- Reflejo superior -->
+    <path fill="#fff" opacity="0.25" d="
+      M 36,15 C 42,13 50,12 56,13 L 64,17 L 70,24 L 25,24 C 28,19 32,16 36,15 Z"/>
+
+    <!-- Ventana trasera -->
+    <path fill="url(#windowGrad)" d="M 30,17 C 28,20 26,23 25,26 L 35,26 L 35,17 C 33,17 31,17 30,17 Z"/>
+
+    <!-- Parabrisas -->
+    <path fill="url(#windowGrad)" d="M 38,17 L 55,17 C 60,18 64,21 67,26 L 38,26 Z"/>
+
+    <!-- Pilar B -->
+    <rect x="35" y="17" width="2" height="9" fill="#1f2937"/>
+
+    <!-- Línea cromada -->
+    <path fill="none" stroke="#9ca3af" stroke-width="0.8" opacity="0.7" d="M 10,38 C 30,37 50,37 74,40"/>
+
+    <!-- Rueda trasera -->
+    <g transform="translate(14, 45)">
+      <circle r="8" fill="#0f172a"/>
+      <circle r="6" fill="#374151"/>
+      <circle r="4" fill="#64748b"/>
+      <circle r="2" fill="#94a3b8"/>
     </g>
 
-    <!-- Auto moderno -->
-    <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
-      <!-- Carrocería -->
-      <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z"/>
-      <!-- Ventanas -->
-      <path d="M22 32 L24 26 L33 26 L33 32 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
-      <path d="M35 32 L35 26 L40 26 L42 32 Z" fill="#A7D8F4" opacity="0.5" stroke="none"/>
-      <!-- Línea de ventanas -->
-      <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5"/>
+    <!-- Rueda delantera -->
+    <g transform="translate(60, 45)">
+      <circle r="8" fill="#0f172a"/>
+      <circle r="6" fill="#374151"/>
+      <circle r="4" fill="#64748b"/>
+      <circle r="2" fill="#94a3b8"/>
     </g>
-    <!-- Ruedas -->
-    <circle cx="18" cy="46" r="5" fill="#050505"/>
-    <circle cx="18" cy="46" r="2" fill="#F8F4EC"/>
-    <circle cx="38" cy="46" r="5" fill="#050505"/>
-    <circle cx="38" cy="46" r="2" fill="#F8F4EC"/>
-    <!-- Faro -->
-    <ellipse cx="11" cy="38" rx="2" ry="1.5" fill="#A7D8F4"/>
+
+    <!-- Faro delantero -->
+    <ellipse cx="74" cy="30" rx="2" ry="4" fill="#fef9c3"/>
+    <ellipse cx="74" cy="30" rx="1" ry="2" fill="#fff"/>
+
+    <!-- Luz trasera -->
+    <rect x="4" y="30" width="2" height="6" rx="1" fill="#dc2626"/>
+
+    <!-- Badge amarillo -->
+    <circle cx="75" cy="36" r="2" fill="#d4f542"/>
   </g>
 
-  <!-- Texto "Auto" - Negro principal -->
-  <text x="72" y="52" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#050505">Auto</text>
+  <!-- Texto "AUTO" - Negro -->
+  <text x="95" y="48" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="32" font-weight="800" fill="#1e293b" letter-spacing="-0.5">AUTO</text>
 
-  <!-- Texto "Renta" - Blue Pastel accent -->
-  <text x="178" y="52" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="38" font-weight="700" fill="#A7D8F4">Renta</text>
+  <!-- Texto "RENTAR" - Amarillo radioactivo -->
+  <text x="175" y="48" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="32" font-weight="800" fill="#d4f542" letter-spacing="-0.5">RENTAR</text>
 
-  <!-- Línea decorativa bajo el texto -->
-  <line x1="72" y1="60" x2="280" y2="60" stroke="#DFD2BF" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Subtítulo -->
+  <text x="95" y="65" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="10" font-weight="500" fill="#64748b" letter-spacing="2">ALQUILER ENTRE PERSONAS</text>
 </svg>

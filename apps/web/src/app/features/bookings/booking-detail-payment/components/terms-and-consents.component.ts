@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserConsents, PaymentMode } from '../../../../core/models/booking-detail-payment.model';
@@ -6,6 +6,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
 @Component({
   selector: 'app-terms-and-consents',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div

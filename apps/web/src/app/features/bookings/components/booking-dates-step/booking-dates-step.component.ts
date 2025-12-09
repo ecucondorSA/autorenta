@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   Output,
@@ -37,6 +38,7 @@ interface LocationData {
     DateRangePickerComponent,
     BookingLocationFormComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './booking-dates-step.component.html',
   styleUrls: ['./booking-dates-step.component.scss'],
 })

@@ -1,4 +1,5 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, inject, PLATFORM_ID, signal } from '@angular/core';
 import { injectSupabase } from './supabase-client.service';
 import { DynamicPricingService } from './dynamic-pricing.service';
 import { BookingsService } from './bookings.service';
@@ -40,6 +41,8 @@ export class UrgentRentalService {
   private readonly supabase = injectSupabase();
   private readonly pricingService = inject(DynamicPricingService);
   private readonly bookingsService = inject(BookingsService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   readonly userLocation = signal<UserLocation | null>(null);
   readonly locationLoading = signal(false);
@@ -50,7 +53,7 @@ export class UrgentRentalService {
    */
   async getCurrentLocation(): Promise<UserLocation> {
     return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
+      if (!this.isBrowser || !navigator.geolocation) {
         reject(new Error('Geolocalización no disponible en este navegador'));
         return;
       }

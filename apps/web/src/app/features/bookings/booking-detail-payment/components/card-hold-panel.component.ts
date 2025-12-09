@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MercadopagoCardFormComponent } from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import {
@@ -13,6 +13,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 @Component({
   selector: 'app-card-hold-panel',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MercadopagoCardFormComponent, ReembolsabilityBadgeComponent],
   templateUrl: './card-hold-panel.component.html',
   styleUrls: ['./card-hold-panel.component.css'],

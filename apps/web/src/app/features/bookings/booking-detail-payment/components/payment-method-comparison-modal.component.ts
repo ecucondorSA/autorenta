@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   PriceBreakdown,
@@ -12,6 +12,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 @Component({
   selector: 'app-payment-method-comparison-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <!-- Modal Backdrop -->

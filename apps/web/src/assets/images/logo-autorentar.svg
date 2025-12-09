@@ -130,7 +130,6 @@
         L 165,50 Z" />
       <line x1="220" y1="52" x2="220" y2="85" stroke="#60a5fa" stroke-width="2" />
 
-      <!-- Ruedas -->
       <g id="wheels">
         <circle cx="100" cy="165" r="32" fill="#1e293b" />
         <circle cx="100" cy="165" r="18" fill="#64748b" />

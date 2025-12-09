@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -16,6 +16,7 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-button-v2',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <button

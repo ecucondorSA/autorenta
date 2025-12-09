@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PromoCodeInputComponent } from '../../../../shared/components/promo-code-input/promo-code-input.component';
 import {
@@ -15,6 +15,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 @Component({
   selector: 'app-payment-summary-panel',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReembolsabilityBadgeComponent, PromoCodeInputComponent], // Añadir PromoCodeInputComponent aquí
   template: `
     <div

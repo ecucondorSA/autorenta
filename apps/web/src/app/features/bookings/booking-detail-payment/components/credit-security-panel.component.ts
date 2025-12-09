@@ -8,6 +8,7 @@ import {
   computed,
   inject,
   effect,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -27,6 +28,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 @Component({
   selector: 'app-credit-security-panel',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReembolsabilityBadgeComponent],
   template: `
     <div

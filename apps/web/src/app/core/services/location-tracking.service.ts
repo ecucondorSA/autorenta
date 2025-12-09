@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { interval, Subscription, Observable, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -32,6 +33,8 @@ export interface TrackingSession {
   providedIn: 'root',
 })
 export class LocationTrackingService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
   private supabaseClient: SupabaseClient;
   private watchId: number | null = null;
   private updateInterval: Subscription | null = null;
@@ -207,7 +210,7 @@ export class LocationTrackingService {
    * Check if user has granted location permissions
    */
   async checkLocationPermission(): Promise<boolean> {
-    if (!navigator.geolocation) {
+    if (!this.isBrowser || !navigator.geolocation) {
       console.warn('[LocationTracking] Geolocation not supported');
       return false;
     }
@@ -230,6 +233,9 @@ export class LocationTrackingService {
    * Request location permission from user
    */
   async requestLocationPermission(): Promise<boolean> {
+    if (!this.isBrowser || !navigator.geolocation) {
+      return false;
+    }
     return new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition(
         () => resolve(true),
@@ -253,7 +259,7 @@ export class LocationTrackingService {
    * Start watching user's location with Geolocation API
    */
   private startWatchingLocation(trackingId: string): void {
-    if (!navigator.geolocation) {
+    if (!this.isBrowser || !navigator.geolocation) {
       console.error('[LocationTracking] Geolocation not supported');
       return;
     }
@@ -288,7 +294,7 @@ export class LocationTrackingService {
    * Stop watching user's location
    */
   private stopWatchingLocation(): void {
-    if (this.watchId !== null) {
+    if (this.watchId !== null && this.isBrowser && navigator.geolocation) {
       navigator.geolocation.clearWatch(this.watchId);
       this.watchId = null;
     }

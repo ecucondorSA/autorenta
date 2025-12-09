@@ -1,6 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 
 /**
  * Toast Component V2
@@ -18,6 +18,7 @@ import { Component, effect, input, output, signal } from '@angular/core';
 @Component({
   selector: 'app-toast',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   animations: [
     trigger('slideIn', [
