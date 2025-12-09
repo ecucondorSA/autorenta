@@ -22,6 +22,15 @@ import {
  * - Responsive resize handling
  * - Fade-in transition on load
  * - Subtle vignette effect
+ *
+ * Performance Optimizations (Industry Best Practices):
+ * - LQIP Pattern: Loads 1K placeholder (~23KB) first, then swaps to 8K (~5.8MB)
+ * - FPS Throttling: 30fps instead of 60fps (50% CPU reduction)
+ * - IntersectionObserver: Pauses render loop when not visible
+ * - Idle Detection: Pauses when no interaction for 3s (if autoRotate=false)
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices
+ * @see https://tympanus.net/codrops/2025/02/11/building-efficient-three-js-scenes-optimize-performance-while-maintaining-quality/
  */
 @Component({
   selector: 'app-hdri-background',
@@ -41,7 +50,14 @@ import {
 export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  @Input() src = 'assets/hdri/suburban_parking_area_8k.webp';
+  /** Low quality placeholder image for fast initial load (LQIP pattern) */
+  @Input() srcLow = 'assets/hdri/suburban_parking_area_1k.webp';
+  /** High quality image loaded in background after placeholder */
+  @Input() srcHigh = 'assets/hdri/suburban_parking_area_8k.webp';
+  /** @deprecated Use srcHigh instead. Kept for backward compatibility */
+  @Input() set src(value: string) {
+    this.srcHigh = value;
+  }
   @Input() autoRotate = true;
   @Input() rotateSpeed = 0.0002; // Slower for premium feel
   @Input() enableInteraction = true;
@@ -63,6 +79,22 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private isDragging = false;
   private lastMouseX = 0;
   private lastMouseY = 0;
+
+  // Performance: FPS Throttling (30fps saves 50% CPU vs 60fps)
+  private readonly targetFPS = 30;
+  private lastFrameTime = 0;
+
+  // Performance: Visibility Detection (pause when not in viewport)
+  private isVisible = true;
+  private intersectionObserver: IntersectionObserver | null = null;
+
+  // Performance: Idle Detection (pause when no interaction)
+  private isIdle = false;
+  private idleTimeout: ReturnType<typeof setTimeout> | null = null;
+  private readonly IDLE_DELAY = 3000; // 3 seconds without interaction
+
+  // Track if high-res texture is loaded
+  private isHighResLoaded = false;
 
   // Shaders for equirectangular projection with vignette
   private readonly vertexShaderSource = `
@@ -188,14 +220,20 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     // Create fullscreen quad
     this.createQuad();
 
-    // Load texture
-    this.loadTexture();
+    // Load texture with LQIP pattern
+    this.loadTextureProgressive();
 
     // Setup event listeners
     this.setupEventListeners();
 
     // Start resize observer
     this.setupResizeObserver();
+
+    // Setup IntersectionObserver for visibility detection
+    this.setupIntersectionObserver();
+
+    // Start idle timer
+    this.resetIdleTimer();
   }
 
   private createProgram(): WebGLProgram | null {
@@ -252,7 +290,15 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
   }
 
-  private loadTexture(): void {
+  /**
+   * LQIP (Low Quality Image Placeholder) Pattern
+   *
+   * Loads a small 1K placeholder (~23KB) for instant FCP,
+   * then swaps to 8K (~5.8MB) when loaded in background.
+   *
+   * @see https://medium.com/@ravipatel.it/web-progressive-enhancement-with-lqip-blurred-image-loading-using-css-and-javascript-fc1043b0a9d5
+   */
+  private loadTextureProgressive(): void {
     if (!this.gl) return;
 
     this.texture = this.gl.createTexture();
@@ -271,49 +317,115 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       new Uint8Array([30, 30, 30, 255]),
     );
 
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
+    // Step 1: Load low-res placeholder first (fast FCP)
+    const lowResImage = new Image();
+    lowResImage.crossOrigin = 'anonymous';
 
-    image.onload = () => {
+    lowResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
 
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
-      this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
+      this.updateTexture(lowResImage);
 
-      // Use linear filtering for smooth appearance
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
-      this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-
-      // Trigger fade-in
+      // Trigger fade-in immediately with low-res
       this.isLoaded = true;
       this.hdriLoaded.emit();
       this.startRenderLoop();
+
+      // Step 2: Load high-res in background
+      this.loadHighResTexture();
     };
 
-    image.onerror = () => {
-      console.error('[HdriBackground] Failed to load image:', this.src);
+    lowResImage.onerror = () => {
+      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', this.srcLow);
+      // Fallback: load high-res directly
+      this.loadHighResTexture();
     };
 
-    image.src = this.src;
+    lowResImage.src = this.srcLow;
   }
 
+  /**
+   * Loads high-resolution texture in background and swaps when ready
+   */
+  private loadHighResTexture(): void {
+    const highResImage = new Image();
+    highResImage.crossOrigin = 'anonymous';
+
+    highResImage.onload = () => {
+      if (this.isDestroyed || !this.gl || !this.texture) return;
+
+      this.updateTexture(highResImage);
+      this.isHighResLoaded = true;
+
+      // If render loop wasn't started (fallback case), start it now
+      if (!this.isLoaded) {
+        this.isLoaded = true;
+        this.hdriLoaded.emit();
+        this.startRenderLoop();
+      }
+    };
+
+    highResImage.onerror = () => {
+      console.error('[HdriBackground] Failed to load high-res image:', this.srcHigh);
+    };
+
+    highResImage.src = this.srcHigh;
+  }
+
+  /**
+   * Updates WebGL texture with new image data
+   */
+  private updateTexture(image: HTMLImageElement): void {
+    if (!this.gl || !this.texture) return;
+
+    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
+
+    // Use linear filtering for smooth appearance
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+  }
+
+  /**
+   * Optimized Render Loop with:
+   * - FPS Throttling: 30fps instead of 60fps (50% CPU reduction)
+   * - Visibility Detection: Skip rendering when not visible
+   * - Idle Detection: Skip rendering when idle and not auto-rotating
+   *
+   * @see https://thewebdev.info/2024/04/13/how-to-limit-framerate-in-three-js-to-increase-performance-requestanimationframe-with-javascript/
+   */
   private startRenderLoop(): void {
     if (this.isDestroyed) return;
 
-    const render = (): void => {
+    const render = (currentTime: number): void => {
       if (this.isDestroyed) return;
 
+      // Always schedule next frame to keep loop alive
+      this.animationId = requestAnimationFrame(render);
+
+      // 1. Skip if not visible (IntersectionObserver)
+      if (!this.isVisible) return;
+
+      // 2. Skip if idle and not auto-rotating (save CPU when user isn't interacting)
+      if (this.isIdle && !this.autoRotate && !this.isDragging) return;
+
+      // 3. FPS Throttling: Only render at target FPS (30fps = 33.33ms per frame)
+      const deltaTime = currentTime - this.lastFrameTime;
+      if (deltaTime < 1000 / this.targetFPS) return;
+      this.lastFrameTime = currentTime;
+
+      // 4. Update rotation if auto-rotating
       if (this.autoRotate && !this.isDragging) {
         this.rotationY += this.rotateSpeed;
       }
 
+      // 5. Render frame
       this.draw();
-      this.animationId = requestAnimationFrame(render);
     };
 
-    render();
+    requestAnimationFrame(render);
   }
 
   private draw(): void {
@@ -396,6 +508,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     this.lastMouseX = e.clientX;
     this.lastMouseY = e.clientY;
+
+    // Reset idle timer on interaction
+    this.resetIdleTimer();
   };
 
   private onMouseUp = (): void => {
@@ -421,6 +536,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     this.lastMouseX = e.touches[0].clientX;
     this.lastMouseY = e.touches[0].clientY;
+
+    // Reset idle timer on interaction
+    this.resetIdleTimer();
   };
 
   private onTouchEnd = (): void => {
@@ -440,6 +558,43 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     this.resizeObserver.observe(canvas);
   }
 
+  /**
+   * IntersectionObserver: Pause render loop when canvas is not visible
+   *
+   * This significantly reduces CPU usage when the HDRI is scrolled out of view.
+   * @see https://tympanus.net/codrops/2025/02/11/building-efficient-three-js-scenes-optimize-performance-while-maintaining-quality/
+   */
+  private setupIntersectionObserver(): void {
+    const canvas = this.canvasRef?.nativeElement;
+    if (!canvas || typeof IntersectionObserver === 'undefined') return;
+
+    this.intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        this.isVisible = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0.1 }, // Trigger when 10% of canvas is visible
+    );
+
+    this.intersectionObserver.observe(canvas);
+  }
+
+  /**
+   * Idle Detection: Mark as idle after 3 seconds without interaction
+   *
+   * When idle and autoRotate=false, the render loop skips frames to save CPU.
+   */
+  private resetIdleTimer(): void {
+    this.isIdle = false;
+
+    if (this.idleTimeout) {
+      clearTimeout(this.idleTimeout);
+    }
+
+    this.idleTimeout = setTimeout(() => {
+      this.isIdle = true;
+    }, this.IDLE_DELAY);
+  }
+
   private cleanup(): void {
     if (this.animationId !== null) {
       cancelAnimationFrame(this.animationId);
@@ -449,6 +604,16 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
       this.resizeObserver = null;
+    }
+
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+      this.intersectionObserver = null;
+    }
+
+    if (this.idleTimeout) {
+      clearTimeout(this.idleTimeout);
+      this.idleTimeout = null;
     }
 
     const canvas = this.canvasRef?.nativeElement;
