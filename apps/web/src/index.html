@@ -66,7 +66,7 @@
     <meta property="twitter:image" content="/assets/images/autorentar-logo.png" />
 
     <!-- Theme Color -->
-    <meta name="theme-color" content="#805ad5" />
+    <meta name="theme-color" content="#ffffff" />
 
     <!-- Content Security Policy -->
     <!-- NOTE: This meta tag is overridden by _headers file in production -->
@@ -100,6 +100,14 @@
       type="font/woff2"
       crossorigin
       fetchpriority="high"
+    />
+
+    <!-- Preload Mapbox GL JS for faster map loading (LCP optimization) -->
+    <link
+      rel="preload"
+      href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.js"
+      as="script"
+      crossorigin
     />
 
     <!-- PWA Manifests -->
