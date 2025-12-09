@@ -273,6 +273,7 @@ serve(async (req: Request) => {
     // ========================================
     // RATE LIMITING (P0 Security - Database-backed)
     // Prevenir DDoS limitando requests por IP
+    // SECURITY: Fail-closed - reject requests if rate limiter fails
     // ========================================
     try {
       await enforceRateLimit(req, {
@@ -288,8 +289,24 @@ serve(async (req: Request) => {
         });
         return error.toResponse();
       }
-      // Don't block on rate limiter errors - fail open for availability
-      console.error('[RateLimit] Error enforcing rate limit:', error);
+      // SECURITY FIX: Fail-closed - reject request if rate limiter has errors
+      // This prevents potential DDoS attacks when rate limiter is unavailable
+      console.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'Service temporarily unavailable',
+          code: 'RATE_LIMITER_ERROR',
+          retry: true,
+        }),
+        {
+          status: 503,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+            'Retry-After': '60',
+          },
+        }
+      );
     }
 
     // OLD: Rate limit headers (now handled by RateLimitError.toResponse())

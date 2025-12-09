@@ -356,8 +356,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       // Get MP Preference
       const preference = await this.mpGateway.createPreference(booking.id);
 
-      // Redirect to MP
+      // Redirect to MP (SECURITY: Validate HTTPS to prevent open redirect attacks)
       if (preference.initPoint) {
+        if (!preference.initPoint.startsWith('https://')) {
+          this.logger.error('Invalid payment URL - not HTTPS', { url: preference.initPoint });
+          throw new Error('URL de pago inválida');
+        }
         window.location.href = preference.initPoint;
       } else {
         throw new Error('No se recibió link de pago');

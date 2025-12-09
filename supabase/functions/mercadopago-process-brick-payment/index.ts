@@ -298,10 +298,12 @@ serve(async (req) => {
     console.log('Payment request:', JSON.stringify(paymentRequest, null, 2));
 
     // Create the payment
+    // SECURITY: Use crypto.randomUUID() instead of Date.now() for idempotency key
+    // to prevent collisions when multiple requests happen within the same millisecond
     const payment = await paymentClient.create({
       body: paymentRequest,
       requestOptions: {
-        idempotencyKey: `brick-payment-${transactionId}-${Date.now()}`,
+        idempotencyKey: `brick-payment-${transactionId}-${crypto.randomUUID()}`,
       },
     });
 

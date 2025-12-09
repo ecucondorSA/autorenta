@@ -9,6 +9,8 @@ import {
   inject,
   Input,
   NgZone,
+  ElementRef,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
@@ -82,7 +84,7 @@ interface CardToken {
         </div>
       }
 
-      <form id="form-checkout" [class.hidden]="isInitializing()">
+      <form #formCheckout id="form-checkout" [class.hidden]="isInitializing()">
         <div class="mb-4">
           <label class="block text-sm font-medium mb-2">Número de Tarjeta</label>
           <div id="form-checkout__cardNumber" class="mp-input"></div>
@@ -223,6 +225,9 @@ export class MercadopagoCardFormComponent implements OnInit, AfterViewInit, OnDe
   @Output() cardTokenGenerated = new EventEmitter<{ cardToken: string; last4: string }>();
   @Output() cardError = new EventEmitter<string>();
 
+  // SECURITY: Use @ViewChild instead of getElementById for DOM references
+  @ViewChild('formCheckout', { static: true }) formRef!: ElementRef<HTMLFormElement>;
+
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly isInitializing = signal(true);
@@ -288,15 +293,15 @@ export class MercadopagoCardFormComponent implements OnInit, AfterViewInit, OnDe
         return;
       }
 
-      // Check if form element exists before proceeding
-      const formElement = document.getElementById('form-checkout');
+      // SECURITY: Use @ViewChild instead of getElementById for reliable DOM access
+      const formElement = this.formRef?.nativeElement;
       if (!formElement) {
-        console.warn('⚠️ Form element not found, will retry...');
+        console.warn('⚠️ Form element not found via @ViewChild, will retry...');
         if (this.initAttempts < this.maxInitAttempts) {
           setTimeout(() => this.initializeMercadoPago(), 300);
           return;
         }
-        throw new Error('Form element with id "form-checkout" not found after multiple attempts');
+        throw new Error('Form element not found after multiple attempts');
       }
 
       // Check all required elements exist
