@@ -9,7 +9,7 @@ import {
   isDevMode,
   LOCALE_ID,
   PLATFORM_ID,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
@@ -47,7 +47,9 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    // ✅ Zoneless Change Detection - removes Zone.js (~35KB savings)
+    // Works with Angular 20+ and Ionic 8+ (signals-based)
+    provideZonelessChangeDetection(),
     provideIonicAngular({ mode: 'md' }),
     provideRouter(
       routes,
