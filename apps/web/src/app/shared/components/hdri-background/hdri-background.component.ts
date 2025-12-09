@@ -138,6 +138,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     uniform vec2 u_resolution;
     uniform float u_rotationY;
     uniform float u_rotationX;
+    uniform float u_isNight; // 0.0 = day, 1.0 = night
 
     const float PI = 3.14159265359;
 
@@ -186,16 +187,24 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
       vec4 color = texture2D(u_texture, texCoord);
 
-      // Summer warm color grading (subtle)
-      // Slightly boost warm tones
-      color.r *= 1.04;
-      color.g *= 1.01;
-      // Slightly reduce blue for warmer feel
-      color.b *= 0.96;
-
-      // Subtle saturation boost for vibrant summer look
-      float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
-      color.rgb = mix(vec3(gray), color.rgb, 1.08);
+      // Time-based color grading
+      if (u_isNight < 0.5) {
+        // DAY: Summer warm color grading (subtle)
+        color.r *= 1.04;
+        color.g *= 1.01;
+        color.b *= 0.96;
+        // Saturation boost for vibrant summer look
+        float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        color.rgb = mix(vec3(gray), color.rgb, 1.08);
+      } else {
+        // NIGHT: Cool moonlit color grading
+        color.r *= 0.95;
+        color.g *= 0.98;
+        color.b *= 1.05;
+        // Slight desaturation for night feel
+        float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        color.rgb = mix(vec3(gray), color.rgb, 0.92);
+      }
 
       // Subtle vignette effect for cinematic look
       vec2 vignetteUV = uv - 0.5;
@@ -502,10 +511,12 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     const resolutionLocation = this.gl.getUniformLocation(this.program, 'u_resolution');
     const rotationYLocation = this.gl.getUniformLocation(this.program, 'u_rotationY');
     const rotationXLocation = this.gl.getUniformLocation(this.program, 'u_rotationX');
+    const isNightLocation = this.gl.getUniformLocation(this.program, 'u_isNight');
 
     this.gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     this.gl.uniform1f(rotationYLocation, this.rotationY);
     this.gl.uniform1f(rotationXLocation, this.rotationX);
+    this.gl.uniform1f(isNightLocation, this.isNightTime() ? 1.0 : 0.0);
 
     // Bind texture
     this.gl.activeTexture(this.gl.TEXTURE0);
