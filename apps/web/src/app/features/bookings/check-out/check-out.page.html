@@ -109,7 +109,7 @@
               Estado
             </p>
             <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light/20 text-success-light"
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light/20 text-success-strong"
             >
               En progreso
             </span>
@@ -160,10 +160,10 @@
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">✅</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-success-light dark:text-success-light mb-2">
+              <h3 class="text-lg font-semibold text-success-light dark:text-success-strong mb-2">
                 Check-out Completado
               </h3>
-              <p class="text-success-light dark:text-success-light mb-4">
+              <p class="text-success-light dark:text-success-strong mb-4">
                 El check-out de este vehículo ya fue completado el
                 {{
                   existingInspection()?.signedAt
@@ -173,30 +173,30 @@
               </p>
 
               @if (kilometersDriven() !== null) {
-                <p class="text-sm text-success-light dark:text-success-light mb-2">
+                <p class="text-sm text-success-light dark:text-success-strong mb-2">
                   <strong>Kilómetros recorridos:</strong> {{ kilometersDriven() }} km
                 </p>
               }
 
               @if (existingInspection()?.odometer) {
-                <p class="text-sm text-success-light dark:text-success-light mb-2">
+                <p class="text-sm text-success-light dark:text-success-strong mb-2">
                   <strong>Odómetro final:</strong> {{ existingInspection()?.odometer }} km
                 </p>
               }
 
               @if (existingInspection()?.fuelLevel !== undefined) {
-                <p class="text-sm text-success-light dark:text-success-light mb-2">
+                <p class="text-sm text-success-light dark:text-success-strong mb-2">
                   <strong>Combustible final:</strong> {{ existingInspection()?.fuelLevel }}%
                 </p>
               }
 
               @if (fuelDifference() !== null) {
-                <p class="text-sm text-success-light dark:text-success-light mb-4">
+                <p class="text-sm text-success-light dark:text-success-strong mb-4">
                   <strong>Diferencia de combustible:</strong>
                   @if (fuelDifference()! >= 0) {
-                    <span class="text-success-light">+{{ fuelDifference() }}%</span>
+                    <span class="text-success-strong">+{{ fuelDifference() }}%</span>
                   } @else {
-                    <span class="text-warning-light">{{ fuelDifference() }}%</span>
+                    <span class="text-warning-strong">{{ fuelDifference() }}%</span>
                   }
                 </p>
               }

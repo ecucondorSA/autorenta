@@ -22,7 +22,7 @@ export interface TrackingSessionSnapshot {
           class="px-2 py-1 rounded-full text-xs font-semibold"
           [ngClass]="
             session?.active
-              ? 'bg-success-light/20 text-success-light'
+              ? 'bg-success-light/20 text-success-strong'
               : 'bg-warning-bg text-warning-600'
           "
         >

@@ -69,7 +69,7 @@ export interface FipeAutocompleteOption {
             type="button"
             (click)="clearSelection(); $event.stopPropagation()"
             (mousedown)="$event.preventDefault()"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20 text-gray-400 hover:text-gray-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 z-20 text-gray-500 hover:text-gray-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
             aria-label="Limpiar selección"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@ export interface FipeAutocompleteOption {
         <div
           class="absolute z-50 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg p-4"
         >
-          <p class="text-sm text-gray-500 dark:text-gray-400 text-center">No se encontraron resultados</p>
+          <p class="text-sm text-gray-500 dark:text-gray-500 text-center">No se encontraron resultados</p>
         </div>
       }
 

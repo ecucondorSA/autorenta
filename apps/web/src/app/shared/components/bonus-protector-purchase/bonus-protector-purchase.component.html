@@ -28,7 +28,7 @@
   >
     <div class="flex items-start">
       <svg
-        class="w-6 h-6 text-success-light mr-3 flex-shrink-0"
+        class="w-6 h-6 text-success-strong mr-3 flex-shrink-0"
         fill="currentColor"
         viewBox="0 0 20 20"
       >
@@ -39,8 +39,8 @@
         ></path>
       </svg>
       <div>
-        <p class="text-sm font-medium text-success-light">Ya tienes un protector activo</p>
-        <p class="text-xs text-success-light mt-1">
+        <p class="text-sm font-medium text-success-strong">Ya tienes un protector activo</p>
+        <p class="text-xs text-success-strong mt-1">
           No puedes comprar otro protector hasta que el actual expire o se use.
         </p>
       </div>
@@ -95,7 +95,7 @@
         <ul class="space-y-2">
           <li class="flex items-start text-xs text-text-primary">
             <svg
-              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              class="w-4 h-4 text-success-strong mr-2 flex-shrink-0 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -110,7 +110,7 @@
           </li>
           <li class="flex items-start text-xs text-text-primary">
             <svg
-              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              class="w-4 h-4 text-success-strong mr-2 flex-shrink-0 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -124,7 +124,7 @@
           </li>
           <li class="flex items-start text-xs text-text-primary">
             <svg
-              class="w-4 h-4 text-success-light mr-2 flex-shrink-0 mt-0.5"
+              class="w-4 h-4 text-success-strong mr-2 flex-shrink-0 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -164,8 +164,8 @@
           *ngIf="getSelectedLevel() && canAfford(getSelectedLevel()!.priceCents)"
           class="text-right"
         >
-          <p class="text-sm font-medium text-success-light flex items-center justify-end gap-1">
-            <app-icon name="check" [size]="16" cssClass="text-success-light" /> Saldo suficiente
+          <p class="text-sm font-medium text-success-strong flex items-center justify-end gap-1">
+            <app-icon name="check" [size]="16" cssClass="text-success-strong" /> Saldo suficiente
           </p>
         </div>
       </div>
@@ -212,7 +212,7 @@
     >
       <p
         class="text-sm"
-        [class.text-success-light]="purchaseMessage.includes('exitosamente')"
+        [class.text-success-strong]="purchaseMessage.includes('exitosamente')"
         [class.text-error-strong]="!purchaseMessage.includes('exitosamente')"
       >
         {{ purchaseMessage }}

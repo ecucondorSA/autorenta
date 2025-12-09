@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9998;
+  z-index: 50;
   background: var(--surface-info-dark, #2c4a52); /* Replaced gradient with solid color token */
   box-shadow: 0 4px 16px rgba(44, 74, 82, 0.3);
   animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);

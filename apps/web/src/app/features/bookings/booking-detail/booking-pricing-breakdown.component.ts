@@ -55,7 +55,7 @@ import { Booking } from '../../../core/models';
                   aria-label="Información sobre cargos del alquiler"
                 >
                   <svg
-                    class="w-4 h-4 text-text-muted hover:text-text-secondary dark:hover:text-gray-300 cursor-help"
+                    class="w-4 h-4 text-text-muted hover:text-text-secondary dark:hover:text-gray-500 cursor-help"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -149,7 +149,7 @@ import { Booking } from '../../../core/models';
                   Depósito de Garantía
                 </h4>
                 <span
-                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong"
                 >
                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path
@@ -231,7 +231,7 @@ import { Booking } from '../../../core/models';
             </p>
           </div>
           <div class="text-right">
-            <p class="text-xl font-bold text-cta-default dark:text-warning-light">
+            <p class="text-xl font-bold text-cta-default dark:text-warning-strong">
               {{ formatCurrency(totalAmount, booking.currency) }}
             </p>
           </div>

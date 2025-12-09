@@ -81,7 +81,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
                   [class.bg-warning-bg-hover]="withdrawal.status === 'pending'"
                   [class.text-warning-strong]="withdrawal.status === 'pending'"
                   [class.bg-success-light/20]="withdrawal.status === 'completed'"
-                  [class.text-success-light]="withdrawal.status === 'completed'"
+                  [class.text-success-strong]="withdrawal.status === 'completed'"
                   [class.bg-error-bg-hover]="withdrawal.status === 'rejected'"
                   [class.text-error-strong]="withdrawal.status === 'rejected'"
                 >

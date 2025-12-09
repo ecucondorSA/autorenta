@@ -270,7 +270,7 @@ interface WalletLedgerEntry {
                       <div class="text-right">
                         <p
                           class="text-lg font-bold"
-                          [class.text-success-light]="entry.kind === 'franchise_fund'"
+                          [class.text-success-strong]="entry.kind === 'franchise_fund'"
                           [class.text-error-text]="entry.kind === 'franchise_user'"
                         >
                           {{ entry.kind === 'franchise_fund' ? '+' : '-'

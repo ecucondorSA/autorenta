@@ -46,7 +46,7 @@
         </div>
       }
       @if (pickupCoordinates()) {
-        <div class="mt-2 text-sm text-success-light dark:text-success-light">
+        <div class="mt-2 text-sm text-success-light dark:text-success-strong">
           ✓ Ubicación: {{ pickupCoordinates()!.lat.toFixed(4) }},
           {{ pickupCoordinates()!.lng.toFixed(4) }}
         </div>
@@ -88,7 +88,7 @@
         </div>
       }
       @if (dropoffCoordinates()) {
-        <div class="mt-2 text-sm text-success-light dark:text-success-light">
+        <div class="mt-2 text-sm text-success-light dark:text-success-strong">
           ✓ Ubicación: {{ dropoffCoordinates()!.lat.toFixed(4) }},
           {{ dropoffCoordinates()!.lng.toFixed(4) }}
         </div>
@@ -135,7 +135,7 @@
           Entrega del auto en tu ubicación de retiro
         </div>
         @if (!isWithinDeliveryRange()) {
-          <div class="text-xs text-warning-light dark:text-warning-light mt-1">
+          <div class="text-xs text-warning-light dark:text-warning-strong mt-1">
             ⚠️ La distancia excede el rango de delivery (máx. 50 km)
           </div>
         }

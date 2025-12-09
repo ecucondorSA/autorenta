@@ -31,7 +31,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                   Necesitas {{ p.yearsNeeded }} año(s) sin siniestros para mejorar
                 </p>
               } @else {
-                <p class="text-sm text-success-light">¡Ya estás en la mejor clase!</p>
+                <p class="text-sm text-success-strong">¡Ya estás en la mejor clase!</p>
               }
             </div>
           </div>
@@ -63,10 +63,10 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
                   </div>
                   <div class="text-right">
                     @if (benefit.is_discount) {
-                      <p class="text-sm font-medium text-success-light">
+                      <p class="text-sm font-medium text-success-strong">
                         -{{ benefit.fee_discount_pct }}% fee
                       </p>
-                      <p class="text-xs text-success-light">
+                      <p class="text-xs text-success-strong">
                         -{{ benefit.guarantee_discount_pct }}% garantía
                       </p>
                     } @else if (benefit.fee_multiplier > 1) {
@@ -125,7 +125,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
               @if (i.classIncrease > 0) {
                 <p class="mt-1 text-sm text-error-text">Aumento de clase: +{{ i.classIncrease }}</p>
               } @else {
-                <p class="mt-1 text-sm text-success-light">Sin cambio de clase</p>
+                <p class="mt-1 text-sm text-success-strong">Sin cambio de clase</p>
               }
             </div>
           }

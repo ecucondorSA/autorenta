@@ -279,7 +279,7 @@ export class AdminVerificationsPage implements OnInit {
 
   getScoreColor(score: number | undefined): string {
     if (!score) return 'text-text-secondary';
-    if (score >= 80) return 'text-success-light';
+    if (score >= 80) return 'text-success-strong';
     if (score >= 60) return 'text-warning-text';
     return 'text-error-text';
   }

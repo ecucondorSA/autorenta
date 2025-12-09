@@ -38,7 +38,7 @@ import { CoverageUpgrade } from '../../../../core/models/booking-detail-payment.
               <span class="text-sm font-medium text-text-primary dark:text-text-primary"
                 >Protección estándar</span
               >
-              <span class="text-sm font-semibold text-success-light dark:text-success-light"
+              <span class="text-sm font-semibold text-success-light dark:text-success-strong"
                 >Incluido</span
               >
             </div>

@@ -632,7 +632,7 @@ section h2 {
   color: #6b7280;
   cursor: pointer;
   padding: 0.25rem;
-  line-height: 1;
+  line-height: 1.25;
   transition: color 0.2s;
 }
 

@@ -15,8 +15,18 @@
       "command": "node",
       "args": [
         "/home/edu/autorenta/tools/playwright-streaming-mcp/server.js"
+      ]
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest"
       ],
-      "description": "Playwright browser automation with compact formatted output"
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_746372d898dd4fbc1b6a70e0c5ed4d25da34f2b6"
+      }
     }
   }
 }

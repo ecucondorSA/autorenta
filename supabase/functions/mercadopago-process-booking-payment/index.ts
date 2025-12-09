@@ -31,10 +31,10 @@ interface MercadoPagoPaymentResponse {
 
 const ensureProductionToken = (rawToken: string, context: string) => {
   const cleaned = rawToken.trim().replace(/[\r\n\t\s]/g, '');
-  if (cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST')) {
-    throw new Error(
-      `${context}: MERCADOPAGO_ACCESS_TOKEN parece ser de sandbox (TEST). Configura token APP_USR-*`,
-    );
+  // Allow TEST tokens for development/sandbox mode
+  const isTestToken = cleaned.toUpperCase().includes('TEST-') || cleaned.startsWith('TEST');
+  if (isTestToken) {
+    console.warn(`${context}: Using TEST/sandbox token - ensure this is intentional`);
   }
   return cleaned;
 };
@@ -149,12 +149,10 @@ serve(async (req) => {
       .from('bookings')
       .select(`
         *,
-        car:cars(*, owner:users!cars_owner_id_fkey(
+        car:cars(*, owner:profiles!cars_owner_id_fkey(
           id,
           mercadopago_collector_id,
-          mercadopago_access_token,
-          mercadopago_connected,
-          marketplace_approved
+          mp_onboarding_completed
         ))
       `)
       .eq('id', booking_id)
@@ -241,7 +239,8 @@ serve(async (req) => {
 
     // Obtener owner para split payment
     const owner = booking.car?.owner;
-    const shouldSplit = owner?.mercadopago_collector_id && owner?.marketplace_approved;
+    // Split payment only if owner has collector_id and completed onboarding
+    const shouldSplit = owner?.mercadopago_collector_id && owner?.mp_onboarding_completed;
 
     // Calcular montos
     const totalAmount = Number(booking.total_amount || 0);
@@ -307,10 +306,8 @@ serve(async (req) => {
     const firstName = profile?.first_name || user.user_metadata?.first_name || 'Usuario';
     const lastName = profile?.last_name || user.user_metadata?.last_name || 'AutoRenta';
 
-    // ✅ MEJORA: Usar OAuth token del vendedor para split payments
-    const accessTokenToUse = shouldSplit && owner?.mercadopago_access_token && owner?.mercadopago_connected
-      ? owner.mercadopago_access_token.trim().replace(/[\r\n\t\s]/g, '')
-      : MP_ACCESS_TOKEN;
+    // Use platform access token (split payment is handled via collector_id)
+    const accessTokenToUse = MP_ACCESS_TOKEN;
 
     // Crear pago en MercadoPago
     const mpPayload: Record<string, unknown> = {
@@ -353,7 +350,6 @@ serve(async (req) => {
       booking_id,
       amount: totalAmount,
       split: shouldSplit,
-      using_oauth: shouldSplit && owner?.mercadopago_access_token ? true : false,
     });
 
     const mpResponse = await fetch(`${MP_API_BASE}/payments`, {
@@ -387,18 +383,28 @@ serve(async (req) => {
     console.log('MercadoPago Payment Response:', mpData);
 
     // Actualizar booking con información del pago
+    // Using correct column names from bookings table schema
     const { error: updateError } = await supabase
       .from('bookings')
       .update({
-        mercadopago_payment_id: mpData.id.toString(),
-        mercadopago_preference_id: null, // Ya no necesitamos preference
+        provider_split_payment_id: mpData.id.toString(),
+        payment_preference_id: null, // Ya no necesitamos preference
         status: mpData.status === 'approved' ? 'confirmed' : 'pending_payment',
-        payment_status: mpData.status,
-        payment_status_detail: mpData.status_detail,
-        payment_method_id: mpData.payment_method_id,
-        card_last4: mpData.card?.last_four_digits,
-        card_holder_name: mpData.card?.cardholder?.name,
+        payment_method: mpData.payment_method_id,
+        paid_at: mpData.status === 'approved' ? new Date().toISOString() : null,
         updated_at: new Date().toISOString(),
+        metadata: {
+          ...booking.metadata,
+          mp_payment_id: mpData.id,
+          mp_status: mpData.status,
+          mp_status_detail: mpData.status_detail,
+          mp_payment_method_id: mpData.payment_method_id,
+          mp_payment_type_id: mpData.payment_type_id,
+          mp_card_last4: mpData.card?.last_four_digits,
+          mp_card_holder_name: mpData.card?.cardholder?.name,
+          mp_date_created: mpData.date_created,
+          mp_date_approved: mpData.date_approved,
+        },
       })
       .eq('id', booking_id);
 

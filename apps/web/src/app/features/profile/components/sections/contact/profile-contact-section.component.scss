@@ -51,7 +51,7 @@
 
 .field-label {
   @apply block text-xs font-semibold uppercase tracking-wider
-    text-text-muted dark:text-gray-400 mb-2;
+    text-text-muted dark:text-gray-500 mb-2;
 }
 
 .field-value {
@@ -64,7 +64,7 @@
 }
 
 .field-icon {
-  @apply text-lg flex-shrink-0 text-text-secondary dark:text-gray-400;
+  @apply text-lg flex-shrink-0 text-text-secondary dark:text-gray-500;
 
   &.text-success {
     @apply text-green-600 dark:text-green-400;
@@ -149,7 +149,7 @@
 
 .input-prefix {
   @apply absolute left-4 top-1/2 -translate-y-1/2
-    text-sm font-medium text-text-secondary dark:text-gray-400
+    text-sm font-medium text-text-secondary dark:text-gray-500
     pointer-events-none;
 }
 
@@ -180,7 +180,7 @@
 }
 
 .form-hint {
-  @apply mt-2 text-xs text-text-muted dark:text-gray-400;
+  @apply mt-2 text-xs text-text-muted dark:text-gray-500;
 }
 
 .form-error {
@@ -203,7 +203,7 @@
   &__text {
     @apply relative inline-block px-4
       bg-surface-base dark:bg-gray-800
-      text-sm font-medium text-text-muted dark:text-gray-400;
+      text-sm font-medium text-text-muted dark:text-gray-500;
   }
 }
 
@@ -235,7 +235,7 @@
     }
 
     p {
-      @apply text-xs text-text-secondary dark:text-gray-400 m-0;
+      @apply text-xs text-text-secondary dark:text-gray-500 m-0;
     }
   }
 }

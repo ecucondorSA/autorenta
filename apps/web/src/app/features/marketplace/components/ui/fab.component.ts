@@ -53,7 +53,7 @@ import { CommonModule } from '@angular/common';
         font-weight: 600;
         font-size: 1rem;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
+        z-index: 50;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
       }

@@ -50,7 +50,7 @@ export class BookingStatusComponent {
       case 'pending_payment':
         return 'bg-warning-bg-hover text-warning-strong';
       case 'confirmed':
-        return 'bg-success-light/20 text-success-light';
+        return 'bg-success-light/20 text-success-strong';
       case 'in_progress':
         return 'bg-cta-default/20 text-cta-default';
       case 'completed':

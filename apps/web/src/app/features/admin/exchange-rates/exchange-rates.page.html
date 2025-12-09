@@ -86,11 +86,11 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm text-text-secondary mb-1">Pares Activos</p>
-            <p class="text-2xl font-bold text-success-light">{{ stats().active_pairs }}</p>
+            <p class="text-2xl font-bold text-success-strong">{{ stats().active_pairs }}</p>
           </div>
           <div class="w-12 h-12 bg-success-light/20 rounded-lg flex items-center justify-center">
             <svg
-              class="w-6 h-6 text-success-light"
+              class="w-6 h-6 text-success-strong"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -113,7 +113,7 @@
             <p
               class="text-2xl font-bold"
               [ngClass]="{
-                'text-success-light': stats().outdated_pairs === 0,
+                'text-success-strong': stats().outdated_pairs === 0,
                 'text-warning-text': stats().outdated_pairs > 0 && stats().outdated_pairs < 2,
                 'text-error-text': stats().outdated_pairs >= 2,
               }"
@@ -132,7 +132,7 @@
             <svg
               class="w-6 h-6"
               [ngClass]="{
-                'text-success-light': stats().outdated_pairs === 0,
+                'text-success-strong': stats().outdated_pairs === 0,
                 'text-warning-text': stats().outdated_pairs > 0 && stats().outdated_pairs < 2,
                 'text-error-text': stats().outdated_pairs >= 2,
               }"
@@ -190,7 +190,7 @@
           </div>
           <div class="w-12 h-12 bg-warning-light/20 rounded-lg flex items-center justify-center">
             <svg
-              class="w-6 h-6 text-warning-light"
+              class="w-6 h-6 text-warning-strong"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -426,11 +426,11 @@
                         <span
                           class="px-2 py-1 text-xs font-medium rounded-full"
                           [ngClass]="{
-                            'bg-success-light/20 text-success-light':
+                            'bg-success-light/20 text-success-strong':
                               (rate.volatility_24h || 0) < 1,
                             'bg-warning-bg-hover text-warning-strong':
                               (rate.volatility_24h || 0) >= 1 && (rate.volatility_24h || 0) < 3,
-                            'bg-warning-light/20 text-warning-light':
+                            'bg-warning-light/20 text-warning-strong':
                               (rate.volatility_24h || 0) >= 3 && (rate.volatility_24h || 0) < 5,
                             'bg-error-bg-hover text-error-strong': (rate.volatility_24h || 0) >= 5,
                           }"

@@ -15,7 +15,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
           <span
             class="rounded-full px-3 py-1 text-sm font-medium"
             [class.bg-success-light/20]="c.accepted_by_renter"
-            [class.text-success-light]="c.accepted_by_renter"
+            [class.text-success-strong]="c.accepted_by_renter"
             [class.bg-warning-bg-hover]="!c.accepted_by_renter"
             [class.text-warning-strong]="!c.accepted_by_renter"
           >

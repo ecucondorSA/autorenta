@@ -271,7 +271,7 @@
 
 .selector-icon {
   font-size: 1rem;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 .selector-text {
@@ -321,7 +321,7 @@
 
 .social-icon {
   font-size: 1.25rem;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 /* ============================================

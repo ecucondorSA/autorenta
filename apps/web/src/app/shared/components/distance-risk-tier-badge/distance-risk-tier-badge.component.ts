@@ -45,7 +45,7 @@ interface TierConfig {
         class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-raised text-text-inverse text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 shadow-lg"
       >
         {{ config.tooltip }}
-        <div class="text-xs mt-1 font-medium text-gray-300">
+        <div class="text-xs mt-1 font-medium text-gray-500">
           Garantía: +{{ (config.guaranteeMultiplier - 1) * 100 | number: '1.0-0' }}%
         </div>
         <!-- Tooltip arrow -->
@@ -71,7 +71,7 @@ export class DistanceRiskTierBadgeComponent {
       icon: '📍',
       label: 'Cercano',
       bgColor: 'bg-success-light/10 dark:bg-success-light/20',
-      textColor: 'text-success-light dark:text-success-light',
+      textColor: 'text-success-light dark:text-success-strong',
       borderColor: 'border-success-light/40 dark:border-success-light',
       tooltip: 'Auto disponible en zona cercana (< 50 km)',
       guaranteeMultiplier: 1.0,
@@ -89,7 +89,7 @@ export class DistanceRiskTierBadgeComponent {
       icon: '🛣️',
       label: 'Larga Distancia',
       bgColor: 'bg-warning-light/10 dark:bg-warning-light/20',
-      textColor: 'text-warning-light dark:text-warning-light',
+      textColor: 'text-warning-light dark:text-warning-strong',
       borderColor: 'border-warning-light/40 dark:border-warning-light',
       tooltip: 'Auto disponible a larga distancia (> 200 km)',
       guaranteeMultiplier: 1.3,

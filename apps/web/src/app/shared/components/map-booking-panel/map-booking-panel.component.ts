@@ -143,7 +143,7 @@ export interface BookingFormData {
           >
             <div
               *ngIf="availabilityStatus() === true"
-              class="flex items-center gap-2 text-sm text-success-light"
+              class="flex items-center gap-2 text-sm text-success-strong"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path

@@ -24,8 +24,8 @@ import { AuthService } from '../../../core/services/auth.service';
             <p class="text-2xl font-bold text-cta-default">{{ s.totalPayouts }}</p>
           </div>
           <div class="rounded-lg bg-success-light/10 p-4">
-            <p class="text-sm font-medium text-success-light">Total Monto</p>
-            <p class="text-2xl font-bold text-success-light">
+            <p class="text-sm font-medium text-success-strong">Total Monto</p>
+            <p class="text-2xl font-bold text-success-strong">
               {{ formatCurrency(s.totalAmount) }}
             </p>
           </div>

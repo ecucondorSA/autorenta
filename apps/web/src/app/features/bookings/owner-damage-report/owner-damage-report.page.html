@@ -199,7 +199,7 @@
             <span
               class="font-semibold"
               [class.text-error-text]="descriptionCharCount() < 20"
-              [class.text-success-light]="descriptionCharCount() >= 20"
+              [class.text-success-strong]="descriptionCharCount() >= 20"
             >
               {{ descriptionCharCount() >= 20 ? '✓ Completa' : '✗ Incompleta' }}
             </span>
@@ -209,7 +209,7 @@
             <span
               class="font-semibold"
               [class.text-error-text]="damageAmount() <= 0 || damageAmount() > maxDepositAmount()"
-              [class.text-success-light]="
+              [class.text-success-strong]="
                 damageAmount() > 0 && damageAmount() <= maxDepositAmount()
               "
             >
@@ -221,7 +221,7 @@
             <span
               class="font-semibold"
               [class.text-error-text]="uploadedFiles().length === 0"
-              [class.text-success-light]="uploadedFiles().length > 0"
+              [class.text-success-strong]="uploadedFiles().length > 0"
             >
               {{ uploadedFiles().length }} foto(s)
             </span>
@@ -236,13 +236,13 @@
           <div class="flex items-center gap-2">
             <ion-icon
               [name]="canSubmit() ? 'checkmark-circle' : 'alert-circle'"
-              [class.text-success-light]="canSubmit()"
+              [class.text-success-strong]="canSubmit()"
               [class.text-text-muted]="!canSubmit()"
               class="text-xl"
             ></ion-icon>
             <span
               class="text-sm"
-              [class.text-success-light]="canSubmit()"
+              [class.text-success-strong]="canSubmit()"
               [class.text-text-secondary]="!canSubmit()"
             >
               {{ canSubmit() ? 'Listo para enviar' : 'Completa todos los campos requeridos' }}

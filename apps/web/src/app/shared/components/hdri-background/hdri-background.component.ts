@@ -50,14 +50,31 @@ import {
 export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  /** Low quality placeholder image for fast initial load (LQIP pattern) */
-  @Input() srcLow = 'assets/hdri/suburban_parking_area_1k.webp';
-  /** High quality image loaded in background after placeholder */
-  @Input() srcHigh = 'assets/hdri/suburban_parking_area_8k.webp';
-  /** @deprecated Use srcHigh instead. Kept for backward compatibility */
+  // Day HDRI (default, used 6am - 6pm)
+  /** Low quality placeholder for day (LQIP pattern) */
+  @Input() srcLowDay = 'assets/hdri/suburban_parking_area_1k.webp';
+  /** High quality day image loaded in background */
+  @Input() srcHighDay = 'assets/hdri/suburban_parking_area_8k.webp';
+
+  // Night HDRI (used 6pm - 6am)
+  /** Low quality placeholder for night (LQIP pattern) */
+  @Input() srcLowNight = 'assets/hdri/laufenurg_church_1k.webp';
+  /** High quality night image loaded in background */
+  @Input() srcHighNight = 'assets/hdri/laufenurg_church_8k.webp';
+
+  /** @deprecated Use srcHighDay instead. Kept for backward compatibility */
   @Input() set src(value: string) {
-    this.srcHigh = value;
+    this.srcHighDay = value;
   }
+  /** @deprecated Use srcLowDay instead */
+  @Input() set srcLow(value: string) {
+    this.srcLowDay = value;
+  }
+  /** @deprecated Use srcHighDay instead */
+  @Input() set srcHigh(value: string) {
+    this.srcHighDay = value;
+  }
+
   @Input() autoRotate = true;
   @Input() rotateSpeed = 0.0002; // Slower for premium feel
   @Input() enableInteraction = true;
@@ -76,6 +93,15 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   // Rotation state - start at initial position
   private rotationY = -0.5;
   private rotationX = 0;
+  // Target rotation for smooth interpolation (more "weighted" feel)
+  private targetRotationY = -0.5;
+  private targetRotationX = 0;
+  // Smoothing factor: lower = heavier/slower movement (0.05 = very smooth, 0.2 = responsive)
+  private readonly ROTATION_SMOOTHING = 0.08;
+  // Drag sensitivity: lower = heavier feel (reduced from 0.005)
+  private readonly DRAG_SENSITIVITY_X = 0.002;
+  private readonly DRAG_SENSITIVITY_Y = 0.0012;
+
   private isDragging = false;
   private lastMouseX = 0;
   private lastMouseY = 0;
@@ -185,7 +211,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (typeof window === 'undefined') return;
+    // Sync both actual and target rotation to initial value
     this.rotationY = this.initialRotationY;
+    this.targetRotationY = this.initialRotationY;
     this.initWebGL();
   }
 
@@ -291,15 +319,38 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * LQIP (Low Quality Image Placeholder) Pattern
+   * Detects if it's currently night time based on device's local time.
+   * Night is defined as 6pm (18:00) to 6am (06:00).
+   */
+  private isNightTime(): boolean {
+    const hour = new Date().getHours();
+    return hour >= 18 || hour < 6;
+  }
+
+  /**
+   * Gets the appropriate HDRI sources based on time of day.
+   */
+  private getHdriSources(): { low: string; high: string } {
+    if (this.isNightTime()) {
+      return { low: this.srcLowNight, high: this.srcHighNight };
+    }
+    return { low: this.srcLowDay, high: this.srcHighDay };
+  }
+
+  /**
+   * LQIP (Low Quality Image Placeholder) Pattern with Day/Night support.
    *
-   * Loads a small 1K placeholder (~23KB) for instant FCP,
-   * then swaps to 8K (~5.8MB) when loaded in background.
+   * Loads a small 1K placeholder (~23-58KB) for instant FCP,
+   * then swaps to 8K (~2.7-5.8MB) when loaded in background.
+   * Automatically selects day or night HDRI based on device time.
    *
    * @see https://medium.com/@ravipatel.it/web-progressive-enhancement-with-lqip-blurred-image-loading-using-css-and-javascript-fc1043b0a9d5
    */
   private loadTextureProgressive(): void {
     if (!this.gl) return;
+
+    // Select day or night HDRI based on current time
+    const sources = this.getHdriSources();
 
     this.texture = this.gl.createTexture();
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
@@ -330,24 +381,25 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       this.isLoaded = true;
       this.hdriLoaded.emit();
       this.startRenderLoop();
-
-      // Step 2: Load high-res in background
-      this.loadHighResTexture();
+      // High-res is already loading in parallel (started below)
     };
 
     lowResImage.onerror = () => {
-      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', this.srcLow);
+      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', sources.low);
       // Fallback: load high-res directly
-      this.loadHighResTexture();
+      this.loadHighResTexture(sources.high);
     };
 
-    lowResImage.src = this.srcLow;
+    lowResImage.src = sources.low;
+
+    // Step 2: Start loading high-res in background immediately
+    this.loadHighResTexture(sources.high);
   }
 
   /**
    * Loads high-resolution texture in background and swaps when ready
    */
-  private loadHighResTexture(): void {
+  private loadHighResTexture(highResSrc: string): void {
     const highResImage = new Image();
     highResImage.crossOrigin = 'anonymous';
 
@@ -366,10 +418,10 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     };
 
     highResImage.onerror = () => {
-      console.error('[HdriBackground] Failed to load high-res image:', this.srcHigh);
+      console.error('[HdriBackground] Failed to load high-res image:', highResSrc);
     };
 
-    highResImage.src = this.srcHigh;
+    highResImage.src = highResSrc;
   }
 
   /**
@@ -393,6 +445,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    * - FPS Throttling: 30fps instead of 60fps (50% CPU reduction)
    * - Visibility Detection: Skip rendering when not visible
    * - Idle Detection: Skip rendering when idle and not auto-rotating
+   * - Smooth rotation interpolation for weighted, premium feel
    *
    * @see https://thewebdev.info/2024/04/13/how-to-limit-framerate-in-three-js-to-increase-performance-requestanimationframe-with-javascript/
    */
@@ -416,12 +469,17 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       if (deltaTime < 1000 / this.targetFPS) return;
       this.lastFrameTime = currentTime;
 
-      // 4. Update rotation if auto-rotating
+      // 4. Update target rotation if auto-rotating
       if (this.autoRotate && !this.isDragging) {
-        this.rotationY += this.rotateSpeed;
+        this.targetRotationY += this.rotateSpeed;
       }
 
-      // 5. Render frame
+      // 5. Smooth interpolation (lerp) for weighted, cadenced movement
+      // This creates the "heavy" feel - rotation gradually catches up to target
+      this.rotationY += (this.targetRotationY - this.rotationY) * this.ROTATION_SMOOTHING;
+      this.rotationX += (this.targetRotationX - this.rotationX) * this.ROTATION_SMOOTHING;
+
+      // 6. Render frame
       this.draw();
     };
 
@@ -503,8 +561,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     const deltaX = e.clientX - this.lastMouseX;
     const deltaY = e.clientY - this.lastMouseY;
 
-    this.rotationY -= deltaX * 0.005;
-    this.rotationX = Math.max(-0.5, Math.min(0.5, this.rotationX + deltaY * 0.003));
+    // Update target rotation (actual rotation is smoothed in render loop)
+    this.targetRotationY -= deltaX * this.DRAG_SENSITIVITY_X;
+    this.targetRotationX = Math.max(-0.5, Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y));
 
     this.lastMouseX = e.clientX;
     this.lastMouseY = e.clientY;
@@ -531,8 +590,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     const deltaX = e.touches[0].clientX - this.lastMouseX;
     const deltaY = e.touches[0].clientY - this.lastMouseY;
 
-    this.rotationY -= deltaX * 0.005;
-    this.rotationX = Math.max(-0.5, Math.min(0.5, this.rotationX + deltaY * 0.003));
+    // Update target rotation (actual rotation is smoothed in render loop)
+    this.targetRotationY -= deltaX * this.DRAG_SENSITIVITY_X;
+    this.targetRotationX = Math.max(-0.5, Math.min(0.5, this.targetRotationX + deltaY * this.DRAG_SENSITIVITY_Y));
 
     this.lastMouseX = e.touches[0].clientX;
     this.lastMouseY = e.touches[0].clientY;

@@ -40,7 +40,7 @@
 
 .calendar-icon {
   @apply h-5 w-5 flex-shrink-0;
-  @apply text-gray-400 dark:text-gray-400;
+  @apply text-gray-400 dark:text-gray-500;
   @apply transition-colors duration-200;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .date-display.placeholder {
-  @apply text-gray-400 dark:text-gray-400;
+  @apply text-gray-400 dark:text-gray-500;
   @apply font-normal;
 }
 
@@ -72,7 +72,7 @@
 
 .clear-button {
   @apply p-1.5 rounded-full;
-  @apply text-gray-400 dark:text-gray-400;
+  @apply text-gray-400 dark:text-gray-500;
   @apply hover:text-gray-600 dark:hover:text-gray-200;
   @apply hover:bg-gray-100 dark:hover:bg-slate-600;
   @apply transition-all duration-200;
@@ -90,12 +90,12 @@
 
 .arrow-icon {
   @apply h-4 w-4 flex-shrink-0;
-  @apply text-gray-400 dark:text-gray-400;
+  @apply text-gray-400 dark:text-gray-500;
   @apply transition-transform duration-200;
 }
 
 .date-input-button:not(.disabled):hover .arrow-icon {
-  @apply text-gray-600 dark:text-gray-300;
+  @apply text-gray-600 dark:text-gray-500;
   @apply translate-y-0.5;
 }
 

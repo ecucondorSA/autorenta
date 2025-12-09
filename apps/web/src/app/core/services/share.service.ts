@@ -167,7 +167,7 @@ export class ShareService {
       padding: 12px 24px;
       border-radius: 24px;
       font-size: 14px;
-      z-index: 9999;
+      z-index: 50;
       animation: fadeInOut 2s ease-in-out;
     `;
 

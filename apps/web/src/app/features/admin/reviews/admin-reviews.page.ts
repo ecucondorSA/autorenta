@@ -25,7 +25,7 @@ interface ModerationStatusOption {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -533,7 +533,7 @@ export class AdminReviewsPage implements OnInit {
       pending:
         'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
       approved:
-        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
+        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-strong',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
     };
     return classes[status] || 'bg-surface-raised text-text-primary';

@@ -229,7 +229,7 @@ export interface SidebarMenuItem {
         width: 340px;
         max-width: 85vw;
         background: white;
-        z-index: 999;
+        z-index: 50;
         display: flex;
         flex-direction: column;
         transform: translateX(-100%);

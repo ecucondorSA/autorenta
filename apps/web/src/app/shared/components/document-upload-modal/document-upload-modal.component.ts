@@ -85,7 +85,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
               <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                 {{ config?.label }}
               </h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-gray-500 dark:text-gray-500">
                 {{ config?.description }}
               </p>
             </div>
@@ -107,7 +107,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
             <div class="grid grid-cols-2 gap-4">
               <!-- Front -->
               <div class="space-y-2">
-                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Frente</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-500">Frente</p>
                 <div
                   class="aspect-[3/2] bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
                   (click)="frontInput.click()"
@@ -137,7 +137,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
 
               <!-- Back -->
               <div class="space-y-2">
-                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Dorso</p>
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-500">Dorso</p>
                 <div
                   class="aspect-[3/2] bg-gray-100 dark:bg-gray-700 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden relative cursor-pointer hover:border-primary-500 transition-colors"
                   (click)="backInput.click()"
@@ -226,7 +226,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
         <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
           <button
             (click)="closed.emit()"
-            class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            class="px-4 py-2 text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
             Cerrar
           </button>

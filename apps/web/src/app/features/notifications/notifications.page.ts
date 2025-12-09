@@ -294,7 +294,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <!-- Delete button (hidden, shows on hover) -->
                           <button
                             (click)="deleteNotification(notification.id)"
-                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-500"
                             type="button"
                             title="Eliminar"
                           >
@@ -396,7 +396,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                           <!-- Delete button (hidden, shows on hover) -->
                           <button
                             (click)="deleteNotification(notification.id)"
-                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                            class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-500"
                             type="button"
                             title="Eliminar"
                           >
@@ -495,7 +495,7 @@ type ExtendedNotificationItem = NotificationItem & { dbType?: string };
                       <!-- Delete button (hidden, shows on hover) -->
                       <button
                         (click)="deleteNotification(notification.id)"
-                        class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                        class="absolute right-2 top-2 rounded-lg p-1.5 text-text-muted opacity-0 transition-opacity hover:bg-surface-hover hover:text-text-secondary group-hover:opacity-100 dark:hover:bg-gray-700 dark:hover:text-gray-500"
                         type="button"
                         title="Eliminar"
                       >

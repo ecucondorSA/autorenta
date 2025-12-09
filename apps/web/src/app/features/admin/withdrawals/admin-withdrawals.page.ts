@@ -195,7 +195,7 @@ export class AdminWithdrawalsPage implements OnInit {
       pending: 'bg-warning-bg-hover text-warning-strong',
       approved: 'bg-cta-default/20 text-cta-default',
       processing: 'bg-cta-default/20 text-cta-default',
-      completed: 'bg-success-light/20 text-success-light',
+      completed: 'bg-success-light/20 text-success-strong',
       failed: 'bg-error-bg-hover text-error-strong',
       rejected: 'bg-surface-raised text-text-primary',
       cancelled: 'bg-surface-raised text-text-primary',

@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div
       *ngIf="visible()"
-      class="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100"
       [class.opacity-0]="fadeOut()"
       [class.pointer-events-none]="fadeOut()"
       style="transition: opacity 0.5s ease-out"

@@ -141,7 +141,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
 
       <!-- Mobile: Card View -->
       <div class="md:hidden space-y-3">
-        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Feature Flags</h2>
+        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-500">Feature Flags</h2>
 
         @if (loading()) {
           <div class="flex justify-center py-8">
@@ -167,7 +167,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
 
               <!-- Description -->
               @if (flag.description) {
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                <p class="text-sm text-gray-600 dark:text-gray-500 mb-3 line-clamp-2">
                   {{ flag.description }}
                 </p>
               }
@@ -191,7 +191,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
                     (click)="editFlag(flag)"
                     aria-label="Editar"
                   >
-                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </button>
@@ -260,7 +260,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
 
       <!-- Audit Log - Mobile Cards -->
       <div class="mt-4 md:hidden">
-        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Historial de Cambios</h2>
+        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-500 mb-3">Historial de Cambios</h2>
 
         @if (loadingAudit()) {
           <div class="flex justify-center py-4">
@@ -280,7 +280,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
                   {{ log.changed_at | date: 'short' }}
                 </div>
                 @if (log.action === 'updated' && log.old_value && log.new_value) {
-                  <div class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <div class="mt-1 text-xs text-gray-600 dark:text-gray-500">
                     @if (log.old_value.enabled !== log.new_value.enabled) {
                       enabled: {{ log.old_value.enabled }} → {{ log.new_value.enabled }}
                     }

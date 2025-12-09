@@ -49,7 +49,7 @@ import { OfflineManagerService } from '../../../core/services/offline-manager.se
         top: 0;
         left: 0;
         right: 0;
-        z-index: 9999;
+        z-index: 50;
         background: var(--error-default); /* Reemplazado gradiente con color sólido */
         color: white;
         padding: 0.75rem 1rem;

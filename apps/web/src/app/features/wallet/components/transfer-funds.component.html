@@ -166,7 +166,7 @@
       <div *ngIf="error()" class="mb-4 info-card-warm p-4 border-2 border-warning-light">
         <div class="flex items-start gap-2">
           <svg
-            class="w-5 h-5 text-warning-light mt-0.5 flex-shrink-0"
+            class="w-5 h-5 text-warning-strong mt-0.5 flex-shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -260,7 +260,7 @@
             <p
               class="font-bold text-base"
               [ngClass]="{
-                'text-warning-light': transfer.from_user === currentUserId(),
+                'text-warning-strong': transfer.from_user === currentUserId(),
                 'text-cta-default': transfer.to_user === currentUserId(),
               }"
             >

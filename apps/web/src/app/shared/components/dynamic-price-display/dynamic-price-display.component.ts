@@ -94,7 +94,7 @@ import {
               <span
                 class="text-xs px-2 py-0.5 rounded"
                 [class.bg-success-light/20]="factor.value < 0"
-                [class.text-success-light]="factor.value < 0"
+                [class.text-success-strong]="factor.value < 0"
                 [class.bg-warning-bg-hover]="factor.value > 0"
                 [class.text-warning-strong]="factor.value > 0"
                 [class.bg-surface-raised]="factor.value === 0"
@@ -116,7 +116,7 @@ import {
             <span class="text-text-primary dark:text-text-inverse-pure">Multiplicador total</span>
             <span
               class="text-lg"
-              [class.text-success-light]="pricing()!.breakdown.total_multiplier < 1"
+              [class.text-success-strong]="pricing()!.breakdown.total_multiplier < 1"
               [class.text-warning-text]="pricing()!.breakdown.total_multiplier > 1.1"
               [class.text-text-primary]="
                 pricing()!.breakdown.total_multiplier >= 1 &&

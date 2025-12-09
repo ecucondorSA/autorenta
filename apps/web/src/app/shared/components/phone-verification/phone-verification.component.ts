@@ -45,7 +45,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         *ngIf="status().isVerified"
         class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
       >
-        <div class="flex items-center gap-2 text-success-light">
+        <div class="flex items-center gap-2 text-success-strong">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
@@ -55,7 +55,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           </svg>
           <span class="text-sm font-medium">Teléfono verificado exitosamente</span>
         </div>
-        <p class="text-xs text-success-light mt-2">
+        <p class="text-xs text-success-strong mt-2">
           Verificado el {{ formatDate(status().verifiedAt) }}
         </p>
       </div>
@@ -133,7 +133,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
           <!-- Rate Limit Warning -->
           <div
             *ngIf="remainingAttempts() < 3"
-            class="p-3 bg-warning-light/10 border border-warning-light/40 rounded-lg text-sm text-warning-light"
+            class="p-3 bg-warning-light/10 border border-warning-light/40 rounded-lg text-sm text-warning-strong"
           >
             ⚠️ Te quedan {{ remainingAttempts() }} intentos en esta hora
           </div>
@@ -227,7 +227,7 @@ import { PhoneVerificationService } from '../../../core/services/phone-verificat
         <!-- Success Message -->
         <div
           *ngIf="successMessage()"
-          class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-light"
+          class="p-3 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
         >
           {{ successMessage() }}
         </div>
@@ -380,7 +380,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
 
   getStatusBadgeClass(): string {
     return this.status().isVerified
-      ? 'bg-success-light/20 text-success-light'
+      ? 'bg-success-light/20 text-success-strong'
       : 'bg-warning-bg-hover text-warning-text';
   }
 
@@ -390,7 +390,7 @@ export class PhoneVerificationComponent implements OnInit, OnDestroy {
 
   getStatusLabelClass(): string {
     return this.status().isVerified
-      ? 'bg-success-light/20 text-success-light'
+      ? 'bg-success-light/20 text-success-strong'
       : 'bg-warning-bg-hover text-warning-strong';
   }
 

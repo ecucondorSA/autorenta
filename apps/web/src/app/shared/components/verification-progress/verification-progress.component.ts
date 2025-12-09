@@ -358,7 +358,7 @@ export class VerificationProgressComponent implements OnInit {
 
   getLevelStatusTextClass(level: number): string {
     const isComplete = this.isLevelComplete(level);
-    if (isComplete) return 'text-success-light';
+    if (isComplete) return 'text-success-strong';
 
     const isActive = level === 1 || this.isLevelComplete(level - 1);
     if (isActive) return 'text-cta-default';
@@ -367,6 +367,6 @@ export class VerificationProgressComponent implements OnInit {
   }
 
   getCheckClass(isComplete: boolean | undefined): string {
-    return isComplete ? 'text-success-light font-bold' : 'text-text-muted';
+    return isComplete ? 'text-success-strong font-bold' : 'text-text-muted';
   }
 }

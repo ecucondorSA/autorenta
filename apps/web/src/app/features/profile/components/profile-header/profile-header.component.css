@@ -96,7 +96,7 @@
   justify-content: center;
   font-size: 3rem;
   font-weight: 700;
-  background: rgba(15, 23, 42, 0.6);
+  background: #334155;
   color: rgba(255, 255, 255, 0.6);
 }
 
@@ -213,7 +213,7 @@
 }
 
 .mini-card {
-  background: rgba(15, 23, 42, 0.6);
+  background: #334155;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
   padding: 0.9rem;
@@ -241,7 +241,7 @@
 }
 
 .hero-performance {
-  background: rgba(15, 23, 42, 0.8);
+  background: #1e293b;
   border-radius: 1.5rem;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -281,7 +281,7 @@
 }
 
 .performance-card {
-  background: rgba(15, 23, 42, 0.7);
+  background: #334155;
   border-radius: 1.2rem;
   padding: 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -334,7 +334,7 @@
 }
 
 .hero-actions-panel {
-  background: rgba(15, 23, 42, 0.7);
+  background: #334155;
   border-radius: 1.5rem;
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -408,7 +408,7 @@
 }
 
 .footer-card {
-  background: rgba(15, 23, 42, 0.65);
+  background: #334155;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
   padding: 0.9rem 1rem;

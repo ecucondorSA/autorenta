@@ -56,7 +56,7 @@
         </div>
         <div *ngIf="hasCredit()" class="text-right">
           <div
-            class="inline-flex items-center px-3 py-1 rounded-full bg-success-light/20 text-success-light text-xs font-medium"
+            class="inline-flex items-center px-3 py-1 rounded-full bg-success-light/20 text-success-strong text-xs font-medium"
           >
             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -124,7 +124,7 @@
       >
         <div class="flex items-start">
           <svg
-            class="w-5 h-5 mr-2 text-success-light flex-shrink-0 mt-0.5"
+            class="w-5 h-5 mr-2 text-success-strong flex-shrink-0 mt-0.5"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -135,13 +135,13 @@
             ></path>
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-success-light">¡Elegible para renovación!</p>
-            <p class="text-xs text-success-light mt-1">
+            <p class="text-sm font-medium text-success-strong">¡Elegible para renovación!</p>
+            <p class="text-xs text-success-strong mt-1">
               Has completado 10+ reservas sin daños. Puedes renovar tu crédito.
             </p>
             <button
               (click)="onCheckRenewal()"
-              class="mt-2 text-xs font-medium text-success-light hover:text-success-light underline"
+              class="mt-2 text-xs font-medium text-success-strong hover:text-success-strong underline"
             >
               Renovar ahora
             </button>
@@ -161,7 +161,7 @@
       >
         <div class="flex items-start">
           <svg
-            class="w-5 h-5 mr-2 text-warning-light flex-shrink-0 mt-0.5"
+            class="w-5 h-5 mr-2 text-warning-strong flex-shrink-0 mt-0.5"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -172,8 +172,8 @@
             ></path>
           </svg>
           <div class="flex-1">
-            <p class="text-sm font-medium text-warning-light">Crédito próximo a vencer</p>
-            <p class="text-xs text-warning-light mt-1">
+            <p class="text-sm font-medium text-warning-strong">Crédito próximo a vencer</p>
+            <p class="text-xs text-warning-strong mt-1">
               Completa más reservas sin daños para renovar tu crédito antes de que expire.
             </p>
           </div>

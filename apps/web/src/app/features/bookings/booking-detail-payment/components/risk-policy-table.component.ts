@@ -220,10 +220,10 @@ import {
           <div
             class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded p-3"
           >
-            <p class="font-medium text-success-light dark:text-success-light mb-1">
+            <p class="font-medium text-success-light dark:text-success-strong mb-1">
               ¿Qué está cubierto?
             </p>
-            <p class="text-success-light dark:text-success-light">
+            <p class="text-success-light dark:text-success-strong">
               Daños al vehículo, robo, combustible faltante, multas y peajes.
             </p>
           </div>

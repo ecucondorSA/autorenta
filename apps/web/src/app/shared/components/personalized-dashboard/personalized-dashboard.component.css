@@ -201,7 +201,7 @@
   font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary, #050505); /* Reemplazado hex con el valor de textPrimary */
-  line-height: 1;
+  line-height: 1.25;
   margin-bottom: 0.25rem;
 }
 

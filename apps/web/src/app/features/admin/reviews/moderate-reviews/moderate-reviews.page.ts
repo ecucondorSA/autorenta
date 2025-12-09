@@ -87,7 +87,7 @@ import type { Review } from '../../../../core/models';
                   [class.bg-warning-bg-hover]="review.moderation_status === 'pending'"
                   [class.text-warning-strong]="review.moderation_status === 'pending'"
                   [class.bg-success-light/20]="review.moderation_status === 'approved'"
-                  [class.text-success-light]="review.moderation_status === 'approved'"
+                  [class.text-success-strong]="review.moderation_status === 'approved'"
                   [class.bg-error-bg-hover]="review.moderation_status === 'rejected'"
                   [class.text-error-strong]="review.moderation_status === 'rejected'"
                 >

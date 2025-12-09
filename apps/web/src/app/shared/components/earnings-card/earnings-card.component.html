@@ -14,7 +14,7 @@
     <div
       class="flex h-12 w-12 items-center justify-center rounded-full bg-success-light/20 dark:bg-success-light/30"
     >
-      <svg class="h-6 w-6 text-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -43,7 +43,7 @@
         <div
           class="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold"
           [ngClass]="{
-            'bg-success-light/20 text-success-strong dark:bg-success-light/30 dark:text-success-light':
+            'bg-success-light/20 text-success-strong dark:bg-success-light/30 dark:text-success-strong':
               growthPercentage() >= 0,
             'bg-error-bg text-error-strong dark:bg-error-900/30 dark:text-error-200':
               growthPercentage() < 0,

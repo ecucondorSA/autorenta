@@ -176,7 +176,7 @@
 .marker-instant-booking-indicator::after {
   content: '⚡';
   font-size: 10px;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 @keyframes instant-booking-pulse {

@@ -138,7 +138,7 @@
             <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-1">Crecimiento</p>
             <p
               class="text-2xl font-bold"
-              [class.text-success-light]="isGrowthPositive()"
+              [class.text-success-strong]="isGrowthPositive()"
               [class.text-error-text]="!isGrowthPositive()"
             >
               {{ isGrowthPositive() ? '+' : '' }}{{ growthPercentage() }}%

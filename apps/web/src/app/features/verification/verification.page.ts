@@ -601,7 +601,7 @@ export class VerificationPage implements OnInit {
   getDocStatusClasses(docId: string): string {
     switch (this.getDocState(docId)) {
       case 'approved':
-        return 'border-success-light text-success-light bg-success-light/10';
+        return 'border-success-light text-success-strong bg-success-light/10';
       case 'rejected':
         return 'border-error-border text-error-strong bg-error-bg dark:bg-error-900/30';
       case 'in_review':
@@ -627,7 +627,7 @@ export class VerificationPage implements OnInit {
   getDocStatusHelperClasses(docId: string): string {
     switch (this.getDocState(docId)) {
       case 'approved':
-        return 'text-success-light';
+        return 'text-success-strong';
       case 'rejected':
         return 'text-error-strong';
       case 'in_review':
@@ -688,7 +688,7 @@ export class VerificationPage implements OnInit {
   getStatusChipClasses(status: VerificationStatus): string {
     switch (status) {
       case 'VERIFICADO':
-        return 'border-success-light text-success-light bg-success-light/10';
+        return 'border-success-light text-success-strong bg-success-light/10';
       case 'RECHAZADO':
         return 'border-error-border text-error-strong bg-error-bg';
       default:

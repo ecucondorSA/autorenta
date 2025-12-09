@@ -26,7 +26,7 @@ import {
       <div class="mb-6">
         <button
           routerLink="/admin"
-          class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-light transition-base mb-4"
+          class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -328,16 +328,16 @@ export class AdminClaimsPage implements OnInit {
   getStatusBadgeClass(status: ClaimStatus): string {
     const classes: Record<ClaimStatus, string> = {
       reported:
-        'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-light',
+        'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-strong',
       pending:
         'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/40 dark:text-warning-200',
       investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200',
       under_review:
         'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default',
       approved:
-        'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
+        'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200',
-      paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-light',
+      paid: 'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong',
       closed:
         'bg-surface-raised text-text-primary dark:bg-surface-raised/40 dark:text-text-primary',
     };

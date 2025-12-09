@@ -41,7 +41,7 @@ import { ReviewsService } from '../../../core/services/reviews.service';
                     [class.bg-warning-light/20]="
                       review.days_remaining <= 7 && review.days_remaining > 3
                     "
-                    [class.text-warning-light]="
+                    [class.text-warning-strong]="
                       review.days_remaining <= 7 && review.days_remaining > 3
                     "
                     [class.bg-error-bg-hover]="review.days_remaining <= 3"

@@ -145,7 +145,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <div
             class="mt-4 p-4 bg-surface-raised dark:bg-surface-raised rounded-lg border border-warning-border dark:border-warning-700"
           >
-            <p class="text-sm font-medium text-slate-700 dark:text-slate-300">
+            <p class="text-sm font-medium text-slate-700 dark:text-slate-500">
               💡 <strong>Beneficio principal:</strong> Este sistema está diseñado para usuarios
               <strong>sin tarjeta de crédito</strong>. Los fondos quedan en tu cuenta de AutoRenta
               para futuros alquileres, creando un <strong>"crédito interno"</strong> que puedes

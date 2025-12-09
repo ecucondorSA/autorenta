@@ -160,8 +160,8 @@ export class ProfileExpandedPage {
    */
   getBadgeProps(type: string): { color: string; icon: string } {
     const badgeMap: Record<string, { color: string; icon: string }> = {
-      top_host: { color: 'text-warning-light', icon: 'star' },
-      super_host: { color: 'text-warning-light', icon: 'award' },
+      top_host: { color: 'text-warning-strong', icon: 'star' },
+      super_host: { color: 'text-warning-strong', icon: 'award' },
       verified_renter: { color: 'text-success-text', icon: 'check-circle' },
       trusted_driver: { color: 'text-info-text', icon: 'check-circle' },
     };

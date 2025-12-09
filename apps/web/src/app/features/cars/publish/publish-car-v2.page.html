@@ -10,7 +10,7 @@
         >
           {{ editMode() ? 'Tu auto, mejorado.' : 'Rentabilizá tu auto.' }}
         </h1>
-        <p class="text-lg text-slate-500 dark:text-slate-400 font-medium">
+        <p class="text-lg text-slate-500 dark:text-slate-500 font-medium">
           Configurá tu activo en minutos con seguridad garantizada.
         </p>
       </div>
@@ -25,7 +25,7 @@
             ></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
           </span>
-          <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-500">
             {{ editMode() ? 'Edición activa' : 'Creando publicación' }}
           </span>
         </div>
@@ -73,7 +73,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Marca -->
                 <div class="md:col-span-2 relative z-20">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-500 mb-2"
                     >Marca</label
                   >
                   <app-fipe-autocomplete
@@ -106,7 +106,7 @@
 
                 <!-- Año -->
                 <div class="relative z-10">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-500 mb-2"
                     >Año</label
                   >
                   <select
@@ -140,7 +140,7 @@
 
                 <!-- Modelo -->
                 <div class="relative z-10">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-500 mb-2"
                     >Modelo</label
                   >
                   <app-fipe-autocomplete
@@ -273,7 +273,7 @@
                     />
                   </svg>
                 </div>
-                <span class="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-400"
+                <span class="mt-2 text-xs font-semibold text-slate-600 dark:text-slate-500"
                   >Subir fotos</span
                 >
                 <input
@@ -344,7 +344,7 @@
             </button>
 
             <!-- Tip sutil -->
-            <p class="text-sm text-slate-500 dark:text-slate-400 flex gap-2">
+            <p class="text-sm text-slate-500 dark:text-slate-500 flex gap-2">
               <span class="text-indigo-600">💡</span>
               <span
                 >Las publicaciones con más de 5 fotos reciben un
@@ -368,7 +368,7 @@
                     class="input-modern pl-10"
                     placeholder="Ej: 45000"
                   />
-                  <span class="absolute left-3.5 top-3.5 text-slate-400 text-xs font-bold">KM</span>
+                  <span class="absolute left-3.5 top-3.5 text-slate-500 text-xs font-bold">KM</span>
                 </div>
                 @if (
                   publishForm.get('mileage')?.invalid &&
@@ -497,7 +497,7 @@
                 placeholder="Contanos qué hace especial a tu auto. Ej: 'Ideal para ruta, bajo consumo, baúl amplio...'"
               ></textarea>
               <div class="flex justify-between mt-1">
-                <p class="text-xs text-slate-400">Mínimo 40 caracteres.</p>
+                <p class="text-xs text-slate-500">Mínimo 40 caracteres.</p>
                 @if (
                   publishForm.get('description')?.hasError('required') &&
                   (publishForm.get('description')?.dirty || publishForm.get('description')?.touched)
@@ -563,7 +563,7 @@
                   >Precio por día ({{ publishForm.get('currency')?.value }})</label
                 >
                 <div class="relative">
-                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold"
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold"
                     >$</span
                   >
                   <input
@@ -629,7 +629,7 @@
                   class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
                 />
                 <div class="ml-3">
-                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-500"
                     >Solicitar Depósito</span
                   >
                   <span class="block text-xs text-slate-500">Garantía para el anfitrión</span>
@@ -644,7 +644,7 @@
                   class="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
                 />
                 <div class="ml-3">
-                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-300"
+                  <span class="block text-sm font-semibold text-slate-700 dark:text-slate-500"
                     >Reserva Inmediata</span
                   >
                   <span class="block text-xs text-slate-500">Acepta viajes automáticamente</span>
@@ -761,7 +761,7 @@
                   </p>
                 }
               </div>
-              <div class="col-span-2 text-xs text-slate-400">
+              <div class="col-span-2 text-xs text-slate-500">
                 * Tu dirección exacta solo se comparte al confirmar una reserva.
               </div>
             </div>
@@ -859,7 +859,7 @@
         <div
           class="bg-white dark:bg-[#161821] rounded-3xl shadow-soft p-6 border border-slate-100 dark:border-neutral-800"
         >
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+          <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
             Vista Previa
           </h4>
           <div
@@ -872,7 +872,7 @@
             />
             <div
               *ngIf="uploadedPhotos().length === 0"
-              class="flex items-center justify-center h-full text-slate-300"
+              class="flex items-center justify-center h-full text-slate-500"
             >
               <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -896,7 +896,7 @@
               <span class="text-lg font-bold text-indigo-600"
                 >${{ publishForm.get('price_per_day')?.value || 0 }}</span
               >
-              <span class="text-xs text-slate-400">/ día</span>
+              <span class="text-xs text-slate-500">/ día</span>
             </div>
           </div>
         </div>
@@ -959,12 +959,12 @@
 <!-- Styles helper for this page specifically -->
 <style>
   .label-text {
-    @apply block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2;
+    @apply block text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider mb-2;
   }
   .input-modern {
-    @apply w-full bg-slate-50 dark:bg-neutral-800 border-0 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-400;
+    @apply w-full bg-slate-50 dark:bg-neutral-800 border-0 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-500;
   }
   .radio-card {
-    @apply flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer text-sm;
+    @apply flex items-center justify-center px-4 py-3 rounded-xl border border-slate-200 dark:border-neutral-700 text-slate-600 dark:text-slate-500 font-medium hover:bg-slate-50 dark:hover:bg-neutral-800 transition cursor-pointer text-sm;
   }
 </style>

@@ -45,7 +45,7 @@
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-text-secondary truncate">Aprobadas Hoy</dt>
-                <dd class="text-lg font-semibold text-success-light">
+                <dd class="text-lg font-semibold text-success-strong">
                   @if (statsLoading()) {
                     <span class="text-text-muted">...</span>
                   } @else {
@@ -68,7 +68,7 @@
             <div class="ml-5 w-0 flex-1">
               <dl>
                 <dt class="text-sm font-medium text-text-secondary truncate">Rechazadas Hoy</dt>
-                <dd class="text-lg font-semibold text-warning-light">
+                <dd class="text-lg font-semibold text-warning-strong">
                   @if (statsLoading()) {
                     <span class="text-text-muted">...</span>
                   } @else {
@@ -324,7 +324,7 @@
                   <td class="px-6 py-4 whitespace-nowrap">
                     @if (verification.manual_review_decision === 'APPROVED') {
                       <span
-                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-light"
+                        class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-success-light/20 text-success-strong"
                       >
                         ✅ Aprobada
                       </span>

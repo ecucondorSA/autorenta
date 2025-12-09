@@ -82,7 +82,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                       [class.bg-cta-default/20]="payout.status === 'processing'"
                       [class.text-cta-default]="payout.status === 'processing'"
                       [class.bg-success-light/20]="payout.status === 'completed'"
-                      [class.text-success-light]="payout.status === 'completed'"
+                      [class.text-success-strong]="payout.status === 'completed'"
                       [class.bg-error-bg-hover]="payout.status === 'failed'"
                       [class.text-error-strong]="payout.status === 'failed'"
                       [class.bg-surface-raised]="payout.status === 'cancelled'"
@@ -147,7 +147,7 @@ import { AuthService } from '../../../../core/services/auth.service';
         }
 
         <!-- Pagination Info -->
-        <div class="mt-2 text-center text-xs text-gray-500 dark:text-gray-400">
+        <div class="mt-2 text-center text-xs text-gray-500 dark:text-gray-500">
           Mostrando {{ payouts().length }} de {{ totalCount() }} ingresos
         </div>
 
@@ -160,8 +160,8 @@ import { AuthService } from '../../../../core/services/auth.service';
             </p>
           </div>
           <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg p-4">
-            <p class="text-sm text-success-light dark:text-success-light mb-1">Completados</p>
-            <p class="text-2xl font-bold text-success-light dark:text-success-light">
+            <p class="text-sm text-success-light dark:text-success-strong mb-1">Completados</p>
+            <p class="text-2xl font-bold text-success-light dark:text-success-strong">
               {{ completedCount() }}
             </p>
           </div>

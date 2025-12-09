@@ -55,7 +55,7 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
                       [class.bg-cta-default/20]="dispute.status === 'in_review'"
                       [class.text-cta-default]="dispute.status === 'in_review'"
                       [class.bg-success-light/20]="dispute.status === 'resolved'"
-                      [class.text-success-light]="dispute.status === 'resolved'"
+                      [class.text-success-strong]="dispute.status === 'resolved'"
                       [class.bg-error-bg-hover]="dispute.status === 'rejected'"
                       [class.text-error-strong]="dispute.status === 'rejected'"
                     >

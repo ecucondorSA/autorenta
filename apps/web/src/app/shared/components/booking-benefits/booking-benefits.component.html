@@ -7,7 +7,7 @@
   >
     <svg
       class="h-5 w-5 flex-shrink-0 mt-0.5"
-      [class.text-success-light]="benefit.highlight"
+      [class.text-success-strong]="benefit.highlight"
       [class.text-cta-default]="!benefit.highlight"
       fill="none"
       stroke="currentColor"
@@ -21,7 +21,7 @@
       />
     </svg>
     <div>
-      <p class="text-text-primary" [class.text-success-light]="benefit.highlight">
+      <p class="text-text-primary" [class.text-success-strong]="benefit.highlight">
         {{ benefit.title }}
       </p>
       <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">
@@ -58,7 +58,7 @@
       >
         <svg
           class="h-6 w-6"
-          [class.text-success-light]="benefit.highlight"
+          [class.text-success-strong]="benefit.highlight"
           [class.text-cta-default]="!benefit.highlight"
           fill="none"
           stroke="currentColor"
@@ -77,14 +77,14 @@
       <div class="flex-1">
         <h4
           class="text-sm font-bold mb-1"
-          [class.text-success-light]="benefit.highlight"
+          [class.text-success-strong]="benefit.highlight"
           [class.text-text-primary]="!benefit.highlight"
         >
           {{ benefit.title }}
         </h4>
         <p
           class="text-xs"
-          [class.text-success-light]="benefit.highlight"
+          [class.text-success-strong]="benefit.highlight"
           [class.text-text-secondary dark:text-text-secondary]="!benefit.highlight"
         >
           {{ benefit.description }}

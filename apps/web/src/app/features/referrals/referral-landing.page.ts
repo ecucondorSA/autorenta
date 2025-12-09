@@ -30,7 +30,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
             <div
               class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-cta-default dark:border-cyan-500 mb-4"
             ></div>
-            <p class="text-text-secondary dark:text-gray-300">Validando código...</p>
+            <p class="text-text-secondary dark:text-gray-500">Validando código...</p>
           </div>
         } @else if (error()) {
           <div class="card-premium p-8 text-center">
@@ -38,7 +38,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
             <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
               Código inválido
             </h2>
-            <p class="text-text-secondary dark:text-gray-300 mb-6">
+            <p class="text-text-secondary dark:text-gray-500 mb-6">
               {{ error() }}
             </p>
             <a routerLink="/" class="btn-primary"> Ir al inicio </a>
@@ -49,7 +49,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
             <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
               ¡Código aplicado!
             </h2>
-            <p class="text-text-secondary dark:text-gray-300 mb-6">
+            <p class="text-text-secondary dark:text-gray-500 mb-6">
               Recibiste <strong class="text-cta-default dark:text-cyan-400">$500 ARS</strong> de
               bono de bienvenida. ¡Publicá tu primer auto y ganá $1,000 ARS más!
             </p>
@@ -62,7 +62,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
               <h2 class="text-2xl font-bold mb-2 text-text-primary dark:text-white">
                 ¡Te invitaron a Autorentar!
               </h2>
-              <p class="text-text-secondary dark:text-gray-300">
+              <p class="text-text-secondary dark:text-gray-500">
                 Usá el código
                 <strong class="text-cta-default dark:text-cyan-400">{{ code() }}</strong> y ganás:
               </p>
@@ -78,7 +78,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
                     <div class="font-semibold text-text-primary dark:text-white">
                       $500 ARS de bienvenida
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-300">Al registrarte</div>
+                    <div class="text-sm text-text-secondary dark:text-gray-500">Al registrarte</div>
                   </div>
                 </li>
                 <li class="flex items-start gap-3">
@@ -87,7 +87,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
                     <div class="font-semibold text-text-primary dark:text-white">
                       $1,000 ARS extras
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-300">
+                    <div class="text-sm text-text-secondary dark:text-gray-500">
                       Al publicar tu primer auto
                     </div>
                   </div>
@@ -98,7 +98,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
                     <div class="font-semibold text-text-primary dark:text-white">
                       Generá ingresos
                     </div>
-                    <div class="text-sm text-text-secondary dark:text-gray-300">
+                    <div class="text-sm text-text-secondary dark:text-gray-500">
                       Rentá tu auto y ganás hasta $200k/mes
                     </div>
                   </div>
@@ -110,7 +110,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
               Registrarme y recibir bono
             </button>
 
-            <div class="text-center text-sm text-text-muted dark:text-gray-400">
+            <div class="text-center text-sm text-text-muted dark:text-gray-500">
               ¿Ya tenés cuenta?
               <button (click)="login()" class="text-cta-default dark:text-cyan-400 hover:underline">
                 Iniciá sesión

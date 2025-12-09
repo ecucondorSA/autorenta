@@ -136,7 +136,7 @@ export class SwipeBackDirective implements OnInit, OnDestroy {
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.15s ease;
-      z-index: 9999;
+      z-index: 50;
     `;
 
     // Arrow indicator

@@ -45,7 +45,7 @@ export interface PricingBreakdownInput {
 
         <div class="flex justify-between" *ngIf="data.discounts && data.discounts !== 0">
           <span>Descuentos</span>
-          <span class="font-medium text-success-light">-{{ format(abs(data.discounts)) }}</span>
+          <span class="font-medium text-success-strong">-{{ format(abs(data.discounts)) }}</span>
         </div>
 
         <!-- Bonus-Malus Display -->

@@ -65,15 +65,15 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
               type="checkbox"
               [(ngModel)]="consents.cardOnFileAccepted"
               (ngModelChange)="onConsentsChange()"
-              class="mt-1 h-4 w-4 text-success-light focus:ring-success-light dark:focus:ring-success-light border-success-light/50 dark:border-success-light rounded bg-surface-raised dark:bg-surface-secondary/60 transition-colors"
+              class="mt-1 h-4 w-4 text-success-strong focus:ring-success-light dark:focus:ring-success-light border-success-light/50 dark:border-success-light rounded bg-surface-raised dark:bg-surface-secondary/60 transition-colors"
             />
             <div class="flex-1">
               <span
-                class="text-sm font-medium text-success-light dark:text-success-light mb-1 block"
+                class="text-sm font-medium text-success-light dark:text-success-strong mb-1 block"
               >
                 Autorizo guardar mi tarjeta de forma segura
               </span>
-              <span class="text-sm text-success-light dark:text-success-light">
+              <span class="text-sm text-success-light dark:text-success-strong">
                 Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o
                 daños según nuestros términos
                 <span class="text-error-500">*</span>
@@ -89,7 +89,7 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-5 h-5 text-success-light flex-shrink-0 mt-0.5"
+            class="w-5 h-5 text-success-strong flex-shrink-0 mt-0.5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -102,10 +102,10 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
             />
           </svg>
           <div>
-            <p class="text-sm font-medium text-success-light dark:text-success-light mb-1">
+            <p class="text-sm font-medium text-success-light dark:text-success-strong mb-1">
               Tus datos están protegidos
             </p>
-            <p class="text-sm text-success-light dark:text-success-light">
+            <p class="text-sm text-success-light dark:text-success-strong">
               @if (paymentMode === 'card') {
                 MercadoPago protege tu información de pago. Solo cobramos según nuestros términos
                 acordados.

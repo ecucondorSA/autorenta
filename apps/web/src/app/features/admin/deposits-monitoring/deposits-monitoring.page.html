@@ -81,13 +81,13 @@
 
       <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg shadow p-6">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-sm font-medium text-success-light dark:text-success-light">Completados</p>
+          <p class="text-sm font-medium text-success-light dark:text-success-strong">Completados</p>
           <span class="text-2xl">✅</span>
         </div>
-        <p class="text-3xl font-bold text-success-light dark:text-success-light">
+        <p class="text-3xl font-bold text-success-light dark:text-success-strong">
           {{ stats().completed }}
         </p>
-        <p class="text-sm text-success-light dark:text-success-light mt-1">
+        <p class="text-sm text-success-light dark:text-success-strong mt-1">
           {{ successRate() }}% tasa éxito
         </p>
       </div>
@@ -121,7 +121,7 @@
             [class.border-cta-default]="selectedTab() === 'pending'"
             [class.text-cta-default]="selectedTab() === 'pending'"
             [class.dark:text-cta-default]="selectedTab() === 'pending'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
           >
             ⏳ Pendientes ({{ pendingDeposits().length }})
           </button>
@@ -130,7 +130,7 @@
             [class.border-cta-default]="selectedTab() === 'recent'"
             [class.text-cta-default]="selectedTab() === 'recent'"
             [class.dark:text-cta-default]="selectedTab() === 'recent'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
           >
             ✅ Recientes ({{ recentDeposits().length }})
           </button>
@@ -139,7 +139,7 @@
             [class.border-cta-default]="selectedTab() === 'failed'"
             [class.text-cta-default]="selectedTab() === 'failed'"
             [class.dark:text-cta-default]="selectedTab() === 'failed'"
-            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-300"
+            class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
           >
             ❌ Fallidos ({{ failedDeposits().length }})
           </button>
@@ -218,7 +218,7 @@
                 </p>
               </div>
               <span
-                class="px-3 py-1 bg-success-light/20 dark:bg-success-light text-success-light dark:text-success-light text-xs font-medium rounded-full"
+                class="px-3 py-1 bg-success-light/20 dark:bg-success-light text-success-light dark:text-success-strong text-xs font-medium rounded-full"
               >
                 Completado
               </span>

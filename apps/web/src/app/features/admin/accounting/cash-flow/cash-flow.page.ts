@@ -77,7 +77,7 @@ import { AccountingService, CashFlowEntry } from '../../../../core/services/acco
                     {{ entry.description || 'Sin descripción' }}
                   </td>
                   <td
-                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-success-light"
+                    class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium text-success-strong"
                   >
                     @if (entry.inflow || entry.debit) {
                       \${{ entry.inflow || entry.debit | number: '1.2-2' }}

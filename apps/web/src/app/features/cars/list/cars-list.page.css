@@ -549,11 +549,11 @@
 
 .filters-icon {
   font-size: 1.25rem;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 .filters-label {
-  line-height: 1;
+  line-height: 1.25;
 }
 
 /* Hide filters FAB on desktop (1024px+) */

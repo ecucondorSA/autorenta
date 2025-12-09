@@ -63,7 +63,7 @@ import { AuthService } from '../../../core/services/auth.service';
                 <div class="font-semibold text-sm text-cta-default dark:text-cyan-400 mb-1">
                   Convertite en Renter
                 </div>
-                <div class="text-xs text-text-muted dark:text-gray-400">
+                <div class="text-xs text-text-muted dark:text-gray-500">
                   Publicá tu auto y generá ingresos extras
                 </div>
               </div>
@@ -85,7 +85,7 @@ import { AuthService } from '../../../core/services/auth.service';
           <hr class="my-2 border-border-default/40 dark:border-white/10" />
 
           <!-- Tours guiados -->
-          <div class="text-xs font-medium text-text-muted dark:text-gray-400 px-3 mb-2">
+          <div class="text-xs font-medium text-text-muted dark:text-gray-500 px-3 mb-2">
             Tours guiados
           </div>
 

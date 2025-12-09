@@ -84,7 +84,7 @@
           <span class="text-xs text-text-secondary dark:text-text-secondary"
             >Reservas Sin Daños</span
           >
-          <span class="text-sm font-semibold text-success-light"> {{ cleanPercentage() }}% </span>
+          <span class="text-sm font-semibold text-success-strong"> {{ cleanPercentage() }}% </span>
         </div>
         <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
           {{ profile()?.clean_bookings || 0 }} de {{ profile()?.total_bookings || 0 }} reservas
@@ -100,7 +100,7 @@
           <span
             [class]="
               feeMultiplier() < 1
-                ? 'text-success-light'
+                ? 'text-success-strong'
                 : feeMultiplier() > 1
                   ? 'text-error-text'
                   : 'text-text-secondary dark:text-text-secondary'
@@ -124,7 +124,7 @@
           <span
             [class]="
               guaranteeMultiplier() < 1
-                ? 'text-success-light'
+                ? 'text-success-strong'
                 : guaranteeMultiplier() > 1
                   ? 'text-error-text'
                   : 'text-text-secondary dark:text-text-secondary'
@@ -147,7 +147,7 @@
         <span [class]="getScoreColor(driverScore())" class="font-semibold">{{
           driverScore()
         }}</span>
-        • Clean: <span class="font-semibold text-success-light">{{ cleanPercentage() }}%</span>
+        • Clean: <span class="font-semibold text-success-strong">{{ cleanPercentage() }}%</span>
       </p>
     </div>
 

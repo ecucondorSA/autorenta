@@ -111,7 +111,7 @@
                 </div>
                 @if (getInsuranceStatus(car.insurance_expires_at) === 'valid') {
                   <span
-                    class="px-3 py-1 bg-success-light/20 text-success-light rounded-full text-sm font-medium"
+                    class="px-3 py-1 bg-success-light/20 text-success-strong rounded-full text-sm font-medium"
                   >
                     ✓ Válido
                   </span>
@@ -123,7 +123,7 @@
                   </span>
                 } @else {
                   <span
-                    class="px-3 py-1 bg-warning-light/20 text-warning-light rounded-full text-sm font-medium"
+                    class="px-3 py-1 bg-warning-light/20 text-warning-strong rounded-full text-sm font-medium"
                   >
                     ⚠ Sin Seguro
                   </span>

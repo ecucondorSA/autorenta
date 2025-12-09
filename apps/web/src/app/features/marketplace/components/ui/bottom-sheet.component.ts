@@ -86,7 +86,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         inset: 0;
         background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(4px);
-        z-index: 9998;
+        z-index: 50;
       }
 
       .sheet-container {
@@ -97,7 +97,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         background: white;
         border-radius: 24px 24px 0 0;
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
-        z-index: 9999;
+        z-index: 50;
         display: flex;
         flex-direction: column;
         max-height: 90vh;

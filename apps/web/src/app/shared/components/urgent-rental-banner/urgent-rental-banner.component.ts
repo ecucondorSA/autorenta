@@ -62,7 +62,7 @@ import {
         </span>
         <span
           *ngIf="availability()!.eta"
-          class="flex items-center gap-1.5 text-warning-light font-semibold"
+          class="flex items-center gap-1.5 text-warning-strong font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -75,7 +75,7 @@ import {
         </span>
         <span
           *ngIf="availability()!.batteryLevel !== undefined"
-          class="flex items-center gap-1.5 text-success-light font-semibold"
+          class="flex items-center gap-1.5 text-success-strong font-semibold"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path

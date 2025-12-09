@@ -43,7 +43,7 @@ import { DistanceBadgeComponent } from '../distance-badge/distance-badge.compone
         <!-- Badge de confianza (si aplica) -->
         <div *ngIf="isVerified()" class="absolute top-2 right-2">
           <span
-            class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-light border border-success-light/40 px-2 py-0.5 text-xs font-semibold"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-strong border border-success-light/40 px-2 py-0.5 text-xs font-semibold"
           >
             <span>✓</span>
             <span>Verificado</span>

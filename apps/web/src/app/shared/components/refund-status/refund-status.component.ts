@@ -21,7 +21,7 @@ import { RefundService } from '../../../core/services/refund.service';
             <span
               class="rounded-full px-2 py-1 text-xs font-medium"
               [class.bg-success-light/20]="status.refund_status === 'approved'"
-              [class.text-success-light]="status.refund_status === 'approved'"
+              [class.text-success-strong]="status.refund_status === 'approved'"
               [class.bg-warning-bg-hover]="status.refund_status === 'pending'"
               [class.text-warning-strong]="status.refund_status === 'pending'"
               [class.bg-error-bg-hover]="status.refund_status === 'rejected'"

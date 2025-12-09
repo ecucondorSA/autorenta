@@ -60,7 +60,7 @@ import { RouterLink } from '@angular/router';
           class="rounded-lg bg-success-light/20 dark:bg-success-light/30 p-4 border border-success-border/30"
         >
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-medium text-success-strong dark:text-success-light"
+            <span class="text-xs font-medium text-success-strong dark:text-success-strong"
               >Confirmadas</span
             >
             <span class="text-lg">✅</span>

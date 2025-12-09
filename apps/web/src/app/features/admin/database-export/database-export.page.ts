@@ -71,7 +71,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
 
       @if (lastExport()) {
         <div class="mt-6 rounded-lg border border-success-light/40 bg-success-light/10 p-4">
-          <p class="text-sm font-medium text-success-light">
+          <p class="text-sm font-medium text-success-strong">
             Última exportación: {{ lastExport() }}
           </p>
         </div>

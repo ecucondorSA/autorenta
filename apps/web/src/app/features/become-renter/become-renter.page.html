@@ -36,7 +36,7 @@
           </span>
         </h1>
 
-        <p class="text-lg lg:text-xl text-text-secondary dark:text-gray-300 mb-8 leading-relaxed">
+        <p class="text-lg lg:text-xl text-text-secondary dark:text-gray-500 mb-8 leading-relaxed">
           Publicá tu auto en Autorentar y generá entre
           <strong class="text-cta-default dark:text-cyan-400">$50,000 y $200,000</strong> por mes.
           Miles de personas están buscando rentar un auto como el tuyo.
@@ -69,19 +69,19 @@
             <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
               1,500+
             </div>
-            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Renters activos</div>
+            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-500">Renters activos</div>
           </div>
           <div class="text-center">
             <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
               $120k
             </div>
-            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Promedio/mes</div>
+            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-500">Promedio/mes</div>
           </div>
           <div class="text-center">
             <div class="text-2xl lg:text-3xl font-bold text-cta-default dark:text-cyan-400">
               24hs
             </div>
-            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-400">Para activar</div>
+            <div class="text-xs lg:text-sm text-text-muted dark:text-gray-500">Para activar</div>
           </div>
         </div>
       </div>
@@ -104,13 +104,13 @@
             <div class="flex items-center gap-3 mb-2">
               <div class="text-3xl">💰</div>
               <div>
-                <div class="text-sm font-medium text-text-muted dark:text-gray-400">
+                <div class="text-sm font-medium text-text-muted dark:text-gray-500">
                   Ganancia promedio
                 </div>
                 <div class="text-2xl font-bold text-text-primary dark:text-white">$120,000/mes</div>
               </div>
             </div>
-            <div class="text-xs text-text-muted dark:text-gray-400">
+            <div class="text-xs text-text-muted dark:text-gray-500">
               Basado en datos de 1,500+ Renters activos
             </div>
           </div>
@@ -128,7 +128,7 @@
         <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
           Calculá tus ingresos potenciales
         </h2>
-        <p class="text-lg text-text-secondary dark:text-gray-300">
+        <p class="text-lg text-text-secondary dark:text-gray-500">
           Estimá cuánto podés ganar rentando tu auto
         </p>
       </div>
@@ -149,7 +149,7 @@
                 step="5000"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">
+              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
                 {{ carValue() | number: '1.0-0' }} ARS
               </div>
             </div>
@@ -166,7 +166,7 @@
                 step="1"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">
+              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
                 {{ daysPerMonth() }} días
               </div>
             </div>
@@ -183,7 +183,7 @@
                 step="500"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-400 mt-1">
+              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
                 {{ pricePerDay() | number: '1.0-0' }} ARS/día
               </div>
             </div>
@@ -194,7 +194,7 @@
             class="bg-gradient-to-br from-cta-default/10 to-cta-hover/10 dark:from-cyan-900/20 dark:to-cyan-800/20 rounded-xl p-6 border border-cta-default/20 dark:border-cyan-500/20"
           >
             <div class="text-center mb-6">
-              <div class="text-sm font-medium text-text-muted dark:text-gray-400 mb-2">
+              <div class="text-sm font-medium text-text-muted dark:text-gray-500 mb-2">
                 Ingresos mensuales estimados
               </div>
               <div class="text-4xl lg:text-5xl font-bold text-cta-default dark:text-cyan-400">
@@ -204,7 +204,7 @@
 
             <div class="space-y-4">
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary dark:text-gray-300"
+                <span class="text-sm text-text-secondary dark:text-gray-500"
                   >Ingresos anuales:</span
                 >
                 <span class="text-lg font-semibold text-text-primary dark:text-white">
@@ -213,14 +213,14 @@
               </div>
 
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary dark:text-gray-300">ROI aproximado:</span>
+                <span class="text-sm text-text-secondary dark:text-gray-500">ROI aproximado:</span>
                 <span class="text-lg font-semibold text-text-primary dark:text-white">
                   {{ estimatedROI() | number: '1.1-1' }}%
                 </span>
               </div>
 
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary dark:text-gray-300">Te quedás (85%):</span>
+                <span class="text-sm text-text-secondary dark:text-gray-500">Te quedás (85%):</span>
                 <span class="text-lg font-semibold text-green-600 dark:text-green-400">
                   ${{ estimatedMonthlyIncome() * 0.85 | number: '1.0-0' }}
                 </span>
@@ -244,7 +244,7 @@
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         ¿Por qué elegir Autorentar?
       </h2>
-      <p class="text-lg text-text-secondary dark:text-gray-300">
+      <p class="text-lg text-text-secondary dark:text-gray-500">
         Te damos todas las herramientas para que rentes tu auto con seguridad y confianza
       </p>
     </div>
@@ -256,7 +256,7 @@
           <h3 class="text-xl font-semibold mb-2 text-text-primary dark:text-white">
             {{ benefit.title }}
           </h3>
-          <p class="text-text-secondary dark:text-gray-300">
+          <p class="text-text-secondary dark:text-gray-500">
             {{ benefit.description }}
           </p>
         </div>
@@ -272,7 +272,7 @@
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         ¿Cómo funciona?
       </h2>
-      <p class="text-lg text-text-secondary dark:text-gray-300">
+      <p class="text-lg text-text-secondary dark:text-gray-500">
         4 pasos simples para comenzar a ganar dinero con tu auto
       </p>
     </div>
@@ -291,7 +291,7 @@
               <h3 class="text-lg font-semibold mb-2 text-text-primary dark:text-white">
                 {{ step.title }}
               </h3>
-              <p class="text-sm text-text-secondary dark:text-gray-300">
+              <p class="text-sm text-text-secondary dark:text-gray-500">
                 {{ step.description }}
               </p>
             </div>
@@ -332,7 +332,7 @@
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         Lo que dicen nuestros Renters
       </h2>
-      <p class="text-lg text-text-secondary dark:text-gray-300">
+      <p class="text-lg text-text-secondary dark:text-gray-500">
         Miles de propietarios ya están generando ingresos con sus autos
       </p>
     </div>
@@ -350,7 +350,7 @@
             }
           </div>
 
-          <p class="text-text-secondary dark:text-gray-300 mb-6 italic">
+          <p class="text-text-secondary dark:text-gray-500 mb-6 italic">
             "{{ testimonial.quote }}"
           </p>
 
@@ -364,7 +364,7 @@
               <div class="font-semibold text-text-primary dark:text-white">
                 {{ testimonial.name }}
               </div>
-              <div class="text-sm text-text-muted dark:text-gray-400">
+              <div class="text-sm text-text-muted dark:text-gray-500">
                 {{ testimonial.location }}
               </div>
               <div class="text-xs text-cta-default dark:text-cyan-400">
@@ -391,7 +391,7 @@
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         Ganás más con nuestro programa de referidos
       </h2>
-      <p class="text-lg text-text-secondary dark:text-gray-300 mb-8">
+      <p class="text-lg text-text-secondary dark:text-gray-500 mb-8">
         Invitá a tus amigos propietarios y ganás
         <strong class="text-cta-default dark:text-cyan-400">$1,500 ARS</strong> por cada uno que
         publique su auto. Ellos también reciben
@@ -402,7 +402,7 @@
         <div class="card-premium p-6">
           <div class="text-3xl mb-3">💵</div>
           <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">$1,500</div>
-          <div class="text-sm text-text-secondary dark:text-gray-300">
+          <div class="text-sm text-text-secondary dark:text-gray-500">
             Por cada amigo que publique su auto
           </div>
         </div>
@@ -410,7 +410,7 @@
         <div class="card-premium p-6">
           <div class="text-3xl mb-3">🚀</div>
           <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">Sin límites</div>
-          <div class="text-sm text-text-secondary dark:text-gray-300">
+          <div class="text-sm text-text-secondary dark:text-gray-500">
             Invitá a todos tus amigos y seguí ganando
           </div>
         </div>
@@ -444,7 +444,7 @@
                 faq.question
               }}</span>
               <svg
-                class="w-5 h-5 text-text-muted dark:text-gray-400 transition-transform"
+                class="w-5 h-5 text-text-muted dark:text-gray-500 transition-transform"
                 [class.rotate-180]="faq.open"
                 fill="none"
                 stroke="currentColor"
@@ -460,7 +460,7 @@
             </button>
 
             @if (faq.open) {
-              <div class="px-6 pb-4 text-text-secondary dark:text-gray-300">
+              <div class="px-6 pb-4 text-text-secondary dark:text-gray-500">
                 {{ faq.answer }}
               </div>
             }

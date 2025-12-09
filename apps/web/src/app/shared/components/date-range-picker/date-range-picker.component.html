@@ -106,7 +106,7 @@
     <!-- Available -->
     <div
       *ngIf="!isCheckingAvailability() && isAvailable() === true"
-      class="flex items-center gap-2 text-xs font-medium text-success-light"
+      class="flex items-center gap-2 text-xs font-medium text-success-strong"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -176,13 +176,13 @@
               </span>
               <span
                 *ngIf="suggestion.discount > 0"
-                class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-light dark:text-success-light rounded-full font-medium"
+                class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-light dark:text-success-strong rounded-full font-medium"
               >
                 -{{ suggestion.discount }}% OFF
               </span>
               <span
                 *ngIf="suggestion.savings"
-                class="text-xs text-success-light dark:text-success-light"
+                class="text-xs text-success-light dark:text-success-strong"
               >
                 (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
               </span>
@@ -191,7 +191,7 @@
 
           <div class="flex items-center gap-2">
             <svg
-              class="h-5 w-5 text-success-light"
+              class="h-5 w-5 text-success-strong"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

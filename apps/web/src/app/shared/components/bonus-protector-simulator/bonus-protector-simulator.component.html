@@ -115,7 +115,7 @@
               </p>
               <p
                 *ngIf="simulationResult()!.withProtector.protected"
-                class="text-sm text-success-light flex items-center gap-1"
+                class="text-sm text-success-strong flex items-center gap-1"
               >
                 <app-icon name="check-circle" [size]="16" /> Protegido
               </p>
@@ -177,7 +177,7 @@
               </p>
               <p
                 class="text-sm flex items-center gap-1"
-                [class.text-success-light]="potentialSavings()!.isWorthIt"
+                [class.text-success-strong]="potentialSavings()!.isWorthIt"
                 [class.text-warning-text]="!potentialSavings()!.isWorthIt"
               >
                 @if (potentialSavings()!.isWorthIt) {

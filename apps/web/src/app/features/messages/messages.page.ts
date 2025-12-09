@@ -108,7 +108,7 @@ import { CarChatComponent } from './components/car-chat.component';
                     [class.bg-warning-bg-hover]="bookingContext()!.status === 'pending'"
                     [class.text-warning-strong]="bookingContext()!.status === 'pending'"
                     [class.bg-success-light/20]="bookingContext()!.status === 'completed'"
-                    [class.text-success-light]="bookingContext()!.status === 'completed'"
+                    [class.text-success-strong]="bookingContext()!.status === 'completed'"
                   >
                     {{ bookingContext()!.statusLabel }}
                   </span>

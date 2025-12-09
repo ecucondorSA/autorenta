@@ -239,7 +239,7 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                       class="text-xs px-2 py-1 rounded-full"
                       [class]="
                         isDniVerified()
-                          ? 'bg-success-light/20 text-success-light'
+                          ? 'bg-success-light/20 text-success-strong'
                           : 'bg-surface-hover text-text-muted'
                       "
                     >
@@ -292,7 +292,7 @@ import { DniUploaderComponent } from './components/dni-uploader.component';
                       class="text-xs px-2 py-1 rounded-full"
                       [class]="
                         isLicenseVerified()
-                          ? 'bg-success-light/20 text-success-light'
+                          ? 'bg-success-light/20 text-success-strong'
                           : 'bg-surface-hover text-text-muted'
                       "
                     >
@@ -630,7 +630,7 @@ export class ProfileVerificationPage implements OnInit {
 
   getStatusBadgeClass(level: number): string {
     if (this.isLevelComplete(level)) {
-      return 'bg-success-light/20 text-success-light';
+      return 'bg-success-light/20 text-success-strong';
     }
     if (!this.canAccessLevel(level)) {
       return 'bg-surface-hover text-text-muted';

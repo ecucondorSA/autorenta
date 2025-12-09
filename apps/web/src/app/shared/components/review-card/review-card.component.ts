@@ -118,7 +118,7 @@ export class ReviewCardComponent {
       pending:
         'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
       approved:
-        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-light',
+        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-strong',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
     };
 

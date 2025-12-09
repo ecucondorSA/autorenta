@@ -7,7 +7,7 @@
 
 /* ===== Toast Container ===== */
 .p-toast {
-  z-index: 9999 !important;
+  z-index: 50 !important;
   opacity: 1;
 }
 

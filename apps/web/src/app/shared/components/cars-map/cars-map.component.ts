@@ -1613,7 +1613,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; padding-left: 16px;">
-          <p class="text-xs text-slate-500 dark:text-slate-400" style="margin: 0;">${accuracyText}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-500" style="margin: 0;">${accuracyText}</p>
           <p class="text-xs text-slate-400 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
           <p class="text-xs text-cyan-600 dark:text-cyan-400 font-medium" style="margin: 4px 0 0 0;">${carsText}</p>
         </div>

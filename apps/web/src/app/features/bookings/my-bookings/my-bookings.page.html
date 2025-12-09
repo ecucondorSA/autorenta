@@ -104,10 +104,10 @@
         <div class="flex items-center gap-2 mb-1">
           <span class="text-xl sm:text-2xl">📋</span>
         </div>
-        <p class="text-2xl sm:text-3xl font-bold text-gray-700 dark:text-gray-300">
+        <p class="text-2xl sm:text-3xl font-bold text-gray-700 dark:text-gray-500">
           {{ dashboardStats().history }}
         </p>
-        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium">Historial</p>
+        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-500 font-medium">Historial</p>
       </button>
     </div>
 
@@ -195,7 +195,7 @@
     >
       <button
         (click)="setStatusFilter('all'); expandAllSections()"
-        class="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+        class="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-500 rounded-xl font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
       >
         Ver todas las reservas ({{ dashboardStats().total }})
       </button>

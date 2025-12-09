@@ -494,7 +494,7 @@
   border: 1px solid var(--border-default) !important;
   border-radius: var(--radius-lg) !important;
   font-family: inherit !important;
-  z-index: 9999 !important;
+  z-index: 50 !important;
   position: absolute !important;
 }
 

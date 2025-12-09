@@ -97,7 +97,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                       [class.bg-error-bg-hover]="log.severity === 'critical'"
                       [class.text-error-strong]="log.severity === 'critical'"
                       [class.bg-warning-light/20]="log.severity === 'high'"
-                      [class.text-warning-light]="log.severity === 'high'"
+                      [class.text-warning-strong]="log.severity === 'high'"
                       [class.bg-warning-bg-hover]="log.severity === 'medium'"
                       [class.text-warning-strong]="log.severity === 'medium'"
                       [class.bg-cta-default/20]="log.severity === 'low'"
@@ -120,7 +120,7 @@ import type { AuditLog, PaginatedResult } from '../../../../core/services/accoun
                 <span
                   class="rounded-full px-2 py-1 text-xs font-medium"
                   [class.bg-success-light/20]="log.resolution_status === 'resolved'"
-                  [class.text-success-light]="log.resolution_status === 'resolved'"
+                  [class.text-success-strong]="log.resolution_status === 'resolved'"
                   [class.bg-surface-raised]="log.resolution_status === 'open'"
                   [class.text-text-primary]="log.resolution_status === 'open'"
                 >

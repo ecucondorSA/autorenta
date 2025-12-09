@@ -175,9 +175,9 @@ export class ExchangeRatesPage implements OnInit, OnDestroy {
 
   getVolatilityClass(volatility: number | null): string {
     if (volatility === null) return 'text-text-secondary';
-    if (volatility < 1) return 'text-success-light';
+    if (volatility < 1) return 'text-success-strong';
     if (volatility < 3) return 'text-warning-text';
-    if (volatility < 5) return 'text-warning-light';
+    if (volatility < 5) return 'text-warning-strong';
     return 'text-error-text';
   }
 

@@ -226,7 +226,7 @@
 .score-number {
   font-size: 48px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.25;
 }
 
 .score-card.score-excellent .score-number {
@@ -327,7 +327,7 @@
   font-size: 24px;
   font-weight: 700;
   color: #111827;
-  line-height: 1;
+  line-height: 1.25;
   margin-bottom: 4px;
 }
 

@@ -148,7 +148,7 @@
               <span class="text-2xl font-bold text-text-primary dark:text-text-primary">
                 {{ userStats()?.renter_rating_avg || 0 | number: '1.1-1' }}
               </span>
-              <span class="text-warning-light dark:text-warning-light/80">★</span>
+              <span class="text-warning-light dark:text-warning-strong/80">★</span>
             </div>
             <p class="text-xs text-text-secondary dark:text-text-secondary/60 mt-1">
               {{ userStats()?.renter_reviews_count || 0 }} reviews
@@ -325,7 +325,7 @@
                   <span class="text-lg font-bold text-text-primary dark:text-text-primary">{{
                     getOverallRating(review)
                   }}</span>
-                  <span class="text-warning-light">★</span>
+                  <span class="text-warning-strong">★</span>
                 </div>
               </div>
               <p

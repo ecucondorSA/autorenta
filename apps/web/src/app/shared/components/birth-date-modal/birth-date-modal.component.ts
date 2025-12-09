@@ -47,7 +47,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             />
 
             <!-- Age Display -->
-            <p *ngIf="calculatedAge()" class="mt-2 text-sm text-success-light">
+            <p *ngIf="calculatedAge()" class="mt-2 text-sm text-success-strong">
               ✓ Edad: {{ calculatedAge() }} años
             </p>
 

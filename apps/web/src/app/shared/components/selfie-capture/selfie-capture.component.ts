@@ -45,7 +45,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         *ngIf="status().isVerified"
         class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
       >
-        <div class="flex items-center gap-2 text-success-light">
+        <div class="flex items-center gap-2 text-success-strong">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
@@ -56,8 +56,8 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <span class="text-sm font-medium">Identidad verificada exitosamente</span>
         </div>
         <div class="mt-3 space-y-1 text-sm">
-          <p class="text-success-light">✓ Face Match: {{ status().faceMatchScore }}%</p>
-          <p class="text-success-light">✓ Liveness: {{ status().livenessScore }}%</p>
+          <p class="text-success-strong">✓ Face Match: {{ status().faceMatchScore }}%</p>
+          <p class="text-success-strong">✓ Liveness: {{ status().livenessScore }}%</p>
         </div>
       </div>
 
@@ -66,7 +66,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         *ngIf="status().requiresLevel2"
         class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
       >
-        <p class="text-sm text-warning-light">
+        <p class="text-sm text-warning-strong">
           ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
         </p>
       </div>
@@ -212,7 +212,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
         <!-- Success Message -->
         <div
           *ngIf="successMessage()"
-          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-light"
+          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
         >
           {{ successMessage() }}
         </div>
@@ -397,7 +397,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
   getStatusBadgeClass(): string {
     return this.status().isVerified
-      ? 'bg-success-light/20 text-success-light'
+      ? 'bg-success-light/20 text-success-strong'
       : 'bg-purple-100 text-purple-600';
   }
 
@@ -407,7 +407,7 @@ export class SelfieCaptureComponent implements OnInit, OnDestroy {
 
   getStatusLabelClass(): string {
     return this.status().isVerified
-      ? 'bg-success-light/20 text-success-light'
+      ? 'bg-success-light/20 text-success-strong'
       : 'bg-purple-100 text-purple-800';
   }
 }

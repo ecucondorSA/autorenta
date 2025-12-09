@@ -14,7 +14,7 @@
       <!-- Header Left -->
       <div class="header-left">
         <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Alquila tu próximo auto</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-400" data-testid="results-count">
+        <p class="text-sm text-slate-600 dark:text-slate-500" data-testid="results-count">
           {{ premiumCars().length }} vehículos disponibles
         </p>
       </div>
@@ -29,7 +29,7 @@
             data-testid="sort-select"
             [value]="sortBy()"
             (change)="onSortChange($any($event.target).value)"
-            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
             <option value="rating">Mejor valorados</option>
             <option value="price_asc">Precio: menor a mayor</option>
@@ -40,7 +40,7 @@
           <app-icon
             name="chevron-down"
             [size]="16"
-            cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
           />
         </div>
 
@@ -97,7 +97,7 @@
           <app-icon
             name="search"
             [size]="20"
-            cssClass="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            cssClass="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
           />
           <input
             type="text"
@@ -106,13 +106,13 @@
             (input)="onSearchInput($event)"
             (keyup.enter)="onSearchSubmit()"
             placeholder="Buscar por marca, modelo o ciudad..."
-            class="w-full pl-10 pr-10 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-slate-400"
+            class="w-full pl-10 pr-10 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-slate-500"
           />
           <button
             *ngIf="searchQuery()"
             data-testid="search-clear"
             (click)="clearSearch()"
-            class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-500 dark:text-slate-300 transition-colors"
+            class="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-500 dark:text-slate-500 transition-colors"
             title="Limpiar búsqueda"
           >
             <app-icon name="close" [size]="12" />
@@ -124,13 +124,13 @@
       <div
         class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700"
       >
-        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-500 mb-4">
           Filtros de búsqueda
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <!-- Filtro por distancia -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Distancia máxima (km)
             </label>
             <input
@@ -151,7 +151,7 @@
 
           <!-- Filtro por precio mínimo -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Precio mínimo ($/día)
             </label>
             <input
@@ -172,7 +172,7 @@
 
           <!-- Filtro por precio máximo -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Precio máximo ($/día)
             </label>
             <input
@@ -193,7 +193,7 @@
 
           <!-- Filtro por rating mínimo -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Calificación mínima (⭐)
             </label>
             <input
@@ -358,12 +358,12 @@
             </div>
 
             <!-- Car Title -->
-            <h3 class="text-sm text-slate-500 dark:text-slate-400 truncate" data-testid="car-title">
+            <h3 class="text-sm text-slate-500 dark:text-slate-500 truncate" data-testid="car-title">
               {{ car.brand }} {{ car.model }} {{ car.year }}
             </h3>
 
             <!-- Specs Row -->
-            <p class="text-sm text-slate-500 dark:text-slate-400">
+            <p class="text-sm text-slate-500 dark:text-slate-500">
               {{ car.transmission | titlecase }} · {{ car.seats }} asientos ·
               {{ car.fuel_type | titlecase }}
             </p>
@@ -373,7 +373,7 @@
               <span class="font-semibold text-slate-900 dark:text-white" data-testid="car-price"
                 >${{ car.price_per_day | number: '1.0-0' }}</span
               >
-              <span class="text-slate-500 dark:text-slate-400"> / día</span>
+              <span class="text-slate-500 dark:text-slate-500"> / día</span>
             </p>
 
             <!-- Social Proof: Viewing Now -->
@@ -425,7 +425,7 @@
                     {{ car.brand }} {{ car.model }}
                   </h3>
                   <p
-                    class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1"
+                    class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
                     data-testid="car-location"
                   >
                     📍 {{ car.location_city || 'Ubicación no disponible' }}
@@ -444,24 +444,24 @@
 
               <p
                 *ngIf="car.description"
-                class="text-slate-600 dark:text-slate-300 text-sm line-clamp-2 mb-4"
+                class="text-slate-600 dark:text-slate-500 text-sm line-clamp-2 mb-4"
               >
                 {{ car.description }}
               </p>
 
               <div class="flex flex-wrap gap-3">
                 <span
-                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
                 >
                   ⚙️ {{ car.transmission || 'Manual' }}
                 </span>
                 <span
-                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
                 >
                   ⛽ {{ car.fuel_type || 'Nafta' }}
                 </span>
                 <span
-                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1"
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
                 >
                   👥 {{ car.seats || 5 }} asientos
                 </span>
@@ -481,7 +481,7 @@
         <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
           No encontramos vehículos
         </h3>
-        <p class="text-slate-500 dark:text-slate-400">Intenta ajustar tu búsqueda o filtros.</p>
+        <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
       </div>
     </div>
     <!-- END LEFT PANEL -->
@@ -524,7 +524,7 @@
           (click)="centerOnUserLocation()"
           title="Mi ubicación"
         >
-          <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-300" />
+          <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-500" />
         </button>
       </div>
 
@@ -592,7 +592,7 @@
                   </span>
                 </div>
               </div>
-              <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+              <p class="text-[11px] text-slate-500 dark:text-slate-500 truncate mt-0.5">
                 {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
               </p>
             </div>

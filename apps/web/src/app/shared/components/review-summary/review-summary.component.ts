@@ -26,8 +26,8 @@ import type { ReviewSummary } from '../../../core/models';
               <p class="h4 text-cta-default">{{ s.total_count }}</p>
             </div>
             <div class="rounded-lg bg-success-light/10 p-4">
-              <p class="text-sm font-medium text-success-light">Promedio</p>
-              <p class="h4 text-success-light">{{ formatRating(s.average_rating) }} ⭐</p>
+              <p class="text-sm font-medium text-success-strong">Promedio</p>
+              <p class="h4 text-success-strong">{{ formatRating(s.average_rating) }} ⭐</p>
             </div>
           </div>
 

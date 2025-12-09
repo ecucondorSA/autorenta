@@ -190,7 +190,7 @@ import { QUICK_FILTERS } from '../../../../core/models/marketplace.model';
         background: var(--bg-primary);
         border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
         box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-        z-index: 999;
+        z-index: 50;
         max-height: 90vh;
         display: flex;
         flex-direction: column;

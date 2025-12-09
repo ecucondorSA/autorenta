@@ -108,14 +108,14 @@ export class BonusMalusService {
       type = 'BONUS';
       message = `¡Tienes un ${percentage.toFixed(0)}% de descuento!`;
       icon = '🎉';
-      color = 'text-success-light';
+      color = 'text-success-strong';
       tips.push('Mantén tu excelente reputación para seguir obteniendo descuentos.');
     } else if (factor < 0) {
       // BONUS pequeño
       type = 'BONUS';
       message = `Tienes un ${percentage.toFixed(0)}% de descuento`;
       icon = '✨';
-      color = 'text-success-light';
+      color = 'text-success-strong';
       tips.push('Completa más reservas y mantén un buen rating para aumentar tu descuento.');
     } else if (factor === 0) {
       // NEUTRAL
@@ -130,7 +130,7 @@ export class BonusMalusService {
       type = 'MALUS';
       message = `Tienes un ${percentage.toFixed(0)}% de recargo`;
       icon = '⚠️';
-      color = 'text-warning-light';
+      color = 'text-warning-strong';
       tips.push('Mejora tu rating completando reservas exitosas.');
       tips.push('Evita cancelaciones para reducir el recargo.');
     } else {
