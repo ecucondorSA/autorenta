@@ -9,9 +9,28 @@
     </div>
 
     <!-- Hero Search Component -->
-    <!-- TODO: Re-add when hero-search component is created -->
-    <!-- <app-hero-search (search)="onSearch($event)"></app-hero-search> -->
-    <p style="padding: 2rem; text-align: center">Search component will be added here</p>
+    <div class="hero-search-container">
+      <div class="search-box">
+        <app-icon name="search" [size]="24" cssClass="search-icon" />
+        <input
+          type="text"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          (keyup.enter)="onSearchSubmit()"
+          placeholder="Buscar por marca, modelo o ciudad..."
+          class="search-input"
+          aria-label="Buscar autos"
+        />
+        <button
+          type="button"
+          (click)="onSearchSubmit()"
+          class="search-button"
+          aria-label="Buscar"
+        >
+          Buscar
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
