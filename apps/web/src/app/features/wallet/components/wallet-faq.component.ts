@@ -146,7 +146,7 @@ export class WalletFaqComponent {
           <li>Una vez liberado, <strong>queda disponible</strong> en tu wallet para futuras reservas</li>
           <li>Es <strong>reutilizable</strong>: no necesitás volver a cargarlo cada vez</li>
         </ul>
-        <p class="mt-2 text-xs text-success-light dark:text-success-strong">💡 <strong>Ventaja:</strong> Con US$ 600 en tu wallet, podés hacer reservas ilimitadas sin volver a cargar.</p>`,
+        <p class="mt-2 text-xs text-success-700 dark:text-success-strong">💡 <strong>Ventaja:</strong> Con US$ 600 en tu wallet, podés hacer reservas ilimitadas sin volver a cargar.</p>`,
       expanded: false,
     },
     {
@@ -255,7 +255,7 @@ export class WalletFaqComponent {
         </ul>
         <p class="mt-2"><strong>Siniestros SIN culpa tuya:</strong> NO afectan tu clase ni tus precios. ✅</p>
         <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Buena noticia:</strong> El siniestro se cubre primero con tu Crédito de Protección ($300 USD), luego tu wallet, y por último pago externo.</p>
-        <p class="mt-2 text-xs text-success-light dark:text-success-strong">🛡️ <strong>Protector de Bonus:</strong> Podés comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
+        <p class="mt-2 text-xs text-success-700 dark:text-success-strong">🛡️ <strong>Protector de Bonus:</strong> Podés comprar un "Protector" ($15-$45) que previene el aumento de clase en 1-3 siniestros.</p>`,
       expanded: false,
     },
     {
@@ -278,7 +278,7 @@ export class WalletFaqComponent {
           <li>Porcentaje de reservas sin incidentes</li>
           <li>Requerido 80%+ para renovación de beneficios</li>
         </ul>
-        <p class="mt-2 text-xs text-success-light dark:text-success-strong">✅ <strong>Transparencia total:</strong> Podés ver tu historial completo, badges de desempeño y progreso hacia mejor clase.</p>`,
+        <p class="mt-2 text-xs text-success-700 dark:text-success-strong">✅ <strong>Transparencia total:</strong> Podés ver tu historial completo, badges de desempeño y progreso hacia mejor clase.</p>`,
       expanded: false,
     },
     {
@@ -298,7 +298,7 @@ export class WalletFaqComponent {
           <li><strong>Protector de Bonus Nivel 3:</strong> $45 USD (protege 3 siniestros)</li>
         </ul>
         <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Ejemplo:</strong> Clase 0 + alquiler $100 = <strong>ahorros de $40 USD</strong> por viaje (fee -$15 + garantía -$25).</p>
-        <p class="mt-2 text-xs text-success-light dark:text-success-strong">🏆 <strong>Gamificación:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu próxima mejora de clase.</p>`,
+        <p class="mt-2 text-xs text-success-700 dark:text-success-strong">🏆 <strong>Gamificación:</strong> Badges visuales, mensajes motivacionales, y progreso visible hacia tu próxima mejora de clase.</p>`,
       expanded: false,
     },
     {
@@ -348,7 +348,7 @@ export class WalletFaqComponent {
           <li>Tu wallet no se afecta</li>
         </ul>
         <p class="mt-2 text-xs text-cta-default dark:text-cta-default">💡 <strong>Tip:</strong> El costo REAL de un siniestro con culpa no es perder el CP, sino perder descuentos y renovación automática.</p>
-        <p class="mt-2 text-xs text-success-light dark:text-success-strong">🛡️ <strong>Protector de Bonus:</strong> Compralo antes ($15-$45) para que tu clase NO aumente aunque tengas siniestro.</p>`,
+        <p class="mt-2 text-xs text-success-700 dark:text-success-strong">🛡️ <strong>Protector de Bonus:</strong> Compralo antes ($15-$45) para que tu clase NO aumente aunque tengas siniestro.</p>`,
       expanded: false,
     },
     {

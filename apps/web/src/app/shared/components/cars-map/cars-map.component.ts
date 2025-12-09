@@ -488,7 +488,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         container: this.mapContainer.nativeElement,
         style: 'mapbox://styles/mapbox/standard', // Modern Standard style with theme support
         center: [-58.3816, -34.6037], // Buenos Aires center
-        zoom: 15.5, // Higher zoom to show 3D buildings immediately
+        zoom: 14, // Standard zoom level for car marketplace
         maxBounds: [
           [-58.8, -34.9], // Southwest
           [-57.9, -34.3], // Northeast
@@ -501,20 +501,20 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
             showTransitLabels: false, // Hide transit for cleaner car-focused map
             showPlaceLabels: true, // Keep neighborhood/area names
             showRoadLabels: true, // Keep street names (essential for car location)
-            show3dObjects: true, // Enable 3D buildings for immersive marketplace view
+            show3dObjects: false, // Disabled for better performance
           },
         },
-        // 3D View Configuration - User controlled
-        pitch: 60, // Deep 3D perspective view (60° angle for immersive effect)
-        bearing: 0, // North-up orientation (user can rotate)
-        antialias: true, // Enable antialiasing for smooth 3D buildings
-        // Enable 3D interactions - full user control
-        dragRotate: true, // Enable rotation drag
-        pitchWithRotate: true, // Enable pitch on rotate
-        touchPitch: true, // Enable touch pitch gestures
+        // 2D View Configuration - Optimized for performance
+        pitch: 0, // Flat 2D view (no 3D angle)
+        bearing: 0, // North-up orientation
+        antialias: false, // Disabled for better performance
+        // Disable 3D interactions for faster rendering
+        dragRotate: false, // Disable rotation drag
+        pitchWithRotate: false, // Disable pitch on rotate
+        touchPitch: false, // Disable touch pitch gestures
       });
 
-      // Add navigation controls (zoom + compass for full 3D control)
+      // Add navigation controls (zoom + compass)
       this.map.addControl(new this.mapboxgl.NavigationControl(), 'top-right');
 
       // Wait for map to load
@@ -1614,7 +1614,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
         <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; padding-left: 16px;">
           <p class="text-xs text-slate-500 dark:text-slate-500" style="margin: 0;">${accuracyText}</p>
-          <p class="text-xs text-slate-400 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
+          <p class="text-xs text-gray-500 dark:text-slate-500" style="margin: 0;">${updateTime}</p>
           <p class="text-xs text-cyan-600 dark:text-cyan-400 font-medium" style="margin: 4px 0 0 0;">${carsText}</p>
         </div>
 
@@ -2311,7 +2311,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         });
       }
 
-      // Add outline layer (casing) - THICK 3D styling to occupy street
+      // Add outline layer (casing) - visible route styling
       if (!this.map.getLayer(this.routeOutlineLayerId)) {
         this.map.addLayer({
           id: this.routeOutlineLayerId,
@@ -2320,7 +2320,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           paint: {
             'line-color': '#ffffff',
             'line-width': 20, // THICK outline to occupy whole street
-            'line-opacity': 0.8, // High visibility for 3D effect
+            'line-opacity': 0.8, // High visibility
           },
           layout: {
             'line-cap': 'round', // Rounded ends for smooth appearance
@@ -2329,7 +2329,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         });
       }
 
-      // Add main route layer - THICK 3D styling to occupy street
+      // Add main route layer - visible route styling
       const routeColor = this.getCssVariableValue('--cta-default', '#A7D8F4'); // AutoRenta brand color
       if (!this.map.getLayer(this.routeLayerId)) {
         this.map.addLayer({
@@ -2339,7 +2339,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           paint: {
             'line-color': routeColor,
             'line-width': 16, // THICK main line to occupy whole street
-            'line-opacity': 0.9, // High visibility for 3D effect
+            'line-opacity': 0.9, // High visibility
           },
           layout: {
             'line-cap': 'round', // Rounded ends for smooth appearance
@@ -2363,7 +2363,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         padding: { top: 100, bottom: 100, left: 100, right: 100 },
         maxZoom: 15,
         duration: 1000,
-        pitch: 60, // Maintain 3D perspective while showing route
+        pitch: 0, // Flat 2D view
       });
 
       console.log('[CarsMap] Directions route added:', {
@@ -2447,7 +2447,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   /**
-   * Public method to fly to car location with smooth 3D animation
+   * Public method to fly to car location with smooth animation
    */
   flyToCarLocation(carId: string): void {
     const car = this.cars.find((c) => c.carId === carId);
@@ -2455,8 +2455,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.map.flyTo({
         center: [car.lng, car.lat],
         zoom: 16, // Closer zoom for better focus
-        pitch: 45, // 3D tilt effect
-        bearing: -15, // Slight rotation for dramatic effect
+        pitch: 0, // Flat 2D view
+        bearing: 0, // North-up orientation
         duration: 1500, // Smooth animation
         essential: true,
       });

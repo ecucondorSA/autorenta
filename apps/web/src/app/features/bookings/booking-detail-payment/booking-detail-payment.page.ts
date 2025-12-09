@@ -12,13 +12,12 @@ import { LoggerService } from '../../../core/services/logger.service';
 import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
 
 // Components
-
-// Components
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
+import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 
 // Models
 import { Car } from '../../../core/models';
-import { FxSnapshot } from '../../../core/models/booking-detail-payment.model';
+import { FxSnapshot, RiskSnapshot, PaymentAuthorization } from '../../../core/models/booking-detail-payment.model';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
@@ -32,6 +31,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
   imports: [
     CommonModule,
     MercadopagoCardFormComponent,
+    CardHoldPanelComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
@@ -44,7 +44,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private fxService = inject(FxService);
-  private authService = inject(AuthService);
+  readonly authService = inject(AuthService);
   private supabaseClient = inject(SupabaseClientService).getClient();
   private mpGateway = inject(MercadoPagoBookingGateway);
   private pdfGenerator = inject(PdfGeneratorService);
@@ -62,6 +62,14 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly bookingId = signal<string | null>(null);
   readonly paymentProcessing = signal(false);
   readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
+
+  // Payment mode toggle: 'direct' = pago directo, 'preauth' = preautorización
+  readonly paymentMode = signal<'direct' | 'preauth'>('direct');
+
+  // Preauthorization state
+  readonly riskSnapshot = signal<RiskSnapshot | null>(null);
+  readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
+  readonly currentUserId = signal<string>('');
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
@@ -188,11 +196,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       return;
     }
 
+    // Store user ID for preauthorization
+    this.currentUserId.set(session.user.id);
+
     // 2. Load params
     this.loadParams();
 
     // 3. Load data
     await Promise.all([this.loadCarInfo(), this.loadFxSnapshot()]);
+
+    // 4. Calculate risk snapshot after FX is loaded
+    this.calculateRiskSnapshot();
   }
 
   ngOnDestroy(): void {
@@ -609,5 +623,88 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     await this.supabaseClient.from('bookings_insurance').upsert(insurancePayload, {
       onConflict: 'booking_id',
     });
+  }
+
+  /**
+   * Toggle payment mode between direct payment and preauthorization
+   */
+  setPaymentMode(mode: 'direct' | 'preauth'): void {
+    this.paymentMode.set(mode);
+    this.error.set(null);
+    this.logger.info('Payment mode changed', { mode });
+  }
+
+  /**
+   * Calculate risk snapshot for preauthorization
+   */
+  private calculateRiskSnapshot(): void {
+    const fx = this.fxSnapshot();
+    const car = this.car();
+
+    if (!fx || !car) return;
+
+    // Estimate vehicle value (use price_per_day * 365 as rough estimate if not available)
+    const vehicleValueUsd = car.value_usd || (car.price_per_day * 365);
+
+    // Calculate deductibles based on vehicle value (Argentina)
+    let deductibleUsd: number;
+    if (vehicleValueUsd <= 10000) deductibleUsd = 1000;
+    else if (vehicleValueUsd <= 20000) deductibleUsd = 1500;
+    else if (vehicleValueUsd <= 40000) deductibleUsd = 2000;
+    else deductibleUsd = 2500;
+
+    const rolloverDeductibleUsd = deductibleUsd * 2;
+
+    // Calculate hold amount: use PRE_AUTH_AMOUNT_USD as base
+    const holdEstimatedUsd = this.PRE_AUTH_AMOUNT_USD;
+    const holdEstimatedArs = holdEstimatedUsd * fx.platformRate;
+
+    const riskSnapshot: RiskSnapshot = {
+      deductibleUsd,
+      rolloverDeductibleUsd,
+      holdEstimatedArs,
+      holdEstimatedUsd,
+      creditSecurityUsd: 600,
+      bucket: 'standard',
+      vehicleValueUsd,
+      country: 'AR',
+      fxRate: fx.platformRate,
+      calculatedAt: new Date(),
+      coverageUpgrade: 'standard',
+    };
+
+    this.riskSnapshot.set(riskSnapshot);
+    this.logger.info('Risk snapshot calculated', { holdEstimatedArs, holdEstimatedUsd });
+  }
+
+  /**
+   * Handle authorization change from CardHoldPanel
+   */
+  onAuthorizationChange(authorization: PaymentAuthorization | null): void {
+    this.currentAuthorization.set(authorization);
+
+    if (authorization?.status === 'authorized') {
+      this.logger.info('Preauthorization successful', {
+        authorizedPaymentId: authorization.authorizedPaymentId,
+        amountArs: authorization.amountArs,
+      });
+    }
+  }
+
+  /**
+   * Handle fallback to wallet from CardHoldPanel
+   */
+  onFallbackToWallet(): void {
+    this.logger.info('User requested fallback to wallet');
+    // TODO: Navigate to wallet flow or show wallet payment option
+    this.error.set('Wallet payment not yet implemented. Please try card payment.');
+  }
+
+  /**
+   * Get current user ID for preauthorization
+   */
+  async getCurrentUserId(): Promise<string> {
+    const user = await this.authService.getCurrentUser();
+    return user?.id || '';
   }
 }

@@ -74,7 +74,7 @@ import { TranslateModule } from '@ngx-translate/core';
           <div
             class="bg-surface-raised dark:bg-surface-raised rounded-lg p-4 border border-border-default dark:border-slate-deep"
           >
-            <div class="h4 text-warning-light dark:text-warning-strong/90">15-25%</div>
+            <div class="h4 text-warning-700 dark:text-warning-strong/90">15-25%</div>
             <div class="text-xs text-text-secondary dark:text-text-secondary/75">
               Comisión de la plataforma
             </div>
@@ -267,7 +267,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   <div
                     class="bg-warning-light/5 dark:bg-warning-light/10 p-3 rounded-lg border border-warning-light/20"
                   >
-                    <p class="font-semibold text-warning-light dark:text-warning-strong/90">
+                    <p class="font-semibold text-warning-700 dark:text-warning-strong/90">
                       Seguro Recomendado
                     </p>
                     <p class="text-sm">
@@ -404,7 +404,7 @@ import { TranslateModule } from '@ngx-translate/core';
                   <span class="text-text-secondary dark:text-text-secondary"
                     >Comisión AutoRenta (20%)</span
                   >
-                  <span class="font-semibold text-warning-light dark:text-warning-strong/90"
+                  <span class="font-semibold text-warning-700 dark:text-warning-strong/90"
                     >- USD {{ platformFee() }}</span
                   >
                 </div>
@@ -427,7 +427,7 @@ import { TranslateModule } from '@ngx-translate/core';
               </div>
 
               <div
-                class="bg-warning-light/5 dark:bg-warning-light/10 border border-warning-light/20 rounded-lg p-3 text-xs text-warning-light dark:text-warning-strong/90"
+                class="bg-warning-light/5 dark:bg-warning-light/10 border border-warning-light/20 rounded-lg p-3 text-xs text-warning-700 dark:text-warning-strong/90"
               >
                 ⚠️ <strong>Nota:</strong> Estos cálculos son estimativos. No incluyen gastos de
                 mantenimiento, combustible, seguro o impuestos.
@@ -467,7 +467,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Toyota Corolla, Volkswagen Vento
                 </p>
-                <div class="h4 text-warning-light dark:text-warning-strong/90">$40-55</div>
+                <div class="h4 text-warning-700 dark:text-warning-strong/90">$40-55</div>
                 <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
 
@@ -495,7 +495,7 @@ import { TranslateModule } from '@ngx-translate/core';
                 <p class="text-xs text-text-muted dark:text-text-secondary/60">
                   Ej: Audi A4, BMW Serie 3
                 </p>
-                <div class="h4 text-warning-light dark:text-warning-strong/90">$90-150+</div>
+                <div class="h4 text-warning-700 dark:text-warning-strong/90">$90-150+</div>
                 <p class="text-xs text-text-secondary dark:text-text-secondary/75">USD por día</p>
               </div>
             </div>

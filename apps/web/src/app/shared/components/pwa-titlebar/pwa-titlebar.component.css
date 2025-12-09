@@ -83,7 +83,7 @@
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #BCBCBC;
   pointer-events: none;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .titlebar-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: #BCBCBC;
 }
 
 .titlebar-search-input:hover {
@@ -111,7 +111,7 @@
 .titlebar-search-input:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: #7B7B7B;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 

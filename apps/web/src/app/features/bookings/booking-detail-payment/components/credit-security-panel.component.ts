@@ -56,7 +56,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
         </div>
         @if (lockStatus() === 'locked') {
           <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light/20 text-success-light dark:bg-success-900/30 dark:text-success-100 transition-colors"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-light/20 text-success-700 dark:bg-success-900/30 dark:text-success-100 transition-colors"
           >
             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -177,7 +177,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 class="font-bold"
                 [ngClass]="
                   creditDifference() >= 0
-                    ? 'text-success-light dark:text-success-200'
+                    ? 'text-success-700 dark:text-success-200'
                     : 'text-error-text'
                 "
               >
@@ -286,7 +286,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                 class="flex items-start space-x-2 p-3 bg-success-light/10 border border-success-light/40 dark:bg-success-900/25 dark:border-success-700/60 rounded-lg transition-colors duration-300"
               >
                 <svg
-                  class="w-5 h-5 text-success-light dark:text-success-200 flex-shrink-0 mt-0.5"
+                  class="w-5 h-5 text-success-700 dark:text-success-200 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -297,10 +297,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-medium text-success-light dark:text-success-50">
+                  <p class="text-sm font-medium text-success-700 dark:text-success-50">
                     Crédito bloqueado
                   </p>
-                  <p class="text-xs text-success-light dark:text-success-200 mt-1">
+                  <p class="text-xs text-success-700 dark:text-success-200 mt-1">
                     El Crédito de Seguridad de {{ formatUsd(riskSnapshot.creditSecurityUsd) }} está
                     bloqueado correctamente para esta reserva.
                   </p>

@@ -788,7 +788,7 @@
             class="empty-state-card">
             <div
               class="w-20 h-20 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-10 h-10 text-gray-400 dark:text-gray-500/30" fill="none"
+              <svg class="w-10 h-10 text-gray-500 dark:text-gray-500/30" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                   d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -866,7 +866,7 @@
         <!-- Pagination Controls -->
         @if (totalPages() > 1) {
         <div
-          class="pagination-controls flex items-center justify-center gap-4 py-6 mt-4 border-t border-gray-200 dark:border-white/10">
+          class="pagination-controls flex items-center justify-center gap-4 py-6 mt-4 border-t border-gray-300 dark:border-white/10">
           <button (click)="previousPage()" [disabled]="currentPage() === 1"
             class="pagination-btn group disabled:opacity-40 disabled:cursor-not-allowed">
             <svg class="w-5 h-5 mr-1 group-hover:-translate-x-0.5 transition-transform" fill="none"
@@ -895,7 +895,7 @@
         }
 
         <!-- Total cars info -->
-        <div class="text-center py-2 text-sm text-gray-400 dark:text-white/40">
+        <div class="text-center py-2 text-sm text-gray-500 dark:text-white/40">
           {{ totalCarsCount() }} autos disponibles
         </div>
       </div>

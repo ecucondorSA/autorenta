@@ -14,7 +14,7 @@
 .mapboxgl-ctrl-group {
   background-color: var(
     --map-control-bg,
-    var(--surface-primary-alpha-95, rgba(255, 255, 255, 0.95))
+    var(--surface-primary-alpha-95, #E3E3E3)
   );
   border: 1px solid var(--map-control-border, var(--shadow-dark-alpha-10, rgba(0, 0, 0, 0.1)));
   box-shadow: var(
@@ -91,7 +91,7 @@
   box-shadow:
     0 0 0 4px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.3)),
     0 4px 12px var(--map-marker-available-shadow, rgba(44, 122, 123, 0.6)),
-    0 8px 24px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -142,7 +142,7 @@
   @apply absolute w-5 h-5 rounded-full;
   background: var(--cta-default); /* Replaced hardcoded hex with solid color token */
   border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px #7B7B7B;
   z-index: 2;
 }
 
@@ -283,7 +283,7 @@
 }
 
 .map-loading-spinner {
-  @apply w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full;
+  @apply w-12 h-12 border-4 border-gray-300 border-t-blue-600 rounded-full;
   animation: spin 1s linear infinite;
 }
 

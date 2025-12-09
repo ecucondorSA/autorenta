@@ -160,8 +160,8 @@ import { AuthService } from '../../../../core/services/auth.service';
             </p>
           </div>
           <div class="bg-success-light/10 dark:bg-success-light/20 rounded-lg p-4">
-            <p class="text-sm text-success-light dark:text-success-strong mb-1">Completados</p>
-            <p class="text-2xl font-bold text-success-light dark:text-success-strong">
+            <p class="text-sm text-success-700 dark:text-success-strong mb-1">Completados</p>
+            <p class="text-2xl font-bold text-success-700 dark:text-success-strong">
               {{ completedCount() }}
             </p>
           </div>

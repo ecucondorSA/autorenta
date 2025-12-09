@@ -85,7 +85,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
               class="w-12 h-12 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-6 h-6 text-success-light dark:text-success-strong"
+                class="w-6 h-6 text-success-700 dark:text-success-strong"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -128,7 +128,7 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
         >
           <div class="flex items-center gap-2">
             <svg
-              class="w-4 h-4 text-success-light dark:text-success-strong"
+              class="w-4 h-4 text-success-700 dark:text-success-strong"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -140,11 +140,11 @@ import { PaymentMode } from '../../../../core/models/booking-detail-payment.mode
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span class="text-sm font-medium text-success-light dark:text-success-strong"
+            <span class="text-sm font-medium text-success-700 dark:text-success-strong"
               >Pago seguro</span
             >
           </div>
-          <p class="text-xs text-success-light dark:text-success-strong mt-1">
+          <p class="text-xs text-success-700 dark:text-success-strong mt-1">
             @if (selectedMode === 'card') {
               MercadoPago protege tus datos
             } @else {

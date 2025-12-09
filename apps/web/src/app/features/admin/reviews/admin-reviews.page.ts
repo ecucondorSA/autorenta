@@ -533,7 +533,7 @@ export class AdminReviewsPage implements OnInit {
       pending:
         'bg-warning-bg-hover text-warning-strong dark:bg-warning-bg0/20 dark:text-warning-300',
       approved:
-        'bg-success-light/20 text-success-light dark:bg-success-light/20 dark:text-success-strong',
+        'bg-success-light/20 text-success-700 dark:bg-success-light/20 dark:text-success-strong',
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
     };
     return classes[status] || 'bg-surface-raised text-text-primary';

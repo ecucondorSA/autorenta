@@ -176,13 +176,13 @@
               </span>
               <span
                 *ngIf="suggestion.discount > 0"
-                class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-light dark:text-success-strong rounded-full font-medium"
+                class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-700 dark:text-success-strong rounded-full font-medium"
               >
                 -{{ suggestion.discount }}% OFF
               </span>
               <span
                 *ngIf="suggestion.savings"
-                class="text-xs text-success-light dark:text-success-strong"
+                class="text-xs text-success-700 dark:text-success-strong"
               >
                 (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
               </span>

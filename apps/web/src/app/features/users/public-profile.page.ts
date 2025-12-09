@@ -166,7 +166,7 @@ export class PublicProfilePage {
 
   getVerificationBadgeClass(): string {
     if (this.profile()?.email_verified && this.profile()?.phone_verified) {
-      return 'bg-success-light/20 dark:bg-success-light/20 text-success-light dark:text-success-strong border-success-light/40 dark:border-success-light/40';
+      return 'bg-success-light/20 dark:bg-success-light/20 text-success-700 dark:text-success-strong border-success-light/40 dark:border-success-light/40';
     }
     return 'bg-ash-gray/20 dark:bg-surface-secondary/40 text-text-secondary dark:text-text-secondary/60 border-ash-gray/30 dark:border-slate-deep/60';
   }

@@ -153,7 +153,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
           </div>
         } @else {
           @for (flag of flags(); track flag.id) {
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 p-4">
               <!-- Header: Name + Toggle -->
               <div class="flex items-center justify-between mb-3">
                 <span class="font-mono text-sm font-medium text-gray-900 dark:text-gray-100 truncate max-w-[60%]">
@@ -269,7 +269,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
         } @else {
           <div class="space-y-2">
             @for (log of auditLog().slice(0, 5); track log.id) {
-              <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 p-3">
                 <div class="flex items-center justify-between mb-1">
                   <span class="font-mono text-xs text-gray-900 dark:text-gray-100">
                     {{ log.feature_flag_name }}

@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  background: var(--surface-primary-alpha-80, rgba(255, 255, 255, 0.8));
+  background: var(--surface-primary-alpha-80, #E3E3E3);
 }
 
 .cars-map-loading-overlay {
@@ -115,7 +115,7 @@
   font-size: 12px;
   font-weight: 700;
   color: white;
-  box-shadow: 0 3px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
+  box-shadow: 0 3px 8px var(--shadow-dark-alpha-40, #7B7B7B);
   z-index: 15;
   animation: badge-appear 0.3s ease-out;
   border: 2px solid white;
@@ -165,7 +165,7 @@
   background: var(--map-marker-instant-booking-color, var(--success-default, #10b981));
   border: 3px solid white;
   border-radius: 50%;
-  box-shadow: 0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-40, #7B7B7B);
   z-index: 20;
   animation: instant-booking-glow 1.5s ease-in-out infinite;
   display: flex;
@@ -245,7 +245,7 @@
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 30px #7B7B7B;
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;
@@ -258,7 +258,7 @@
 }
 
 .car-marker--dark::after {
-  background: var(--surface-overlay-light, var(--surface-overlay-light, rgba(255, 255, 255, 0.92)));
+  background: var(--surface-overlay-light, var(--surface-overlay-light, #E3E3E3));
   color: var(--text-primary-dark, var(--text-primary-dark, #0f172a));
   box-shadow: var(--shadow-lg-dark, 0 14px 34px rgba(15, 23, 42, 0.25));
 }
@@ -363,7 +363,7 @@
   color: var(--text-dark, #1a1a1a) !important; /* Texto oscuro para contraste */
   box-shadow: var(
     --shadow-sm-dark,
-    0 1px 3px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))
+    0 1px 3px var(--shadow-dark-alpha-40, #7B7B7B)
   ) !important; /* Reducido 4x */
   z-index: 1000 !important; /* Asegurar que esté por encima */
   border: none !important; /* Eliminar cualquier borde que pueda interferir */
@@ -379,7 +379,7 @@
   color: var(--text-white, #ffffff) !important; /* Texto blanco para contraste */
   box-shadow: var(
     --shadow-lg-dark,
-    0 6px 20px var(--shadow-dark-alpha-80, rgba(0, 0, 0, 0.8))
+    0 6px 20px var(--shadow-dark-alpha-80, #2B2B2B)
   ) !important; /* Sombra más intensa */
   border: 1px solid
     var(--border-light-alpha-15, var(--border-light-alpha-15, rgba(255, 255, 255, 0.15))) !important; /* Borde sutil */
@@ -682,7 +682,7 @@ img.car-popup-image {
   color: var(--text-white, #ffffff) !important;
   box-shadow: var(
     --shadow-md-dark,
-    0 2px 8px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4))
+    0 2px 8px var(--shadow-dark-alpha-40, #7B7B7B)
   ) !important;
 }
 
@@ -690,7 +690,7 @@ img.car-popup-image {
   background: var(--surface-hover-dark, #2a2a2a) !important;
   box-shadow: var(
     --shadow-lg-dark,
-    0 4px 12px var(--shadow-dark-alpha-60, rgba(0, 0, 0, 0.6))
+    0 4px 12px var(--shadow-dark-alpha-60, #4E4E4E)
   ) !important;
 }
 
@@ -718,7 +718,7 @@ img.car-popup-image {
     /* cta-default con opacidad */ 0 4px 12px
       var(--cta-alpha-60, var(--cta-alpha-60, rgba(167, 216, 244, 0.6))),
     /* cta-default con opacidad */ 0 8px 24px
-      var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3)));
+      var(--shadow-dark-alpha-30, var(--shadow-dark-alpha-30, #7B7B7B));
   animation: pulse-marker 2s ease-in-out infinite;
 }
 
@@ -742,7 +742,7 @@ img.car-popup-image {
   border: var(--map-marker-photo-border, 3px) solid var(--map-marker-photo-border-color, white);
   box-shadow: var(
     --map-marker-photo-shadow,
-    0 6px 20px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3))
+    0 6px 20px var(--shadow-dark-alpha-30, #7B7B7B)
   );
   display: flex;
   align-items: center;
@@ -811,7 +811,7 @@ img.car-popup-image {
   padding: 3px 8px;
   border-radius: 12px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, #7B7B7B);
   border: 2px solid white;
   z-index: 15;
   pointer-events: none;
@@ -819,7 +819,7 @@ img.car-popup-image {
 }
 .car-marker-simple:hover .marker-photo-price-badge {
   transform: translateX(-50%) scale(1.1);
-  box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, rgba(0, 0, 0, 0.4));
+  box-shadow: 0 4px 12px var(--shadow-dark-alpha-40, #7B7B7B);
 }
 
 /* Hover effects for photo marker - Using Tokens */
@@ -827,7 +827,7 @@ img.car-popup-image {
   transform: scale(var(--map-marker-photo-hover-scale, 1.12));
   box-shadow: var(
     --map-marker-photo-hover-shadow,
-    0 8px 16px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3))
+    0 8px 16px var(--shadow-dark-alpha-30, #7B7B7B)
   );
   border-width: calc(var(--map-marker-photo-border, 2.5px) * 1.6);
 }
@@ -841,7 +841,7 @@ img.car-popup-image {
   box-shadow:
     0 0 0 4px var(--cta-alpha-30, rgba(167, 216, 244, 0.3)),
     0 4px 12px var(--cta-alpha-60, rgba(167, 216, 244, 0.6)),
-    0 8px 24px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+    0 8px 24px var(--shadow-dark-alpha-30, #7B7B7B);
   animation: pulse-marker-photo 2s ease-in-out infinite;
   border-color: var(--cta-default);
 }
@@ -897,7 +897,7 @@ img.car-popup-image {
   height: var(--circle-size, 40px);
   border-radius: 50%;
   border: 3px solid white;
-  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, rgba(0, 0, 0, 0.3));
+  box-shadow: 0 2px 8px var(--shadow-dark-alpha-30, #7B7B7B);
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;

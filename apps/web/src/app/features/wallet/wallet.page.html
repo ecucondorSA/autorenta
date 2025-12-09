@@ -59,13 +59,13 @@
           <div class="space-y-4">
             <div class="flex flex-wrap gap-3">
               <span
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-success-light/15 text-success-light dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30"
               >
                 <app-icon name="check-circle" [size]="16" cssClass="inline-block" /> Saldo Actualizado
               </span>
               <span
                 [ngClass]="{
-                  'bg-success-light/15 text-success-light dark:bg-success-light/20 dark:text-success-400 border border-success-light/30': protectedCreditStatus() === 'active',
+                  'bg-success-light/15 text-success-700 dark:bg-success-light/20 dark:text-success-400 border border-success-light/30': protectedCreditStatus() === 'active',
                   'bg-warning-bg/50 text-warning-strong dark:bg-warning-bg/30 dark:text-warning-300 border border-warning-border': protectedCreditStatus() !== 'active',
                 }"
                 class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold"
@@ -109,7 +109,7 @@
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-success-light/40 text-success-light dark:text-success-400 font-semibold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-success-light/40 text-success-700 dark:text-success-400 font-semibold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
               >
                 <app-icon name="arrow-up" [size]="18" /> Retirar
               </button>
@@ -867,7 +867,7 @@
                         <button
                           type="button"
                           (click)="setWithdrawalMode('accounts')"
-                          class="mt-2 text-sm font-medium text-warning-light dark:text-text-secondary hover:text-cta-default dark:hover:text-ivory-luminous underline transition"
+                          class="mt-2 text-sm font-medium text-warning-700 dark:text-text-secondary hover:text-cta-default dark:hover:text-ivory-luminous underline transition"
                         >
                           Agregar cuenta bancaria
                         </button>

@@ -101,7 +101,7 @@ interface MarkerData {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.95);
+        background: #E3E3E3;
         z-index: 1000;
       }
 
@@ -430,7 +430,7 @@ export class LiveTrackingMapComponent implements OnInit, OnChanges, OnDestroy {
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
       border: 3px solid white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 8px #7B7B7B;
       cursor: pointer;
       position: relative;
     `;

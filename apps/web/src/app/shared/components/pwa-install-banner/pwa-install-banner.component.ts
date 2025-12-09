@@ -56,7 +56,7 @@ import { PwaInstallService } from '../../../core/services/pwa-install.service';
         ); /* Replaced gradient with solid color token */
         color: white;
         border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 32px #7B7B7B;
         padding: 20px;
         z-index: 1000;
         animation: slideUp 0.4s ease;

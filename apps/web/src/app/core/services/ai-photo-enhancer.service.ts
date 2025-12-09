@@ -248,7 +248,7 @@ export class AiPhotoEnhancerService {
 
     const gradient = ctx.createRadialGradient(width / 2, height, 0, width / 2, height, width / 2);
 
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.3)');
+    gradient.addColorStop(0, '#7B7B7B');
     gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.1)');
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 

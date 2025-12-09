@@ -105,7 +105,7 @@ import { SplashScreenComponent } from './shared/components/splash-screen/splash-
       }
 
       [data-profile-menu]::-webkit-scrollbar-thumb:hover {
-        background: rgba(0, 0, 0, 0.3);
+        background: #7B7B7B;
       }
 
 

@@ -31,7 +31,7 @@ import { FavoritesService } from '../../../core/services/favorites.service';
         width: 40px;
         height: 40px;
         border: none;
-        background: rgba(255, 255, 255, 0.9);
+        background: #E3E3E3;
         backdrop-filter: blur(8px);
         border-radius: 50%;
         cursor: pointer;

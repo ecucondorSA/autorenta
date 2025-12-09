@@ -128,7 +128,7 @@ export interface VerificationBlockingModalConfig {
         transition: background-color 0.3s ease;
 
         &.open {
-          background-color: rgba(0, 0, 0, 0.5);
+          background-color: #4E4E4E;
         }
       }
 

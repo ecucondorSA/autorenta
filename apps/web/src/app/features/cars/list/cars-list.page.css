@@ -194,7 +194,7 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.95);
+  background: #E3E3E3;
   backdrop-filter: blur(8px);
   color: #000;
 }
@@ -513,7 +513,7 @@
 
 :host-context(.dark) .distance-badge,
 :host-context(.dark) .available-badge {
-  background: var(--overlay-dark, rgba(0, 0, 0, 0.8));
+  background: var(--overlay-dark, #2B2B2B);
   color: var(--text-light, #fff);
 }
 

@@ -84,7 +84,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       .sheet-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: #4E4E4E;
         backdrop-filter: blur(4px);
         z-index: 50;
       }

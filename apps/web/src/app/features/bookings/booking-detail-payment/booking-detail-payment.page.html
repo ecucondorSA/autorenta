@@ -329,7 +329,7 @@
             </div>
           </section>
 
-          <!-- 3. Payment Method (MercadoPago) -->
+          <!-- 3. Payment Method Toggle -->
           @if (!bookingCreated()) {
             <section
               class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
@@ -352,7 +352,6 @@
                   Método de Pago
                 </h3>
                 <div class="flex gap-2">
-                  <!-- Icons placeholder for Cards -->
                   <div
                     class="h-6 w-8 bg-surface-base rounded border border-border-default flex items-center justify-center text-xs font-bold text-text-secondary/50"
                   >
@@ -366,30 +365,81 @@
                 </div>
               </div>
 
-              <app-mercadopago-card-form
-                [amountArs]="totalArs()"
-                (cardTokenGenerated)="onCardTokenGenerated($event)"
-                (cardError)="onCardError($event)"
-              ></app-mercadopago-card-form>
-
-              <div class="mt-4 text-center">
+              <!-- Payment Mode Toggle -->
+              <div class="flex rounded-lg bg-surface-base p-1 mb-6">
                 <button
                   type="button"
-                  (click)="payWithMercadoPago()"
-                  [disabled]="processingPayment() || paymentProcessing()"
-                  class="text-sm text-[#009EE3] hover:text-[#007BB5] font-medium hover:underline inline-flex items-center gap-1 transition-colors"
+                  (click)="setPaymentMode('direct')"
+                  [class]="paymentMode() === 'direct'
+                    ? 'flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white dark:bg-surface-raised shadow text-text-primary transition-all'
+                    : 'flex-1 py-2 px-4 rounded-md text-sm font-medium text-text-secondary hover:text-text-primary transition-all'"
                 >
-                  O pagar con efectivo/transferencia vía MercadoPago
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  💳 Pago Directo
+                </button>
+                <button
+                  type="button"
+                  (click)="setPaymentMode('preauth')"
+                  [class]="paymentMode() === 'preauth'
+                    ? 'flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white dark:bg-surface-raised shadow text-text-primary transition-all'
+                    : 'flex-1 py-2 px-4 rounded-md text-sm font-medium text-text-secondary hover:text-text-primary transition-all'"
+                >
+                  🔒 Preautorización
                 </button>
               </div>
+
+              <!-- Direct Payment Form -->
+              @if (paymentMode() === 'direct') {
+                <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <p class="text-sm text-blue-700 dark:text-blue-300">
+                    <strong>Pago Directo:</strong> Se cobrará el monto total inmediatamente a tu tarjeta.
+                  </p>
+                </div>
+
+                <app-mercadopago-card-form
+                  [amountArs]="totalArs()"
+                  (cardTokenGenerated)="onCardTokenGenerated($event)"
+                  (cardError)="onCardError($event)"
+                ></app-mercadopago-card-form>
+
+                <div class="mt-4 text-center">
+                  <button
+                    type="button"
+                    (click)="payWithMercadoPago()"
+                    [disabled]="processingPayment() || paymentProcessing()"
+                    class="text-sm text-[#009EE3] hover:text-[#007BB5] font-medium hover:underline inline-flex items-center gap-1 transition-colors"
+                  >
+                    O pagar con efectivo/transferencia vía MercadoPago
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              }
+
+              <!-- Preauthorization Form -->
+              @if (paymentMode() === 'preauth' && riskSnapshot() && fxSnapshot()) {
+                <div class="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <p class="text-sm text-amber-700 dark:text-amber-300">
+                    <strong>Preautorización:</strong> Se retendrá el monto en tu tarjeta sin cobrarlo.
+                    Se liberará automáticamente si no se captura en 7-30 días.
+                  </p>
+                </div>
+
+                <app-card-hold-panel
+                  [riskSnapshot]="riskSnapshot()!"
+                  [fxSnapshot]="fxSnapshot()!"
+                  [userId]="currentUserId()"
+                  [bookingId]="bookingId() || undefined"
+                  [currentAuthorization]="currentAuthorization()"
+                  (authorizationChange)="onAuthorizationChange($event)"
+                  (fallbackToWallet)="onFallbackToWallet()"
+                ></app-card-hold-panel>
+              }
             </section>
           }
 

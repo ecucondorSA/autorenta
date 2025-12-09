@@ -172,7 +172,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
 
           <!-- Subtotal USD -->
           <div
-            class="flex justify-between text-sm pt-2 border-t border-gray-100 dark:border-neutral-800/80"
+            class="flex justify-between text-sm pt-2 border-t border-gray-300 dark:border-neutral-800/80"
           >
             <span class="text-text-primary dark:text-text-secondary/80 font-medium"
               >Subtotal (USD)</span

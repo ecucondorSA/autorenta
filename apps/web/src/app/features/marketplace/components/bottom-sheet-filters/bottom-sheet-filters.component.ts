@@ -168,7 +168,7 @@ import { QUICK_FILTERS } from '../../../../core/models/marketplace.model';
       .sheet-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: #4E4E4E;
         z-index: 998;
         animation: fadeIn 0.2s ease;
       }

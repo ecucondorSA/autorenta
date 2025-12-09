@@ -260,7 +260,7 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
             >
               <div class="flex items-start gap-3">
                 <svg
-                  class="w-6 h-6 text-success-light dark:text-success-300 flex-shrink-0"
+                  class="w-6 h-6 text-success-700 dark:text-success-300 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -273,10 +273,10 @@ import { ReembolsabilityBadgeComponent } from './reembolsability-badge.component
                   />
                 </svg>
                 <div class="flex-1">
-                  <p class="text-sm font-semibold text-success-light dark:text-success-100">
+                  <p class="text-sm font-semibold text-success-700 dark:text-success-100">
                     Ahorro con Wallet
                   </p>
-                  <p class="text-xs text-success-light dark:text-success-200 mt-1">
+                  <p class="text-xs text-success-700 dark:text-success-200 mt-1">
                     Con Wallet bloqueas {{ formatArs(savingsArs()) }} menos en garantía. Eso es
                     {{ formatUsd(savingsUsd()) }} que quedan disponibles.
                   </p>

@@ -44,7 +44,7 @@
 // Toolbar Search
 .search-bar-toolbar {
   padding: 4px 0;
-  --background: rgba(255, 255, 255, 0.95);
+  --background: #E3E3E3;
   --border-radius: 8px;
   margin: 0 8px;
 }
@@ -257,15 +257,15 @@
   }
 
   .map-carousel {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+    background: linear-gradient(to top, #7B7B7B 0%, transparent 100%);
   }
 
   .map-carousel-card-wrapper {
     app-car-card {
       background: #1f2937;
       box-shadow:
-        0 2px 12px rgba(0, 0, 0, 0.5),
-        0 1px 3px rgba(0, 0, 0, 0.3);
+        0 2px 12px #4E4E4E,
+        0 1px 3px #7B7B7B;
     }
 
     &.selected app-car-card {

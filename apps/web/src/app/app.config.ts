@@ -99,7 +99,8 @@ export const appConfig: ApplicationConfig = {
             };
           },
         },
-        defaultLanguage: 'es',
+        // Use fallbackLang instead of deprecated defaultLanguage
+        fallbackLang: 'es',
       })
     ),
     // ✅ Route Reuse Strategy - keeps Marketplace & Map in memory for instant navigation

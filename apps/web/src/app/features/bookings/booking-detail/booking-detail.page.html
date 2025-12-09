@@ -234,7 +234,7 @@
                         Categoría:
                         @switch (booking()?.distance_risk_tier) {
                           @case ('local') {
-                            <span class="text-success-light dark:text-success-strong font-medium"
+                            <span class="text-success-700 dark:text-success-strong font-medium"
                               >Local</span
                             >
                           }
@@ -244,7 +244,7 @@
                             >
                           }
                           @case ('long_distance') {
-                            <span class="text-warning-light dark:text-warning-strong font-medium"
+                            <span class="text-warning-700 dark:text-warning-strong font-medium"
                               >Larga distancia</span
                             >
                           }
@@ -576,7 +576,7 @@
                       class="w-12 h-12 rounded-full bg-success-light/20 dark:bg-success-light/40 flex items-center justify-center"
                     >
                       <svg
-                        class="w-6 h-6 text-success-light dark:text-success-strong"
+                        class="w-6 h-6 text-success-700 dark:text-success-strong"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -631,7 +631,7 @@
                   class="flex items-center gap-3 p-3 rounded-lg bg-success-light/10 dark:bg-success-light/20"
                 >
                   <svg
-                    class="w-5 h-5 text-success-light dark:text-success-strong"
+                    class="w-5 h-5 text-success-700 dark:text-success-strong"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -643,7 +643,7 @@
                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span class="text-sm font-medium text-success-light dark:text-success-strong"
+                  <span class="text-sm font-medium text-success-700 dark:text-success-strong"
                     >Check-in completado</span
                   >
                 </div>
@@ -652,7 +652,7 @@
                   class="flex items-center gap-3 p-3 rounded-lg bg-success-light/10 dark:bg-success-light/20"
                 >
                   <svg
-                    class="w-5 h-5 text-success-light dark:text-success-strong"
+                    class="w-5 h-5 text-success-700 dark:text-success-strong"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -664,7 +664,7 @@
                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span class="text-sm font-medium text-success-light dark:text-success-strong"
+                  <span class="text-sm font-medium text-success-700 dark:text-success-strong"
                     >Check-out completado</span
                   >
                 </div>
@@ -806,11 +806,11 @@
                         <span
                           class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
                           [ngClass]="{
-                            'bg-warning-light/20 text-warning-light dark:bg-warning-light/40 dark:text-warning-strong':
+                            'bg-warning-light/20 text-warning-700 dark:bg-warning-light/40 dark:text-warning-strong':
                               getClaimStatusColor(latestClaim()!.status) === 'orange',
                             'bg-cta-default/20 text-cta-default dark:bg-cta-default/40 dark:text-cta-default':
                               getClaimStatusColor(latestClaim()!.status) === 'blue',
-                            'bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong':
+                            'bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong':
                               getClaimStatusColor(latestClaim()!.status) === 'green',
                             'bg-error-bg-hover text-error-strong dark:bg-error-900/40 dark:text-error-200':
                               getClaimStatusColor(latestClaim()!.status) === 'red',

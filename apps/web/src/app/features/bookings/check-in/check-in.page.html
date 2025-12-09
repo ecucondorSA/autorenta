@@ -129,10 +129,10 @@
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0 text-2xl">✅</div>
             <div class="flex-1">
-              <h3 class="text-lg font-semibold text-success-light dark:text-success-strong mb-2">
+              <h3 class="text-lg font-semibold text-success-700 dark:text-success-strong mb-2">
                 Check-in Completado
               </h3>
-              <p class="text-success-light dark:text-success-strong mb-4">
+              <p class="text-success-700 dark:text-success-strong mb-4">
                 El check-in de este vehículo ya fue completado el
                 {{
                   existingInspection()?.signedAt
@@ -141,12 +141,12 @@
                 }}.
               </p>
               @if (existingInspection()?.odometer) {
-                <p class="text-sm text-success-light dark:text-success-strong mb-2">
+                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
                   <strong>Odómetro:</strong> {{ existingInspection()?.odometer }} km
                 </p>
               }
               @if (existingInspection()?.fuelLevel !== undefined) {
-                <p class="text-sm text-success-light dark:text-success-strong mb-4">
+                <p class="text-sm text-success-700 dark:text-success-strong mb-4">
                   <strong>Combustible:</strong> {{ existingInspection()?.fuelLevel }}%
                 </p>
               }

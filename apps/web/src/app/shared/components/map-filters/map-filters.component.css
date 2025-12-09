@@ -135,7 +135,7 @@
 :host-context(.dark) .filter-panel {
   background: var(--surface-dark, #1e1e1e);
   border-color: var(--border-dark, #444444);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 32px #7B7B7B;
 }
 
 /* Animations */

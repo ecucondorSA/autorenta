@@ -16,7 +16,7 @@
         </span>
         <span
           *ngIf="isTimelineComplete()"
-          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong rounded-full"
+          class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong rounded-full"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -38,7 +38,7 @@
     >
       <div class="flex items-start gap-3">
         <svg
-          class="w-5 h-5 text-warning-light dark:text-warning-strong flex-shrink-0 mt-0.5"
+          class="w-5 h-5 text-warning-700 dark:text-warning-strong flex-shrink-0 mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -51,10 +51,10 @@
           />
         </svg>
         <div class="flex-1">
-          <p class="text-sm font-semibold text-warning-light dark:text-warning-strong">
+          <p class="text-sm font-semibold text-warning-700 dark:text-warning-strong">
             Acción requerida
           </p>
-          <p class="text-sm text-warning-light dark:text-warning-strong">
+          <p class="text-sm text-warning-700 dark:text-warning-strong">
             {{ pendingActionMessage() }}
           </p>
         </div>

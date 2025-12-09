@@ -31,7 +31,7 @@ export interface FipeAutocompleteOption {
           role="combobox"
           [attr.aria-expanded]="showDropdown()"
           [attr.aria-controls]="dataTestId ? dataTestId + '-list' : null"
-          class="block w-full px-4 py-3 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-neutral-500"
+          class="block w-full px-4 py-3 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-neutral-500"
           [class.border-blue-500]="isFocused()"
           [class.bg-gray-50]="disabled"
           [class.dark:bg-neutral-900]="disabled"
@@ -87,7 +87,7 @@ export interface FipeAutocompleteOption {
       <!-- Dropdown list -->
       @if (showDropdown() && filteredOptions().length > 0) {
         <div
-          class="absolute z-50 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+          class="absolute z-50 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
           (mouseenter)="isHoveringDropdown.set(true)"
           (mouseleave)="onDropdownLeave()"
           [attr.id]="dataTestId ? dataTestId + '-list' : null"
@@ -97,7 +97,7 @@ export interface FipeAutocompleteOption {
             <button
               type="button"
               (mousedown)="selectOption(option)"
-              class="w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-neutral-700 focus:bg-blue-50 dark:focus:bg-neutral-700 focus:outline-none transition-colors border-b border-gray-100 dark:border-neutral-700 last:border-b-0"
+              class="w-full px-4 py-3 text-left hover:bg-blue-50 dark:hover:bg-neutral-700 focus:bg-blue-50 dark:focus:bg-neutral-700 focus:outline-none transition-colors border-b border-gray-300 dark:border-neutral-700 last:border-b-0"
             >
               <div class="flex items-center gap-3">
                 @if (getBrandLogoPath(option.name); as logoPath) {
@@ -118,7 +118,7 @@ export interface FipeAutocompleteOption {
       <!-- No results message -->
       @if (showDropdown() && filteredOptions().length === 0 && searchQuery().length >= minChars) {
         <div
-          class="absolute z-50 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg shadow-lg p-4"
+          class="absolute z-50 w-full mt-2 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700 rounded-lg shadow-lg p-4"
         >
           <p class="text-sm text-gray-500 dark:text-gray-500 text-center">No se encontraron resultados</p>
         </div>

@@ -149,7 +149,7 @@ import { Booking } from '../../../core/models';
                   Depósito de Garantía
                 </h4>
                 <span
-                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-light dark:bg-success-light/40 dark:text-success-strong"
+                  class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-success-light/20 text-success-700 dark:bg-success-light/40 dark:text-success-strong"
                 >
                   <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path

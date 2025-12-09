@@ -17,7 +17,7 @@ $shepherd-primary: var(--primary-default);
 $shepherd-primary-hover: var(--primary-dark);
 $shepherd-accent-warm: var(--surface-secondary);
 
-$shepherd-bg-light: rgba(255, 255, 255, 0.95);
+$shepherd-bg-light: #E3E3E3;
 $shepherd-bg-secondary-light: var(--surface-raised);
 
 $shepherd-text-dark: var(--text-primary);
@@ -41,7 +41,7 @@ $shepherd-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.12);
 // ══════════════════════════════════════════════════════════════════════
 
 .shepherd-modal-overlay-container {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: #7B7B7B;
   backdrop-filter: blur(2px);
   transition: opacity 0.2s ease;
 }

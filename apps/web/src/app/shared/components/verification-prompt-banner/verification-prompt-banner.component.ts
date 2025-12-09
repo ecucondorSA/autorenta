@@ -226,7 +226,7 @@ import { VerificationService } from '../../../core/services/verification.service
               class="flex-shrink-0 w-10 h-10 bg-success-light/20 dark:bg-success-light/30 rounded-full flex items-center justify-center"
             >
               <svg
-                class="w-5 h-5 text-success-light dark:text-success-strong"
+                class="w-5 h-5 text-success-700 dark:text-success-strong"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

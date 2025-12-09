@@ -69,11 +69,11 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
             />
             <div class="flex-1">
               <span
-                class="text-sm font-medium text-success-light dark:text-success-strong mb-1 block"
+                class="text-sm font-medium text-success-700 dark:text-success-strong mb-1 block"
               >
                 Autorizo guardar mi tarjeta de forma segura
               </span>
-              <span class="text-sm text-success-light dark:text-success-strong">
+              <span class="text-sm text-success-700 dark:text-success-strong">
                 Permito que AutoRenta guarde mi tarjeta para futuros cargos por multas, peajes o
                 daños según nuestros términos
                 <span class="text-error-500">*</span>
@@ -102,10 +102,10 @@ import { UserConsents, PaymentMode } from '../../../../core/models/booking-detai
             />
           </svg>
           <div>
-            <p class="text-sm font-medium text-success-light dark:text-success-strong mb-1">
+            <p class="text-sm font-medium text-success-700 dark:text-success-strong mb-1">
               Tus datos están protegidos
             </p>
-            <p class="text-sm text-success-light dark:text-success-strong">
+            <p class="text-sm text-success-700 dark:text-success-strong">
               @if (paymentMode === 'card') {
                 MercadoPago protege tu información de pago. Solo cobramos según nuestros términos
                 acordados.

@@ -346,9 +346,9 @@ svg[aria-hidden="true"],
     --info-icon: var(--info-600);
 
     /* ─── Overlays ─── */
-    --overlay-dark: rgba(0, 0, 0, 0.6); /* Standard dark overlay */
-    --overlay-light: rgba(255, 255, 255, 0.8); /* Standard light overlay */
-    --surface-overlay: rgba(0, 0, 0, 0.6);
+    --overlay-dark: #4E4E4E; /* Standard dark overlay */
+    --overlay-light: #E3E3E3; /* Standard light overlay */
+    --surface-overlay: #4E4E4E;
 
     /* ─── Elevation System (Sombras) ─── */
     --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
@@ -1505,7 +1505,7 @@ svg[aria-hidden="true"],
 }
 
 .whatsapp-bg::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: #7B7B7B;
 }
 
 /* Animación de aparición de mensajes */

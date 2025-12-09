@@ -12,7 +12,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: #7B7B7B;
   z-index: 35;
   animation: fadeIn 0.3s ease-out;
 }
@@ -123,7 +123,7 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #E3E3E3;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   color: var(--text-info-dark, #2c4a52);

@@ -66,10 +66,10 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
             <div class="flex items-center gap-3">
               <span class="text-xl">✅</span>
               <div>
-                <p class="font-semibold text-success-light dark:text-success-strong">
+                <p class="font-semibold text-success-700 dark:text-success-strong">
                   Verificación Completada
                 </p>
-                <p class="text-sm text-success-light dark:text-success-strong">
+                <p class="text-sm text-success-700 dark:text-success-strong">
                   Tu cuenta está completamente verificada
                 </p>
               </div>

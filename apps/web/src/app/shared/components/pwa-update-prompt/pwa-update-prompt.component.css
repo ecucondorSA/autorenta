@@ -120,7 +120,7 @@
 
 .btn-update {
   padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #E3E3E3;
   color: var(--text-info-dark, #2c4a52);
   border: none;
   border-radius: 8px;

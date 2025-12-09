@@ -108,7 +108,7 @@ import {
               <td class="px-4 py-4 text-sm">
                 <div class="flex items-start space-x-2">
                   <svg
-                    class="w-5 h-5 text-warning-light dark:text-warning-300 flex-shrink-0 mt-0.5"
+                    class="w-5 h-5 text-warning-700 dark:text-warning-300 flex-shrink-0 mt-0.5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -131,12 +131,12 @@ import {
                 </div>
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-warning-light dark:text-warning-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-warning-700 dark:text-warning-300"
               >
                 {{ formatUsd(riskSnapshot.deductibleUsd) }}
               </td>
               <td
-                class="px-4 py-4 text-sm text-right font-semibold text-warning-light dark:text-warning-300"
+                class="px-4 py-4 text-sm text-right font-semibold text-warning-700 dark:text-warning-300"
               >
                 {{ formatArs(riskSnapshot.deductibleUsd * fxSnapshot.rate) }}
               </td>
@@ -220,10 +220,10 @@ import {
           <div
             class="bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded p-3"
           >
-            <p class="font-medium text-success-light dark:text-success-strong mb-1">
+            <p class="font-medium text-success-700 dark:text-success-strong mb-1">
               ¿Qué está cubierto?
             </p>
-            <p class="text-success-light dark:text-success-strong">
+            <p class="text-success-700 dark:text-success-strong">
               Daños al vehículo, robo, combustible faltante, multas y peajes.
             </p>
           </div>

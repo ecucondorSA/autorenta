@@ -102,13 +102,8 @@
       fetchpriority="high"
     />
 
-    <!-- Preload Mapbox GL JS for faster map loading (LCP optimization) -->
-    <link
-      rel="preload"
-      href="https://api.mapbox.com/mapbox-gl-js/v3.16.0/mapbox-gl.js"
-      as="script"
-      crossorigin
-    />
+    <!-- Mapbox GL JS is loaded lazily by MapboxPreloaderService when needed -->
+    <!-- Removed preload to avoid "not used within a few seconds" warning -->
 
     <!-- PWA Manifests -->
     <link rel="manifest" href="manifest.webmanifest" />
@@ -122,7 +117,8 @@
     </a>
 
     <!-- Runtime environment configuration (loaded before Angular) -->
-    <script src="env.js?v=20251024"></script>
+    <!-- Cache buster updated to force reload after env changes -->
+    <script src="env.js?v=20251209"></script>
     <app-root></app-root>
     <noscript>Please enable JavaScript to continue using this application.</noscript>
 

@@ -44,7 +44,7 @@ export interface ConfirmModalOptions {
         >
           <!-- Header -->
           <div
-            class="p-6 pb-4 border-b border-gray-100 dark:border-gray-800"
+            class="p-6 pb-4 border-b border-gray-300 dark:border-gray-800"
             [ngClass]="headerClass()"
           >
             <!-- Icon -->
@@ -84,7 +84,7 @@ export interface ConfirmModalOptions {
           <div class="p-6 pt-0 flex gap-3">
             <button
               type="button"
-              class="flex-1 px-4 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+              class="flex-1 px-4 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
               (click)="onCancel()"
             >
               {{ options()?.cancelText || 'Cancelar' }}

@@ -354,11 +354,11 @@ export class PaymentSummaryPanelComponent {
   protected getDistanceTierClass(tier: 'local' | 'regional' | 'long_distance'): string {
     const classes = {
       local:
-        'bg-success-light/20 text-success-light dark:bg-success-light/30 dark:text-success-strong',
+        'bg-success-light/20 text-success-700 dark:bg-success-light/30 dark:text-success-strong',
       regional:
         'bg-warning-bg-hover text-warning-strong dark:bg-warning-900/30 dark:text-warning-300',
       long_distance:
-        'bg-warning-light/20 text-warning-light dark:bg-warning-light/30 dark:text-warning-strong',
+        'bg-warning-light/20 text-warning-700 dark:bg-warning-light/30 dark:text-warning-strong',
     };
     return classes[tier];
   }

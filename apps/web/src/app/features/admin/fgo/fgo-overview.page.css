@@ -216,7 +216,7 @@ section h2 {
 }
 
 .card-primary .card-header h3 {
-  color: rgba(255, 255, 255, 0.9);
+  color: #E3E3E3;
 }
 
 .card-header .icon,
@@ -265,7 +265,7 @@ section h2 {
 }
 
 .card-primary .meta-item .label {
-  color: rgba(255, 255, 255, 0.8);
+  color: #E3E3E3;
 }
 
 .meta-item .value {
@@ -592,7 +592,7 @@ section h2 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: #4E4E4E;
   display: flex;
   align-items: center;
   justify-content: center;

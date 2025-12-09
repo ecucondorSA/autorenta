@@ -427,7 +427,7 @@ import { MetaService } from '../../core/services/meta.service';
       .no-profile-content {
         text-align: center;
         padding: var(--spacing-xl) var(--spacing-lg);
-        background: rgba(255, 255, 255, 0.95);
+        background: #E3E3E3;
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius-large);
         box-shadow: var(--shadow-medium);
@@ -462,7 +462,7 @@ import { MetaService } from '../../core/services/meta.service';
       }
 
       .hero-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: #E3E3E3;
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: var(--shadow-strong);
