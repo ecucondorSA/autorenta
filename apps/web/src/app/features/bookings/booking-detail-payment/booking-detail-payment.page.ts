@@ -61,6 +61,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly bookingCreated = signal(false);
   readonly bookingId = signal<string | null>(null);
   readonly paymentProcessing = signal(false);
+  readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
@@ -323,15 +324,27 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   async payWithMercadoPago(): Promise<void> {
     const input = this.bookingInput();
+    const fx = this.fxSnapshot();
     if (!input) return;
+
+    if (!fx) {
+      this.error.set('No hay cotización disponible. Por favor, recarga la página.');
+      return;
+    }
 
     this.processingPayment.set(true);
     try {
-      // Create booking first (simplified for this flow)
-      // Note: In a real flow we might want to create the booking record first
-      // For now we assume we pass the carId/dates to the preference creation or use a temp ID
-      // But the gateway expects a bookingId.
-      // Let's try to create a pending booking first.
+      // Lock the FX rate - stop polling to prevent price changes during redirect
+      this.stopPolling();
+      this.fxRateLocked.set(true);
+
+      // Store locked FX rate in booking metadata for audit trail
+      const lockedFxSnapshot = {
+        binanceRate: fx.binanceRate,
+        platformRate: fx.platformRate,
+        lockedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 min validity
+      };
 
       const { data: booking, error: bookingError } = await this.supabaseClient
         .from('bookings')
@@ -345,6 +358,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           total_amount: this.PRE_AUTH_AMOUNT_USD, // Store decimal amount
           currency: 'USD',
           payment_mode: 'card',
+          price_locked_until: lockedFxSnapshot.expiresAt,
+          metadata: {
+            fx_locked: lockedFxSnapshot,
+            total_ars_at_lock: this.totalArs(),
+            rental_cost_ars_at_lock: this.rentalCostArs(),
+            guarantee_ars_at_lock: this.PRE_AUTH_AMOUNT_USD * fx.platformRate,
+          },
         })
         .select()
         .single();
@@ -471,16 +491,34 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
   /**
    * Create a pending booking in the database
+   * IMPORTANT: This also locks the FX rate to prevent price changes during payment
    */
   private async createBooking(): Promise<void> {
     const input = this.bookingInput();
     const user = await this.authService.getCurrentUser();
+    const fx = this.fxSnapshot();
 
     if (!input || !user?.id) {
       throw new Error('Faltan datos para crear la reserva');
     }
 
+    if (!fx) {
+      throw new Error('No hay cotización disponible. Por favor, recarga la página.');
+    }
+
     try {
+      // Lock the FX rate - stop polling to prevent price changes during payment
+      this.stopPolling();
+      this.fxRateLocked.set(true);
+
+      // Store locked FX rate in booking metadata for audit trail
+      const lockedFxSnapshot = {
+        binanceRate: fx.binanceRate,
+        platformRate: fx.platformRate,
+        lockedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 min validity
+      };
+
       const { data: booking, error: bookingError } = await this.supabaseClient
         .from('bookings')
         .insert({
@@ -493,6 +531,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
           total_amount: this.totalArs(), // Store decimal amount
           currency: 'ARS',
           payment_mode: 'card',
+          price_locked_until: lockedFxSnapshot.expiresAt,
+          metadata: {
+            fx_locked: lockedFxSnapshot,
+            total_ars_at_lock: this.totalArs(),
+            rental_cost_ars_at_lock: this.rentalCostArs(),
+            guarantee_ars_at_lock: this.PRE_AUTH_AMOUNT_USD * fx.platformRate,
+          },
         })
         .select()
         .single();
@@ -504,11 +549,17 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
       await this.upsertPricingAndInsurance(booking.id);
 
-      this.logger.info('Booking created successfully', {
+      this.logger.info('Booking created with locked FX rate', {
         total: this.totalArs(),
         currency: 'ARS',
+        binanceRate: fx.binanceRate.toFixed(2),
+        platformRate: fx.platformRate.toFixed(2),
+        lockedUntil: lockedFxSnapshot.expiresAt,
       });
     } catch (err) {
+      // If booking creation fails, unlock FX rate and resume polling
+      this.fxRateLocked.set(false);
+      this.loadFxSnapshot(); // Resume polling
       this.logger.error('Error creating booking', { error: err });
       throw err;
     }

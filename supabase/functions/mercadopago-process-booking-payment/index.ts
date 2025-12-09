@@ -49,6 +49,7 @@ serve(async (req) => {
   try {
     // ========================================
     // RATE LIMITING (P0 Security - DDoS Protection)
+    // SECURITY: Fail-closed to prevent DDoS when limiter unavailable
     // ========================================
     try {
       await enforceRateLimit(req, {
@@ -59,8 +60,19 @@ serve(async (req) => {
       if (error instanceof RateLimitError) {
         return error.toResponse();
       }
-      // Don't block on rate limiter errors - fail open for availability
-      console.error('[RateLimit] Error enforcing rate limit:', error);
+      // SECURITY FIX: Fail-closed - reject request if rate limiter has errors
+      console.error('[RateLimit] Error enforcing rate limit - failing closed:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'Service temporarily unavailable',
+          code: 'RATE_LIMITER_ERROR',
+          retry: true,
+        }),
+        {
+          status: 503,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' },
+        }
+      );
     }
 
     // Verificar variables de entorno
@@ -163,6 +175,56 @@ serve(async (req) => {
     if (booking.status !== 'pending' && booking.status !== 'pending_payment') {
       return new Response(
         JSON.stringify({ error: `Booking is not in a valid state for payment. Current status: ${booking.status}` }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // ========================================
+    // SECURITY: Validate price lock hasn't expired
+    // ========================================
+    if (booking.price_locked_until) {
+      const lockExpiry = new Date(booking.price_locked_until);
+      if (lockExpiry < new Date()) {
+        console.warn('Price lock expired for booking:', {
+          booking_id,
+          locked_until: booking.price_locked_until,
+          now: new Date().toISOString(),
+        });
+        return new Response(
+          JSON.stringify({
+            error: 'El precio de la reserva ha expirado. Por favor, inicie el proceso de pago nuevamente.',
+            code: 'PRICE_LOCK_EXPIRED',
+            expired_at: booking.price_locked_until,
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+    }
+
+    // ========================================
+    // SECURITY: Validate amount matches stored booking amount
+    // Prevents tampering with payment amounts
+    // ========================================
+    const storedAmount = Number(booking.total_amount || 0);
+    const metadataAmount = booking.metadata?.total_ars_at_lock;
+
+    if (metadataAmount && Math.abs(storedAmount - metadataAmount) > 0.01) {
+      console.error('Amount mismatch detected:', {
+        booking_id,
+        stored_amount: storedAmount,
+        metadata_amount: metadataAmount,
+      });
+      return new Response(
+        JSON.stringify({
+          error: 'Inconsistencia en el monto de la reserva. Por favor, contacte soporte.',
+          code: 'AMOUNT_MISMATCH',
+        }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
