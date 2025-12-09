@@ -3,7 +3,12 @@
   Diseñado para Autorent con 7 items de navegación
 -->
 
-<nav class="mobile-bottom-nav" role="navigation" aria-label="Navegación principal móvil">
+<nav
+  class="mobile-bottom-nav"
+  [class.mobile-bottom-nav--hidden]="isHidden()"
+  role="navigation"
+  aria-label="Navegación principal móvil"
+>
   <div class="nav-container">
     <a
       *ngFor="let item of navItems; trackBy: trackByRoute"

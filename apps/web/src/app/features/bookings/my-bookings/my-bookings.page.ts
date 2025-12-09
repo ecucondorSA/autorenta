@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, computed, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';
@@ -18,6 +18,17 @@ type BookingStatusFilter =
   | 'completed'
   | 'cancelled';
 
+// Section configuration for collapsible groups
+interface BookingSection {
+  id: string;
+  title: string;
+  icon: string;
+  expanded: boolean;
+  priority: number;
+  statuses: string[];
+  accentClass: string;
+}
+
 @Component({
   standalone: true,
   selector: 'app-my-bookings-page',
@@ -25,8 +36,8 @@ type BookingStatusFilter =
     CommonModule,
     MoneyPipe,
     RouterLink,
+    ScrollingModule,
     TranslateModule,
-    DepositStatusBadgeComponent,
     IconComponent,
   ],
   templateUrl: './my-bookings.page.html',
@@ -38,6 +49,37 @@ export class MyBookingsPage implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly statusFilter = signal<BookingStatusFilter>('all');
+
+  // Collapsible sections state
+  readonly sections = signal<BookingSection[]>([
+    {
+      id: 'action-required',
+      title: 'Requieren Acción',
+      icon: '⚠️',
+      expanded: true, // Always expanded by default
+      priority: 1,
+      statuses: ['pending'],
+      accentClass: 'border-l-amber-500 bg-amber-50 dark:bg-amber-950/20',
+    },
+    {
+      id: 'active',
+      title: 'Activas',
+      icon: '✅',
+      expanded: true,
+      priority: 2,
+      statuses: ['confirmed', 'in_progress'],
+      accentClass: 'border-l-green-500 bg-green-50 dark:bg-green-950/20',
+    },
+    {
+      id: 'history',
+      title: 'Historial',
+      icon: '📋',
+      expanded: false, // Collapsed by default
+      priority: 3,
+      statuses: ['completed', 'cancelled', 'expired'],
+      accentClass: 'border-l-gray-400 bg-gray-50 dark:bg-gray-900/20',
+    },
+  ]);
 
   // Array tipado de filtros disponibles
   readonly statusFilters: readonly BookingStatusFilter[] = [
@@ -61,16 +103,40 @@ export class MyBookingsPage implements OnInit {
     return allBookings.filter((booking) => booking.status === filter);
   });
 
-  // Computed: Count of bookings per status
+  // Computed: Bookings grouped by section (using effective status)
+  readonly bookingsBySection = computed(() => {
+    const allBookings = this.bookings();
+    const sectionList = this.sections();
+
+    return sectionList.map((section) => ({
+      ...section,
+      bookings: allBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))),
+      count: allBookings.filter((b) => section.statuses.includes(this.getEffectiveStatus(b))).length,
+    }));
+  });
+
+  // Computed: Count of bookings per status (using effective status)
   readonly statusCounts = computed(() => {
     const bookings = this.bookings();
     return {
       all: bookings.length,
-      pending: bookings.filter((b) => b.status === 'pending').length,
-      confirmed: bookings.filter((b) => b.status === 'confirmed').length,
-      in_progress: bookings.filter((b) => b.status === 'in_progress').length,
-      completed: bookings.filter((b) => b.status === 'completed').length,
-      cancelled: bookings.filter((b) => b.status === 'cancelled' || b.status === 'expired').length,
+      pending: bookings.filter((b) => this.getEffectiveStatus(b) === 'pending').length,
+      confirmed: bookings.filter((b) => this.getEffectiveStatus(b) === 'confirmed').length,
+      in_progress: bookings.filter((b) => this.getEffectiveStatus(b) === 'in_progress').length,
+      completed: bookings.filter((b) => this.getEffectiveStatus(b) === 'completed').length,
+      expired: bookings.filter((b) => this.getEffectiveStatus(b) === 'expired').length,
+      cancelled: bookings.filter((b) => this.getEffectiveStatus(b) === 'cancelled').length,
+    };
+  });
+
+  // Computed: Summary stats for dashboard (using effective status)
+  readonly dashboardStats = computed(() => {
+    const counts = this.statusCounts();
+    return {
+      actionRequired: counts.pending, // Only truly pending (can still be paid)
+      active: counts.confirmed + counts.in_progress,
+      history: counts.completed + counts.cancelled + counts.expired, // Include expired
+      total: counts.all,
     };
   });
 
@@ -101,8 +167,30 @@ export class MyBookingsPage implements OnInit {
     return formatDateRange(booking.start_at, booking.end_at);
   }
 
+  /**
+   * Determina el estado efectivo de una reserva.
+   * Si está pendiente pero la fecha de inicio ya pasó, se considera "vencida".
+   */
+  getEffectiveStatus(booking: Booking): string {
+    if (booking.status === 'pending' && this.isStartDatePassed(booking)) {
+      return 'expired';
+    }
+    return booking.status;
+  }
+
+  /**
+   * Verifica si la fecha de inicio de la reserva ya pasó
+   */
+  isStartDatePassed(booking: Booking): boolean {
+    if (!booking.start_at) return false;
+    const startDate = new Date(booking.start_at);
+    const now = new Date();
+    return startDate < now;
+  }
+
   statusLabel(booking: Booking): string {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return 'Pendiente de pago';
       case 'confirmed':
@@ -121,7 +209,8 @@ export class MyBookingsPage implements OnInit {
   }
 
   statusHint(booking: Booking): string | null {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return 'Completá el checkout para confirmar tu reserva.';
       case 'confirmed':
@@ -130,13 +219,16 @@ export class MyBookingsPage implements OnInit {
         return 'Gracias por viajar con nosotros.';
       case 'cancelled':
         return 'Se canceló esta reserva. Podés generar una nueva cuando quieras.';
+      case 'expired':
+        return 'La fecha de alquiler ya pasó sin completar el pago.';
       default:
         return null;
     }
   }
 
   statusBannerClass(booking: Booking): string {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return 'status-banner--pending';
       case 'confirmed':
@@ -153,7 +245,8 @@ export class MyBookingsPage implements OnInit {
   }
 
   statusBadgeClass(booking: Booking): string {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return 'badge-warning';
       case 'confirmed':
@@ -171,7 +264,8 @@ export class MyBookingsPage implements OnInit {
   }
 
   statusCardClass(booking: Booking): string {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return 'booking-card--pending';
       case 'confirmed':
@@ -188,7 +282,8 @@ export class MyBookingsPage implements OnInit {
   }
 
   statusIcon(booking: Booking): string {
-    switch (booking.status) {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
       case 'pending':
         return '⏳';
       case 'confirmed':
@@ -198,10 +293,94 @@ export class MyBookingsPage implements OnInit {
         return '🚗';
       case 'cancelled':
       case 'expired':
-        return '⚠️';
+        return '❌';
       default:
         return 'ℹ️';
     }
+  }
+
+  /** Short status label for compact cards */
+  statusLabelShort(booking: Booking): string {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
+      case 'pending':
+        return 'Pendiente';
+      case 'confirmed':
+        return 'Pagada';
+      case 'in_progress':
+        return 'En uso';
+      case 'completed':
+        return 'Finalizada';
+      case 'cancelled':
+        return 'Cancelada';
+      case 'expired':
+        return 'Vencida';
+      default:
+        return effectiveStatus;
+    }
+  }
+
+  /** Border color class for compact cards */
+  statusBorderClass(booking: Booking): string {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
+      case 'pending':
+        return 'border-l-amber-500';
+      case 'confirmed':
+      case 'in_progress':
+        return 'border-l-green-500';
+      case 'completed':
+        return 'border-l-gray-400';
+      case 'cancelled':
+      case 'expired':
+        return 'border-l-red-500';
+      default:
+        return 'border-l-gray-300';
+    }
+  }
+
+  /** Status icon background class */
+  statusIconBgClass(booking: Booking): string {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
+      case 'pending':
+        return 'bg-amber-100 dark:bg-amber-900/50';
+      case 'confirmed':
+      case 'in_progress':
+        return 'bg-green-100 dark:bg-green-900/50';
+      case 'completed':
+        return 'bg-gray-100 dark:bg-gray-800';
+      case 'cancelled':
+      case 'expired':
+        return 'bg-red-100 dark:bg-red-900/50';
+      default:
+        return 'bg-gray-100 dark:bg-gray-800';
+    }
+  }
+
+  /** Compact badge class with colors */
+  statusBadgeCompactClass(booking: Booking): string {
+    const effectiveStatus = this.getEffectiveStatus(booking);
+    switch (effectiveStatus) {
+      case 'pending':
+        return 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300';
+      case 'confirmed':
+        return 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300';
+      case 'in_progress':
+        return 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300';
+      case 'completed':
+        return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+      case 'cancelled':
+      case 'expired':
+        return 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300';
+      default:
+        return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+    }
+  }
+
+  /** Check if booking can still be paid (pending AND start date not passed) */
+  canCompletePay(booking: Booking): boolean {
+    return booking.status === 'pending' && !this.isStartDatePassed(booking);
   }
 
   // Actions
@@ -316,5 +495,34 @@ export class MyBookingsPage implements OnInit {
       default:
         return filter;
     }
+  }
+
+  /**
+   * Toggle section expanded/collapsed state
+   */
+  toggleSection(sectionId: string): void {
+    const currentSections = this.sections();
+    const updatedSections = currentSections.map((section) =>
+      section.id === sectionId ? { ...section, expanded: !section.expanded } : section,
+    );
+    this.sections.set(updatedSections);
+  }
+
+  /**
+   * Expand all sections
+   */
+  expandAllSections(): void {
+    const currentSections = this.sections();
+    this.sections.set(currentSections.map((s) => ({ ...s, expanded: true })));
+  }
+
+  /**
+   * Check if booking is from history (older than 3 months)
+   */
+  isOldBooking(booking: Booking): boolean {
+    if (!booking.end_at) return false;
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    return new Date(booking.end_at) < threeMonthsAgo;
   }
 }

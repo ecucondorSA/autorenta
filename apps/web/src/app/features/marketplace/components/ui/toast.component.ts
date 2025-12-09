@@ -55,6 +55,9 @@ import { Component, effect, input, output, signal } from '@angular/core';
         (touchmove)="onTouchMove($event)"
         (touchend)="onTouchEnd()"
         [style.transform]="'translateY(' + swipeOffset() + 'px)'"
+        role="alert"
+        [attr.aria-live]="variant() === 'error' ? 'assertive' : 'polite'"
+        aria-atomic="true"
       >
         <!-- Icon -->
         <div class="toast-icon">

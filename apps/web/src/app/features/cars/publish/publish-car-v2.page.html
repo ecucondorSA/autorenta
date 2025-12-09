@@ -236,7 +236,7 @@
                 type="button"
                 (click)="showAIPhotosModal.set(true)"
                 [disabled]="!selectedFIPEModel() || uploadedPhotos().length >= 10"
-                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-[#A7D8F4] hover:bg-[#8EC9EC] text-[#050505] rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
               >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -772,7 +772,7 @@
             <button
               type="submit"
               [disabled]="isSubmitting() || !canSubmit()"
-              class="w-full sm:w-auto px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              class="w-full sm:w-auto px-8 py-4 bg-[#00D95F] hover:bg-[#00C553] active:bg-[#00B048] text-black rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
               data-testid="publish-submit"
             >
               <span
@@ -797,16 +797,16 @@
       <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
         <!-- Tarjeta de Confianza -->
         <div
-          class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
+          class="bg-gradient-to-br from-[#00D95F] to-[#00B048] rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
         >
           <div
             class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"
           ></div>
-          <h3 class="font-bold text-lg mb-4 relative z-10">Tu seguridad es primero</h3>
-          <ul class="space-y-3 text-sm text-indigo-100 relative z-10">
+          <h3 class="font-bold text-lg mb-4 relative z-10 text-black">Tu seguridad es primero</h3>
+          <ul class="space-y-3 text-sm text-black/80 relative z-10">
             <li class="flex gap-2">
               <svg
-                class="w-5 h-5 text-indigo-300"
+                class="w-5 h-5 text-black/60"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -822,7 +822,7 @@
             </li>
             <li class="flex gap-2">
               <svg
-                class="w-5 h-5 text-indigo-300"
+                class="w-5 h-5 text-black/60"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -838,7 +838,7 @@
             </li>
             <li class="flex gap-2">
               <svg
-                class="w-5 h-5 text-indigo-300"
+                class="w-5 h-5 text-black/60"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

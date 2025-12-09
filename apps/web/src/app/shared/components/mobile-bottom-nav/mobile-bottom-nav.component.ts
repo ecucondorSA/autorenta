@@ -1,7 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  PLATFORM_ID,
+  NgZone,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { Subject, takeUntil, filter, fromEvent, throttleTime } from 'rxjs';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
 import { IconComponent } from '../icon/icon.component';
 
@@ -22,10 +32,19 @@ interface NavItem {
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost
   host: { class: 'block md:hidden' },
 })
-export class MobileBottomNavComponent implements OnDestroy {
+export class MobileBottomNavComponent implements OnInit, OnDestroy {
   private readonly unreadMessagesService = inject(UnreadMessagesService);
+  private readonly document = inject(DOCUMENT);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly ngZone = inject(NgZone);
   private readonly destroy$ = new Subject<void>();
+
   readonly currentRoute = signal<string>('');
+  readonly isHidden = signal(false);
+
+  private lastScrollY = 0;
+  private readonly scrollThreshold = 50; // Mínimo scroll para activar hide/show
+  private readonly scrollDelta = 10; // Sensibilidad del scroll
 
   readonly navItems: NavItem[] = [
     {
@@ -66,6 +85,68 @@ export class MobileBottomNavComponent implements OnDestroy {
     this.router.events.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.currentRoute.set(this.router.url);
     });
+
+    // Reset nav visibility on route change
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.isHidden.set(false);
+        this.lastScrollY = 0;
+      });
+  }
+
+  ngOnInit(): void {
+    this.setupScrollListener();
+  }
+
+  /**
+   * Sets up scroll listener with throttling for performance
+   * Hides nav on scroll down, shows on scroll up
+   */
+  private setupScrollListener(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Run outside Angular zone for performance
+    this.ngZone.runOutsideAngular(() => {
+      fromEvent(window, 'scroll', { passive: true })
+        .pipe(throttleTime(100), takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.handleScroll();
+        });
+    });
+  }
+
+  private handleScroll(): void {
+    const currentScrollY = window.scrollY;
+    const scrollDiff = currentScrollY - this.lastScrollY;
+
+    // Only react if scroll difference is significant
+    if (Math.abs(scrollDiff) < this.scrollDelta) return;
+
+    // Scrolling down and past threshold - hide nav
+    if (scrollDiff > 0 && currentScrollY > this.scrollThreshold) {
+      if (!this.isHidden()) {
+        this.ngZone.run(() => this.isHidden.set(true));
+      }
+    }
+    // Scrolling up - show nav
+    else if (scrollDiff < 0) {
+      if (this.isHidden()) {
+        this.ngZone.run(() => this.isHidden.set(false));
+      }
+    }
+
+    // At top of page - always show
+    if (currentScrollY <= this.scrollThreshold) {
+      if (this.isHidden()) {
+        this.ngZone.run(() => this.isHidden.set(false));
+      }
+    }
+
+    this.lastScrollY = currentScrollY;
   }
 
   ngOnDestroy(): void {
