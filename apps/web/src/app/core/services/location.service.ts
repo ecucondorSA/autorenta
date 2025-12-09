@@ -1,5 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { Geolocation, Position } from '@capacitor/geolocation';
 import { GeocodingResult, GeocodingService } from './geocoding.service';
 import { ProfileService } from './profile.service';
 import { SupabaseClientService } from './supabase-client.service';
@@ -104,10 +106,43 @@ export class LocationService {
   }
 
   /**
-   * Get current GPS position from browser
+   * Get current GPS position from browser or native platform
+   * Uses Capacitor Geolocation on native platforms for better accuracy
    * @returns Current position or null if geolocation not available/denied
    */
   async getCurrentPosition(): Promise<LocationCoordinates | null> {
+    // Use Capacitor Geolocation on native platforms
+    if (Capacitor.isNativePlatform()) {
+      try {
+        // Check permissions first
+        const permStatus = await Geolocation.checkPermissions();
+        if (permStatus.location !== 'granted') {
+          const requestStatus = await Geolocation.requestPermissions();
+          if (requestStatus.location !== 'granted') {
+            console.warn('Location permission denied');
+            return null;
+          }
+        }
+
+        const position: Position = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000, // 5 minutes cache
+        });
+
+        return {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        };
+      } catch (error) {
+        console.warn('Error getting native position:', error);
+        return null;
+      }
+    }
+
+    // Fallback to browser geolocation
     return new Promise((resolve) => {
       if (!this.isBrowser || !navigator.geolocation) {
         console.warn('Geolocation is not supported by this browser');
@@ -137,12 +172,45 @@ export class LocationService {
     });
   }
 
+  // Store Capacitor watch ID for cleanup
+  private capacitorWatchId: string | null = null;
+
   /**
    * Watch user's position for real-time updates
+   * Uses Capacitor on native platforms
    * @param callback Function to call with new location
-   * @returns Watch ID to clear later
+   * @returns Watch ID to clear later (browser only, native uses internal ID)
    */
   watchPosition(callback: (location: LocationCoordinates) => void): number | null {
+    // Use Capacitor on native platforms
+    if (Capacitor.isNativePlatform()) {
+      Geolocation.watchPosition(
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0, // No cache for real-time
+        },
+        (position, err) => {
+          if (err) {
+            console.warn('Error watching native position:', err);
+            return;
+          }
+          if (position) {
+            callback({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              accuracy: position.coords.accuracy,
+              timestamp: position.timestamp,
+            });
+          }
+        },
+      ).then((watchId) => {
+        this.capacitorWatchId = watchId;
+      });
+      return null; // Capacitor uses string IDs stored internally
+    }
+
+    // Browser fallback
     if (!this.isBrowser || !navigator.geolocation) {
       console.warn('Geolocation is not supported by this browser');
       return null;
@@ -170,10 +238,18 @@ export class LocationService {
 
   /**
    * Clear position watch
-   * @param watchId ID returned by watchPosition
+   * @param watchId ID returned by watchPosition (browser only)
    */
-  clearWatch(watchId: number): void {
-    if (this.isBrowser && navigator.geolocation) {
+  clearWatch(watchId: number | null): void {
+    // Clear Capacitor watch on native
+    if (Capacitor.isNativePlatform() && this.capacitorWatchId) {
+      Geolocation.clearWatch({ id: this.capacitorWatchId });
+      this.capacitorWatchId = null;
+      return;
+    }
+
+    // Browser fallback
+    if (this.isBrowser && navigator.geolocation && watchId !== null) {
       navigator.geolocation.clearWatch(watchId);
     }
   }

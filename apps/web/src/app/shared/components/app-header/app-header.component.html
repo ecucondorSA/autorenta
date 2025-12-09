@@ -6,38 +6,7 @@
     <a routerLink="/"
       class="flex items-center gap-2 flex-shrink-0 hover:opacity-90 transition-opacity"
       aria-label="Ir al inicio">
-      <!-- Logo Original - Actualizado a Índigo -->
-      <svg class="h-10 w-auto" viewBox="0 0 400 80" fill="none" xmlns="http://www.w3.org/2000/svg"
-        aria-label="AutoRenta">
-        <!-- Ícono de auto con llave -->
-        <g transform="translate(8, 12)">
-          <circle cx="25" cy="30" r="28" fill="#39FF14" opacity="0.15" />
-          <g stroke="#39FF14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            fill="none">
-            <circle cx="18" cy="18" r="6" />
-            <circle cx="18" cy="18" r="2.5" fill="#39FF14" />
-            <path d="M18 24 L18 35" />
-            <path d="M18 30 L21 30 L21 32" />
-            <path d="M18 34 L22 34 L22 36" />
-          </g>
-          <g fill="none" stroke="#050505" stroke-width="2" stroke-linejoin="round"
-            stroke-linecap="round" class="dark:stroke-white">
-            <path d="M8 38 L12 28 L20 24 L36 24 L44 28 L48 38 L48 46 L8 46 Z" />
-            <path d="M22 32 L24 26 L33 26 L33 32 Z" fill="#39FF14" opacity="0.5" stroke="none" />
-            <path d="M35 32 L35 26 L40 26 L42 32 Z" fill="#39FF14" opacity="0.5" stroke="none" />
-            <line x1="14" y1="32" x2="46" y2="32" stroke-width="1.5" />
-          </g>
-          <circle cx="18" cy="46" r="5" class="fill-text-primary dark:fill-white" />
-          <circle cx="18" cy="46" r="2" fill="#F8F4EC" />
-          <circle cx="38" cy="46" r="5" class="fill-text-primary dark:fill-white" />
-          <circle cx="38" cy="46" r="2" fill="#F8F4EC" />
-          <ellipse cx="11" cy="38" rx="2" ry="1.5" fill="#39FF14" />
-        </g>
-        <text x="72" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38"
-          font-weight="700" class="fill-text-primary dark:fill-white">Auto</text>
-        <text x="178" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="38"
-          font-weight="700" fill="#39FF14">Renta</text>
-      </svg>
+      <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar Logo" class="h-10 w-auto" width="160" height="40" priority />
     </a>
 
     <!-- Search Input (compact when compact=true) -->
@@ -60,13 +29,13 @@
     <div class="flex items-center gap-2 flex-shrink-0">
       <!-- Secondary CTA: ¿Cómo funciona? -->
       <button type="button" (click)="navigateToHowItWorks()"
-        class="hidden md:flex items-center px-4 py-2 text-sm font-medium text-text-primary dark:text-text-inverse hover:text-cta-default transition-colors">
+        class="hidden md:flex items-center px-4 py-2 text-sm font-medium text-text-primary dark:text-text-inverse hover:text-cta-default transition-colors whitespace-nowrap">
         ¿Cómo funciona?
       </button>
 
       <!-- Secondary CTA: Publica tu auto (más sutil para no competir con Buscar) -->
       <button type="button" (click)="navigateToPublish()"
-        class="px-4 py-2 text-sm font-bold text-cta-default hover:text-white border-2 border-cta-default hover:bg-cta-default rounded-lg transition-all">
+        class="px-4 py-2 text-sm font-bold text-cta-default hover:text-white border-2 border-cta-default hover:bg-cta-default rounded-lg transition-all whitespace-nowrap">
         Publica tu auto
       </button>
     </div>

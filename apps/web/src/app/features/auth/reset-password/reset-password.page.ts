@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   standalone: true,
   selector: 'app-reset-password-page',
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, TranslateModule],
   templateUrl: './reset-password.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

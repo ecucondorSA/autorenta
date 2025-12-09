@@ -196,19 +196,19 @@
     >
       <button
         (click)="onEdit($event)"
-        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-primary-50 hover:text-primary-600 transition-colors"
+        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-primary-50 hover:text-primary-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis"
       >
         Editar
       </button>
       <button
         (click)="onToggleAvailability($event)"
-        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-warning-light/10 hover:text-warning-text transition-colors"
+        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-warning-light/10 hover:text-warning-text transition-colors whitespace-nowrap overflow-hidden text-ellipsis"
       >
         {{ car.status === 'active' ? 'Pausar' : 'Activar' }}
       </button>
       <button
         (click)="onDelete($event)"
-        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-error-bg hover:text-error-text transition-colors"
+        class="text-xs font-medium py-2 rounded-lg bg-surface-base hover:bg-error-bg hover:text-error-text transition-colors whitespace-nowrap overflow-hidden text-ellipsis"
       >
         Eliminar
       </button>

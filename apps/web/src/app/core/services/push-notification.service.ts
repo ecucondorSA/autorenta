@@ -1,8 +1,20 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
+import { Capacitor } from '@capacitor/core';
+import { PushNotifications, Token, ActionPerformed, PushNotificationSchema } from '@capacitor/push-notifications';
+import { Subject } from 'rxjs';
 import { SupabaseClientService } from './supabase-client.service';
 import { AuthService } from './auth.service';
+
+/**
+ * Push notification message interface
+ */
+export interface PushMessage {
+  title?: string;
+  body?: string;
+  data?: Record<string, unknown>;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +22,14 @@ import { AuthService } from './auth.service';
 export class PushNotificationService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly isNative = this.isBrowser && Capacitor.isNativePlatform();
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly authService = inject(AuthService);
   private readonly swPush = inject(SwPush);
+
+  // Native push notification subjects
+  private readonly nativeNotificationClicks$ = new Subject<ActionPerformed>();
+  private readonly nativeMessages$ = new Subject<PushNotificationSchema>();
 
   // VAPID public key - should be stored in environment variables
   // Generar en: https://web-push-codelab.glitch.me/
@@ -22,6 +39,9 @@ export class PushNotificationService {
    * Verifica si push notifications están disponibles
    */
   get isEnabled(): boolean {
+    if (this.isNative) {
+      return true; // Always available on native
+    }
     return this.swPush.isEnabled;
   }
 
@@ -29,6 +49,9 @@ export class PushNotificationService {
    * Observable de clicks en notificaciones
    */
   get notificationClicks$() {
+    if (this.isNative) {
+      return this.nativeNotificationClicks$.asObservable();
+    }
     return this.swPush.notificationClicks;
   }
 
@@ -36,6 +59,9 @@ export class PushNotificationService {
    * Observable de mensajes recibidos
    */
   get messages$() {
+    if (this.isNative) {
+      return this.nativeMessages$.asObservable();
+    }
     return this.swPush.messages;
   }
 
@@ -44,7 +70,7 @@ export class PushNotificationService {
    * This should be called once when the application bootstraps.
    */
   public async initializePushNotifications(): Promise<void> {
-    if (!this.isBrowser || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (!this.isBrowser) {
       return;
     }
 
@@ -54,10 +80,21 @@ export class PushNotificationService {
       return;
     }
 
+    // Use native push on mobile platforms
+    if (this.isNative) {
+      await this.initializeNativePush();
+      return;
+    }
+
+    // Web push fallback
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return;
+    }
+
     try {
       const subscription = await this.subscribeUserToPush();
       if (subscription) {
-        await this.saveTokenToDatabase(subscription);
+        await this.saveTokenToDatabase(subscription.endpoint, 'web');
       }
     } catch {
       /* Silenced */
@@ -65,7 +102,54 @@ export class PushNotificationService {
   }
 
   /**
-   * Subscribes the user to push notifications.
+   * Initialize native push notifications using Capacitor
+   */
+  private async initializeNativePush(): Promise<void> {
+    try {
+      // Check permissions
+      let permStatus = await PushNotifications.checkPermissions();
+
+      if (permStatus.receive === 'prompt') {
+        permStatus = await PushNotifications.requestPermissions();
+      }
+
+      if (permStatus.receive !== 'granted') {
+        console.warn('Push notification permission not granted');
+        return;
+      }
+
+      // Register for push notifications
+      await PushNotifications.register();
+
+      // Listen for registration success
+      PushNotifications.addListener('registration', async (token: Token) => {
+        console.log('Push registration success, token:', token.value);
+        await this.saveTokenToDatabase(token.value, 'fcm');
+      });
+
+      // Listen for registration errors
+      PushNotifications.addListener('registrationError', (error) => {
+        console.error('Push registration error:', error.error);
+      });
+
+      // Listen for push notifications received
+      PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
+        console.log('Push notification received:', notification);
+        this.nativeMessages$.next(notification);
+      });
+
+      // Listen for notification action performed (user tapped notification)
+      PushNotifications.addListener('pushNotificationActionPerformed', (action: ActionPerformed) => {
+        console.log('Push notification action performed:', action);
+        this.nativeNotificationClicks$.next(action);
+      });
+    } catch (error) {
+      console.error('Error initializing native push:', error);
+    }
+  }
+
+  /**
+   * Subscribes the user to push notifications (web only).
    * @returns The PushSubscription object or null if permission is denied.
    */
   private async subscribeUserToPush(): Promise<PushSubscription | null> {
@@ -91,11 +175,10 @@ export class PushNotificationService {
 
   /**
    * Saves the push subscription token to the database.
-   * @param subscription The PushSubscription object.
+   * @param token The token string (endpoint for web, FCM token for native)
+   * @param platform The platform type ('web' | 'fcm')
    */
-  private async saveTokenToDatabase(subscription: PushSubscription): Promise<void> {
-    const token = subscription.toJSON();
-
+  private async saveTokenToDatabase(token: string, platform: 'web' | 'fcm'): Promise<void> {
     // Ensure we have a user
     const user = await this.authService.getCurrentUser();
     if (!user) return;
@@ -103,13 +186,34 @@ export class PushNotificationService {
     const { error } = await this.supabase.from('push_tokens').upsert(
       {
         user_id: user.id,
-        token: token.endpoint, // The endpoint is a unique identifier for the device
+        token: token,
+        platform: platform,
+        updated_at: new Date().toISOString(),
       },
-      { onConflict: 'token' }, // If the token already exists, do nothing
+      { onConflict: 'token' },
     );
 
     if (error) {
+      console.error('Error saving push token:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Remove push token from database (call on logout)
+   */
+  public async removeToken(): Promise<void> {
+    const user = await this.authService.getCurrentUser();
+    if (!user) return;
+
+    // Get current token
+    if (this.isNative) {
+      // For native, we need to get the token from storage or registration
+      // This is handled by removing all tokens for the user on logout
+      await this.supabase
+        .from('push_tokens')
+        .delete()
+        .eq('user_id', user.id);
     }
   }
 

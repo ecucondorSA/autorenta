@@ -1,12 +1,14 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Capacitor } from '@capacitor/core';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 /**
  * HapticFeedbackService - Mobile-First Tactile Feedback
  *
  * Provides haptic/vibration feedback for mobile interactions.
- * Uses the Web Vibration API (navigator.vibrate).
- * Falls back gracefully on unsupported browsers/platforms.
+ * Uses Capacitor Haptics on native platforms (Android/iOS) for better quality.
+ * Falls back to Web Vibration API on browsers.
  *
  * Feedback Types:
  * - light: Quick tap (10ms) - button presses, toggles
@@ -34,11 +36,15 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class HapticFeedbackService {
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly isSupported: boolean;
+  private readonly isBrowser: boolean;
+  private readonly isNative: boolean;
+  private readonly isWebSupported: boolean;
   private enabled = true;
 
   constructor() {
-    this.isSupported = isPlatformBrowser(this.platformId) && 'vibrate' in navigator;
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    this.isNative = this.isBrowser && Capacitor.isNativePlatform();
+    this.isWebSupported = this.isBrowser && 'vibrate' in navigator;
   }
 
   /**
@@ -46,7 +52,11 @@ export class HapticFeedbackService {
    * Use for: button presses, toggles, quick interactions
    */
   light(): void {
-    this.vibrate(10);
+    if (this.isNative) {
+      this.nativeImpact(ImpactStyle.Light);
+    } else {
+      this.vibrate(10);
+    }
   }
 
   /**
@@ -54,7 +64,11 @@ export class HapticFeedbackService {
    * Use for: confirmations, selections
    */
   medium(): void {
-    this.vibrate(20);
+    if (this.isNative) {
+      this.nativeImpact(ImpactStyle.Medium);
+    } else {
+      this.vibrate(20);
+    }
   }
 
   /**
@@ -62,7 +76,11 @@ export class HapticFeedbackService {
    * Use for: important actions, emphasis
    */
   heavy(): void {
-    this.vibrate(30);
+    if (this.isNative) {
+      this.nativeImpact(ImpactStyle.Heavy);
+    } else {
+      this.vibrate(30);
+    }
   }
 
   /**
@@ -70,7 +88,11 @@ export class HapticFeedbackService {
    * Use for: successful operations, completions
    */
   success(): void {
-    this.vibrate([10, 50, 10]);
+    if (this.isNative) {
+      this.nativeNotification(NotificationType.Success);
+    } else {
+      this.vibrate([10, 50, 10]);
+    }
   }
 
   /**
@@ -78,7 +100,23 @@ export class HapticFeedbackService {
    * Use for: errors, warnings, validation failures
    */
   error(): void {
-    this.vibrate([20, 30, 20, 30, 20]);
+    if (this.isNative) {
+      this.nativeNotification(NotificationType.Error);
+    } else {
+      this.vibrate([20, 30, 20, 30, 20]);
+    }
+  }
+
+  /**
+   * Warning feedback
+   * Use for: warnings, validation issues
+   */
+  warning(): void {
+    if (this.isNative) {
+      this.nativeNotification(NotificationType.Warning);
+    } else {
+      this.vibrate([15, 40, 15]);
+    }
   }
 
   /**
@@ -86,11 +124,16 @@ export class HapticFeedbackService {
    * Use for: list selections, tab changes, toggles
    */
   selection(): void {
-    this.vibrate(15);
+    if (this.isNative) {
+      void Haptics.selectionStart();
+      void Haptics.selectionEnd();
+    } else {
+      this.vibrate(15);
+    }
   }
 
   /**
-   * Custom vibration pattern
+   * Custom vibration pattern (web only)
    * @param pattern - Duration in ms or array of durations [vibrate, pause, vibrate...]
    */
   custom(pattern: number | number[]): void {
@@ -108,11 +151,40 @@ export class HapticFeedbackService {
    * Check if haptic feedback is supported and enabled
    */
   isAvailable(): boolean {
-    return this.isSupported && this.enabled;
+    return (this.isNative || this.isWebSupported) && this.enabled;
   }
 
+  /**
+   * Native impact feedback using Capacitor Haptics
+   */
+  private async nativeImpact(style: ImpactStyle): Promise<void> {
+    if (!this.enabled) return;
+
+    try {
+      await Haptics.impact({ style });
+    } catch {
+      // Silently fail if haptics not available
+    }
+  }
+
+  /**
+   * Native notification feedback using Capacitor Haptics
+   */
+  private async nativeNotification(type: NotificationType): Promise<void> {
+    if (!this.enabled) return;
+
+    try {
+      await Haptics.notification({ type });
+    } catch {
+      // Silently fail if haptics not available
+    }
+  }
+
+  /**
+   * Web vibration fallback
+   */
   private vibrate(pattern: number | number[]): void {
-    if (!this.isSupported || !this.enabled) {
+    if (!this.isWebSupported || !this.enabled) {
       return;
     }
 

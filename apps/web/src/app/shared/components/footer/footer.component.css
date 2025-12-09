@@ -162,6 +162,12 @@
   color: var(--text-secondary, #717171);
 }
 
+.footer-logo {
+  height: 2rem; /* h-8 in Tailwind */
+  width: auto;
+  margin-right: 0.5rem; /* Space between logo and copyright */
+}
+
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .footer-bottom-left {

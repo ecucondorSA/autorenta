@@ -32,7 +32,11 @@
     "serve:ssr:web": "node dist/web/server/server.mjs",
     "docs:build": "compodoc -p tsconfig.json",
     "docs:serve": "compodoc -s",
-    "docs:clean": "rm -rf documentation"
+    "docs:clean": "rm -rf documentation",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "android:debug": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run build && npx cap sync android && cd android && ./gradlew bundleRelease"
   },
   "lint-staged": {
     "src/**/*.{ts,js,html,css,scss}": [
@@ -65,8 +69,17 @@
     "@angular/router": "^20.3.15",
     "@angular/service-worker": "~20.3.15",
     "@angular/ssr": "^20.3.13",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/app": "^7.1.1",
+    "@capacitor/camera": "^7.0.3",
     "@capacitor/core": "^7.4.4",
     "@capacitor/geolocation": "^7.1.6",
+    "@capacitor/haptics": "^7.0.3",
+    "@capacitor/preferences": "^7.0.3",
+    "@capacitor/push-notifications": "^7.0.4",
+    "@capacitor/share": "^7.0.3",
+    "@capacitor/splash-screen": "^7.0.4",
+    "@capacitor/status-bar": "^7.0.4",
     "@ionic/angular": "^8.7.11",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
@@ -102,6 +115,7 @@
     "@angular/compiler-cli": "~20.3.15",
     "@angular/ssr": "^20.3.7",
     "@axe-core/playwright": "^4.11.0",
+    "@capacitor/cli": "^7.4.4",
     "@cloudflare/workers-types": "^4.20251205.0",
     "@compodoc/compodoc": "^1.1.32",
     "@sentry/cli": "^2.58.2",

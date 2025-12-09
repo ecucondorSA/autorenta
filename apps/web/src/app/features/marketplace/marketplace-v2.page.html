@@ -16,8 +16,9 @@
         <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-150 animate-pulse">
         </div>
 
-        <img src="/assets/images/autorentar-logo.svg" alt="Autorentar Loading"
-          class="h-16 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+        <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar Loading"
+          class="h-16 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+          width="256" height="64" priority>
       </div>
 
       <!-- NEW: Dynamic Loading Bar & Text -->
@@ -68,8 +69,9 @@
       <!-- Left: Logo Autorentar -->
       <div class="flex items-center gap-2 cursor-pointer group flex-shrink-0"
         (click)="onLogoClick()">
-        <img src="/assets/images/autorentar-logo.svg" alt="Autorentar Logo"
-          class="h-10 w-auto group-hover:scale-105 transition-transform drop-shadow-lg">
+        <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar Logo"
+          class="h-10 w-auto group-hover:scale-105 transition-transform drop-shadow-lg"
+          width="160" height="40" priority>
       </div>
 
       <!-- Center: Navigation Links -->
@@ -90,7 +92,7 @@
         </button>
         <!-- Primary: Ingresar -->
         <button routerLink="/auth/login"
-          class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00D95F] hover:bg-[#00B048] text-white font-bold transition-all shadow-lg shadow-[#00D95F]/30 hover:scale-105 active:scale-95">
+          class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00D95F] hover:bg-[#00B048] text-white font-bold transition-all shadow-lg shadow-[#00D95F]/30 hover:scale-105 active:scale-95 whitespace-nowrap min-w-[100px]">
           Ingresar
         </button>
       </div>
@@ -119,7 +121,7 @@
 
       <!-- CTA Button -->
       <a routerLink="/cars"
-        class="inline-flex items-center gap-3 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30">
+        class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30">
         Ver autos de vecinos
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           stroke-width="2.5">
@@ -207,10 +209,10 @@
             <stop offset="0%" stop-color="#1565c0" />
             <stop offset="100%" stop-color="#42a5f5" />
           </linearGradient>
-          <!-- Purple feathers gradient -->
+          <!-- Purple feathers gradient -> Blue-dark -->
           <linearGradient id="ecu-purple" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#7b1fa2" />
-            <stop offset="100%" stop-color="#ab47bc" />
+            <stop offset="0%" stop-color="#0284c7" />
+            <stop offset="100%" stop-color="#0369a1" />
           </linearGradient>
         </defs>
         <!-- Circular clip -->
@@ -467,7 +469,7 @@
         class="bg-surface-raised p-6 rounded-2xl shadow-sm border border-border-default flex flex-col">
         <div class="flex items-center gap-3 mb-4">
           <div
-            class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold">
+            class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">
             F
           </div>
           <div>
@@ -557,8 +559,8 @@
           </li>
           <li class="flex items-start gap-4">
             <div
-              class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-50 to-violet-100 flex items-center justify-center flex-shrink-0 shadow-sm">
-              <svg class="w-5 h-5 text-violet-600" viewBox="0 0 24 24" fill="none"
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center flex-shrink-0 shadow-sm">
+              <svg class="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />

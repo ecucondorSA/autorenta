@@ -1,6 +1,5 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   AfterViewInit,
   Output,
@@ -16,43 +15,88 @@ import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
 
+/**
+ * MercadoPago Payment Brick SDK interfaces
+ * Using the recommended Checkout Bricks API (not legacy cardForm)
+ */
 interface MercadoPagoSDK {
-  cardForm: (options: CardFormOptions) => CardFormInstance;
+  bricks: () => BricksBuilder;
 }
 
-interface CardFormInstance {
-  unmount: () => void;
-  createCardToken: () => void;
+interface BricksBuilder {
+  create: (
+    brick: 'payment' | 'cardPayment' | 'wallet' | 'statusScreen',
+    containerId: string,
+    settings: PaymentBrickSettings,
+  ) => Promise<BrickController>;
 }
 
-interface CardFormOptions {
-  amount: string;
-  iframe: boolean;
-  autoMount: boolean;
-  form: {
-    id: string;
-    cardNumber: { id: string; placeholder: string };
-    expirationDate: { id: string; placeholder: string };
-    securityCode: { id: string; placeholder: string };
-    cardholderName: { id: string; placeholder: string };
-    identificationType: { id: string; placeholder: string };
-    identificationNumber: { id: string; placeholder: string };
-    installments: { id: string; placeholder: string };
-    issuer: { id: string; placeholder: string };
+interface BrickController {
+  unmount: () => Promise<void>;
+}
+
+interface PaymentBrickSettings {
+  initialization: {
+    amount: number;
+    preferenceId?: string;
+    payer?: {
+      email?: string;
+      firstName?: string;
+      lastName?: string;
+      identification?: {
+        type: string;
+        number: string;
+      };
+    };
+  };
+  customization?: {
+    paymentMethods?: {
+      creditCard?: string;
+      debitCard?: string;
+      ticket?: string;
+      bankTransfer?: string;
+      atm?: string;
+      mercadoPago?: string;
+      maxInstallments?: number;
+    };
+    visual?: {
+      style?: {
+        theme?: 'default' | 'dark' | 'bootstrap' | 'flat';
+        customVariables?: Record<string, string>;
+      };
+      hideFormTitle?: boolean;
+      hidePaymentButton?: boolean;
+    };
   };
   callbacks: {
-    onFormMounted: (error: unknown) => void;
-    onSubmit: (event: Event) => void;
-    onFetching: (resource: string) => void;
-    onError: (errors: unknown) => void;
-    onCardTokenReceived: (error: unknown, token: CardToken | null) => void;
+    onReady?: () => void;
+    onSubmit: (formData: PaymentFormData) => Promise<void>;
+    onError?: (error: BrickError) => void;
   };
 }
 
-interface CardToken {
-  id: string;
-  last_four_digits?: string;
-  first_six_digits?: string;
+interface PaymentFormData {
+  selectedPaymentMethod: string;
+  formData: {
+    token?: string;
+    issuer_id?: string;
+    payment_method_id?: string;
+    transaction_amount?: number;
+    installments?: number;
+    payer?: {
+      email?: string;
+      identification?: {
+        type?: string;
+        number?: string;
+      };
+    };
+  };
+}
+
+interface BrickError {
+  type: string;
+  cause: string;
+  message: string;
 }
 
 @Component({
@@ -60,9 +104,7 @@ interface CardToken {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="mp-card-form-container">
-      <h3 class="text-lg font-semibold mb-4">Información de Pago</h3>
-
+    <div class="mp-payment-brick-container">
       @if (isInitializing()) {
         <div class="flex flex-col items-center justify-center py-8">
           <svg class="animate-spin h-8 w-8 text-cta-default mb-3" fill="none" viewBox="0 0 24 24">
@@ -80,431 +122,328 @@ interface CardToken {
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
             ></path>
           </svg>
-          <p class="text-sm text-text-secondary">Cargando formulario de pago...</p>
+          <p class="text-sm text-text-secondary">Cargando formulario de pago seguro...</p>
+          @if (initAttempt() > 1) {
+            <p class="text-xs text-text-secondary mt-1">Intento {{ initAttempt() }} de {{ maxInitAttempts }}</p>
+          }
         </div>
       }
 
-      <form #formCheckout id="form-checkout" [class.hidden]="isInitializing()">
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2">Número de Tarjeta</label>
-          <div id="form-checkout__cardNumber" class="mp-input"></div>
-        </div>
-
-        <div class="grid grid-cols-1 xs:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-sm font-medium mb-2">Vencimiento</label>
-            <div id="form-checkout__expirationDate" class="mp-input"></div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-2">CVV</label>
-            <div id="form-checkout__securityCode" class="mp-input"></div>
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2">Titular de la Tarjeta</label>
-          <input
-            id="form-checkout__cardholderName"
-            name="cardholderName"
-            type="text"
-            class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
-            placeholder="NOMBRE APELLIDO"
-          />
-        </div>
-
-        <div class="grid grid-cols-1 xs:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-sm font-medium mb-2">Tipo de Documento</label>
-            <select
-              id="form-checkout__identificationType"
-              name="identificationType"
-              class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
-            >
-              <option value="">Seleccionar...</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-2">Número de Documento</label>
-            <input
-              id="form-checkout__identificationNumber"
-              name="identificationNumber"
-              type="text"
-              class="w-full px-3 py-2 border border-border-muted rounded-md text-base"
-              placeholder="12345678"
-            />
-          </div>
-        </div>
-
-        <div class="hidden">
-          <select id="form-checkout__installments" name="installments"></select>
-          <select id="form-checkout__issuer" name="issuer"></select>
-        </div>
-
-        <button
-          type="submit"
-          [disabled]="isSubmitting()"
-          class="w-full bg-primary-600 text-text-inverse py-3 rounded-md font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          @if (isSubmitting()) {
-            <span class="flex items-center justify-center">
-              <svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Autorizando...
-            </span>
-          } @else {
-            Autorizar Tarjeta
-          }
-        </button>
-      </form>
+      <!-- Payment Brick Container -->
+      <div
+        #paymentBrickContainer
+        id="paymentBrick_container"
+        [class.hidden]="isInitializing()"
+        class="payment-brick-wrapper"
+      ></div>
 
       @if (errorMessage()) {
-        <div class="mt-4 p-3 bg-error-bg border border-error-border rounded-md">
-          <p class="text-sm text-error-strong">{{ errorMessage() }}</p>
+        <div class="mt-4 p-4 bg-error-bg border border-error-border rounded-lg">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-error-strong flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-error-strong">{{ errorMessage() }}</p>
+              <button
+                (click)="retryInitialization()"
+                class="mt-2 text-xs text-cta-default hover:underline"
+              >
+                Intentar nuevamente
+              </button>
+            </div>
+          </div>
         </div>
       }
 
-      <div class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-md">
+      <div class="mt-4 p-3 bg-cta-default/10 border border-cta-default/40 rounded-lg flex items-center gap-2">
+        <svg class="w-4 h-4 text-cta-default flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
         <p class="text-xs text-cta-default">
-          🔒 Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu
-          tarjeta.
+          Tus datos están protegidos por Mercado Pago. No guardamos información sensible de tu tarjeta.
         </p>
       </div>
     </div>
   `,
   styles: [
     `
-      .mp-card-form-container {
+      .mp-payment-brick-container {
         max-width: min(500px, 100%);
         margin: 0 auto;
-        padding: 0 1rem;
       }
 
-      @media (min-width: 640px) {
-        .mp-card-form-container {
-          padding: 0;
-        }
+      .payment-brick-wrapper {
+        min-height: 300px;
       }
 
-      .mp-input {
-        height: 48px;
-        border: 1px solid var(--border-default, #d1d5db);
-        border-radius: 0.375rem;
-        padding: 0.5rem 0.75rem;
-        font-size: 16px; /* Prevent iOS zoom */
+      /* Override MercadoPago Brick styles for better integration */
+      :host ::ng-deep .mp-bricks-container {
+        font-family: inherit !important;
       }
 
-      .mp-input:focus {
-        outline: none;
-        border-color: var(--system-blue-default, #3b82f6);
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-      }
-
-      /* Ensure MercadoPago iframes are responsive */
-      .mp-input iframe {
-        width: 100% !important;
-        min-height: 100% !important;
+      :host ::ng-deep [data-testid="payment-form"] {
+        padding: 0 !important;
       }
     `,
   ],
 })
-export class MercadopagoCardFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   @Input() amountArs = 0;
   @Output() cardTokenGenerated = new EventEmitter<{ cardToken: string; last4: string }>();
   @Output() cardError = new EventEmitter<string>();
 
-  // SECURITY: Use @ViewChild instead of getElementById for DOM references
-  @ViewChild('formCheckout', { static: true }) formRef!: ElementRef<HTMLFormElement>;
+  // SECURITY: Use @ViewChild for DOM references instead of getElementById
+  @ViewChild('paymentBrickContainer', { static: true }) brickContainerRef!: ElementRef<HTMLDivElement>;
 
-  readonly isSubmitting = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly isInitializing = signal(true);
+  readonly errorMessage = signal<string | null>(null);
+  readonly initAttempt = signal(0);
 
-  private cardForm: CardFormInstance | null = null;
+  // Exponential backoff configuration
+  readonly maxInitAttempts = 5;
+  private readonly baseDelayMs = 200; // Starting delay: 200ms, then 400, 800, 1600, 3200
+
+  private brickController: BrickController | null = null;
   private mp: MercadoPagoSDK | null = null;
   private mpScriptService = inject(MercadoPagoScriptService);
   private ngZone = inject(NgZone);
-  private initAttempts = 0;
-  private maxInitAttempts = 3;
-
-  ngOnInit(): void {
-    // Preload SDK script early (don't initialize yet - wait for view)
-    this.mpScriptService.preloadSDK().catch((err) => {
-      console.warn('⚠️ MercadoPago SDK preload failed:', err);
-    });
-  }
 
   ngAfterViewInit(): void {
-    // DOM is now ready - initialize MercadoPago after a small delay
-    // to ensure Angular has finished rendering the template
+    // Start initialization with exponential backoff
     this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
         this.ngZone.run(() => {
-          this.initializeMercadoPago();
+          this.initializePaymentBrick();
         });
-      }, 200);
+      }, this.baseDelayMs);
     });
   }
 
   ngOnDestroy(): void {
-    if (this.cardForm) {
-      this.cardForm.unmount();
+    this.unmountBrick();
+  }
+
+  /**
+   * Retry initialization manually (called from error UI)
+   */
+  retryInitialization(): void {
+    this.initAttempt.set(0);
+    this.errorMessage.set(null);
+    this.isInitializing.set(true);
+    this.initializePaymentBrick();
+  }
+
+  /**
+   * Unmount the Payment Brick safely
+   */
+  private async unmountBrick(): Promise<void> {
+    if (this.brickController) {
+      try {
+        await this.brickController.unmount();
+        this.brickController = null;
+        console.log('✅ Payment Brick unmounted');
+      } catch (err) {
+        console.warn('⚠️ Error unmounting brick:', err);
+      }
     }
   }
 
-  private async initializeMercadoPago(): Promise<void> {
-    this.initAttempts++;
-    console.log(`🔄 MercadoPago init attempt ${this.initAttempts}/${this.maxInitAttempts}`);
+  /**
+   * Calculate delay for exponential backoff
+   * Delays: 200ms, 400ms, 800ms, 1600ms, 3200ms
+   */
+  private getRetryDelay(attempt: number): number {
+    return this.baseDelayMs * Math.pow(2, attempt);
+  }
+
+  /**
+   * Initialize MercadoPago Payment Brick with exponential backoff retry
+   */
+  private async initializePaymentBrick(): Promise<void> {
+    const currentAttempt = this.initAttempt() + 1;
+    this.initAttempt.set(currentAttempt);
+
+    console.log(`🔄 Payment Brick init attempt ${currentAttempt}/${this.maxInitAttempts}`);
 
     try {
-      // Get public key from environment
-      const globalEnv = (globalThis as Record<string, unknown>).__env as
-        | Record<string, unknown>
-        | undefined;
-      const windowEnvKey = String(globalEnv?.NG_APP_MERCADOPAGO_PUBLIC_KEY ?? '').trim();
-
-      const envRecord = environment as Record<string, unknown>;
-      const buildEnvKey = String(
-        envRecord.mercadopagoPublicKey ?? envRecord.mercadoPagoPublicKey ?? '',
-      ).trim();
-      const runtimeEnvKey = windowEnvKey || buildEnvKey;
-
-      console.log(
-        '🔑 MercadoPago public key:',
-        runtimeEnvKey ? `${runtimeEnvKey.slice(0, 20)}...` : 'NOT FOUND',
-      );
-
-      if (!runtimeEnvKey.length) {
-        this.isInitializing.set(false);
-        this.errorMessage.set('No pudimos inicializar Mercado Pago: falta la public key.');
-        this.cardError.emit('MercadoPago public key not configured');
-        return;
+      // 1. Get and validate public key
+      const publicKey = this.getPublicKey();
+      if (!publicKey) {
+        throw new Error('MercadoPago public key no configurada. Verifica NG_APP_MERCADOPAGO_PUBLIC_KEY.');
       }
 
-      // SECURITY: Use @ViewChild instead of getElementById for reliable DOM access
-      const formElement = this.formRef?.nativeElement;
-      if (!formElement) {
-        console.warn('⚠️ Form element not found via @ViewChild, will retry...');
-        if (this.initAttempts < this.maxInitAttempts) {
-          setTimeout(() => this.initializeMercadoPago(), 300);
-          return;
-        }
-        throw new Error('Form element not found after multiple attempts');
+      console.log('🔑 MercadoPago public key:', `${publicKey.slice(0, 20)}...`);
+
+      // 2. Verify container element exists
+      const container = this.brickContainerRef?.nativeElement;
+      if (!container) {
+        throw new Error('Container element not found');
       }
 
-      // Check all required elements exist
-      const requiredElements = [
-        'form-checkout__cardNumber',
-        'form-checkout__expirationDate',
-        'form-checkout__securityCode',
-        'form-checkout__cardholderName',
-        'form-checkout__identificationType',
-        'form-checkout__identificationNumber',
-      ];
-
-      const missingElements = requiredElements.filter((id) => !document.getElementById(id));
-      if (missingElements.length > 0) {
-        console.warn('⚠️ Missing form elements:', missingElements);
-        if (this.initAttempts < this.maxInitAttempts) {
-          setTimeout(() => this.initializeMercadoPago(), 300);
-          return;
-        }
-        throw new Error(`Missing form elements: ${missingElements.join(', ')}`);
-      }
-
-      console.log('✅ All form elements found, loading SDK...');
-
-      // Load MercadoPago SDK
-      const mpInstance = await this.mpScriptService.getMercadoPago(runtimeEnvKey);
-
+      // 3. Load MercadoPago SDK
+      const mpInstance = await this.mpScriptService.getMercadoPago(publicKey);
       if (!mpInstance) {
-        throw new Error('MercadoPago instance is null or undefined');
+        throw new Error('MercadoPago SDK instance is null');
       }
 
       this.mp = mpInstance as unknown as MercadoPagoSDK;
-      console.log('✅ MercadoPago SDK loaded successfully');
 
-      // Validate that cardForm method exists
-      if (!this.mp || typeof this.mp.cardForm !== 'function') {
-        throw new Error('MercadoPago cardForm method is not available');
+      // 4. Validate bricks method exists (confirms V2 SDK loaded)
+      if (typeof this.mp.bricks !== 'function') {
+        throw new Error('MercadoPago bricks() method not available. SDK may not be V2.');
       }
 
-      const normalizedAmount = this.amountArs > 0 ? Math.ceil(this.amountArs) : 1;
-      console.log(`💰 Initializing CardForm with amount: ${normalizedAmount} ARS`);
+      console.log('✅ MercadoPago SDK V2 loaded successfully');
 
-      this.cardForm = this.mp.cardForm({
-        amount: normalizedAmount.toString(),
-        iframe: true,
-        autoMount: true,
-        form: {
-          id: 'form-checkout',
-          cardNumber: {
-            id: 'form-checkout__cardNumber',
-            placeholder: '0000 0000 0000 0000',
-          },
-          expirationDate: {
-            id: 'form-checkout__expirationDate',
-            placeholder: 'MM/YY',
-          },
-          securityCode: {
-            id: 'form-checkout__securityCode',
-            placeholder: '123',
-          },
-          cardholderName: {
-            id: 'form-checkout__cardholderName',
-            placeholder: 'TITULAR DE LA TARJETA',
-          },
-          identificationType: {
-            id: 'form-checkout__identificationType',
-            placeholder: 'Tipo de documento',
-          },
-          identificationNumber: {
-            id: 'form-checkout__identificationNumber',
-            placeholder: 'Número de documento',
-          },
-          installments: {
-            id: 'form-checkout__installments',
-            placeholder: 'Cuotas',
-          },
-          issuer: {
-            id: 'form-checkout__issuer',
-            placeholder: 'Banco emisor',
+      // 5. Calculate amount (minimum 1 ARS for MercadoPago)
+      const amount = Math.max(1, Math.ceil(this.amountArs));
+      console.log(`💰 Initializing Payment Brick with amount: ${amount} ARS`);
+
+      // 6. Create Payment Brick
+      const bricksBuilder = this.mp.bricks();
+
+      this.brickController = await bricksBuilder.create('cardPayment', 'paymentBrick_container', {
+        initialization: {
+          amount: amount,
+        },
+        customization: {
+          visual: {
+            style: {
+              theme: 'default',
+            },
+            hideFormTitle: true,
           },
         },
         callbacks: {
-          onFormMounted: (error: unknown) => {
-            this.isInitializing.set(false);
-            if (error) {
-              console.error('❌ MercadoPago CardForm mount error:', error);
-              const errorMsg = this.extractErrorMessage(error) || 'Error al cargar el formulario';
-              this.errorMessage.set(errorMsg);
-              this.cardError.emit(errorMsg);
-            } else {
-              console.log('✅ MercadoPago CardForm mounted successfully');
-            }
+          onReady: () => {
+            console.log('✅ Payment Brick ready');
+            this.ngZone.run(() => {
+              this.isInitializing.set(false);
+              this.errorMessage.set(null);
+            });
           },
-          onSubmit: (event: Event) => {
-            try {
-              event.preventDefault();
-              if (!this.cardForm || typeof this.cardForm.createCardToken !== 'function') {
-                throw new Error('CardForm no está inicializado correctamente');
-              }
-              this.isSubmitting.set(true);
-              this.cardForm.createCardToken();
-            } catch (err) {
-              this.isSubmitting.set(false);
-              const errorMsg =
-                err instanceof Error ? err.message : 'Error al procesar el formulario';
-              this.errorMessage.set(errorMsg);
-              this.cardError.emit(errorMsg);
-            }
+          onSubmit: async (cardFormData: PaymentFormData) => {
+            console.log('📤 Payment Brick submitted');
+            await this.handleBrickSubmit(cardFormData);
           },
-          onFetching: (_resource: string) => {
-            this.isSubmitting.set(true);
-          },
-          onError: (errors: unknown) => {
-            this.isSubmitting.set(false);
-            this.handleMercadoPagoErrors(errors);
-          },
-          onCardTokenReceived: (error: unknown, token: CardToken | null) => {
-            this.isSubmitting.set(false);
-
-            if (error) {
-              this.handleMercadoPagoErrors(error);
-              return;
-            }
-
-            if (!token?.id) {
-              const errorMsg = 'No se pudo generar el token de la tarjeta';
-              this.errorMessage.set(errorMsg);
-              this.cardError.emit(errorMsg);
-              return;
-            }
-
-            this.cardTokenGenerated.emit({
-              cardToken: token.id,
-              last4: token.last_four_digits ?? 'XXXX',
+          onError: (error: BrickError) => {
+            console.error('❌ Payment Brick error:', error);
+            this.ngZone.run(() => {
+              this.handleBrickError(error);
             });
           },
         },
       });
 
-      if (!this.cardForm) {
-        throw new Error('CardForm no se creó correctamente');
+      console.log('✅ Payment Brick created successfully');
+
+    } catch (error) {
+      console.error(`❌ Payment Brick init error (attempt ${currentAttempt}):`, error);
+
+      // Retry with exponential backoff if under max attempts
+      if (currentAttempt < this.maxInitAttempts) {
+        const delay = this.getRetryDelay(currentAttempt);
+        console.log(`⏳ Retrying in ${delay}ms...`);
+
+        this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => {
+            this.ngZone.run(() => {
+              this.initializePaymentBrick();
+            });
+          }, delay);
+        });
+      } else {
+        // Max attempts reached - show error to user
+        this.ngZone.run(() => {
+          this.isInitializing.set(false);
+          const errorMsg = error instanceof Error ? error.message : String(error);
+          this.errorMessage.set(`No pudimos cargar el formulario de pago: ${errorMsg}`);
+          this.cardError.emit('Error al inicializar Mercado Pago');
+        });
+      }
+    }
+  }
+
+  /**
+   * Get MercadoPago public key from environment
+   */
+  private getPublicKey(): string {
+    // 1. Try runtime env (window.__env from env.js)
+    const globalEnv = (globalThis as Record<string, unknown>).__env as
+      | Record<string, string | undefined>
+      | undefined;
+    const runtimeKey = globalEnv?.NG_APP_MERCADOPAGO_PUBLIC_KEY?.trim();
+
+    if (runtimeKey && runtimeKey.length > 0) {
+      return runtimeKey;
+    }
+
+    // 2. Try build-time environment
+    const envRecord = environment as Record<string, unknown>;
+    const buildKey = String(
+      envRecord.mercadopagoPublicKey ?? envRecord.mercadoPagoPublicKey ?? '',
+    ).trim();
+
+    return buildKey;
+  }
+
+  /**
+   * Handle Payment Brick form submission
+   */
+  private async handleBrickSubmit(cardFormData: PaymentFormData): Promise<void> {
+    try {
+      const { formData } = cardFormData;
+
+      // Extract token from form data
+      const token = formData.token;
+      if (!token) {
+        throw new Error('No se generó el token de la tarjeta');
       }
 
-      console.log('✅ MercadoPago CardForm created successfully');
+      console.log('✅ Card token received:', token.slice(0, 10) + '...');
+
+      // Emit token to parent component
+      this.ngZone.run(() => {
+        this.cardTokenGenerated.emit({
+          cardToken: token,
+          last4: 'XXXX', // Payment Brick doesn't expose last4 directly
+        });
+      });
+
     } catch (error) {
-      console.error('❌ MercadoPago initialization error:', error);
-      this.isInitializing.set(false);
-      const errorDetails = error instanceof Error ? error.message : String(error);
-      const userMessage = `No pudimos cargar Mercado Pago: ${errorDetails}. Intenta recargar la página.`;
-      this.errorMessage.set(userMessage);
-      this.cardError.emit('Error al inicializar Mercado Pago');
+      console.error('❌ Error processing card form:', error);
+      this.ngZone.run(() => {
+        const errorMsg = error instanceof Error ? error.message : 'Error al procesar la tarjeta';
+        this.errorMessage.set(errorMsg);
+        this.cardError.emit(errorMsg);
+      });
     }
   }
 
-  private extractErrorMessage(error: unknown): string | null {
-    if (typeof error === 'string') {
-      return error.trim() || null;
-    }
-    if (error && typeof error === 'object') {
-      const errorObj = error as Record<string, unknown>;
-      return (
-        (errorObj.message as string) ||
-        (errorObj.description as string) ||
-        (errorObj.error as string) ||
-        null
-      );
-    }
-    return null;
-  }
-
-  private handleMercadoPagoErrors(error: unknown): void {
+  /**
+   * Handle Payment Brick errors
+   */
+  private handleBrickError(error: BrickError): void {
     let message = 'No pudimos procesar tu tarjeta. Intenta nuevamente.';
 
-    if (typeof error === 'string') {
-      message = error.trim() || message;
-    } else if (Array.isArray(error)) {
-      const extracted = error
-        .map((err: unknown) => {
-          const errorRecord = err as Record<string, unknown>;
-          return String(
-            errorRecord?.message || errorRecord?.description || errorRecord?.cause || '',
-          );
-        })
-        .filter(Boolean)
-        .join(' | ');
-      message = extracted || message;
-    } else if (error && typeof error === 'object') {
-      const maybeMessage =
-        (error as { message?: string }).message ||
-        (error as { description?: string }).description ||
-        (error as { cause?: string | string[] }).cause;
+    if (error?.message) {
+      message = error.message;
+    } else if (error?.cause) {
+      message = error.cause;
+    }
 
-      if (Array.isArray(maybeMessage)) {
-        message = maybeMessage.filter(Boolean).join(' | ') || message;
-      } else if (typeof maybeMessage === 'string' && maybeMessage.trim()) {
-        message = maybeMessage.trim();
-      } else {
-        try {
-          message = JSON.stringify(error);
-        } catch {
-          // message se mantiene con el fallback
-        }
-      }
+    // Map common error types to user-friendly messages
+    const errorTypeMessages: Record<string, string> = {
+      'invalid_card_number': 'El número de tarjeta no es válido.',
+      'invalid_expiration_date': 'La fecha de vencimiento no es válida.',
+      'invalid_security_code': 'El código de seguridad no es válido.',
+      'empty_card_holder_name': 'Ingresa el nombre del titular de la tarjeta.',
+      'invalid_identification_number': 'El número de documento no es válido.',
+    };
+
+    if (error?.type && errorTypeMessages[error.type]) {
+      message = errorTypeMessages[error.type];
     }
 
     this.errorMessage.set(message);

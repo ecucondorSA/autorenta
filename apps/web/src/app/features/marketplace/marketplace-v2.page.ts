@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -86,6 +86,7 @@ export interface Stat {
     CommonModule,
     FormsModule,
     RouterModule,
+    NgOptimizedImage,
 
     FloatingActionFabComponent,
     DateRangePickerComponent,

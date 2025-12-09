@@ -64,6 +64,7 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 2px;
+  flex-wrap: wrap;
 }
 
 .prompt-title {
@@ -72,6 +73,7 @@
   color: var(--text-primary, #1a1a1a);
   margin: 0;
   line-height: 1.2;
+  white-space: nowrap;
 }
 
 .badge-free {
@@ -120,17 +122,19 @@
 }
 
 .btn-install {
-  background: var(--surface-info-dark, #2c4a52);
-  color: white;
+  background: #00D95F;
+  color: black;
   border: none;
   padding: 10px 20px;
   border-radius: 24px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 217, 95, 0.3);
 }
 
 .btn-install:hover {
-  background: var(--surface-info-dark-hover, #1e353b);
+  background: #00B048;
+  transform: scale(1.02);
 }
 
 .btn-dismiss {
@@ -143,33 +147,7 @@
   color: var(--text-primary, #374151);
 }
 
-/* Close button */
-.btn-close {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-muted, #9ca3af);
-  padding: 0;
-}
 
-.btn-close:hover {
-  background: var(--surface-hover-light, #f3f4f6);
-  color: var(--text-primary, #4b5563);
-}
-
-.btn-close svg {
-  width: 14px;
-  height: 14px;
-}
 
 /* Spinner */
 .spinner {
