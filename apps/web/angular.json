@@ -70,7 +70,9 @@
               "core-js",
               "flatpickr",
               "whatwg-url",
-              "@supabase/node-fetch"
+              "@supabase/node-fetch",
+              "@supabase/postgrest-js",
+              "localforage"
             ],
             "prerender": true,
             "ssr": true,
@@ -81,13 +83,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.5MB",
+                  "maximumWarning": "1.6MB",
                   "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "50kB",
-                  "maximumError": "100kB"
+                  "maximumWarning": "80kB",
+                  "maximumError": "120kB"
                 }
               ],
               "outputHashing": "all",

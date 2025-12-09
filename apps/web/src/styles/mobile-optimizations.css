@@ -148,10 +148,16 @@
     height: 36px !important;
   }
 
-  /* Ocultar texto del logo en móvil pequeño */
+  /* En móviles muy pequeños (<360px): compactar header, no ocultar */
   @media (max-width: 360px) {
-    #main-header .flex.flex-col {
-      display: none;
+    #main-header .container-page {
+      padding-left: 8px;
+      padding-right: 8px;
+      gap: 4px;
+    }
+
+    #main-header img {
+      height: 28px !important;
     }
   }
 

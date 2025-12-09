@@ -5,7 +5,8 @@
 
 /* Container principal */
 .whatsapp-container {
-  min-height: 100vh;
+  min-height: 100%;
+  height: 100%;
   background: #f8f4ec;
   display: flex;
   flex-direction: column;
@@ -352,9 +353,9 @@
   box-shadow: 0 1px 3px rgba(37, 211, 102, 0.4);
 }
 
-/* Bottom padding para el bottom nav */
+/* Bottom padding para el bottom nav - mínimo para FAB */
 .conversation-list {
-  padding-bottom: 5rem;
+  padding-bottom: 1rem;
 }
 
 /* Floating Action Button Container */

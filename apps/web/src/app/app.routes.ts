@@ -427,13 +427,16 @@ export const routes: Routes = [
   {
     path: 'messages',
     canMatch: [AuthGuard],
+    data: { layout: 'full-bleed' },
     children: [
       {
         path: '',
+        data: { layout: 'full-bleed' },
         loadComponent: () => import('./features/messages/inbox.page').then((m) => m.InboxPage),
       },
       {
         path: 'chat',
+        data: { layout: 'full-bleed' },
         loadComponent: () =>
           import('./features/messages/messages.page').then((m) => m.MessagesPage),
       },
