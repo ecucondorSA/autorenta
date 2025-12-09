@@ -47,6 +47,9 @@ import { VerificationBadgeComponent } from './shared/components/verification-bad
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { IconComponent } from './shared/components/icon/icon.component';
 import { SplashScreenComponent } from './shared/components/splash-screen/splash-screen.component';
+import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawer/mobile-menu-drawer.component';
+import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
+import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 
 @Component({
   selector: 'app-root',
@@ -73,6 +76,9 @@ import { SplashScreenComponent } from './shared/components/splash-screen/splash-
     FooterComponent,
     IconComponent,
     SplashScreenComponent,
+    MobileMenuDrawerComponent,
+    HeaderIconComponent,
+    ClickOutsideDirective,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -186,6 +192,7 @@ export class AppComponent implements OnInit {
   readonly compareCountSig = computed(() => this.compareService.count());
   readonly sidebarOpen = signal(false);
   readonly profileMenuOpen = signal(false);
+  readonly mobileMenuDrawerOpen = signal(false);
 
   // Legacy binding placeholder: UI no longer uses dark mode toggle, keep for template compatibility
   readonly darkMode = false;
@@ -197,6 +204,14 @@ export class AppComponent implements OnInit {
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
+  @ViewChild('profileButton', { read: ElementRef }) profileButton?: ElementRef<HTMLButtonElement>;
+
+  /**
+   * Elements to exclude from profile menu click-outside detection
+   */
+  get profileMenuExcludedElements(): HTMLElement[] {
+    return this.profileButton?.nativeElement ? [this.profileButton.nativeElement] : [];
+  }
 
   year = new Date().getFullYear();
 
@@ -233,6 +248,14 @@ export class AppComponent implements OnInit {
     this.profileMenuOpen.set(false);
   }
 
+  openMobileMenuDrawer(): void {
+    this.mobileMenuDrawerOpen.set(true);
+  }
+
+  closeMobileMenuDrawer(): void {
+    this.mobileMenuDrawerOpen.set(false);
+  }
+
   ngOnInit(): void {
     // SSR-safe: Only run browser-specific initialization in browser
     if (!this.isBrowser) {
@@ -247,9 +270,14 @@ export class AppComponent implements OnInit {
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
 
-    // Renderizar barra inferior móvil directamente en body para evitar issues de stacking
+    // Renderizar barra inferior movil directamente en body para evitar issues de stacking
     this.mobileBottomNavPortal.create();
     this.destroyRef.onDestroy(() => this.mobileBottomNavPortal.destroy());
+
+    // Subscribe to mobile menu drawer open event
+    this.mobileBottomNavPortal.menuOpen$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.openMobileMenuDrawer());
   }
 
   private initializeTheme(): void {

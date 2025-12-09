@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService, SupportedLanguage } from '../../../core/services/language.service';
+import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 /**
  * LanguageSelectorComponent
@@ -22,7 +23,7 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
 @Component({
   selector: 'app-language-selector',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, HeaderIconComponent],
   template: `
     <div class="relative">
       <!-- Botón del selector -->
@@ -35,21 +36,11 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
       >
         <span class="text-lg">{{ languageService.getCurrentLanguageFlag() }}</span>
         <span class="hidden sm:inline">{{ languageService.getCurrentLanguageName() }}</span>
-        <svg
-          class="w-4 h-4 transition-transform"
-          [class.rotate-180]="isOpen()"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          ></path>
-        </svg>
+        <app-header-icon
+          [name]="isOpen() ? 'chevron-up' : 'chevron-down'"
+          [size]="16"
+          cssClass="transition-transform"
+        />
       </button>
 
       <!-- Dropdown menu -->
@@ -73,9 +64,9 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
           <svg
             *ngIf="lang.code === languageService.currentLanguage()"
             class="w-5 h-5 text-cta-default"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            viewBox="0 0 24 24"
             aria-hidden="true"
           >
             <path
@@ -83,7 +74,7 @@ import { LanguageService, SupportedLanguage } from '../../../core/services/langu
               stroke-linejoin="round"
               stroke-width="2"
               d="M5 13l4 4L19 7"
-            ></path>
+            />
           </svg>
         </button>
       </div>

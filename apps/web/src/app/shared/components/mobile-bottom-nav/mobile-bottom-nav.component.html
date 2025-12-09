@@ -12,20 +12,21 @@
   <div class="nav-container">
     <a
       *ngFor="let item of navItems; trackBy: trackByRoute"
-      [routerLink]="item.route"
-      (click)="navigateWithHaptic($event, item.route)"
+      [routerLink]="item.isMenuTrigger ? null : item.route"
+      (click)="navigateWithHaptic($event, item)"
       class="nav-item"
-      [class.nav-item--active]="isActive(item.route)"
+      [class.nav-item--active]="!item.isMenuTrigger && isActive(item.route)"
       [attr.aria-label]="item.label"
-      [attr.aria-current]="isActive(item.route) ? 'page' : null"
+      [attr.aria-current]="!item.isMenuTrigger && isActive(item.route) ? 'page' : null"
     >
-      <!-- Icono SVG del sprite -->
+      <!-- Icono SVG Premium del sprite dedicado -->
       <div class="nav-item__icon-wrapper">
-        <app-icon
+        <app-nav-icon
           [name]="item.icon"
           [size]="24"
+          [active]="!item.isMenuTrigger && isActive(item.route)"
           class="nav-item__icon"
-          [class.nav-item__icon--active]="isActive(item.route)"
+          [class.nav-item__icon--active]="!item.isMenuTrigger && isActive(item.route)"
         />
 
         <!-- Badge de notificaciones -->

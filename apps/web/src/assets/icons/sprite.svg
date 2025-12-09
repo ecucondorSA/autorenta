@@ -763,4 +763,110 @@
     <line x1="5" y1="12" x2="19" y2="12"/>
   </symbol>
 
+  <!-- Help / Ayuda -->
+  <symbol id="help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Ayuda</title>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+    <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
+  </symbol>
+
+  <!-- Calendar Days -->
+  <symbol id="calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Calendario</title>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+    <path d="M16 2v4"/>
+    <path d="M8 2v4"/>
+    <path d="M3 10h18"/>
+    <rect x="7" y="14" width="3" height="3" rx="0.5" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- Chart Bar -->
+  <symbol id="chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Estadísticas</title>
+    <rect x="3" y="12" width="4" height="9" rx="1"/>
+    <rect x="10" y="8" width="4" height="13" rx="1"/>
+    <rect x="17" y="3" width="4" height="18" rx="1"/>
+  </symbol>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       PREMIUM BOTTOM NAV ICONS
+       Iconos de alta calidad para la navegación inferior móvil
+       ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Premium Car Icon - Alquilar -->
+  <symbol id="nav-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Alquilar</title>
+    <!-- Body principal del auto - diseño moderno tipo sedan -->
+    <path d="M3 14h18v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3z"/>
+    <!-- Techo y ventanas - perfil deportivo -->
+    <path d="M5 14l1.5-4.5a2 2 0 0 1 1.9-1.5h7.2a2 2 0 0 1 1.9 1.5L19 14"/>
+    <!-- Ventanas -->
+    <path d="M7 14v-3.5a1 1 0 0 1 1-1h3v4.5"/>
+    <path d="M13 9.5h3a1 1 0 0 1 1 1V14"/>
+    <!-- Ruedas con detalle -->
+    <circle cx="7" cy="17" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="7" cy="17" r="0.75" fill="none" stroke="currentColor" stroke-width="1"/>
+    <circle cx="17" cy="17" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="17" cy="17" r="0.75" fill="none" stroke="currentColor" stroke-width="1"/>
+    <!-- Faros -->
+    <circle cx="4.5" cy="14" r="0.5" fill="currentColor" stroke="none"/>
+    <circle cx="19.5" cy="14" r="0.5" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- Premium Plus Icon - Publicar -->
+  <symbol id="nav-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Publicar</title>
+    <!-- Círculo exterior con gradiente implícito -->
+    <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+    <!-- Cruz central con peso visual -->
+    <line x1="12" y1="7" x2="12" y2="17" stroke-width="2"/>
+    <line x1="7" y1="12" x2="17" y2="12" stroke-width="2"/>
+  </symbol>
+
+  <!-- Premium Message Icon - Mensajes -->
+  <symbol id="nav-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Mensajes</title>
+    <!-- Burbuja de chat moderna con esquinas suaves -->
+    <path d="M21 12c0 4.418-4.03 8-9 8-1.6 0-3.112-.354-4.412-.98L3 21l1.5-4.5C3.56 15.126 3 13.617 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    <!-- Puntos de escritura animados -->
+    <circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- Premium Calendar Icon - Reservas -->
+  <symbol id="nav-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Reservas</title>
+    <!-- Base del calendario -->
+    <rect x="3" y="4" width="18" height="18" rx="2.5" ry="2.5"/>
+    <!-- Ganchos superiores -->
+    <path d="M8 2v4"/>
+    <path d="M16 2v4"/>
+    <!-- Línea separadora del header -->
+    <path d="M3 10h18"/>
+    <!-- Día destacado (fecha actual) -->
+    <rect x="9" y="13" width="6" height="5" rx="1" fill="currentColor" stroke="none"/>
+    <!-- Puntos de días -->
+    <circle cx="6" cy="15" r="0.75" fill="currentColor" stroke="none" opacity="0.5"/>
+    <circle cx="6" cy="18" r="0.75" fill="currentColor" stroke="none" opacity="0.5"/>
+    <circle cx="18" cy="15" r="0.75" fill="currentColor" stroke="none" opacity="0.5"/>
+    <circle cx="18" cy="18" r="0.75" fill="currentColor" stroke="none" opacity="0.5"/>
+  </symbol>
+
+  <!-- Premium Menu Icon - Menú (Grid style moderno) -->
+  <symbol id="nav-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <title>Menú</title>
+    <!-- Grid de 3x3 puntos estilo iOS -->
+    <circle cx="6" cy="6" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="6" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="18" cy="6" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="6" cy="12" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="18" cy="12" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="6" cy="18" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="18" r="2" fill="currentColor" stroke="none"/>
+    <circle cx="18" cy="18" r="2" fill="currentColor" stroke="none"/>
+  </symbol>
+
 </svg>

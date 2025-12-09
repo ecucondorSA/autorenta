@@ -2,13 +2,14 @@ import { Component, Input, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareService } from '../../../core/services/share.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 export type ShareType = 'car' | 'booking' | 'app' | 'custom';
 
 @Component({
   selector: 'app-share-button',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderIconComponent],
   template: `
     <button
       type="button"
@@ -40,13 +41,7 @@ export type ShareType = 'car' | 'booking' | 'app' | 'custom';
         </svg>
         <span>Compartiendo...</span>
       } @else {
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-          />
-        </svg>
+        <app-header-icon name="share" [size]="20" />
         <span>{{ label }}</span>
       }
     </button>

@@ -7,11 +7,12 @@ import {
 } from '../../../core/services/user-notifications.service';
 import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 @Component({
   standalone: true,
   selector: 'app-notifications',
-  imports: [CommonModule, ClickOutsideDirective],
+  imports: [CommonModule, ClickOutsideDirective, HeaderIconComponent],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })

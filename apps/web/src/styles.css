@@ -1426,6 +1426,26 @@ svg[aria-hidden="true"],
   }
 
   /* ─────────────────────────────────────────────────────────────
+     Profile Dropdown Menu Items
+     ───────────────────────────────────────────────────────────── */
+
+  .menu-item {
+    @apply flex items-center gap-3 px-4 py-2.5 text-sm text-text-primary;
+    @apply hover:bg-surface-secondary/50 transition-colors;
+    @apply cursor-pointer;
+  }
+
+  .menu-icon {
+    @apply flex items-center justify-center w-9 h-9 rounded-xl;
+    @apply transition-colors;
+  }
+
+  .menu-chevron {
+    @apply text-text-muted opacity-0 group-hover:opacity-100;
+    @apply transition-opacity;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
      Backgrounds y Secciones
      ───────────────────────────────────────────────────────────── */
 

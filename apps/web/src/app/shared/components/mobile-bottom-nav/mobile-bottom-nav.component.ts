@@ -5,6 +5,8 @@ import {
   inject,
   OnDestroy,
   OnInit,
+  Output,
+  EventEmitter,
   signal,
   PLATFORM_ID,
   NgZone,
@@ -13,7 +15,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { Subject, takeUntil, filter, fromEvent, throttleTime } from 'rxjs';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
-import { IconComponent } from '../icon/icon.component';
+import { NavIconComponent } from '../nav-icon/nav-icon.component';
 
 interface NavItem {
   id: string;
@@ -21,12 +23,13 @@ interface NavItem {
   icon: string;
   route: string;
   badgeSignal?: () => number;
+  isMenuTrigger?: boolean;
 }
 
 @Component({
   selector: 'app-mobile-bottom-nav',
   standalone: true,
-  imports: [CommonModule, RouterModule, IconComponent],
+  imports: [CommonModule, RouterModule, NavIconComponent],
   templateUrl: './mobile-bottom-nav.component.html',
   styleUrls: ['./mobile-bottom-nav.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost
@@ -39,44 +42,47 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
   private readonly ngZone = inject(NgZone);
   private readonly destroy$ = new Subject<void>();
 
+  @Output() menuOpen = new EventEmitter<void>();
+
   readonly currentRoute = signal<string>('');
   readonly isHidden = signal(false);
 
   private lastScrollY = 0;
-  private readonly scrollThreshold = 50; // Mínimo scroll para activar hide/show
-  private readonly scrollDelta = 10; // Sensibilidad del scroll
+  private readonly scrollThreshold = 50;
+  private readonly scrollDelta = 10;
 
   readonly navItems: NavItem[] = [
     {
       id: 'rent',
       label: 'Alquilar',
-      icon: 'car',
+      icon: 'nav-car', // Premium icon
       route: '/cars',
     },
     {
       id: 'publish',
       label: 'Publicar',
-      icon: 'plus',
+      icon: 'nav-plus', // Premium icon
       route: '/cars/publish',
     },
     {
       id: 'messages',
       label: 'Mensajes',
-      icon: 'message',
+      icon: 'nav-message', // Premium icon
       route: '/messages',
       badgeSignal: () => this.unreadMessagesService.totalUnreadCount(),
     },
     {
       id: 'bookings',
       label: 'Reservas',
-      icon: 'calendar',
+      icon: 'nav-calendar', // Premium icon
       route: '/bookings',
     },
     {
-      id: 'account',
-      label: 'Cuenta',
-      icon: 'user',
-      route: '/profile',
+      id: 'menu',
+      label: 'Menu',
+      icon: 'nav-menu', // Premium icon (grid style)
+      route: '',
+      isMenuTrigger: true,
     },
   ];
 
@@ -160,15 +166,14 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Navega con haptic feedback
-   * Funciona en dispositivos móviles con Capacitor
+   * Navega con haptic feedback o abre menu
+   * Funciona en dispositivos moviles con Capacitor
    */
-  async navigateWithHaptic(event: Event, route: string): Promise<void> {
+  async navigateWithHaptic(event: Event, item: NavItem): Promise<void> {
     event.preventDefault();
 
-    // Haptic feedback (solo funciona en móvil nativo)
+    // Haptic feedback (solo funciona en movil nativo)
     try {
-      // Vibración ligera en navegadores que lo soportan
       if ('vibrate' in navigator) {
         navigator.vibrate(10);
       }
@@ -176,7 +181,13 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
       // Silently fail en navegadores sin soporte
     }
 
-    await this.router.navigate([route]);
+    // If this is the menu trigger, emit event instead of navigating
+    if (item.isMenuTrigger) {
+      this.menuOpen.emit();
+      return;
+    }
+
+    await this.router.navigate([item.route]);
   }
 
   getIcon(iconName: string): string {
