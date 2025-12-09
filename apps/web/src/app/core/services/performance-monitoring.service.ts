@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
+
+/**
+ * Sentry module type for lazy loading
+ */
+type SentryModule = typeof import('@sentry/angular');
 
 type LargestContentfulPaintEntry = PerformanceEntry & {
   renderTime?: number;
@@ -54,10 +58,74 @@ export class PerformanceMonitoringService {
   private fpsCounter = 0;
   private lastFrameTime = performance.now();
 
+  /** Cached Sentry module (lazy-loaded) */
+  private sentryModule: SentryModule | null = null;
+  private sentryLoadPromise: Promise<SentryModule | null> | null = null;
+
   constructor() {
     if (typeof window !== 'undefined') {
       this.initMonitoring();
     }
+  }
+
+  /**
+   * Lazy-load Sentry module (saves ~238KB from initial bundle)
+   */
+  private async getSentry(): Promise<SentryModule | null> {
+    if (this.sentryModule) {
+      return this.sentryModule;
+    }
+
+    if (!environment.sentryDsn) {
+      return null;
+    }
+
+    if (!this.sentryLoadPromise) {
+      this.sentryLoadPromise = import('@sentry/angular')
+        .then((module) => {
+          this.sentryModule = module;
+          return module;
+        })
+        .catch((err) => {
+          console.error('Failed to load Sentry:', err);
+          this.sentryLoadPromise = null;
+          return null;
+        });
+    }
+
+    return this.sentryLoadPromise;
+  }
+
+  /**
+   * Send performance metric to Sentry (lazy-loaded)
+   */
+  private async sendToSentry(contextKey: string, value: number): Promise<void> {
+    if (!environment.sentryDsn) return;
+
+    const Sentry = await this.getSentry();
+    if (!Sentry) return;
+
+    Sentry.getCurrentScope().setContext('performance', {
+      [contextKey]: value,
+    });
+  }
+
+  /**
+   * Send warning to Sentry (lazy-loaded)
+   */
+  private async sendWarningToSentry(
+    message: string,
+    tags: Record<string, string>,
+  ): Promise<void> {
+    if (!environment.sentryDsn || !environment.production) return;
+
+    const Sentry = await this.getSentry();
+    if (!Sentry) return;
+
+    Sentry.captureMessage(message, {
+      level: 'warning',
+      tags,
+    });
   }
 
   /**
@@ -113,23 +181,14 @@ export class PerformanceMonitoringService {
           const lcp = lastEntry?.renderTime ?? lastEntry?.loadTime ?? 0;
           console.log(`📊 LCP: ${lcp.toFixed(2)}ms`);
 
-          // Send to Sentry as measurement
-          if (environment.sentryDsn) {
-            Sentry.getCurrentScope().setContext('performance', {
-              lcp: lcp,
-            });
-          }
+          // Send to Sentry as measurement (lazy-loaded)
+          void this.sendToSentry('lcp', lcp);
 
           if (lcp > 2500) {
             console.warn(`⚠️ LCP is above target (2.5s): ${(lcp / 1000).toFixed(2)}s`);
-
-            // Send warning to Sentry
-            if (environment.sentryDsn && environment.production) {
-              Sentry.captureMessage(`Poor LCP: ${(lcp / 1000).toFixed(2)}s`, {
-                level: 'warning',
-                tags: { metric: 'lcp' },
-              });
-            }
+            void this.sendWarningToSentry(`Poor LCP: ${(lcp / 1000).toFixed(2)}s`, {
+              metric: 'lcp',
+            });
           }
         });
 
@@ -146,23 +205,14 @@ export class PerformanceMonitoringService {
             const fid = fidEntry.processingStart - fidEntry.startTime;
             console.log(`📊 FID: ${fid.toFixed(2)}ms`);
 
-            // Send to Sentry as measurement
-            if (environment.sentryDsn) {
-              Sentry.getCurrentScope().setContext('performance', {
-                fid: fid,
-              });
-            }
+            // Send to Sentry as measurement (lazy-loaded)
+            void this.sendToSentry('fid', fid);
 
             if (fid > 100) {
               console.warn(`⚠️ FID is above target (100ms): ${fid.toFixed(2)}ms`);
-
-              // Send warning to Sentry
-              if (environment.sentryDsn && environment.production) {
-                Sentry.captureMessage(`Poor FID: ${fid.toFixed(2)}ms`, {
-                  level: 'warning',
-                  tags: { metric: 'fid' },
-                });
-              }
+              void this.sendWarningToSentry(`Poor FID: ${fid.toFixed(2)}ms`, {
+                metric: 'fid',
+              });
             }
           });
         });
@@ -182,23 +232,14 @@ export class PerformanceMonitoringService {
               clsScore += clsEntry.value;
               console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
 
-              // Send to Sentry as measurement
-              if (environment.sentryDsn) {
-                Sentry.getCurrentScope().setContext('performance', {
-                  cls: clsScore,
-                });
-              }
+              // Send to Sentry as measurement (lazy-loaded)
+              void this.sendToSentry('cls', clsScore);
 
               if (clsScore > 0.1) {
                 console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
-
-                // Send warning to Sentry
-                if (environment.sentryDsn && environment.production) {
-                  Sentry.captureMessage(`Poor CLS: ${clsScore.toFixed(4)}`, {
-                    level: 'warning',
-                    tags: { metric: 'cls' },
-                  });
-                }
+                void this.sendWarningToSentry(`Poor CLS: ${clsScore.toFixed(4)}`, {
+                  metric: 'cls',
+                });
               }
             }
           });
@@ -255,26 +296,19 @@ export class PerformanceMonitoringService {
       const duration = performance.now() - start;
       console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
 
-      // Send to Sentry as measurement
-      if (environment.sentryDsn) {
-        Sentry.getCurrentScope().setContext('performance', {
-          [name.toLowerCase().replace(/\s+/g, '_')]: duration,
-        });
-      }
+      // Send to Sentry as measurement (lazy-loaded)
+      const metricKey = name.toLowerCase().replace(/\s+/g, '_');
+      void this.sendToSentry(metricKey, duration);
 
       if (duration > 100) {
         console.warn(`⚠️ Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
-
-        // Send warning to Sentry
-        if (environment.sentryDsn && environment.production) {
-          Sentry.captureMessage(`Slow operation: ${name} took ${duration.toFixed(2)}ms`, {
-            level: 'warning',
-            tags: {
-              metric: 'operation_duration',
-              operation: name,
-            },
-          });
-        }
+        void this.sendWarningToSentry(
+          `Slow operation: ${name} took ${duration.toFixed(2)}ms`,
+          {
+            metric: 'operation_duration',
+            operation: name,
+          },
+        );
       }
     };
 

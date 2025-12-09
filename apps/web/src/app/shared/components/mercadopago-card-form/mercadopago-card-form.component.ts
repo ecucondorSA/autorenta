@@ -70,25 +70,33 @@ interface PaymentBrickSettings {
   };
   callbacks: {
     onReady?: () => void;
-    onSubmit: (formData: PaymentFormData) => Promise<void>;
+    onSubmit: (formData: CardPaymentFormData) => Promise<void>;
     onError?: (error: BrickError) => void;
   };
 }
 
-interface PaymentFormData {
-  selectedPaymentMethod: string;
-  formData: {
-    token?: string;
-    issuer_id?: string;
-    payment_method_id?: string;
-    transaction_amount?: number;
-    installments?: number;
-    payer?: {
-      email?: string;
-      identification?: {
-        type?: string;
-        number?: string;
-      };
+/**
+ * Card Payment Brick returns data directly at root level:
+ * {
+ *   token: "abc123...",
+ *   issuer_id: "123",
+ *   payment_method_id: "visa",
+ *   transaction_amount: 1000,
+ *   installments: 1,
+ *   payer: { email, identification: { type, number } }
+ * }
+ */
+interface CardPaymentFormData {
+  token: string;
+  issuer_id: string;
+  payment_method_id: string;
+  transaction_amount: number;
+  installments: number;
+  payer: {
+    email: string;
+    identification: {
+      type: string;
+      number: string;
     };
   };
 }
@@ -323,7 +331,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
               this.errorMessage.set(null);
             });
           },
-          onSubmit: async (cardFormData: PaymentFormData) => {
+          onSubmit: async (cardFormData: CardPaymentFormData) => {
             console.log('📤 Payment Brick submitted');
             await this.handleBrickSubmit(cardFormData);
           },
@@ -389,25 +397,38 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Handle Payment Brick form submission
+   * Handle Card Payment Brick form submission
+   * The cardPayment brick sends data directly at root level:
+   * {
+   *   token: "abc123...",
+   *   issuer_id: "123",
+   *   payment_method_id: "visa",
+   *   transaction_amount: 1000,
+   *   installments: 1,
+   *   payer: { email, identification }
+   * }
    */
-  private async handleBrickSubmit(cardFormData: PaymentFormData): Promise<void> {
+  private async handleBrickSubmit(cardFormData: CardPaymentFormData): Promise<void> {
     try {
-      const { formData } = cardFormData;
+      console.log('📦 Card Payment Brick raw data:', JSON.stringify(cardFormData, null, 2));
 
-      // Extract token from form data
-      const token = formData.token;
-      if (!token) {
-        throw new Error('No se generó el token de la tarjeta');
+      // Card Payment Brick returns token directly at root level
+      const token = cardFormData?.token;
+
+      if (!token || typeof token !== 'string' || token.length === 0) {
+        console.error('❌ Token not found or invalid in response:', cardFormData);
+        throw new Error('No se generó el token de la tarjeta. Verifica los datos e intenta nuevamente.');
       }
 
       console.log('✅ Card token received:', token.slice(0, 10) + '...');
+      console.log('📋 Payment method:', cardFormData.payment_method_id);
+      console.log('🔢 Installments:', cardFormData.installments);
 
       // Emit token to parent component
       this.ngZone.run(() => {
         this.cardTokenGenerated.emit({
           cardToken: token,
-          last4: 'XXXX', // Payment Brick doesn't expose last4 directly
+          last4: 'XXXX', // Card Payment Brick doesn't expose last4 directly
         });
       });
 

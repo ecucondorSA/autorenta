@@ -1,6 +1,43 @@
 import { ErrorHandler, Injectable } from '@angular/core';
-import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
+
+/**
+ * Sentry module type for lazy loading
+ */
+type SentryModule = typeof import('@sentry/angular');
+
+/** Cached Sentry module */
+let sentryModule: SentryModule | null = null;
+let sentryLoadPromise: Promise<SentryModule | null> | null = null;
+
+/**
+ * Lazy-load Sentry module (saves ~238KB from initial bundle)
+ * Caches the module for subsequent calls
+ */
+async function getSentry(): Promise<SentryModule | null> {
+  if (sentryModule) {
+    return sentryModule;
+  }
+
+  if (!environment.sentryDsn) {
+    return null;
+  }
+
+  if (!sentryLoadPromise) {
+    sentryLoadPromise = import('@sentry/angular')
+      .then((module) => {
+        sentryModule = module;
+        return module;
+      })
+      .catch((err) => {
+        console.error('Failed to load Sentry:', err);
+        sentryLoadPromise = null;
+        return null;
+      });
+  }
+
+  return sentryLoadPromise;
+}
 
 /**
  * Sentry Error Handler
@@ -20,13 +57,9 @@ export class SentryErrorHandler implements ErrorHandler {
       console.error('❌ Unhandled error:', error);
     }
 
-    // Send to Sentry if configured
+    // Send to Sentry if configured (lazy-loaded)
     if (environment.sentryDsn) {
-      if (error instanceof Error) {
-        Sentry.captureException(error);
-      } else {
-        Sentry.captureException(new Error(String(error)));
-      }
+      void this.sendToSentry(error);
     }
 
     // Rethrow in development for visibility
@@ -34,21 +67,35 @@ export class SentryErrorHandler implements ErrorHandler {
       throw error;
     }
   }
+
+  private async sendToSentry(error: Error | unknown): Promise<void> {
+    const Sentry = await getSentry();
+    if (!Sentry) return;
+
+    if (error instanceof Error) {
+      Sentry.captureException(error);
+    } else {
+      Sentry.captureException(new Error(String(error)));
+    }
+  }
 }
 
 /**
- * Initialize Sentry
+ * Initialize Sentry (lazy-loaded)
  *
  * Call this function early in the application bootstrap process.
  * Configures Sentry with Angular-specific integrations.
  */
-export function initSentry(): void {
+export async function initSentry(): Promise<void> {
   if (!environment.sentryDsn) {
     if (environment.production) {
       console.warn('⚠️ Sentry DSN not configured - error tracking disabled');
     }
     return;
   }
+
+  const Sentry = await getSentry();
+  if (!Sentry) return;
 
   Sentry.init({
     dsn: environment.sentryDsn,

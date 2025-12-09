@@ -4,10 +4,10 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { initSentry } from './app/core/services/sentry.service';
 
-// Initialize Sentry before bootstrapping (production only)
-initSentry();
+// Lazy-load Sentry initialization (saves ~238KB from initial bundle)
+// Sentry doesn't need to block app startup - it can initialize async
+void import('./app/core/services/sentry.service').then(({ initSentry }) => initSentry());
 
 registerLocaleData(localeEsAr);
 

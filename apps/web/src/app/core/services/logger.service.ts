@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import * as Sentry from '@sentry/angular';
 import { environment } from '../../../environments/environment';
+
+/**
+ * Sentry module type definition for lazy loading
+ * We only import the types, not the actual module
+ */
+type SentryModule = typeof import('@sentry/angular');
 
 /**
  * Centralized LoggerService for Angular Frontend
@@ -8,7 +13,7 @@ import { environment } from '../../../environments/environment';
  * Part of the centralized logging infrastructure (Issue #120).
  *
  * Features:
- * - Structured logging with Sentry integration
+ * - Structured logging with LAZY-LOADED Sentry integration (saves ~238KB)
  * - Level-based filtering (debug, info, warn, error, critical)
  * - Automatic sensitive data sanitization
  * - Trace ID support for request correlation
@@ -37,6 +42,10 @@ import { environment } from '../../../environments/environment';
 export class LoggerService {
   private readonly isDevelopment = !environment.production;
   private traceId?: string;
+
+  /** Cached Sentry module (lazy-loaded) */
+  private sentryModule: SentryModule | null = null;
+  private sentryLoadPromise: Promise<SentryModule> | null = null;
 
   /**
    * Set trace ID for request correlation
@@ -259,7 +268,41 @@ export class LoggerService {
   }
 
   /**
+   * Lazy-load Sentry module (saves ~238KB from initial bundle)
+   * Caches the module for subsequent calls
+   * @private
+   */
+  private async getSentry(): Promise<SentryModule | null> {
+    // Return cached module if available
+    if (this.sentryModule) {
+      return this.sentryModule;
+    }
+
+    // Only load Sentry if DSN is configured
+    if (!environment.sentryDsn) {
+      return null;
+    }
+
+    // Reuse existing load promise to avoid duplicate imports
+    if (!this.sentryLoadPromise) {
+      this.sentryLoadPromise = import('@sentry/angular')
+        .then((module) => {
+          this.sentryModule = module;
+          return module;
+        })
+        .catch((err) => {
+          console.error('Failed to load Sentry:', err);
+          this.sentryLoadPromise = null;
+          return null;
+        });
+    }
+
+    return this.sentryLoadPromise;
+  }
+
+  /**
    * Send log to Sentry (production)
+   * Uses lazy loading to avoid including Sentry in the initial bundle
    * @private
    */
   private sendToSentry(
@@ -272,7 +315,23 @@ export class LoggerService {
       return;
     }
 
+    // Use void to indicate we're intentionally not awaiting this async operation
+    void this.sendToSentryAsync(level, message, data);
+  }
+
+  /**
+   * Async implementation of sendToSentry
+   * @private
+   */
+  private async sendToSentryAsync(
+    level: 'debug' | 'info' | 'warning' | 'error' | 'fatal',
+    message: string,
+    data?: unknown,
+  ): Promise<void> {
     try {
+      const Sentry = await this.getSentry();
+      if (!Sentry) return;
+
       const captureContext = {
         level: level as 'debug' | 'info' | 'warning' | 'error' | 'fatal',
         extra: { data: this.sanitizeData(data) },
