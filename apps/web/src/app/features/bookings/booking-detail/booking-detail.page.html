@@ -1079,16 +1079,6 @@
           <div class="h-10 bg-surface-base animate-pulse rounded-lg border border-border-default"></div>
         }
 
-        <!-- Booking Extension Request Modal -->
-        @defer (when showExtensionRequestModal()) {
-          <app-booking-extension-request-modal
-            [isOpen]="showExtensionRequestModal()"
-            [booking]="booking()!"
-            (closeModal)="showExtensionRequestModal.set(false)"
-            (requestExtension)="onRequestExtension($event)"
-          ></app-booking-extension-request-modal>
-        }
-
         <!-- Report Traffic Fine Modal -->
         @defer (when showReportTrafficFineModal()) {
           <app-report-traffic-fine

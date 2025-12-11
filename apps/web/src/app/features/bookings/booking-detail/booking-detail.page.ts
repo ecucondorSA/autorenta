@@ -50,7 +50,6 @@ import {
 } from '../../../core/services/booking-ops.service';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
-import { BookingExtensionRequestModalComponent } from '../../../shared/components/booking-extension-request-modal/booking-extension-request-modal.component'; // NEW
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
@@ -94,7 +93,6 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
     BookingInsuranceSummaryComponent,
     SettlementSimulatorComponent,
     DamageComparisonComponent,
-    BookingExtensionRequestModalComponent, // NEW
     ReportTrafficFineComponent, // NEW
     ReportOwnerNoShowComponent, // NEW
     ReportRenterNoShowComponent, // NEW
@@ -323,7 +321,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // Disputes and refunds
   showDisputeForm = signal(false);
   showRefundForm = signal(false);
-  showExtensionRequestModal = signal(false); // NEW
   showReportTrafficFineModal = signal(false); // NEW
   showReportOwnerNoShowModal = signal(false); // NEW
 
@@ -435,28 +432,33 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking) return;
 
-    this.showExtensionRequestModal.set(true); // Open the modal
-  }
+    // Simple prompt-based extension request
+    const daysStr = prompt('¿Cuántos días adicionales necesitas?', '1');
+    if (!daysStr) return;
 
-  async onRequestExtension(event: { newEndDate: Date; estimatedCost: number }): Promise<void> {
-    const booking = this.booking();
-    if (!booking) return;
+    const days = parseInt(daysStr, 10);
+    if (isNaN(days) || days < 1) {
+      alert('Por favor ingresa un número válido de días.');
+      return;
+    }
 
-    this.showExtensionRequestModal.set(false); // Close the modal
+    const currentEndDate = new Date(booking.end_at);
+    const newEndDate = new Date(currentEndDate);
+    newEndDate.setDate(newEndDate.getDate() + days);
 
-    if (!confirm(`¿Confirmas solicitar extender la reserva hasta el ${event.newEndDate.toLocaleDateString()} por un costo estimado de ${event.estimatedCost} ARS? El anfitrión deberá aprobarla.`)) {
+    if (!confirm(`¿Confirmas solicitar extender la reserva hasta el ${newEndDate.toLocaleDateString()}? El anfitrión deberá aprobarla.`)) {
       return;
     }
 
     this.loading.set(true);
     try {
-      const result = await this.bookingsService.requestExtension(booking.id, event.newEndDate);
+      const result = await this.bookingsService.requestExtension(booking.id, newEndDate);
       if (result.success) {
         alert(`Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`);
         // Reload booking to show pending extension status
         const updated = await this.bookingsService.getBookingById(booking.id);
         this.booking.set(updated);
-        await this.loadPendingExtensionRequests(booking.id); // Reload requests after action
+        await this.loadPendingExtensionRequests(booking.id);
       } else {
         alert('Error al solicitar extensión: ' + result.error);
       }
