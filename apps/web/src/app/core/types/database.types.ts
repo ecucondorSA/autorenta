@@ -12184,6 +12184,12 @@ export type Database = {
         | "cancelled"
         | "no_show"
         | "expired"
+        | "cancelled_renter"
+        | "cancelled_owner"
+        | "cancelled_system"
+        | "rejected"
+        | "resolved"
+        | "pending_dispute_resolution"
       cancel_policy: "flex" | "moderate" | "strict"
       car_status: "draft" | "pending" | "active" | "suspended" | "deleted"
       claim_status:
@@ -12392,6 +12398,12 @@ export const Constants = {
         "cancelled",
         "no_show",
         "expired",
+        "cancelled_renter",
+        "cancelled_owner",
+        "cancelled_system",
+        "rejected",
+        "resolved",
+        "pending_dispute_resolution",
       ],
       cancel_policy: ["flex", "moderate", "strict"],
       car_status: ["draft", "pending", "active", "suspended", "deleted"],
@@ -12465,14 +12477,14 @@ export const Constants = {
 export type BookingStatus = Database['public']['Enums']['booking_status'];
 export type CancelPolicy = Database['public']['Enums']['cancel_policy'];
 export type CarStatus = Database['public']['Enums']['car_status'];
-export type FuelType = Database['public']['Enums']['fuel_type'];
 export type PaymentProvider = Database['public']['Enums']['payment_provider'];
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
-export type Transmission = Database['public']['Enums']['transmission'];
-export type UserRole = Database['public']['Enums']['user_role'];
 export type PayoutStatusEnum = Database['public']['Enums']['payout_status_enum'];
+export type FuelType = 'gasoline' | 'diesel' | 'electric' | 'hybrid' | 'plugin_hybrid';
+export type Transmission = 'automatic' | 'manual';
+export type UserRole = 'renter' | 'owner' | 'admin' | 'both';
 
-// Table row type aliases
+// Table row type aliases  
 export type BankAccount = Database['public']['Tables']['bank_accounts']['Row'];
 export type Booking = Database['public']['Tables']['bookings']['Row'];
 export type Car = Database['public']['Tables']['cars']['Row'];

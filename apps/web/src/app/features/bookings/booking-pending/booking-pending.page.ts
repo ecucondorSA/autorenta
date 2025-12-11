@@ -86,7 +86,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
 
         // Load car data if available
         if (booking.car) {
-          this.car.set(booking.car as Car);
+          this.car.set(booking.car as unknown as Car);
         }
 
         // Check if payment is already processed

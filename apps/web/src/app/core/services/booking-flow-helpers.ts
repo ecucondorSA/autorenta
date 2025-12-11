@@ -27,8 +27,6 @@ export function isValidStatusTransition(
     expired: [],
     no_show: [],
     rejected: [],
-    pending_owner_review: [],
-    pending_renter_review: [],
     // pending_dispute_resolution is redundant with 'disputed' in the new model, so it can be mapped to it if needed
     pending_dispute_resolution: ['disputed'],
     cancelled_renter: [],
@@ -214,18 +212,6 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '❌',
       description: 'La solicitud fue rechazada por el dueño',
-    },
-    pending_owner_review: {
-      label: 'Calificación Pendiente',
-      color: 'warning',
-      icon: '⭐',
-      description: 'El dueño debe calificar al conductor',
-    },
-    pending_renter_review: {
-      label: 'Tu Calificación Pendiente',
-      color: 'warning',
-      icon: '⭐',
-      description: 'Debés calificar tu experiencia',
     },
     pending_dispute_resolution: {
       label: 'En Disputa',

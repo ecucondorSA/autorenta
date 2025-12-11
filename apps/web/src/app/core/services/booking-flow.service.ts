@@ -409,18 +409,6 @@ export class BookingFlowService {
         icon: 'close-circle-outline',
         description: 'La solicitud fue rechazada',
       },
-      pending_owner_review: {
-        label: 'Esperando reseña',
-        color: 'warning',
-        icon: 'star-outline',
-        description: 'El dueño debe calificar',
-      },
-      pending_renter_review: {
-        label: 'Esperando reseña',
-        color: 'warning',
-        icon: 'star-outline',
-        description: 'Debés dejar una reseña',
-      },
       pending_dispute_resolution: {
         label: 'En disputa',
         color: 'danger',
