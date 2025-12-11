@@ -35,17 +35,22 @@ export class CarAvailabilityService {
   private readonly supabase = inject(SupabaseClientService).getClient();
 
   async getBlackouts(carId: string): Promise<CarBlackout[]> {
+    // car_blackouts table no longer exists; use car_blocked_dates as source
     const { data, error } = await this.supabase
-      .from('car_blackouts')
-      .select('starts_at, ends_at, reason')
+      .from('car_blocked_dates')
+      .select('blocked_from, blocked_to, reason')
       .eq('car_id', carId)
-      .order('starts_at', { ascending: true });
+      .order('blocked_from', { ascending: true });
 
     if (error) {
       throw error;
     }
 
-    return (data || []) as CarBlackout[];
+    return (data || []).map((row) => ({
+      starts_at: row.blocked_from,
+      ends_at: row.blocked_to,
+      reason: row.reason ?? null,
+    })) as CarBlackout[];
   }
 
   async getHandoverPoints(carId: string): Promise<CarHandoverPoint[]> {
@@ -75,32 +80,31 @@ export class CarAvailabilityService {
       notes?: string | null;
     };
 
+    // Normalize date boundaries
+    const fromIso = this.normalizeToDate(fromDate).toISOString();
+    const toIso = this.normalizeToDate(toDate).toISOString();
+    const fromDateOnly = this.toDateString(this.normalizeToDate(fromDate));
+    const toDateOnly = this.toDateString(this.normalizeToDate(toDate));
+
     // Execute all queries in parallel for better performance
     // Overlap logic: range1 overlaps range2 when start1 <= end2 AND end1 >= start2
-    const [bookingsResult, blackoutsResult, manualBlocksResult] = await Promise.all([
+    const [bookingsResult, manualBlocksResult] = await Promise.all([
       this.supabase
         .from('bookings')
         .select('start_at, end_at')
         .eq('car_id', carId)
-        .in('status', ['confirmed', 'active'])
-        .lte('start_at', toDate)
-        .gte('end_at', fromDate),
-      this.supabase
-        .from('car_blackouts')
-        .select('starts_at, ends_at, reason')
-        .eq('car_id', carId)
-        .lte('starts_at', toDate)
-        .gte('ends_at', fromDate),
+        .in('status', ['confirmed', 'in_progress'])
+        .lte('start_at', toIso)
+        .gte('end_at', fromIso),
       this.supabase
         .from('car_blocked_dates')
         .select('id, blocked_from, blocked_to, reason, notes')
         .eq('car_id', carId)
-        .lte('blocked_from', toDate)
-        .gte('blocked_to', fromDate),
+        .lte('blocked_from', toDateOnly)
+        .gte('blocked_to', fromDateOnly),
     ]);
 
     const bookings = bookingsResult.data;
-    const blackouts = blackoutsResult.data;
     const manualRows = (manualBlocksResult.data || []) as ManualBlockRow[];
 
     const ranges: DetailedBlockedRange[] = [];
@@ -112,17 +116,6 @@ export class CarAvailabilityService {
           to: this.toDateString(b.end_at),
           type: 'booking' as const,
           reason: 'Reserva',
-        })),
-      );
-    }
-
-    if (blackouts) {
-      ranges.push(
-        ...blackouts.map((b) => ({
-          from: this.toDateString(b.starts_at),
-          to: this.toDateString(b.ends_at),
-          type: 'blackout' as const,
-          reason: b.reason,
         })),
       );
     }
@@ -277,22 +270,15 @@ export class CarAvailabilityService {
       let q = this.supabase
         .from('bookings')
         .select('car_id')
-        .in('status', ['confirmed', 'active'])
+        .in('status', ['confirmed', 'in_progress'])
         .lte('start_at', toDate)
         .gte('end_at', fromDate);
       if (carIds?.length) q = q.in('car_id', carIds);
       return q;
     };
 
-    const buildBlackoutsQuery = () => {
-      let q = this.supabase
-        .from('car_blackouts')
-        .select('car_id')
-        .lte('starts_at', toDate)
-        .gte('ends_at', fromDate);
-      if (carIds?.length) q = q.in('car_id', carIds);
-      return q;
-    };
+    // car_blackouts table no longer exists - removed query
+    // Use car_blocked_dates for all manual blocks
 
     const buildBlockedDatesQuery = () => {
       let q = this.supabase
@@ -304,18 +290,14 @@ export class CarAvailabilityService {
       return q;
     };
 
-    const [bookingsResult, blackoutsResult, manualBlocksResult] = await Promise.all([
+    const [bookingsResult, manualBlocksResult] = await Promise.all([
       buildBookingsQuery(),
-      buildBlackoutsQuery(),
       buildBlockedDatesQuery(),
     ]);
 
     const blockedIds = new Set<string>();
 
     for (const row of bookingsResult.data || []) {
-      blockedIds.add(row.car_id);
-    }
-    for (const row of blackoutsResult.data || []) {
       blockedIds.add(row.car_id);
     }
     for (const row of manualBlocksResult.data || []) {
@@ -370,7 +352,7 @@ export class CarAvailabilityService {
       .from('bookings')
       .select('id, status, start_at, end_at', { count: 'exact' })
       .eq('car_id', carId)
-      .in('status', ['confirmed', 'active'])
+      .in('status', ['confirmed', 'in_progress'])
       .order('start_at', { ascending: true })
       .limit(10);
 

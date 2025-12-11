@@ -26,6 +26,8 @@ import { LoadingStateComponent } from '../../../shared/components/loading-state/
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { WalletBalanceCardComponent } from '../../../shared/components/wallet-balance-card/wallet-balance-card.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
+import { PaymentModeToggleComponent } from '../booking-detail-payment/components/payment-mode-toggle.component';
+import type { PaymentMode } from '../../../core/models/booking-detail-payment.model';
 
 // Types
 import { Booking, Car } from '../../../core/models';
@@ -53,6 +55,7 @@ interface PaymentOption {
     ButtonComponent,
     MoneyPipe,
     DatePipe,
+    PaymentModeToggleComponent,
   ],
   templateUrl: './booking-payment.page.html',
   styleUrls: ['./booking-payment.page.css'],
@@ -79,6 +82,11 @@ export class BookingPaymentPage implements OnInit {
 
   // Computed values
   readonly walletBalance = this.walletService.availableBalance;
+
+  // Computed to convert paymentMethod to PaymentMode for the toggle component
+  readonly toggleMode = computed<PaymentMode>(() => {
+    return this.paymentMethod() === 'credit_card' ? 'card' : 'wallet';
+  });
 
   readonly depositAmount = computed(() => {
     const bookingData = this.booking();
@@ -256,6 +264,20 @@ export class BookingPaymentPage implements OnInit {
         this.showPaymentOptions.set(false);
         break;
     }
+  }
+
+  /**
+   * Handler for PaymentModeToggleComponent
+   * Converts PaymentMode ('card' | 'wallet') to this page's payment method ('credit_card' | 'wallet')
+   */
+  onToggleModeChange(mode: PaymentMode): void {
+    if (mode === 'card') {
+      this.paymentMethod.set('credit_card');
+    } else {
+      this.paymentMethod.set('wallet');
+    }
+    // Always hide the options panel when user makes a choice
+    this.showPaymentOptions.set(false);
   }
 
   processWalletPayment(): void {

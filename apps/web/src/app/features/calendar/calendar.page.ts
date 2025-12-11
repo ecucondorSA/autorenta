@@ -208,10 +208,11 @@ export class CalendarPage implements OnInit {
       const reason = this.blackoutReason().trim() || 'Bloqueado manualmente';
 
       const supabase = this.supabaseClient.getClient();
-      const { error } = await supabase.from('car_blackouts').insert({
+      // Persist bloqueo manual en car_blocked_dates (tabla vigente en Supabase)
+      const { error } = await supabase.from('car_blocked_dates').insert({
         car_id: carId,
-        starts_at: startsAt,
-        ends_at: endsAt,
+        blocked_from: startsAt,
+        blocked_to: endsAt,
         reason,
       });
 

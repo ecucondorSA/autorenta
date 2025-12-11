@@ -96,7 +96,7 @@ export class CarDepreciationNotificationsService {
         .from('bookings')
         .select('total_amount, currency, status')
         .eq('car_id', carId)
-        .in('status', ['confirmed', 'active', 'completed'])
+        .in('status', ['confirmed', 'in_progress', 'completed'])
         .gte('start_date', startDate)
         .lte('start_date', endDate);
 

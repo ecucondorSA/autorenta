@@ -65,13 +65,8 @@ USING (owner_id = auth.uid());
 CREATE POLICY "Members can view other members of same org" 
 ON public.organization_members FOR SELECT 
 USING (
-    EXISTS (
-        SELECT 1 FROM public.organization_members om
-        WHERE om.organization_id = organization_members.organization_id 
-        AND om.user_id = auth.uid()
-    )
+    organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid())
 );
-
 -- Link Cars to Organizations
 ALTER TABLE public.cars 
 ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id);

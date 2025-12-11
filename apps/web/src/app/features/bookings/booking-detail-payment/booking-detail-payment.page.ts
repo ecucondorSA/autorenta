@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 
 // Services
@@ -18,6 +18,8 @@ import { FxSnapshot, RiskSnapshot, PaymentAuthorization } from '../../../core/mo
 // Components
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
+import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
+import { PaymentMode } from '../../../core/models/booking-detail-payment.model';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
@@ -30,8 +32,10 @@ interface DualRateFxSnapshot extends FxSnapshot {
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     MercadopagoCardFormComponent,
     CardHoldPanelComponent,
+    PaymentModeToggleComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
@@ -63,8 +67,8 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly paymentProcessing = signal(false);
   readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
 
-  // Payment mode toggle: 'direct' = pago directo, 'preauth' = preautorización
-  readonly paymentMode = signal<'direct' | 'preauth'>('direct');
+  // Payment mode toggle: 'card' = tarjeta (preautorización), 'wallet' = saldo AutoRenta
+  readonly paymentMode = signal<PaymentMode>('card');
 
   // Preauthorization state
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
@@ -199,11 +203,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     // Store user ID for preauthorization
     this.currentUserId.set(session.user.id);
 
-    // 2. Load params
-    this.loadParams();
+    // 2. Load params (now async to support bookingId lookup)
+    await this.loadParams();
 
-    // 3. Load data
-    await Promise.all([this.loadCarInfo(), this.loadFxSnapshot()]);
+    // 3. Load data (only if params were loaded successfully)
+    if (this.bookingInput()) {
+      await Promise.all([this.loadCarInfo(), this.loadFxSnapshot()]);
+    }
 
     // 4. Calculate risk snapshot after FX is loaded
     this.calculateRiskSnapshot();
@@ -215,22 +221,55 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadParams(): void {
+  private async loadParams(): Promise<void> {
     const queryParams = this.route.snapshot.queryParamMap;
     const carId = queryParams.get('carId');
     const startDate = queryParams.get('startDate');
     const endDate = queryParams.get('endDate');
+    const bookingIdParam = queryParams.get('bookingId');
 
-    if (!carId || !startDate || !endDate) {
-      this.error.set('Faltan parámetros de reserva.');
+    // Mode 1: Direct booking params (carId + dates)
+    if (carId && startDate && endDate) {
+      this.bookingInput.set({
+        carId,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+      });
       return;
     }
 
-    this.bookingInput.set({
-      carId,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
-    });
+    // Mode 2: Existing booking ID - load booking data
+    if (bookingIdParam) {
+      try {
+        const { data: booking, error } = await this.supabaseClient
+          .from('bookings')
+          .select('id, car_id, start_date, end_date')
+          .eq('id', bookingIdParam)
+          .single();
+
+        if (error || !booking) {
+          this.logger.error('Error loading booking', { bookingId: bookingIdParam, error });
+          this.error.set('No se encontró la reserva. Puede que haya sido cancelada o el enlace sea incorrecto.');
+          return;
+        }
+
+        this.bookingId.set(booking.id);
+        this.bookingCreated.set(true);
+        this.bookingInput.set({
+          carId: booking.car_id,
+          startDate: new Date(booking.start_date),
+          endDate: new Date(booking.end_date),
+        });
+        return;
+      } catch (err) {
+        this.logger.error('Error loading booking params', { error: err });
+        this.error.set('Error al cargar los datos de la reserva.');
+        return;
+      }
+    }
+
+    // No valid params found
+    this.error.set('Faltan parámetros de reserva. Por favor, selecciona un vehículo y fechas desde el catálogo.');
   }
 
   private async loadCarInfo(): Promise<void> {
@@ -626,12 +665,19 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Toggle payment mode between direct payment and preauthorization
+   * Toggle payment mode between card (preauthorization) and wallet
    */
-  setPaymentMode(mode: 'direct' | 'preauth'): void {
+  setPaymentMode(mode: PaymentMode): void {
     this.paymentMode.set(mode);
     this.error.set(null);
     this.logger.info('Payment mode changed', { mode });
+  }
+
+  /**
+   * Handle mode change from PaymentModeToggleComponent
+   */
+  onPaymentModeChange(mode: PaymentMode): void {
+    this.setPaymentMode(mode);
   }
 
   /**

@@ -4,13 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../core/services/analytics.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
-import {
-  MercadopagoPaymentBrickComponent,
-  PaymentResult,
-} from '../../shared/components/mercadopago-payment-brick/mercadopago-payment-brick.component';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
 
 /**
  * DepositPage
@@ -29,7 +25,7 @@ import {
 @Component({
   selector: 'app-deposit',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, MercadopagoPaymentBrickComponent],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './deposit.page.html',
   styleUrls: ['./deposit.page.css'],
 })
@@ -41,8 +37,9 @@ export class DepositPage implements OnInit {
   private readonly analyticsService = inject(AnalyticsService);
   private readonly supabase = injectSupabase();
 
-  // Form state
-  readonly arsAmount = signal<number>(0);
+  // Form state (usuario ingresa en USD, convertimos a ARS para MP)
+  usdAmountValue = 0;
+  readonly usdAmountInput = signal<number>(0);
   readonly description = signal<string>('');
   readonly isProcessing = signal<boolean>(false);
   readonly formError = signal<string | null>(null);
@@ -51,29 +48,43 @@ export class DepositPage implements OnInit {
   readonly platformRate = signal<number | null>(null);
   readonly loadingRate = signal<boolean>(false);
 
-  // Payment Brick state
-  readonly showPaymentBrick = signal<boolean>(false);
+  // Pago vía Checkout Pro (init_point)
+  // Checkout Pro redirect flow
+  readonly showPaymentRedirect = signal<boolean>(false);
   readonly paymentCompleted = signal<boolean>(false);
   readonly paymentPending = signal<boolean>(false);
   readonly preferenceId = signal<string | null>(null);
+  readonly initPoint = signal<string | null>(null);
   readonly transactionId = signal<string | null>(null);
 
-  // Computed USD amount (in cents)
-  readonly usdAmount = computed(() => {
+  // Monto ARS calculado a partir de USD ingresados
+  readonly arsAmount = computed(() => {
     const rate = this.platformRate();
-    const ars = this.arsAmount();
-    if (!rate || !ars) return 0;
-    return Math.round((ars / rate) * 100); // Convert to cents
+    const usd = this.usdAmountInput();
+    if (!rate || !usd) return 0;
+    return Math.round(usd * rate);
   });
 
-  // Computed ARS amount in cents for Payment Brick
-  readonly arsAmountCents = computed(() => {
-    return Math.round(this.arsAmount() * 100);
-  });
+  // Computed USD amount (in cents) para la RPC
+  readonly usdAmount = computed(() => Math.round(this.usdAmountInput() * 100));
 
-  // Min/max amounts (in ARS)
-  readonly MIN_AMOUNT_ARS = 1000; // 1000 ARS
-  readonly MAX_AMOUNT_ARS = 1000000; // 1,000,000 ARS
+  // ARS en centavos para preferencia MP
+  readonly arsAmountCents = computed(() => Math.round(this.arsAmount() * 100));
+
+  // Límites (en ARS, se derivan a USD para validar entrada)
+  readonly MIN_AMOUNT_ARS = 1000; // 1.000 ARS
+  // Se eleva el máximo para permitir hasta 3M ARS (nuevo límite de MP in-app).
+  readonly MAX_AMOUNT_ARS = 3_000_000; // 3.000.000 ARS
+
+  get minAmountUsd(): number {
+    const rate = this.platformRate();
+    return rate ? this.MIN_AMOUNT_ARS / rate : 0;
+  }
+
+  get maxAmountUsd(): number {
+    const rate = this.platformRate();
+    return rate ? this.MAX_AMOUNT_ARS / rate : 0;
+  }
 
   ngOnInit(): void {
     // Track page view
@@ -123,10 +134,26 @@ export class DepositPage implements OnInit {
   }
 
   /**
-   * Update ARS amount
+   * Alias for showPaymentRedirect (used in template)
+   */
+  readonly showPaymentBrick = this.showPaymentRedirect;
+
+  /**
+   * Update USD amount from input
+   */
+  updateUsdAmount(value: number): void {
+    this.usdAmountInput.set(value);
+    this.formError.set(null);
+  }
+
+  /**
+   * Update ARS amount - converts to USD and updates input
    */
   updateArsAmount(value: number): void {
-    this.arsAmount.set(value);
+    const rate = this.platformRate();
+    if (rate && rate > 0) {
+      this.usdAmountInput.set(value / rate);
+    }
     this.formError.set(null);
   }
 
@@ -184,7 +211,7 @@ export class DepositPage implements OnInit {
       // 2. Create pending deposit transaction
       // La función en producción espera: (p_user_id uuid, p_amount bigint, p_provider text)
       // p_amount es en centavos USD (bigint)
-      const amountCentsUsd = this.usdAmount(); // Ya está en cents
+      const amountCentsUsd = this.usdAmount(); // centavos USD
 
       const { data: txData, error: txError } = await this.supabase.rpc('wallet_initiate_deposit', {
         p_user_id: user.id,
@@ -202,9 +229,9 @@ export class DepositPage implements OnInit {
       this.transactionId.set(transactionId);
       console.log('✅ Deposit transaction created:', transactionId);
 
-      // 3. Try to create MercadoPago preference with purpose: wallet_purchase
-      // This enables account_money and consumer_credits in Payment Brick
+      // 3. Crear preferencia de MercadoPago (Checkout Pro) con purpose wallet_purchase
       let preferenceId: string | null = null;
+      let initPoint: string | null = null;
 
       try {
         const { data: prefData, error: prefError } = await this.supabase.functions.invoke(
@@ -212,7 +239,7 @@ export class DepositPage implements OnInit {
           {
             body: {
               transaction_id: transactionId,
-              amount: this.arsAmount(), // Amount in ARS for MercadoPago
+              amount: this.arsAmount(), // Monto en ARS para MercadoPago
               description: this.description() || 'Depósito a wallet AutoRentar',
             },
           },
@@ -220,7 +247,9 @@ export class DepositPage implements OnInit {
 
         if (!prefError && prefData?.preference_id) {
           preferenceId = prefData.preference_id;
+          initPoint = prefData.init_point || prefData.sandbox_init_point || null;
           this.preferenceId.set(preferenceId);
+          this.initPoint.set(initPoint);
           console.log('✅ MercadoPago preference created:', preferenceId);
         } else {
           console.warn('⚠️ Could not create preference, continuing without it:', prefError);
@@ -236,8 +265,18 @@ export class DepositPage implements OnInit {
         transaction_id: transactionId,
       });
 
-      // Show the Payment Brick (with or without preferenceId)
-      this.showPaymentBrick.set(true);
+      // Redirigir a Checkout Pro (init_point)
+      if (preferenceId && initPoint) {
+        this.showPaymentRedirect.set(true);
+        // Guardar analytics antes de salir
+        this.analyticsService.trackEvent('deposit_checkoutpro_redirect', {
+          amount_ars: this.arsAmount(),
+          preference_id: preferenceId,
+        });
+        window.location.href = initPoint;
+      } else {
+        throw new Error('No pudimos generar el link de pago. Intenta nuevamente.');
+      }
     } catch (error) {
       console.error('Error in deposit submission:', error);
       const friendlyMessage =
@@ -276,63 +315,13 @@ export class DepositPage implements OnInit {
     }
   }
 
-  /**
-   * Handle successful payment from Payment Brick
-   */
-  onPaymentSuccess(result: PaymentResult): void {
-    this.analyticsService.trackEvent('deposit_payment_approved', {
-      amount_ars: this.arsAmount(),
-      amount_usd: this.usdAmount(),
-      payment_id: result.paymentId,
-    });
-
-    this.paymentCompleted.set(true);
-    this.showPaymentBrick.set(false);
-
-    this.toastService.success('¡Depósito exitoso!', 'Los fondos se acreditaron a tu wallet.');
-
-    // Navigate to wallet after delay
-    setTimeout(() => {
-      void this.router.navigate(['/wallet']);
-    }, 2000);
-  }
-
-  /**
-   * Handle payment error from Payment Brick
-   */
-  onPaymentError(result: PaymentResult): void {
-    this.analyticsService.trackEvent('deposit_payment_error', {
-      amount_ars: this.arsAmount(),
-      status: result.status,
-      status_detail: result.statusDetail,
-      message: result.message,
-    });
-
-    this.formError.set(result.message || 'El pago fue rechazado. Intenta con otro medio de pago.');
-    this.toastService.error('Pago rechazado', this.formError()!);
-  }
-
-  /**
-   * Handle pending payment from Payment Brick (offline methods)
-   */
-  onPaymentPending(result: PaymentResult): void {
-    this.analyticsService.trackEvent('deposit_payment_pending', {
-      amount_ars: this.arsAmount(),
-      payment_id: result.paymentId,
-      status: result.status,
-    });
-
-    this.paymentPending.set(true);
-    this.showPaymentBrick.set(false);
-
-    this.toastService.info('Pago pendiente', 'Los fondos se acreditarán cuando completes el pago.');
-  }
+  // Con Checkout Pro la confirmación llega vía webhook/DB; la UI solo redirige.
 
   /**
    * Go back to amount selection
    */
   onBackToAmount(): void {
-    this.showPaymentBrick.set(false);
+    // legacy cleanup (no brick)
     this.formError.set(null);
   }
 

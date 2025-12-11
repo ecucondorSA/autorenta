@@ -33,6 +33,16 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: 'claims',
+    loadComponent: () => import('./claims/my-claims.page').then((m) => m.MyClaimsPage),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: 'calendar',
+    loadComponent: () => import('../calendar/calendar.page').then((m) => m.CalendarPage),
+    canMatch: [AuthGuard],
+  },
+  {
     path: 'success/:id',
     loadComponent: () =>
       import('./booking-success/booking-success.page').then((m) => m.BookingSuccessPage),
@@ -110,16 +120,6 @@ export const BOOKINGS_ROUTES: Routes = [
   {
     path: ':bookingId/report-claim',
     loadComponent: () => import('./report-claim/report-claim.page').then((m) => m.ReportClaimPage),
-    canMatch: [AuthGuard],
-  },
-  {
-    path: 'claims',
-    loadComponent: () => import('./claims/my-claims.page').then((m) => m.MyClaimsPage),
-    canMatch: [AuthGuard],
-  },
-  {
-    path: 'calendar',
-    loadComponent: () => import('../calendar/calendar.page').then((m) => m.CalendarPage),
     canMatch: [AuthGuard],
   },
   // {

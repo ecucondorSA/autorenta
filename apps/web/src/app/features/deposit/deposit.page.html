@@ -4,7 +4,7 @@
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
     <div class="text-center mb-8">
-      @if (showPaymentBrick()) {
+      @if (showPaymentRedirect()) {
         <button
           (click)="onBackToAmount()"
           class="inline-flex items-center text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-text-primary transition mb-4"
@@ -41,8 +41,8 @@
           ¡Depósito Exitoso!
         } @else if (paymentPending()) {
           Pago Pendiente
-        } @else if (showPaymentBrick()) {
-          Completar Pago
+        } @else if (showPaymentRedirect()) {
+          Redirigiendo a Mercado Pago…
         } @else {
           Depositar Fondos
         }
@@ -52,8 +52,8 @@
           Los fondos se acreditaron a tu wallet
         } @else if (paymentPending()) {
           Completa el pago para acreditar los fondos
-        } @else if (showPaymentBrick()) {
-          Monto: ${{ arsAmount() | number: '1.0-0' }} ARS
+        } @else if (showPaymentRedirect()) {
+          Monto: ${{ arsAmount() | number: '1.0-0' }} ARS · Serás enviado a Checkout Pro.
         } @else {
           Agrega saldo a tu wallet usando MercadoPago
         }
@@ -125,59 +125,6 @@
         </div>
       }
 
-      <!-- Payment Brick View -->
-      @else if (showPaymentBrick()) {
-        <div class="space-y-6">
-          <!-- Amount Summary -->
-          <div
-            class="bg-surface-base dark:bg-surface-secondary rounded-xl p-4 border border-border-default"
-          >
-            <div class="flex justify-between items-center">
-              <span class="text-text-secondary">Total a pagar:</span>
-              <span class="text-2xl font-bold text-text-primary"
-                >${{ arsAmount() | number: '1.0-0' }} ARS</span
-              >
-            </div>
-            @if (platformRate()) {
-              <p class="text-xs text-text-muted mt-1 text-right">
-                ≈ {{ formatCurrency(usdAmount()) }} USD
-              </p>
-            }
-          </div>
-
-          <!-- Error Message -->
-          @if (formError()) {
-            <div
-              class="bg-error-bg border-l-4 border-error-500 text-error-strong px-4 py-3 rounded"
-              role="alert"
-              data-testid="deposit-error"
-            >
-              <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <span class="font-semibold">{{ formError() }}</span>
-              </div>
-            </div>
-          }
-
-          <!-- Payment Brick Component with preferenceId for account_money/consumer_credits -->
-          <app-mercadopago-payment-brick
-            [amount]="arsAmountCents()"
-            [description]="description() || 'Depósito a wallet AutoRentar'"
-            [preferenceId]="preferenceId()"
-            [depositId]="transactionId()"
-            (paymentSuccess)="onPaymentSuccess($event)"
-            (paymentError)="onPaymentError($event)"
-            (paymentPending)="onPaymentPending($event)"
-          />
-        </div>
-      }
-
       <!-- Amount Selection Form -->
       @else {
         <form (ngSubmit)="onSubmit()" class="space-y-6">
@@ -187,7 +134,7 @@
               for="amount"
               class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2"
             >
-              Monto en ARS
+              Monto en USD
             </label>
             <div class="relative">
               <span
@@ -198,12 +145,12 @@
                 type="number"
                 id="amount"
                 name="amount"
-                [(ngModel)]="arsAmount"
-                (ngModelChange)="updateArsAmount($event)"
+                [(ngModel)]="usdAmountValue"
+                (ngModelChange)="updateUsdAmount($event)"
                 class="w-full pl-8 pr-4 py-3 text-lg rounded-xl border-2 border-border-default dark:border-border-default bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-primary focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 transition"
                 placeholder="0.00"
                 min="0"
-                step="100"
+                step="10"
                 data-testid="deposit-amount-input"
               />
             </div>
@@ -218,14 +165,15 @@
               @if (!loadingRate() && platformRate() && arsAmount() > 0) {
                 <div class="flex items-center justify-between text-sm">
                   <span class="text-text-secondary dark:text-text-secondary">
-                    Recibirás aproximadamente:
+                    Se cobrará:
                   </span>
                   <span class="font-semibold text-primary-600 dark:text-primary-400">
-                    {{ formatCurrency(usdAmount()) }} USD
+                    ${{ arsAmount() | number: '1.0-0' }} ARS
                   </span>
                 </div>
                 <p class="text-xs text-text-muted dark:text-text-muted mt-1">
-                  Tasa: 1 USD ≈ {{ platformRate() | number: '1.2-2' }} ARS
+                  Ingresaste {{ usdAmountInput() | number: '1.2-2' }} USD · Tasa: 1 USD ≈
+                  {{ platformRate() | number: '1.2-2' }} ARS
                 </p>
               }
             </div>

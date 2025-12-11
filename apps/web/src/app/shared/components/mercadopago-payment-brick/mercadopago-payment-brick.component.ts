@@ -56,9 +56,11 @@ interface MercadoPagoBricksSDK {
   bricks: () => BricksBuilder;
 }
 
+type BrickType = 'payment' | 'cardPayment' | 'wallet' | 'statusScreen';
+
 interface BricksBuilder {
   create: (
-    brick: string,
+    brick: BrickType,
     container: string,
     settings: PaymentBrickSettings,
   ) => Promise<BrickController>;
@@ -88,9 +90,10 @@ interface PaymentBrickSettings {
     paymentMethods?: {
       creditCard?: string | string[];
       debitCard?: string | string[];
-      mercadoPago?: string[];
-      ticket?: string[];
-      bankTransfer?: string[];
+      // MP docs: omit mercadoPago to let the SDK decide the best option for account money.
+      mercadoPago?: 'all' | 'mercado_pago' | 'onboarding_credits';
+      ticket?: string | string[];
+      bankTransfer?: string | string[];
       maxInstallments?: number;
     };
   };
@@ -407,6 +410,15 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
       const amountArs = this.amount / 100;
       console.log(`💰 Initializing Payment Brick with amount: ${amountArs} ARS`);
 
+      // ✅ Guard: Mercado Pago bricks tienen límites prácticos (~3M ARS en la actualidad).
+      // Si se excede, mostramos mensaje claro y evitamos 400 en initialization.
+      const BRICK_MAX_AMOUNT_ARS = 3_000_000;
+      if (amountArs > BRICK_MAX_AMOUNT_ARS) {
+        throw new Error(
+          `El monto (${amountArs.toLocaleString('es-AR')} ARS) supera el máximo permitido en el pago in-app (${BRICK_MAX_AMOUNT_ARS.toLocaleString('es-AR')} ARS). Dividí el depósito en montos menores.`,
+        );
+      }
+
       // Create Payment Brick
       const bricksBuilder = this.mp.bricks();
 
@@ -427,8 +439,10 @@ export class MercadopagoPaymentBrickComponent implements OnInit, AfterViewInit, 
           paymentMethods: {
             creditCard: 'all',
             debitCard: 'all',
-            mercadoPago: ['wallet_purchase', 'account_money', 'consumer_credits'],
-            ticket: ['rapipago', 'pagofacil'],
+            // Let MP decide wallet/account_money; avoid passing invalid enum.
+            // Allow all cash voucher options; MP accepts 'all' (string) instead of array here.
+            ticket: 'all',
+            bankTransfer: 'all',
             maxInstallments: 12,
           },
         },

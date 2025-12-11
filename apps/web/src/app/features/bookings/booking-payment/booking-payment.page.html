@@ -33,6 +33,12 @@
           <p class="text-text-secondary">Confirma el pago para tu reserva</p>
         </div>
 
+        <!-- Payment Mode Toggle (HUB) -->
+        <app-payment-mode-toggle
+          [selectedMode]="toggleMode()"
+          (modeChange)="onToggleModeChange($event)"
+        ></app-payment-mode-toggle>
+
         <!-- Payment Options (when wallet has insufficient funds) -->
         <div
           *ngIf="showPaymentOptions()"
@@ -103,9 +109,9 @@
           </div>
         </div>
 
-        <!-- Wallet Payment (when sufficient funds) -->
+        <!-- Wallet Payment -->
         <div
-          *ngIf="paymentMethod() === 'wallet' && hasSufficientFunds() && !showPaymentOptions()"
+          *ngIf="paymentMethod() === 'wallet'"
           class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6"
         >
           <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">
@@ -186,7 +192,7 @@
 
         <!-- Credit Card Payment -->
         <div
-          *ngIf="paymentMethod() === 'credit_card' && !showPaymentOptions()"
+          *ngIf="paymentMethod() === 'credit_card'"
           class="bg-surface-raised dark:bg-surface-raised rounded-xl p-6"
         >
           <h2 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-4">

@@ -442,7 +442,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
         this.recipientTyping.set(false);
         this.toastService.success('Usuario bloqueado', `No recibirás mensajes de ${ctx.recipientName}.`);
       }
-    } catch (err) {
+    } catch {
       // Revertir optimistic update en caso de error
       this.blocked.set(wasBlocked);
       this.toastService.error('Error', 'No se pudo actualizar el bloqueo.');

@@ -22,6 +22,8 @@ import {
 } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import { GuidedTourService } from './core/guided-tour';
 import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
@@ -44,8 +46,6 @@ import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-title
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
 import { HapticFeedbackService } from './core/services/haptic-feedback.service';
-import { Capacitor } from '@capacitor/core';
-import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';

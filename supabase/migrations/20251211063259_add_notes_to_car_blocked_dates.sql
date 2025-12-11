@@ -1,0 +1,1 @@
+ALTER TABLE public.car_blocked_dates ADD COLUMN notes text;

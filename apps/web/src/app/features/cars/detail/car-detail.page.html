@@ -374,15 +374,20 @@
           </div>
         </div>
 
-        <!-- Contact Host (Secondary Action) -->
+        <!-- Contact Host (Secondary Action - More Prominent) -->
         <button
           *ngIf="authService.isAuthenticated() && car() && !isCurrentUserOwner()"
           type="button"
           (click)="onContactOwner()"
-          class="w-full mt-4 py-2 text-text-secondary font-medium underline hover:text-text-primary transition-colors text-sm flex items-center justify-center gap-2"
+          class="w-full mt-4 py-3 px-4 bg-surface-base hover:bg-primary-50 dark:hover:bg-primary-900/20 border-2 border-primary-200 dark:border-primary-800 hover:border-primary-400 dark:hover:border-primary-600 rounded-xl text-primary-700 dark:text-primary-400 font-semibold transition-all duration-200 flex items-center justify-center gap-3 group"
         >
-          <app-icon name="message" [size]="16" />
-          Contactar al anfitrión
+          <div class="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-full group-hover:bg-primary-200 dark:group-hover:bg-primary-800/40 transition-colors">
+            <app-icon name="message" [size]="18" class="text-primary-600 dark:text-primary-400" />
+          </div>
+          <span class="flex flex-col items-start">
+            <span class="text-sm">Contactar al anfitrión</span>
+            <span class="text-xs text-text-secondary font-normal">Consulta antes de reservar</span>
+          </span>
         </button>
       </aside>
     </section>

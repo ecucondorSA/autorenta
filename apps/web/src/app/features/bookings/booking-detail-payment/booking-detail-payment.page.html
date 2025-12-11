@@ -64,12 +64,12 @@
     <!-- Error State -->
     @if (error(); as errorMsg) {
       <div
-        class="max-w-2xl mx-auto bg-error-bg/10 border border-error-border/50 rounded-2xl p-8 text-center space-y-4"
+        class="max-w-2xl mx-auto bg-error-bg/10 border border-error-border/50 rounded-2xl p-8 text-center space-y-6"
       >
         <div
-          class="w-12 h-12 bg-error-bg text-error-strong rounded-full flex items-center justify-center mx-auto"
+          class="w-16 h-16 bg-error-bg text-error-strong rounded-full flex items-center justify-center mx-auto"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -78,14 +78,30 @@
             />
           </svg>
         </div>
-        <h3 class="text-xl font-bold text-text-primary">Hubo un problema</h3>
-        <p class="text-text-secondary">{{ errorMsg }}</p>
-        <button
-          onclick="window.location.reload()"
-          class="px-6 py-2 bg-surface-raised border border-border-default rounded-lg text-sm font-medium hover:bg-surface-base transition-colors"
-        >
-          Intentar nuevamente
-        </button>
+        <div class="space-y-2">
+          <h3 class="text-xl font-bold text-text-primary">Hubo un problema</h3>
+          <p class="text-text-secondary">{{ errorMsg }}</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            routerLink="/cars"
+            class="px-6 py-3 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            Ver catálogo de autos
+          </a>
+          <a
+            routerLink="/bookings"
+            class="px-6 py-3 bg-surface-raised border border-border-default rounded-lg text-sm font-medium hover:bg-surface-base transition-colors flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            Mis reservas
+          </a>
+        </div>
       </div>
     }
 
@@ -331,116 +347,111 @@
 
           <!-- 3. Payment Method Toggle -->
           @if (!bookingCreated()) {
-            <section
-              class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-text-primary flex items-center gap-2">
-                  <svg
-                    class="w-5 h-5 text-success-strong"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                    />
-                  </svg>
-                  Método de Pago
-                </h3>
-                <div class="flex gap-2">
-                  <div
-                    class="h-6 w-8 bg-surface-base rounded border border-border-default flex items-center justify-center text-xs font-bold text-text-secondary/50"
-                  >
-                    VISA
-                  </div>
-                  <div
-                    class="h-6 w-8 bg-surface-base rounded border border-border-default flex items-center justify-center text-xs font-bold text-text-secondary/50"
-                  >
-                    MC
-                  </div>
-                </div>
-              </div>
+            <section class="space-y-6">
+              <!-- Payment Mode Toggle Component -->
+              <app-payment-mode-toggle
+                [selectedMode]="paymentMode()"
+                (modeChange)="onPaymentModeChange($event)"
+              ></app-payment-mode-toggle>
 
-              <!-- Payment Mode Toggle -->
-              <div class="flex rounded-lg bg-surface-base p-1 mb-6">
-                <button
-                  type="button"
-                  (click)="setPaymentMode('direct')"
-                  [class]="paymentMode() === 'direct'
-                    ? 'flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white dark:bg-surface-raised shadow text-text-primary transition-all'
-                    : 'flex-1 py-2 px-4 rounded-md text-sm font-medium text-text-secondary hover:text-text-primary transition-all'"
+              <!-- Card Payment Form -->
+              @if (paymentMode() === 'card') {
+                <div
+                  class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
                 >
-                  <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" stroke-width="1.75"/><path d="M1 10h22" stroke-width="1.75"/><path d="M5 15h4" stroke-width="1.75" stroke-linecap="round"/></svg>
-                  Pago Directo
-                </button>
-                <button
-                  type="button"
-                  (click)="setPaymentMode('preauth')"
-                  [class]="paymentMode() === 'preauth'
-                    ? 'flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white dark:bg-surface-raised shadow text-text-primary transition-all'
-                    : 'flex-1 py-2 px-4 rounded-md text-sm font-medium text-text-secondary hover:text-text-primary transition-all'"
-                >
-                  <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg>
-                  Preautorización
-                </button>
-              </div>
-
-              <!-- Direct Payment Form -->
-              @if (paymentMode() === 'direct') {
-                <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                  <p class="text-sm text-blue-700 dark:text-blue-300">
-                    <strong>Pago Directo:</strong> Se cobrará el monto total inmediatamente a tu tarjeta.
-                  </p>
-                </div>
-
-                <app-mercadopago-card-form
-                  [amountArs]="totalArs()"
-                  (cardTokenGenerated)="onCardTokenGenerated($event)"
-                  (cardError)="onCardError($event)"
-                ></app-mercadopago-card-form>
-
-                <div class="mt-4 text-center">
-                  <button
-                    type="button"
-                    (click)="payWithMercadoPago()"
-                    [disabled]="processingPayment() || paymentProcessing()"
-                    class="text-sm text-[#009EE3] hover:text-[#007BB5] font-medium hover:underline inline-flex items-center gap-1 transition-colors"
-                  >
-                    O pagar con efectivo/transferencia vía MercadoPago
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
+                  <h3 class="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                     </svg>
-                  </button>
+                    Pagar con Tarjeta
+                  </h3>
+
+                  <div class="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                    <p class="text-sm text-amber-700 dark:text-amber-300">
+                      <strong>Preautorización:</strong> Se retendrá el monto en tu tarjeta sin cobrarlo.
+                      Se libera automáticamente al finalizar el alquiler.
+                    </p>
+                  </div>
+
+                  @if (riskSnapshot() && fxSnapshot()) {
+                    <app-card-hold-panel
+                      [riskSnapshot]="riskSnapshot()!"
+                      [fxSnapshot]="fxSnapshot()!"
+                      [userId]="currentUserId()"
+                      [bookingId]="bookingId() || undefined"
+                      [currentAuthorization]="currentAuthorization()"
+                      (authorizationChange)="onAuthorizationChange($event)"
+                      (fallbackToWallet)="onFallbackToWallet()"
+                    ></app-card-hold-panel>
+                  } @else {
+                    <app-mercadopago-card-form
+                      [amountArs]="totalArs()"
+                      (cardTokenGenerated)="onCardTokenGenerated($event)"
+                      (cardError)="onCardError($event)"
+                    ></app-mercadopago-card-form>
+                  }
+
+                  <div class="mt-4 text-center">
+                    <button
+                      type="button"
+                      (click)="payWithMercadoPago()"
+                      [disabled]="processingPayment() || paymentProcessing()"
+                      class="text-sm text-[#009EE3] hover:text-[#007BB5] font-medium hover:underline inline-flex items-center gap-1 transition-colors"
+                    >
+                      O pagar con efectivo/transferencia vía MercadoPago
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               }
 
-              <!-- Preauthorization Form -->
-              @if (paymentMode() === 'preauth' && riskSnapshot() && fxSnapshot()) {
-                <div class="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                  <p class="text-sm text-amber-700 dark:text-amber-300">
-                    <strong>Preautorización:</strong> Se retendrá el monto en tu tarjeta sin cobrarlo.
-                    Se liberará automáticamente si no se captura en 7-30 días.
+              <!-- Wallet Payment Form -->
+              @if (paymentMode() === 'wallet') {
+                <div
+                  class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"
+                >
+                  <h3 class="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-success-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Pagar con Wallet AutoRenta
+                  </h3>
+
+                  <div class="mb-4 p-3 bg-success-light/10 dark:bg-success-light/20 border border-success-light/40 dark:border-success-light/60 rounded-lg">
+                    <p class="text-sm text-success-700 dark:text-success-strong">
+                      <strong>Pago con Saldo:</strong> Usa tu saldo de AutoRenta para pagar sin necesidad de tarjeta.
+                      El monto se debitará de tu wallet inmediatamente.
+                    </p>
+                  </div>
+
+                  <!-- Wallet Balance Info -->
+                  <div class="bg-surface-base rounded-xl p-4 mb-4 border border-border-default">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm text-text-secondary">Tu saldo disponible:</span>
+                      <span class="text-lg font-bold text-success-strong">
+                        <!-- TODO: Integrar con wallet service -->
+                        Cargando...
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    (click)="onFallbackToWallet()"
+                    class="w-full py-4 px-6 bg-gradient-to-r from-success-700 to-success-600 hover:from-success-600 hover:to-success-500 text-white font-bold rounded-xl shadow-lg transform transition-all active:scale-95 flex items-center justify-center gap-3"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Confirmar Pago con Wallet
+                  </button>
+
+                  <p class="text-xs text-text-secondary text-center mt-3">
+                    El pago se procesará inmediatamente desde tu saldo AutoRenta.
                   </p>
                 </div>
-
-                <app-card-hold-panel
-                  [riskSnapshot]="riskSnapshot()!"
-                  [fxSnapshot]="fxSnapshot()!"
-                  [userId]="currentUserId()"
-                  [bookingId]="bookingId() || undefined"
-                  [currentAuthorization]="currentAuthorization()"
-                  (authorizationChange)="onAuthorizationChange($event)"
-                  (fallbackToWallet)="onFallbackToWallet()"
-                ></app-card-hold-panel>
               }
             </section>
           }

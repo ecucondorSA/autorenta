@@ -122,12 +122,9 @@ export class PublishCarV2Page implements OnInit {
   readonly fipeErrorCode = signal<string | null>(null); // ✅ NEW: Machine-readable error code
   readonly fipeSuggestions = signal<string[]>([]); // ✅ NEW: Actionable suggestions
   readonly allowManualValueEdit = signal(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly fipeMultiCurrencyValues = signal<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly selectedFIPEBrand = signal<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly selectedFIPEModel = signal<any>(null);
+  readonly fipeMultiCurrencyValues = signal<Record<string, unknown> | null>(null);
+  readonly selectedFIPEBrand = signal<{ code: string; name: string } | null>(null);
+  readonly selectedFIPEModel = signal<{ code: string; name: string } | null>(null);
   readonly suggestedPrice = signal<number | null>(null);
   readonly selectedCategoryName = signal<string>('');
   readonly isCalculatingSuggestedPrice = signal(false);
@@ -177,6 +174,21 @@ export class PublishCarV2Page implements OnInit {
       hasDescription &&
       hasAvailability
     );
+  });
+
+  // ✅ NEW: Draft saving capability (Minimal requirements: Brand + Model)
+  readonly canSaveDraft = computed(() => {
+    const brandId = this.publishForm?.get('brand_id')?.value;
+    const modelId = this.publishForm?.get('model_id')?.value;
+    const brandTextBackup = this.publishForm?.get('brand_text_backup')?.value;
+    const modelTextBackup = this.publishForm?.get('model_text_backup')?.value;
+    const fipeBrand = this.selectedFIPEBrand();
+    const fipeModel = this.selectedFIPEModel();
+
+    const hasBrand = !!(brandId || brandTextBackup || (fipeBrand && fipeBrand.name));
+    const hasModel = !!(modelId || modelTextBackup || (fipeModel && fipeModel.name));
+
+    return hasBrand && hasModel;
   });
 
   // ✅ NEW: Check if we have valid location coordinates
@@ -230,10 +242,8 @@ export class PublishCarV2Page implements OnInit {
   });
 
   // FIPE autocomplete signals
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly fipeBrands = signal<any[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  readonly fipeModels = signal<any[]>([]);
+  readonly fipeBrands = signal<{ code: string; name: string }[]>([]);
+  readonly fipeModels = signal<{ code: string; name: string }[]>([]);
   readonly isLoadingFIPEBrands = signal(false);
   readonly isLoadingFIPEModels = signal(false);
 
@@ -302,11 +312,9 @@ export class PublishCarV2Page implements OnInit {
       console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
       const categories = await this.pricingService.getVehicleCategories();
       console.log('[PublishCarV2] Loaded categories:', categories.length);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const category = categories.find((c: any) => c.id === categoryId);
+    const category = categories.find((c) => c.id === categoryId);
       if (category) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const categoryName = (category as any).name_es || category.name;
+        const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
         console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
         this.selectedCategoryName.set(categoryName);
       } else {
@@ -397,8 +405,7 @@ export class PublishCarV2Page implements OnInit {
   /**
    * Handle FIPE brand selection
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async onFIPEBrandSelected(brand: any): Promise<void> {
+  async onFIPEBrandSelected(brand: { code: string; name: string } | null): Promise<void> {
     console.log('[PublishCarV2] Brand selected:', brand);
     this.selectedFIPEBrand.set(brand);
     this.selectedFIPEModel.set(null);
@@ -443,8 +450,7 @@ export class PublishCarV2Page implements OnInit {
   /**
    * Handle FIPE model selection
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async onFIPEModelSelected(model: any): Promise<void> {
+  async onFIPEModelSelected(model: { code: string; name: string } | null): Promise<void> {
     console.log('[PublishCarV2] Model selected:', model);
     this.selectedFIPEModel.set(model);
 
@@ -700,11 +706,9 @@ export class PublishCarV2Page implements OnInit {
 
     console.log('[PublishCarV2] Value-based classification:', { valueUsd, categoryCode });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const category = categories.find((c: any) => c.code === categoryCode);
+    const category = categories.find((c) => c.code === categoryCode);
     if (category) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const categoryName = (category as any).name_es || category.name;
+      const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
       console.log(
         '[PublishCarV2] ✅ Category from value USD:',
         categoryName,
@@ -735,8 +739,7 @@ export class PublishCarV2Page implements OnInit {
         '[PublishCarV2] ❌ Category not found for code:',
         categoryCode,
         'Available codes:',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        categories.map((c: any) => c.code),
+        categories.map((c) => c.code),
       );
     }
   }
@@ -864,8 +867,7 @@ export class PublishCarV2Page implements OnInit {
    */
   getCurrentBrand(): string {
     // Try FIPE signal first
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fipeBrand = this.selectedFIPEBrand() as any;
+    const fipeBrand = this.selectedFIPEBrand();
     if (fipeBrand && fipeBrand.code) {
       return fipeBrand.name;
     }
@@ -1105,8 +1107,7 @@ export class PublishCarV2Page implements OnInit {
 
       console.log('💰 Calculated price_per_day:', pricePerDay);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const carData: any = {
+      const carData: Record<string, unknown> = {
         ...formData,
         // Campos opcionales con valores por defecto
         color: formData.color || 'No especificado',
@@ -1127,7 +1128,7 @@ export class PublishCarV2Page implements OnInit {
         location_street_number: formData.location_street_number || '',
         location_city: formData.location_city || '',
         location_state: formData.location_state || '',
-        location_country: formData.location_country || 'AR',
+        location_country: formData.location_country || '', // ✅ CHANGED: Removed hardcoded 'AR' default
       };
 
       // Get coordinates (manual or from address)
@@ -1165,6 +1166,50 @@ export class PublishCarV2Page implements OnInit {
         owner_id: carData.owner_id ? '***' : undefined,
       });
 
+      await this.performSubmission(carData);
+    } catch (error) {
+      this.handleSubmissionError(error);
+    } finally {
+      this.isSubmitting.set(false);
+    }
+  }
+
+  /**
+   * Save car as draft (Minimal validation)
+   */
+  async saveDraft(): Promise<void> {
+    if (!this.canSaveDraft()) return;
+
+    this.isSubmitting.set(true);
+    try {
+      const formData = this.formService.getFormData();
+      
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const carData: any = {
+        ...formData,
+        status: 'draft', // ✅ Explicitly set as draft
+        // Defaults for draft to avoid DB constraints if any
+        price_per_day: formData.price_per_day || 0,
+        year: formData.year || new Date().getFullYear(),
+        mileage: formData.mileage || 0,
+        transmission: formData.transmission || 'manual',
+        fuel: formData.fuel || 'nafta',
+      };
+
+      await this.performSubmission(carData);
+      
+      this.notificationManager.success(
+        'Borrador guardado',
+        'Tu progreso ha sido guardado. Puedes continuar editando más tarde.'
+      );
+    } catch (error) {
+      this.handleSubmissionError(error);
+    } finally {
+      this.isSubmitting.set(false);
+    }
+  }
+
+  private async performSubmission(carData: Record<string, unknown>): Promise<void> {
       let carId: string;
 
       if (this.editMode() && this.carId) {
@@ -1172,23 +1217,25 @@ export class PublishCarV2Page implements OnInit {
         await this.carsService.updateCar(this.carId, carData);
         carId = this.carId;
 
-        // Mostrar notificación de actualización
-        this.notificationManager.success(
-          '✅ Auto actualizado exitosamente',
-          'Los cambios se han guardado correctamente. Tu auto ya está visible con la información actualizada.',
-          6000,
-        );
+        if (carData.status === 'active') {
+          this.notificationManager.success(
+            '✅ Auto actualizado exitosamente',
+            'Los cambios se han guardado correctamente.',
+            6000,
+          );
+        }
       } else {
         // Create new car
         const newCar = await this.carsService.createCar(carData);
         carId = newCar.id;
 
-        // Mostrar notificación de éxito completa
-        this.notificationManager.success(
-          '🎉 ¡Auto publicado exitosamente!',
-          'Tu auto ya está visible en el marketplace. Podrás acompañar su rendimiento, ver cuántas personas lo están viendo, recibir mensajes en el chat y editarlo desde tu lista. ¡Esperamos que puedas realizar muchos negocios exitosos!',
-          8000,
-        );
+        if (carData.status === 'active') {
+          this.notificationManager.success(
+            '🎉 ¡Auto publicado exitosamente!',
+            'Tu auto ya está visible en el marketplace.',
+            8000,
+          );
+        }
       }
 
       // Upload photos (if new or changed)
@@ -1196,81 +1243,38 @@ export class PublishCarV2Page implements OnInit {
         await this.photoService.uploadPhotos(carId);
       }
 
-      // ✅ NUEVO: Notificar documentos faltantes (NO bloquea la publicación)
-      // El auto ya fue publicado exitosamente, ahora solo informamos al usuario
-      // que faltan documentos para completar su perfil
-      if (!this.editMode()) {
-        // Ejecutar después de un pequeño delay para que el usuario vea primero
-        // la notificación de éxito de publicación
+      // Check docs only if active
+      if (carData.status === 'active' && !this.editMode()) {
         setTimeout(() => {
-          this.checkMissingDocuments(carId).catch(() => {
-            // Silently fail - notification is optional
-          });
-        }, 2000); // 2 segundos después de la publicación exitosa
+          this.checkMissingDocuments(carId).catch(() => {});
+        }, 2000);
       }
 
-      // Navigate to my cars
       await this.router.navigate(['/cars/my-cars']);
-    } catch (error) {
+  }
+
+  private handleSubmissionError(error: unknown): void {
       console.error('❌ Failed to publish car:', error);
 
       // Log detailed error information
       if (error instanceof Error) {
         console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
-      } else if (error && typeof error === 'object') {
-        console.error('Error object:', JSON.stringify(error, null, 2));
-        if ('message' in error) {
-          console.error('Error message:', (error as { message: string }).message);
-        }
-        if ('code' in error) {
-          console.error('Error code:', (error as { code: string }).code);
-        }
-        if ('details' in error) {
-          console.error('Error details:', (error as { details: string }).details);
-        }
-        if ('hint' in error) {
-          console.error('Error hint:', (error as { hint: string }).hint);
-        }
       }
 
       // Show user-friendly error message
-      let errorTitle = 'Error al publicar el auto';
+      let errorTitle = 'Error al guardar';
       let errorMessage = 'Por favor intenta nuevamente.';
 
       if (error instanceof Error) {
-        // Check for specific error types
         if (error.message.includes('Marca y modelo son requeridos')) {
           errorTitle = 'Información incompleta';
           errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
-        } else if (error.message.includes('Ubicación del vehículo requerida')) {
-          errorTitle = 'Ubicación requerida';
-          errorMessage =
-            'Selecciona una ubicación en el mapa o usa tu ubicación actual para que tu auto aparezca en las búsquedas.';
-        } else if (error.message.includes('Precio por día debe ser mayor a 0')) {
-          errorTitle = 'Precio inválido';
-          errorMessage = 'El precio por día debe ser mayor a 0.';
-        } else if (error.message.includes('Usuario no autenticado')) {
-          errorTitle = 'Sesión expirada';
-          errorMessage = 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.';
         } else if (error.message) {
           errorMessage = error.message;
         }
-      } else if (error && typeof error === 'object' && 'message' in error) {
-        const msg = String((error as { message: string }).message);
-        if (msg.includes('permission denied') || msg.includes('RLS')) {
-          errorTitle = 'Permisos insuficientes';
-          errorMessage = 'No tienes permisos para realizar esta acción. Verifica tu sesión.';
-        } else if (msg) {
-          errorMessage = msg;
-        }
       }
 
-      // Mostrar notificación de error
       this.notificationManager.error(errorTitle, errorMessage);
-    } finally {
-      this.isSubmitting.set(false);
-    }
   }
 
   /**
