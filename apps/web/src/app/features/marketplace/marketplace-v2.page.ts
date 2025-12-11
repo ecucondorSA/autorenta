@@ -25,10 +25,7 @@ import { GeocodingResult, GeocodingService } from '../../core/services/geocoding
 import { LocationService } from '../../core/services/location.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
-import {
-  FabAction,
-  FloatingActionFabComponent,
-} from '../../shared/components/floating-action-fab/floating-action-fab.component';
+import { FabAction } from '../../shared/components/floating-action-fab/floating-action-fab.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 
 import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
@@ -87,11 +84,8 @@ export interface Stat {
     FormsModule,
     RouterModule,
     NgOptimizedImage,
-
-    FloatingActionFabComponent,
     DateRangePickerComponent,
     HdriBackgroundComponent,
-
   ],
   templateUrl: './marketplace-v2.page.html',
   styleUrls: ['./marketplace-v2.page.css'],
