@@ -171,13 +171,13 @@ export class AuthCallbackPage implements OnInit {
             // Usuario nuevo - ir al onboarding
             await this.router.navigate(['/onboarding']);
           } else {
-            // Usuario existente - ir a explorar autos (mejor UX)
-            await this.router.navigate(['/cars']);
+            // Usuario existente - ir a lista de autos
+            await this.router.navigate(['/cars/list']);
           }
         } catch (onboardingError) {
-          // Si hay error verificando onboarding, ir a explorar autos (fail-open)
+          // Si hay error verificando onboarding, ir a lista de autos (fail-open)
           console.warn('Error verificando onboarding:', onboardingError);
-          await this.router.navigate(['/cars']);
+          await this.router.navigate(['/cars/list']);
         }
       } else {
         throw new Error('No se pudo completar la autenticación. Intentá nuevamente.');

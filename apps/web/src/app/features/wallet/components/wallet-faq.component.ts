@@ -189,35 +189,35 @@ export class WalletFaqComponent {
         <table class="w-full text-xs mt-2 border-collapse" data-testid="wallet-table">
           <thead>
             <tr class="bg-border-default/30 dark:bg-surface-base">
-              <th class="border border-border-default dark:border-border-muted px-2 py-1 text-left">Característica</th>
-              <th class="border border-border-default dark:border-border-muted px-2 py-1">Wallet</th>
-              <th class="border border-border-default dark:border-border-muted px-2 py-1">Tarjeta</th>
+              <th class="border border-border-default dark:border-border-muted px-3 py-2 text-left text-sm">Característica</th>
+              <th class="border border-border-default dark:border-border-muted px-3 py-2 text-sm">Wallet</th>
+              <th class="border border-border-default dark:border-border-muted px-3 py-2 text-sm">Tarjeta</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Confirmación</strong></td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">⚡ Instantánea</td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">⏱️ 1-2 min</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Confirmación</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">⚡ Instantánea</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">⏱️ 1-2 min</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
-              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Comisiones</strong></td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">✅ Sin comisiones</td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">➖ Según tu banco</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Comisiones</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">✅ Sin comisiones</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">➖ Según tu banco</td>
             </tr>
             <tr>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Garantía</strong></td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">♻️ Reutilizable</td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">🔒 Se libera post-alquiler</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Garantía</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">♻️ Reutilizable</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">🔒 Se libera post-alquiler</td>
             </tr>
             <tr class="bg-border-default/10 dark:bg-surface-base/30">
-              <td class="border border-border-default dark:border-border-muted px-2 py-1"><strong>Requisito</strong></td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">💰 Saldo previo</td>
-              <td class="border border-border-default dark:border-border-muted px-2 py-1 text-center">💳 Tarjeta válida</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-sm"><strong>Requisito</strong></td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">💰 Saldo previo</td>
+              <td class="border border-border-default dark:border-border-muted px-3 py-2 text-center text-sm">💳 Tarjeta válida</td>
             </tr>
           </tbody>
         </table>
-        <p class="mt-2 text-xs"><strong>Recomendación:</strong> Wallet ideal para locadores y usuarios frecuentes. Tarjeta para alquileres ocasionales.</p>`,
+        <p class="mt-3 text-sm"><strong>Recomendación:</strong> Wallet ideal para locadores y usuarios frecuentes. Tarjeta para alquileres ocasionales.</p>`,
       expanded: false,
     },
     {

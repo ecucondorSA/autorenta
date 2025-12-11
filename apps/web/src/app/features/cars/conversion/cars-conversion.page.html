@@ -6,6 +6,7 @@
       <p class="hero-subtitle">
         Más de 2,500 autos disponibles. Reserva en minutos, conduce en horas.
       </p>
+      <p class="hero-price">Desde <strong>$15.000</strong>/día</p>
     </div>
 
     <!-- Hero Search Component -->
@@ -25,18 +26,104 @@
           type="button"
           (click)="onSearchSubmit()"
           class="search-button"
-          aria-label="Buscar"
+          aria-label="Buscar autos"
         >
-          Buscar
+          Buscar autos
         </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Trust Badges -->
-<!-- TODO: Re-add when trust-badges component is created -->
-<!-- <app-trust-badges></app-trust-badges> -->
+<!-- Trust Badges Section -->
+<section class="trust-badges">
+  <div class="trust-container">
+    <div class="trust-badge">
+      <app-icon name="car" [size]="28" cssClass="trust-icon" />
+      <div class="trust-text">
+        <span class="trust-number">2,500+</span>
+        <span class="trust-label">Autos disponibles</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <app-icon name="shield-check" [size]="28" cssClass="trust-icon" />
+      <div class="trust-text">
+        <span class="trust-number">100%</span>
+        <span class="trust-label">Asegurados</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <app-icon name="star" [size]="28" cssClass="trust-icon" />
+      <div class="trust-text">
+        <span class="trust-number">4.8/5</span>
+        <span class="trust-label">Satisfacción</span>
+      </div>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-badge">
+      <app-icon name="clock" [size]="28" cssClass="trust-icon" />
+      <div class="trust-text">
+        <span class="trust-number">24/7</span>
+        <span class="trust-label">Soporte</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Cars Section -->
+<section class="featured-cars">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Autos destacados</h2>
+      <a routerLink="/cars/list" class="view-all-link">
+        Ver todos
+        <app-icon name="arrow-right" [size]="18" />
+      </a>
+    </div>
+
+    @if (loading()) {
+      <div class="cars-loading">
+        <div class="skeleton-grid">
+          @for (i of [1,2,3,4,5,6]; track i) {
+            <div class="skeleton-card">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-content">
+                <div class="skeleton-line wide"></div>
+                <div class="skeleton-line medium"></div>
+                <div class="skeleton-line narrow"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    } @else if (featuredCars().length > 0) {
+      <a routerLink="/cars/list" class="cars-grid-link">
+        <div class="cars-grid cars-grid-preview">
+          @for (car of featuredCars(); track car.id) {
+            <div class="car-preview-wrapper">
+              <app-car-card [car]="car" />
+              <div class="car-preview-overlay">
+                <span class="overlay-text">Ver en marketplace</span>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="view-marketplace-banner">
+          <span>Explora todos los autos disponibles en el marketplace</span>
+          <app-icon name="arrow-right" [size]="20" />
+        </div>
+      </a>
+    } @else {
+      <div class="no-cars">
+        <app-icon name="car" [size]="48" cssClass="no-cars-icon" />
+        <p>Pronto tendremos autos disponibles para vos</p>
+        <a routerLink="/publish" class="btn-secondary">Publicar mi auto</a>
+      </div>
+    }
+  </div>
+</section>
 
 <!-- How It Works Section -->
 <section class="how-it-works">
@@ -46,44 +133,103 @@
 
     <div class="steps-grid">
       <!-- Step 1 -->
-      <div class="step-card">
+      <a routerLink="/cars/list" class="step-card step-card-clickable">
         <div class="step-icon">
-          <app-icon name="search" [size]="48" cssClass="text-primary" />
+          <app-icon name="search" [size]="48" cssClass="step-svg" />
         </div>
         <h3 class="step-title">1. Busca tu auto</h3>
         <p class="step-description">
           Usa nuestros filtros para encontrar el auto perfecto para tu viaje. Compara precios,
           ubicaciones y características.
         </p>
-      </div>
+      </a>
 
       <!-- Step 2 -->
-      <div class="step-card">
+      <a routerLink="/cars/list" class="step-card step-card-clickable">
         <div class="step-icon">
-          <app-icon name="calendar" [size]="48" cssClass="text-primary" />
+          <app-icon name="calendar" [size]="48" cssClass="step-svg" />
         </div>
         <h3 class="step-title">2. Reserva online</h3>
         <p class="step-description">
           Selecciona tus fechas y completa tu reserva en minutos. Pago seguro con confirmación
           instantánea.
         </p>
-      </div>
+      </a>
 
       <!-- Step 3 -->
-      <div class="step-card">
+      <a routerLink="/cars/list" class="step-card step-card-clickable">
         <div class="step-icon">
-          <app-icon name="car" [size]="48" cssClass="text-primary" />
+          <app-icon name="car" [size]="48" cssClass="step-svg" />
         </div>
         <h3 class="step-title">3. Recoge y conduce</h3>
         <p class="step-description">
           Coordina con el anfitrión, recoge tu auto y disfruta tu viaje. Todo verificado y
           asegurado.
         </p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Autorentar Section -->
+<section class="why-autorentar">
+  <div class="container">
+    <h2 class="section-title">¿Por qué Autorentar?</h2>
+    <p class="section-subtitle">La forma más segura y conveniente de alquilar un auto</p>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <app-icon name="shield-check" [size]="32" cssClass="benefit-svg" />
+        </div>
+        <h3 class="benefit-title">100% Asegurado</h3>
+        <p class="benefit-description">
+          Todos los viajes incluyen seguro contra daños y robo. Conduce tranquilo.
+        </p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <app-icon name="calendar" [size]="32" cssClass="benefit-svg" />
+        </div>
+        <h3 class="benefit-title">Cancelación gratis</h3>
+        <p class="benefit-description">
+          Cancela hasta 24 horas antes sin costo. Flexibilidad total.
+        </p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <app-icon name="user-check" [size]="32" cssClass="benefit-svg" />
+        </div>
+        <h3 class="benefit-title">Usuarios verificados</h3>
+        <p class="benefit-description">
+          Verificamos identidad y licencia de todos los conductores.
+        </p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">
+          <app-icon name="headset" [size]="32" cssClass="benefit-svg" />
+        </div>
+        <h3 class="benefit-title">Soporte 24/7</h3>
+        <p class="benefit-description">
+          Nuestro equipo está disponible las 24 horas para ayudarte.
+        </p>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="cta-section">
-      <a routerLink="/cars/list" class="btn-primary btn-large"> Ver todos los autos disponibles </a>
+<!-- Final CTA Section -->
+<section class="cta-final">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">¿Listo para tu próximo viaje?</h2>
+      <p class="cta-subtitle">Encuentra el auto perfecto ahora mismo</p>
+      <a routerLink="/cars/list" class="btn-primary btn-large">
+        Ver todos los autos disponibles
+      </a>
     </div>
   </div>
 </section>

@@ -71,6 +71,28 @@ export class CarCardComponent implements OnInit, OnDestroy {
     return dynamic !== null ? dynamic : (car?.price_per_day ?? 0);
   });
 
+  readonly hasValidPrice = computed(() => {
+    const price = this.displayPrice();
+    return Number.isFinite(price) && price > 0;
+  });
+
+  readonly displayTitle = computed(() => {
+    const car = this._car();
+    if (!car) return 'Próximamente';
+    if (car.title && car.title.trim().length > 0) return car.title.trim();
+
+    const parts = [
+      car.brand || car.brand_name || '',
+      car.model || car.model_name || '',
+      car.year || '',
+    ]
+      .map((p) => String(p).trim())
+      .filter(Boolean);
+
+    const fallback = parts.join(' ').trim();
+    return fallback || 'Próximamente';
+  });
+
   readonly showPriceLoader = computed(() => {
     return this.priceLoading() && this.dynamicPrice() === null;
   });

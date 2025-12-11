@@ -75,11 +75,19 @@ export class PaymentAuthorizationService {
         return from(this.authService.ensureSession()).pipe(
           switchMap((session) => {
             if (!session?.access_token) throw new Error('No session token');
+            // Convert camelCase to snake_case for Edge Function
             return from(
               this.supabase.functions.invoke<MercadoPagoPreauthResponse>('mp-create-preauth', {
                 body: {
                   intent_id: data.intent_id,
-                  ...params,
+                  user_id: params.userId,
+                  booking_id: params.bookingId || null,
+                  amount_ars: params.amountArs,
+                  amount_usd: params.amountUsd,
+                  card_token: params.cardToken,
+                  payer_email: params.payerEmail,
+                  description: params.description,
+                  external_reference: `preauth_${params.bookingId || Date.now()}`,
                 },
                 headers: {
                   Authorization: `Bearer ${session.access_token}`,
@@ -173,6 +181,7 @@ export class PaymentAuthorizationService {
   private mapStatus(dbStatus: string): 'pending' | 'authorized' | 'expired' | 'failed' {
     switch (dbStatus) {
       case 'authorized':
+      case 'approved': // DB stores 'approved' for preauthorized payments
         return 'authorized';
       case 'expired':
         return 'expired';

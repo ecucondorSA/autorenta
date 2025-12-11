@@ -74,3 +74,19 @@
     padding-right: 1rem;
   }
 }
+
+/* FAQ tables: breathing room */
+[data-testid='wallet-table'] th,
+[data-testid='wallet-table'] td {
+  line-height: 1.5;
+}
+
+/* Tabs look like pills, not primary buttons */
+.wallet-tab-button {
+  border: 1px solid var(--border-default, #d9d9d9);
+  background: var(--surface-base, #f8fafc);
+}
+.wallet-tab-button.active {
+  border-color: var(--cta-default, #0ea5e9);
+  background: rgba(14, 165, 233, 0.12);
+}

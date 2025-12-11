@@ -106,7 +106,7 @@ import { NavigationService } from '../../../core/services/navigation.service';
           <!-- Reviews Badge (if has reviews) -->
           <span
             *ngIf="hasReviews()"
-            class="inline-flex items-center gap-1 rounded-full bg-warning-light text-text-inverse px-2.5 py-0.5 text-xs font-semibold shadow-sm"
+            class="inline-flex items-center gap-1 rounded-full bg-warning-light text-text-primary px-2.5 py-0.5 text-xs font-semibold shadow-sm"
             title="{{ reviewCount() }} {{ reviewCount() === 1 ? 'reseña' : 'reseñas' }}"
           >
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

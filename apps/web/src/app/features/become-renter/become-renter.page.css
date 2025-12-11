@@ -55,6 +55,96 @@ input[type='range']::-moz-range-thumb:hover {
   box-shadow: 0 3px 8px #7B7B7B;
 }
 
+.slider-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.value-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--surface-secondary, #e2e8f0);
+  color: var(--text-primary, #111827);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.dark .value-chip {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+.hero-bridge {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-default, #e2e8f0);
+}
+
+.hero-bridge__label {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #475569);
+  margin-bottom: 0.15rem;
+}
+
+.hero-bridge__value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+  margin: 0.1rem 0;
+}
+
+.hero-bridge__helper {
+  font-size: 0.9rem;
+  color: var(--text-muted, #64748b);
+  max-width: 36ch;
+}
+
+.dark .hero-bridge__label {
+  color: #cbd5e1;
+}
+
+.dark .hero-bridge__value {
+  color: #e2e8f0;
+}
+
+.dark .hero-bridge__helper {
+  color: #94a3b8;
+}
+
+.btn-tertiary {
+  border: 1px solid var(--border-default, #e2e8f0);
+  background: transparent;
+  color: var(--text-primary, #0f172a);
+  padding: 0.55rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-tertiary:hover {
+  border-color: var(--cta-default, #0066cc);
+  color: var(--cta-default, #0066cc);
+}
+
+.dark .btn-tertiary {
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.dark .btn-tertiary:hover {
+  border-color: var(--cta-default, #06b6d4);
+  color: var(--cta-default, #06b6d4);
+}
+
 /* Dark mode overrides */
 .dark input[type='range'] {
   background: linear-gradient(

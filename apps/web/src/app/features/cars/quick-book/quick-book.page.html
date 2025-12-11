@@ -41,7 +41,11 @@
           <div class="mt-2">
             <div class="flex justify-between">
               <span>Precio</span>
-              <span class="font-semibold">{{ car.price_per_day | money }}</span>
+              @if (car.price_per_day && car.price_per_day > 0) {
+                <span class="font-semibold">{{ car.price_per_day | money }}</span>
+              } @else {
+                <span class="font-semibold text-primary-600">Consultar</span>
+              }
             </div>
             <div class="flex justify-between mt-2">
               <span>Depósito</span>

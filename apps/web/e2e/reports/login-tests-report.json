@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-12-11T01:37:12.441Z",
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "totalDuration": 61037
+  },
+  "environment": {
+    "baseUrl": "http://localhost:4200",
+    "headless": true,
+    "nodeVersion": "v22.21.0"
+  },
+  "results": [
+    {
+      "name": "login-page-loads",
+      "suite": "auth",
+      "passed": true,
+      "duration": 3214
+    },
+    {
+      "name": "login-form-input",
+      "suite": "auth",
+      "passed": true,
+      "duration": 3864
+    },
+    {
+      "name": "login-submission",
+      "suite": "auth",
+      "passed": true,
+      "duration": 6857
+    },
+    {
+      "name": "login-invalid-credentials",
+      "suite": "auth",
+      "passed": true,
+      "duration": 6886
+    },
+    {
+      "name": "logout",
+      "suite": "auth",
+      "passed": true,
+      "duration": 6580
+    },
+    {
+      "name": "protected-route-redirect",
+      "suite": "auth",
+      "passed": true,
+      "duration": 11414
+    },
+    {
+      "name": "session-persistence",
+      "suite": "auth",
+      "passed": true,
+      "duration": 9855
+    },
+    {
+      "name": "forgot-password-link",
+      "suite": "auth",
+      "passed": true,
+      "duration": 6309
+    },
+    {
+      "name": "register-link",
+      "suite": "auth",
+      "passed": true,
+      "duration": 6058
+    }
+  ]
+}

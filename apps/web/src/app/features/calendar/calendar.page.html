@@ -1,44 +1,250 @@
-<div class="p-4">
-  <div class="max-w-md mx-auto">
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <!-- Calendar Header -->
-      <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6">
-        <h2 class="text-2xl font-semibold mb-4">Calendario demo</h2>
-        <div class="flex items-center justify-between">
-          <button (click)="previousMonth()" class="p-2 hover:bg-blue-700 rounded">←</button>
-          <h3 class="text-xl font-semibold capitalize">{{ monthName }}</h3>
-          <button (click)="nextMonth()" class="p-2 hover:bg-blue-700 rounded">→</button>
+<div class="calendar-container">
+  <!-- Header -->
+  <header class="calendar-header">
+    <div class="header-content">
+      <a routerLink="/bookings" class="back-link">
+        <app-icon name="arrow-left" [size]="20" />
+      </a>
+      <h1 class="page-title">Mi Calendario</h1>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando tus autos...</p>
+    </div>
+  }
+
+  <!-- No Cars State -->
+  @if (!loading() && myCars().length === 0) {
+    <div class="empty-state">
+      <app-icon name="car" [size]="48" />
+      <h2>No tienes autos registrados</h2>
+      <p>Registra tu primer auto para comenzar a gestionar tu disponibilidad</p>
+      <a routerLink="/cars/publish" class="btn-primary">
+        Publicar auto
+      </a>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!loading() && myCars().length > 0) {
+    <div class="calendar-content">
+      <!-- Car Selector -->
+      <div class="car-selector">
+        <label class="selector-label">Selecciona tu auto:</label>
+        <div class="car-pills">
+          @for (car of myCars(); track trackByCar($index, car)) {
+            <button
+              type="button"
+              class="car-pill"
+              [class.active]="selectedCarId() === car.id"
+              (click)="selectCar(car.id)"
+            >
+              <span class="car-pill-name">{{ carLabel(car) }}</span>
+              <span class="car-pill-year">{{ car.year }}</span>
+            </button>
+          }
         </div>
       </div>
 
-      <!-- Weekday Headers -->
-      <div class="grid grid-cols-7 gap-0 bg-gray-100 text-center text-sm font-semibold">
-        <div class="p-2">Dom</div>
-        <div class="p-2">Lun</div>
-        <div class="p-2">Mar</div>
-        <div class="p-2">Mié</div>
-        <div class="p-2">Jue</div>
-        <div class="p-2">Vie</div>
-        <div class="p-2">Sab</div>
+      <!-- Selected Car Info -->
+      @if (selectedCar(); as car) {
+        <div class="selected-car-info">
+          <div class="car-photo">
+            @if (car.photos?.length || car.car_photos?.length) {
+              <img
+                [src]="car.photos?.[0]?.url || car.car_photos?.[0]?.url || '/assets/placeholder-car.webp'"
+                [alt]="car.brand + ' ' + car.model"
+              />
+            } @else {
+              <div class="no-photo">
+                <app-icon name="car" [size]="32" />
+              </div>
+            }
+          </div>
+          <div class="car-details">
+            <h3>{{ carLabel(car) }}</h3>
+            <p class="car-plate">{{ car.plate || '—' }}</p>
+          </div>
+        </div>
+      }
+
+      <!-- Calendar Widget -->
+      <div class="calendar-widget">
+        <!-- Calendar Header -->
+        <div class="widget-header">
+          <button type="button" class="nav-btn" (click)="previousMonth()" title="Mes anterior" aria-label="Mes anterior">
+            <app-icon name="chevron-left" [size]="20" />
+          </button>
+          <h3 class="month-name">{{ monthName() }}</h3>
+          <button type="button" class="nav-btn" (click)="nextMonth()" title="Mes siguiente" aria-label="Mes siguiente">
+            <app-icon name="chevron-right" [size]="20" />
+          </button>
+        </div>
+
+        <!-- Weekday Headers -->
+        <div class="weekday-headers">
+          <span>Dom</span>
+          <span>Lun</span>
+          <span>Mar</span>
+          <span>Mie</span>
+          <span>Jue</span>
+          <span>Vie</span>
+          <span>Sab</span>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid">
+          @if (loadingBlocks()) {
+            <div class="grid-loading">
+              <div class="spinner small"></div>
+            </div>
+          }
+          @for (day of calendarDays(); track trackByDay($index)) {
+            <button
+              type="button"
+              class="day-cell"
+              [class.empty]="day.day === null"
+              [class.today]="day.isToday"
+              [class.past]="day.isPast"
+              [class.blocked]="day.isBlocked"
+              [class.booking]="day.blockType === 'booking'"
+              [class.blackout]="day.blockType === 'blackout' || day.blockType === 'manual_block'"
+              [class.selected]="day.isSelected"
+              [disabled]="day.day === null || day.isPast || (day.isBlocked && day.blockType === 'booking')"
+              (click)="onDateClick(day)"
+              [title]="day.blockReason || ''"
+            >
+              @if (day.day !== null) {
+                <span class="day-number">{{ day.day }}</span>
+                @if (day.isBlocked) {
+                  <span class="block-indicator">
+                    @if (day.blockType === 'booking') {
+                      <app-icon name="calendar-check" [size]="12" />
+                    } @else {
+                      <app-icon name="x" [size]="12" />
+                    }
+                  </span>
+                }
+              }
+            </button>
+          }
+        </div>
       </div>
 
-      <!-- Calendar Days -->
-      <div class="grid grid-cols-7 gap-0 p-4">
-        @for (day of calendarDays; track $index) {
-          <button
-            (click)="onDateClick(day)"
-            [disabled]="day === null"
-            class="aspect-square flex items-center justify-center rounded hover:bg-blue-100 transition-colors"
-            [class.text-gray-500]="day === null"
-            [class.cursor-default]="day === null"
-            [class.cursor-pointer]="day !== null"
-            [class.bg-blue-500]="day !== null"
-            [class.text-white]="day !== null"
-          >
-            {{ day }}
-          </button>
-        }
+      <!-- Legend -->
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-dot today"></span>
+          <span>Hoy</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot booking"></span>
+          <span>Reservado</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot blackout"></span>
+          <span>Bloqueado</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot selected"></span>
+          <span>Seleccionado</span>
+        </div>
       </div>
+
+      <!-- Selection Actions -->
+      @if (selectedDates().size > 0 && !isAddingBlackout()) {
+        <div class="selection-actions">
+          <p class="selection-count">{{ selectedDates().size }} dia(s) seleccionado(s)</p>
+          <div class="action-buttons">
+            <button type="button" class="btn-secondary" (click)="clearSelection()">
+              Cancelar
+            </button>
+            <button type="button" class="btn-primary" (click)="startAddBlackout()">
+              <app-icon name="x" [size]="16" />
+              Bloquear fechas
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Add Blackout Form -->
+      @if (isAddingBlackout()) {
+        <div class="blackout-form">
+          <h4>Bloquear fechas seleccionadas</h4>
+          <p class="form-description">
+            Estas fechas no estaran disponibles para reservas
+          </p>
+          <div class="form-group">
+            <label for="blackout-reason">Motivo (opcional)</label>
+            <input
+              type="text"
+              id="blackout-reason"
+              [value]="blackoutReason()"
+              (input)="onReasonInput($event)"
+              placeholder="Ej: Mantenimiento, uso personal..."
+              class="form-input"
+            />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="cancelAddBlackout()">
+              Cancelar
+            </button>
+            <button type="button" class="btn-danger" (click)="confirmAddBlackout()">
+              Confirmar bloqueo
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (error()) {
+        <div class="error-message">
+          <app-icon name="alert-triangle" [size]="20" />
+          <span>{{ error() }}</span>
+        </div>
+      }
+
+      <!-- Blocked Ranges List -->
+      @if (blockedRanges().length > 0) {
+        <div class="blocked-ranges">
+          <h4>Fechas bloqueadas</h4>
+          <div class="ranges-list">
+            @for (range of blockedRanges(); track range.from + range.to) {
+              <div class="range-item" [class.booking]="range.type === 'booking'">
+                <div class="range-info">
+                  <span class="range-type">
+                    @if (range.type === 'booking') {
+                      <app-icon name="calendar-check" [size]="16" />
+                      Reserva
+                    } @else {
+                      <app-icon name="x" [size]="16" />
+                      Bloqueo
+                    }
+                  </span>
+                  <span class="range-dates">{{ range.from }} - {{ range.to }}</span>
+                  @if (range.reason) {
+                    <span class="range-reason">{{ range.reason }}</span>
+                  }
+                </div>
+                @if (range.type === 'manual_block' && range.block_id) {
+                  <button
+                    type="button"
+                    class="remove-btn"
+                    (click)="removeBlackout(range.block_id!)"
+                    title="Eliminar bloqueo"
+                  >
+                    <app-icon name="trash" [size]="16" />
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>

@@ -5,6 +5,8 @@ import { kycGuard, onboardingGuard } from './core/guards/onboarding.guard';
 export const routes: Routes = [
   {
     path: '',
+    // GuestGuard removido - marketplace debe ser accesible para todos (autenticados y no autenticados)
+    // El GuestGuard solo aplica a rutas de auth (/auth/login, /auth/register)
     data: { layout: 'full-bleed' },
     loadComponent: () =>
       import('./features/marketplace/marketplace-v2.page').then((m) => m.MarketplaceV2Page),
@@ -416,6 +418,11 @@ export const routes: Routes = [
   {
     path: 'terminos',
     loadComponent: () => import('./features/legal/terms/terms.page').then((m) => m.TermsPage),
+  },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/legal/privacy/privacy.page').then((m) => m.PrivacyPage),
   },
   {
     path: 'politica-seguros',

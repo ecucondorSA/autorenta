@@ -43,7 +43,6 @@ import { PickupLocationSelection } from '../../../shared/components/pickup-locat
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import {
   BookingLocationData,
-  BookingLocationFormComponent,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
@@ -88,7 +87,6 @@ interface CarDetailState {
     CarReviewsSectionComponent,
     TranslateModule,
     StickyCtaMobileComponent,
-    BookingLocationFormComponent,
     IconComponent,
     RiskCalculatorViewerComponent,
   ],
@@ -115,6 +113,12 @@ export class CarDetailPage implements OnInit, OnDestroy {
   private readonly toastService = inject(NotificationManagerService);
   private readonly tiktokEvents = inject(TikTokEventsService);
   private readonly riskCalculatorService = inject(RiskCalculatorService);
+  private readonly usdFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   // P0-006 FIX: Memory leak prevention
   private readonly destroy$ = new Subject<void>();
@@ -138,7 +142,6 @@ export class CarDetailPage implements OnInit, OnDestroy {
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
 
   // ✅ NEW: Booking location form state
-  readonly showLocationForm = signal(false);
   readonly pendingBookingData = signal<{ from: string; to: string } | null>(null);
 
   // ✅ NEW: Pickup location selector state
@@ -262,13 +265,29 @@ export class CarDetailPage implements OnInit, OnDestroy {
   readonly loading = computed(() => this.state().loading);
   readonly error = computed(() => this.state().error);
 
+  readonly displayTitle = computed(() => {
+    const car = this.car();
+    if (!car) return 'Próximamente';
+    if (car.title && car.title.trim().length > 0) return car.title.trim();
+
+    const parts = [
+      car.brand || car.brand_name || '',
+      car.model || car.model_name || '',
+      car.year || '',
+    ]
+      .map((p) => String(p).trim())
+      .filter(Boolean);
+
+    const fallback = parts.join(' ').trim();
+    return fallback || 'Próximamente';
+  });
+
   // Breadcrumbs navigation
   readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => {
-    const car = this.car();
     return [
       { label: 'Inicio', url: '/', icon: '🏠' },
       { label: 'Explorar Autos', url: '/cars/list', icon: '🚗' },
-      { label: car?.title || 'Cargando...' },
+      { label: this.displayTitle() || 'Cargando...' },
     ];
   });
 
@@ -710,7 +729,17 @@ export class CarDetailPage implements OnInit, OnDestroy {
    */
   readonly displayPrice = computed(() => {
     const car = this.car();
-    return car?.price_per_day ?? 0;
+    const price = car?.price_per_day ?? 0;
+    return Number.isFinite(price) ? price : 0;
+  });
+
+  readonly hasValidPrice = computed(() => {
+    const price = this.displayPrice();
+    return Number.isFinite(price) && price > 0;
+  });
+
+  readonly formattedPrice = computed(() => {
+    return this.hasValidPrice() ? this.usdFormatter.format(this.displayPrice()) : null;
   });
 
   async setupExpressMode(): Promise<void> {
@@ -944,18 +973,28 @@ export class CarDetailPage implements OnInit, OnDestroy {
 
     // Store booking data and show form
     this.pendingBookingData.set({ from: startDate, to: endDate });
-    this.showLocationForm.set(true);
     this.bookingError.set(null);
+
+    await this.createBookingFlow(startDate, endDate);
   }
 
   /**
    * ✅ NEW: Handle location form submission
    */
   async onLocationFormSubmit(locationData: BookingLocationData): Promise<void> {
-    const car = this.car();
     const pendingData = this.pendingBookingData();
+    if (!pendingData) return;
 
-    if (!car || !pendingData) {
+    await this.createBookingFlow(pendingData.from, pendingData.to, locationData);
+  }
+
+  private async createBookingFlow(
+    startDate: string,
+    endDate: string,
+    locationData?: BookingLocationData,
+  ): Promise<void> {
+    const car = this.car();
+    if (!car) {
       this.bookingError.set('Datos incompletos. Por favor intentá nuevamente.');
       return;
     }
@@ -964,9 +1003,6 @@ export class CarDetailPage implements OnInit, OnDestroy {
     this.bookingError.set(null);
 
     try {
-      const startDate = pendingData.from;
-      const endDate = pendingData.to;
-
       // ✅ NEW: Re-validate availability before booking
       if (!this.expressMode()) {
         this.validatingAvailability.set(true);
@@ -1015,8 +1051,8 @@ export class CarDetailPage implements OnInit, OnDestroy {
         days_count: this.daysCount(),
         total_amount: this.totalPrice() ?? undefined,
         express_mode: this.expressMode(),
-        has_delivery: locationData.deliveryRequired,
-        delivery_distance_km: locationData.distanceKm,
+        has_delivery: locationData?.deliveryRequired ?? false,
+        delivery_distance_km: locationData?.distanceKm ?? null,
       });
 
       // ✅ NEW: Create booking with location data
@@ -1035,7 +1071,6 @@ export class CarDetailPage implements OnInit, OnDestroy {
         });
 
         this.bookingError.set(result.error || 'No pudimos crear la reserva.');
-        this.showLocationForm.set(false);
         return;
       }
 
@@ -1048,7 +1083,6 @@ export class CarDetailPage implements OnInit, OnDestroy {
       });
 
       // Close form and navigate
-      this.showLocationForm.set(false);
       this.pendingBookingData.set(null);
 
       this.router.navigate(['/bookings/detail-payment'], {
@@ -1071,7 +1105,6 @@ export class CarDetailPage implements OnInit, OnDestroy {
    * ✅ NEW: Handle location form cancellation
    */
   onLocationFormCancelled(): void {
-    this.showLocationForm.set(false);
     this.pendingBookingData.set(null);
     this.bookingError.set(null);
   }

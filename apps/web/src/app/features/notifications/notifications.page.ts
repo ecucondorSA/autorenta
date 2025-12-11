@@ -620,10 +620,6 @@ export class NotificationsPage implements OnInit {
   }
 
   async deleteNotification(notificationId: string) {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
-      return;
-    }
-
     try {
       await this.notificationsService.deleteNotification(notificationId);
       // Update local state
@@ -632,7 +628,6 @@ export class NotificationsPage implements OnInit {
       );
     } catch (error) {
       console.error('Error deleting notification:', error);
-      alert('Error al eliminar la notificación');
     }
   }
 

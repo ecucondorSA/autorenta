@@ -192,6 +192,12 @@ export class MercadoPagoCallbackPage implements OnInit {
     const error = this.route.snapshot.queryParamMap.get('error');
     const errorDescription = this.route.snapshot.queryParamMap.get('error_description');
 
+    // DEBUG: Log state para diagnóstico
+    console.log('[MP Callback] Raw URL:', window.location.href);
+    console.log('[MP Callback] Code:', code ? `${code.substring(0, 10)}...` : 'missing');
+    console.log('[MP Callback] State received:', state);
+    console.log('[MP Callback] State length:', state?.length);
+
     // Verificar si el usuario canceló
     if (error) {
       this.processing.set(false);

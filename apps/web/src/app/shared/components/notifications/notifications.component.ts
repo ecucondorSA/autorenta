@@ -114,15 +114,10 @@ export class NotificationsComponent {
   }
 
   async deleteNotification(notification: NotificationItem) {
-    if (!confirm('¿Eliminar esta notificación?')) {
-      return;
-    }
-
     try {
       await this.notificationsService.deleteNotification(notification.id);
     } catch (error) {
       console.error('Error deleting notification:', error);
-      alert('Error al eliminar la notificación');
     }
   }
 

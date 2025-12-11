@@ -20,6 +20,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
         (click)="toggleMenu()"
         [attr.aria-label]="'common.help' | translate"
         [attr.aria-expanded]="showMenu()"
+        title="Centro de ayuda"
         type="button"
       >
         <app-header-icon
@@ -166,7 +167,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
           @if (!isAuthenticated()) {
             <button
               (click)="navigateToLogin()"
-              class="w-full text-left px-3 py-2 rounded-lg bg-cta-default hover:bg-cta-hover dark:bg-cyan-600 dark:hover:bg-cyan-500 text-white text-sm font-medium transition-base flex items-center justify-center gap-2"
+              class="w-full text-left px-3 py-2 rounded-lg bg-cta-default hover:bg-cta-hover dark:bg-cyan-600 dark:hover:bg-cyan-500 text-cta-text dark:text-white text-sm font-medium transition-base flex items-center justify-center gap-2"
               role="menuitem"
             >
               Iniciá sesión o registrate

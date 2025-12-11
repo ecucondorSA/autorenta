@@ -238,63 +238,15 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   // Splash Screen State
   readonly showSplash = signal(true);
-  readonly loadingProgress = signal(0);
-  readonly loadingText = signal('Inicializando...');
-
-  // Loading Sequence
-  private readonly loadingMessages = [
-    'Conectando al servidor...',
-    'Cargando flota de vehículos...',
-    'Verificando perfiles...',
-    'Sincronizando wallet...',
-    'Optimizando experiencia...',
-    'Todo listo',
-  ];
 
   constructor() {
-    this.simulateLoading();
-  }
-
-  private simulateLoading() {
-    const intervalTime = 50; // Update every 50ms
-
-    this.loadingInterval = setInterval(() => {
-      // Increment progress
-      if (this.loadingProgress() < 90) {
-        // Slow down as we get closer to 90%
-        const increment = Math.max(0.5, (90 - this.loadingProgress()) / 20);
-        this.loadingProgress.update((p) => Math.min(90, p + increment));
-      }
-
-      // Cycle text based on progress thresholds
-      const progress = this.loadingProgress();
-      if (progress < 20) this.loadingText.set(this.loadingMessages[0]);
-      else if (progress < 40) this.loadingText.set(this.loadingMessages[1]);
-      else if (progress < 60) this.loadingText.set(this.loadingMessages[2]);
-      else if (progress < 80) this.loadingText.set(this.loadingMessages[3]);
-      else this.loadingText.set(this.loadingMessages[4]);
-
-    }, intervalTime);
+    // Hide splash immediately to show skeletons or content
+    this.showSplash.set(false);
   }
 
   onHdriLoaded(): void {
-    // Clear loading interval
-    if (this.loadingInterval) {
-      clearInterval(this.loadingInterval);
-      this.loadingInterval = undefined;
-    }
-
     // Mark HDRI as loaded
     this.hdriLoaded = true;
-
-    // Force completion
-    this.loadingProgress.set(100);
-    this.loadingText.set(this.loadingMessages[5]);
-
-    // Pequeño delay artificial para asegurar transición suave si carga muy rápido
-    setTimeout(() => {
-      this.showSplash.set(false);
-    }, 600);
 
     // Show click hint after HDRI loads (only once per session)
     if (!this.clickHintShownSession && this.isBrowser) {
@@ -534,7 +486,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   ngOnInit(): void {
     // SEO Meta Tags
     this.titleService.setTitle(
-      'Alquiler de Autos P2P | Autorentar - Renta Segura sin Intermediarios',
+      'Autorentar | Alquiler de Autos entre Personas - Renta Segura',
     );
     this.meta.updateTag({
       name: 'description',
@@ -544,9 +496,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     this.meta.updateTag({
       name: 'keywords',
       content:
-        'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, P2P, Argentina',
+        'alquiler autos, renta de autos, alquiler sin tarjeta, autos particulares, alquiler entre personas, Argentina',
     });
-    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos P2P' });
+    this.meta.updateTag({ property: 'og:title', content: 'Autorentar - Alquiler de Autos entre Personas' });
     this.meta.updateTag({
       property: 'og:description',
       content: 'Conectamos personas con vehículos verificados. Sin intermediarios, 100% asegurado.',
@@ -572,11 +524,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       this.setupRealtimeSubscription();
       this.checkPriceTransparencyModal();
     }
-
-    // Show welcome toast
-    setTimeout(() => {
-      this.showToast('¡Bienvenido! Encuentra tu auto ideal 🚗', 'success');
-    }, 500);
   }
 
   ngOnDestroy(): void {

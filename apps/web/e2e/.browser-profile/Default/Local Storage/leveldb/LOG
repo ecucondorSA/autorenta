@@ -1,0 +1,8 @@
+2025/12/10-23:59:41.765 261596 Reusing MANIFEST /home/edu/autorenta/apps/web/e2e/.browser-profile/Default/Local Storage/leveldb/MANIFEST-000001
+2025/12/10-23:59:41.793 261596 Recovering log #3
+2025/12/10-23:59:41.794 261596 Level-0 table #3: started
+2025/12/10-23:59:41.802 261596 Level-0 table #3: 20333 bytes OK
+2025/12/10-23:59:41.802 261596 Recovering log #4
+2025/12/10-23:59:41.802 261596 Reusing old log /home/edu/autorenta/apps/web/e2e/.browser-profile/Default/Local Storage/leveldb/000004.log 
+2025/12/10-23:59:41.808 261596 Delete type=0 #3
+2025/12/10-23:59:41.810 261596 Delete type=2 #5

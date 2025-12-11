@@ -19,7 +19,10 @@
         <div
           class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-raised dark:bg-slate-800 border border-cta-default/20 dark:border-cyan-500/20 mb-6"
         >
-          <span class="text-2xl">🏠</span>
+          <svg class="w-6 h-6 text-cta-default dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" stroke-width="1.75" stroke-linejoin="round"/>
+            <path d="M9 22V12h6v10" stroke-width="1.75"/>
+          </svg>
           <span class="text-sm font-medium text-cta-default dark:text-cyan-400"
             >Programa de Renters</span
           >
@@ -63,6 +66,19 @@
           </button>
         </div>
 
+        <div class="hero-bridge card-premium">
+          <div>
+            <p class="hero-bridge__label">Simulación rápida</p>
+            <p class="hero-bridge__value">
+              ${{ estimatedMonthlyIncome() | number: '1.0-0' }} / mes
+            </p>
+            <p class="hero-bridge__helper">
+              Basado en tus valores actuales. Ajustá la calculadora para ver otros escenarios.
+            </p>
+          </div>
+          <button class="btn-tertiary" (click)="scrollToSection('calculator')">Ajustar montos</button>
+        </div>
+
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-4">
           <div class="text-center">
@@ -102,7 +118,11 @@
             class="absolute bottom-6 left-6 right-6 bg-surface-raised/95 dark:bg-slate-800/95 backdrop-blur-md rounded-xl p-4 border border-border-default/50 dark:border-white/10 shadow-lg"
           >
             <div class="flex items-center gap-3 mb-2">
-              <div class="text-3xl">💰</div>
+              <svg class="w-8 h-8 text-cta-default dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z" stroke-width="1.75" stroke-linejoin="round"/>
+                <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5" stroke-width="1.25" stroke-linecap="round"/>
+              </svg>
               <div>
                 <div class="text-sm font-medium text-text-muted dark:text-gray-500">
                   Ganancia promedio
@@ -138,9 +158,12 @@
           <!-- Inputs -->
           <div class="space-y-6">
             <div>
-              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">
-                Valor de tu auto
-              </label>
+              <div class="slider-label">
+                <label class="block text-sm font-medium text-text-primary dark:text-white">
+                  Valor de tu auto
+                </label>
+                <span class="value-chip">{{ carValue() | number: '1.0-0' }} ARS</span>
+              </div>
               <input
                 type="range"
                 [(ngModel)]="carValue"
@@ -149,15 +172,15 @@
                 step="5000"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
-                {{ carValue() | number: '1.0-0' }} ARS
-              </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">
-                Días rentados por mes
-              </label>
+              <div class="slider-label">
+                <label class="block text-sm font-medium text-text-primary dark:text-white">
+                  Días rentados por mes
+                </label>
+                <span class="value-chip">{{ daysPerMonth() }} días</span>
+              </div>
               <input
                 type="range"
                 [(ngModel)]="daysPerMonth"
@@ -166,15 +189,15 @@
                 step="1"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
-                {{ daysPerMonth() }} días
-              </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium mb-2 text-text-primary dark:text-white">
-                Precio por día
-              </label>
+              <div class="slider-label">
+                <label class="block text-sm font-medium text-text-primary dark:text-white">
+                  Precio por día
+                </label>
+                <span class="value-chip">{{ pricePerDay() | number: '1.0-0' }} ARS/día</span>
+              </div>
               <input
                 type="range"
                 [(ngModel)]="pricePerDay"
@@ -183,9 +206,6 @@
                 step="500"
                 class="w-full"
               />
-              <div class="text-right text-sm text-text-muted dark:text-gray-500 mt-1">
-                {{ pricePerDay() | number: '1.0-0' }} ARS/día
-              </div>
             </div>
           </div>
 
@@ -252,7 +272,42 @@
     <div data-tour-step="benefits-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (benefit of benefits; track benefit.title) {
         <div class="card-premium p-6 hover:scale-[1.02] transition-transform">
-          <div class="text-4xl mb-4">{{ benefit.icon }}</div>
+          <div class="mb-4">
+            @if (benefit.icon === 'dollar-bill') {
+              <svg class="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
+                <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
+                <path d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1" stroke-width="1.25" stroke-linecap="round"/>
+              </svg>
+            } @else if (benefit.icon === 'target') {
+              <svg class="w-10 h-10 text-cta-default dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
+                <circle cx="12" cy="12" r="6" stroke-width="1.5"/>
+                <circle cx="12" cy="12" r="2" stroke-width="1.5"/>
+              </svg>
+            } @else if (benefit.icon === 'shield') {
+              <svg class="w-10 h-10 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L4 6v5c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z" stroke-width="1.75" stroke-linejoin="round"/>
+                <path d="M9 12l2 2 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            } @else if (benefit.icon === 'handshake') {
+              <svg class="w-10 h-10 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12l-2-2m2 2l2-2m-2 2v6m-4-4l4 4m0 0l4-4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 7h5l4 4m4 0l4-4h5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            } @else if (benefit.icon === 'lightning') {
+              <svg class="w-10 h-10 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" stroke-width="1.75" stroke-linejoin="round"/>
+              </svg>
+            } @else if (benefit.icon === 'gift') {
+              <svg class="w-10 h-10 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 3v11m0-11L8 7m4-4l4 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round"/>
+                <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5"/>
+              </svg>
+            }
+          </div>
           <h3 class="text-xl font-semibold mb-2 text-text-primary dark:text-white">
             {{ benefit.title }}
           </h3>
@@ -282,9 +337,31 @@
         @for (step of steps; track step.number) {
           <div class="relative">
             <div class="card-premium p-6 text-center h-full">
-              <div class="text-5xl mb-4">{{ step.icon }}</div>
+              <div class="mb-4 flex justify-center">
+                @if (step.icon === 'pencil') {
+                  <svg class="w-12 h-12 text-cta-default dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                } @else if (step.icon === 'camera') {
+                  <svg class="w-12 h-12 text-cta-default dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v11z" stroke-width="1.75" stroke-linejoin="round"/>
+                    <circle cx="12" cy="13" r="4" stroke-width="1.5"/>
+                  </svg>
+                } @else if (step.icon === 'checkmark') {
+                  <svg class="w-12 h-12 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                } @else if (step.icon === 'money-bag') {
+                  <svg class="w-12 h-12 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 10c0-1 1-2 2-3l1-2h6l1 2c1 1 2 2 2 3v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-8z" stroke-width="1.75" stroke-linejoin="round"/>
+                    <path d="M9 5h6" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M12 11v6M10 12.5c0-.83.9-1.5 2-1.5s2 .67 2 1.5-.9 1.5-2 1.5-2 .67-2 1.5.9 1.5 2 1.5" stroke-width="1.25" stroke-linecap="round"/>
+                  </svg>
+                }
+              </div>
               <div
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-white font-bold mb-4"
+                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-cta-default dark:bg-cyan-600 text-cta-text dark:text-white font-bold mb-4"
               >
                 {{ step.number }}
               </div>
@@ -387,7 +464,12 @@
 >
   <div class="container-page px-container">
     <div data-tour-step="referral-program" class="max-w-4xl mx-auto text-center">
-      <div class="text-5xl mb-6">🎁</div>
+      <svg class="w-14 h-14 text-cta-default dark:text-cyan-400 mb-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 3v11m0-11L8 7m4-4l4 4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round"/>
+        <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5"/>
+      </svg>
       <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
         Ganás más con nuestro programa de referidos
       </h2>
@@ -400,7 +482,11 @@
 
       <div class="grid md:grid-cols-2 gap-6 mb-8">
         <div class="card-premium p-6">
-          <div class="text-3xl mb-3">💵</div>
+          <svg class="w-8 h-8 text-green-600 dark:text-green-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="1.75"/>
+            <circle cx="12" cy="12" r="3.5" stroke-width="1.5"/>
+            <path d="M12 9.5v5M10.5 10.5c0-.5.67-1 1.5-1s1.5.5 1.5 1-.67 1-1.5 1-1.5.5-1.5 1 .67 1 1.5 1 1.5-.5 1.5-1" stroke-width="1.25" stroke-linecap="round"/>
+          </svg>
           <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">$1,500</div>
           <div class="text-sm text-text-secondary dark:text-gray-500">
             Por cada amigo que publique su auto
@@ -408,7 +494,10 @@
         </div>
 
         <div class="card-premium p-6">
-          <div class="text-3xl mb-3">🚀</div>
+          <svg class="w-8 h-8 text-cta-default dark:text-cyan-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L12 14M12 2L8 6M12 2L16 6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 11L21 14L18 22L12 19L6 22L3 14L6 11" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <div class="text-2xl font-bold text-cta-default dark:text-cyan-400 mb-2">Sin límites</div>
           <div class="text-sm text-text-secondary dark:text-gray-500">
             Invitá a todos tus amigos y seguí ganando
@@ -473,7 +562,7 @@
 
 <!-- Final CTA -->
 <section
-  class="py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-white"
+  class="py-20 bg-gradient-to-br from-cta-default to-cta-hover dark:from-cyan-600 dark:to-cyan-500 text-cta-text dark:text-white"
 >
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto text-center">
@@ -482,10 +571,7 @@
         Unite a miles de Renters que ya están generando ingresos con sus autos.
       </p>
 
-      <button
-        (click)="startPublishing()"
-        class="bg-white text-cta-default dark:text-cyan-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 transition-colors shadow-lg"
-      >
+      <button (click)="startPublishing()" class="btn-primary btn-lg">
         @if (isAuthenticated()) {
           Publicar mi auto ahora
         } @else {
@@ -493,8 +579,25 @@
         }
       </button>
 
-      <div class="mt-8 text-sm opacity-75">
-        ✅ Sin costos iniciales • ✅ Sin contratos • ✅ Cancelás cuando quieras
+      <div class="mt-8 text-sm opacity-75 flex items-center justify-center gap-6 flex-wrap">
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sin costos iniciales
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Sin contratos
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Cancelás cuando quieras
+        </span>
       </div>
     </div>
   </div>

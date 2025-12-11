@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/car-locations.service';
 
@@ -8,6 +8,7 @@ import { CarMapLocation } from '@core/services/car-locations.service';
   styleUrls: ['./map-marker.component.css'],
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapMarkerComponent {
   @Input() car!: CarMapLocation;

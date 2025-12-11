@@ -17,6 +17,8 @@ import { CarOwnerNotificationsService } from './car-owner-notifications.service'
 import { CarsService } from './cars.service';
 import { ProfileService } from './profile.service';
 
+const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
 type BookingWithMetadata = Booking & {
   car?: { title?: string | null } | null;
   price_per_day?: number | null;
@@ -73,11 +75,11 @@ export class BookingsService {
       p_car_id: carId,
       p_start: start,
       p_end: end,
-      // ✅ DYNAMIC PRICING: Pass optional parameters
-      p_use_dynamic_pricing: options?.useDynamicPricing || false,
-      p_price_lock_token: options?.priceLockToken || null,
-      p_dynamic_price_snapshot: options?.dynamicPriceSnapshot || null,
-    });
+    // ✅ DYNAMIC PRICING: Pass optional parameters
+    p_use_dynamic_pricing: options?.useDynamicPricing || false,
+    p_price_lock_token: options?.priceLockToken || null,
+    p_dynamic_price_snapshot: options?.dynamicPriceSnapshot || null,
+  });
 
     if (error) {
       const errorMessage = error.message || error.details || 'Error al crear la reserva';
@@ -95,6 +97,20 @@ export class BookingsService {
             hint: error.hint,
           }),
       );
+
+      // Fallback para entornos desactualizados o cambios de esquema
+      const needsFallback =
+        error.code === '42703' ||
+        errorMessage.toLowerCase().includes('pickup_lat') ||
+        errorMessage.toLowerCase().includes('faltan parámetros');
+
+      if (needsFallback) {
+        this.logger.warn(
+          'Falling back to direct booking insert (schema mismatch)',
+          'BookingsService',
+        );
+        return await this.fallbackDirectBookingInsert(carId, start, end);
+      }
 
       throw new Error(errorMessage);
     }
@@ -292,6 +308,12 @@ export class BookingsService {
    * ✅ OPTIMIZED: Parallel loading of car details and insurance coverage
    */
   async getBookingById(bookingId: string): Promise<Booking | null> {
+    // Evita llamadas inválidas (previene 400 de PostgREST por UUID mal formado)
+    if (!UUID_REGEX.test(bookingId)) {
+      this.logger.warn(`getBookingById: invalid bookingId - ${bookingId}`);
+      return null;
+    }
+
     const { data, error } = await this.supabase
       .from('my_bookings')
       .select('*')
@@ -514,15 +536,8 @@ export class BookingsService {
         };
       }
 
-      // Activate insurance coverage
-      try {
-        await this.insuranceService.activateCoverage({
-          booking_id: result.booking_id,
-          addon_ids: [],
-        });
-      } catch {
-        // Don't block booking if insurance fails
-      }
+      // ✅ P0-003: Insurance is mandatory — block booking if it fails
+      await this.activateInsuranceWithRetry(result.booking_id, []);
 
       return {
         success: true,
@@ -1160,6 +1175,72 @@ export class BookingsService {
 
   private getBookingPricePerDay(booking: BookingWithMetadata): number {
     return typeof booking.price_per_day === 'number' ? (booking.price_per_day ?? 0) : 0;
+  }
+
+  /**
+   * Fallback: inserta directamente en bookings cuando el RPC request_booking falla
+   * por columnas faltantes (p.ej. pickup_lat) en entornos desactualizados.
+   */
+  private async fallbackDirectBookingInsert(
+    carId: string,
+    start: string,
+    end: string,
+  ): Promise<Booking> {
+    // Obtener usuario
+    const { data: userData, error: userError } = await this.supabase.auth.getUser();
+    if (userError || !userData.user?.id) {
+      throw new Error('Usuario no autenticado');
+    }
+    const renterId = userData.user.id;
+
+    // Obtener datos del auto para calcular total
+    const { data: car, error: carError } = await this.supabase
+      .from('cars')
+      .select('price_per_day, currency')
+      .eq('id', carId)
+      .single();
+
+    if (carError) {
+      throw new Error('No se pudo obtener el auto para calcular el total');
+    }
+
+    const pricePerDay = Number(car?.price_per_day ?? 0);
+    const currency = (car?.currency as string | null) || 'ARS';
+    const days = Math.max(
+      1,
+      Math.ceil(
+        (new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24),
+      ),
+    );
+    const totalAmount = pricePerDay * days;
+
+    // Insert directo
+    const { data, error } = await this.supabase
+      .from('bookings')
+      .insert({
+        car_id: carId,
+        renter_id: renterId,
+        start_at: start,
+        end_at: end,
+        status: 'pending',
+        currency,
+        total_amount: totalAmount,
+      })
+      .select()
+      .single();
+
+    if (error || !data) {
+      throw new Error(error?.message || 'No se pudo crear la reserva (fallback)');
+    }
+
+    // Recalcular pricing
+    try {
+      await this.recalculatePricing(data.id);
+    } catch {
+      // no bloquear si falla el recalculo en fallback
+    }
+
+    return data as Booking;
   }
 
   // ============================================================================

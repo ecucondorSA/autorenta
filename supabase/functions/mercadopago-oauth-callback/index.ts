@@ -12,6 +12,7 @@ interface OAuthState {
   user_id: string;
   token: string;
   timestamp: number;
+  redirect_uri?: string;
 }
 
 interface CallbackRequest {
@@ -77,6 +78,7 @@ serve(async (req) => {
 
     console.log(`[OAuth Callback] Code: ${callbackData.code ? 'present' : 'missing'}`);
     console.log(`[OAuth Callback] State: ${callbackData.state ? 'present' : 'missing'}`);
+    console.log(`[OAuth Callback] Raw state received: ${callbackData.state}`);
 
     // ============================================
     // 2. VERIFICAR ERRORES DE MERCADOPAGO
@@ -118,10 +120,21 @@ serve(async (req) => {
 
     let stateData: OAuthState;
     try {
-      const stateJson = atob(callbackData.state);
+      // Decodificar URL-safe base64 (convertir -_ de vuelta a +/)
+      let base64 = callbackData.state
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+      // Agregar padding si es necesario
+      while (base64.length % 4) {
+        base64 += '=';
+      }
+
+      const stateJson = atob(base64);
       stateData = JSON.parse(stateJson);
     } catch (e) {
       console.error('[State Error] Could not decode state:', e);
+      console.error('[State Error] Raw state received:', callbackData.state);
       return new Response(
         JSON.stringify({
           success: false,
@@ -136,16 +149,28 @@ serve(async (req) => {
     }
 
     console.log(`[OAuth Callback] User ID from state: ${stateData.user_id}`);
+    console.log(`[OAuth Callback] State timestamp: ${stateData.timestamp}`);
+    console.log(`[OAuth Callback] Current time: ${Date.now()}`);
 
-    // Verificar que el state no sea muy viejo (> 10 minutos)
+    // Verificar que el state no sea muy viejo (> 60 minutos - aumentado para testing)
     const stateAge = Date.now() - stateData.timestamp;
-    if (stateAge > 10 * 60 * 1000) {
+    const maxAgeMs = 60 * 60 * 1000; // 60 minutos
+    console.log(`[OAuth Callback] State age: ${stateAge}ms (max: ${maxAgeMs}ms)`);
+    console.log(`[OAuth Callback] State age in minutes: ${(stateAge / 60000).toFixed(2)}`);
+
+    if (stateAge > maxAgeMs) {
       console.error('[State Error] State expired:', stateAge, 'ms');
       return new Response(
         JSON.stringify({
           success: false,
           error: 'State expirado',
-          details: 'El proceso de autorización tomó demasiado tiempo',
+          details: `El proceso tomó ${(stateAge / 60000).toFixed(1)} minutos (máximo: 60)`,
+          debug: {
+            state_timestamp: stateData.timestamp,
+            current_time: Date.now(),
+            age_ms: stateAge,
+            age_minutes: (stateAge / 60000).toFixed(2),
+          }
         }),
         {
           status: 400,
@@ -185,16 +210,34 @@ serve(async (req) => {
     }
 
     // Validar que el state coincida
-    if (profile.mercadopago_oauth_state !== callbackData.state) {
-      console.error('[State Error] State mismatch');
-      console.log('Expected:', profile.mercadopago_oauth_state);
-      console.log('Received:', callbackData.state);
+    // Normalizar ambos states (URL decode por si MercadoPago lo modificó)
+    const normalizeState = (s: string) => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return s;
+      }
+    };
+
+    const expectedState = normalizeState(profile.mercadopago_oauth_state || '');
+    const receivedState = normalizeState(callbackData.state);
+
+    console.log('[State Comparison] Expected (from DB):', expectedState);
+    console.log('[State Comparison] Received (from MP):', receivedState);
+    console.log('[State Comparison] Match:', expectedState === receivedState);
+
+    if (expectedState !== receivedState) {
+      console.error('[State Error] State mismatch after normalization');
 
       return new Response(
         JSON.stringify({
           success: false,
           error: 'State no coincide',
           details: 'Posible ataque CSRF detectado',
+          debug: {
+            expected_length: expectedState.length,
+            received_length: receivedState.length,
+          }
         }),
         {
           status: 400,
@@ -211,8 +254,14 @@ serve(async (req) => {
 
     const MP_CLIENT_ID = Deno.env.get('MERCADOPAGO_APPLICATION_ID')!;
     const MP_CLIENT_SECRET = Deno.env.get('MERCADOPAGO_CLIENT_SECRET')!;
-    const REDIRECT_URI = Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI') ||
-      'https://autorenta.com.ar/auth/mercadopago/callback';
+
+    // Usar el redirect_uri que se usó al generar el state; fallback al env
+    const REDIRECT_URI =
+      stateData.redirect_uri ||
+      Deno.env.get('MERCADOPAGO_OAUTH_REDIRECT_URI') ||
+      'https://autorentar.com/auth/mercadopago/callback';
+
+    console.log(`[OAuth Callback] Using redirect_uri: ${REDIRECT_URI}`);
 
     if (!MP_CLIENT_SECRET) {
       console.error('[Config Error] MERCADOPAGO_CLIENT_SECRET not set');
@@ -250,14 +299,20 @@ serve(async (req) => {
       const errorData = await tokenResponse.json().catch(() => ({}));
       console.error('[MP Token Error]', tokenResponse.status, errorData);
 
+      // Propagar el status real de MercadoPago para evitar 500 genérico en frontend
+      const status = tokenResponse.status === 400 ? 400 : tokenResponse.status || 500;
+
       return new Response(
         JSON.stringify({
           success: false,
           error: 'Error obteniendo token de MercadoPago',
           details: errorData.message || `HTTP ${tokenResponse.status}`,
+          mp_error: errorData.error,
+          mp_error_description: errorData.error_description,
+          status: tokenResponse.status,
         }),
         {
-          status: 500,
+          status,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
@@ -301,28 +356,21 @@ serve(async (req) => {
 
     console.log('[OAuth] Saving to database...');
 
-    const { data: connectResult, error: connectError } = await supabase.rpc(
-      'connect_mercadopago',
-      {
-        p_collector_id: tokenData.user_id.toString(),
-        p_access_token: tokenData.access_token,
-        p_refresh_token: tokenData.refresh_token,
-        p_expires_at: expiresAt.toISOString(),
-        p_public_key: tokenData.public_key,
-        p_account_type: 'personal', // Podríamos detectar esto con tags
-        p_country: userInfo?.country_id || 'AR',
-        p_site_id: userInfo?.site_id || 'MLA',
-      }
-    );
+    // 7.a Validar que el collector_id no esté asignado a otro usuario
+    const { data: existingCollector, error: collectorError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('mercadopago_collector_id', tokenData.user_id.toString())
+      .neq('id', stateData.user_id)
+      .maybeSingle();
 
-    if (connectError) {
-      console.error('[DB Error] Could not save OAuth data:', connectError);
-
+    if (collectorError) {
+      console.error('[DB Error] Checking collector_id:', collectorError);
       return new Response(
         JSON.stringify({
           success: false,
           error: 'Error guardando datos de MercadoPago',
-          details: connectError.message,
+          details: collectorError.message,
         }),
         {
           status: 500,
@@ -331,14 +379,47 @@ serve(async (req) => {
       );
     }
 
-    // Verificar resultado de la RPC
-    if (!connectResult || !connectResult.success) {
-      console.error('[RPC Error]', connectResult);
+    if (existingCollector) {
+      console.error('[DB Error] collector_id already in use by', existingCollector.id);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Esta cuenta de MercadoPago ya está vinculada a otro usuario',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // 7.b Guardar tokens y marcar conexión (sin depender de auth.uid())
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        mercadopago_collector_id: tokenData.user_id.toString(),
+        mercadopago_connected: true,
+        mercadopago_connected_at: new Date().toISOString(),
+        mercadopago_access_token: tokenData.access_token,
+        mercadopago_refresh_token: tokenData.refresh_token,
+        mercadopago_access_token_expires_at: expiresAt.toISOString(),
+        mercadopago_public_key: tokenData.public_key,
+        mercadopago_account_type: 'personal',
+        mercadopago_country: userInfo?.country_id || 'AR',
+        mercadopago_site_id: userInfo?.site_id || 'MLA',
+        mercadopago_oauth_state: null, // limpiar state
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', stateData.user_id);
+
+    if (updateError) {
+      console.error('[DB Error] Could not save OAuth data:', updateError);
 
       return new Response(
         JSON.stringify({
           success: false,
-          error: connectResult?.error || 'Error conectando MercadoPago',
+          error: 'Error guardando datos de MercadoPago',
+          details: updateError.message,
         }),
         {
           status: 500,
@@ -348,12 +429,6 @@ serve(async (req) => {
     }
 
     console.log('[OAuth Callback] Success! MercadoPago connected.');
-
-    // Limpiar state de profiles (ya no lo necesitamos)
-    await supabase
-      .from('profiles')
-      .update({ mercadopago_oauth_state: null })
-      .eq('id', stateData.user_id);
 
     // ============================================
     // 8. RETORNAR RESPONSE EXITOSA

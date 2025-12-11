@@ -1,0 +1,20 @@
+diff --git a/node_modules/acorn-walk/dist/walk.d.ts b/node_modules/acorn-walk/dist/walk.d.ts
+index e07a6af..d1acdca 100644
+--- a/node_modules/acorn-walk/dist/walk.d.ts
++++ b/node_modules/acorn-walk/dist/walk.d.ts
+@@ -167,11 +167,12 @@ export function findNodeAround<TState>(
+ /**
+  * Find the outermost matching node after a given position.
+  */
+-export const findNodeAfter: typeof findNodeAround
++// Fixed ambient declarations for TS const initialization
++export const findNodeAfter: typeof findNodeAround = findNodeAround
+ 
+ /**
+  * Find the outermost matching node before a given position.
+  */
+-export const findNodeBefore: typeof findNodeAround
++export const findNodeBefore: typeof findNodeAround = findNodeAround
+ 
+-export const base: RecursiveVisitors<any>
++export const base: RecursiveVisitors<any> = {} as RecursiveVisitors<any>

@@ -625,7 +625,7 @@ export class ProfileVerificationPage implements OnInit {
     if (!this.canAccessLevel(level)) {
       return 'bg-surface-hover text-text-muted';
     }
-    return 'bg-cta-default text-white';
+    return 'bg-cta-default text-cta-text';
   }
 
   getStatusBadgeClass(level: number): string {

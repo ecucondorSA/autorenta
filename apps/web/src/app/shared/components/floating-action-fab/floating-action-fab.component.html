@@ -13,6 +13,7 @@
       class="fab-action w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
       [style.transition-delay.ms]="expanded() ? i * 50 : 0"
       [attr.aria-label]="action.label"
+      [title]="action.label"
     >
       <app-icon [name]="action.icon" [size]="22" />
     </button>
@@ -25,6 +26,7 @@
     class="fab-main w-14 h-14 rounded-full bg-cta-default text-cta-text shadow-xl flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
     [attr.aria-label]="expanded() ? 'Cerrar acciones' : 'Abrir acciones'"
     [attr.aria-expanded]="expanded()"
+    [title]="expanded() ? 'Cerrar' : 'Acciones rápidas'"
   >
     <svg
       class="w-6 h-6 transition-transform duration-300"

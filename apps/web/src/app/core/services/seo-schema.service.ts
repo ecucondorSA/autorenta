@@ -28,7 +28,7 @@ export class SeoSchemaService {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'Autorentar',
-      alternateName: 'AutoRenta P2P',
+      alternateName: 'Autorentar Alquiler entre Personas',
       url: 'https://autorentar.com.ar',
       logo: 'https://autorentar.com.ar/assets/logo/logo.svg',
       description:
@@ -63,7 +63,7 @@ export class SeoSchemaService {
       '@type': 'CarRental',
       name: 'Autorentar',
       description:
-        'Alquiler de autos P2P en Argentina. Autos verificados, pagos seguros con MercadoPago, seguro incluido.',
+        'Alquiler de autos entre personas en Argentina. Autos verificados, pagos seguros con MercadoPago, seguro incluido.',
       url: 'https://autorentar.com.ar',
       telephone: '+54-9-11-1234-5678',
       priceRange: '$$ - $$$',

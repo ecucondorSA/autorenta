@@ -47,7 +47,42 @@ export class BookingValidationService {
         };
       }
 
-      // 2. Attempt to create the booking
+      // 2. Pre‑validar disponibilidad para ofrecer feedback inmediato (no bloqueante)
+      try {
+        const availability = await this.supabase.rpc('is_car_available', {
+          p_car_id: carId,
+          p_start_date: startDate,
+          p_end_date: endDate,
+        });
+
+        if (availability.error) {
+          // Log y continuar: no bloquear creación por error de RPC
+          this.errorHandler.handleBookingError(
+            availability.error,
+            'Availability check failed (non-blocking)',
+            false,
+          );
+        } else if (availability.data === false) {
+          const hasPendingBookings = await this.checkPendingBookings(carId, startDate, endDate);
+
+          return {
+            success: false,
+            error: hasPendingBookings
+              ? 'El auto está reservado temporalmente (pendiente de pago). Intenta con otras fechas o únete a la lista de espera.'
+              : 'El auto no está disponible para esas fechas. Por favor elige otras fechas.',
+            canWaitlist: true,
+          };
+        }
+      } catch (rpcError) {
+        // Fallback: registrar y seguir
+        this.errorHandler.handleBookingError(
+          rpcError,
+          'Availability pre-check crashed (non-blocking)',
+          false,
+        );
+      }
+
+      // 3. Attempt to create the booking
       // This allows capturing the constraint error if there's a pending booking
       // Availability validation is done inside request_booking
       // If it fails, we check if it's due to a pending booking and activate waitlist

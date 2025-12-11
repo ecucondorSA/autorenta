@@ -11,7 +11,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { getCorsHeaders } from '../_shared/cors.ts';
 
 const TIKTOK_PIXEL_ID = 'D4AHBBBC77U2U4VHPCO0';
 const TIKTOK_API_VERSION = 'v1.3';
@@ -175,8 +175,10 @@ async function sendTikTokEvent(
 serve(async (req) => {
   // CORS headers
   const corsHeaders = {
-    ...corsHeaders,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    ...getCorsHeaders(req),
+    // Extend allowed headers for this endpoint
+    'Access-Control-Allow-Headers':
+      'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
   };
 
   // Handle CORS preflight
@@ -188,7 +190,14 @@ serve(async (req) => {
     // Get TikTok access token from environment
     const accessToken = Deno.env.get('TIKTOK_ACCESS_TOKEN');
     if (!accessToken) {
-      throw new Error('TIKTOK_ACCESS_TOKEN not configured');
+      console.warn('TikTok Events disabled: TIKTOK_ACCESS_TOKEN not configured');
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'TikTok Events disabled - missing access token',
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
     }
 
     // Parse request body
@@ -224,24 +233,22 @@ serve(async (req) => {
     // Send event to TikTok
     const result = await sendTikTokEvent(eventData, accessToken);
 
-    return new Response(
-      JSON.stringify(result),
-      {
-        status: result.success ? 200 : 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
+    return new Response(JSON.stringify(result), {
+      status: 200, // Tracking failures shouldn't break UX
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Edge function error:', error);
     return new Response(
       JSON.stringify({
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        success: false,
+        error: 'internal_error',
+        message: error instanceof Error ? error.message : 'Unknown error',
       }),
       {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
+        status: 200, // Avoid surfacing tracking errors to users
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      },
     );
   }
 });

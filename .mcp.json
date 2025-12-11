@@ -1,32 +1,12 @@
 {
   "mcpServers": {
-    "gemini-suite": {
-      "type": "stdio",
-      "command": "/home/edu/autorenta/tools/gemini-suite-mcp-python/.venv/bin/python",
-      "args": [
-        "/home/edu/autorenta/tools/gemini-suite-mcp-python/server.py"
-      ],
-      "env": {
-        "GEMINI_API_KEY": "AIzaSyADvctF4PQGK0pHnwVPlgw6IGYddpybNPc"
-      }
-    },
-    "playwright-streaming": {
+    "patchright-streaming": {
       "type": "stdio",
       "command": "node",
       "args": [
-        "/home/edu/autorenta/tools/playwright-streaming-mcp/server.js"
-      ]
-    },
-    "supabase": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@supabase/mcp-server-supabase@latest"
+        "/home/edu/autorenta/tools/patchright-streaming-mcp/server.js"
       ],
-      "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_746372d898dd4fbc1b6a70e0c5ed4d25da34f2b6"
-      }
+      "env": {}
     }
   }
 }

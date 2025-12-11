@@ -41,8 +41,8 @@ export class LoginPage {
       const { email, password } = this.form.getRawValue();
       await this.auth.signIn(email, password);
 
-      // Get returnUrl from query params, default to /cars for better UX after login
-      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars';
+      // Get returnUrl from query params, default to /cars/list for better UX after login
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/cars/list';
       await this.router.navigateByUrl(returnUrl);
     } catch (err) {
       this.error.set(

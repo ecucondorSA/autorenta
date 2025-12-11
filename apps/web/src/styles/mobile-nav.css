@@ -1,0 +1,117 @@
+
+/* 📱 Mobile Navigation System - Modern Bottom Bar
+   Reemplaza el menú hamburguesa con una navegación ergonómica
+   Optimizado para pulgares y áreas seguras de iOS/Android */
+
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.96); /* Surface Raised con blur */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-subtle);
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+  height: calc(60px + env(safe-area-inset-bottom, 20px));
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* Ocultar en desktop */
+@media (min-width: 768px) {
+  .mobile-bottom-nav {
+    display: none;
+  }
+}
+
+.mobile-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); /* Smooth spring-like transition */
+}
+
+.mobile-nav-item:active {
+  transform: scale(0.92);
+}
+
+.mobile-nav-item.active {
+  color: var(--cta-default);
+}
+
+.mobile-nav-item.active .mobile-nav-icon {
+  transform: translateY(-2px); /* Slight lift */
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.mobile-nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  position: relative;
+}
+
+/* Indicador de activo sutil */
+.mobile-nav-item.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background-color: var(--cta-default);
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 8px rgba(167, 216, 244, 0.6);
+}
+
+.mobile-nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Animación de entrada */
+@keyframes slideUpNav {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-bottom-nav {
+  animation: slideUpNav 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Badge de notificaciones */
+.nav-badge {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  background-color: var(--error-500);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}

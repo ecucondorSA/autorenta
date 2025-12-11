@@ -318,9 +318,8 @@
             <div
               class="flex items-center gap-2 px-3 py-2 bg-surface-default dark:bg-surface-pressed rounded-lg"
             >
-              <span class="text-lg">
-                {{ paymentMethod() === 'wallet' ? '🏦' : '💳' }}
-              </span>
+              <svg *ngIf="paymentMethod() === 'wallet'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M12 3l9 7H3l9-7z" stroke-width="1.75" stroke-linejoin="round"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8" stroke-width="1.75"/></svg>
+              <svg *ngIf="paymentMethod() !== 'wallet'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" stroke-width="1.75"/><path d="M1 10h22" stroke-width="1.75"/><path d="M5 15h4" stroke-width="1.75" stroke-linecap="round"/></svg>
               <span class="font-medium text-text-primary dark:text-text-secondary">
                 {{
                   paymentMethod() === 'wallet' ? 'Wallet AutoRenta' : 'Tarjeta de Crédito/Débito'

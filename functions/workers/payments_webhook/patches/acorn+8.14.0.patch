@@ -1,0 +1,29 @@
+diff --git a/node_modules/acorn/dist/acorn.d.ts b/node_modules/acorn/dist/acorn.d.ts
+index 81f4e38..55d8c7e 100644
+--- a/node_modules/acorn/dist/acorn.d.ts
++++ b/node_modules/acorn/dist/acorn.d.ts
+@@ -754,7 +754,8 @@ export class Parser {
+   static extend(...plugins: ((BaseParser: typeof Parser) => typeof Parser)[]): typeof Parser
+ }
+ 
+-export const defaultOptions: Options
++// Fixed ambient declarations for TS const initialization
++export const defaultOptions: Options = {} as Options
+ 
+ export function getLineInfo(input: string, offset: number): Position
+ 
+@@ -844,7 +845,7 @@ export const tokTypes: {
+   _typeof: TokenType
+   _void: TokenType
+   _delete: TokenType
+-}
++} = {} as any
+ 
+ export interface Comment {
+   type: "Line" | "Block"
+@@ -863,4 +864,4 @@ export class Token {
+   range?: [number, number]
+ }
+ 
+-export const version: string
++export const version: string = ''

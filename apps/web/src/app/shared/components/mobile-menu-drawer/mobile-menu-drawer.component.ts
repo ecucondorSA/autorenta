@@ -6,7 +6,6 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnDestroy,
   Output,
   signal,
   ViewChild,
@@ -39,7 +38,7 @@ interface MenuSection {
   styleUrls: ['./mobile-menu-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MobileMenuDrawerComponent implements OnDestroy {
+export class MobileMenuDrawerComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
@@ -94,7 +93,7 @@ export class MobileMenuDrawerComponent implements OnDestroy {
       items: [
         { label: 'Wallet', route: '/wallet', icon: 'wallet' },
         { label: 'Retiros', route: '/wallet/payouts', icon: 'credit-card' },
-        { label: 'Mis Ganancias', route: '/wallet/earnings', icon: 'chart-bar', badge: 'NEW' },
+        { label: 'Mis Ganancias', route: '/dashboard/earnings', icon: 'chart-bar', badge: 'NEW' },
       ],
     },
     {
@@ -125,9 +124,6 @@ export class MobileMenuDrawerComponent implements OnDestroy {
   private touchStartY = 0;
   private isDragging = false;
 
-  ngOnDestroy(): void {
-    // Cleanup if needed
-  }
 
   private animateIn(): void {
     this.isAnimating.set(true);

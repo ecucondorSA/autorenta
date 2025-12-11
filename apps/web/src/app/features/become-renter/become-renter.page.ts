@@ -98,25 +98,25 @@ export class BecomeRenterPage implements OnInit {
       number: 1,
       title: 'Creá tu cuenta',
       description: 'Registrate gratis y completá tu perfil en minutos.',
-      icon: '📝',
+      icon: 'pencil',
     },
     {
       number: 2,
       title: 'Publicá tu auto',
       description: 'Cargá fotos, detalles y configurá tu precio.',
-      icon: '📸',
+      icon: 'camera',
     },
     {
       number: 3,
       title: 'Verificá tu identidad',
       description: 'Validamos tu identidad para seguridad de todos.',
-      icon: '✅',
+      icon: 'checkmark',
     },
     {
       number: 4,
       title: 'Recibí reservas',
       description: 'Aprobá solicitudes y comenzá a generar ingresos.',
-      icon: '💰',
+      icon: 'money-bag',
     },
   ];
 
@@ -125,32 +125,32 @@ export class BecomeRenterPage implements OnInit {
     {
       title: 'Ingresos extras',
       description: 'Generá entre $50,000 y $200,000 por mes según tu auto y disponibilidad.',
-      icon: '💵',
+      icon: 'dollar-bill',
     },
     {
       title: 'Vos decidís',
       description: 'Controlás precios, disponibilidad y quién puede rentar tu auto.',
-      icon: '🎯',
+      icon: 'target',
     },
     {
       title: 'Seguro incluido',
       description: 'Todas las rentas están protegidas con seguro contra terceros.',
-      icon: '🛡️',
+      icon: 'shield',
     },
     {
       title: 'Soporte 24/7',
       description: 'Nuestro equipo está disponible para ayudarte cuando lo necesites.',
-      icon: '🤝',
+      icon: 'handshake',
     },
     {
       title: 'Cobros automáticos',
       description: 'Recibís tu dinero directamente en tu wallet, sin complicaciones.',
-      icon: '⚡',
+      icon: 'lightning',
     },
     {
       title: 'Programa de referidos',
       description: 'Ganás bonos por invitar a otros propietarios a la plataforma.',
-      icon: '🎁',
+      icon: 'gift',
     },
   ];
 

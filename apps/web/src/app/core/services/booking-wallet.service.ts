@@ -82,13 +82,12 @@ export class BookingWalletService {
       const ref = `rental-payment-${booking.id}-${Date.now()}`;
 
       // Insert rental_payment ledger entry manually
-      const { error } = await this.supabase.from('wallet_ledger').insert({
-        user_id: booking.owner_id,
-        kind: 'rental_payment',
-        amount_cents: amountCents,
-        ref,
-        booking_id: booking.id,
-        meta: {
+      const { error } = await this.supabase.rpc('wallet_record_rental_payment', {
+        p_owner_id: booking.owner_id,
+        p_booking_id: booking.id,
+        p_amount_cents: amountCents,
+        p_ref: ref,
+        p_meta: {
           received_at: new Date().toISOString(),
           description: description || `Pago recibido - Reserva ${booking.id.substring(0, 8)}`,
           car_id: booking.car_id,

@@ -132,15 +132,26 @@ serve(async (req) => {
     // 5. GENERAR STATE (SEGURIDAD)
     // ============================================
 
-    // State = user_id + random token (para verificar en callback)
-    const randomToken = crypto.randomUUID();
-    const state = btoa(JSON.stringify({
-      user_id: user.id,
-      token: randomToken,
-      timestamp: Date.now(),
-    }));
+  // State = user_id + random token (para verificar en callback)
+  // Usar URL-safe base64 para evitar corrupción por MercadoPago
+  const randomToken = crypto.randomUUID();
+  const stateJson = JSON.stringify({
+    user_id: user.id,
+    token: randomToken,
+    timestamp: Date.now(),
+    // Guardamos el redirect_uri usado para que el callback lo re-utilice
+    redirect_uri: redirectUri,
+  });
+
+    // Convertir a base64 URL-safe (reemplazar +/= por -_)
+    const state = btoa(stateJson)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
 
     console.log(`[OAuth] Generated state for user: ${user.id}`);
+    console.log(`[OAuth] State value: ${state}`);
+    console.log(`[OAuth] State length: ${state.length}`);
 
     // Guardar state en profiles (temporal, para validar en callback)
     const { error: updateError } = await supabase
@@ -155,7 +166,19 @@ serve(async (req) => {
 
     if (updateError) {
       console.error('[DB Error] Could not save state:', updateError);
-      // No bloqueamos el flujo, pero es un warning
+      // DEBUG: Retornar error detallado para diagnóstico
+      return new Response(
+        JSON.stringify({
+          error: 'Error guardando state en DB',
+          details: updateError.message,
+          code: updateError.code,
+          hint: updateError.hint,
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // ============================================

@@ -76,9 +76,9 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() autoRotate = true;
-  @Input() rotateSpeed = 0.0002; // Slower for premium feel
+  @Input() rotateSpeed = 0.0006; // Moderate speed rotation
   @Input() enableInteraction = true;
-  @Input() initialRotationY = -0.5; // Start showing the cars
+  @Input() initialRotationY = 1.24; // Start showing the city in night mode
 
   @Output() hdriLoaded = new EventEmitter<void>();
 
@@ -90,11 +90,11 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
   private animationId: number | null = null;
   private isDestroyed = false;
 
-  // Rotation state - start at initial position
-  private rotationY = -0.5;
+  // Rotation state - start at initial position (showing the star)
+  private rotationY = 0.3;
   private rotationX = 0;
   // Target rotation for smooth interpolation (more "weighted" feel)
-  private targetRotationY = -0.5;
+  private targetRotationY = 0.3;
   private targetRotationX = 0;
   // Smoothing factor: lower = heavier/slower movement (0.05 = very smooth, 0.2 = responsive)
   private readonly ROTATION_SMOOTHING = 0.08;
@@ -153,7 +153,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       ndc.x *= aspect;
 
       // Field of view (lower = more zoomed in)
-      float fov = 0.7;
+      float fov = 0.55;
 
       // Create ray direction (as if inside a sphere looking out)
       vec3 dir = normalize(vec3(ndc.x * fov, ndc.y * fov, -1.0));
@@ -197,13 +197,21 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
         float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
         color.rgb = mix(vec3(gray), color.rgb, 1.08);
       } else {
-        // NIGHT: Cool moonlit color grading
-        color.r *= 0.95;
-        color.g *= 0.98;
-        color.b *= 1.05;
-        // Slight desaturation for night feel
+        // NIGHT: Ambient nocturnal feel (visible but moody)
+        // 1. Slight brightness reduction
+        color.rgb *= 0.92;
+
+        // 2. Cool blue shift for moonlit feel
+        color.r *= 0.85;
+        color.g *= 0.92;
+        color.b *= 1.08;
+
+        // 3. Subtle desaturation for night feel
         float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
-        color.rgb = mix(vec3(gray), color.rgb, 0.92);
+        color.rgb = mix(vec3(gray), color.rgb, 0.85);
+
+        // 4. Very subtle blue tint for night sky
+        color.rgb = mix(color.rgb, vec3(0.15, 0.18, 0.28), 0.08);
       }
 
       // Subtle vignette effect for cinematic look
@@ -435,12 +443,43 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Updates WebGL texture with new image data
+   * Automatically resizes if image exceeds device's max texture size
    */
   private updateTexture(image: HTMLImageElement): void {
     if (!this.gl || !this.texture) return;
 
+    // Get device's maximum texture size
+    const maxTextureSize = this.gl.getParameter(this.gl.MAX_TEXTURE_SIZE) || 4096;
+
+    // Check if image needs to be resized
+    let textureSource: HTMLImageElement | HTMLCanvasElement = image;
+
+    if (image.width > maxTextureSize || image.height > maxTextureSize || image.width === 0 || image.height === 0) {
+      // Skip if image has invalid dimensions
+      if (image.width === 0 || image.height === 0) {
+        console.warn('[HdriBackground] Image has invalid dimensions, skipping texture update');
+        return;
+      }
+
+      // Resize image to fit within max texture size
+      const scale = Math.min(maxTextureSize / image.width, maxTextureSize / image.height);
+      const newWidth = Math.floor(image.width * scale);
+      const newHeight = Math.floor(image.height * scale);
+
+      console.log(`[HdriBackground] Resizing texture from ${image.width}x${image.height} to ${newWidth}x${newHeight} (max: ${maxTextureSize})`);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(image, 0, 0, newWidth, newHeight);
+        textureSource = canvas;
+      }
+    }
+
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
+    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, textureSource);
 
     // Use linear filtering for smooth appearance
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);

@@ -326,6 +326,7 @@
   body {
     overscroll-behavior-y: contain;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none; /* Deshabilita el menú contextual en iOS */
   }
 
   /* Prevenir zoom en inputs */

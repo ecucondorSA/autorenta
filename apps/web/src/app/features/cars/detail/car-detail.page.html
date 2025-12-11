@@ -4,14 +4,14 @@
 
 <ng-container *ngIf="car(); else loadingOrError">
   <!-- ✅ HEADER & TITLE SECTION (Fuera del grid principal) -->
-  <header class="max-w-7xl mx-auto px-4 pt-6 pb-4">
-    <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary mb-2">
-      {{ car()?.title }}
+  <header class="max-w-7xl mx-auto px-4 pt-4 md:pt-6 pb-4">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-text-primary mb-2 text-balance">
+      {{ displayTitle() }}
     </h1>
 
     <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
       <!-- Rating & Location -->
-      <div class="flex items-center flex-wrap gap-4">
+      <div class="flex items-center flex-wrap gap-2 md:gap-4 text-xs md:text-sm">
         <div class="flex items-center gap-1 font-semibold">
           <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
           <span class="text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
@@ -26,7 +26,7 @@
         <div class="hidden sm:block w-1 h-1 bg-text-secondary rounded-full"></div>
 
         <div
-          class="flex items-center gap-1 text-text-primary font-medium underline cursor-pointer hover:text-text-secondary"
+          class="flex items-center gap-1 text-text-primary font-medium underline cursor-pointer hover:text-text-secondary line-clamp-1"
         >
           <ng-container *ngIf="car()?.location_formatted_address; else oldLocation">
             {{ car()?.location_formatted_address }}
@@ -38,35 +38,37 @@
 
         @if (distanceKm() !== null && distanceKm() !== undefined) {
           <span
-            class="px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs text-text-secondary"
+            class="px-2 py-0.5 bg-surface-raised border border-border-default rounded text-xs text-text-secondary whitespace-nowrap"
           >
             a {{ distanceKm() | number: '1.1-1' }} km
           </span>
         }
       </div>
 
-      <!-- Share Buttons -->
+      <!-- Share Buttons (Icon only on mobile) -->
       <div class="flex items-center gap-2">
         <button
-          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary"
+          class="flex items-center gap-2 px-2 md:px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium"
+          aria-label="Compartir"
         >
-          <app-icon name="share" [size]="16" />
-          Compartir
+          <app-icon name="share" [size]="20" />
+          <span class="hidden md:inline underline decoration-transparent hover:decoration-text-primary">Compartir</span>
         </button>
         <button
-          class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium underline decoration-transparent hover:decoration-text-primary"
+          class="flex items-center gap-2 px-2 md:px-3 py-2 rounded-lg hover:bg-surface-raised transition-colors text-text-primary text-sm font-medium"
+          aria-label="Guardar en favoritos"
         >
-          <app-icon name="heart" [size]="16" />
-          Guardar
+          <app-icon name="heart" [size]="20" />
+          <span class="hidden md:inline underline decoration-transparent hover:decoration-text-primary">Guardar</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- ✅ HERO GALLERY (Grid Mosaico) -->
-  <div class="max-w-7xl mx-auto px-4 mb-8">
+  <div class="max-w-7xl mx-auto px-0 md:px-4 mb-8">
     <div
-      class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[300px] md:h-[400px] rounded-2xl overflow-hidden relative"
+      class="grid grid-cols-1 md:grid-cols-4 gap-2 h-[280px] sm:h-[350px] md:h-[400px] md:rounded-2xl overflow-hidden relative"
     >
       <!-- Foto Principal (Grande) -->
       <div
@@ -76,8 +78,16 @@
           *ngIf="car()?.photos?.[0]?.url"
           [src]="car()?.photos?.[0]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          [alt]="car()?.title + ' - Vista principal'"
+          [alt]="displayTitle() + ' - Vista principal'"
         />
+        
+        <!-- Botón Ver Fotos (Visible en móvil sobre la imagen) -->
+        <button
+          class="md:hidden absolute bottom-4 right-4 bg-black/70 backdrop-blur-md text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md flex items-center gap-2 border border-white/20"
+        >
+          <app-icon name="grid" [size]="14" />
+          1/{{ car()?.photos?.length || 1 }}
+        </button>
       </div>
 
       <!-- Fotos Secundarias (Hidden on mobile) -->
@@ -86,7 +96,7 @@
           *ngIf="car()?.photos?.[1]?.url"
           [src]="car()?.photos?.[1]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          [alt]="car()?.title + ' - Vista 2'"
+          [alt]="displayTitle() + ' - Vista 2'"
         />
       </div>
       <div
@@ -96,7 +106,7 @@
           *ngIf="car()?.photos?.[2]?.url"
           [src]="car()?.photos?.[2]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          [alt]="car()?.title + ' - Vista 3'"
+          [alt]="displayTitle() + ' - Vista 3'"
         />
       </div>
       <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
@@ -104,7 +114,7 @@
           *ngIf="car()?.photos?.[3]?.url"
           [src]="car()?.photos?.[3]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          [alt]="car()?.title + ' - Vista 4'"
+          [alt]="displayTitle() + ' - Vista 4'"
         />
       </div>
       <div
@@ -114,10 +124,10 @@
           *ngIf="car()?.photos?.[4]?.url"
           [src]="car()?.photos?.[4]?.url"
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          [alt]="car()?.title + ' - Vista 5'"
+          [alt]="displayTitle() + ' - Vista 5'"
         />
 
-        <!-- Botón "Ver todas" -->
+        <!-- Botón "Ver todas" (Desktop) -->
         <button
           class="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:scale-105 transition-transform flex items-center gap-2"
         >
@@ -137,7 +147,7 @@
         <div class="flex justify-between items-center pb-6 border-b border-border-default">
           <div>
             <h2 class="text-xl font-semibold text-text-primary mb-1">
-              {{ car()?.title }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
+              {{ displayTitle() }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
             </h2>
             <div class="text-text-secondary text-sm">
               {{ car()?.year }} · {{ car()?.seats }} plazas · {{ car()?.doors }} puertas ·
@@ -253,8 +263,13 @@
           <!-- Header del Widget -->
           <div class="flex items-baseline justify-between mb-6">
             <div class="flex items-baseline gap-1">
-              <span class="text-2xl font-bold text-text-primary">USD {{ displayPrice() | number:'1.0-0' }}</span>
-              <span class="text-text-secondary font-normal"> por día</span>
+              <ng-container *ngIf="formattedPrice(); else pricePendingWidget">
+                <span class="text-2xl font-bold text-text-primary">{{ formattedPrice() }}</span>
+                <span class="text-text-secondary font-normal"> por día</span>
+              </ng-container>
+              <ng-template #pricePendingWidget>
+                <span class="text-xl font-semibold text-text-secondary">Próximamente</span>
+              </ng-template>
             </div>
             <div class="flex items-center gap-1 text-sm">
               <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
@@ -289,7 +304,7 @@
             *ngIf="authService.isAuthenticated()"
             (click)="onBookClick()"
             [disabled]="!canBook() || bookingInProgress()"
-            class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mb-4"
+            class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mb-4"
             [ngClass]="{ 'opacity-50 cursor-not-allowed': !canBook() || bookingInProgress() }"
           >
             <span *ngIf="!bookingInProgress()">
@@ -319,13 +334,22 @@
             No se te cobrará nada todavía
           </p>
 
+          @if (bookingError()) {
+            <div class="mb-4 rounded-lg border border-error-border/60 bg-error-bg/15 px-4 py-3 text-sm text-error-text">
+              <div class="flex items-start gap-2">
+                <app-icon name="alert-triangle" [size]="16" cssClass="mt-0.5" />
+                <span>{{ bookingError() }}</span>
+              </div>
+            </div>
+          }
+
           <!-- Price Breakdown (Only if dates selected) -->
-          <div *ngIf="totalPrice() as total" class="space-y-3 pt-4 border-t border-border-default">
+          <div *ngIf="totalPrice() && hasValidPrice()" class="space-y-3 pt-4 border-t border-border-default">
             <div class="flex justify-between text-text-primary">
               <span class="underline decoration-text-secondary/30"
-                >USD {{ displayPrice() | number:'1.0-0' }} x {{ daysCount() }} días</span
+                >{{ formattedPrice() || 'Próximamente' }} x {{ daysCount() }} días</span
               >
-              <span>USD {{ total | number:'1.0-0' }}</span>
+              <span>{{ totalPrice() | number:'1.0-0':'en-US' }}</span>
             </div>
             <div class="flex justify-between text-text-primary">
               <span class="underline decoration-text-secondary/30 cursor-pointer" (click)="showRiskCalculator.set(!showRiskCalculator())">
@@ -345,7 +369,7 @@
             <div class="border-t border-border-default my-2"></div>
             <div class="flex justify-between text-lg font-bold text-text-primary">
               <span>Total</span>
-              <span>USD {{ total | number:'1.0-0' }}</span>
+              <span>{{ totalPrice() | number:'1.0-0':'en-US' }}</span>
             </div>
           </div>
         </div>
@@ -397,7 +421,7 @@
 <!-- Sticky CTA Mobile (only visible on mobile when authenticated) -->
 <app-sticky-cta-mobile
   *ngIf="authService.isAuthenticated() && car()"
-  [pricePerDay]="displayPrice()"
+  [pricePerDay]="hasValidPrice() ? displayPrice() : null"
   [totalPrice]="totalPrice()"
   [daysCount]="daysCount()"
   [ctaText]="canBook() ? 'Solicitar Reserva' : 'Seleccionar Fechas'"
@@ -406,24 +430,3 @@
   [expressMode]="expressMode()"
   (ctaClick)="onBookClick()"
 ></app-sticky-cta-mobile>
-
-<!-- ✅ NEW: Booking Location Form Modal -->
-@if (showLocationForm()) {
-  <div
-    class="fixed inset-0 bg-surface-overlay/50 dark:bg-surface-overlay/70 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-sm"
-  >
-    <div
-      class="bg-surface-raised dark:bg-surface-raised rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom-10"
-    >
-      <div class="p-4 sm:p-6">
-        <app-booking-location-form
-          [carOwnerLat]="car()?.location_lat ?? undefined"
-          [carOwnerLng]="car()?.location_lng ?? undefined"
-          [carOwnerAddress]="car()?.location_formatted_address ?? undefined"
-          (locationSelected)="onLocationFormSubmit($event)"
-          (cancelled)="onLocationFormCancelled()"
-        ></app-booking-location-form>
-      </div>
-    </div>
-  </div>
-}

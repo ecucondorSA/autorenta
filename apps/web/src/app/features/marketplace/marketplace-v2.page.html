@@ -2,45 +2,6 @@
 <!-- Hero section with scroll-through enabled - touch-action allows vertical scroll passthrough -->
 <section class="hero-minimal relative h-screen w-full bg-black" style="touch-action: pan-y;">
 
-  <!-- SPLASH SCREEN OVERLAY (Concept 1: Minimalist & Tech) -->
-  <!-- Se muestra mientras carga el HDRI y desaparece con fade-out -->
-  <!-- Moved to ROOT of section with z-[100] to correctly cover header -->
-  <div
-    class="absolute inset-0 z-[100] flex items-center justify-center bg-[#050505] transition-opacity duration-700 ease-out"
-    [class.opacity-0]="!showSplash()" [class.pointer-events-none]="!showSplash()">
-
-    <div class="flex flex-col items-center gap-8 min-w-[280px]">
-      <!-- Logo Animation: Fade In + Scale Up -->
-      <div class="animate-splash-entrance relative">
-        <!-- Glow effect behind logo -->
-        <div class="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-150 animate-pulse">
-        </div>
-
-        <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar Loading"
-          class="h-16 w-auto relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-          width="256" height="64" priority>
-      </div>
-
-      <!-- NEW: Dynamic Loading Bar & Text -->
-      <div class="w-full flex flex-col items-center gap-3 animate-fade-in-up">
-        <!-- Text -->
-        <p class="text-white/70 text-xs font-mono tracking-widest uppercase h-4">
-          {{ loadingText() }}
-        </p>
-
-        <!-- Progress Bar Container -->
-        <div class="w-full h-[2px] bg-white/10 rounded-full overflow-hidden relative">
-          <!-- Filling Bar -->
-          <div
-            class="h-full bg-gradient-to-r from-[#00D95F] to-emerald-400 shadow-[0_0_10px_rgba(0,217,95,0.6)] transition-all ease-out duration-300 relative"
-            [style.width.%]="loadingProgress()">
-            <div class="absolute right-0 top-0 bottom-0 w-[20px] bg-white/50 blur-[4px]"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- HDRI Background - Full Screen (Lazy Loaded, WebGL Pure) -->
   <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
     @defer (on viewport) {
@@ -77,22 +38,22 @@
       <!-- Center: Navigation Links -->
       <nav class="hidden md:flex items-center gap-8">
         <a (click)="scrollToHowItWorks()"
-          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors drop-shadow-lg cursor-pointer">Cómo
+          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow">Cómo
           funciona</a>
         <a routerLink="/cars"
-          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors drop-shadow-lg cursor-pointer">Explorar</a>
+          class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow">Explorar</a>
       </nav>
 
       <!-- Right: Actions -->
       <div class="flex items-center gap-4">
-        <!-- Secondary: Publicar auto -->
+        <!-- Secondary: Publicar auto (outline style) -->
         <button routerLink="/cars/publish"
-          class="hidden sm:inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#FFFF00] hover:bg-[#FFEA00] text-black font-black text-base tracking-wide transition-all shadow-[0_0_20px_rgba(255,255,0,0.4)] hover:shadow-[0_0_30px_rgba(255,255,0,0.6)] hover:scale-105 active:scale-95 border-2 border-transparent">
+          class="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-transparent hover:bg-[#00D95F]/10 text-white font-bold text-base transition-all border-2 border-[#00D95F] hover:border-[#00D95F] hover:scale-105 active:scale-95 nav-text-shadow">
           Publicar auto
         </button>
         <!-- Primary: Ingresar -->
         <button routerLink="/auth/login"
-          class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00D95F] hover:bg-[#00B048] text-white font-bold transition-all shadow-lg shadow-[#00D95F]/30 hover:scale-105 active:scale-95 whitespace-nowrap min-w-[100px]">
+          class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#00D95F] hover:bg-[#00B048] text-cta-text font-bold transition-all shadow-lg shadow-[#00D95F]/30 hover:scale-105 active:scale-95 whitespace-nowrap min-w-[100px]">
           Ingresar
         </button>
       </div>
@@ -121,7 +82,7 @@
 
       <!-- CTA Button -->
       <a routerLink="/cars"
-        class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30">
+        class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-[#00D95F] to-[#00C553] hover:from-[#00C553] hover:to-[#00B048] text-black font-bold text-base transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-[#00D95F]/30 w-full sm:w-auto max-w-xs sm:max-w-none justify-center">
         Ver autos de vecinos
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           stroke-width="2.5">
@@ -723,7 +684,7 @@
                 <!-- Badges -->
                 <div class="absolute top-3 left-3 flex gap-2">
                   <span *ngIf="getCarInstantBooking(car)"
-                    class="bg-cta-default text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                    class="bg-cta-default text-cta-text text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -763,10 +724,17 @@
                 </div>
 
                 <div class="flex items-end justify-between mt-auto pt-2">
-                  <span class="text-xs text-text-secondary">por día</span>
-                  <span class="text-lg font-black text-text-primary tracking-tight">
-                    ${{ car.price_per_day | number: '1.0-0' }}
-                  </span>
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                    <span class="text-xs text-text-secondary">por día</span>
+                    <span class="text-lg font-black text-text-primary tracking-tight">
+                      ${{ car.price_per_day | number: '1.0-0' }}
+                    </span>
+                  } @else {
+                    <span class="text-xs text-text-secondary"></span>
+                    <span class="text-sm font-semibold text-primary-600">
+                      Consultar precio
+                    </span>
+                  }
                 </div>
               </div>
             </article>
@@ -774,11 +742,26 @@
 
           <!-- Loading skeleton -->
           <ng-container *ngIf="loading()">
-            <div *ngFor="let _ of [].constructor(4)" class="car-card-premium animate-pulse">
-              <div class="car-card-image bg-white/5"></div>
-              <div class="car-card-content space-y-3">
-                <div class="h-5 bg-white/10 rounded w-3/4"></div>
-                <div class="h-4 bg-white/5 rounded w-1/2"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div *ngFor="let _ of [].constructor(6)" class="bg-surface-raised rounded-2xl overflow-hidden border border-transparent shadow-sm h-full flex flex-col animate-pulse">
+                <!-- Image skeleton -->
+                <div class="aspect-[4/3] bg-surface-secondary/50 relative overflow-hidden">
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 translate-x-[-100%] animate-[shimmer_1.5s_infinite]"></div>
+                </div>
+                <!-- Content skeleton -->
+                <div class="p-4 space-y-3 flex-1">
+                  <div class="flex justify-between items-start">
+                    <div class="space-y-2 w-2/3">
+                      <div class="h-5 bg-surface-secondary rounded w-3/4"></div>
+                      <div class="h-3 bg-surface-secondary/50 rounded w-1/2"></div>
+                    </div>
+                    <div class="h-4 bg-surface-secondary/50 rounded w-8"></div>
+                  </div>
+                  <div class="pt-2 border-t border-border-default/30 flex justify-between items-end mt-auto">
+                    <div class="h-3 bg-surface-secondary/50 rounded w-1/3"></div>
+                    <div class="h-6 bg-surface-secondary rounded w-1/4"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </ng-container>
@@ -854,9 +837,13 @@
                   <span class="car-spec px-2 py-0.5">{{ car.seats || 5 }} plazas</span>
                 </div>
                 <div class="text-right flex-shrink-0">
-                  <span class="text-lg font-bold text-text-primary">${{ car.price_per_day | number:
-                    '1.0-0' }}</span>
-                  <span class="text-xs text-text-secondary">/día</span>
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                    <span class="text-lg font-bold text-text-primary">${{ car.price_per_day | number:
+                      '1.0-0' }}</span>
+                    <span class="text-xs text-text-secondary">/día</span>
+                  } @else {
+                    <span class="text-sm font-semibold text-primary-600">Consultar</span>
+                  }
                 </div>
               </div>
             </div>
@@ -895,8 +882,9 @@
         }
 
         <!-- Total cars info -->
-        <div class="text-center py-2 text-sm text-gray-500 dark:text-white/40">
-          {{ totalCarsCount() }} autos disponibles
+        <div class="text-center py-3 px-4 bg-surface-raised/50 rounded-lg border border-border-default/50">
+          <span class="text-lg font-bold text-primary-600">{{ totalCarsCount() }}</span>
+          <span class="text-sm text-text-secondary ml-1">autos disponibles en tu zona</span>
         </div>
       </div>
 
@@ -928,9 +916,26 @@
   </div>
 </section>
 
-<!-- Floating Action Button -->
-<app-floating-action-fab [actions]="fabActions" position="bottom-right"
-  (actionClick)="onFabActionClick($event)" />
+<!-- Floating Map/List Toggle Pill -->
+<div class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40 transition-transform duration-300 hover:scale-105 active:scale-95" *ngIf="!loading()">
+  <button
+    (click)="viewMode() === 'map' ? viewMode.set('list') : onLogoClick()"
+    class="flex items-center gap-2 px-6 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-colors border border-white/10"
+  >
+    <ng-container *ngIf="viewMode() !== 'map'; else showListText">
+      <span>Mapa</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+      </svg>
+    </ng-container>
+    <ng-template #showListText>
+      <span>Lista</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </ng-template>
+  </button>
+</div>
 
 <!-- Modals (Date Picker, Location Picker) -->
 <div *ngIf="showDatePicker()" class="fixed inset-0 z-50 flex items-start justify-center pt-6 px-4"

@@ -11,13 +11,13 @@ import {
   PLATFORM_ID,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   NoPreloading,
   provideRouter,
-  withEnabledBlockingInitialNavigation,
   withInMemoryScrolling,
   withPreloading,
+  withViewTransitions,
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -28,6 +28,7 @@ import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interce
 import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
+import { DebugService } from './core/services/debug.service';
 import { GlobalErrorHandler } from './core/services/global-error-handler';
 import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
 import { SupabaseClientService } from './core/services/supabase-client.service';
@@ -41,6 +42,21 @@ function initializePerformanceMonitoring(_perfService: PerformanceMonitoringServ
   return () => {
     if (isDevMode()) {
       console.log('📊 Performance Monitoring initialized');
+    }
+  };
+}
+
+/**
+ * Inicializa el DebugService para e2e tests
+ * Expone window.__AR_DEBUG__ para acceso desde tests
+ * Nota: Llamamos exposeForE2E() explícitamente porque con SSR+hydration
+ * el constructor puede ejecutarse en el servidor donde window no existe
+ */
+function initializeDebugService(debugService: DebugService) {
+  return () => {
+    // Solo exponer en el cliente (browser)
+    if (typeof window !== 'undefined') {
+      debugService.exposeForE2E();
     }
   };
 }
@@ -60,6 +76,8 @@ export const appConfig: ApplicationConfig = {
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       }),
+      // ✅ Native-like Page Transitions
+      withViewTransitions(),
     ),
     provideHttpClient(
       withFetch(),
@@ -70,7 +88,8 @@ export const appConfig: ApplicationConfig = {
         httpErrorInterceptor,
       ]),
     ),
-    provideNoopAnimations(),
+    // ✅ Async Animations - better initial load performance than standard animations
+    provideAnimationsAsync(),
 
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
@@ -116,5 +135,13 @@ export const appConfig: ApplicationConfig = {
           multi: true,
         }
       : [],
+    // ✅ Debug Service initialization (para e2e tests)
+    // Siempre inicializar para exponer window.__AR_DEBUG__
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeDebugService,
+      deps: [DebugService],
+      multi: true,
+    },
   ],
 };

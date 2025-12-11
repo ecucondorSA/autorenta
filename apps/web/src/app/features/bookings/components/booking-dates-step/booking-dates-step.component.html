@@ -17,7 +17,11 @@
           />
           <div class="car-details">
             <h3>{{ car.brand }} {{ car.model }}</h3>
-            <p class="car-price">${{ car.price_per_day }}/día</p>
+            @if (car.price_per_day && car.price_per_day > 0) {
+              <p class="car-price">${{ car.price_per_day }}/día</p>
+            } @else {
+              <p class="car-price text-primary-600">Consultar precio</p>
+            }
             @if (car.location_formatted_address || car.location_city) {
               <p class="car-location">
                 <ion-icon name="location-outline"></ion-icon>

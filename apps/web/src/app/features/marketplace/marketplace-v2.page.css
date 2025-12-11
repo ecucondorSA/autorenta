@@ -139,6 +139,14 @@
     text-shadow: 0 0 40px #7B7B7B, 0 0 80px rgba(255,255,255,0.2);
 }
 
+/* Navigation text shadow for readability over hero background */
+.nav-text-shadow {
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(0, 0, 0, 0.4);
+}
+
 @media (min-width: 1024px) {
   .hero-text-contrast {
     text-shadow: 0 4px 30px #2B2B2B, 0 2px 4px #4E4E4E;

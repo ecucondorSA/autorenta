@@ -345,7 +345,9 @@
 
             <!-- Tip sutil -->
             <p class="text-sm text-slate-500 dark:text-slate-500 flex gap-2">
-              <span class="text-indigo-600">💡</span>
+              <svg class="w-5 h-5 flex-shrink-0 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
               <span
                 >Las publicaciones con más de 5 fotos reciben un
                 <strong>40% más de reservas</strong>.</span
@@ -536,13 +538,16 @@
               <button
                 type="button"
                 (click)="setPricingStrategy('dynamic')"
-                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all"
+                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-1.5"
                 [class.bg-white]="isDynamicPricingSignal()"
                 [class.shadow-sm]="isDynamicPricingSignal()"
                 [class.text-indigo-600]="isDynamicPricingSignal()"
                 [class.text-slate-500]="!isDynamicPricingSignal()"
               >
-                ⚡ Precio Dinámico (Recomendado)
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Precio Dinámico (Recomendado)
               </button>
               <button
                 type="button"
@@ -797,7 +802,7 @@
       <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
         <!-- Tarjeta de Confianza -->
         <div
-          class="bg-gradient-to-br from-[#00D95F] to-[#00B048] rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
+          class="bg-gradient-to-br from-[#00D95F] to-[#00B048] rounded-3xl p-6 text-cta-text shadow-xl relative overflow-hidden"
         >
           <div
             class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"

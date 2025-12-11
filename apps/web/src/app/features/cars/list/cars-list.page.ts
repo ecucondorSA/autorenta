@@ -1071,8 +1071,12 @@ export class CarsListPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Primera selección: scroll + highlight
-    this.scrollToCarInCarousel(carId);
+    // Scroll al auto en la lista (o carrusel si es móvil)
+    if (this.isMobile() && this.viewMode() === 'map') {
+        this.scrollToCarInCarousel(carId);
+    } else {
+        this.scrollToCarCard(carId);
+    }
   }
 
   isCarSelected(carId: string): boolean {

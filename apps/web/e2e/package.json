@@ -1,0 +1,27 @@
+{
+  "name": "@autorentar/e2e",
+  "version": "2.0.0",
+  "private": true,
+  "description": "E2E tests for AutoRenta using Patchright with Page Object Model",
+  "type": "module",
+  "scripts": {
+    "test": "tsx specs/auth/login.spec.ts && tsx specs/booking/browse-cars.spec.ts",
+    "test:login": "tsx specs/auth/login.spec.ts",
+    "test:marketplace": "tsx specs/booking/browse-cars.spec.ts",
+    "test:payment": "tsx specs/booking/payment.spec.ts",
+    "test:headed": "HEADLESS=false tsx specs/auth/login.spec.ts",
+    "test:headed:marketplace": "HEADLESS=false tsx specs/booking/browse-cars.spec.ts",
+    "test:headed:payment": "HEADLESS=false tsx specs/booking/payment.spec.ts",
+    "test:all": "npm run test && tsx specs/booking/payment.spec.ts",
+    "test:all:headed": "HEADLESS=false npm run test:all",
+    "clean": "rm -rf reports/*.json reports/*.png .browser-profile",
+    "clean:profile": "rm -rf .browser-profile"
+  },
+  "dependencies": {
+    "patchright": "^1.49.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

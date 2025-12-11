@@ -239,10 +239,10 @@ cmd_deploy_web() {
 
     CLOUDFLARE_ACCOUNT_ID=5b448192fe4b369642b68ad8f53a7603 \
         npx wrangler pages deploy dist/web/browser \
-        --project-name=autorenta-web
+        --project-name=autorentar
 
     success "Web deployed to Cloudflare Pages"
-    info "URL: https://autorenta-web.pages.dev"
+    info "URL: https://autorentar.com"
 }
 
 cmd_deploy_worker() {

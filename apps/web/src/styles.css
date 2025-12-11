@@ -26,6 +26,12 @@
 /* 📱 Mobile Optimizations - Professional mobile experience */
 @import './styles/mobile-optimizations.css';
 
+/* 📱 Mobile Navigation - Bottom Bar */
+@import './styles/mobile-nav.css';
+
+/* 📱 Mobile Transitions - View Transitions API */
+@import './styles/mobile-transitions.css';
+
 /* 📦 Container Queries - Component-level responsive design */
 @import './styles/container-queries.css';
 
@@ -1116,6 +1122,11 @@ svg[aria-hidden="true"],
     @apply shadow-elevated;
     border-color: rgba(196, 168, 130, 0.5); /* warning-light con opacidad */
     transform: translateY(-4px);
+  }
+
+  .card-premium:active {
+    @apply scale-[0.98] shadow-medium; /* Sutil feedback al tocar */
+    transition-duration: var(--duration-fast);
   }
 
   .card-premium.selected {

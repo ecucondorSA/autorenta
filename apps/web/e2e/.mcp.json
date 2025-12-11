@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "patchright-streaming": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/home/edu/autorenta/tools/patchright-streaming-mcp/server.js"
+      ],
+      "env": {}
+    }
+  }
+}

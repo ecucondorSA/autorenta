@@ -4,7 +4,7 @@
 set -e
 
 ACCOUNT_ID="5b448192fe4b369642b68ad8f53a7603"
-PROJECT_NAME="autorenta-web"
+PROJECT_NAME="autorentar"
 DOMAIN="autorentar.com"
 
 echo "🌐 Configurando custom domain $DOMAIN para proyecto $PROJECT_NAME..."
@@ -71,7 +71,6 @@ echo ""
 echo "✅ Custom domain configurado!"
 echo "⏳ Espera 2-5 minutos para que SSL se active"
 echo "🔍 Verificar: curl -I https://$DOMAIN"
-
 
 
 

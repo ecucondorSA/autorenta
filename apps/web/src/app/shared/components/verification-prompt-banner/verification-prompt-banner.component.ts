@@ -28,7 +28,7 @@ import { VerificationService } from '../../../core/services/verification.service
   template: `
     <div
       *ngIf="shouldShow()"
-      class="bg-gradient-to-r from-warning-light to-cta-default text-text-inverse shadow-lg"
+      class="bg-gradient-to-r from-warning-light to-cta-default text-text-primary shadow-lg"
       role="alert"
       aria-live="polite"
     >
@@ -55,7 +55,7 @@ import { VerificationService } from '../../../core/services/verification.service
                       class="h-full w-full flex items-center justify-center bg-surface-raised/30"
                     >
                       <svg
-                        class="h-7 w-7 text-text-inverse/80"
+                        class="h-7 w-7 text-text-primary/80"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >

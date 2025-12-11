@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-12-11T01:33:50.018Z",
+  "networkLogs": [],
+  "pageErrors": [],
+  "summary": {
+    "totalRequests": 0,
+    "totalResponses": 0,
+    "failedRequests": 0,
+    "pageErrors": 0,
+    "avgResponseTime": 0
+  }
+}

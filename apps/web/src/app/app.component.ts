@@ -25,6 +25,7 @@ import { filter } from 'rxjs';
 import { GuidedTourService } from './core/guided-tour';
 import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
+import { DebugService } from './core/services/debug.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { LocaleManagerService } from './core/services/locale-manager.service';
 import { MapboxPreloaderService } from './core/services/mapbox-preloader.service';
@@ -42,6 +43,9 @@ import { PwaInstallPromptComponent } from './shared/components/pwa-install-promp
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
+import { HapticFeedbackService } from './core/services/haptic-feedback.service';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
@@ -50,6 +54,7 @@ import { SplashScreenComponent } from './shared/components/splash-screen/splash-
 import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawer/mobile-menu-drawer.component';
 import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
+import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel.component';
 
 @Component({
   selector: 'app-root',
@@ -79,6 +84,7 @@ import { ClickOutsideDirective } from './shared/directives/click-outside.directi
     MobileMenuDrawerComponent,
     HeaderIconComponent,
     ClickOutsideDirective,
+    DebugPanelComponent,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -172,6 +178,7 @@ export class AppComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly assetPreloader = inject(AssetPreloaderService);
   private readonly mapboxPreloader = inject(MapboxPreloaderService);
+  private readonly debugService = inject(DebugService); // Initialize early for e2e tests
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
@@ -186,9 +193,15 @@ export class AppComponent implements OnInit {
     MobileBottomNavPortalService,
   );
   private readonly contexts = inject(ChildrenOutletContexts);
+  private readonly hapticService = inject(HapticFeedbackService); // Injected HapticFeedbackService
   private readonly isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
 
   readonly isAuthenticatedSig = this.authService.isAuthenticated;
+  // ... (resto de readonly signals) ...
+
+  triggerHapticFeedback(): void {
+    this.hapticService.selection();
+  }
   readonly compareCountSig = computed(() => this.compareService.count());
   readonly sidebarOpen = signal(false);
   readonly profileMenuOpen = signal(false);
@@ -269,6 +282,16 @@ export class AppComponent implements OnInit {
     this.pushNotificationService.initializePushNotifications();
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
+
+    // Configurar Edge-to-Edge en móvil
+    if (Capacitor.isNativePlatform()) {
+      try {
+        void StatusBar.setOverlaysWebView({ overlay: true });
+        void StatusBar.setStyle({ style: Style.Light }); // O Dark según el tema
+      } catch (e) {
+        console.warn('StatusBar not available', e);
+      }
+    }
 
     // Renderizar barra inferior movil directamente en body para evitar issues de stacking
     this.mobileBottomNavPortal.create();

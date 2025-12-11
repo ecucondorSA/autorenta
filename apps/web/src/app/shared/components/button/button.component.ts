@@ -108,14 +108,14 @@ export class ButtonComponent {
 
     const variants = {
       primary:
-        'bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-white focus-visible:ring-border-focus shadow-sm',
+        'bg-cta-default hover:bg-cta-hover active:bg-cta-pressed text-cta-text focus-visible:ring-border-focus shadow-sm',
       secondary:
         'bg-white border border-border-default hover:bg-surface-secondary text-text-primary focus-visible:ring-border-focus shadow-sm',
       danger: 'bg-error-light hover:bg-red-700 text-white focus-visible:ring-error-light',
       ghost:
         'bg-transparent hover:bg-surface-secondary text-text-primary hover:text-cta-default focus-visible:ring-border-focus',
       outline:
-        'border-2 border-cta-default text-cta-default hover:bg-cta-default hover:text-white focus-visible:ring-border-focus',
+        'border-2 border-cta-default text-text-primary hover:bg-cta-default hover:text-cta-text focus-visible:ring-border-focus',
     };
 
     // Touch-friendly sizes: WCAG 2.5.5 requires 44x44px minimum for md/lg

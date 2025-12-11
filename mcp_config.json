@@ -60,6 +60,9 @@
       "args": [
         "/home/edu/autorenta/tools/patchright-streaming-mcp/server.js"
       ],
+      "env": {
+        "HEADLESS": "false"
+      },
       "description": "Patchright Streaming MCP - Stealth automation for MercadoPago"
     }
   }

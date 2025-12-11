@@ -44,7 +44,7 @@
             <p
               class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
             >
-              💎 Mi Billetera
+              <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Mi Billetera
             </p>
             <h1
               class="text-4xl font-bold text-text-primary dark:text-text-primary mt-2"
@@ -104,14 +104,14 @@
                 (click)="setActiveTab('transactions')"
                 class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-cta-default text-cta-default dark:text-cta-default font-semibold hover:bg-cta-default/10 dark:hover:bg-cta-default/10 transition"
               >
-                <app-icon name="list" [size]="18" /> Transacciones
+                <app-icon name="list" [size]="18" /> <span class="pr-0.5">Transacciones</span>
               </button>
               <button
                 type="button"
                 (click)="setActiveTab('withdrawals')"
                 class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-success-light/40 text-success-700 dark:text-success-400 font-semibold hover:bg-success-light/5 dark:hover:bg-success-light/10 transition"
               >
-                <app-icon name="arrow-up" [size]="18" /> Retirar
+                <app-icon name="arrow-up" [size]="18" /> <span class="pr-0.5">Retirar</span>
               </button>
             </div>
             <p
@@ -187,7 +187,7 @@
                 <span
                   class="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-cta-default/25 text-cta-default dark:bg-cta-default/35 dark:text-cta-default border border-cta-default/40"
                 >
-                  ⚡ Configuración Recomendada
+                  <svg class="w-4 h-4 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Configuración Recomendada
                 </span>
               </div>
               <h2 class="text-3xl md:text-4xl font-bold text-text-primary dark:text-text-primary leading-tight">
@@ -252,7 +252,7 @@
               class="inline-flex items-center justify-center gap-2 px-8 py-5 rounded-xl bg-cta-default text-cta-text font-bold hover:bg-cta-default/90 transition shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
               data-testid="deposit-button-onboarding"
             >
-              <app-icon name="zap" [size]="20" /> Empezar Ahora
+              <app-icon name="zap" [size]="20" /> <span class="pr-0.5">Empezar Ahora</span>
             </button>
             <div class="space-y-1 text-center">
               <p class="text-sm font-semibold text-cta-default">✓ Sin tarjeta requerida</p>
@@ -274,7 +274,7 @@
           </div>
           <div class="flex-1">
             <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2">
-              🔒 Seguro & Protegido
+              <svg class="w-5 h-5 text-primary-600 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg> Seguro & Protegido
             </h3>
             <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
               <li class="flex items-center gap-2">
@@ -301,7 +301,7 @@
           </div>
           <div class="flex-1">
             <h3 class="text-lg font-bold text-text-primary dark:text-text-primary mb-2">
-              ⚡ Rápido & Flexible
+              <svg class="w-5 h-5 text-warning-text inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Rápido & Flexible
             </h3>
             <ul class="space-y-2 text-sm text-text-secondary dark:text-text-secondary/80">
               <li class="flex items-center gap-2">
@@ -593,7 +593,7 @@
           <div class="flex flex-wrap items-start justify-between gap-4">
             <div>
               <div class="flex items-center gap-2 mb-2">
-                <span class="text-xl">🔐</span>
+                <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg>
                 <p
                   class="text-xs uppercase tracking-widest text-warning-strong dark:text-warning-300 font-bold"
                 >
@@ -626,23 +626,23 @@
 
             <div class="grid gap-4 sm:grid-cols-3">
               <div
-                class="rounded-xl border-2 border-warning-border bg-warning-bg/50 dark:bg-warning-bg/20 px-4 py-4 hover:shadow-md transition"
+                class="rounded-xl border-2 border-[#f59e0b]/70 bg-[#fff4e5] dark:bg-[#2b1b06] dark:border-[#fbbf24]/60 px-4 py-4 hover:shadow-md transition"
               >
                 <div class="flex items-center justify-between mb-2">
                   <p
-                    class="text-xs uppercase tracking-widest font-bold text-warning-strong dark:text-warning-200"
+                    class="text-[11px] uppercase tracking-widest font-bold text-[#b45309] dark:text-[#fbbf24]"
                   >
-                    🔒 Protegido
+                    <svg class="w-4 h-4 text-warning-text inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="1.75"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="1.75"/></svg> Protegido
                   </p>
                   <app-icon name="lock" [size]="16" cssClass="text-warning-strong" />
                 </div>
-                <p class="text-2xl font-bold text-text-primary dark:text-warning-50">
+                <p class="text-3xl font-extrabold text-text-primary dark:text-warning-50 leading-tight">
                   USD {{ protectedCreditBalance() / 100 | number: '1.2-2' }}
                 </p>
-                <div class="mt-2 w-full bg-warning-200/30 rounded-full h-2">
-                  <div class="bg-warning-strong h-2 rounded-full transition-all" [style.width.%]="protectedCreditProgress()"></div>
+                <div class="mt-3 w-full bg-[#fde68a] dark:bg-[#fbbf24]/30 rounded-full h-2.5">
+                  <div class="bg-[#d97706] dark:bg-[#f59e0b] h-2.5 rounded-full transition-all" [style.width.%]="protectedCreditProgress()"></div>
                 </div>
-                <p class="text-xs text-warning-strong/80 dark:text-warning-200/70 mt-2">
+                <p class="text-sm font-semibold text-[#92400e] dark:text-[#fbbf24] mt-2">
                   Meta: USD 300 ({{ protectedCreditProgress() | number:'1.0-0' }}%)
                 </p>
               </div>
@@ -653,7 +653,7 @@
                   <p
                     class="text-xs uppercase tracking-widest font-bold text-success-strong dark:text-success-200"
                   >
-                    ↔️ Transferible
+                    <svg class="w-4 h-4 text-success-strong inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg> Transferible
                   </p>
                   <app-icon name="arrow-right-left" [size]="16" cssClass="text-success-strong" />
                 </div>
@@ -671,7 +671,7 @@
                   <p
                     class="text-xs uppercase tracking-widest font-bold text-cta-default dark:text-cta-default/90"
                   >
-                    🏦 Retirable
+                    <svg class="w-4 h-4 text-cta-default inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.75"/><path d="M3 9h18M9 3v18" stroke-width="1.75"/></svg> Retirable
                   </p>
                   <app-icon name="arrow-up" [size]="16" cssClass="text-cta-default" />
                 </div>
@@ -686,7 +686,7 @@
 
             <div class="bg-surface-base/50 dark:bg-surface-secondary/30 rounded-lg p-4 border border-border-default/30">
               <p class="text-sm text-text-secondary dark:text-text-secondary/80 leading-relaxed">
-                <strong>💡 Cómo funciona:</strong> Tu crédito protegido se "congela" durante cada viaje y se libera automáticamente al finalizarlo. Los fondos transferibles los usas para otros pagos. Retira a tu banco cuando lo necesites.
+                <svg class="w-5 h-5 text-warning-text inline-block align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17h4M10 19h4" stroke-width="1" stroke-linecap="round"/></svg> <strong>Cómo funciona:</strong> Tu crédito protegido se "congela" durante cada viaje y se libera automáticamente al finalizarlo. Los fondos transferibles los usas para otros pagos. Retira a tu banco cuando lo necesites.
               </p>
             </div>
           </div>
@@ -706,13 +706,13 @@
           class="rounded-2xl border-2 border-cta-default/20 dark:border-cta-default/30 bg-gradient-to-br from-cta-default/5 to-surface-raised dark:from-cta-default/10 dark:to-surface-raised p-6 shadow-md"
         >
           <div class="flex items-center gap-2 mb-3">
-            <span class="text-lg">⚡</span>
+            <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <h3 class="text-lg font-bold text-text-primary dark:text-text-primary">
-              Acciones Rápidas
+              Acciones rápidas (atajos)
             </h3>
           </div>
           <p class="text-sm text-text-secondary dark:text-text-secondary/70 mb-5">
-            Gestiona tu dinero en segundos
+            Atajos directos para depositar, transferir o retirar
           </p>
           <div class="flex flex-col gap-3">
             <button
@@ -754,7 +754,7 @@
           <p
             class="text-xs uppercase tracking-widest text-cta-default dark:text-cta-default/80 font-semibold"
           >
-            📊 Historial Completo
+            <svg class="w-5 h-5 text-primary-600 inline-block align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 21h18" stroke-width="1.75" stroke-linecap="round"/><rect x="5" y="13" width="3" height="8" rx="0.5" stroke-width="1.5"/><rect x="10.5" y="7" width="3" height="14" rx="0.5" stroke-width="1.5"/><rect x="16" y="3" width="3" height="18" rx="0.5" stroke-width="1.5"/></svg> Historial Completo
           </p>
           <h2 class="text-3xl font-bold text-text-primary dark:text-text-primary mt-2">
             Tus Movimientos
@@ -763,39 +763,42 @@
             Visualiza todos tus depósitos, transferencias y retiros en un mismo lugar.
           </p>
         </div>
-        <div class="flex gap-2 flex-wrap lg:flex-nowrap bg-surface-base/50 dark:bg-surface-secondary/30 p-2 rounded-xl">
-          <button
-            type="button"
-            (click)="setActiveTab('transactions')"
-            [class.bg-cta-default]="activeTab() === 'transactions'"
-            [class.text-text-inverse]="activeTab() === 'transactions'"
-            [class.shadow-md]="activeTab() === 'transactions'"
-            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
-          >
-            <app-icon name="list" [size]="16" cssClass="inline-block mr-1" /> Transacciones
-          </button>
-          <button
-            type="button"
-            (click)="setActiveTab('transfers')"
-            [class.bg-cta-default]="activeTab() === 'transfers'"
-            [class.text-text-inverse]="activeTab() === 'transfers'"
-            [class.shadow-md]="activeTab() === 'transfers'"
-            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
-          >
-            <app-icon name="arrow-right-left" [size]="16" cssClass="inline-block mr-1" /> Transferencias
-          </button>
-          <button
-            type="button"
-            (click)="setActiveTab('withdrawals')"
-            [class.bg-cta-default]="activeTab() === 'withdrawals'"
-            [class.text-text-inverse]="activeTab() === 'withdrawals'"
-            [class.shadow-md]="activeTab() === 'withdrawals'"
-            class="px-5 py-2 text-sm font-bold rounded-lg border-0 text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
-          >
-            <app-icon name="arrow-up" [size]="16" cssClass="inline-block mr-1" /> Retiros
-          </button>
+          <div class="flex gap-2 flex-wrap lg:flex-nowrap bg-surface-base/60 dark:bg-surface-secondary/40 p-2 rounded-xl border border-border-default/50 dark:border-border-default/30">
+            <button
+              type="button"
+              (click)="setActiveTab('transactions')"
+            [class.bg-cta-default/20]="activeTab() === 'transactions'"
+            [class.border-cta-default]="activeTab() === 'transactions'"
+            [class.text-text-primary]="activeTab() === 'transactions'"
+            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            [class.active]="activeTab() === 'transactions'"
+            >
+              <app-icon name="list" [size]="16" cssClass="inline-block mr-1" /> Transacciones
+            </button>
+            <button
+              type="button"
+              (click)="setActiveTab('transfers')"
+            [class.bg-cta-default/20]="activeTab() === 'transfers'"
+            [class.border-cta-default]="activeTab() === 'transfers'"
+            [class.text-text-primary]="activeTab() === 'transfers'"
+            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            [class.active]="activeTab() === 'transfers'"
+            >
+              <app-icon name="arrow-right-left" [size]="16" cssClass="inline-block mr-1" /> Transferencias
+            </button>
+            <button
+              type="button"
+              (click)="setActiveTab('withdrawals')"
+            [class.bg-cta-default/20]="activeTab() === 'withdrawals'"
+            [class.border-cta-default]="activeTab() === 'withdrawals'"
+            [class.text-text-primary]="activeTab() === 'withdrawals'"
+            class="wallet-tab-button px-5 py-2 text-sm font-semibold rounded-lg border text-text-secondary dark:text-text-secondary hover:text-text-primary transition"
+            [class.active]="activeTab() === 'withdrawals'"
+            >
+              <app-icon name="arrow-up" [size]="16" cssClass="inline-block mr-1" /> Retiros
+            </button>
+          </div>
         </div>
-      </div>
 
       <div class="mt-6">
         @if (activeTab() === 'transactions') {
@@ -911,12 +914,12 @@
 
     <!-- Gradient CTA -->
     <section
-      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-inverse"
+      class="bg-gradient-to-r from-cta-default to-warning-light rounded-2xl shadow-elevated p-6 text-text-primary"
     >
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h2 class="text-2xl font-bold mb-2">Gestiona tu dinero fácilmente</h2>
-          <p class="text-sm text-ivory-soft/90">
+          <p class="text-sm text-text-secondary">
             Carga fondos, transfiere a otros usuarios o retira tus ganancias a tu cuenta bancaria
             cuando lo necesites.
           </p>
@@ -933,7 +936,7 @@
           <button
             type="button"
             (click)="goToTransfer()"
-            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-white/40 text-text-inverse font-semibold rounded-xl hover:bg-surface-raised dark:bg-surface-secondary/30 transition"
+            class="px-5 py-3 bg-surface-raised dark:bg-surface-secondary/20 border border-border-default text-text-primary font-semibold rounded-xl hover:bg-surface-secondary dark:bg-surface-secondary/30 transition"
           >
             Transferir
           </button>

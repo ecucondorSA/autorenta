@@ -88,9 +88,16 @@ export class MercadoPagoOAuthService {
    * @returns Promise<boolean> - true si la conexión fue exitosa
    */
   async handleCallback(code: string, state: string): Promise<boolean> {
+    console.log('[OAuth Service] handleCallback called');
+    console.log('[OAuth Service] State to send:', state);
+    console.log('[OAuth Service] State length:', state?.length);
+
     const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
       body: { code, state },
     });
+
+    console.log('[OAuth Service] Response:', JSON.stringify(data));
+    console.log('[OAuth Service] Error:', error);
 
     if (error) {
       throw new Error(error.message || 'Error procesando callback');

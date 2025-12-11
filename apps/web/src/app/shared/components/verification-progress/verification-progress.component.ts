@@ -341,7 +341,7 @@ export class VerificationProgressComponent implements OnInit {
       return 'bg-success-light text-white';
     }
     if (isActive) {
-      return 'bg-cta-default text-white';
+      return 'bg-cta-default text-cta-text';
     }
     return 'bg-surface-hover text-text-muted';
   }

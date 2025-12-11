@@ -19,6 +19,7 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { chromium } from 'patchright';
+import fs from 'fs';
 
 // ========== Helper ==========
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -134,12 +135,19 @@ async function mpTransfer(page, alias, amount, expectedName) {
 
 // ========== Configuration ==========
 const CONFIG = {
-  headless: true,
+  headless: process.env.HEADLESS === 'true', // Default to false (visible) unless HEADLESS=true
   profilePath: process.env.BROWSER_PROFILE || '/home/edu/.mercadopago-browser-profile',
+  executablePath: undefined, // Use bundled Chromium (most stable)
   eventBufferSize: 100,
   compactOutput: true,
   maxEventSummary: 5,
 };
+
+// Force DISPLAY for GUI apps if missing (assumes local user session)
+if (!process.env.DISPLAY) {
+  process.env.DISPLAY = ':0';
+  console.error('[MCP] DISPLAY environment variable not set. Defaulting to :0 to support visible browser.');
+}
 
 // ========== Compact Output Formatting ==========
 function formatCompact(data, type) {
@@ -331,6 +339,7 @@ class PatchrightStreamingMCP {
       CONFIG.profilePath,
       {
         headless: CONFIG.headless,
+        executablePath: CONFIG.executablePath,
         viewport: null,  // Natural viewport
         // NO custom userAgent or headers (patchright recommendation)
       }

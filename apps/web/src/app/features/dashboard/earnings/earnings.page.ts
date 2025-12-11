@@ -7,12 +7,13 @@ import { CarsService } from '../../../core/services/cars.service';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 
 @Component({
   selector: 'app-earnings-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, MoneyPipe, DatePipe],
+  imports: [CommonModule, RouterLink, MoneyPipe, DatePipe, IconComponent],
   templateUrl: './earnings.page.html',
   styleUrls: ['./earnings.page.css'],
 })
@@ -152,17 +153,23 @@ export class EarningsPage implements OnInit {
     const annualDepreciation = this.totalAnnualDepreciation();
     const monthlyDepreciation = annualDepreciation / 12;
     const monthlyIncome = this.thisMonthEarnings();
+    const fallbackMonthly =
+      monthlyIncome ||
+      (this.totalEarnings() > 0 ? this.totalEarnings() / 12 : 0) ||
+      (this.availableBalance() + this.pendingBalance()) / 6 ||
+      500; // baseline estimate if no data
 
     // Generate cumulative data for each month
     const depreciationData: { month: string; value: number; percentage: number }[] = [];
     const incomeData: { month: string; value: number; percentage: number }[] = [];
 
     const maxDepreciation = annualDepreciation;
-    const maxIncome = monthlyIncome * 12;
+    const baseIncome = monthlyIncome || fallbackMonthly;
+    const maxIncome = baseIncome * 12;
 
     for (let i = 0; i < 12; i++) {
       const depValue = Math.round(monthlyDepreciation * (i + 1));
-      const incValue = Math.round(monthlyIncome * (i + 1));
+      const incValue = Math.round(baseIncome * (i + 1));
 
       depreciationData.push({
         month: this.months[i],

@@ -374,8 +374,13 @@ export class ProfileService {
   }
 
   async hasCompletedOnboarding(): Promise<boolean> {
-    const profile = await this.getMe();
-    return profile.onboarding === 'complete';
+    try {
+      const profile = await this.getCurrentProfile();
+      return profile?.onboarding === 'complete';
+    } catch (error) {
+      console.warn('[ProfileService] Error checking onboarding status:', error);
+      return false;
+    }
   }
 
   async hasAcceptedTOS(): Promise<boolean> {

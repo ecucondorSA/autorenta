@@ -82,7 +82,11 @@
         <div class="car-info">
           <h3>{{ car.title }}</h3>
           <p>{{ car.location_city }}, {{ car.location_state }}</p>
-          <p class="price">{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}/día</p>
+          @if (car.price_per_day && car.price_per_day > 0) {
+            <p class="price">{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}/día</p>
+          } @else {
+            <p class="price text-primary-600">Consultar precio</p>
+          }
         </div>
       </div>
 
@@ -128,7 +132,11 @@
         </div>
         <div class="summary-item">
           <span>Precio por día</span>
-          <span>{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+          @if (car.price_per_day && car.price_per_day > 0) {
+            <span>{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+          } @else {
+            <span class="text-primary-600">Consultar</span>
+          }
         </div>
         <div class="summary-total">
           <span>Total alquiler</span>

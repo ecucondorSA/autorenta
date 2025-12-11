@@ -6,14 +6,20 @@
     </p>
   </header>
 
-  <!-- Loading state -->
-  <div
-    *ngIf="loading() && !error()"
-    class="text-center text-sm text-text-secondary dark:text-text-secondary/70 py-12"
-  >
-    <div class="animate-spin w-8 h-8 border-4 border-cta-default border-t-transparent rounded-full mx-auto mb-4"></div>
-    Cargando reservas...
-  </div>
+  <!-- Loading state (Skeletons) -->
+  <ng-container *ngIf="loading() && !error()">
+    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+      <div *ngFor="let _ of [1,2,3]" class="h-24 rounded-2xl bg-surface-raised animate-pulse border-2 border-transparent"></div>
+    </div>
+    <div class="space-y-4">
+      <div *ngFor="let _ of [1,2]" class="rounded-2xl border border-gray-300 dark:border-gray-700 overflow-hidden">
+        <div class="h-16 bg-gray-50 dark:bg-gray-800/50 animate-pulse"></div>
+        <div class="p-3 space-y-3">
+          <div *ngFor="let __ of [1,2]" class="h-24 rounded-xl bg-surface-raised animate-pulse"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 
   <!-- Error message -->
   <div *ngIf="error()" class="info-card-warm">
@@ -30,7 +36,7 @@
   <!-- Empty state -->
   <div *ngIf="!loading() && !error() && bookings().length === 0" class="text-center py-16">
     <div class="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-      <span class="text-4xl">🚗</span>
+      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
     </div>
     <h3 class="text-xl font-semibold text-text-primary dark:text-white mb-2">No tenés reservas todavía</h3>
     <p class="text-text-secondary dark:text-text-secondary/70 mb-6">
@@ -41,7 +47,7 @@
       class="inline-flex items-center gap-2 px-6 py-3 bg-[#00D95F] hover:bg-[#00C553] text-black rounded-xl font-semibold transition-all"
     >
       <app-icon name="car-outline" [size]="20"></app-icon>
-      Explorar Autos
+      <span class="pr-0.5">Explorar Autos</span>
     </a>
   </div>
 
@@ -83,7 +89,7 @@
         }"
       >
         <div class="flex items-center gap-2 mb-1">
-          <span class="text-xl sm:text-2xl">✅</span>
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <p class="text-2xl sm:text-3xl font-bold text-green-700 dark:text-green-400">
           {{ dashboardStats().active }}
@@ -102,7 +108,7 @@
         }"
       >
         <div class="flex items-center gap-2 mb-1">
-          <span class="text-xl sm:text-2xl">📋</span>
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/><rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75"/><path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <p class="text-2xl sm:text-3xl font-bold text-gray-700 dark:text-gray-500">
           {{ dashboardStats().history }}
@@ -222,7 +228,7 @@
         />
         <ng-template #defaultThumb>
           <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
-            <span class="text-2xl">🚗</span>
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
           </div>
         </ng-template>
         <!-- Status Icon Overlay -->

@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { DebugService } from './debug.service';
 
 /**
  * Sentry module type definition for lazy loading
@@ -18,6 +19,8 @@ type SentryModule = typeof import('@sentry/angular');
  * - Automatic sensitive data sanitization
  * - Trace ID support for request correlation
  * - Performance and action logging
+ * - [AR] prefix for ADB filtering on Android devices
+ * - Integration with DebugService for in-app debug panel
  *
  * Usage:
  *   constructor(private logger: LoggerService) {}
@@ -29,7 +32,10 @@ type SentryModule = typeof import('@sentry/angular');
  *   this.logger.info('Action completed'); // Auto-prefixed with [MyService]
  *
  * Log Format (Console):
- *   [INFO] [req-abc-123] [PaymentService] Processing payment { amount: 1000 }
+ *   [AR][14:30:45.123][INFO][PaymentService] Processing payment { amount: 1000 }
+ *
+ * ADB Filtering:
+ *   adb logcat | grep "\[AR\]"
  *
  * Production:
  * - DEBUG/INFO filtered out, only WARN/ERROR/CRITICAL sent to Sentry
@@ -42,6 +48,7 @@ type SentryModule = typeof import('@sentry/angular');
 export class LoggerService {
   private readonly isDevelopment = !environment.production;
   private traceId?: string;
+  private debugService?: DebugService;
 
   /** Cached Sentry module (lazy-loaded) */
   private sentryModule: SentryModule | null = null;
@@ -74,10 +81,29 @@ export class LoggerService {
   }
 
   /**
-   * Build log prefix with trace ID
+   * Get DebugService lazily to avoid circular dependency
+   */
+  private getDebugService(): DebugService {
+    if (!this.debugService) {
+      this.debugService = inject(DebugService);
+    }
+    return this.debugService;
+  }
+
+  /**
+   * Format timestamp for logging (HH:mm:ss.SSS)
+   */
+  private formatTimestamp(): string {
+    return new Date().toISOString().substring(11, 23);
+  }
+
+  /**
+   * Build log prefix with [AR] tag for ADB filtering
+   * Format: [AR][HH:mm:ss.SSS][LEVEL][Context]
    */
   private buildLogPrefix(level: string, context?: string): string {
-    const parts: string[] = [level];
+    const timestamp = this.formatTimestamp();
+    const parts: string[] = ['[AR]', `[${timestamp}]`, level];
 
     if (this.traceId) {
       parts.push(`[${this.traceId.substring(0, 8)}]`);
@@ -87,7 +113,26 @@ export class LoggerService {
       parts.push(`[${context}]`);
     }
 
-    return parts.join(' ');
+    return parts.join('');
+  }
+
+  /**
+   * Log to DebugService for in-app panel
+   */
+  private logToDebugService(
+    level: 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL',
+    context: string,
+    message: string,
+    data?: unknown
+  ): void {
+    try {
+      const debug = this.getDebugService();
+      if (debug.isEnabled()) {
+        debug.log(level, context || 'App', message, this.sanitizeData(data));
+      }
+    } catch {
+      // Ignore if DebugService not available
+    }
   }
 
   /**
@@ -95,11 +140,14 @@ export class LoggerService {
    * Only logged in development mode
    */
   debug(message: string, context?: string, data?: unknown): void {
+    // Always log to DebugService if enabled
+    this.logToDebugService('DEBUG', context || 'App', message, data);
+
     if (this.isDevelopment) {
       // In development, log to console with safe data only
       const safeData = this.sanitizeData(data);
       const prefix = this.buildLogPrefix('[DEBUG]', context);
-      console.log(`${prefix} ${message}`, safeData);
+      console.log(`${prefix} ${message}`, safeData ?? '');
     }
   }
 
@@ -109,10 +157,13 @@ export class LoggerService {
    * Development: Logged to console
    */
   info(message: string, context?: string, data?: unknown): void {
+    // Always log to DebugService if enabled
+    this.logToDebugService('INFO', context || 'App', message, data);
+
     if (this.isDevelopment) {
       const safeData = this.sanitizeData(data);
       const prefix = this.buildLogPrefix('[INFO]', context);
-      console.log(`${prefix} ${message}`, safeData);
+      console.log(`${prefix} ${message}`, safeData ?? '');
     }
     // Production: INFO is too noisy, don't send to Sentry
   }
@@ -123,9 +174,12 @@ export class LoggerService {
    * Development: Logged to console
    */
   warn(message: string, context?: string, error?: Error | unknown): void {
+    // Always log to DebugService if enabled
+    this.logToDebugService('WARN', context || 'App', message, error);
+
     const prefix = this.buildLogPrefix('[WARN]', context);
     if (this.isDevelopment) {
-      console.warn(`${prefix} ${message}`, error);
+      console.warn(`${prefix} ${message}`, error ?? '');
     } else {
       this.sendToSentry('warning', message, error);
     }
@@ -137,9 +191,12 @@ export class LoggerService {
    * Development: Also logged to console
    */
   error(message: string, context?: string, error?: Error | unknown): void {
+    // Always log to DebugService if enabled
+    this.logToDebugService('ERROR', context || 'App', message, error);
+
     const prefix = this.buildLogPrefix('[ERROR]', context);
     if (this.isDevelopment) {
-      console.error(`${prefix} ${message}`, error);
+      console.error(`${prefix} ${message}`, error ?? '');
     }
 
     // Always report errors to Sentry
@@ -155,9 +212,12 @@ export class LoggerService {
    * ALWAYS sent to Sentry with highest priority
    */
   critical(message: string, context?: string, error?: Error): void {
+    // Always log to DebugService if enabled
+    this.logToDebugService('CRITICAL', context || 'App', message, error);
+
     const prefix = this.buildLogPrefix('[CRITICAL]', context);
     if (this.isDevelopment) {
-      console.error(`${prefix} ${message}`, error);
+      console.error(`${prefix} ${message}`, error ?? '');
     }
     this.sendToSentry('fatal', message, error);
   }

@@ -54,6 +54,35 @@ export interface ChatContext {
           </p>
         </div>
 
+        <!-- Bloquear / Desbloquear -->
+        <button
+          type="button"
+          class="flex items-center gap-1 rounded-full bg-surface-raised/20 px-3 py-1 text-[11px] font-medium text-text-primary transition hover:bg-surface-raised/40 dark:bg-surface-base/40 dark:hover:bg-surface-base/60"
+          (click)="toggleBlockUser()"
+        >
+          <svg
+            class="h-4 w-4"
+            [attr.fill]="blocked() ? 'currentColor' : 'none'"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18.364 5.636a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728z"
+            />
+            <path
+              *ngIf="blocked()"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6.343 6.343l11.314 11.314"
+            />
+          </svg>
+          {{ blocked() ? 'Desbloquear' : 'Bloquear' }}
+        </button>
+
         <!-- Icono menú -->
         <button
           class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-raised/10"
@@ -66,6 +95,14 @@ export interface ChatContext {
             />
           </svg>
         </button>
+      </div>
+
+      <!-- Banner de usuario bloqueado -->
+      <div
+        *ngIf="blocked()"
+        class="bg-error-bg text-error-strong dark:bg-error-900/40 dark:text-error-200 px-4 py-2 text-sm text-center"
+      >
+        Has bloqueado a {{ context().recipientName }}. Desbloquéalo para volver a chatear.
       </div>
 
       <!-- Notificación flotante -->
@@ -265,15 +302,15 @@ export interface ChatContext {
             [ngModel]="draftMessage"
             (ngModelChange)="onMessageDraftChange($event)"
             name="message"
-            [disabled]="sending()"
-            placeholder="Escribe un mensaje"
+            [disabled]="sending() || blocked()"
+            [placeholder]="blocked() ? 'Has bloqueado a este usuario' : 'Escribe un mensaje'"
             class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none dark:bg-surface-raised dark:text-text-primary dark:placeholder-text-muted"
           />
 
           <!-- Send button -->
           <button
             type="submit"
-            [disabled]="!draftMessage.trim() || sending()"
+            [disabled]="!draftMessage.trim() || sending() || blocked()"
             class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-cta-default text-cta-text transition-all hover:bg-cta-hover disabled:opacity-50 dark:bg-cta-hover dark:hover:bg-cta-default"
           >
             <svg *ngIf="!sending()" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -333,6 +370,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   readonly sending = signal(false);
   readonly error = signal<string | null>(null);
   readonly newMessage = signal('');
+  readonly blocked = signal(false);
   readonly notification = signal<string | null>(null);
   readonly recipientTyping = signal(false);
 
@@ -348,6 +386,13 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     effect(() => {
       const session = this.authService.session$();
       this.currentUserId.set(session?.user?.id ?? null);
+    });
+
+    // Sincroniza estado bloqueado cuando cambia el contexto o la sesión
+    effect(() => {
+      const ctx = this.context();
+      const list = this.getBlockedList();
+      this.blocked.set(list.includes(ctx.recipientId));
     });
   }
 
@@ -371,6 +416,51 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     // Stop typing on unmount
     if (this.currentUserId()) {
       this.stopTyping();
+    }
+  }
+
+  /**
+   * Lista de bloqueados en localStorage
+   */
+  protected getBlockedList(): string[] {
+    if (typeof localStorage === 'undefined') return [];
+    try {
+      return JSON.parse(localStorage.getItem('app_blocked_users') || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Persiste la lista de bloqueados
+   */
+  protected saveBlockedList(list: string[]): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem('app_blocked_users', JSON.stringify(Array.from(new Set(list))));
+  }
+
+  /**
+   * Bloquea / desbloquea al usuario actual del chat
+   */
+  toggleBlockUser(): void {
+    const ctx = this.context();
+    const target = ctx.recipientId;
+    if (!target) return;
+
+    const list = this.getBlockedList();
+    const isBlocked = list.includes(target);
+
+    if (isBlocked) {
+      const updated = list.filter((id) => id !== target);
+      this.saveBlockedList(updated);
+      this.blocked.set(false);
+      this.toastService.info('Usuario desbloqueado', `${ctx.recipientName} puede volver a escribirte.`);
+    } else {
+      list.push(target);
+      this.saveBlockedList(list);
+      this.blocked.set(true);
+      this.recipientTyping.set(false);
+      this.toastService.success('Usuario bloqueado', `No recibirás mensajes de ${ctx.recipientName}.`);
     }
   }
 
@@ -478,6 +568,13 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   async sendMessage(): Promise<void> {
     const text = this.newMessage().trim();
     if (!text) return;
+    if (this.blocked()) {
+      this.toastService.warning(
+        'Usuario bloqueado',
+        'Debes desbloquear a este usuario para enviar mensajes.'
+      );
+      return;
+    }
 
     // Guardar el texto actual por si falla
     const draft = text;

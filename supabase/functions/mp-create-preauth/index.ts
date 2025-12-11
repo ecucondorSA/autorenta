@@ -191,13 +191,21 @@ serve(async (req) => {
     console.log('Mercado Pago response:', mpData);
 
     // Actualizar payment intent con datos de MP
+    // Map MP status to our payment_status enum: authorized → approved
+    const dbStatus =
+      mpData.status === 'authorized'
+        ? 'approved'
+        : mpData.status === 'rejected'
+          ? 'rejected'
+          : 'pending';
+
     const { error: updateError } = await supabase
       .from('payment_intents')
       .update({
         mp_payment_id: mpData.id.toString(),
         mp_status: mpData.status,
         mp_status_detail: mpData.status_detail,
-        status: mpData.status === 'authorized' ? 'authorized' : 'pending',
+        status: dbStatus,
         payment_method_id: mpData.payment_method_id,
         card_last4: mpData.card?.last_four_digits,
         card_holder_name: mpData.card?.cardholder?.name,

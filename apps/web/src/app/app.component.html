@@ -25,14 +25,14 @@
     </a>
 
     <div
-      class="container-page px-container flex flex-col md:flex-row md:flex-wrap md:items-center gap-3 sm:gap-5 py-1 min-h-[3.5rem]">
-      <div class="flex w-full md:flex-1 items-center gap-2 sm:gap-4 min-w-0">
+      class="container-page px-container flex flex-row md:flex-row md:flex-wrap items-center justify-between gap-3 sm:gap-5 py-2 md:py-1 min-h-[3rem] md:min-h-[3.5rem]">
+      <div class="flex items-center gap-2 sm:gap-4 min-w-0">
         <!-- Logo -->
         <a routerLink="/" data-tour-step="welcome-hero"
           class="group flex items-center gap-3 hover:opacity-100 transition-base">
           <img ngSrc="/assets/images/autorentar-logo.svg" alt="Autorentar" width="320" height="80"
             priority
-            class="h-10 md:h-12 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04]" />
+            class="h-8 md:h-12 w-auto object-contain drop-shadow-lg transition-transform duration-200 group-hover:scale-[1.04]" />
         </a>
 
         <!-- Desktop Navigation -->
@@ -41,20 +41,21 @@
           aria-label="Principal">
           <a routerLink="/cars" routerLinkActive="nav-link-active"
             [routerLinkActiveOptions]="{ exact: false }" class="nav-link nav-link-primary">
-            <app-header-icon name="cta-search" [size]="24" />
+            <app-header-icon name="cta-search" [size]="36" />
             <span>{{ 'nav.cars' | translate }}</span>
           </a>
           <a routerLink="/cars/publish" routerLinkActive="nav-link-active"
             class="nav-link nav-link-highlight">
-            <app-header-icon name="cta-publish" [size]="26" />
+            <app-header-icon name="cta-publish" [size]="36" />
             <span>Publicar auto</span>
           </a>
         </nav>
       </div>
 
       <!-- Actions - improved spacing for tap targets -->
+      <!-- Mobile: Hide most actions, they are redundant with bottom nav or clutter the header -->
       <div
-        class="flex w-full flex-wrap lg:flex-nowrap items-center gap-3 gap-y-3 sm:gap-4 lg:gap-5 justify-between md:justify-end md:w-auto md:ml-auto border-t border-border-default/60 pt-2 md:border-none md:pt-0">
+        class="hidden md:flex w-full flex-wrap lg:flex-nowrap items-center gap-3 gap-y-3 sm:gap-4 lg:gap-5 justify-between md:justify-end md:w-auto md:ml-auto border-t border-border-default/60 pt-2 md:border-none md:pt-0">
         <app-verification-badge *ngIf="isAuthenticatedSig()"
           class="hidden lg:inline-flex"></app-verification-badge>
         <!-- Language Selector -->
@@ -211,7 +212,7 @@
                 <app-icon name="chevron-right" [size]="16" cssClass="menu-chevron" />
               </a>
 
-              <a routerLink="/wallet/earnings" (click)="closeProfileMenu()"
+              <a routerLink="/dashboard/earnings" (click)="closeProfileMenu()"
                 class="menu-item group" role="menuitem">
                 <div class="menu-icon bg-emerald-500/10 text-emerald-600 group-hover:bg-emerald-500/20">
                   <svg class="h-[18px] w-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,7 +335,7 @@
   </div>
 
   <!-- Main Content Area -->
-  <main id="main-content" class="app-main w-full pb-20 md:pb-0"
+  <main id="main-content" class="app-main w-full pb-[calc(80px+env(safe-area-inset-bottom))] md:pb-0"
     [class.container-page]="!fullBleedLayout()" [class.mx-auto]="!fullBleedLayout()"
     [class.max-w-none]="fullBleedLayout()" [class.px-container]="!fullBleedLayout()"
     [class.py-section-sm]="!fullBleedLayout()" [class.px-0]="fullBleedLayout()"
@@ -354,12 +355,63 @@
 
   <!-- Footer Profesional (oculto en móvil, visible en desktop) -->
   <app-footer class="hidden md:block"></app-footer>
-</div>
 
-<!-- Bottom Navigation Bar (V2) - Visible solo en móvil -->
-<!-- IMPORTANTE: Debe estar fuera del contenedor principal para que position:fixed funcione -->
-<!-- TODO: Re-add when bottom-nav-bar component is created -->
-<!-- <app-bottom-nav-bar class="md:hidden"></app-bottom-nav-bar> -->
+  <!-- 📱 MOBILE BOTTOM NAVIGATION - NATIVE APP FEEL -->
+  <nav class="mobile-bottom-nav md:hidden" role="navigation" aria-label="Navegación móvil">
+    
+    <a routerLink="/cars" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" class="mobile-nav-item" (click)="triggerHapticFeedback()">
+      <div class="mobile-nav-icon">
+        <app-icon name="search" [size]="24" />
+      </div>
+      <span class="mobile-nav-label">Explorar</span>
+    </a>
+
+    <a routerLink="/favorites" routerLinkActive="active" class="mobile-nav-item" (click)="triggerHapticFeedback()">
+      <div class="mobile-nav-icon">
+        <app-icon name="heart" [size]="24" />
+      </div>
+      <span class="mobile-nav-label">Favoritos</span>
+    </a>
+
+    <a routerLink="/bookings" routerLinkActive="active" class="mobile-nav-item" (click)="triggerHapticFeedback()">
+      <div class="mobile-nav-icon">
+        <app-icon name="calendar" [size]="24" />
+      </div>
+      <span class="mobile-nav-label">Viajes</span>
+    </a>
+
+    <a routerLink="/messages" routerLinkActive="active" class="mobile-nav-item" (click)="triggerHapticFeedback()">
+      <div class="mobile-nav-icon">
+        <app-icon name="message" [size]="24" />
+        <!-- TODO: Add dynamic badge here -->
+        <!-- <span class="nav-badge">2</span> -->
+      </div>
+      <span class="mobile-nav-label">Inbox</span>
+    </a>
+
+    <a *ngIf="isAuthenticatedSig(); else loginLink" (click)="toggleProfileMenu(); triggerHapticFeedback()" 
+       [class.active]="profileMenuOpen()"
+       class="mobile-nav-item">
+      <div class="mobile-nav-icon">
+        <div class="w-6 h-6 rounded-full overflow-hidden border border-border-default bg-surface-secondary">
+          <img *ngIf="userProfile()?.avatar_url" [src]="userProfile()!.avatar_url" class="w-full h-full object-cover" />
+          <app-icon *ngIf="!userProfile()?.avatar_url" name="user" [size]="16" class="w-full h-full p-1 text-secondary" />
+        </div>
+      </div>
+      <span class="mobile-nav-label">Perfil</span>
+    </a>
+
+    <ng-template #loginLink>
+      <a routerLink="/auth/login" routerLinkActive="active" class="mobile-nav-item" (click)="triggerHapticFeedback()">
+        <div class="mobile-nav-icon">
+          <app-icon name="user" [size]="24" />
+        </div>
+        <span class="mobile-nav-label">Ingresar</span>
+      </a>
+    </ng-template>
+
+  </nav>
+</div>
 
 <!-- Mobile Bottom Navigation (solo movil) - Renderizado via Portal Service directamente en body -->
 <!-- El componente se crea dinamicamente en app.component.ts usando MobileBottomNavPortalService -->
@@ -374,3 +426,6 @@
 
 <!-- PWA Install Banner - Minimalista y menos intrusivo que pwa-install-prompt -->
 <app-pwa-install-banner></app-pwa-install-banner>
+
+<!-- Debug Panel - Activated via Ctrl+Shift+D or ?debug=1 -->
+<app-debug-panel></app-debug-panel>

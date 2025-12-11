@@ -12,12 +12,12 @@ import { SupabaseClientService } from './supabase-client.service';
  * MercadoPago Wallet Gateway Service
  *
  * Maneja depósitos al wallet usando MercadoPago como proveedor de pago.
- * Integra con la Edge Function mercadopago-create-deposit-order.
+ * Integra con la Edge Function mercadopago-create-preference (depósitos).
  *
  * Flujo de depósito:
  * 1. Usuario solicita depósito en USD
  * 2. Se convierte a ARS usando tasa de cambio actual
- * 3. Se crea una orden de MercadoPago (mercadopago-create-deposit-order)
+ * 3. Se crea una preferencia en MercadoPago (mercadopago-create-preference)
  * 4. Usuario es redirigido a MercadoPago para aprobar
  * 5. MercadoPago envía webhook después de pago completado
  * 6. Webhook actualiza wallet balance automáticamente
@@ -79,7 +79,8 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
 
     // Obtener URL base de Supabase
     const supabaseUrl = this.getSupabaseUrl();
-    const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-deposit-order`;
+    // Usamos la función existente para depósitos a wallet
+    const edgeFunctionUrl = `${supabaseUrl}/functions/v1/mercadopago-create-preference`;
 
     // Llamar a Edge Function
     const response = await fetch(edgeFunctionUrl, {
@@ -89,8 +90,9 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
         Authorization: `Bearer ${session.access_token}`,
       },
       body: JSON.stringify({
-        amount_usd: amountUSD,
+        amount: amountUSD,
         transaction_id: transactionId,
+        description: 'Depósito a Wallet - MercadoPago',
       }),
     });
 
@@ -110,9 +112,9 @@ export class MercadoPagoWalletGatewayService implements WalletPaymentGateway {
     // Retornar en formato estándar WalletDepositResponse
     return {
       success: true,
-      order_id: data.order_id,
+      order_id: data.preference_id ?? data.order_id,
       approval_url: data.init_point || data.approval_url,
-      amount_usd: parseFloat(data.amount_usd),
+      amount_usd: parseFloat(data.amount_usd ?? amountUSD.toString()),
       currency: data.currency || 'ARS',
       transaction_id: transactionId,
       provider: 'mercadopago',

@@ -444,7 +444,7 @@
         <div class="text-center">
           <button
             (click)="openPublishModal()"
-            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-cta-default to-warning-light text-text-inverse-pure font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer"
+            class="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-cta-default to-warning-light text-cta-text font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 cursor-pointer"
           >
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -512,7 +512,12 @@
             <p
               class="text-sm font-semibold text-gray-700 dark:text-gray-500 mb-2 flex items-center gap-2"
             >
-              <span class="text-xl">🎯</span> Metas de Calidad (Próximo Bono: ${{
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke-width="1.75"/>
+                <circle cx="12" cy="12" r="6" stroke-width="1.5"/>
+                <circle cx="12" cy="12" r="2" fill="currentColor"/>
+              </svg>
+              Metas de Calidad (Próximo Bono: ${{
                 bonuses()[0].bonus_amount_usd
               }}
               USD)

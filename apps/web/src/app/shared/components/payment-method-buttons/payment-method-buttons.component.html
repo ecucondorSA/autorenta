@@ -12,7 +12,7 @@
     <!-- Recommended Badge -->
     <div
       *ngIf="isRecommended('credit_card')"
-      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-inverse text-xs font-semibold rounded-full"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-primary text-xs font-semibold rounded-full"
     >
       ⭐ Recomendado
     </div>
@@ -26,7 +26,7 @@
       >
         <svg
           class="w-6 h-6"
-          [class.text-text-inverse]="isSelected('credit_card')"
+          [class.text-cta-text]="isSelected('credit_card')"
           [class.text-cta-default]="!isSelected('credit_card')"
           fill="none"
           stroke="currentColor"
@@ -77,7 +77,7 @@
     <!-- Recommended Badge -->
     <div
       *ngIf="isRecommended('wallet')"
-      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-inverse text-xs font-semibold rounded-full"
+      class="absolute -top-2 left-4 px-2 py-0.5 bg-warning-light text-text-primary text-xs font-semibold rounded-full"
     >
       ⭐ Recomendado
     </div>
@@ -91,7 +91,7 @@
       >
         <svg
           class="w-6 h-6"
-          [class.text-text-inverse]="isSelected('wallet')"
+          [class.text-cta-text]="isSelected('wallet')"
           [class.text-cta-default]="!isSelected('wallet')"
           fill="none"
           stroke="currentColor"

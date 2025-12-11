@@ -56,7 +56,7 @@ export class FloatingActionFabComponent {
     const colors = {
       primary: 'bg-cta-default text-cta-text',
       secondary: 'bg-charcoal-medium hover:bg-charcoal-dark text-text-inverse',
-      accent: 'bg-warning-light hover:bg-warning-light/90 text-text-inverse',
+      accent: 'bg-warning-light hover:bg-warning-light/90 text-text-primary',
     };
     return colors[action.color || 'primary'];
   }

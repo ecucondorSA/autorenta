@@ -139,7 +139,7 @@
 .btn-primary {
   @apply bg-gradient-to-r from-cta-default to-cta-hover
     dark:from-cyan-600 dark:to-cyan-500
-    text-white shadow-md
+    text-cta-text shadow-md
     hover:shadow-elevated hover:scale-[1.02] hover:-translate-y-0.5
     focus:ring-cta-default/30 dark:focus:ring-cyan-500/30
     active:scale-[0.98];

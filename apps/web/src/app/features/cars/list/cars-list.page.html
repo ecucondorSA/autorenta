@@ -44,9 +44,9 @@
           />
         </div>
 
-        <!-- View Toggle (Mobile: Map/List, Desktop: hidden - always split) -->
+        <!-- View Toggle (Desktop only - mobile uses floating pill) -->
         <div
-          class="lg:hidden bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center border border-slate-200 dark:border-slate-700"
+          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700"
         >
           <button
             data-testid="view-map"
@@ -84,7 +84,10 @@
   </div>
 
   <!-- 🎯 SPLIT VIEW CONTAINER (Desktop: side-by-side, Mobile: toggle) -->
-  <div class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]">
+  <div
+    class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
+    [style.minHeight]="viewMode() === 'map' ? 'calc(100vh - 64px)' : null"
+  >
     <!-- 📦 LEFT PANEL: Lista de Autos (scrollable independiente) -->
     <div
       class="w-full lg:w-1/2 xl:w-[55%] lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
@@ -193,8 +196,11 @@
 
           <!-- Filtro por rating mínimo -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
-              Calificación mínima (⭐)
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2 flex items-center gap-1.5">
+              Calificación mínima
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
             </label>
             <input
               type="number"
@@ -261,6 +267,7 @@
           *ngFor="let car of premiumCars(); trackBy: trackByCar"
           [routerLink]="['/cars', car.id]"
           [attr.data-car-id]="car.id"
+          [id]="'car-card-' + car.id"
           data-testid="car-card"
           class="airbnb-card group block cursor-pointer transition-transform duration-200"
           [class.ring-2]="activeMapCarId() === car.id"
@@ -300,21 +307,27 @@
               <!-- Superhost Badge (rating >= 4.5 AND rating_count >= 5) -->
               <span
                 *ngIf="isTopRated(car)"
-                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md"
+                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md flex items-center gap-1"
               >
-                🏆 Superanfitrión
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Superanfitrión
               </span>
               <!-- Instant Book Badge (rating >= 4.0 AND rating_count >= 3) -->
               <span
                 *ngIf="hasInstantBooking(car) && !isTopRated(car)"
-                class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md"
+                class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md flex items-center gap-1"
               >
-                ⚡ Reserva inmediata
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Reserva inmediata
               </span>
               <!-- Popular Badge (rating_count >= 10) -->
               <span
                 *ngIf="isPopular(car)"
-                class="px-2 py-1 bg-rose-500 text-white text-[10px] font-semibold rounded-full shadow-md"
+                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-semibold rounded-full shadow-md"
               >
                 🔥 Popular
               </span>
@@ -370,18 +383,22 @@
 
             <!-- Price -->
             <p class="pt-1">
-              <span class="font-semibold text-slate-900 dark:text-white" data-testid="car-price"
-                >${{ car.price_per_day | number: '1.0-0' }}</span
-              >
-              <span class="text-slate-500 dark:text-slate-500"> / día</span>
+              @if (car.price_per_day && car.price_per_day > 0) {
+                <span class="font-semibold text-slate-900 dark:text-white" data-testid="car-price"
+                  >${{ car.price_per_day | number: '1.0-0' }}</span
+                >
+                <span class="text-slate-500 dark:text-slate-500"> / día</span>
+              } @else {
+                <span class="font-semibold text-primary-600">Consultar precio</span>
+              }
             </p>
 
             <!-- Social Proof: Viewing Now -->
             <p
-              class="text-xs text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1"
+              class="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1"
               *ngIf="getViewingCount(car.id) > 0"
             >
-              <span class="inline-block w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
+              <span class="inline-block w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
               {{ getViewingCount(car.id) }} personas mirando ahora
             </p>
           </div>
@@ -394,6 +411,7 @@
           *ngFor="let car of premiumCars(); trackBy: trackByCar"
           [routerLink]="['/cars', car.id]"
           [attr.data-car-id]="car.id"
+          [id]="'car-card-' + car.id"
           data-testid="car-card"
           class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
           [class.ring-2]="activeMapCarId() === car.id"
@@ -428,17 +446,25 @@
                     class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
                     data-testid="car-location"
                   >
-                    📍 {{ car.location_city || 'Ubicación no disponible' }}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-width="1.75"/>
+                      <circle cx="12" cy="10" r="3" stroke-width="1.75"/>
+                    </svg>
+                    {{ car.location_city || 'Ubicación no disponible' }}
                   </p>
                 </div>
                 <div class="text-right">
-                  <div
-                    class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
-                    data-testid="car-price"
-                  >
-                    ${{ car.price_per_day | number: '1.0-0' }}
-                  </div>
-                  <div class="text-xs text-slate-500">por día</div>
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                    <div
+                      class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
+                      data-testid="car-price"
+                    >
+                      ${{ car.price_per_day | number: '1.0-0' }}
+                    </div>
+                    <div class="text-xs text-slate-500">por día</div>
+                  } @else {
+                    <div class="text-lg font-semibold text-primary-600">Consultar precio</div>
+                  }
                 </div>
               </div>
 
@@ -453,7 +479,11 @@
                 <span
                   class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
                 >
-                  ⚙️ {{ car.transmission || 'Manual' }}
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" stroke-width="1.75"/>
+                    <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke-width="1.75" stroke-linecap="round"/>
+                  </svg>
+                  {{ car.transmission || 'Manual' }}
                 </span>
                 <span
                   class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
@@ -488,9 +518,11 @@
 
     <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: toggle) -->
     <div
-      class="w-full lg:w-1/2 xl:w-[45%] h-[60vh] lg:h-full relative flex-shrink-0"
+      class="w-full lg:w-1/2 xl:w-[45%] relative flex-shrink-0"
       [class.hidden]="viewMode() !== 'map'"
       [class.lg:block]="true"
+      [style.height]="isDesktop() ? '100%' : viewMode() === 'map' ? 'calc(100vh - 64px - env(safe-area-inset-top, 0px))' : '60vh'"
+      [style.minHeight]="viewMode() === 'map' ? 'calc(100vh - 64px - env(safe-area-inset-top, 0px))' : null"
       data-testid="cars-map"
     >
       <app-cars-map
@@ -573,9 +605,11 @@
             <!-- Superhost Badge -->
             <span
               *ngIf="isTopRated(car)"
-              class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded"
+              class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded flex items-center justify-center"
             >
-              🏆
+              <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
             </span>
           </div>
           <!-- Car Info -->
@@ -597,9 +631,13 @@
               </p>
             </div>
             <div class="flex items-center justify-between">
-              <span class="font-bold text-[15px] text-slate-900 dark:text-white">
-                ${{ car.price_per_day | number: '1.0-0' }}<span class="text-[11px] font-normal text-slate-500">/día</span>
-              </span>
+              @if (car.price_per_day && car.price_per_day > 0) {
+                <span class="font-bold text-[15px] text-slate-900 dark:text-white">
+                  ${{ car.price_per_day | number: '1.0-0' }}<span class="text-[11px] font-normal text-slate-500">/día</span>
+                </span>
+              } @else {
+                <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
+              }
               <span class="text-cyan-600 dark:text-cyan-400 text-[11px] font-medium">
                 Ver →
               </span>
@@ -619,13 +657,36 @@
     (ctaClick)="onReserveClick(selectedCarId()!)"
   />
 
-  <!-- Filters FAB (Mobile only) -->
-  <button
-    type="button"
-    class="fixed bottom-24 right-6 md:hidden z-50 w-14 h-14 bg-cyan-600 hover:bg-cyan-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all duration-200 hover:scale-110"
-    (click)="toggleFiltersDrawer()"
-    aria-label="Abrir filtros"
-  >
-    <app-icon name="filter" [size]="24" />
-  </button>
+  <!-- Floating Actions Pill (Map/List + Filters) -->
+  <div class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40 flex items-center gap-3 lg:hidden" *ngIf="!loading()">
+    <!-- Map/List Toggle -->
+    <button
+      (click)="viewMode() === 'map' ? viewMode.set('grid') : viewMode.set('map')"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10"
+    >
+      <ng-container *ngIf="viewMode() !== 'map'; else showListText">
+        <span>Mapa</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+      </ng-container>
+      <ng-template #showListText>
+        <span>Lista</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </ng-template>
+    </button>
+
+    <!-- Filters Button -->
+    <button
+      (click)="toggleFiltersDrawer()"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10"
+    >
+      <span>Filtros</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+    </button>
+  </div>
 </section>
