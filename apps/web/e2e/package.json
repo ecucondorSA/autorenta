@@ -5,6 +5,7 @@
   "description": "E2E tests for AutoRenta using Patchright with Page Object Model",
   "type": "module",
   "scripts": {
+    "setup": "npx patchright install chromium",
     "test": "tsx specs/auth/login.spec.ts && tsx specs/booking/browse-cars.spec.ts",
     "test:login": "tsx specs/auth/login.spec.ts",
     "test:marketplace": "tsx specs/booking/browse-cars.spec.ts",
@@ -12,8 +13,9 @@
     "test:headed": "HEADLESS=false tsx specs/auth/login.spec.ts",
     "test:headed:marketplace": "HEADLESS=false tsx specs/booking/browse-cars.spec.ts",
     "test:headed:payment": "HEADLESS=false tsx specs/booking/payment.spec.ts",
-    "test:all": "npm run test && tsx specs/booking/payment.spec.ts",
+    "test:all": "npm run test:login && npm run test:marketplace && npm run test:payment",
     "test:all:headed": "HEADLESS=false npm run test:all",
+    "test:ci": "HEADLESS=true CI=true npm run test:all",
     "clean": "rm -rf reports/*.json reports/*.png .browser-profile",
     "clean:profile": "rm -rf .browser-profile"
   },

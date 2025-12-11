@@ -1,0 +1,173 @@
+name: Patchright E2E Tests
+
+on:
+  # Run on PRs to main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/patchright-e2e.yml'
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - login
+          - marketplace
+          - payment
+
+concurrency:
+  group: patchright-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  patchright-tests:
+    name: Patchright E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      BASE_URL: http://localhost:4200
+      HEADLESS: true
+      CI: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Patchright browser
+        working-directory: apps/web/e2e
+        run: npx patchright install chromium
+
+      - name: Build Angular application
+        run: pnpm run build:web
+        env:
+          NODE_ENV: production
+          NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
+          NG_APP_SUPABASE_ANON_KEY: ${{ secrets.NG_APP_SUPABASE_ANON_KEY }}
+          NG_APP_MERCADOPAGO_PUBLIC_KEY: ${{ secrets.NG_APP_MERCADOPAGO_PUBLIC_KEY }}
+          NG_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.NG_APP_MAPBOX_ACCESS_TOKEN }}
+
+      - name: Start application server
+        run: |
+          cd apps/web/dist/web/browser
+          npx http-server -p 4200 --silent &
+          echo $! > /tmp/server.pid
+          sleep 3
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server..."
+          timeout 60 bash -c 'until curl -sf http://localhost:4200 > /dev/null; do sleep 2; done'
+          echo "Server is ready!"
+
+      - name: Run Login Tests
+        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'login' || github.event.inputs.test_suite == '' }}
+        working-directory: apps/web/e2e
+        run: npx tsx specs/auth/login.spec.ts
+        env:
+          TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+        continue-on-error: true
+
+      - name: Run Marketplace Tests
+        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'marketplace' || github.event.inputs.test_suite == '' }}
+        working-directory: apps/web/e2e
+        run: npx tsx specs/booking/browse-cars.spec.ts
+        env:
+          TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+        continue-on-error: true
+
+      - name: Run Payment Tests
+        if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == 'payment' || github.event.inputs.test_suite == '' }}
+        working-directory: apps/web/e2e
+        run: npx tsx specs/booking/payment.spec.ts
+        env:
+          TEST_USER_PASSWORD: ${{ secrets.E2E_TEST_USER_PASSWORD }}
+        continue-on-error: true
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: patchright-e2e-reports
+          path: |
+            apps/web/e2e/reports/*.json
+            apps/web/e2e/reports/*.png
+          retention-days: 7
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f /tmp/server.pid ]; then
+            kill $(cat /tmp/server.pid) || true
+          fi
+
+      - name: Generate Test Summary
+        if: always()
+        run: |
+          echo "## Patchright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Parse results from JSON files
+          for report in apps/web/e2e/reports/*-report.json; do
+            if [ -f "$report" ]; then
+              suite=$(basename "$report" | sed 's/-report.json//')
+              total=$(jq '.summary.total // 0' "$report" 2>/dev/null || echo "0")
+              passed=$(jq '.summary.passed // 0' "$report" 2>/dev/null || echo "0")
+              failed=$(jq '.summary.failed // 0' "$report" 2>/dev/null || echo "0")
+
+              if [ "$failed" -gt 0 ]; then
+                echo "### $suite: $passed/$total passed" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "### $suite: $passed/$total passed" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+          done
+
+      - name: Check for failures
+        run: |
+          failed=0
+          for report in apps/web/e2e/reports/*-report.json; do
+            if [ -f "$report" ]; then
+              suite_failed=$(jq '.summary.failed // 0' "$report" 2>/dev/null || echo "0")
+              failed=$((failed + suite_failed))
+            fi
+          done
+
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed test(s) failed"
+            exit 1
+          fi
+          echo "All tests passed!"
