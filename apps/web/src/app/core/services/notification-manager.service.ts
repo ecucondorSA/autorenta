@@ -186,7 +186,8 @@ export class NotificationManagerService {
       duration: finalSticky ? undefined : finalDuration,
       position: 'top',
       color: this.mapTypeToColor(type),
-      cssClass: `toast-${type} toast-priority-${priority}`,
+      // Apply base + type + priority classes for styling
+      cssClass: `toast-modern toast-${type} toast-priority-${priority}`,
       buttons: buttons || [
         {
           icon: 'close',

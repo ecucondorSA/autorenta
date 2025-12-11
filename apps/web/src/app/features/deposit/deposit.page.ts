@@ -240,8 +240,37 @@ export class DepositPage implements OnInit {
       this.showPaymentBrick.set(true);
     } catch (error) {
       console.error('Error in deposit submission:', error);
-      this.formError.set(error instanceof Error ? error.message : 'Error al procesar el depósito');
-      this.toastService.error('Error', this.formError()!);
+      const friendlyMessage =
+        'No pudimos iniciar tu depósito. Podés intentarlo de nuevo y, si persiste, envíanos el detalle para revisarlo en minutos.';
+      this.formError.set(friendlyMessage);
+
+      const payload = this.buildFeedbackPayload(
+        'init_deposit',
+        error,
+        this.transactionId(),
+        this.preferenceId(),
+      );
+
+      await this.toastService.show({
+        title: 'No pudimos iniciar tu depósito',
+        message: `${friendlyMessage}`,
+        type: 'error',
+        priority: 'high',
+        duration: 12000,
+        actions: [
+          {
+            label: 'Copiar detalle',
+            icon: 'copy-outline',
+            command: () => void this.copyFeedback(payload),
+          },
+          {
+            label: 'Enviar a soporte',
+            icon: 'send-outline',
+            styleClass: 'cta',
+            command: () => void this.sendFeedback(payload),
+          },
+        ],
+      });
     } finally {
       this.isProcessing.set(false);
     }
@@ -323,5 +352,91 @@ export class DepositPage implements OnInit {
    */
   formatCurrency(cents: number): string {
     return `$${(cents / 100).toFixed(2)}`;
+  }
+
+  /**
+   * Build a detailed payload for admin feedback
+   */
+  private buildFeedbackPayload(
+    stage: 'init_deposit' | 'mp_preference',
+    error: unknown,
+    transactionId?: string | null,
+    preferenceId?: string | null,
+  ): Record<string, unknown> {
+    const errorMessage =
+      error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown error';
+
+    return {
+      stage,
+      message: errorMessage,
+      user_id: this.supabase.auth.getUser().then((u) => u.data.user?.id).catch(() => null),
+      amount_ars: this.arsAmount(),
+      amount_usd_cents: this.usdAmount(),
+      transaction_id: transactionId,
+      preference_id: preferenceId,
+      route: this.router.url,
+      timestamp: new Date().toISOString(),
+      platform_rate: this.platformRate(),
+      device: navigator.userAgent,
+    };
+  }
+
+  /**
+   * Copy payload to clipboard for user
+   */
+  private async copyFeedback(payload: Record<string, unknown>): Promise<void> {
+    const resolvedPayload = await this.resolveAsyncFields(payload);
+    const text = JSON.stringify(resolvedPayload, null, 2);
+    try {
+      await navigator.clipboard.writeText(text);
+      this.toastService.success('Detalle copiado', 'Pegalo en el chat o envíanoslo.');
+    } catch {
+      this.toastService.warning('No se pudo copiar', 'Intenta manualmente: ' + text.slice(0, 140));
+    }
+  }
+
+  /**
+   * Send payload to incident webhook for admins
+   */
+  private async sendFeedback(payload: Record<string, unknown>): Promise<void> {
+    const resolvedPayload = await this.resolveAsyncFields(payload);
+    try {
+      await this.supabase.functions.invoke('incident-webhook', {
+        body: {
+          source: 'custom',
+          severity: 'high',
+          title: 'wallet_deposit_init_failed',
+          message: resolvedPayload.message || 'Deposit init failed',
+          metadata: resolvedPayload,
+        },
+      });
+      this.toastService.success('Enviado a soporte', 'Gracias por ayudarnos a revisarlo.');
+    } catch (err) {
+      console.error('Error sending feedback', err);
+      this.toastService.warning(
+        'No se pudo enviar',
+        'Copia el detalle y compártelo por chat. Intentaremos de nuevo.',
+      );
+    }
+  }
+
+  /**
+   * Resolve any async values in payload (promises) before using
+   */
+  private async resolveAsyncFields(obj: Record<string, unknown>): Promise<Record<string, unknown>> {
+    const entries = await Promise.all(
+      Object.entries(obj).map(async ([k, v]) => {
+        if (v instanceof Promise) {
+          try {
+            const val = await v;
+            return [k, val];
+          } catch {
+            return [k, null];
+          }
+        }
+        return [k, v];
+      }),
+    );
+    return Object.fromEntries(entries);
   }
 }
