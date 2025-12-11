@@ -7,7 +7,7 @@
  */
 
 // Form Components
-export { ButtonV2Component } from './button.component';
+// Note: ButtonV2Component was removed - use ButtonComponent from shared/components instead
 export { InputComponent } from './input.component';
 
 // Layout Components

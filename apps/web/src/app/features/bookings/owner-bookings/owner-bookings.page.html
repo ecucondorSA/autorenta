@@ -349,6 +349,15 @@
                 >
                   Ver Detalles →
                 </a>
+
+                <!-- NEW: Abrir Disputa Button -->
+                <a
+                  *ngIf="canOpenDispute(booking)"
+                  [routerLink]="['/bookings', booking.id, 'disputes']"
+                  class="px-4 py-2 bg-error-light text-error-strong text-sm font-medium rounded-lg transition-colors hover:bg-error-200"
+                >
+                  ⚠️ Abrir Disputa
+                </a>
               </div>
             </div>
           }

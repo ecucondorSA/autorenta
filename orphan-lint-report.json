@@ -1,0 +1,1361 @@
+{
+  "timestamp": "2025-12-11T18:37:16.319Z",
+  "summary": {
+    "orphanComponents": 90,
+    "unusedRpcFunctions": 185,
+    "tablesWithoutQueries": 49,
+    "criticalOrphans": 1,
+    "passed": false
+  },
+  "criticalIssues": [
+    {
+      "type": "rpc",
+      "name": "can_user_operate",
+      "reason": "RPC function crítica 'can_user_operate' no está siendo llamada desde el frontend",
+      "severity": "critical"
+    }
+  ],
+  "orphanComponents": [
+    {
+      "name": "AppComponent",
+      "path": "apps/web/src/app/app.component.ts",
+      "selector": "app-root"
+    },
+    {
+      "name": "WizardComponent",
+      "path": "apps/web/src/app/shared/components/wizard/wizard.component.ts",
+      "selector": "app-wizard"
+    },
+    {
+      "name": "WaitlistCountComponent",
+      "path": "apps/web/src/app/shared/components/waitlist-count/waitlist-count.component.ts",
+      "selector": "app-waitlist-count"
+    },
+    {
+      "name": "VerificationBlockingModalComponent",
+      "path": "apps/web/src/app/shared/components/verification-blocking-modal/verification-blocking-modal.component.ts",
+      "selector": "app-verification-blocking-modal"
+    },
+    {
+      "name": "UtilityBarComponent",
+      "path": "apps/web/src/app/shared/components/utility-bar/utility-bar.component.ts",
+      "selector": "app-utility-bar"
+    },
+    {
+      "name": "UserBadgesComponent",
+      "path": "apps/web/src/app/shared/components/user-badges/user-badges.component.ts",
+      "selector": "app-user-badges"
+    },
+    {
+      "name": "UploadImageComponent",
+      "path": "apps/web/src/app/shared/components/upload-image/upload-image.component.ts",
+      "selector": "app-upload-image"
+    },
+    {
+      "name": "StepperModalComponent",
+      "path": "apps/web/src/app/shared/components/stepper-modal/stepper-modal.component.ts",
+      "selector": "app-stepper-modal"
+    },
+    {
+      "name": "StatsStripComponent",
+      "path": "apps/web/src/app/shared/components/stats-strip/stats-strip.component.ts",
+      "selector": "app-stats-strip"
+    },
+    {
+      "name": "SimpleCheckoutComponent",
+      "path": "apps/web/src/app/shared/components/simple-checkout/simple-checkout.component.ts",
+      "selector": "app-simple-checkout"
+    },
+    {
+      "name": "ShareMenuComponent",
+      "path": "apps/web/src/app/shared/components/share-menu/share-menu.component.ts",
+      "selector": "app-share-menu"
+    },
+    {
+      "name": "ReviewSummaryComponent",
+      "path": "apps/web/src/app/shared/components/review-summary/review-summary.component.ts",
+      "selector": "app-review-summary"
+    },
+    {
+      "name": "QuickBookingModalComponent",
+      "path": "apps/web/src/app/shared/components/quick-booking-modal/quick-booking-modal.component.ts",
+      "selector": "app-quick-booking-modal"
+    },
+    {
+      "name": "PwaCapabilitiesComponent",
+      "path": "apps/web/src/app/shared/components/pwa-capabilities/pwa-capabilities.component.ts",
+      "selector": "app-pwa-capabilities"
+    },
+    {
+      "name": "ProtectionCreditCardComponent",
+      "path": "apps/web/src/app/shared/components/protection-credit-card/protection-credit-card.component.ts",
+      "selector": "app-protection-credit-card"
+    },
+    {
+      "name": "ProfessionalDateInputComponent",
+      "path": "apps/web/src/app/shared/components/professional-date-input/professional-date-input.component.ts",
+      "selector": "app-professional-date-input"
+    },
+    {
+      "name": "PickupLocationSelectorComponent",
+      "path": "apps/web/src/app/shared/components/pickup-location-selector/pickup-location-selector.component.ts",
+      "selector": "app-pickup-location-selector"
+    },
+    {
+      "name": "PersonalizedLocationComponent",
+      "path": "apps/web/src/app/shared/components/personalized-location/personalized-location.component.ts",
+      "selector": "app-personalized-location"
+    },
+    {
+      "name": "PersonalizedDashboardComponent",
+      "path": "apps/web/src/app/shared/components/personalized-dashboard/personalized-dashboard.component.ts",
+      "selector": "app-personalized-dashboard"
+    },
+    {
+      "name": "PendingReviewsListComponent",
+      "path": "apps/web/src/app/shared/components/pending-reviews-list/pending-reviews-list.component.ts",
+      "selector": "app-pending-reviews-list"
+    },
+    {
+      "name": "PaymentMethodSelectorComponent",
+      "path": "apps/web/src/app/shared/components/payment-method-selector/payment-method-selector.component.ts",
+      "selector": "app-payment-method-selector"
+    },
+    {
+      "name": "OfflineMessagesIndicatorComponent",
+      "path": "apps/web/src/app/shared/components/offline-messages-indicator/offline-messages-indicator.component.ts",
+      "selector": "app-offline-messages-indicator"
+    },
+    {
+      "name": "OfflineBannerComponent",
+      "path": "apps/web/src/app/shared/components/offline-banner/offline-banner.component.ts",
+      "selector": "app-offline-banner"
+    },
+    {
+      "name": "MercadopagoPaymentBrickComponent",
+      "path": "apps/web/src/app/shared/components/mercadopago-payment-brick/mercadopago-payment-brick.component.ts",
+      "selector": "app-mercadopago-payment-brick"
+    },
+    {
+      "name": "MapControlsComponent",
+      "path": "apps/web/src/app/shared/components/map-controls/map-controls.component.ts",
+      "selector": "app-map-controls"
+    },
+    {
+      "name": "MapCardTooltipComponent",
+      "path": "apps/web/src/app/shared/components/map-card-tooltip/map-card-tooltip.component.ts",
+      "selector": "app-map-card-tooltip"
+    },
+    {
+      "name": "MakeCalendarPublicButtonComponent",
+      "path": "apps/web/src/app/shared/components/make-calendar-public-button/make-calendar-public-button.component.ts",
+      "selector": "app-make-calendar-public-button"
+    },
+    {
+      "name": "LocationPickerComponent",
+      "path": "apps/web/src/app/shared/components/location-picker/location-picker.component.ts",
+      "selector": "app-location-picker"
+    },
+    {
+      "name": "InsuranceSummaryCardComponent",
+      "path": "apps/web/src/app/shared/components/insurance-summary-card/insurance-summary-card.component.ts",
+      "selector": "app-insurance-summary-card"
+    },
+    {
+      "name": "InitialGoalModalComponent",
+      "path": "apps/web/src/app/shared/components/initial-goal-modal/initial-goal-modal.component.ts",
+      "selector": "app-initial-goal-modal"
+    },
+    {
+      "name": "InfoBannerComponent",
+      "path": "apps/web/src/app/shared/components/info-banner/info-banner.component.ts",
+      "selector": "app-info-banner"
+    },
+    {
+      "name": "HostSupportInfoPanelComponent",
+      "path": "apps/web/src/app/shared/components/host-support-info-panel/host-support-info-panel.component.ts",
+      "selector": "app-host-support-info-panel"
+    },
+    {
+      "name": "ErrorStateComponent",
+      "path": "apps/web/src/app/shared/components/error-state/error-state.component.ts",
+      "selector": "app-error-state"
+    },
+    {
+      "name": "EmptyStateComponent",
+      "path": "apps/web/src/app/shared/components/empty-state/empty-state.component.ts",
+      "selector": "app-empty-state"
+    },
+    {
+      "name": "EarningsCardComponent",
+      "path": "apps/web/src/app/shared/components/earnings-card/earnings-card.component.ts",
+      "selector": "app-earnings-card"
+    },
+    {
+      "name": "DynamicPriceDisplayComponent",
+      "path": "apps/web/src/app/shared/components/dynamic-price-display/dynamic-price-display.component.ts",
+      "selector": "app-dynamic-price-display"
+    },
+    {
+      "name": "DriverProfileCardComponent",
+      "path": "apps/web/src/app/shared/components/driver-profile-card/driver-profile-card.component.ts",
+      "selector": "app-driver-profile-card"
+    },
+    {
+      "name": "DriverProfileAdvancedComponent",
+      "path": "apps/web/src/app/shared/components/driver-profile-advanced/driver-profile-advanced.component.ts",
+      "selector": "app-driver-profile-advanced"
+    },
+    {
+      "name": "DistanceSummaryComponent",
+      "path": "apps/web/src/app/shared/components/distance-summary/distance-summary.component.ts",
+      "selector": "app-distance-summary"
+    },
+    {
+      "name": "DepositWarningComponent",
+      "path": "apps/web/src/app/shared/components/deposit-warning/deposit-warning.component.ts",
+      "selector": "app-deposit-warning"
+    },
+    {
+      "name": "DateSearchComponent",
+      "path": "apps/web/src/app/shared/components/date-search/date-search.component.ts",
+      "selector": "app-date-search"
+    },
+    {
+      "name": "DarkModeToggleComponent",
+      "path": "apps/web/src/app/shared/components/dark-mode-toggle/dark-mode-toggle.component.ts",
+      "selector": "app-dark-mode-toggle"
+    },
+    {
+      "name": "ClaimFormComponent",
+      "path": "apps/web/src/app/shared/components/claim-form/claim-form.component.ts",
+      "selector": "app-claim-form"
+    },
+    {
+      "name": "CitySelectComponent",
+      "path": "apps/web/src/app/shared/components/city-select/city-select.component.ts",
+      "selector": "app-city-select"
+    },
+    {
+      "name": "CarsDrawerComponent",
+      "path": "apps/web/src/app/shared/components/cars-drawer/cars-drawer.component.ts",
+      "selector": "app-cars-drawer"
+    },
+    {
+      "name": "CalendarEventsListComponent",
+      "path": "apps/web/src/app/shared/components/calendar-events-list/calendar-events-list.component.ts",
+      "selector": "app-calendar-events-list"
+    },
+    {
+      "name": "BottomSheetComponent",
+      "path": "apps/web/src/app/shared/components/bottom-sheet/bottom-sheet.component.ts",
+      "selector": "app-bottom-sheet"
+    },
+    {
+      "name": "BookingFlowMetricsComponent",
+      "path": "apps/web/src/app/shared/components/booking-flow-metrics/booking-flow-metrics.component.ts",
+      "selector": "app-booking-flow-metrics"
+    },
+    {
+      "name": "BookingBenefitsComponent",
+      "path": "apps/web/src/app/shared/components/booking-benefits/booking-benefits.component.ts",
+      "selector": "app-booking-benefits"
+    },
+    {
+      "name": "BonusProtectorSimulatorComponent",
+      "path": "apps/web/src/app/shared/components/bonus-protector-simulator/bonus-protector-simulator.component.ts",
+      "selector": "app-bonus-protector-simulator"
+    },
+    {
+      "name": "AvailabilityAlertComponent",
+      "path": "apps/web/src/app/shared/components/availability-alert/availability-alert.component.ts",
+      "selector": "app-availability-alert"
+    },
+    {
+      "name": "AutorentarCreditCardComponent",
+      "path": "apps/web/src/app/shared/components/autorentar-credit-card/autorentar-credit-card.component.ts",
+      "selector": "app-autorentar-credit-card"
+    },
+    {
+      "name": "AppHeaderComponent",
+      "path": "apps/web/src/app/shared/components/app-header/app-header.component.ts",
+      "selector": "app-app-header"
+    },
+    {
+      "name": "TransferFundsComponent",
+      "path": "apps/web/src/app/features/wallet/components/transfer-funds.component.ts",
+      "selector": "app-transfer-funds"
+    },
+    {
+      "name": "LedgerHistoryComponent",
+      "path": "apps/web/src/app/features/wallet/components/ledger-history.component.ts",
+      "selector": "app-ledger-history"
+    },
+    {
+      "name": "MercadoPagoConnectComponent",
+      "path": "apps/web/src/app/features/profile/mercadopago-connect.component.ts",
+      "selector": "app-mercadopago-connect"
+    },
+    {
+      "name": "ProfileHeaderComponent",
+      "path": "apps/web/src/app/features/profile/components/profile-header/profile-header.component.ts",
+      "selector": "app-profile-header"
+    },
+    {
+      "name": "PayoutStatsComponent",
+      "path": "apps/web/src/app/features/payouts/payout-stats/payout-stats.component.ts",
+      "selector": "app-payout-stats"
+    },
+    {
+      "name": "OrganizationDashboardComponent",
+      "path": "apps/web/src/app/features/organizations/pages/organization-dashboard.component.ts",
+      "selector": "app-organization-dashboard"
+    },
+    {
+      "name": "UrgencyBannerComponent",
+      "path": "apps/web/src/app/features/marketplace/components/urgency-banner/urgency-banner.component.ts",
+      "selector": "app-urgency-banner"
+    },
+    {
+      "name": "ToastComponent",
+      "path": "apps/web/src/app/features/marketplace/components/ui/toast.component.ts",
+      "selector": "app-toast"
+    },
+    {
+      "name": "SkeletonComponent",
+      "path": "apps/web/src/app/features/marketplace/components/ui/skeleton.component.ts",
+      "selector": "app-skeleton"
+    },
+    {
+      "name": "FABComponent",
+      "path": "apps/web/src/app/features/marketplace/components/ui/fab.component.ts",
+      "selector": "app-fab"
+    },
+    {
+      "name": "ChipComponent",
+      "path": "apps/web/src/app/features/marketplace/components/ui/chip.component.ts",
+      "selector": "app-chip"
+    },
+    {
+      "name": "BottomSheetComponent",
+      "path": "apps/web/src/app/features/marketplace/components/ui/bottom-sheet.component.ts",
+      "selector": "app-bottom-sheet"
+    },
+    {
+      "name": "FacebookSidebarComponent",
+      "path": "apps/web/src/app/features/marketplace/components/layout/facebook-sidebar.component.ts",
+      "selector": "app-facebook-sidebar"
+    },
+    {
+      "name": "FAQSectionComponent",
+      "path": "apps/web/src/app/features/marketplace/components/faq-section/faq-section.component.ts",
+      "selector": "app-faq-section"
+    },
+    {
+      "name": "BottomSheetFiltersComponent",
+      "path": "apps/web/src/app/features/marketplace/components/bottom-sheet-filters/bottom-sheet-filters.component.ts",
+      "selector": "app-bottom-sheet-filters"
+    },
+    {
+      "name": "ChatShellComponent",
+      "path": "apps/web/src/app/features/experiences/communication/chat-shell/chat-shell.component.ts",
+      "selector": "app-chat-shell"
+    },
+    {
+      "name": "ContractSignModalComponent",
+      "path": "apps/web/src/app/features/contracts/components/contract-sign-modal.component.ts",
+      "selector": "app-contract-sign-modal"
+    },
+    {
+      "name": "InsuranceSelectorComponent",
+      "path": "apps/web/src/app/features/bookings/insurance-selector/insurance-selector.component.ts",
+      "selector": "app-insurance-selector"
+    },
+    {
+      "name": "BookingPaymentCoverageStepComponent",
+      "path": "apps/web/src/app/features/bookings/components/booking-payment-coverage-step/booking-payment-coverage-step.component.ts",
+      "selector": "app-booking-payment-coverage-step"
+    },
+    {
+      "name": "BookingExtensionRequestComponent",
+      "path": "apps/web/src/app/features/bookings/components/booking-extension-request/booking-extension-request.component.ts",
+      "selector": "app-booking-extension-request"
+    },
+    {
+      "name": "BookingDatesLocationStepComponent",
+      "path": "apps/web/src/app/features/bookings/components/booking-dates-location-step/booking-dates-location-step.component.ts",
+      "selector": "app-booking-dates-location-step"
+    },
+    {
+      "name": "BookingConfirmationStepComponent",
+      "path": "apps/web/src/app/features/bookings/components/booking-confirmation-step/booking-confirmation-step.component.ts",
+      "selector": "app-booking-confirmation-step"
+    },
+    {
+      "name": "TermsAndConsentsComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/terms-and-consents.component.ts",
+      "selector": "app-terms-and-consents"
+    },
+    {
+      "name": "RiskPolicyTableComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/risk-policy-table.component.ts",
+      "selector": "app-risk-policy-table"
+    },
+    {
+      "name": "PaymentSummaryPanelComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/payment-summary-panel.component.ts",
+      "selector": "app-payment-summary-panel"
+    },
+    {
+      "name": "PaymentModeAlertComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/payment-mode-alert.component.ts",
+      "selector": "app-payment-mode-alert"
+    },
+    {
+      "name": "PaymentMethodComparisonModalComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/payment-method-comparison-modal.component.ts",
+      "selector": "app-payment-method-comparison-modal"
+    },
+    {
+      "name": "DynamicPriceLockPanelComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/dynamic-price-lock-panel.component.ts",
+      "selector": "app-dynamic-price-lock-panel"
+    },
+    {
+      "name": "DynamicPriceBreakdownModalComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/dynamic-price-breakdown-modal.component.ts",
+      "selector": "app-dynamic-price-breakdown-modal"
+    },
+    {
+      "name": "CreditSecurityPanelComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts",
+      "selector": "app-credit-security-panel"
+    },
+    {
+      "name": "CoverageUpgradeSelectorComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/coverage-upgrade-selector.component.ts",
+      "selector": "app-coverage-upgrade-selector"
+    },
+    {
+      "name": "BookingSummaryCardComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/booking-summary-card.component.ts",
+      "selector": "app-booking-summary-card"
+    },
+    {
+      "name": "PaymentActionsComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail/payment-actions.component.ts",
+      "selector": "app-payment-actions"
+    },
+    {
+      "name": "FgoManagementComponent",
+      "path": "apps/web/src/app/features/bookings/booking-detail/fgo-management.component.ts",
+      "selector": "app-fgo-management"
+    },
+    {
+      "name": "WaterfallSimulatorComponent",
+      "path": "apps/web/src/app/features/admin/settlements/components/waterfall-simulator.component.ts",
+      "selector": "app-waterfall-simulator"
+    },
+    {
+      "name": "CoverageFundDashboardComponent",
+      "path": "apps/web/src/app/features/admin/components/coverage-fund-dashboard.component.ts",
+      "selector": "app-coverage-fund-dashboard"
+    },
+    {
+      "name": "AccountingDashboardComponent",
+      "path": "apps/web/src/app/features/admin/accounting-dashboard/accounting-dashboard.component.ts",
+      "selector": "app-accounting-dashboard"
+    }
+  ],
+  "unusedRpcFunctions": [
+    {
+      "name": "open_dispute",
+      "definedIn": "supabase/migrations/20251211140000_dispute_system_functions.sql"
+    },
+    {
+      "name": "resolve_dispute",
+      "definedIn": "supabase/migrations/20251211140000_dispute_system_functions.sql"
+    },
+    {
+      "name": "get_dispute_details",
+      "definedIn": "supabase/migrations/20251211140000_dispute_system_functions.sql"
+    },
+    {
+      "name": "analyze_collusion_risk",
+      "definedIn": "supabase/migrations/20251211130000_fraud_detection_system.sql"
+    },
+    {
+      "name": "is_blocked_by",
+      "definedIn": "supabase/migrations/20251211120000_create_user_blocks.sql"
+    },
+    {
+      "name": "check_message_block",
+      "definedIn": "supabase/migrations/20251211120000_create_user_blocks.sql"
+    },
+    {
+      "name": "get_cron_job_history",
+      "definedIn": "supabase/migrations/20251211060003_additional_cron_jobs.sql"
+    },
+    {
+      "name": "owner_cancel_booking",
+      "definedIn": "supabase/migrations/20251211060002_renter_levels_and_owner_penalty.sql"
+    },
+    {
+      "name": "get_owner_penalties",
+      "definedIn": "supabase/migrations/20251211060002_renter_levels_and_owner_penalty.sql"
+    },
+    {
+      "name": "get_owner_visibility_factor",
+      "definedIn": "supabase/migrations/20251211060002_renter_levels_and_owner_penalty.sql"
+    },
+    {
+      "name": "calculate_bonus_malus",
+      "definedIn": "supabase/migrations/20251211060001_bonus_malus_system.sql"
+    },
+    {
+      "name": "apply_bonus_malus_to_deposit",
+      "definedIn": "supabase/migrations/20251211060001_bonus_malus_system.sql"
+    },
+    {
+      "name": "get_user_risk_score",
+      "definedIn": "supabase/migrations/20251211060001_bonus_malus_system.sql"
+    },
+    {
+      "name": "update_debt_start_date",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "suspend_accounts_for_debt",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "can_user_operate",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "get_users_with_debt",
+      "definedIn": "supabase/migrations/20251211060000_account_suspension_system.sql"
+    },
+    {
+      "name": "unlock_expired_wallet_locks",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "wallet_lock_funds_with_expiration",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "get_expiring_locks",
+      "definedIn": "supabase/migrations/20251211050017_wallet_lock_expiration_system.sql"
+    },
+    {
+      "name": "sync_profile_verification_status",
+      "definedIn": "supabase/migrations/20251203090000_fix_verification_issues.sql"
+    },
+    {
+      "name": "update_driver_class_on_event",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "improve_driver_class_annual",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_binance_response",
+      "definedIn": "supabase/migrations/20251203040000_auto_exchange_rate_sync.sql"
+    },
+    {
+      "name": "sync_email_verification",
+      "definedIn": "supabase/migrations/20251202020000_sync_email_verification.sql"
+    },
+    {
+      "name": "sync_phone_verification",
+      "definedIn": "supabase/migrations/20251202020000_sync_email_verification.sql"
+    },
+    {
+      "name": "account_bonus_protector_sale",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_breakage",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_consumption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_issuance",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "account_protection_credit_renewal",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_auto_audit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_balance_sheet",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_cancellation_fee_after_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_breakage_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_consume_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_credit_issue_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_daily_closure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_delivery_fee_after_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_income_statement",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_monthly_closure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_verify_wallet_liabilities",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "accounting_wallet_deposit_after_insert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "add_bank_account_with_encryption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "apply_fgo_movement",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_complete_first_booking_milestone",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_generate_referral_code_on_first_car",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "auto_payout_approved_rewards",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "booking_location_tracking_broadcast_trigger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_age",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_distance_based_pricing",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_distance_km",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_fgo_metrics",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_suggested_daily_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "calculate_trip_score",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "can_publish_car",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_conflicting_pending_by_renter",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_payment_authorization",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cancel_preauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "capture_payment_authorization",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "capture_preauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_autorentar_credit_expiry",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_availability",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_car_availability",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_fleet_bonus_eligibility",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_snapshot_revalidation",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "check_user_pending_deposits_limit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_expired_onboarding_states",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_expired_waitlist",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "cleanup_old_pending_deposits",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "close_accounting_period",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "complete_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "complete_referral_milestone",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "compute_fee_with_class",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "compute_guarantee_with_class",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_boolean",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_json",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_number",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_get_string",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "config_update",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "connect_mercadopago",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "consume_protection_credit_for_claim",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_onboarding_plan_with_steps",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_onboarding_plan_with_steps_v1",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "create_review",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "deactivate_previous_fx_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "decrypt_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "decrypt_pii",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_message_body_trigger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "encrypt_pii",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "expire_pending_bookings",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "extend_protection_credit_for_good_history",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_contribute_from_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_pay_siniestro",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fgo_transfer_between_subfunds",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "find_brazil_model_equivalent",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "fx_rate_needs_revalidation",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "generate_referral_code",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_active_calendar_token",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_booking_distance",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_car_blocked_dates",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_car_conversation_participants",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_car_price_in_currency",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_cars_availability_batch",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_claims_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_conversation_messages",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_conversion_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_current_fx_rate",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_effective_daily_rate_pct",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_effective_vehicle_value",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_expiring_holds",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_marketplace_approved_owners",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_mp_onboarding_notifications",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_my_profile_decrypted",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_next_available_date",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_payout_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_unread_messages_count",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_user_conversations",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "get_user_public_stats",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "handle_new_user",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "insert_notification_secure",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_at_least_18",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_car_owner",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "is_google_calendar_connected",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "log_cron_execution",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "mark_conversation_as_read",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "mark_payout_failed",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "monitoring_check_database_metrics",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "monitoring_create_alert",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "populate_car_estimates",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prepare_booking_payment",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_completed_transaction_modification",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_message_content_changes",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "preview_booking_pricing",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_split_payment",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "process_withdrawal",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "recalculate_all_driver_scores",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "recognize_protection_credit_breakage",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "register_payment_split",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "rotate_encryption_key",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "send_encrypted_message",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "send_monthly_depreciation_notifications",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_location_tracking_created_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_row_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "set_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "submit_claim",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_binance_rates_direct",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_binance_rates_via_edge_function",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_profile_email_from_auth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "sync_profile_email_on_user_create",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "transfer_profit_to_equity",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_revenue_recognition",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_security_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "trg_accounting_wallet_deposit",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_accounting_journal_entries_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_all_demand_snapshots",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_booking_payout",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_calendar_sync_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_car_blocked_dates_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_claims_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_demand_snapshot",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_facturas_recibidas_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_fx_rates_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_location_tracking_timestamp",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_messages_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_payment_intent_status",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_payment_intents_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_profile_with_encryption",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_proveedores_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_updated_at_column",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_user_cars_payment_status",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_user_stats_v2_for_booking",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_vehicle_categories_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "update_vehicle_pricing_models_updated_at",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "user_can_receive_payments",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "validate_bonus_malus_migration",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "validate_mercadopago_oauth",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "verify_accounting_integrity",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "verify_bank_account",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_confirm_deposit_admin",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_deposit_ledger",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_refund",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "wallet_transfer_to_owner",
+      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    }
+  ],
+  "tablesWithoutQueries": [
+    {
+      "name": "risk_events"
+    },
+    {
+      "name": "for"
+    },
+    {
+      "name": "user_risk_scores"
+    },
+    {
+      "name": "as"
+    },
+    {
+      "name": "booking_waitlist"
+    },
+    {
+      "name": "platform_config"
+    },
+    {
+      "name": "monitoring_alerts"
+    },
+    {
+      "name": "auth"
+    },
+    {
+      "name": "private"
+    },
+    {
+      "name": "accounting_accounts"
+    },
+    {
+      "name": "accounting_journal_entries"
+    },
+    {
+      "name": "accounting_period_balances"
+    },
+    {
+      "name": "booking_location_tracking"
+    },
+    {
+      "name": "booking_risk_snapshot"
+    },
+    {
+      "name": "calendar_sync_log"
+    },
+    {
+      "name": "car_google_calendars"
+    },
+    {
+      "name": "cron_execution_log"
+    },
+    {
+      "name": "driver_class_history"
+    },
+    {
+      "name": "driver_protection_addons"
+    },
+    {
+      "name": "driver_score_snapshots"
+    },
+    {
+      "name": "driver_telemetry"
+    },
+    {
+      "name": "encryption_audit_log"
+    },
+    {
+      "name": "encryption_keys"
+    },
+    {
+      "name": "exchange_rate_sync_log"
+    },
+    {
+      "name": "fgo_metrics"
+    },
+    {
+      "name": "fgo_subfunds"
+    },
+    {
+      "name": "fleet_bonuses"
+    },
+    {
+      "name": "fx_rates"
+    },
+    {
+      "name": "google_calendar_tokens"
+    },
+    {
+      "name": "monitoring_performance_metrics"
+    },
+    {
+      "name": "mp_webhook_logs"
+    },
+    {
+      "name": "onboarding_plan_templates"
+    },
+    {
+      "name": "outbound_requests"
+    },
+    {
+      "name": "pricing_class_factors"
+    },
+    {
+      "name": "pricing_cron_health"
+    },
+    {
+      "name": "pricing_day_factors"
+    },
+    {
+      "name": "pricing_hour_factors"
+    },
+    {
+      "name": "pricing_user_factors"
+    },
+    {
+      "name": "system_flags"
+    },
+    {
+      "name": "user_onboarding_plans"
+    },
+    {
+      "name": "user_onboarding_steps"
+    },
+    {
+      "name": "vehicle_model_equivalents"
+    },
+    {
+      "name": "vehicle_pricing_models"
+    },
+    {
+      "name": "wallet_audit_log"
+    },
+    {
+      "name": "wallet_split_config"
+    },
+    {
+      "name": "wallet_transaction_backups"
+    },
+    {
+      "name": "withdrawal_transactions"
+    },
+    {
+      "name": "realtime"
+    },
+    {
+      "name": "storage"
+    }
+  ]
+}

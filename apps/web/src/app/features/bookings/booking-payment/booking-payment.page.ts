@@ -17,6 +17,7 @@ import { finalize } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { BonusMalusService } from '../../../core/services/bonus-malus.service';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
 import { MercadoPagoPaymentService } from '../../../core/services/mercadopago-payment.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -70,6 +71,7 @@ export class BookingPaymentPage implements OnInit {
   private readonly mercadopagoService = inject(MercadoPagoPaymentService);
   private readonly mercadoPagoScriptService = inject(MercadoPagoScriptService);
   private readonly toastService = inject(ToastService);
+  private readonly bonusMalusService = inject(BonusMalusService);
 
   // State
   readonly loading = signal(true);
@@ -80,6 +82,14 @@ export class BookingPaymentPage implements OnInit {
   readonly showPaymentOptions = signal(false);
   readonly selectedOption = signal<PaymentOption['id'] | null>(null);
 
+  // Bonus-Malus state
+  readonly bonusMalusData = signal<{
+    adjustedDepositCents: number;
+    factor: number;
+    savings: number;
+  } | null>(null);
+  readonly bonusMalusLoading = signal(false);
+
   // Computed values
   readonly walletBalance = this.walletService.availableBalance;
 
@@ -88,10 +98,37 @@ export class BookingPaymentPage implements OnInit {
     return this.paymentMethod() === 'credit_card' ? 'card' : 'wallet';
   });
 
-  readonly depositAmount = computed(() => {
+  // Original deposit amount from booking (before bonus-malus)
+  readonly originalDepositAmount = computed(() => {
     const bookingData = this.booking();
     if (!bookingData) return 0;
     return (bookingData.deposit_amount_cents || 0) / 100;
+  });
+
+  // Adjusted deposit amount (with bonus-malus applied)
+  readonly depositAmount = computed(() => {
+    const bmData = this.bonusMalusData();
+    if (bmData) {
+      return bmData.adjustedDepositCents / 100;
+    }
+    return this.originalDepositAmount();
+  });
+
+  // Savings from bonus-malus
+  readonly depositSavings = computed(() => {
+    const bmData = this.bonusMalusData();
+    return bmData ? bmData.savings / 100 : 0;
+  });
+
+  // Bonus-malus factor for display
+  readonly bonusMalusFactor = computed(() => {
+    const bmData = this.bonusMalusData();
+    return bmData ? bmData.factor : 1;
+  });
+
+  // Whether user has a discount on deposit
+  readonly hasDepositDiscount = computed(() => {
+    return this.depositSavings() > 0;
   });
 
   // Desglose de costos para transparencia
@@ -229,6 +266,9 @@ export class BookingPaymentPage implements OnInit {
           if (booking.car) {
             this.car.set(booking.car as Car);
           }
+
+          // Load bonus-malus adjustment for deposit
+          this.loadBonusMalusAdjustment();
         },
         error: (error) => {
           console.error('[BookingPayment] Error loading booking:', error);
@@ -247,6 +287,31 @@ export class BookingPaymentPage implements OnInit {
         console.error('[BookingPayment] Error loading wallet balance:', error);
       },
     });
+  }
+
+  private async loadBonusMalusAdjustment(): Promise<void> {
+    const bookingData = this.booking();
+    if (!bookingData || !bookingData.deposit_amount_cents) return;
+
+    this.bonusMalusLoading.set(true);
+    try {
+      const result = await this.bonusMalusService.applyBonusMalusToDeposit(
+        bookingData.deposit_amount_cents
+      );
+      this.bonusMalusData.set(result);
+
+      // Log for debugging
+      if (result.savings > 0) {
+        console.log(
+          `[BookingPayment] Bonus-malus applied: factor=${result.factor}, savings=${result.savings / 100} USD`
+        );
+      }
+    } catch (error) {
+      console.error('[BookingPayment] Error loading bonus-malus:', error);
+      // Continue without bonus-malus adjustment - user pays full deposit
+    } finally {
+      this.bonusMalusLoading.set(false);
+    }
   }
 
   selectPaymentOption(optionId: PaymentOption['id']): void {

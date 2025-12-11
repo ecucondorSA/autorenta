@@ -32,6 +32,81 @@
     </button>
   </div>
 
+  <!-- Expiring Credits Alert -->
+  @if (expiringCredits().length > 0) {
+    <div
+      class="mb-4 p-4 rounded-xl border-l-4 shadow-soft"
+      [ngClass]="{
+        'bg-error-bg dark:bg-error-900/20 border-error-500': hasUrgentExpiringCredits(),
+        'bg-warning-bg dark:bg-warning-bg0/15 border-warning-border': !hasUrgentExpiringCredits()
+      }"
+      data-testid="expiring-credits-alert"
+    >
+      <div class="flex items-start gap-3">
+        <svg
+          class="w-6 h-6 flex-shrink-0"
+          [ngClass]="{
+            'text-error-500 animate-pulse': hasUrgentExpiringCredits(),
+            'text-warning-text': !hasUrgentExpiringCredits()
+          }"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div class="flex-1">
+          <h3
+            class="text-sm font-semibold"
+            [ngClass]="{
+              'text-error-strong': hasUrgentExpiringCredits(),
+              'text-warning-strong': !hasUrgentExpiringCredits()
+            }"
+          >
+            {{ hasUrgentExpiringCredits() ? '¡Créditos por vencer!' : 'Créditos próximos a vencer' }}
+          </h3>
+          <p
+            class="text-sm mt-1"
+            [ngClass]="{
+              'text-error-700 dark:text-error-300': hasUrgentExpiringCredits(),
+              'text-warning-strong dark:text-warning-100': !hasUrgentExpiringCredits()
+            }"
+          >
+            Tienes {{ formatCurrency(totalExpiringAmount() / 100) }} en créditos que vencerán pronto.
+            ¡Úsalos antes de que expiren!
+          </p>
+          <div class="mt-2 space-y-1">
+            @for (credit of expiringCredits(); track credit.transaction_id) {
+              <div
+                class="flex justify-between text-xs"
+                [ngClass]="{
+                  'text-error-600 dark:text-error-300': credit.days_until_expiry <= 7,
+                  'text-warning-700 dark:text-warning-200': credit.days_until_expiry > 7
+                }"
+              >
+                <span>{{ formatCurrency(credit.amount_cents / 100) }}</span>
+                <span class="font-medium">
+                  @if (credit.days_until_expiry <= 1) {
+                    ¡Vence hoy!
+                  } @else if (credit.days_until_expiry <= 7) {
+                    Vence en {{ credit.days_until_expiry }} días
+                  } @else {
+                    Vence en {{ credit.days_until_expiry }} días
+                  }
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
   <!-- Pending Deposits Toast Notification -->
   <div
     *ngIf="showPendingDepositsNotification() && hasPendingDeposits()"

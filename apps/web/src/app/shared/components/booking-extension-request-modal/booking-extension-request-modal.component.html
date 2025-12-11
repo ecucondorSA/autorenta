@@ -1,0 +1,59 @@
+<ion-modal [isOpen]="isOpen" (willDismiss)="closeModal.emit()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Solicitar Extensión de Reserva</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal.emit()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <h3 class="ion-text-center">Extender Reserva para:</h3>
+      <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
+      <p class="ion-text-center ion-text-secondary">
+        Fecha de fin actual: {{ booking.end_at | date:'mediumDate' }}
+      </p>
+
+      <ion-item class="ion-margin-top">
+        <ion-label position="stacked">Nueva Fecha de Fin</ion-label>
+        <ion-input
+          type="date"
+          [value]="newEndDateStr()"
+          [min]="minDate()"
+          [max]="maxDate()"
+          (ionChange)="onDateChange($event)"
+          aria-label="Nueva Fecha de Fin"
+        ></ion-input>
+      </ion-item>
+
+      <div *ngIf="error()" class="ion-padding-top ion-text-danger ion-text-center">
+        {{ error() }}
+      </div>
+
+      <div *ngIf="loadingCost()" class="ion-text-center ion-padding-top">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Calculando costo estimado...</p>
+      </div>
+
+      <div *ngIf="estimatedCost()" class="ion-margin-top ion-text-center">
+        <p>Costo adicional estimado:</p>
+        <h2 class="ion-text-primary ion-text-bold">
+          {{ estimatedCost() | currency:'ARS':'symbol':'1.2-2' }}
+        </h2>
+        <p class="ion-text-secondary ion-text-sm">
+          Este es un costo estimado. El anfitrión deberá aprobar la extensión.
+        </p>
+      </div>
+
+      <ion-button
+        expand="block"
+        class="ion-margin-top"
+        (click)="request()"
+        [disabled]="loadingCost() || !estimatedCost()"
+      >
+        Solicitar Extensión
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>

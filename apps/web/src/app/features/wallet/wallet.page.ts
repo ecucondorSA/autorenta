@@ -290,15 +290,16 @@ export class WalletPage implements AfterViewInit, OnInit {
   /**
    * Navega a la página de depósito
    */
-  navigateToDeposit(): void {
-    void this.router.navigate(['/wallet/deposit']);
+  navigateToDeposit(amount?: number): void {
+    const queryParams = amount ? { amount } : {};
+    void this.router.navigate(['/wallet/deposit'], { queryParams });
   }
 
   /**
    * Navega a la página de depósito (alias para compatibilidad)
    */
-  openDepositModal(): void {
-    this.navigateToDeposit();
+  openDepositModal(amount?: number): void {
+    this.navigateToDeposit(amount);
   }
 
   /**

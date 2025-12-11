@@ -1,0 +1,74 @@
+<ion-modal [isOpen]="isOpen" (willDismiss)="onCancel()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Reportar No-Show del Propietario</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="onCancel()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <h3 class="ion-text-center">Reportar no-show para la reserva:</h3>
+      <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
+      <p class="ion-text-center ion-text-secondary">
+        ID de Reserva: {{ booking.id | slice:0:8 }}
+      </p>
+
+      <div class="ion-padding-vertical">
+        <p>
+          Si el propietario no se presentó en el lugar y hora acordados para la entrega del vehículo,
+          puedes reportar la situación aquí. Esto iniciará el protocolo de no-show.
+        </p>
+        <p class="ion-text-danger">
+          <strong>¡Importante!</strong> No abandones el lugar de encuentro hasta que se te indique.
+          Toma fotos y reúne toda la evidencia posible.
+        </p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-label position="stacked">Detalles del Incidente *</ion-label>
+          <ion-textarea
+            [(ngModel)]="details"
+            [ngModelOptions]="{ standalone: true }"
+            rows="5"
+            placeholder="Describe lo sucedido: fecha, hora de espera, intentos de contacto, etc."
+            required
+            aria-label="Detalles del Incidente"
+          ></ion-textarea>
+        </ion-item>
+
+        <!-- TODO: Add evidence uploader when generic component is available -->
+        <ion-item>
+          <ion-label position="stacked">Evidencias (Opcional)</ion-label>
+          <ion-note>Funcionalidad de subida de evidencias próximamente</ion-note>
+        </ion-item>
+
+        <div *ngIf="formError()" class="ion-padding-top ion-text-danger ion-text-center">
+          {{ formError() }}
+        </div>
+
+        <ion-button
+          expand="block"
+          class="ion-margin-top"
+          type="submit"
+          [disabled]="loading()"
+        >
+          <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
+          Reportar No-Show
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="ion-margin-top"
+          (click)="onCancel()"
+          [disabled]="loading()"
+        >
+          Cancelar
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

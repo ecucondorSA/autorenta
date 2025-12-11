@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { BonusProgress } from '../../../core/models/organization.model';
 
 export interface Organization {
   id: string;
@@ -99,5 +100,12 @@ export class OrganizationService {
     }
 
     return { ...org, role: 'owner' };
+  }
+
+  async getBonusesProgress(organizationId: string): Promise<BonusProgress[]> {
+    // TODO: Implement actual bonus progress fetching from database
+    // For now, return empty array as this feature is not yet implemented
+    console.log('getBonusesProgress called for org:', organizationId);
+    return [];
   }
 }

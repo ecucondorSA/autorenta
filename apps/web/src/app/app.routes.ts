@@ -249,6 +249,27 @@ export const routes: Routes = [
           import('./features/admin/pricing/admin-pricing.page').then((m) => m.AdminPricingPage),
       },
       {
+        path: 'suspended-users',
+        loadComponent: () =>
+          import('./features/admin/suspended-users/admin-suspended-users.page').then(
+            (m) => m.AdminSuspendedUsersPage,
+          ),
+      },
+      {
+        path: 'traffic-infractions',
+        loadComponent: () =>
+          import('./features/admin/traffic-infractions/admin-traffic-infractions.page').then(
+            (m) => m.AdminTrafficInfractionsPage,
+          ),
+      },
+      {
+        path: 'accidents',
+        loadComponent: () =>
+          import('./features/admin/accidents/admin-accidents.page').then(
+            (m) => m.AdminAccidentsPage,
+          ),
+      },
+      {
         path: 'organizations', // Nueva ruta para organizaciones
         loadComponent: () =>
           import('./features/organizations/pages/organization-dashboard.component').then(

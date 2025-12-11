@@ -1056,4 +1056,159 @@ export class AdminService {
 
     if (error) throw error;
   }
+
+  // ============================================================================
+  // RPC INTEGRATIONS - Account Suspension & Debt Management
+  // ============================================================================
+
+  /**
+   * Obtiene usuarios con deuda (balance negativo)
+   * Para el panel de administración de suspensiones
+   */
+  async getUsersWithDebt(options?: {
+    minDays?: number;
+    limit?: number;
+    offset?: number;
+  }): Promise<{
+    users: Array<{
+      userId: string;
+      fullName: string;
+      email: string;
+      balanceCents: number;
+      debtStartDate: string;
+      daysSinceDebt: number;
+      isSuspended: boolean;
+      suspendedAt: string | null;
+      suspensionReason: string | null;
+    }>;
+    total: number;
+  }> {
+    try {
+      // Check permission
+      const hasPermission = await this.hasPermission('view_users');
+      if (!hasPermission) {
+        throw new Error('Insufficient permissions to view users with debt');
+      }
+
+      const { data, error } = await this.supabase.rpc('get_users_with_debt', {
+        p_min_days: options?.minDays ?? 0,
+        p_limit: options?.limit ?? 50,
+        p_offset: options?.offset ?? 0,
+      });
+
+      if (error) throw error;
+
+      return {
+        users: (data?.users ?? []).map((u: Record<string, unknown>) => ({
+          userId: u.user_id as string,
+          fullName: u.full_name as string,
+          email: u.email as string,
+          balanceCents: u.balance_cents as number,
+          debtStartDate: u.debt_start_date as string,
+          daysSinceDebt: u.days_since_debt as number,
+          isSuspended: u.is_suspended as boolean,
+          suspendedAt: u.suspended_at as string | null,
+          suspensionReason: u.suspension_reason as string | null,
+        })),
+        total: data?.total ?? 0,
+      };
+    } catch (error) {
+      this.logger.error('Error fetching users with debt', 'AdminService', error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Suspende manualmente una cuenta por deuda
+   */
+  async suspendAccountForDebt(
+    userId: string,
+    reason: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const hasPermission = await this.hasPermission('suspend_users');
+      if (!hasPermission) {
+        throw new Error('Insufficient permissions to suspend users');
+      }
+
+      const { error } = await this.supabase.rpc('suspend_account_manual', {
+        p_user_id: userId,
+        p_reason: reason,
+      });
+
+      if (error) throw error;
+
+      // Log action
+      await this.logAction({
+        action: 'suspend_account',
+        resourceType: 'user',
+        resourceId: userId,
+        details: { reason },
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al suspender cuenta',
+      };
+    }
+  }
+
+  /**
+   * Reactiva una cuenta suspendida (después de pagar deuda)
+   */
+  async unsuspendAccount(userId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const hasPermission = await this.hasPermission('suspend_users');
+      if (!hasPermission) {
+        throw new Error('Insufficient permissions to unsuspend users');
+      }
+
+      const { error } = await this.supabase.rpc('unsuspend_account', {
+        p_user_id: userId,
+      });
+
+      if (error) throw error;
+
+      // Log action
+      await this.logAction({
+        action: 'unsuspend_account',
+        resourceType: 'user',
+        resourceId: userId,
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al reactivar cuenta',
+      };
+    }
+  }
+
+  /**
+   * Verifica si un usuario puede operar (no está suspendido)
+   */
+  async canUserOperate(userId?: string): Promise<{
+    canOperate: boolean;
+    reason?: string;
+    suspendedAt?: string;
+  }> {
+    try {
+      const { data, error } = await this.supabase.rpc('can_user_operate', {
+        p_user_id: userId || null,
+      });
+
+      if (error) throw error;
+
+      return {
+        canOperate: data?.can_operate ?? true,
+        reason: data?.reason,
+        suspendedAt: data?.suspended_at,
+      };
+    } catch {
+      return { canOperate: true }; // Default to allowing operation on error
+    }
+  }
 }

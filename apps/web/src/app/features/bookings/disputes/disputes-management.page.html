@@ -163,24 +163,35 @@
       </ion-card-header>
       <ion-card-content>
         <!-- Evidence Gallery -->
-        <div *ngIf="evidence().length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-          <div *ngFor="let item of evidence()" class="relative">
-            <img
-              *ngIf="isImage(item.path)"
-              [src]="item.path"
-              [alt]="item.note || 'Evidencia'"
-              class="w-full h-48 object-cover rounded"
-            />
-            <div
-              *ngIf="!isImage(item.path)"
-              class="w-full h-48 bg-surface-raised rounded flex items-center justify-center"
-            >
-              <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+        <div *ngIf="evidence().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+          <div *ngFor="let item of evidence()" class="relative p-3 rounded-lg border border-border-default bg-surface-base">
+            <div *ngIf="item.path; else textCommentTemplate" class="h-48">
+              <img
+                *ngIf="isImage(item.path)"
+                [src]="item.path"
+                [alt]="item.note || 'Evidencia'"
+                class="w-full h-full object-cover rounded"
+              />
+              <div
+                *ngIf="!isImage(item.path)"
+                class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
+              >
+                <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+              </div>
+              <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
+              <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
+                Ver completo
+              </a>
             </div>
-            <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
-            <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
-              Ver completo
-            </a>
+            <ng-template #textCommentTemplate>
+              <div class="flex flex-col h-full justify-between">
+                <div>
+                  <h4 class="font-semibold text-text-primary mb-1">Comentario:</h4>
+                  <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
+                </div>
+                <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
+              </div>
+            </ng-template>
           </div>
         </div>
 
@@ -219,6 +230,29 @@
             {{ uploadingEvidence() ? 'Subiendo...' : 'Subir Evidencias' }}
           </ion-button>
         </div>
+
+        <!-- NEW: Add Comment Section -->
+        <div class="mt-6 pt-6 border-t">
+          <h3 class="text-lg font-semibold mb-3">Agregar Comentario</h3>
+          <ion-item class="mb-4">
+            <ion-label position="stacked">Tu Comentario</ion-label>
+            <ion-textarea
+              [(ngModel)]="newComment"
+              name="newComment"
+              rows="3"
+              placeholder="Escribe tu respuesta o comentario..."
+            ></ion-textarea>
+          </ion-item>
+          <ion-button
+            expand="block"
+            (click)="addCommentToSelectedDispute()"
+            [disabled]="!newComment() || newComment().trim() === '' || uploadingEvidence()"
+          >
+            <ion-icon name="send" slot="start"></ion-icon>
+            Enviar Comentario
+          </ion-button>
+        </div>
+        <!-- END NEW -->
 
         <ion-button expand="block" fill="outline" class="mt-4" (click)="closeEvidenceModal()">
           Cerrar

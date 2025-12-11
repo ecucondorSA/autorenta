@@ -9,6 +9,7 @@ import {
   DisputeStatus,
 } from '../../../core/services/disputes.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { NotificationManagerService } from '../../../core/services/notification-manager.service'; // NEW: Import toast service
 
 @Component({
   selector: 'app-admin-disputes',
@@ -20,12 +21,18 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 export class AdminDisputesPage implements OnInit {
   private readonly disputesService = inject(DisputesService);
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly toastService = inject(NotificationManagerService); // NEW: Inject toast service
 
   readonly loading = signal(false);
   readonly disputes = signal<Dispute[]>([]);
   readonly selectedDispute = signal<Dispute | null>(null);
   readonly evidence = signal<DisputeEvidence[]>([]);
   readonly showDetailModal = signal(false);
+
+  // NEW: Resolution fields
+  readonly resolutionReason = signal('');
+  readonly resolutionAmount = signal<number | null>(null);
+  readonly resolutionCurrency = signal<string | null>('ARS');
 
   readonly filters = signal({
     status: '' as DisputeStatus | '',
@@ -61,6 +68,7 @@ export class AdminDisputesPage implements OnInit {
       this.disputes.set((data || []) as Dispute[]);
     } catch (err) {
       console.error('Error loading disputes:', err);
+      this.toastService.error('Error', 'No se pudieron cargar las disputas');
     } finally {
       this.loading.set(false);
     }
@@ -69,12 +77,18 @@ export class AdminDisputesPage implements OnInit {
   async openDetailModal(dispute: Dispute): Promise<void> {
     this.selectedDispute.set(dispute);
     this.loading.set(true);
+    // Pre-populate resolution fields
+    this.resolutionReason.set(dispute.dispute_resolution || ''); // Use dispute_resolution
+    this.resolutionAmount.set(dispute.resolution_amount || null);
+    this.resolutionCurrency.set(dispute.resolution_currency || 'ARS'); // Default or pre-populate
+
     try {
       const evidenceList = await this.disputesService.listEvidence(dispute.id);
       this.evidence.set(evidenceList);
       this.showDetailModal.set(true);
     } catch (err) {
       console.error('Error loading evidence:', err);
+      this.toastService.error('Error', 'No se pudieron cargar las evidencias'); // Add toast
     } finally {
       this.loading.set(false);
     }
@@ -84,26 +98,43 @@ export class AdminDisputesPage implements OnInit {
     this.showDetailModal.set(false);
     this.selectedDispute.set(null);
     this.evidence.set([]);
+    this.resolutionReason.set(''); // Clear
+    this.resolutionAmount.set(null); // Clear
+    this.resolutionCurrency.set('ARS'); // Reset to default
   }
 
   async updateStatus(disputeId: string, newStatus: DisputeStatus): Promise<void> {
     this.loading.set(true);
     try {
-      const supabase = this.supabaseService.getClient();
-      const { error } = await supabase
-        .from('disputes')
-        .update({
-          status: newStatus,
-          resolved_at:
-            newStatus === 'resolved' || newStatus === 'rejected' ? new Date().toISOString() : null,
-        })
-        .eq('id', disputeId);
+      // Map status to resolution type for RPC
+      const resolutionMap: Record<string, 'favor_renter' | 'favor_owner' | 'split' | 'rejected'> = {
+        resolved: 'favor_renter', // Default, can be changed via UI
+        rejected: 'rejected',
+      };
 
-      if (error) throw error;
+      if (newStatus === 'resolved' || newStatus === 'rejected') {
+        // Use the new RPC method for final resolutions
+        const result = await this.disputesService.resolveDisputeRpc({
+          disputeId,
+          resolution: resolutionMap[newStatus] || 'rejected',
+          resolutionAmountCents: this.resolutionAmount() ? Math.round(this.resolutionAmount()! * 100) : undefined,
+          resolutionNotes: this.resolutionReason().trim() || undefined,
+        });
+
+        if (!result.success) {
+          throw new Error(result.error || 'Error al resolver disputa');
+        }
+      } else {
+        // For intermediate statuses (in_review), use the direct update
+        await this.disputesService.updateStatus(disputeId, newStatus);
+      }
+
       await this.loadAllDisputes();
       this.closeDetailModal();
+      this.toastService.success('Estado de disputa actualizado', '');
     } catch (err) {
       console.error('Error updating status:', err);
+      this.toastService.error('Error', err instanceof Error ? err.message : 'Error al actualizar el estado de la disputa');
     } finally {
       this.loading.set(false);
     }

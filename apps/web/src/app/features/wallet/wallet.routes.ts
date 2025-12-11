@@ -9,7 +9,9 @@ export const WALLET_ROUTES: Routes = [
   {
     path: 'history',
     loadComponent: () =>
-      import('./components/ledger-history.component').then((m) => m.LedgerHistoryComponent),
+      import('../../shared/components/transaction-history/transaction-history.component').then(
+        (m) => m.TransactionHistoryComponent,
+      ),
     title: 'Historial de Movimientos - AutoRenta',
   },
   {

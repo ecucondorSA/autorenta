@@ -307,4 +307,147 @@ export class BonusMalusService {
       };
     }
   }
+
+  // ============================================================================
+  // RPC INTEGRATIONS - Backend Functions
+  // ============================================================================
+
+  /**
+   * Aplica el factor bonus-malus al depósito de seguridad
+   * Retorna el depósito ajustado según el historial del usuario
+   */
+  async applyBonusMalusToDeposit(
+    baseDepositCents: number,
+    userId?: string,
+  ): Promise<{
+    adjustedDepositCents: number;
+    factor: number;
+    savings: number;
+  }> {
+    try {
+      let targetUserId = userId;
+      if (!targetUserId) {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        targetUserId = user?.id;
+      }
+
+      const { data, error } = await this.supabase.rpc('apply_bonus_malus_to_deposit', {
+        p_user_id: targetUserId,
+        p_base_deposit_cents: baseDepositCents,
+      });
+
+      if (error) throw error;
+
+      return {
+        adjustedDepositCents: data?.adjusted_deposit_cents ?? baseDepositCents,
+        factor: data?.factor ?? 0,
+        savings: baseDepositCents - (data?.adjusted_deposit_cents ?? baseDepositCents),
+      };
+    } catch {
+      // Fallback: return base deposit without adjustment
+      return {
+        adjustedDepositCents: baseDepositCents,
+        factor: 0,
+        savings: 0,
+      };
+    }
+  }
+
+  /**
+   * Obtiene el score de riesgo completo del usuario
+   * Incluye desglose de bonificaciones y penalizaciones
+   */
+  async getUserRiskScore(userId?: string): Promise<{
+    totalScore: number;
+    riskLevel: 'low' | 'medium' | 'high';
+    bonuses: Array<{ type: string; value: number; description: string }>;
+    maluses: Array<{ type: string; value: number; description: string }>;
+    lastCalculated: string | null;
+  } | null> {
+    try {
+      let targetUserId = userId;
+      if (!targetUserId) {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        targetUserId = user?.id;
+      }
+
+      const { data, error } = await this.supabase.rpc('get_user_risk_score', {
+        p_user_id: targetUserId,
+      });
+
+      if (error) throw error;
+
+      // Determine risk level based on score
+      const score = data?.total_score ?? 0;
+      let riskLevel: 'low' | 'medium' | 'high' = 'medium';
+      if (score <= -0.1) riskLevel = 'low';
+      else if (score >= 0.1) riskLevel = 'high';
+
+      return {
+        totalScore: score,
+        riskLevel,
+        bonuses: data?.bonuses ?? [],
+        maluses: data?.maluses ?? [],
+        lastCalculated: data?.last_calculated ?? null,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Obtiene el nivel de renter del usuario
+   * Niveles: basic, verified, premium
+   */
+  async getRenterLevel(userId?: string): Promise<{
+    level: 'basic' | 'verified' | 'premium';
+    requirements: {
+      emailVerified: boolean;
+      phoneVerified: boolean;
+      dniVerified: boolean;
+      licenseVerified: boolean;
+      selfieVerified: boolean;
+      minRentals: number;
+      currentRentals: number;
+      minRating: number;
+      currentRating: number;
+      noLostDisputes: boolean;
+    };
+    nextLevel: 'verified' | 'premium' | null;
+    missingRequirements: string[];
+  } | null> {
+    try {
+      let targetUserId = userId;
+      if (!targetUserId) {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        targetUserId = user?.id;
+      }
+
+      const { data, error } = await this.supabase.rpc('get_renter_level', {
+        p_user_id: targetUserId,
+      });
+
+      if (error) throw error;
+
+      return {
+        level: data?.level ?? 'basic',
+        requirements: data?.requirements ?? {
+          emailVerified: false,
+          phoneVerified: false,
+          dniVerified: false,
+          licenseVerified: false,
+          selfieVerified: false,
+          minRentals: 5,
+          currentRentals: 0,
+          minRating: 4.5,
+          currentRating: 0,
+          noLostDisputes: true,
+        },
+        nextLevel: data?.next_level ?? null,
+        missingRequirements: data?.missing_requirements ?? [],
+      };
+    } catch {
+      return null;
+    }
+  }
 }

@@ -190,15 +190,20 @@ export class DisputeFormComponent {
     this.error.set(null);
 
     try {
-      const newDispute: Dispute = await this.disputesService.createDispute({
+      // Usar el método RPC que tiene lógica completa del backend
+      const result = await this.disputesService.openDisputeRpc({
         bookingId: this.bookingId(),
         kind: this.selectedKind as DisputeKind,
         description: this.description.trim(),
       });
-      this.createdDisputeId.set(newDispute.id); // Almacenar el ID de la disputa creada
 
+      if (!result.success) {
+        throw new Error(result.error || 'Error al crear la disputa');
+      }
+
+      this.createdDisputeId.set(result.disputeId || null);
       this.toastService.success('Disputa creada exitosamente. Ahora puedes añadir evidencias.', '');
-      // No cerramos el modal, permitimos subir evidencia
+      this.disputeCreated.emit();
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al crear la disputa');
     } finally {

@@ -164,30 +164,49 @@
               <p *ngIf="selectedDispute()?.resolved_at" class="text-sm">
                 <strong>Resuelta:</strong> {{ formatDate(selectedDispute()?.resolved_at ?? null) }}
               </p>
+              <!-- NEW: Display Resolution Details -->
+              <p *ngIf="selectedDispute()?.dispute_resolution" class="text-sm">
+                <strong>Razón de Resolución:</strong> {{ selectedDispute()!.dispute_resolution }}
+              </p>
+              <p *ngIf="selectedDispute()?.resolution_amount" class="text-sm">
+                <strong>Monto de Resolución:</strong>
+                {{ selectedDispute()!.resolution_amount | currency:selectedDispute()!.resolution_currency:'symbol':'1.2-2' }}
+              </p>
             </div>
           </div>
 
           <!-- Evidence Gallery -->
           <div>
             <h3 class="text-lg font-semibold mb-2">Evidencias ({{ evidence().length }})</h3>
-            <div *ngIf="evidence().length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div *ngFor="let item of evidence()" class="relative">
-                <img
-                  *ngIf="isImage(item.path)"
-                  [src]="item.path"
-                  [alt]="item.note || 'Evidencia'"
-                  class="w-full h-48 object-cover rounded"
-                />
-                <div
-                  *ngIf="!isImage(item.path)"
-                  class="w-full h-48 bg-surface-raised rounded flex items-center justify-center"
-                >
-                  <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+            <div *ngIf="evidence().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div *ngFor="let item of evidence()" class="relative p-3 rounded-lg border border-border-default bg-surface-base">
+                <div *ngIf="item.path; else textCommentTemplate" class="h-48">
+                  <img
+                    *ngIf="isImage(item.path)"
+                    [src]="item.path"
+                    [alt]="item.note || 'Evidencia'"
+                    class="w-full h-full object-cover rounded"
+                  />
+                  <div
+                    *ngIf="!isImage(item.path)"
+                    class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
+                  >
+                    <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+                  </div>
+                  <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
+                  <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
+                    Ver completo
+                  </a>
                 </div>
-                <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
-                <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
-                  Ver completo
-                </a>
+                <ng-template #textCommentTemplate>
+                  <div class="flex flex-col h-full justify-between">
+                    <div>
+                      <h4 class="font-semibold text-text-primary mb-1">Comentario:</h4>
+                      <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
+                    </div>
+                    <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
+                  </div>
+                </ng-template>
               </div>
             </div>
             <div *ngIf="evidence().length === 0" class="text-center py-8 text-text-secondary">
@@ -198,6 +217,28 @@
           <!-- Actions -->
           <div class="pt-4 border-t">
             <h3 class="text-lg font-semibold mb-3">Acciones</h3>
+            <!-- Resolution Inputs (conditional visibility) -->
+            <div *ngIf="selectedDispute() && ['open', 'in_review'].includes(selectedDispute()!.status)">
+              <ion-item class="mb-3">
+                <ion-label position="stacked">Razón de Resolución (Opcional)</ion-label>
+                <ion-textarea
+                  [(ngModel)]="resolutionReason"
+                  name="resolutionReason"
+                  rows="3"
+                  placeholder="Describe la razón de la resolución..."
+                ></ion-textarea>
+              </ion-item>
+              <ion-item class="mb-4">
+                <ion-label position="stacked">Monto de Resolución (ARS, Opcional)</ion-label>
+                <ion-input
+                  type="number"
+                  [(ngModel)]="resolutionAmount"
+                  name="resolutionAmount"
+                  placeholder="Ej: 15000.00"
+                ></ion-input>
+              </ion-item>
+            </div>
+
             <div class="flex flex-wrap gap-2">
               <ion-button
                 *ngIf="selectedDispute()!.status !== 'in_review'"

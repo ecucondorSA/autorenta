@@ -46,6 +46,7 @@ export class DisputesManagementPage implements OnInit {
 
   readonly evidenceFiles = signal<File[]>([]);
   readonly evidenceNote = signal('');
+  readonly newComment = signal(''); // New signal for comment input
 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
@@ -147,6 +148,7 @@ export class DisputesManagementPage implements OnInit {
     this.evidence.set([]);
     this.evidenceFiles.set([]);
     this.evidenceNote.set('');
+    this.newComment.set(''); // Clear newComment when closing the modal
   }
 
   onEvidenceFilesSelected(event: Event): void {
@@ -204,6 +206,33 @@ export class DisputesManagementPage implements OnInit {
 
     await this.uploadEvidenceFiles(dispute.id);
     await this.openEvidenceModal(dispute); // Reload evidence
+  }
+
+  async addCommentToSelectedDispute(): Promise<void> {
+    const dispute = this.selectedDispute();
+    const comment = this.newComment();
+
+    if (!dispute || !comment.trim()) {
+      this.toastService.error('Error', 'El comentario no puede estar vacío');
+      return;
+    }
+
+    this.uploadingEvidence.set(true); // Reusing this for loading state
+    try {
+      await this.disputesService.addEvidence(
+        dispute.id,
+        '', // Empty path for text-only comment
+        comment.trim()
+      );
+      this.toastService.success('Comentario agregado exitosamente', '');
+      this.newComment.set(''); // Clear comment input
+      await this.openEvidenceModal(dispute); // Reload evidence to show new comment
+    } catch (err) {
+      console.error('Error adding comment:', err);
+      this.toastService.error('Error', 'Error al agregar comentario');
+    } finally {
+      this.uploadingEvidence.set(false);
+    }
   }
 
   getStatusLabel(status: Dispute['status']): string {

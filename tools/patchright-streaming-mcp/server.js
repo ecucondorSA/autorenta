@@ -136,7 +136,7 @@ async function mpTransfer(page, alias, amount, expectedName) {
 // ========== Configuration ==========
 const CONFIG = {
   headless: process.env.HEADLESS === 'true', // Default to false (visible) unless HEADLESS=true
-  profilePath: process.env.BROWSER_PROFILE || '/home/edu/.mercadopago-browser-profile',
+  profilePath: process.env.BROWSER_PROFILE || '/home/edu/.patchright-profile',
   executablePath: undefined, // Use bundled Chromium (most stable)
   eventBufferSize: 100,
   compactOutput: true,

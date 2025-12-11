@@ -677,6 +677,39 @@
                   </div>
                 </div>
               </div>
+
+              <!-- NEW: Report Owner No-Show Button -->
+              <div
+                *ngIf="canReportOwnerNoShow()"
+                class="p-4 rounded-xl bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 mt-4"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 text-error-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L12 12m0 0L5.636 5.636M12 12L5.636 5.636M12 12L18.364 5.636M12 12L18.364 5.636M12 12L5.636 18.364" />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-text-primary dark:text-text-inverse mb-1">
+                      El propietario no se presentó?
+                    </h4>
+                    <p class="text-sm text-text-secondary dark:text-text-secondary mb-3">
+                      Si el propietario no llegó a la hora acordada, reporta el incidente para iniciar
+                      el protocolo de no-show y buscar alternativas.
+                    </p>
+                    <button
+                      (click)="showReportOwnerNoShowModal.set(true)"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse rounded-lg font-medium transition-colors shadow-sm"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      Reportar No-Show
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             <!-- Check-in/Check-out Status (if completed) -->
@@ -950,6 +983,58 @@
           </div>
         }
 
+        <!-- NEW: Extension Request Section for Owners -->
+        <div *ngIf="isOwner() && hasPendingExtensionRequest()"
+             class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-primary-300 dark:border-primary-700/50"
+        >
+          <h3 class="h5 mb-4 flex items-center gap-2">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Solicitud de Extensión Pendiente
+          </h3>
+          <p class="text-sm text-text-secondary mb-4">
+            El locatario ha solicitado extender la reserva. Por favor, revisa los detalles y decide si apruebas o rechazas la solicitud.
+          </p>
+
+          <div *ngFor="let request of pendingExtensionRequests()" class="space-y-3 p-4 rounded-lg bg-surface-base border border-border-default mb-4 last:mb-0">
+            <p class="text-xs text-text-muted">Solicitud ID: {{ request.id | slice:0:8 }}</p>
+            <div class="flex justify-between items-center text-sm">
+              <span class="font-medium text-text-primary">Fecha de fin original:</span>
+              <span>{{ request.original_end_at | date:'mediumDate' }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="font-medium text-text-primary">Nueva fecha de fin solicitada:</span>
+              <span class="font-bold text-primary-600">{{ request.new_end_at | date:'mediumDate' }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="font-medium text-text-primary">Costo adicional estimado:</span>
+              <span class="font-bold text-success-strong">{{ request.estimated_cost_amount | currency:request.estimated_cost_currency:'symbol':'1.2-2' }}</span>
+            </div>
+            <div *ngIf="request.renter_message" class="pt-2 border-t border-border-default text-sm text-text-secondary">
+              <p class="font-medium">Mensaje del locatario:</p>
+              <p class="whitespace-pre-wrap">{{ request.renter_message }}</p>
+            </div>
+
+            <!-- Actions for each request -->
+            <div class="flex gap-2 mt-4">
+              <button
+                (click)="approveExtension(request.id)"
+                class="flex-1 px-4 py-2 bg-success-600 hover:bg-success-700 text-text-inverse rounded-lg font-medium transition-colors shadow-sm"
+              >
+                Aprobar
+              </button>
+              <button
+                (click)="rejectExtension(request.id)"
+                class="flex-1 px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse rounded-lg font-medium transition-colors shadow-sm"
+              >
+                Rechazar
+              </button>
+            </div>
+          </div>
+        </div>
+        
+
         <!-- Refund Request Section -->
         @if (canRequestRefund()) {
           <div class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft">
@@ -994,6 +1079,46 @@
           <div class="h-10 bg-surface-base animate-pulse rounded-lg border border-border-default"></div>
         }
 
+        <!-- Booking Extension Request Modal -->
+        @defer (when showExtensionRequestModal()) {
+          <app-booking-extension-request-modal
+            [isOpen]="showExtensionRequestModal()"
+            [booking]="booking()!"
+            (closeModal)="showExtensionRequestModal.set(false)"
+            (requestExtension)="onRequestExtension($event)"
+          ></app-booking-extension-request-modal>
+        }
+
+        <!-- Report Traffic Fine Modal -->
+        @defer (when showReportTrafficFineModal()) {
+          <app-report-traffic-fine
+            [isOpen]="showReportTrafficFineModal()"
+            [booking]="booking()!"
+            (closeModal)="showReportTrafficFineModal.set(false)"
+            (fineReported)="onTrafficFineReported($event)"
+          ></app-report-traffic-fine>
+        }
+
+        <!-- Report Owner No-Show Modal -->
+        @defer (when showReportOwnerNoShowModal()) {
+          <app-report-owner-no-show
+            [isOpen]="showReportOwnerNoShowModal()"
+            [booking]="booking()!"
+            (closeModal)="showReportOwnerNoShowModal.set(false)"
+            (noShowReported)="onOwnerNoShowReported($event)"
+          ></app-report-owner-no-show>
+        }
+
+        <!-- Report Renter No-Show Modal -->
+        @defer (when showReportRenterNoShowModal()) {
+          <app-report-renter-no-show
+            [isOpen]="showReportRenterNoShowModal()"
+            [booking]="booking()!"
+            (closeModal)="showReportRenterNoShowModal.set(false)"
+            (noShowReported)="onRenterNoShowReported($event)"
+          ></app-report-renter-no-show>
+        }
+
         <!-- Contract Section -->
         <div class="mt-6" *ngIf="booking()">
           @defer (on viewport) {
@@ -1008,103 +1133,232 @@
           <app-refund-status [bookingId]="booking()!.id"></app-refund-status>
         </div>
 
-        <!-- Owner Damage Report Button -->
-        <div
-          *ngIf="canReportDamage()"
-          class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-error-border"
-        >
-          <div class="flex items-start gap-4">
-            <div class="flex-shrink-0">
-              <svg
-                class="w-8 h-8 text-error-text"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-2">
-                ¿Detectaste daños en el vehículo?
-              </h3>
-              <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
-                Reporta cualquier daño detectado después de la devolución del vehículo. El monto
-                será deducido del depósito de garantía del locatario.
-              </p>
-              <a
-                [routerLink]="['/bookings', booking()?.id, 'owner-damage-report']"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse rounded-xl font-medium transition-base shadow-sm"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-                Reportar Daños
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Display Damage Report if already submitted -->
-        <div
-          *ngIf="isOwner() && booking()?.owner_reported_damages"
-          class="card-premium p-4 rounded-2xl shadow-soft border-l-4 border-warning-border bg-warning-bg dark:bg-warning-900/20"
-        >
-          <div class="flex items-start gap-4">
-            <div class="flex-shrink-0">
-              <svg
-                class="w-8 h-8 text-warning-text dark:text-warning-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2">
-                Reporte de Daños Enviado
-              </h3>
-              <div class="space-y-2">
-                <div class="flex justify-between items-center">
-                  <span class="text-sm text-warning-strong dark:text-warning-300"
-                    >Monto del daño:</span
-                  >
-                  <span class="font-semibold text-warning-strong dark:text-warning-100">
-                    ${{ (booking()?.owner_damage_amount ?? 0) / 100 }} USD
-                  </span>
-                </div>
-                <div
-                  *ngIf="booking()?.owner_damage_description"
-                  class="pt-2 border-t border-warning-border dark:border-warning-700"
-                >
-                  <p class="text-xs text-warning-strong dark:text-warning-300 font-medium mb-1">
-                    Descripción:
-                  </p>
-                  <p class="text-sm text-warning-strong dark:text-warning-100">
-                    {{ booking()?.owner_damage_description }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+                    <!-- Owner Damage Report Button -->
+                    <div
+                      *ngIf="canReportDamage()"
+                      class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-error-border"
+                    >
+                      <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0">
+                          <svg
+                            class="w-8 h-8 text-error-text"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                            />
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-2">
+                            ¿Detectaste daños en el vehículo?
+                          </h3>
+                          <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
+                            Reporta cualquier daño detectado después de la devolución del vehículo. El monto
+                            será deducido del depósito de garantía del locatario.
+                          </p>
+                          <a
+                            [routerLink]="['/bookings', booking()?.id, 'owner-damage-report']"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse rounded-xl font-medium transition-base shadow-sm"
+                          >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                              />
+                            </svg>
+                            Reportar Daños
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+        
+                    <!-- NEW: Report Traffic Fine Button -->
+                    <div
+                      *ngIf="canReportTrafficFine()"
+                      class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-l-4 border-warning-border"
+                    >
+                      <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0">
+                          <svg
+                            class="w-8 h-8 text-warning-strong"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 14l6-6m-6 0l6 6m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure mb-2">
+                            ¿Multa de Tránsito?
+                          </h3>
+                          <p class="text-sm text-text-secondary dark:text-text-secondary mb-4">
+                            Reporta una multa de tránsito recibida durante esta reserva.
+                          </p>
+                          <button
+                            (click)="showReportTrafficFineModal.set(true)"
+                            class="inline-flex items-center gap-2 px-4 py-2 bg-warning-600 hover:bg-warning-700 text-text-inverse rounded-xl font-medium transition-base shadow-sm"
+                          >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                              />
+                            </svg>
+                            Reportar Multa
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+        
+                                <!-- Display Damage Report if already submitted -->
+                                <div
+                                  *ngIf="isOwner() && booking()?.owner_reported_damages"
+                                  class="card-premium p-4 rounded-2xl shadow-soft border-l-4 border-warning-border bg-warning-bg dark:bg-warning-900/20"
+                                >
+                                  <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                      <svg
+                                        class="w-8 h-8 text-warning-text dark:text-warning-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"
+                                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                      </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                      <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2">
+                                        Reporte de Daños Enviado
+                                      </h3>
+                                      <div class="space-y-2">
+                                        <div class="flex justify-between items-center">
+                                          <span class="text-sm text-warning-strong dark:text-warning-300"
+                                            >Monto del daño:</span
+                                          >
+                                          <span class="font-semibold text-warning-strong dark:text-warning-100">
+                                            ${{ (booking()?.owner_damage_amount ?? 0) / 100 }} USD
+                                          </span>
+                                        </div>
+                                        <div
+                                          *ngIf="booking()?.owner_damage_description"
+                                          class="pt-2 border-t border-warning-border dark:border-warning-700"
+                                        >
+                                          <p class="text-xs text-warning-strong dark:text-warning-300 font-medium mb-1">
+                                            Descripción:
+                                          </p>
+                                          <p class="text-sm text-warning-strong dark:text-warning-100">
+                                            {{ booking()?.owner_damage_description }}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                    
+                                <!-- NEW: Report Renter No-Show Button -->
+                                <div
+                                  *ngIf="canReportRenterNoShow()"
+                                  class="card-premium p-4 rounded-2xl shadow-soft bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-l-4 border-error-border"
+                                >
+                                  <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0">
+                                      <svg class="w-8 h-8 text-error-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                      </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                      <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2">
+                                        ¿Locatario no se presentó?
+                                      </h3>
+                                      <p class="text-sm text-text-secondary dark:text-text-secondary mb-3">
+                                        Reporta si el locatario no llegó a la hora acordada para retirar el vehículo.
+                                        Esto iniciará el protocolo de no-show y se aplicarán penalidades.
+                                      </p>
+                                      <button
+                                        (click)="showReportRenterNoShowModal.set(true)"
+                                        class="inline-flex items-center gap-2 px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse rounded-xl font-medium transition-base shadow-sm"
+                                      >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        Reportar No-Show
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>        
+                    <!-- NEW: Traffic Fines Section (for both owner and renter) -->
+                    <div *ngIf="hasTrafficFines()"
+                         class="card-premium p-4 rounded-2xl shadow-soft border-2 border-warning-300 dark:border-warning-700/50"
+                    >
+                      <h3 class="h5 mb-4 flex items-center gap-2">
+                        <svg class="w-6 h-6 text-warning-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Multas de Tránsito
+                      </h3>
+        
+                      <div *ngFor="let fine of trafficFines()" class="space-y-3 p-4 rounded-lg bg-surface-base border border-border-default mb-4 last:mb-0">
+                        <p class="text-xs text-text-muted">Multa ID: {{ fine.id | slice:0:8 }}</p>
+                        <div class="flex justify-between items-center text-sm">
+                          <span class="font-medium text-text-primary">Fecha de infracción:</span>
+                          <span>{{ fine.infraction_date | date:'mediumDate' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                          <span class="font-medium text-text-primary">Monto:</span>
+                          <span class="font-bold text-error-strong">{{ (fine.amount_cents / 100) | currency:fine.currency:'symbol':'1.2-2' }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                          <span class="font-medium text-text-primary">Estado:</span>
+                          <span class="font-bold" [ngClass]="{'text-warning-strong': fine.status === 'pending', 'text-cta-default': fine.status === 'disputed', 'text-success-strong': fine.status === 'accepted'}">{{ fine.status | titlecase }}</span>
+                        </div>
+                        <div class="pt-2 border-t border-border-default text-sm text-text-secondary">
+                          <p class="font-medium">Descripción:</p>
+                          <p class="whitespace-pre-wrap">{{ fine.description }}</p>
+                        </div>
+                        <div *ngIf="fine.evidence_urls?.length" class="pt-2 border-t border-border-default text-sm text-text-secondary">
+                          <p class="font-medium">Evidencias:</p>
+                          <div class="grid grid-cols-2 gap-2 mt-2">
+                            <img *ngFor="let url of fine.evidence_urls" [src]="url" class="w-full h-24 object-cover rounded-lg" alt="Evidencia de multa">
+                          </div>
+                        </div>
+                        <div *ngIf="fine.dispute_reason" class="pt-2 border-t border-border-default text-sm text-text-secondary">
+                          <p class="font-medium text-cta-default">Razón de disputa:</p>
+                          <p class="whitespace-pre-wrap">{{ fine.dispute_reason }}</p>
+                        </div>
+        
+                        <!-- Actions for Renter to Dispute -->
+                        <div *ngIf="isRenter() && (fine.status === 'pending' || fine.status === 'accepted')" class="flex gap-2 mt-4">
+                          <button
+                            (click)="disputeTrafficFine(fine)"
+                            class="flex-1 px-4 py-2 bg-cta-default hover:bg-cta-hover text-text-inverse rounded-lg font-medium transition-colors shadow-sm"
+                          >
+                            Disputar Multa
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+        
         <!-- Bilateral Confirmation Section -->
         <div *ngIf="showConfirmationSection()" class="space-y-4">
           <!-- Timeline Component -->

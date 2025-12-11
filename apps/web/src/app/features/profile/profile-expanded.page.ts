@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProfileStore } from '../../core/stores/profile.store';
 import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
+import { BonusMalusCardComponent } from '../../shared/components/bonus-malus-card/bonus-malus-card.component';
+import { RenterLevelProgressComponent } from '../../shared/components/renter-level-progress/renter-level-progress.component';
 import { AuthService } from '../../core/services/auth.service';
 import { MetaService } from '../../core/services/meta.service';
 import { VerificationStateService } from '../../core/services/verification-state.service';
@@ -24,7 +26,7 @@ import { KycStatus } from '../../core/models';
 @Component({
   standalone: true,
   selector: 'app-profile-expanded-page',
-  imports: [CommonModule, RouterLink, DocumentUploadModalComponent],
+  imports: [CommonModule, RouterLink, DocumentUploadModalComponent, BonusMalusCardComponent, RenterLevelProgressComponent],
   templateUrl: './profile-expanded.page.html',
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

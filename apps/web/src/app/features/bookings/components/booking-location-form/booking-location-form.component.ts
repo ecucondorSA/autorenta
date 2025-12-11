@@ -41,6 +41,13 @@ export interface BookingLocationData {
  * Allows users to select pickup/dropoff locations and delivery preference
  * Calculates distance and delivery fees in real-time
  */
+// Simple location data for single location selection
+export interface LocationData {
+  address: string;
+  lat: number;
+  lng: number;
+}
+
 @Component({
   selector: 'app-booking-location-form',
   standalone: true,
@@ -64,12 +71,20 @@ export class BookingLocationFormComponent {
   private readonly geocodingService = inject(GeocodingService);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
 
+  // Original inputs
   @Input() carOwnerLat?: number;
   @Input() carOwnerLng?: number;
   @Input() carOwnerAddress?: string;
 
+  // New inputs for compatibility with booking-dates-step
+  @Input() initialLocation?: LocationData;
+  @Input() label?: string;
+  @Input() placeholder?: string;
+  @Input() suggestions?: LocationData[];
+
   @Output() locationSelected = new EventEmitter<BookingLocationData>();
   @Output() cancelled = new EventEmitter<void>();
+  @Output() locationChange = new EventEmitter<LocationData>();
 
   // State
   loading = signal(false);

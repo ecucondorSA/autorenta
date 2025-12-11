@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisputesService, Dispute, DisputeEvidence } from '../../../core/services/disputes.service';
+import { DisputeDetailComponent } from '../../../features/disputes/components/dispute-detail/dispute-detail.component';
 
 @Component({
   selector: 'app-disputes-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DisputeDetailComponent],
   template: `
     <div class="space-y-4">
       <!-- Header -->
@@ -43,7 +44,8 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
         <div class="space-y-3">
           @for (dispute of disputes(); track dispute.id) {
             <div
-              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4"
+              (click)="openDetail(dispute.id)"
+              class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4 cursor-pointer hover:border-cta-default transition-colors group"
             >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
@@ -65,13 +67,16 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
                       {{ getKindLabel(dispute.kind) }}
                     </span>
                   </div>
-                  <p class="text-sm text-text-primary dark:text-text-secondary">
+                  <p class="text-sm text-text-primary dark:text-text-secondary group-hover:text-cta-default transition-colors">
                     {{ dispute.description || 'Sin descripción' }}
                   </p>
                 </div>
-                <span class="text-xs text-text-secondary dark:text-text-muted">
-                  {{ formatDate(dispute.created_at) }}
-                </span>
+                <div class="flex flex-col items-end gap-1">
+                  <span class="text-xs text-text-secondary dark:text-text-muted">
+                    {{ formatDate(dispute.created_at) }}
+                  </span>
+                  <span class="text-xs text-cta-default opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</span>
+                </div>
               </div>
 
               <!-- Evidence Section -->
@@ -82,25 +87,24 @@ import { DisputesService, Dispute, DisputeEvidence } from '../../../core/service
                   </p>
                   <div class="space-y-1">
                     @for (evidence of disputeEvidenceMap().get(dispute.id); track evidence.id) {
-                      <div class="text-xs text-text-secondary dark:text-text-muted">
-                        • {{ evidence.note || 'Sin nota' }}
+                      <div class="text-xs text-text-secondary dark:text-text-muted truncate">
+                        • {{ evidence.note || 'Archivo adjunto' }}
                       </div>
                     }
                   </div>
                 </div>
               }
-
-              <!-- Resolution Info -->
-              @if (dispute.resolved_at) {
-                <div class="mt-3 pt-3 border-t border-border-default dark:border-border-muted">
-                  <p class="text-xs text-text-secondary dark:text-text-muted">
-                    Resuelto el {{ formatDate(dispute.resolved_at) }}
-                  </p>
-                </div>
-              }
             </div>
           }
         </div>
+      }
+
+      <!-- Detail Modal -->
+      @if (selectedDisputeId()) {
+        <app-dispute-detail 
+          [disputeId]="selectedDisputeId()!" 
+          (closeDetail)="closeDetail()"
+        ></app-dispute-detail>
       }
     </div>
   `,
@@ -116,6 +120,7 @@ export class DisputesListComponent implements OnInit {
   readonly disputes = signal<Dispute[]>([]);
   readonly disputeEvidenceMap = signal<Map<string, DisputeEvidence[]>>(new Map());
   readonly loading = signal(false);
+  readonly selectedDisputeId = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
     await this.loadDisputes();
@@ -144,6 +149,16 @@ export class DisputesListComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  openDetail(disputeId: string): void {
+    this.selectedDisputeId.set(disputeId);
+  }
+
+  closeDetail(): void {
+    this.selectedDisputeId.set(null);
+    // Reload to refresh evidence count or status if changed
+    this.loadDisputes();
   }
 
   getStatusLabel(status: Dispute['status']): string {

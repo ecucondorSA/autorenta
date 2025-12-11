@@ -57,7 +57,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   /**
    * Callback para cuando el usuario hace click en "Depositar"
    */
-  depositClickHandler?: () => void;
+  depositClickHandler?: (amount?: number) => void;
 
   /**
    * Permite configurar si mostrar el botón de depósito desde el componente padre
@@ -69,7 +69,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   /**
    * Permite configurar el handler de depósito desde el componente padre
    */
-  setDepositClickHandler(handler: () => void): void {
+  setDepositClickHandler(handler: (amount?: number) => void): void {
     this.depositClickHandler = handler;
   }
 
@@ -126,6 +126,21 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   readonly hasPendingDeposits = computed(() => this.pendingDeposits() > 0);
 
   /**
+   * Créditos que expiran pronto
+   */
+  readonly expiringCredits = this.walletService.expiringCredits;
+
+  /**
+   * Indica si hay créditos por vencer urgentemente (7 días o menos)
+   */
+  readonly hasUrgentExpiringCredits = this.walletService.hasUrgentExpiringCredits;
+
+  /**
+   * Total de créditos por vencer en centavos
+   */
+  readonly totalExpiringAmount = this.walletService.totalExpiringAmount;
+
+  /**
    * Controla si la notificación de depósitos pendientes está visible
    */
   readonly showPendingDepositsNotification = signal(false);
@@ -177,6 +192,9 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
     // Cargar pending deposits
     await this.loadPendingDeposits();
+
+    // Cargar créditos por vencer
+    await this.walletService.fetchExpiringCredits(30);
 
     // Subscribirse a cambios realtime en wallet
     await this.walletService.subscribeToWalletChanges(
@@ -257,10 +275,8 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    */
   payDebt(): void {
     const debtAmount = Math.abs(this.availableBalance());
-    // TODO: Pass amount to deposit handler if supported
-    // For now, just open the modal, the user will see their negative balance
     if (this.depositClickHandler) {
-      this.depositClickHandler();
+      this.depositClickHandler(debtAmount);
     }
   }
 

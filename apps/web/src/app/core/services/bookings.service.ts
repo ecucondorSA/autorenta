@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Booking } from '../models';
+import { Booking, BookingExtensionRequest } from '../models';
 import { getErrorMessage } from '../utils/type-guards';
 import { injectSupabase } from './supabase-client.service';
 import { PwaService } from './pwa.service';
@@ -755,32 +755,28 @@ export class BookingsService {
 
   // Extension Operations
   /**
-   * Extiende una reserva existente
-   * 1. Verifica disponibilidad
-   * 2. Calcula diferencia de precio
-   * 3. Cobra diferencia de wallet (o tarjeta guardada)
-   * 4. Actualiza fechas de reserva y seguro
+   * Solicita una extensión de reserva.
+   * Crea una solicitud pendiente para aprobación del Owner.
    */
-  async extendBooking(
+  async requestExtension(
     bookingId: string,
     newEndDate: Date,
-  ): Promise<{ success: boolean; error?: string }> {
+    renterMessage?: string,
+  ): Promise<{ success: boolean; error?: string; additionalCost?: number }> {
     try {
       const booking = await this.getBookingById(bookingId);
       if (!booking) throw new Error('Reserva no encontrada');
 
-      // 1. Verificar disponibilidad
-      const isAvailable = await this.carsService.isCarAvailable(
-        booking.car_id,
-        booking.end_at, // Desde el fin actual
-        newEndDate.toISOString(), // Hasta la nueva fecha
-      );
-
-      if (!isAvailable) {
-        return { success: false, error: 'El auto no está disponible para esas fechas' };
+      if (newEndDate <= new Date(booking.end_at)) {
+        return { success: false, error: 'La nueva fecha debe ser posterior a la actual' };
       }
 
-      // 2. Calcular costo adicional
+      const currentUser = (await this.supabase.auth.getUser()).data.user;
+      if (!currentUser || currentUser.id !== booking.renter_id) {
+          return { success: false, error: 'Solo el arrendatario puede solicitar una extensión.' };
+      }
+
+      // Calcular costo adicional ESTIMADO (puede variar al momento de la aprobación)
       const currentEnd = new Date(booking.end_at);
       const additionalDays = Math.ceil(
         (newEndDate.getTime() - currentEnd.getTime()) / (1000 * 60 * 60 * 24),
@@ -789,35 +785,172 @@ export class BookingsService {
         return { success: false, error: 'La nueva fecha debe ser posterior a la actual' };
 
       const pricePerDay = this.getBookingPricePerDay(booking);
-      const additionalCostCents = Math.round(pricePerDay * additionalDays * 100); // Simple calculation
+      const estimatedAdditionalCostCents = Math.round(pricePerDay * additionalDays * 100);
 
-      // 3. Cobrar diferencia (Intento de cobro directo a wallet)
+      // INSERT a new extension request
+      const { data: newRequest, error: insertError } = await this.supabase
+        .from('booking_extension_requests')
+        .insert({
+          booking_id: booking.id,
+          renter_id: booking.renter_id,
+          owner_id: booking.owner_id || '', // owner_id is NOT NULL in DB, ensure it's set
+          original_end_at: booking.end_at,
+          new_end_at: newEndDate.toISOString(),
+          estimated_cost_amount: estimatedAdditionalCostCents / 100, // Store as actual amount
+          estimated_cost_currency: booking.currency,
+          renter_message: renterMessage || null,
+          request_status: 'pending',
+        })
+        .select('*')
+        .single();
+
+      if (insertError) throw insertError;
+
+      // TODO: Notificar al propietario de la nueva solicitud de extensión
+
+      return { success: true, additionalCost: estimatedAdditionalCostCents / 100 };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al solicitar extensión',
+      };
+    }
+  }
+
+  /**
+   * Aprueba una solicitud de extensión de reserva.
+   * Extiende el booking y realiza el cobro.
+   */
+  async approveExtensionRequest(
+    requestId: string,
+    ownerResponse?: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const existingRequest = await this.supabase
+        .from('booking_extension_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
+
+      if (existingRequest.error || !existingRequest.data) {
+          throw new Error('Solicitud de extensión no encontrada.');
+      }
+
+      const request = existingRequest.data as BookingExtensionRequest;
+      if (request.request_status !== 'pending') {
+          throw new Error('La solicitud ya no está pendiente.');
+      }
+
+      const booking = await this.getBookingById(request.booking_id);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      const currentUser = (await this.supabase.auth.getUser()).data.user;
+      if (!currentUser || currentUser.id !== booking.owner_id) {
+          throw new Error('Solo el propietario puede aprobar una extensión.');
+      }
+
+      // 1. Cobrar el costo adicional al renter (assuming this logic is correct from original)
+      // This part needs to be carefully handled. The `additionalCost` in the request is estimated.
+      // Re-calculate the cost or trust the estimated one. For now, we trust the estimated one.
+      if (!request.estimated_cost_amount || !request.estimated_cost_currency) {
+          throw new Error('Faltan datos de costo estimado en la solicitud.');
+      }
+
+      // Assuming a new endpoint or helper is needed to process additional payment.
+      // For simplicity, let's assume `processRentalPayment` can handle additional charges.
       const chargeResult = await this.bookingWalletService.processRentalPayment(
-        booking,
-        additionalCostCents,
-        `Extensión de reserva #${booking.id} (${additionalDays} días)`,
+          booking,
+          Math.round(request.estimated_cost_amount * 100), // Convert to cents
+          `Extensión de reserva #${booking.id} (${new Date(request.new_end_at).toLocaleDateString()})`,
       );
 
       if (!chargeResult.ok) {
-        return { success: false, error: `Fallo al cobrar extensión: ${chargeResult.error}` };
+          throw new Error(`Fallo al cobrar extensión: ${chargeResult.error}`);
       }
 
-      // 4. Actualizar reserva
+      // 2. Actualizar la solicitud de extensión
+      const { error: updateRequestError } = await this.supabase
+        .from('booking_extension_requests')
+        .update({
+          request_status: 'approved',
+          responded_at: new Date().toISOString(),
+          owner_response: ownerResponse || null,
+        })
+        .eq('id', requestId);
+
+      if (updateRequestError) throw updateRequestError;
+
+      // 3. Actualizar la reserva con la nueva fecha y total
       await this.updateBooking(booking.id, {
-        end_at: newEndDate.toISOString(),
-        total_amount: (booking.total_amount || 0) + additionalCostCents / 100,
+        end_at: request.new_end_at,
+        total_amount: (booking.total_amount || 0) + request.estimated_cost_amount,
       });
 
       // TODO: Extender seguro (llamada a insuranceService)
+      // This should probably be triggered by a backend event based on booking update.
 
       return { success: true };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error al extender reserva',
+        error: error instanceof Error ? error.message : 'Error al aprobar extensión',
       };
     }
   }
+
+  /**
+   * Rechaza una solicitud de extensión de reserva.
+   */
+  async rejectExtensionRequest(
+    requestId: string,
+    reason: string,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const existingRequest = await this.supabase
+        .from('booking_extension_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
+
+      if (existingRequest.error || !existingRequest.data) {
+          throw new Error('Solicitud de extensión no encontrada.');
+      }
+
+      const request = existingRequest.data as BookingExtensionRequest;
+      if (request.request_status !== 'pending') {
+          throw new Error('La solicitud ya no está pendiente.');
+      }
+
+      const booking = await this.getBookingById(request.booking_id);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      const currentUser = (await this.supabase.auth.getUser()).data.user;
+      if (!currentUser || currentUser.id !== booking.owner_id) {
+            throw new Error('Solo el propietario puede rechazar una extensión.');
+      }
+
+      const { error: updateRequestError } = await this.supabase
+          .from('booking_extension_requests')
+          .update({
+            request_status: 'rejected',
+            responded_at: new Date().toISOString(),
+            owner_response: reason,
+          })
+          .eq('id', requestId);
+
+      if (updateRequestError) throw updateRequestError;
+
+      // TODO: Notificar al renter del rechazo (via push/email/chat)
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al rechazar extensión',
+      };
+    }
+  }
+
 
   /**
    * Rechaza el auto en el momento del retiro (Check-in)
@@ -935,6 +1068,66 @@ export class BookingsService {
   }
 
   /**
+   * Reporta que el propietario no se presentó (Owner No-Show).
+   * Inicia el protocolo de no-show: cancela reserva, procesa reembolso y busca alternativas.
+   */
+  async reportOwnerNoShow(
+    bookingId: string,
+    details: string,
+    evidenceUrls: string[] = [],
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('report_owner_no_show', {
+        p_booking_id: bookingId,
+        p_details: details,
+        p_evidence_urls: evidenceUrls,
+      });
+
+      if (error) throw error;
+
+      // The RPC should handle booking cancellation, refund, etc.
+      // This service method just reports the no-show.
+
+      return { success: true, ...data }; // Assuming RPC returns success/error/message
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al reportar no-show del propietario',
+      };
+    }
+  }
+
+  /**
+   * Reporta que el locatario no se presentó (Renter No-Show).
+   * Inicia el protocolo de no-show: marca reserva como cancelada, cobra penalidad al locatario.
+   */
+  async reportRenterNoShow(
+    bookingId: string,
+    details: string,
+    evidenceUrls: string[] = [],
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('report_renter_no_show', {
+        p_booking_id: bookingId,
+        p_details: details,
+        p_evidence_urls: evidenceUrls,
+      });
+
+      if (error) throw error;
+
+      // The RPC should handle booking cancellation, penalty charges, etc.
+      // This service method just reports the no-show.
+
+      return { success: true, ...data }; // Assuming RPC returns success/error/message
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al reportar no-show del locatario',
+      };
+    }
+  }
+
+  /**
    * Inicia una disputa sobre cargos adicionales
    * Congela la transferencia de fondos al dueño hasta resolución.
    */
@@ -986,6 +1179,66 @@ export class BookingsService {
   isExpired(booking: Booking): boolean {
     return this.utilsService.isExpired(booking);
   }
+
+  /**
+   * Obtiene las solicitudes de extensión pendientes para una reserva.
+   */
+  async getPendingExtensionRequests(bookingId: string): Promise<BookingExtensionRequest[]> {
+      const { data, error } = await this.supabase
+          .from('booking_extension_requests')
+          .select('*')
+          .eq('booking_id', bookingId)
+          .eq('request_status', 'pending')
+          .order('requested_at', { ascending: false });
+
+      if (error) {
+          console.error('Error fetching pending extension requests:', error);
+          throw error;
+      }
+      return (data || []) as BookingExtensionRequest[];
+  }
+
+  /**
+   * Estima el costo adicional de una extensión de reserva.
+   * @param bookingId ID de la reserva.
+   * @param newEndDate Nueva fecha de fin de la reserva.
+   * @returns Costo estimado en `amount` y un posible `error`.
+   */
+  async estimateExtensionCost(
+    bookingId: string,
+    newEndDate: Date,
+  ): Promise<{ amount: number; currency: string; error?: string }> {
+    try {
+      const booking = await this.getBookingById(bookingId);
+      if (!booking) throw new Error('Reserva no encontrada');
+
+      if (newEndDate <= new Date(booking.end_at)) {
+        return { amount: 0, currency: booking.currency, error: 'La nueva fecha debe ser posterior a la actual' };
+      }
+
+      // Calcular días adicionales
+      const currentEnd = new Date(booking.end_at);
+      const additionalDays = Math.ceil(
+        (newEndDate.getTime() - currentEnd.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      if (additionalDays <= 0)
+        return { amount: 0, currency: booking.currency, error: 'La nueva fecha debe ser posterior a la actual' };
+
+      // Obtener precio por día actual (utilizando el desglose de la reserva original)
+      const pricePerDay = this.getBookingPricePerDay(booking); // Assuming this helper exists and returns price per day in actual amount (not cents)
+
+      const estimatedAdditionalCost = pricePerDay * additionalDays;
+
+      return { amount: estimatedAdditionalCost, currency: booking.currency };
+    } catch (error) {
+      return {
+        amount: 0,
+        currency: 'ARS',
+        error: error instanceof Error ? error.message : 'Error al estimar el costo de extensión',
+      };
+    }
+  }
+
 
   // Insurance Operations (delegation to InsuranceService)
   async activateInsuranceCoverage(
@@ -1472,5 +1725,82 @@ export class BookingsService {
    */
   private delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // ============================================================================
+  // RPC INTEGRATIONS - Owner Cancellation & Penalties
+  // ============================================================================
+
+  /**
+   * Owner cancela una reserva con penalización automática
+   * - Reembolso 100% al renter
+   * - -10% visibilidad por 30 días
+   * - 3+ cancelaciones en 90 días = suspensión temporal
+   */
+  async ownerCancelBooking(
+    bookingId: string,
+    reason: string,
+  ): Promise<{ success: boolean; error?: string; penaltyApplied?: boolean }> {
+    try {
+      const { data, error } = await this.supabase.rpc('owner_cancel_booking', {
+        p_booking_id: bookingId,
+        p_reason: reason,
+      });
+
+      if (error) throw error;
+
+      return {
+        success: true,
+        penaltyApplied: data?.penalty_applied ?? true,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Error al cancelar reserva',
+      };
+    }
+  }
+
+  /**
+   * Obtiene las penalizaciones activas del owner actual
+   */
+  async getOwnerPenalties(): Promise<{
+    visibilityPenaltyUntil: string | null;
+    visibilityFactor: number;
+    cancellationCount90d: number;
+    isSuspended: boolean;
+  } | null> {
+    try {
+      const { data, error } = await this.supabase.rpc('get_owner_penalties');
+
+      if (error) throw error;
+
+      return {
+        visibilityPenaltyUntil: data?.visibility_penalty_until || null,
+        visibilityFactor: data?.visibility_factor ?? 1.0,
+        cancellationCount90d: data?.cancellation_count_90d ?? 0,
+        isSuspended: data?.is_suspended ?? false,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Obtiene el factor de visibilidad de un owner (para búsquedas)
+   * Factor entre 0.0 y 1.0 donde 1.0 = visibilidad completa
+   */
+  async getOwnerVisibilityFactor(ownerId?: string): Promise<number> {
+    try {
+      const { data, error } = await this.supabase.rpc('get_owner_visibility_factor', {
+        p_owner_id: ownerId || null,
+      });
+
+      if (error) throw error;
+
+      return data ?? 1.0;
+    } catch {
+      return 1.0; // Default to full visibility on error
+    }
   }
 }

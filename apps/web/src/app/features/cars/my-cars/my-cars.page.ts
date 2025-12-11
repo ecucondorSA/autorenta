@@ -5,12 +5,13 @@ import { ModalController } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car, CarStatus } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 import { CarsService } from '../../../core/services/cars.service';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 
-import { Organization, BonusProgress } from '../../../core/models/organization.model';
-import { OrganizationService } from '../../../core/services/organization.service';
+import { BonusProgress } from '../../../core/models/organization.model';
+import { OrganizationService, Organization } from '../../organizations/services/organization.service';
 
 @Component({
   standalone: true,
@@ -22,6 +23,7 @@ import { OrganizationService } from '../../../core/services/organization.service
 export class MyCarsPage {
   private readonly carsService = inject(CarsService);
   private readonly orgService = inject(OrganizationService);
+  private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
   private readonly modalCtrl = inject(ModalController);
   private readonly router = inject(Router);
@@ -31,22 +33,57 @@ export class MyCarsPage {
   readonly bonuses = signal<BonusProgress[]>([]);
   readonly loading = signal(false);
 
+  // Owner penalties
+  readonly ownerPenalties = signal<{
+    visibilityPenaltyUntil: string | null;
+    visibilityFactor: number;
+    cancellationCount90d: number;
+    isSuspended: boolean;
+  } | null>(null);
+
+  readonly hasPenalty = computed(() => {
+    const penalties = this.ownerPenalties();
+    return penalties && (penalties.visibilityFactor < 1 || penalties.isSuspended);
+  });
+
+  readonly penaltyMessage = computed(() => {
+    const penalties = this.ownerPenalties();
+    if (!penalties) return null;
+
+    if (penalties.isSuspended) {
+      return 'Tu cuenta está suspendida temporalmente por cancelaciones frecuentes.';
+    }
+
+    if (penalties.visibilityFactor < 1) {
+      const reduction = Math.round((1 - penalties.visibilityFactor) * 100);
+      const until = penalties.visibilityPenaltyUntil
+        ? new Date(penalties.visibilityPenaltyUntil).toLocaleDateString('es-AR')
+        : 'próximamente';
+      return `Visibilidad reducida ${reduction}% hasta ${until} por cancelaciones recientes.`;
+    }
+
+    return null;
+  });
+
   constructor() {
     this.loading.set(true);
-    Promise.all([this.carsService.listMyCars(), this.orgService.getMyOrganizations()]).then(
-      async ([cars, orgs]) => {
-        this.cars.set(cars);
-        this.organizations.set(orgs);
+    Promise.all([
+      this.carsService.listMyCars(),
+      this.orgService.getMyOrganizations(),
+      this.bookingsService.getOwnerPenalties(),
+    ]).then(async ([cars, orgs, penalties]) => {
+      this.cars.set(cars);
+      this.organizations.set(orgs);
+      this.ownerPenalties.set(penalties);
 
-        // Fetch bonuses if org exists
-        if (orgs.length > 0) {
-          const bonuses = await this.orgService.getBonusesProgress(orgs[0].id);
-          this.bonuses.set(bonuses);
-        }
+      // Fetch bonuses if org exists
+      if (orgs.length > 0) {
+        const bonuses = await this.orgService.getBonusesProgress(orgs[0].id);
+        this.bonuses.set(bonuses);
+      }
 
-        this.loading.set(false);
-      },
-    );
+      this.loading.set(false);
+    });
   }
 
   readonly countActive = computed(

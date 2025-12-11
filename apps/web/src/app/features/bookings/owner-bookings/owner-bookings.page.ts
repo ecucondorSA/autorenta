@@ -200,6 +200,17 @@ export class OwnerBookingsPage implements OnInit {
     return booking.status === 'pending' || booking.status === 'confirmed';
   }
 
+  canOpenDispute(booking: Booking): boolean {
+    // An owner can open a dispute if the booking is completed or in_progress,
+    // and there isn't an active dispute already.
+    const validStatusForDispute = ['completed', 'in_progress'].includes(booking.status);
+
+    // Check if a dispute is already open or in review
+    const existingDisputeActive = booking.dispute_status && ['open', 'in_review'].includes(booking.dispute_status);
+
+    return validStatusForDispute && !existingDisputeActive;
+  }
+
   async onStartRental(bookingId: string): Promise<void> {
     const confirmed = await this.presentConfirmation({
       header: 'Iniciar alquiler',

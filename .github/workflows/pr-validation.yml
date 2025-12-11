@@ -117,6 +117,82 @@ jobs:
             echo "✅ **PR Template**: Complete" >> $GITHUB_STEP_SUMMARY
           fi
 
+  lint-orphans:
+    name: Lint Orphan Components & Functions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Orphan Lint
+        id: orphan-lint
+        run: |
+          npx tsx scripts/lint-orphans.ts --fix-suggestions 2>&1 | tee orphan-lint-output.txt
+          exit_code=${PIPESTATUS[0]}
+          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+          exit $exit_code
+        continue-on-error: true
+
+      - name: Upload Orphan Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: orphan-lint-report
+          path: orphan-lint-report.json
+          retention-days: 30
+
+      - name: Post Orphan Lint Summary
+        if: always()
+        run: |
+          echo "## 🔍 Orphan Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f orphan-lint-report.json ]; then
+            COMPONENTS=$(jq -r '.summary.orphanComponents' orphan-lint-report.json)
+            RPC=$(jq -r '.summary.unusedRpcFunctions' orphan-lint-report.json)
+            TABLES=$(jq -r '.summary.tablesWithoutQueries' orphan-lint-report.json)
+            CRITICAL=$(jq -r '.summary.criticalOrphans' orphan-lint-report.json)
+            PASSED=$(jq -r '.summary.passed' orphan-lint-report.json)
+
+            echo "| Metric | Count | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Orphan Components | $COMPONENTS | $([ $COMPONENTS -le 5 ] && echo '✅' || echo '❌') |" >> $GITHUB_STEP_SUMMARY
+            echo "| Unused RPC Functions | $RPC | $([ $RPC -le 5 ] && echo '✅' || echo '❌') |" >> $GITHUB_STEP_SUMMARY
+            echo "| Tables without Queries | $TABLES | $([ $TABLES -le 5 ] && echo '✅' || echo '❌') |" >> $GITHUB_STEP_SUMMARY
+            echo "| Critical Issues | $CRITICAL | $([ $CRITICAL -eq 0 ] && echo '✅' || echo '❌') |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$CRITICAL" -gt 0 ]; then
+              echo "### ❌ Critical Issues Found:" >> $GITHUB_STEP_SUMMARY
+              jq -r '.criticalIssues[] | "- **\(.type)**: `\(.name)` - \(.reason)"' orphan-lint-report.json >> $GITHUB_STEP_SUMMARY
+            fi
+
+            if [ "$PASSED" = "true" ]; then
+              echo "### ✅ Orphan Lint Passed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ❌ Orphan Lint Failed" >> $GITHUB_STEP_SUMMARY
+              echo "Please fix critical issues before merging." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️ No report generated" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail if Critical Issues
+        if: steps.orphan-lint.outputs.exit_code != '0'
+        run: |
+          echo "❌ Orphan lint found critical issues. See report for details."
+          exit 1
+
   check-migrations:
     name: Check Database Migrations
     runs-on: ubuntu-latest

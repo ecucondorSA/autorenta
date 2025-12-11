@@ -94,6 +94,18 @@ export class DepositPage implements OnInit {
 
     // Load exchange rate
     void this.loadExchangeRate();
+
+    // Check for 'amount' query parameter to pre-fill debt payment
+    const amountParam = this.route.snapshot.queryParams['amount'];
+    if (amountParam) {
+      const prefillAmount = parseFloat(amountParam);
+      if (!isNaN(prefillAmount) && prefillAmount > 0) {
+        this.usdAmountInput.set(prefillAmount);
+        this.usdAmountValue = prefillAmount; // Update non-signal property for input binding
+        this.description.set('Pago de deuda del wallet');
+        this.formError.set(null); // Clear any initial form errors
+      }
+    }
   }
 
   /**

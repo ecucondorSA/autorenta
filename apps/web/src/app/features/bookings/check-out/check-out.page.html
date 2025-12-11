@@ -194,7 +194,7 @@
               }
 
               @if (fuelDifference() !== null) {
-                <p class="text-sm text-success-700 dark:text-success-strong mb-4">
+                <p class="text-sm text-success-700 dark:text-success-strong mb-2">
                   <strong>Diferencia de combustible:</strong>
                   @if (fuelDifference()! >= 0) {
                     <span class="text-success-strong">+{{ fuelDifference() }}%</span>
@@ -202,6 +202,38 @@
                     <span class="text-warning-strong">{{ fuelDifference() }}%</span>
                   }
                 </p>
+              }
+
+              <!-- Fuel Penalty Alert -->
+              @if (fuelPenalty()) {
+                <div class="p-4 bg-error-bg dark:bg-error-900/30 rounded-xl border border-error-border dark:border-error-700 mb-4">
+                  <div class="flex items-start gap-3">
+                    <svg class="w-6 h-6 text-error-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-error-700 dark:text-error-200 mb-1">
+                        Penalización por Combustible
+                      </h4>
+                      <p class="text-sm text-error-600 dark:text-error-300 mb-2">
+                        El vehículo fue devuelto con {{ fuelPenalty()!.percentageMissing }}% menos de combustible.
+                      </p>
+                      <div class="text-sm space-y-1">
+                        <div class="flex justify-between text-error-600 dark:text-error-300">
+                          <span>Litros faltantes:</span>
+                          <span class="font-medium">~{{ fuelPenalty()!.liters }} L</span>
+                        </div>
+                        <div class="flex justify-between text-error-700 dark:text-error-200 font-semibold">
+                          <span>Cargo total (inc. servicio):</span>
+                          <span>US$ {{ fuelPenalty()!.totalCost | number:'1.2-2' }}</span>
+                        </div>
+                      </div>
+                      <p class="text-xs text-error-500 dark:text-error-400 mt-2">
+                        Este monto será descontado de tu depósito de garantía.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               }
 
               <button

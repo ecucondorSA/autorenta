@@ -11,6 +11,7 @@ import type {
   WalletLockRentalAndDepositResponse,
   WalletTransactionFilters,
   WalletInitiateDepositResponse,
+  ExpiringCredit,
 } from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
@@ -458,6 +459,49 @@ export class WalletService {
 
   getTotalCoverageBalance(): number {
     return this.availableBalance() + this.protectedCreditBalance();
+  }
+
+  // ============================================================================
+  // EXPIRING CREDITS
+  // ============================================================================
+
+  /**
+   * Signal para créditos que expiran pronto (30 días o menos)
+   */
+  readonly expiringCredits = signal<ExpiringCredit[]>([]);
+
+  /**
+   * Computed: tiene créditos por vencer en 7 días o menos (urgente)
+   */
+  readonly hasUrgentExpiringCredits = computed(() =>
+    this.expiringCredits().some(c => c.days_until_expiry <= 7)
+  );
+
+  /**
+   * Computed: total de créditos por vencer
+   */
+  readonly totalExpiringAmount = computed(() =>
+    this.expiringCredits().reduce((sum, c) => sum + c.amount_cents, 0)
+  );
+
+  /**
+   * Obtiene créditos que expiran en los próximos N días
+   */
+  async fetchExpiringCredits(daysAhead: number = 30): Promise<ExpiringCredit[]> {
+    try {
+      const { data, error } = await this.supabase.rpc('get_expiring_credits', {
+        p_days_ahead: daysAhead
+      });
+
+      if (error) throw error;
+
+      const credits = (data ?? []) as ExpiringCredit[];
+      this.expiringCredits.set(credits);
+      return credits;
+    } catch (err) {
+      this.logger.error('Error al obtener créditos por vencer', String(err));
+      return [];
+    }
   }
 
   private handleError(err: unknown, defaultMessage: string): void {

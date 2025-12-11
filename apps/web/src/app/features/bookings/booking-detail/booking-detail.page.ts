@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { Booking } from '../../../core/models';
+import { Booking, BookingExtensionRequest } from '../../../core/models';
+import { TrafficInfraction } from '../../admin/traffic-infractions/admin-traffic-infractions.page'; // NEW
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '../../../core/models/insurance.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,6 +21,7 @@ import { MetaService } from '../../../core/services/meta.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { LoggerService } from '../../../core/services/logger.service';
+import { TrafficInfractionsService } from '../../../core/services/traffic-infractions.service'; // NEW
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
@@ -47,6 +50,10 @@ import {
 } from '../../../core/services/booking-ops.service';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
+import { BookingExtensionRequestModalComponent } from '../../../shared/components/booking-extension-request-modal/booking-extension-request-modal.component'; // NEW
+import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
+import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
+import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
 
 /**
  * BookingDetailPage
@@ -87,6 +94,10 @@ import { ReviewManagementComponent } from './review-management.component';
     BookingInsuranceSummaryComponent,
     SettlementSimulatorComponent,
     DamageComparisonComponent,
+    BookingExtensionRequestModalComponent, // NEW
+    ReportTrafficFineComponent, // NEW
+    ReportOwnerNoShowComponent, // NEW
+    ReportRenterNoShowComponent, // NEW
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -99,11 +110,13 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly reviewsService = inject(ReviewsService);
   private readonly authService = inject(AuthService);
   private readonly confirmationService = inject(BookingConfirmationService);
+  private readonly alertController = inject(AlertController); // NEW
   private readonly metaService = inject(MetaService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly insuranceService = inject(InsuranceService);
   private readonly bookingOpsService = inject(BookingOpsService);
+  private readonly trafficInfractionsService = inject(TrafficInfractionsService); // NEW
   private readonly logger = inject(LoggerService).createChildLogger('BookingDetailPage');
 
   booking = signal<Booking | null>(null);
@@ -310,12 +323,57 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // Disputes and refunds
   showDisputeForm = signal(false);
   showRefundForm = signal(false);
+  showExtensionRequestModal = signal(false); // NEW
+  showReportTrafficFineModal = signal(false); // NEW
+  showReportOwnerNoShowModal = signal(false); // NEW
+
+  // NEW: Extension Requests
+  pendingExtensionRequests = signal<BookingExtensionRequest[]>([]);
+  loadingExtensionRequests = signal(false);
 
   readonly canCreateDispute = computed(() => {
     const booking = this.booking();
     if (!booking) return false;
     // Can create dispute for active or completed bookings
     return booking.status === 'in_progress' || booking.status === 'completed';
+  });
+
+  readonly hasPendingExtensionRequest = computed(() => {
+    return this.pendingExtensionRequests().length > 0;
+  });
+
+  readonly canReportTrafficFine = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can report a fine if the booking is completed or in_progress
+    return booking.status === 'completed' || booking.status === 'in_progress';
+  });
+
+  // NEW: Traffic Fines
+  trafficFines = signal<TrafficInfraction[]>([]);
+  loadingTrafficFines = signal(false);
+
+  readonly hasTrafficFines = computed(() => {
+    return this.trafficFines().length > 0;
+  });
+
+  readonly canReportOwnerNoShow = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isRenter()) return false;
+    // Renter can report owner no-show if booking is confirmed and pickup date is in the past
+    const pickupDate = new Date(booking.start_at);
+    const now = new Date();
+    return booking.status === 'confirmed' && now > pickupDate;
+  });
+
+  readonly showReportRenterNoShowModal = signal(false); // NEW
+  readonly canReportRenterNoShow = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can report renter no-show if booking is confirmed and pickup date is in the past
+    const pickupDate = new Date(booking.start_at);
+    const now = new Date();
+    return booking.status === 'confirmed' && now > pickupDate;
   });
 
   readonly canRequestRefund = computed(() => {
@@ -377,42 +435,94 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const booking = this.booking();
     if (!booking) return;
 
-    // TODO: Replace with a proper date picker modal
-    const dateStr = prompt('Ingresa la nueva fecha de fin (YYYY-MM-DD):', booking.end_at.split('T')[0]);
-    if (!dateStr) return;
+    this.showExtensionRequestModal.set(true); // Open the modal
+  }
 
-    const newEndDate = new Date(dateStr);
-    if (isNaN(newEndDate.getTime())) {
-      alert('Fecha inválida');
-      return;
-    }
+  async onRequestExtension(event: { newEndDate: Date; estimatedCost: number }): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
 
-    if (newEndDate <= new Date(booking.end_at)) {
-      alert('La nueva fecha debe ser posterior a la actual');
-      return;
-    }
+    this.showExtensionRequestModal.set(false); // Close the modal
 
-    if (!confirm(`¿Confirmas extender la reserva hasta el ${dateStr}? Se cobrará la diferencia de tu wallet.`)) {
+    if (!confirm(`¿Confirmas solicitar extender la reserva hasta el ${event.newEndDate.toLocaleDateString()} por un costo estimado de ${event.estimatedCost} ARS? El anfitrión deberá aprobarla.`)) {
       return;
     }
 
     this.loading.set(true);
     try {
-      const result = await this.bookingsService.extendBooking(booking.id, newEndDate);
+      const result = await this.bookingsService.requestExtension(booking.id, event.newEndDate);
       if (result.success) {
-        alert('Reserva extendida exitosamente');
-        // Reload booking
+        alert(`Solicitud de extensión enviada exitosamente por un costo estimado de ${result.additionalCost}. Esperando aprobación del anfitrión.`);
+        // Reload booking to show pending extension status
         const updated = await this.bookingsService.getBookingById(booking.id);
         this.booking.set(updated);
+        await this.loadPendingExtensionRequests(booking.id); // Reload requests after action
       } else {
-        alert('Error al extender: ' + result.error);
+        alert('Error al solicitar extensión: ' + result.error);
       }
     } catch (error) {
-      console.error('Error extending booking:', error);
-      alert('Ocurrió un error inesperado');
+      console.error('Error requesting booking extension:', error);
+      alert('Ocurrió un error inesperado al solicitar la extensión.');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async approveExtension(requestId: string): Promise<void> {
+    const confirmApproval = confirm('¿Confirmas que quieres aprobar esta solicitud de extensión?');
+    if (!confirmApproval) return;
+
+    this.loading.set(true);
+    try {
+      const result = await this.bookingsService.approveExtensionRequest(requestId);
+      if (result.success) {
+        alert('Solicitud de extensión aprobada y reserva actualizada.');
+        // Reload booking and requests to reflect changes
+        const updated = await this.bookingsService.getBookingById(this.booking()!.id);
+        this.booking.set(updated);
+        await this.loadPendingExtensionRequests(this.booking()!.id);
+      } else {
+        alert('Error al aprobar extensión: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error approving extension request:', error);
+      alert('Ocurrió un error inesperado al aprobar la extensión.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  async rejectExtension(requestId: string): Promise<void> {
+    const reason = prompt('¿Por qué rechazas esta solicitud de extensión? (Opcional)');
+
+    const confirmRejection = confirm('¿Confirmas que quieres rechazar esta solicitud de extensión?');
+    if (!confirmRejection) return;
+
+    this.loading.set(true);
+    try {
+      const result = await this.bookingsService.rejectExtensionRequest(requestId, reason || '');
+      if (result.success) {
+        alert('Solicitud de extensión rechazada.');
+        // Reload requests to reflect changes
+        await this.loadPendingExtensionRequests(this.booking()!.id);
+      } else {
+        alert('Error al rechazar extensión: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error rejecting extension request:', error);
+      alert('Ocurrió un error inesperado al rechazar la extensión.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  onTrafficFineReported(fine: TrafficInfraction): void {
+    console.log('Traffic fine reported:', fine);
+    this.showReportTrafficFineModal.set(false);
+    // Reload pending extension requests to ensure the UI is up-to-date.
+    // This is a placeholder, ideally we should reload fines or the booking itself if fines affect it
+    this.loadPendingExtensionRequests(this.booking()!.id);
+    // TODO: Implement loading of fines for display or updating booking status if fines affect it.
   }
 
   isStepCompleted(index: number): boolean {
@@ -445,6 +555,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
       this.booking.set(booking);
       this.startCountdown();
+
+      // Load pending extension requests
+      await this.loadPendingExtensionRequests(booking.id);
+      // Load traffic fines
+      await this.loadTrafficFines(booking.id); // NEW
 
       // Update SEO meta tags (private page - noindex)
       this.metaService.updateBookingDetailMeta(booking.id);
@@ -803,5 +918,208 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       console.error('Error al marcar la reserva como devuelta', error);
       alert('No pudimos marcar la devolución. Intentalo nuevamente en unos minutos.');
     }
+  }
+
+  private async loadPendingExtensionRequests(bookingId: string): Promise<void> {
+    this.loadingExtensionRequests.set(true);
+    try {
+      const requests = await this.bookingsService.getPendingExtensionRequests(bookingId);
+      this.pendingExtensionRequests.set(requests);
+    } catch (error) {
+      this.logger.error('Error loading pending extension requests:', error);
+    } finally {
+      this.loadingExtensionRequests.set(false);
+    }
+  }
+
+  // NEW: Traffic Fines Methods
+  private async loadTrafficFines(bookingId: string): Promise<void> {
+    this.loadingTrafficFines.set(true);
+    try {
+      const fines = await this.trafficInfractionsService.getInfractionsByBooking(bookingId);
+      this.trafficFines.set(fines);
+    } catch (error) {
+      this.logger.error('Error loading traffic fines:', error);
+    } finally {
+      this.loadingTrafficFines.set(false);
+    }
+  }
+
+  async disputeTrafficFine(fine: TrafficInfraction): Promise<void> {
+    const reason = prompt('Por favor, ingresa la razón por la que deseas disputar esta multa:');
+    if (!reason) {
+      alert('Debes ingresar una razón para disputar la multa.');
+      return;
+    }
+
+    if (!confirm('¿Confirmas que deseas disputar esta multa de tránsito?')) {
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      await this.trafficInfractionsService.updateInfractionStatus(fine.id, 'disputed', reason);
+      alert('Multa disputada exitosamente. El propietario será notificado.');
+      // Reload fines to update UI
+      await this.loadTrafficFines(this.booking()!.id);
+    } catch (error) {
+      console.error('Error disputing traffic fine:', error);
+      alert('Ocurrió un error al disputar la multa.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  onOwnerNoShowReported(result: { success: boolean; message?: string }): void {
+    console.log('Owner No-Show reported:', result);
+    this.showReportOwnerNoShowModal.set(false);
+    if (result.success) {
+      const alert = this.alertController.create({ // Assuming alertController is available
+        header: '✅ No-Show Reportado',
+        message: 'Hemos registrado tu reporte de no-show. Nuestro equipo ha sido notificado y se pondrá en contacto contigo a la brevedad para asistirte en buscar una alternativa o procesar un reembolso.',
+        buttons: [
+          {
+            text: 'Buscar otro auto',
+            handler: () => {
+              const booking = this.booking();
+              if (booking) {
+                this.router.navigate(['/cars'], {
+                  queryParams: {
+                    startDate: new Date(booking.start_at).toISOString().split('T')[0],
+                    endDate: new Date(booking.end_at).toISOString().split('T')[0],
+                    city: booking.car_city, // Pre-fill city from original booking
+                  },
+                });
+              }
+            },
+          },
+          {
+            text: 'Solicitar Reembolso',
+            handler: () => {
+              this.showRefundForm.set(true); // Trigger existing refund request modal
+            },
+          },
+          {
+            text: 'Cerrar',
+            role: 'cancel',
+            handler: () => {
+              // Reload booking data to reflect any status changes
+              this.bookingsService.getBookingById(this.booking()!.id).then(updated => {
+                if (updated) this.booking.set(updated);
+              });
+            },
+          },
+        ],
+      });
+      alert.then(a => a.present());
+    } else {
+      alert('Error al reportar no-show: ' + (result.message || 'Error desconocido.'));
+    }
+  }
+
+  onRenterNoShowReported(result: { success: boolean; message?: string }): void {
+    console.log('Renter No-Show reported:', result);
+    this.showReportRenterNoShowModal.set(false);
+    if (result.success) {
+      alert('Reporte de no-show enviado. Nuestro equipo se pondrá en contacto para validar la situación y aplicar las penalidades correspondientes.');
+      // For now, reload booking data to reflect any status changes
+      this.bookingsService.getBookingById(this.booking()!.id).then(updated => {
+        if (updated) this.booking.set(updated);
+      });
+    } else {
+      alert('Error al reportar no-show: ' + (result.message || 'Error desconocido.'));
+    }
+  }
+
+  // ============================================================================
+  // OWNER CANCELLATION WITH PENALTY
+  // ============================================================================
+
+  readonly canOwnerCancel = computed(() => {
+    const booking = this.booking();
+    if (!booking || !this.isOwner()) return false;
+    // Owner can cancel confirmed or pending bookings
+    return booking.status === 'confirmed' || booking.status === 'pending' || booking.status === 'pending_payment';
+  });
+
+  async ownerCancelBooking(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    const alert = await this.alertController.create({
+      header: '⚠️ Cancelar Reserva',
+      message: `
+        <p><strong>¿Estás seguro de cancelar esta reserva?</strong></p>
+        <p>Como propietario, al cancelar se aplicarán las siguientes penalizaciones:</p>
+        <ul>
+          <li>🔙 Reembolso del 100% al arrendatario</li>
+          <li>📉 -10% de visibilidad por 30 días</li>
+          <li>⚠️ 3+ cancelaciones en 90 días = suspensión temporal</li>
+        </ul>
+      `,
+      inputs: [
+        {
+          name: 'reason',
+          type: 'textarea',
+          placeholder: 'Motivo de la cancelación (requerido)',
+        },
+      ],
+      buttons: [
+        {
+          text: 'No cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Sí, cancelar',
+          cssClass: 'danger',
+          handler: async (data) => {
+            if (!data.reason || data.reason.trim().length < 10) {
+              alert.message = 'Por favor, ingresa un motivo válido (mínimo 10 caracteres).';
+              return false; // Prevent closing
+            }
+
+            this.loading.set(true);
+            try {
+              const result = await this.bookingsService.ownerCancelBooking(booking.id, data.reason.trim());
+
+              if (result.success) {
+                const updated = await this.bookingsService.getBookingById(booking.id);
+                this.booking.set(updated);
+
+                const penaltyMessage = result.penaltyApplied
+                  ? 'Se ha aplicado una penalización de visibilidad.'
+                  : '';
+
+                const successAlert = await this.alertController.create({
+                  header: '✅ Reserva Cancelada',
+                  message: `La reserva ha sido cancelada y el arrendatario recibirá un reembolso completo. ${penaltyMessage}`,
+                  buttons: ['Entendido'],
+                });
+                await successAlert.present();
+              } else {
+                const errorAlert = await this.alertController.create({
+                  header: '❌ Error',
+                  message: result.error || 'No se pudo cancelar la reserva.',
+                  buttons: ['Cerrar'],
+                });
+                await errorAlert.present();
+              }
+            } catch (error) {
+              const errorAlert = await this.alertController.create({
+                header: '❌ Error',
+                message: 'Ocurrió un error inesperado al cancelar la reserva.',
+                buttons: ['Cerrar'],
+              });
+              await errorAlert.present();
+            } finally {
+              this.loading.set(false);
+            }
+            return true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

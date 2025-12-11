@@ -1,0 +1,107 @@
+<ion-card class="bonus-malus-dashboard">
+  <ion-card-header>
+    <ion-card-title class="flex items-center gap-2">
+      <span class="text-2xl" *ngIf="display()">{{ display()!.icon }}</span>
+      Tu Score Bonus-Malus
+    </ion-card-title>
+    <ion-card-subtitle *ngIf="display()">
+      {{ display()!.message }}
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <div *ngIf="loading()" class="ion-text-center">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando tu score...</p>
+    </div>
+
+    <div *ngIf="!loading() && !bonusMalus()" class="ion-text-center ion-text-danger">
+      <p>No se pudo cargar tu score Bonus-Malus.</p>
+      <ion-button (click)="loadBonusMalus()">Reintentar</ion-button>
+    </div>
+
+    <div *ngIf="!loading() && bonusMalus()" class="space-y-4">
+      <!-- Score Display -->
+      <div class="score-display">
+        <h3 class="ion-text-center text-5xl font-bold" [ngClass]="display()?.color">
+          {{ display()?.percentage.toFixed(0) }}%
+        </h3>
+        <p class="ion-text-center text-text-secondary">
+          {{ display()?.type === 'BONUS' ? 'descuento' : 'recargo' }} en tus tarifas
+        </p>
+      </div>
+
+      <!-- Metrics Breakdown -->
+      <div *ngIf="bonusMalus()?.metrics" class="metrics-breakdown">
+        <h4 class="text-lg font-semibold mb-2">Impacto por factor:</h4>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label>Rating</ion-label>
+            <ion-badge color="primary">
+              {{ (bonusMalus()!.metrics.owner_rating || bonusMalus()!.metrics.renter_rating) | number:'1.1-1' }}
+              ({{ (bonusMalus()!.metrics.average_rating | number:'1.1-1') }})
+            </ion-badge>
+            <ion-text [color]="bonusMalus()!.rating_factor < 0 ? 'success' : bonusMalus()!.rating_factor > 0 ? 'danger' : 'medium'">
+              {{ (bonusMalus()!.rating_factor * 100).toFixed(0) }}%
+            </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label>Cancelaciones</ion-label>
+            <ion-badge color="primary">
+              {{ (bonusMalus()!.metrics.cancellation_rate * 100).toFixed(0) }}%
+            </ion-badge>
+            <ion-text [color]="bonusMalus()!.cancellation_factor < 0 ? 'success' : bonusMalus()!.cancellation_factor > 0 ? 'danger' : 'medium'">
+              {{ (bonusMalus()!.cancellation_factor * 100).toFixed(0) }}%
+            </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label>Experiencia (Reservas completadas)</ion-label>
+            <ion-badge color="primary">
+              {{ bonusMalus()!.metrics.completed_rentals }}
+            </ion-badge>
+            <ion-text [color]="bonusMalus()!.completion_factor < 0 ? 'success' : bonusMalus()!.completion_factor > 0 ? 'danger' : 'medium'">
+              {{ (bonusMalus()!.completion_factor * 100).toFixed(0) }}%
+            </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label>Verificación de Identidad</ion-label>
+            <ion-badge [color]="bonusMalus()!.metrics.is_verified ? 'success' : 'danger'">
+              {{ bonusMalus()!.metrics.is_verified ? 'Verificado' : 'Pendiente' }}
+            </ion-badge>
+            <ion-text [color]="bonusMalus()!.verification_factor < 0 ? 'success' : bonusMalus()!.verification_factor > 0 ? 'danger' : 'medium'">
+              {{ (bonusMalus()!.verification_factor * 100).toFixed(0) }}%
+            </ion-text>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Improvement Tips -->
+      <div *ngIf="tips().length > 0" class="improvement-tips">
+        <h4 class="text-lg font-semibold mb-2">💡 Cómo mejorar tu score:</h4>
+        <ion-list lines="none">
+          <ion-item *ngFor="let tip of tips()">
+            <ion-icon slot="start" name="bulb-outline" color="medium"></ion-icon>
+            <ion-label>{{ tip }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <!-- Bonus Protector Info -->
+      <div class="bonus-protector-info mt-4">
+        <ion-item lines="none">
+          <ion-icon slot="start" name="shield-checkmark-outline" color="primary"></ion-icon>
+          <ion-label>
+            <h3>Bonus Protector</h3>
+            <p *ngIf="hasActiveProtector()" class="ion-text-wrap">
+              {{ protectorInfoMessage() }}
+            </p>
+            <p *ngIf="!hasActiveProtector()">
+              No tienes un Protector de Bonus activo.
+            </p>
+          </ion-label>
+          <ion-button fill="outline" routerLink="/profile/bonus-protector">Ver más</ion-button>
+        </ion-item>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>

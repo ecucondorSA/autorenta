@@ -531,8 +531,45 @@ export interface Booking {
   // Relación con car (populated dinamically in some queries)
   car?: Partial<Car>;
 
-
+  // ✅ BOOKING EXTENSION: Campos para extensiones de reserva
+  extension_status?: 'pending' | 'approved' | 'rejected' | null;
+  extension_new_end_date?: string | null;
+  extension_additional_cost_cents?: number | null;
+  extension_requested_at?: string | null;
+  extension_responded_at?: string | null;
 }
+
+  
+
+  export interface BookingExtensionRequest { // NEW
+
+    id: string;
+
+    booking_id: string;
+
+    renter_id: string;
+
+    owner_id: string;
+
+    original_end_at: string;
+
+    new_end_at: string;
+
+    request_status: 'pending' | 'approved' | 'rejected' | 'cancelled';
+
+    estimated_cost_amount: number | null;
+
+    estimated_cost_currency: string | null;
+
+    renter_message: string | null;
+
+    owner_response: string | null;
+
+    requested_at: string;
+
+    responded_at: string | null;
+
+  }
 
 export interface PaymentIntent {
   id: string;

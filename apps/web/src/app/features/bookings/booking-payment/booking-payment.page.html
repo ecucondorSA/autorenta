@@ -141,18 +141,34 @@
             </div>
 
             <!-- Garantía separada visualmente -->
-            <div class="flex justify-between text-sm bg-amber-50 dark:bg-amber-900/20 p-2 rounded">
-              <span class="text-amber-700 dark:text-amber-300">
-                + Garantía bloqueada (reembolsable):
-              </span>
-              <span class="font-semibold text-amber-700 dark:text-amber-300">
-                {{ depositAmount() | money }}
-              </span>
+            <div class="bg-amber-50 dark:bg-amber-900/20 p-2 rounded space-y-1">
+              <div *ngIf="hasDepositDiscount()" class="flex justify-between text-xs">
+                <span class="text-amber-600 dark:text-amber-400">Garantía original:</span>
+                <span class="text-amber-600 dark:text-amber-400 line-through">
+                  {{ originalDepositAmount() | money }}
+                </span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-amber-700 dark:text-amber-300">
+                  + Garantía bloqueada (reembolsable):
+                </span>
+                <span class="font-semibold text-amber-700 dark:text-amber-300">
+                  {{ depositAmount() | money }}
+                </span>
+              </div>
+              <div *ngIf="hasDepositDiscount()" class="flex justify-between text-xs">
+                <span class="text-success-strong">
+                  Tu descuento Bonus:
+                </span>
+                <span class="text-success-strong font-medium">
+                  -{{ depositSavings() | money }}
+                </span>
+              </div>
             </div>
 
             <!-- Movimiento total -->
             <div class="flex justify-between pt-2 border-t border-border-default">
-              <span class="text-text-secondary text-sm">Movimiento total en wallet:</span>
+              <span class="text-text-secondary text-sm">Impacto total en wallet (alquiler + garantía):</span>
               <span class="font-semibold">{{ totalAmount() | money }}</span>
             </div>
           </div>
@@ -189,7 +205,7 @@
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            Confirmar Reserva
+            Confirmar Pago y Bloqueo de Garantía
           </app-button>
         </div>
 
@@ -314,11 +330,48 @@
             </div>
 
             <!-- Security Deposit -->
-            <div class="flex justify-between text-sm pt-2 border-t border-border-default/50">
-              <span class="text-text-secondary">Depósito de garantía (Reembolsable):</span>
-              <span class="font-medium text-text-primary dark:text-text-secondary">
-                {{ depositAmount() | money }}
-              </span>
+            <div class="pt-2 border-t border-border-default/50">
+              <!-- Show original + discount if bonus-malus applied -->
+              <div *ngIf="hasDepositDiscount()" class="space-y-1">
+                <div class="flex justify-between text-sm">
+                  <span class="text-text-secondary">Garantía original:</span>
+                  <span class="text-text-muted line-through">
+                    {{ originalDepositAmount() | money }}
+                  </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-success-strong flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Descuento Bonus ({{ ((1 - bonusMalusFactor()) * 100) | number:'1.0-0' }}%)
+                  </span>
+                  <span class="text-success-strong font-medium">
+                    -{{ depositSavings() | money }}
+                  </span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-text-secondary font-medium">Garantía final (Reembolsable):</span>
+                  <span class="font-semibold text-text-primary dark:text-text-secondary">
+                    {{ depositAmount() | money }}
+                  </span>
+                </div>
+              </div>
+              <!-- Normal display without discount -->
+              <div *ngIf="!hasDepositDiscount()" class="flex justify-between text-sm">
+                <span class="text-text-secondary">Depósito de garantía (Reembolsable):</span>
+                <span class="font-medium text-text-primary dark:text-text-secondary">
+                  {{ depositAmount() | money }}
+                </span>
+              </div>
+              <!-- Loading bonus-malus -->
+              <div *ngIf="bonusMalusLoading()" class="text-xs text-text-muted mt-1 flex items-center gap-1">
+                <svg class="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Calculando descuento...
+              </div>
             </div>
           </div>
 

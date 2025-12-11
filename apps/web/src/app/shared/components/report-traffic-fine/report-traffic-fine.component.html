@@ -1,0 +1,87 @@
+<ion-modal [isOpen]="isOpen" (willDismiss)="onCancel()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Reportar Multa de Tránsito</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="onCancel()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <h3 class="ion-text-center">Reportar multa para la reserva:</h3>
+      <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
+      <p class="ion-text-center ion-text-secondary">
+        ID de Reserva: {{ booking.id | slice:0:8 }}
+      </p>
+
+      <form (ngSubmit)="onSubmit()">
+        <ion-item class="ion-margin-top">
+          <ion-label position="stacked">Fecha de Infracción *</ion-label>
+          <ion-input
+            type="date"
+            [(ngModel)]="infractionDate"
+            [ngModelOptions]="{ standalone: true }"
+            required
+            aria-label="Fecha de Infracción"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Monto de la Multa (en {{ booking.currency || 'ARS' }}) *</ion-label>
+          <ion-input
+            type="number"
+            [(ngModel)]="amount"
+            [ngModelOptions]="{ standalone: true }"
+            required
+            min="0.01"
+            step="0.01"
+            aria-label="Monto de la Multa"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Descripción *</ion-label>
+          <ion-textarea
+            [(ngModel)]="description"
+            [ngModelOptions]="{ standalone: true }"
+            rows="4"
+            placeholder="Describe la infracción y cualquier detalle relevante..."
+            required
+            aria-label="Descripción"
+          ></ion-textarea>
+        </ion-item>
+
+        <!-- TODO: Add evidence uploader when generic component is available -->
+        <ion-item>
+          <ion-label position="stacked">Evidencias (Opcional)</ion-label>
+          <ion-note>Funcionalidad de subida de evidencias próximamente</ion-note>
+        </ion-item>
+
+        <div *ngIf="formError()" class="ion-padding-top ion-text-danger ion-text-center">
+          {{ formError() }}
+        </div>
+
+        <ion-button
+          expand="block"
+          class="ion-margin-top"
+          type="submit"
+          [disabled]="loading()"
+        >
+          <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
+          Reportar Multa
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          class="ion-margin-top"
+          (click)="onCancel()"
+          [disabled]="loading()"
+        >
+          Cancelar
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

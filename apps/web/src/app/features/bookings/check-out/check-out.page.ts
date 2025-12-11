@@ -75,6 +75,32 @@ export class CheckOutPage implements OnInit {
     return checkOut.fuelLevel - checkIn.fuelLevel;
   });
 
+  /**
+   * Calcula la penalidad por combustible faltante
+   * Precio por litro: ~$1.50 USD/litro Argentina
+   * Tanque promedio: 50 litros
+   * Penalización: diferencia% * 50L * $1.50 + 20% margen servicio
+   */
+  readonly fuelPenalty = computed(() => {
+    const diff = this.fuelDifference();
+    if (diff === null || diff >= 0) return null;
+
+    const LITERS_PER_TANK = 50;
+    const PRICE_PER_LITER_USD = 1.5;
+    const SERVICE_MARGIN = 1.2; // 20% margen por servicio de carga
+
+    const litersNeeded = (Math.abs(diff) / 100) * LITERS_PER_TANK;
+    const baseCost = litersNeeded * PRICE_PER_LITER_USD;
+    const totalCost = baseCost * SERVICE_MARGIN;
+
+    return {
+      liters: Math.round(litersNeeded * 10) / 10,
+      baseCost: Math.round(baseCost * 100) / 100,
+      totalCost: Math.round(totalCost * 100) / 100,
+      percentageMissing: Math.abs(diff)
+    };
+  });
+
   async ngOnInit(): Promise<void> {
     const bookingId = this.route.snapshot.paramMap.get('id');
     if (!bookingId) {

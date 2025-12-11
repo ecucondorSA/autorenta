@@ -535,3 +535,21 @@ export interface WalletMigrationStats {
   ledger_only_entries: number; // Solo en ledger (source_system = 'ledger')
   migration_percentage: number; // % de progreso (0-100)
 }
+
+// ============================================================================
+// EXPIRING CREDITS - Créditos por Vencer
+// ============================================================================
+
+/**
+ * Crédito que está próximo a vencer
+ * Usado para mostrar alertas al usuario
+ */
+export interface ExpiringCredit {
+  user_id: string;
+  transaction_id: string;
+  amount_cents: number;
+  expires_at: string;
+  days_until_expiry: number;
+  description?: string;
+  credit_type?: 'autorentar' | 'promotional' | 'refund';
+}
