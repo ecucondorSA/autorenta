@@ -53,9 +53,16 @@ export class BookingStatusComponent {
         return 'bg-success-light/20 text-success-strong';
       case 'in_progress':
         return 'bg-cta-default/20 text-cta-default';
+      case 'pending_review':
+        return 'bg-warning-light/20 text-warning-strong';
       case 'completed':
+      case 'resolved':
         return 'bg-surface-raised text-text-primary';
+      case 'disputed':
+        return 'bg-error-bg-hover text-error-strong';
       case 'cancelled':
+      case 'cancelled_renter':
+      case 'cancelled_owner':
       case 'expired':
         return 'bg-error-bg-hover text-error-strong';
       default:
@@ -76,9 +83,17 @@ export class BookingStatusComponent {
         return 'Confirmada';
       case 'in_progress':
         return 'En curso';
+      case 'pending_review':
+        return 'En revisión';
       case 'completed':
         return 'Completada';
+      case 'disputed':
+        return 'En disputa';
+      case 'resolved':
+        return 'Resuelta';
       case 'cancelled':
+      case 'cancelled_renter':
+      case 'cancelled_owner':
         return 'Cancelada';
       case 'expired':
         return 'Expirada';
@@ -103,9 +118,16 @@ export class BookingStatusComponent {
         return '✅';
       case 'in_progress':
         return '🚗';
+      case 'pending_review':
+        return '🔍';
       case 'completed':
+      case 'resolved':
         return '🏁';
+      case 'disputed':
+        return '⚖️';
       case 'cancelled':
+      case 'cancelled_renter':
+      case 'cancelled_owner':
         return '⚠️';
       case 'expired':
         return '⛔';

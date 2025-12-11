@@ -133,20 +133,35 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       description: 'Realizá las inspecciones y disfrutá del viaje.',
     },
     {
+      key: 'pending_review',
+      label: 'Revisión final',
+      description: 'Check-out realizado. Período de 24h para reportar incidentes.',
+    },
+    {
       key: 'completed',
-      label: 'Check-out y cierre',
-      description: 'Inspección final y liberación de fondos.',
+      label: 'Cierre',
+      description: 'Reserva finalizada y fondos liberados.',
     },
   ] as const;
 
   readonly currentBookingStageIndex = computed(() => {
     const booking = this.booking();
     if (!booking) return 0;
+    
+    // Direct mapping for main steps
     const idx = this.bookingFlowSteps.findIndex((step) => step.key === booking.status);
     if (idx >= 0) return idx;
-    if (booking.status === 'cancelled') {
-      return 0;
+
+    // Mapping for sub-states or alternative states
+    if (booking.status === 'disputed' || booking.status === 'resolved') {
+      return 4; // Map to 'pending_review' step
     }
+
+    if (booking.status === 'cancelled' || booking.status === 'cancelled_renter' || booking.status === 'cancelled_owner' || booking.status === 'expired') {
+      return 0; // Cancelled bookings don't follow the happy path stepper
+    }
+    
+    // Default fallback
     return this.bookingFlowSteps.length - 1;
   });
 
@@ -352,6 +367,53 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       !booking.owner_reported_damages;
     return canReport;
   });
+
+  readonly canExtendBooking = computed(() => {
+    const booking = this.booking();
+    return this.isRenter() && booking?.status === 'in_progress';
+  });
+
+  async extendBooking(): Promise<void> {
+    const booking = this.booking();
+    if (!booking) return;
+
+    // TODO: Replace with a proper date picker modal
+    const dateStr = prompt('Ingresa la nueva fecha de fin (YYYY-MM-DD):', booking.end_at.split('T')[0]);
+    if (!dateStr) return;
+
+    const newEndDate = new Date(dateStr);
+    if (isNaN(newEndDate.getTime())) {
+      alert('Fecha inválida');
+      return;
+    }
+
+    if (newEndDate <= new Date(booking.end_at)) {
+      alert('La nueva fecha debe ser posterior a la actual');
+      return;
+    }
+
+    if (!confirm(`¿Confirmas extender la reserva hasta el ${dateStr}? Se cobrará la diferencia de tu wallet.`)) {
+      return;
+    }
+
+    this.loading.set(true);
+    try {
+      const result = await this.bookingsService.extendBooking(booking.id, newEndDate);
+      if (result.success) {
+        alert('Reserva extendida exitosamente');
+        // Reload booking
+        const updated = await this.bookingsService.getBookingById(booking.id);
+        this.booking.set(updated);
+      } else {
+        alert('Error al extender: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error extending booking:', error);
+      alert('Ocurrió un error inesperado');
+    } finally {
+      this.loading.set(false);
+    }
+  }
 
   isStepCompleted(index: number): boolean {
     return index < this.currentBookingStageIndex();

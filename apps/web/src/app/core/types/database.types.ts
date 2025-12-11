@@ -9713,7 +9713,14 @@ export type BookingStatus =
   | 'no_show'
   | 'pending_owner_review'
   | 'pending_renter_review'
-  | 'pending_dispute_resolution';
+  | 'pending_dispute_resolution'
+  | 'pending_review' // NUEVO: Post check-out, esperando confirmación/disputa
+  | 'disputed' // NUEVO: En proceso de disputa
+  | 'resolved' // NUEVO: Disputa resuelta
+  | 'cancelled_renter' // NUEVO: Cancelada por el renter
+  | 'cancelled_owner' // NUEVO: Cancelada por el owner
+  | 'cancelled_system'; // NUEVO: Cancelada por el sistema
+
 export type PaymentStatus = Database['public']['Enums']['payment_status'];
 export type PaymentProvider = Database['public']['Enums']['payment_provider'];
 

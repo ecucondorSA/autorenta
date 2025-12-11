@@ -126,6 +126,14 @@
                 *ngIf="booking()?.deposit_status"
                 [status]="booking()!.deposit_status!"
               ></app-deposit-status-badge>
+              <!--
+              @if (booking()?.deposit_lock_expires_at) {
+                <p class="text-xs text-text-secondary dark:text-text-secondary/70">
+                  Garantía expira:
+                  <strong class="font-medium">{{ booking()?.deposit_lock_expires_at | date:'dd/MM/yyyy' }}</strong>
+                </p>
+              }
+              -->
             </div>
 
             <!-- Distance Risk Tier Badge -->
@@ -618,6 +626,56 @@
                       </svg>
                       <span class="pr-0.5">Iniciar Check-out</span>
                     </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extend Booking Button -->
+              <div
+                *ngIf="canExtendBooking()"
+                class="p-4 rounded-xl bg-surface-base dark:bg-surface-raised border border-border-default dark:border-border-muted mt-4"
+              >
+                <div class="flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div
+                      class="w-12 h-12 rounded-full bg-cta-default/10 dark:bg-cta-default/20 flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-cta-default"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="font-semibold text-text-primary dark:text-text-inverse mb-1">
+                      Extender Reserva
+                    </h4>
+                    <p class="text-sm text-text-secondary dark:text-text-secondary mb-3">
+                      ¿Necesitás el auto por más tiempo? Solicitá una extensión de fechas.
+                    </p>
+                    <button
+                      (click)="extendBooking()"
+                      class="inline-flex items-center gap-2 px-4 py-2 bg-surface-raised hover:bg-surface-base text-text-primary border border-border-default rounded-lg font-medium transition-colors shadow-sm"
+                    >
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Extender Fechas
+                    </button>
                   </div>
                 </div>
               </div>

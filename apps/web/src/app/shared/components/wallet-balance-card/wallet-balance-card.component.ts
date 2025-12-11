@@ -253,6 +253,18 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Inicia el flujo de pago de deuda
+   */
+  payDebt(): void {
+    const debtAmount = Math.abs(this.availableBalance());
+    // TODO: Pass amount to deposit handler if supported
+    // For now, just open the modal, the user will see their negative balance
+    if (this.depositClickHandler) {
+      this.depositClickHandler();
+    }
+  }
+
+  /**
    * Reintenta cargar el balance después de un error
    * También fuerza el polling de pagos pendientes en MercadoPago
    */

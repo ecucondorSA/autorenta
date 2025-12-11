@@ -427,6 +427,42 @@ export class BookingFlowService {
         icon: 'alert-circle-outline',
         description: 'El equipo de soporte está revisando el caso',
       },
+      pending_review: {
+        label: 'En Revisión Final',
+        color: 'warning',
+        icon: 'search-outline',
+        description: 'Esperando confirmación post-alquiler o reporte de incidentes',
+      },
+      disputed: {
+        label: 'En Disputa',
+        color: 'danger',
+        icon: 'hammer-outline',
+        description: 'Hay una disputa activa. Caso en revisión.',
+      },
+      resolved: {
+        label: 'Disputa Resuelta',
+        color: 'success',
+        icon: 'checkmark-circle-outline',
+        description: 'Disputa resuelta. Fondos en proceso de liberación.',
+      },
+      cancelled_renter: {
+        label: 'Cancelada por Locatario',
+        color: 'danger',
+        icon: 'close-circle-outline',
+        description: 'La reserva fue cancelada por el locatario',
+      },
+      cancelled_owner: {
+        label: 'Cancelada por Anfitrión',
+        color: 'danger',
+        icon: 'close-circle-outline',
+        description: 'La reserva fue cancelada por el anfitrión',
+      },
+      cancelled_system: {
+        label: 'Cancelada por Sistema',
+        color: 'danger',
+        icon: 'alert-circle-outline',
+        description: 'La reserva fue cancelada automáticamente por el sistema',
+      },
     };
 
     return (

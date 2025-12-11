@@ -57,6 +57,14 @@ export class PublishCarFormService {
       description: ['', [Validators.required, Validators.minLength(40), Validators.maxLength(800)]],
       availability_start_date: [this.todayISO(), [Validators.required]],
       availability_end_date: [this.nextMonthISO(), [Validators.required]],
+      
+      // Reglas de Alquiler (Owner Preferences)
+      mileage_limit: [200, [Validators.min(0)]], // 0 = Ilimitado
+      extra_km_price: [5, [Validators.min(0)]],
+      fuel_policy: ['full_to_full', Validators.required],
+      allow_second_driver: [true],
+      second_driver_cost: [10, [Validators.min(0)]],
+      max_anticipation_days: [90, [Validators.min(1), Validators.max(365)]],
 
       // Pricing - Opcional (se calcula automáticamente si es dinámico)
       pricing_strategy: ['dynamic'],
@@ -159,6 +167,14 @@ export class PublishCarFormService {
           location_city: lastCar.location_city,
           location_state: lastCar.location_state,
           location_country: lastCar.location_country,
+          
+          // Reglas
+          mileage_limit: lastCar.mileage_limit ?? 200,
+          extra_km_price: lastCar.extra_km_price ?? 5,
+          fuel_policy: lastCar.fuel_policy ?? 'full_to_full',
+          allow_second_driver: lastCar.allow_second_driver ?? true,
+          second_driver_cost: lastCar.second_driver_cost ?? 10,
+          max_anticipation_days: lastCar.max_anticipation_days ?? 90,
         });
 
         // Update signal for reactive UI
@@ -211,6 +227,14 @@ export class PublishCarFormService {
         location_city: car.location_city,
         location_state: car.location_state,
         location_country: car.location_country,
+
+        // Reglas
+        mileage_limit: car.mileage_limit ?? 200,
+        extra_km_price: car.extra_km_price ?? 5,
+        fuel_policy: car.fuel_policy ?? 'full_to_full',
+        allow_second_driver: car.allow_second_driver ?? true,
+        second_driver_cost: car.second_driver_cost ?? 10,
+        max_anticipation_days: car.max_anticipation_days ?? 90,
       });
 
       // Update signal for reactive UI
@@ -313,6 +337,14 @@ export class PublishCarFormService {
       location_city,
       location_state,
       location_country,
+      
+      // Reglas de Alquiler
+      mileage_limit,
+      extra_km_price,
+      fuel_policy,
+      allow_second_driver,
+      second_driver_cost,
+      max_anticipation_days,
     } = rawValue;
 
     // Get brand and model info (solo si tenemos UUIDs)
@@ -336,6 +368,14 @@ export class PublishCarFormService {
       mileage,
       transmission,
       fuel,
+
+      // Reglas de Alquiler
+      mileage_limit: mileage_limit ?? 200,
+      extra_km_price: extra_km_price ?? 5,
+      fuel_policy: fuel_policy || 'full_to_full',
+      allow_second_driver: allow_second_driver ?? true,
+      second_driver_cost: second_driver_cost ?? 10,
+      max_anticipation_days: max_anticipation_days ?? 90,
 
       // Pricing fields
       price_per_day,

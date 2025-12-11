@@ -7,6 +7,14 @@
         "/home/edu/autorenta/tools/patchright-streaming-mcp/server.js"
       ],
       "env": {}
+    },
+    "supabase": {
+      "type": "stdio",
+      "command": "/home/edu/.npm-global/bin/mcp-server-supabase",
+      "args": [],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_4984abf7ac0af3d977b989b674c19875539c014b"
+      }
     }
   }
 }

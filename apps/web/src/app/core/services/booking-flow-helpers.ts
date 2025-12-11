@@ -15,10 +15,13 @@ export function isValidStatusTransition(
   to: BookingStatus,
 ): { valid: boolean; reason?: string } {
   const validTransitions: Record<BookingStatus, BookingStatus[]> = {
-    pending: ['confirmed', 'cancelled', 'expired'],
-    pending_payment: ['confirmed', 'cancelled', 'expired'],
-    confirmed: ['in_progress', 'cancelled'],
-    in_progress: ['completed', 'cancelled'],
+    pending: ['confirmed', 'cancelled', 'expired', 'rejected', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    pending_payment: ['confirmed', 'cancelled', 'expired', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    confirmed: ['in_progress', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    in_progress: ['pending_review', 'completed', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    pending_review: ['completed', 'disputed', 'cancelled', 'cancelled_renter', 'cancelled_owner', 'cancelled_system'],
+    disputed: ['resolved', 'cancelled_system'],
+    resolved: ['completed'], // Resolved leads to completed
     completed: [],
     cancelled: [],
     expired: [],
@@ -26,7 +29,11 @@ export function isValidStatusTransition(
     rejected: [],
     pending_owner_review: [],
     pending_renter_review: [],
-    pending_dispute_resolution: [],
+    // pending_dispute_resolution is redundant with 'disputed' in the new model, so it can be mapped to it if needed
+    pending_dispute_resolution: ['disputed'],
+    cancelled_renter: [],
+    cancelled_owner: [],
+    cancelled_system: [],
   };
 
   const allowed = validTransitions[from]?.includes(to) ?? false;
@@ -225,6 +232,42 @@ export function getBookingStatusDisplay(status: BookingStatus): {
       color: 'danger',
       icon: '⚖️',
       description: 'El caso está siendo revisado por soporte',
+    },
+    pending_review: {
+      label: 'En Revisión Final',
+      color: 'warning',
+      icon: '🔍',
+      description: 'Esperando confirmación post-alquiler o reporte de incidentes',
+    },
+    disputed: {
+      label: 'En Disputa',
+      color: 'danger',
+      icon: '⚖️',
+      description: 'Hay una disputa activa. Caso en revisión.',
+    },
+    resolved: {
+      label: 'Disputa Resuelta',
+      color: 'success',
+      icon: '✅',
+      description: 'Disputa resuelta. Fondos en proceso de liberación.',
+    },
+    cancelled_renter: {
+      label: 'Cancelada por Locatario',
+      color: 'danger',
+      icon: '🚫',
+      description: 'La reserva fue cancelada por el locatario',
+    },
+    cancelled_owner: {
+      label: 'Cancelada por Anfitrión',
+      color: 'danger',
+      icon: '🚫',
+      description: 'La reserva fue cancelada por el anfitrión',
+    },
+    cancelled_system: {
+      label: 'Cancelada por Sistema',
+      color: 'danger',
+      icon: '⛔',
+      description: 'La reserva fue cancelada automáticamente por el sistema',
     },
   };
 

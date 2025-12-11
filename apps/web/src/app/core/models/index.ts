@@ -319,6 +319,14 @@ export interface Car {
   terms_and_conditions?: string;
   delivery_options?: string[];
 
+  // Rules & Preferences (Owner)
+  mileage_limit?: number | null; // 0 = unlimited
+  extra_km_price?: number | null;
+  fuel_policy?: string | null; // 'full_to_full', etc.
+  allow_second_driver?: boolean | null;
+  second_driver_cost?: number | null;
+  max_anticipation_days?: number | null;
+
   mileage: number;
   cancel_policy: CancelPolicy;
   photos?: CarPhoto[];
@@ -448,6 +456,11 @@ export interface Booking {
   deposit_release_transaction_id?: string | null;
   deposit_status?: BookingDepositStatus | null;
 
+  // NUEVO: Fecha de expiración del lock de garantía
+  // @P0-004 FIX: Se libera automáticamente el depósito si no hay acción
+  // El backend debe actualizar este campo al bloquear el depósito
+
+
   // Bilateral confirmation system
   returned_at?: string | null;
   owner_confirmed_delivery?: boolean | null;
@@ -517,6 +530,8 @@ export interface Booking {
 
   // Relación con car (populated dinamically in some queries)
   car?: Partial<Car>;
+
+
 }
 
 export interface PaymentIntent {

@@ -121,52 +121,55 @@
           <!-- Wallet Balance Card -->
           <app-wallet-balance-card class="mb-6" />
 
-          <!-- Payment Breakdown -->
+          <!-- Payment Breakdown - Wallet -->
           <div class="space-y-2 mb-6">
+            <!-- Desglose del alquiler -->
             <div class="flex justify-between text-sm">
               <span class="text-text-secondary">Alquiler del vehículo:</span>
-              <span class="font-semibold text-text-primary dark:text-text-secondary">
+              <span class="font-semibold">{{ booking()?.total_amount | money }}</span>
+            </div>
+
+            <!-- Línea de separación -->
+            <div class="border-t border-border-default my-2"></div>
+
+            <!-- Total a PAGAR (no bloquear) -->
+            <div class="flex justify-between">
+              <span class="font-semibold text-text-primary">Total a pagar:</span>
+              <span class="font-bold text-lg text-cta-default">
                 {{ booking()?.total_amount | money }}
               </span>
             </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-text-secondary">Depósito de garantía:</span>
-              <span class="font-semibold text-text-primary dark:text-text-secondary">
+
+            <!-- Garantía separada visualmente -->
+            <div class="flex justify-between text-sm bg-amber-50 dark:bg-amber-900/20 p-2 rounded">
+              <span class="text-amber-700 dark:text-amber-300">
+                + Garantía bloqueada (reembolsable):
+              </span>
+              <span class="font-semibold text-amber-700 dark:text-amber-300">
                 {{ depositAmount() | money }}
               </span>
             </div>
-            <div class="pt-2 mt-2 border-t border-border-default">
-              <div class="flex justify-between">
-                <span class="font-semibold text-text-primary dark:text-text-secondary"
-                  >Total a bloquear:</span
-                >
-                <span class="font-bold text-xl text-cta-default">
-                  {{ totalAmount() | money }}
-                </span>
-              </div>
+
+            <!-- Movimiento total -->
+            <div class="flex justify-between pt-2 border-t border-border-default">
+              <span class="text-text-secondary text-sm">Movimiento total en wallet:</span>
+              <span class="font-semibold">{{ totalAmount() | money }}</span>
             </div>
           </div>
 
           <!-- Success Message -->
-          <div class="bg-success-light/10 border border-success-light/20 rounded-lg p-4 mb-6">
+          <div class="bg-info-light/10 border border-info-light/20 rounded-lg p-4 mb-6">
             <div class="flex items-start gap-2">
-              <svg
-                class="w-5 h-5 text-success-strong mt-0.5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+              <svg class="w-5 h-5 text-info-strong mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
               </svg>
-              <div class="text-sm text-success-strong">
-                <p class="font-semibold mb-1">Fondos disponibles confirmados</p>
-                <p class="text-success-text">
-                  Los fondos se bloquearán hasta que completes el check-in. Si cancelas la reserva,
-                  se liberarán automáticamente.
-                </p>
+              <div class="text-sm">
+                <p class="font-semibold text-info-strong mb-1">¿Cómo funciona?</p>
+                <ul class="text-info-text space-y-1 list-disc list-inside">
+                  <li>El <strong>alquiler</strong> se paga ahora al confirmar</li>
+                  <li>La <strong>garantía</strong> queda bloqueada en tu wallet</li>
+                  <li>Si no hay daños, la garantía se libera automáticamente</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -183,10 +186,10 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                d="M5 13l4 4L19 7"
               />
             </svg>
-            Confirmar y Bloquear Fondos
+            Confirmar Reserva
           </app-button>
         </div>
 
@@ -206,9 +209,20 @@
             (cardError)="onCardPaymentError($event)"
           />
 
+          <!-- Info box para tarjeta -->
+          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mt-4">
+            <p class="text-sm text-blue-700 dark:text-blue-300">
+              <strong>Tu tarjeta verá:</strong>
+            </p>
+            <ul class="text-sm text-blue-600 dark:text-blue-400 mt-1 space-y-1">
+              <li>• Cargo de <strong>{{ booking()?.total_amount | money }}</strong> (alquiler)</li>
+              <li>• Retención de <strong>{{ depositAmount() | money }}</strong> (garantía - no se cobra)</li>
+            </ul>
+          </div>
+
           <!-- Security Info -->
-          <div class="mt-6 flex items-start gap-2 text-xs text-text-secondary">
-            <svg class="w-4 h-4 mt-0.5 text-success-strong" fill="currentColor" viewBox="0 0 20 20">
+          <div class="mt-4 flex items-start gap-2 text-xs text-text-secondary">
+            <svg class="w-4 h-4 mt-0.5 text-success-strong flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fill-rule="evenodd"
                 d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -216,7 +230,7 @@
               />
             </svg>
             <p>
-              Pago seguro procesado por MercadoPago. Tus datos están protegidos con encriptación
+              Pago seguro procesado por MercadoPago. Tus datos estan protegidos con encriptacion
               SSL.
             </p>
           </div>
