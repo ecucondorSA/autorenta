@@ -460,6 +460,60 @@ export class MessagesService implements OnDestroy {
   }
 
   /**
+   * Bloquea a un usuario en el servidor.
+   */
+  async blockUser(userIdToBlock: string): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) throw new Error('No autenticado');
+
+    const { error } = await this.supabase.from('user_blocks').insert({
+      blocker_id: user.id,
+      blocked_id: userIdToBlock,
+    });
+
+    if (error) throw error;
+  }
+
+  /**
+   * Desbloquea a un usuario en el servidor.
+   */
+  async unblockUser(userIdToUnblock: string): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) throw new Error('No autenticado');
+
+    const { error } = await this.supabase
+      .from('user_blocks')
+      .delete()
+      .eq('blocker_id', user.id)
+      .eq('blocked_id', userIdToUnblock);
+
+    if (error) throw error;
+  }
+
+  /**
+   * Verifica si el usuario actual ha bloqueado a otro usuario.
+   */
+  async isUserBlocked(userId: string): Promise<boolean> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) return false;
+
+    const { count, error } = await this.supabase
+      .from('user_blocks')
+      .select('*', { count: 'exact', head: true })
+      .eq('blocker_id', user.id)
+      .eq('blocked_id', userId);
+
+    if (error) return false;
+    return (count ?? 0) > 0;
+  }
+
+  /**
    * Formatea una fecha relativa para mostrar en UI
    * Ejemplos: "Ahora", "Hace 5m", "Hace 2h", "Hace 3d", "15 nov"
    */

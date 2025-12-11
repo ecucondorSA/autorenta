@@ -387,19 +387,20 @@ export class BaseChatComponent implements OnInit, OnDestroy {
       const session = this.authService.session$();
       this.currentUserId.set(session?.user?.id ?? null);
     });
-
-    // Sincroniza estado bloqueado cuando cambia el contexto o la sesión
-    effect(() => {
-      const ctx = this.context();
-      const list = this.getBlockedList();
-      this.blocked.set(list.includes(ctx.recipientId));
-    });
   }
 
   async ngOnInit(): Promise<void> {
     await this.loadMessages();
     this.subscribeToMessages();
     this.subscribeToTyping();
+
+    // Check initial blocked status from server
+    const ctx = this.context();
+    if (ctx.recipientId) {
+      this.messagesService.isUserBlocked(ctx.recipientId).then((isBlocked) => {
+        this.blocked.set(isBlocked);
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -420,47 +421,31 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Lista de bloqueados en localStorage
-   */
-  protected getBlockedList(): string[] {
-    if (typeof localStorage === 'undefined') return [];
-    try {
-      return JSON.parse(localStorage.getItem('app_blocked_users') || '[]');
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * Persiste la lista de bloqueados
-   */
-  protected saveBlockedList(list: string[]): void {
-    if (typeof localStorage === 'undefined') return;
-    localStorage.setItem('app_blocked_users', JSON.stringify(Array.from(new Set(list))));
-  }
-
-  /**
    * Bloquea / desbloquea al usuario actual del chat
    */
-  toggleBlockUser(): void {
+  async toggleBlockUser(): Promise<void> {
     const ctx = this.context();
     const target = ctx.recipientId;
     if (!target) return;
 
-    const list = this.getBlockedList();
-    const isBlocked = list.includes(target);
+    const wasBlocked = this.blocked();
+    
+    // Optimistic update
+    this.blocked.set(!wasBlocked);
 
-    if (isBlocked) {
-      const updated = list.filter((id) => id !== target);
-      this.saveBlockedList(updated);
-      this.blocked.set(false);
-      this.toastService.info('Usuario desbloqueado', `${ctx.recipientName} puede volver a escribirte.`);
-    } else {
-      list.push(target);
-      this.saveBlockedList(list);
-      this.blocked.set(true);
-      this.recipientTyping.set(false);
-      this.toastService.success('Usuario bloqueado', `No recibirás mensajes de ${ctx.recipientName}.`);
+    try {
+      if (wasBlocked) {
+        await this.messagesService.unblockUser(target);
+        this.toastService.info('Usuario desbloqueado', `${ctx.recipientName} puede volver a escribirte.`);
+      } else {
+        await this.messagesService.blockUser(target);
+        this.recipientTyping.set(false);
+        this.toastService.success('Usuario bloqueado', `No recibirás mensajes de ${ctx.recipientName}.`);
+      }
+    } catch (err) {
+      // Revertir optimistic update en caso de error
+      this.blocked.set(wasBlocked);
+      this.toastService.error('Error', 'No se pudo actualizar el bloqueo.');
     }
   }
 
