@@ -389,8 +389,8 @@
       <span class="mobile-nav-label">Inbox</span>
     </a>
 
-    <a *ngIf="isAuthenticatedSig(); else loginLink" (click)="toggleProfileMenu(); triggerHapticFeedback()" 
-       [class.active]="profileMenuOpen()"
+    <a *ngIf="isAuthenticatedSig(); else loginLink" (click)="openMobileMenuDrawer(); triggerHapticFeedback()" 
+       [class.active]="mobileMenuDrawerOpen()"
        class="mobile-nav-item">
       <div class="mobile-nav-icon">
         <div class="w-6 h-6 rounded-full overflow-hidden border border-border-default bg-surface-secondary">
