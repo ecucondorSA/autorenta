@@ -126,14 +126,12 @@
                 *ngIf="booking()?.deposit_status"
                 [status]="booking()!.deposit_status!"
               ></app-deposit-status-badge>
-              <!--
               @if (booking()?.deposit_lock_expires_at) {
                 <p class="text-xs text-text-secondary dark:text-text-secondary/70">
                   Garantía expira:
                   <strong class="font-medium">{{ booking()?.deposit_lock_expires_at | date:'dd/MM/yyyy' }}</strong>
                 </p>
               }
-              -->
             </div>
 
             <!-- Distance Risk Tier Badge -->

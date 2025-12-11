@@ -153,11 +153,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (idx >= 0) return idx;
 
     // Mapping for sub-states or alternative states
-    if (booking.status === 'disputed' || booking.status === 'resolved') {
+    if (booking.status === 'disputed') {
       return 4; // Map to 'pending_review' step
     }
 
-    if (booking.status === 'cancelled' || booking.status === 'cancelled_renter' || booking.status === 'cancelled_owner' || booking.status === 'expired') {
+    if (booking.status === 'cancelled' || booking.status === 'expired') {
       return 0; // Cancelled bookings don't follow the happy path stepper
     }
     

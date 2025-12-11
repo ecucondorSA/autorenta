@@ -30,6 +30,11 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error) => {
+      // Break infinite loop: If already retried once, don't try again
+      if (req.headers.has('X-Retry-Attempt')) {
+        return throwError(() => error);
+      }
+
       if (
         error instanceof HttpErrorResponse &&
         error.status === 401 &&
@@ -44,7 +49,11 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
               isRefreshing = false;
               if (session?.access_token) {
                 refreshTokenSubject.next(session.access_token);
-                return next(addToken(req, session.access_token));
+                // Mark request as retried to prevent infinite loops
+                const retriedReq = addToken(req, session.access_token).clone({
+                  headers: req.headers.set('X-Retry-Attempt', '1')
+                });
+                return next(retriedReq);
               }
               // Refresh failed
               auth.signOut();
@@ -62,7 +71,10 @@ export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
             filter((token) => token != null),
             take(1),
             switchMap((token) => {
-              return next(addToken(req, token!));
+              const retriedReq = addToken(req, token!).clone({
+                headers: req.headers.set('X-Retry-Attempt', '1')
+              });
+              return next(retriedReq);
             }),
           );
         }

@@ -459,7 +459,7 @@ export interface Booking {
   // NUEVO: Fecha de expiración del lock de garantía
   // @P0-004 FIX: Se libera automáticamente el depósito si no hay acción
   // El backend debe actualizar este campo al bloquear el depósito
-
+  deposit_lock_expires_at?: string | null;
 
   // Bilateral confirmation system
   returned_at?: string | null;
