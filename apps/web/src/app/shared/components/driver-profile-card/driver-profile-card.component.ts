@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import {Component, computed, inject, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
@@ -30,6 +31,7 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
 @Component({
   selector: 'app-driver-profile-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-card>

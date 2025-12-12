@@ -1,10 +1,12 @@
-import { Component, Input, Output, EventEmitter, inject, computed } from '@angular/core';
+import {Component, Input, Output, EventEmitter, inject, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FavoritesService } from '../../../core/services/favorites.service';
 
 @Component({
   selector: 'app-favorite-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <button

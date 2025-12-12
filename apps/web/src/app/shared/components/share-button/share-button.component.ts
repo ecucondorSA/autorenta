@@ -1,4 +1,5 @@
-import { Component, Input, signal, inject } from '@angular/core';
+import {Component, Input, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShareService } from '../../../core/services/share.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -9,6 +10,7 @@ export type ShareType = 'car' | 'booking' | 'app' | 'custom';
 @Component({
   selector: 'app-share-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, HeaderIconComponent],
   template: `
     <button

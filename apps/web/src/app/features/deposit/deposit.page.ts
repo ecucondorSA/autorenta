@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,6 +26,7 @@ import { NotificationManagerService } from '../../core/services/notification-man
 @Component({
   selector: 'app-deposit',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './deposit.page.html',
   styleUrls: ['./deposit.page.css'],

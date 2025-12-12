@@ -1,4 +1,5 @@
-import { Component, Input, computed } from '@angular/core';
+import {Component, Input, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
@@ -12,6 +13,7 @@ import { BookingsService } from '../../../core/services/bookings.service';
 @Component({
   selector: 'app-booking-status',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div *ngIf="booking" class="status-badge" [ngClass]="statusClass()">

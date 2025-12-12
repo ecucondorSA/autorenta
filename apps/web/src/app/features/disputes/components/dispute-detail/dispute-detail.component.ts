@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, input, output, signal, computed } from '@angular/core';
+import {Component, OnInit, inject, input, output, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +13,7 @@ import { ProfileService } from '../../../../core/services/profile.service';
 @Component({
   selector: 'app-dispute-detail',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, EvidenceUploaderComponent],
   templateUrl: './dispute-detail.component.html',
   styleUrls: ['./dispute-detail.component.css']

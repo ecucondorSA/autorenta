@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, Input, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewsService } from '../../../core/services/reviews.service';
@@ -17,6 +18,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
 @Component({
   selector: 'app-review-management',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
   template: `
     <!-- Completed Actions -->

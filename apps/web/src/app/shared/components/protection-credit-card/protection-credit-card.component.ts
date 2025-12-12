@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import {Component, computed, inject, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { ProtectionCreditService } from '../../../core/services/protection-credit.service';
@@ -26,6 +27,7 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
 @Component({
   selector: 'app-protection-credit-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-card>

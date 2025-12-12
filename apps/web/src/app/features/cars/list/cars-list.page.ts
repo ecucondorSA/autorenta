@@ -26,7 +26,7 @@ import { MetaService } from '../../../core/services/meta.service';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
 import { CarsMapComponent } from '../../../shared/components/cars-map/cars-map.component';
-import { DateRange } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { DateRange, DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PullToRefreshComponent } from '../../../shared/components/pull-to-refresh/pull-to-refresh.component';
 import { PwaTitlebarComponent } from '../../../shared/components/pwa-titlebar/pwa-titlebar.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
@@ -75,6 +75,7 @@ const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
     PwaTitlebarComponent,
     TranslateModule,
     IconComponent,
+    DateRangePickerComponent,
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],
@@ -178,6 +179,45 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly maxPrice = signal<number | null>(null);
   readonly minRating = signal<number | null>(null); // 0-5
   readonly searchQuery = signal<string>(''); // Búsqueda por texto
+  readonly searchSuggestions = signal<string[]>([]); // Sugerencias de autocompletado
+  private allBrandsAndModels: { brand: string; model: string }[] = [];
+  private carCities: string[] = [];
+
+  // Efecto para cargar marcas y modelos de autos para el autocompletado
+  private readonly loadBrandsAndModelsEffect = effect(
+    () => {
+      if (this.isBrowser) {
+        // Cargar marcas
+        void this.carsService.getCarBrands().then((brands) => {
+          this.allBrandsAndModels = brands.map((b) => ({ brand: b.name, model: '' }));
+        });
+        // Cargar modelos
+        void this.carsService.getAllCarModels().then((models) => {
+          models.forEach((m) => {
+            // Find brand name by brand_id or use an empty string if not found
+            // For simplicity and to avoid another API call here, we might need a mapping in CarsService
+            // For now, let's just add model names.
+            this.allBrandsAndModels.push({ brand: '', model: m.name });
+          });
+        });
+      }
+    },
+    { allowSignalWrites: true },
+  );
+
+  // Efecto para reaccionar a los cambios en searchQuery y actualizar las sugerencias
+  private readonly searchEffect = effect(
+    () => {
+      const query = this.searchQuery();
+      if (query.length > 2) {
+        this.updateSearchSuggestions(query);
+      } else {
+        this.searchSuggestions.set([]);
+      }
+    },
+    { allowSignalWrites: true },
+  );
+
 
   // Contadores para badge de resultados
   readonly totalCount = computed(() => this.cars().length);
@@ -544,6 +584,42 @@ export class CarsListPage implements OnInit, OnDestroy {
     return recommended.length >= 3; // Mostrar mínimo 3 autos
   });
 
+  // Effect para extraer ciudades únicas de los autos
+  private readonly extractCarCitiesEffect = effect(() => {
+    const cars = this.cars();
+    const uniqueCities = new Set<string>();
+    cars.forEach(car => {
+      if (car.location_city) {
+        uniqueCities.add(car.location_city);
+      }
+    });
+    this.carCities = Array.from(uniqueCities);
+  });
+
+  private updateSearchSuggestions(query: string): void {
+    const lowerQuery = query.toLowerCase();
+    const suggestions: Set<string> = new Set();
+
+    // Sugerencias de marcas
+    this.allBrandsAndModels
+      .filter((item) => item.brand && item.brand.toLowerCase().includes(lowerQuery))
+      .map((item) => item.brand)
+      .forEach((brand) => suggestions.add(brand));
+
+    // Sugerencias de modelos
+    this.allBrandsAndModels
+      .filter((item) => item.model && item.model.toLowerCase().includes(lowerQuery))
+      .map((item) => item.model)
+      .forEach((model) => suggestions.add(model));
+
+    // Sugerencias de ciudades
+    this.carCities
+      .filter((city) => city.toLowerCase().includes(lowerQuery))
+      .forEach((city) => suggestions.add(city));
+
+    this.searchSuggestions.set(Array.from(suggestions).slice(0, 5)); // Limitar a 5 sugerencias
+  }
+
   // Helper para determinar si un auto es "Top Rated" (Superanfitrión)
   isTopRated(car: CarWithDistance): boolean {
     return (car.rating_avg || 0) >= 4.5 && (car.rating_count || 0) >= 5;
@@ -603,6 +679,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     void this.initializeUserLocation();
 
     void this.loadCars();
+    // Effects se ejecutan automáticamente, no necesitan ser llamados
   }
 
   /**
@@ -671,6 +748,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
       // Collapse search form on mobile after search
       this.searchExpanded.set(false);
+      this.searchSuggestions.set([]); // Limpiar sugerencias después de la búsqueda
 
       // Notificar que el inventario está listo
       if (this.isBrowser && !this.inventoryReady()) {
@@ -925,6 +1003,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   onSearchSubmit(): void {
     // La búsqueda ya se aplica reactivamente via searchQuery signal
     // Este método puede usarse para analytics o acciones adicionales
+    this.searchSuggestions.set([]); // Limpiar sugerencias al presionar Enter
   }
 
   /**
@@ -932,6 +1011,14 @@ export class CarsListPage implements OnInit, OnDestroy {
    */
   clearSearch(): void {
     this.searchQuery.set('');
+    this.searchSuggestions.set([]); // Limpiar sugerencias al limpiar búsqueda
+  }
+
+  onSuggestionClick(suggestion: string): void {
+    this.searchQuery.set(suggestion);
+    this.searchSuggestions.set([]); // Limpiar sugerencias
+    // Podríamos disparar una búsqueda inmediata aquí si queremos
+    // void this.loadCars();
   }
 
   // Card ↔ Map hover synchronization

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
+import {Component, computed, EventEmitter, inject, OnInit, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { AddBankAccountParams, BankAccountType } from '../../../core/models/wallet.model';
@@ -15,6 +16,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 @Component({
   selector: 'app-bank-account-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './bank-account-form.component.html',
   styleUrl: './bank-account-form.component.css',

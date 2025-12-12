@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnDestroy, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -13,6 +14,7 @@ import { PayoutsHistoryComponent } from './components/payouts-history/payouts-hi
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-owner-dashboard',
   imports: [
     CommonModule,

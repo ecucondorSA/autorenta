@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -24,6 +25,7 @@ import { ProfileService } from '../../../core/services/profile.service';
  */
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-auth-callback-page',
   imports: [CommonModule, NgOptimizedImage],
   template: `

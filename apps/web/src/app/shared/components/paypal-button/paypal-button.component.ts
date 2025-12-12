@@ -1,6 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   Component,
   EventEmitter,
   inject,
@@ -9,7 +8,7 @@ import {
   OnInit,
   Output,
   PLATFORM_ID,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { PayPalBookingGatewayService } from '../../../core/services/paypal-booking-gateway.service';
 
@@ -48,6 +47,7 @@ declare const window: PayPalWindow;
 @Component({
   selector: 'app-paypal-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './paypal-button.component.html',
   styleUrls: ['./paypal-button.component.css'],

@@ -1,4 +1,5 @@
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import {Component, inject, signal, OnInit, OnDestroy,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,6 +31,7 @@ import { CarsService } from '../../../core/services/cars.service';
 @Component({
   selector: 'app-vehicle-documents',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './vehicle-documents.page.html',
   styleUrls: ['./vehicle-documents.page.css'],

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { WithdrawalService } from '@core/services/withdrawal.service';
 import { NotificationManagerService } from '@core/services/notification-manager.service';
 import type { WithdrawalRequest } from '@core/models/wallet.model';
@@ -8,6 +9,7 @@ import type { WithdrawalRequest } from '@core/models/wallet.model';
 @Component({
   selector: 'app-withdrawals-admin',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="container mx-auto px-4 py-8">

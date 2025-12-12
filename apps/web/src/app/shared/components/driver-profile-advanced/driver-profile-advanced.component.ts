@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { DriverProfileService, ClassBenefits } from '../../../core/services/driver-profile.service';
 
 @Component({
   selector: 'app-driver-profile-advanced',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="space-y-6">

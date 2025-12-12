@@ -1,6 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   ApplicationRef,
   Component,
   ComponentRef,
@@ -20,7 +19,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
@@ -181,6 +180,7 @@ class QuadTree {
 @Component({
   selector: 'app-cars-map',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     MapBookingPanelComponent,

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 
 export interface InsuranceSummaryInput {
   coverageName?: string;
@@ -13,6 +14,7 @@ export interface InsuranceSummaryInput {
 @Component({
   selector: 'app-booking-insurance-summary',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

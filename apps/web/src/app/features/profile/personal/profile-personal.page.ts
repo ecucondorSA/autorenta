@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
+import {Component, inject, OnInit, signal, computed, effect,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,6 +24,7 @@ import type { UserProfile, Role } from '../../../core/models';
 @Component({
   selector: 'app-profile-personal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, ReactiveFormsModule, SectionCardComponent],
   template: `
     <ion-header>

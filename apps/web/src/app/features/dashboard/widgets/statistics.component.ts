@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import {Component, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 
 @Component({
   selector: 'app-statistics-widget',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <section class="p-4 bg-white rounded shadow">

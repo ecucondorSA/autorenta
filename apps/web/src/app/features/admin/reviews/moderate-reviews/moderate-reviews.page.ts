@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ReviewsService } from '../../../../core/services/reviews.service';
 import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
 import type { Review } from '../../../../core/models';
@@ -7,6 +8,7 @@ import type { Review } from '../../../../core/models';
 @Component({
   selector: 'app-moderate-reviews',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="container mx-auto px-4 py-8">

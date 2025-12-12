@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
+import {Component,
   computed,
   effect,
   EffectRef,
@@ -10,7 +9,7 @@ import {
   OnInit,
   runInInjectionContext,
   signal,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 
@@ -38,6 +37,7 @@ import { WalletService } from '../../../core/services/wallet.service';
 @Component({
   selector: 'app-wallet-balance-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   templateUrl: './wallet-balance-card.component.html',
   styleUrls: ['./wallet-balance-card.component.css'],

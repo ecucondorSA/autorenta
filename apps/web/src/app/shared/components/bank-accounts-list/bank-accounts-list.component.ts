@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {Component, EventEmitter, Input, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import type { BankAccount } from '../../../core/models/wallet.model';
@@ -9,6 +10,7 @@ import type { BankAccount } from '../../../core/models/wallet.model';
 @Component({
   selector: 'app-bank-accounts-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   templateUrl: './bank-accounts-list.component.html',
   styleUrl: './bank-accounts-list.component.css',

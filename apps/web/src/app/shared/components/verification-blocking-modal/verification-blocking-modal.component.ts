@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
+import {Component, Input, Output, EventEmitter, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,6 +16,7 @@ export interface VerificationBlockingModalConfig {
 @Component({
   selector: 'app-verification-blocking-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div class="verification-blocking-modal" [class.open]="isOpen()">

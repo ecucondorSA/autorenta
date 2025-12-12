@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -17,6 +18,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-dynamic-pricing-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="dynamic-pricing-badge" [class.with-surge]="surgeActive">

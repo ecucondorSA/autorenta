@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import {Component, OnInit, inject, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -9,6 +10,7 @@ import { BonusProtectorService } from '../../../core/services/bonus-protector.se
 @Component({
   selector: 'app-bonus-malus-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, RouterLink],
   templateUrl: './bonus-malus-card.component.html',
 })

@@ -55,6 +55,8 @@ import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawe
 import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel.component';
+import { TouchFeedbackDirective } from './shared/directives/touch-feedback.directive';
+import { routeAnimations } from './core/animations/route-animations'; // Importar animaciones
 
 @Component({
   selector: 'app-root',
@@ -85,6 +87,7 @@ import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel
     HeaderIconComponent,
     ClickOutsideDirective,
     DebugPanelComponent,
+    TouchFeedbackDirective,
   ],
   templateUrl: './app.component.html',
   styles: [
@@ -172,8 +175,17 @@ import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [routeAnimations], // Registrar la animación
 })
 export class AppComponent implements OnInit {
+  // ... imports anteriores ...
+
+  // Método para detectar la animación de la ruta
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
+
+
   private readonly authService = inject(AuthService);
   private readonly profileService = inject(ProfileService);
   private readonly assetPreloader = inject(AssetPreloaderService);

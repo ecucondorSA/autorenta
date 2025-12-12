@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, interval, firstValueFrom } from 'rxjs';
@@ -25,6 +26,7 @@ import { FgoStatusV1_1 } from '../../../core/models/fgo-v1-1.model';
 @Component({
   selector: 'app-fgo-overview',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './fgo-overview.page.html',
   styleUrls: ['./fgo-overview.page.css'],

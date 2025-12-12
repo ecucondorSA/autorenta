@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, OnDestroy, signal, effect } from '@angular/core';
+import {Component, inject, OnInit, OnDestroy, signal, effect,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -20,6 +21,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
 @Component({
   selector: 'app-profile-preferences',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   template: `
     <ion-header>

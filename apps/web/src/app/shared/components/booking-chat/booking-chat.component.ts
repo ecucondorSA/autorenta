@@ -1,4 +1,5 @@
-import { Component, computed, input } from '@angular/core';
+import {Component, computed, input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component';
 
@@ -10,6 +11,7 @@ import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component
 @Component({
   selector: 'app-booking-chat',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, BaseChatComponent],
   template: `
     <app-base-chat

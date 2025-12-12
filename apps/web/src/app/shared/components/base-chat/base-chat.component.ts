@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, effect, inject, input, output, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '../../../core/services/auth.service';
@@ -25,6 +26,7 @@ export interface ChatContext {
 @Component({
   selector: 'app-base-chat',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <!-- WhatsApp-style Chat Container -->

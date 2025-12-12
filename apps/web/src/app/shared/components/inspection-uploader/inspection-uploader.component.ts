@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
+import {Component,
   EventEmitter,
   Input,
   OnInit,
@@ -8,7 +7,7 @@ import {
   computed,
   inject,
   signal,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { IconComponent } from '../icon/icon.component';
@@ -51,6 +50,7 @@ interface WindowWithInspectionCallback extends Window {
 @Component({
   selector: 'app-inspection-uploader',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './inspection-uploader.component.html',
   styleUrl: './inspection-uploader.component.css',

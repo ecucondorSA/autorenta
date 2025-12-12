@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import type { ConversationDTO } from '../../core/repositories/messages.repository';
@@ -20,6 +21,7 @@ import { UnreadMessagesService } from '../../core/services/unread-messages.servi
 @Component({
   selector: 'app-inbox',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   styleUrls: ['./inbox-pro.styles.css'],
   template: `

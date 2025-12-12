@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, effect, PLATFORM_ID } from '@angular/core';
+import {Component, OnInit, inject, signal, effect, PLATFORM_ID,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,6 +28,7 @@ interface NotificationPreferencesPayload {
 @Component({
   selector: 'app-notification-preferences',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">

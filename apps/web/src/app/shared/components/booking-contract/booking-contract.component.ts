@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import {Component, Input, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-booking-contract',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">

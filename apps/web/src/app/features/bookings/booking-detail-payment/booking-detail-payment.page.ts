@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 
@@ -30,6 +31,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
 @Component({
   selector: 'app-booking-detail-payment',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,

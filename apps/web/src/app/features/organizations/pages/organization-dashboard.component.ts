@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
 import { RouterModule } from '@angular/router';
 import { OrganizationService, Organization } from '../services/organization.service';
@@ -7,6 +8,7 @@ import { OrganizationService, Organization } from '../services/organization.serv
 @Component({
   selector: 'app-organization-dashboard',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule, FormsModule], // Añadir FormsModule
   template: `
     <div class="container mx-auto p-6">

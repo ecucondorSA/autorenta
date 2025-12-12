@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {Component, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { BookingsService } from '../../core/services/bookings.service';
 import { CalendarComponent } from '../../shared/calendar.component';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, CalendarComponent],
   selector: 'app-car-booking',
   template: `

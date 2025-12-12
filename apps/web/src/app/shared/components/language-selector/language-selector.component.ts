@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageService, SupportedLanguage } from '../../../core/services/language.service';
@@ -23,6 +24,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 @Component({
   selector: 'app-language-selector',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule, HeaderIconComponent],
   template: `
     <div class="relative">

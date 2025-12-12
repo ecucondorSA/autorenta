@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import {Component, computed, OnDestroy, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -29,6 +30,7 @@ interface ExchangeRateStats {
 @Component({
   selector: 'app-exchange-rates',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './exchange-rates.page.html',
   styleUrls: ['./exchange-rates.page.css'],

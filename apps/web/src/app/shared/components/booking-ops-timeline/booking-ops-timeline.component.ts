@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 
 export interface BookingOpsData {
   payment_note?: string | null;
@@ -18,6 +19,7 @@ export interface BookingOpsData {
 @Component({
   selector: 'app-booking-ops-timeline',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

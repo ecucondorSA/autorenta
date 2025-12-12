@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import {Component, computed, EventEmitter, inject, Input, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { BankAccount, PayoutService } from '../../../core/services/payout.service';
@@ -12,6 +13,7 @@ import { BankAccount, PayoutService } from '../../../core/services/payout.servic
 @Component({
   selector: 'app-request-payout-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="modal-overlay" (click)="onClose()">

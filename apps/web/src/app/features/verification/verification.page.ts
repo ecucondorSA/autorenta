@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, computed, inject, effect } from '@angular/core';
+import {Component, OnInit, signal, computed, inject, effect,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -100,6 +101,7 @@ type DocState = 'missing' | 'in_review' | 'approved' | 'rejected';
 @Component({
   selector: 'app-verification',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
 import { BookingsService } from '../../../../core/services/bookings.service';
@@ -34,6 +35,7 @@ interface PaymentDetails {
 @Component({
   selector: 'app-booking-confirmation',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './booking-confirmation.page.html',
   styleUrls: ['./booking-confirmation.page.css'],

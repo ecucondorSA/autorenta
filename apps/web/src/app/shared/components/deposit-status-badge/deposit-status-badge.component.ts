@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingDepositStatus } from '../../../core/models';
 
@@ -14,6 +15,7 @@ interface BadgeConfig {
 @Component({
   selector: 'app-deposit-status-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="inline-flex items-center gap-1.5 group relative">

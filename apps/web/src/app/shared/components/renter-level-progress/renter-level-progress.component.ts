@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import {Component, OnInit, inject, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -20,6 +21,7 @@ export interface RenterLevelData {
 @Component({
   selector: 'app-renter-level-progress',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './renter-level-progress.component.html',
 })

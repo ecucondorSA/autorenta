@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { DriverProfileService, ClassBenefits } from '../../../core/services/driver-profile.service';
@@ -28,6 +29,7 @@ import { DriverProfileService, ClassBenefits } from '../../../core/services/driv
 @Component({
   selector: 'app-class-benefits-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-header>

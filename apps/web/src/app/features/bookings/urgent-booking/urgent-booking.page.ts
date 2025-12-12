@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import type { Car } from '../../../core/models';
@@ -10,6 +11,7 @@ import { UrgentRentalService } from '../../../core/services/urgent-rental.servic
 @Component({
   selector: 'app-urgent-booking',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './urgent-booking.page.html',
 })

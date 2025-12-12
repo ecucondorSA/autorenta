@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
@@ -10,7 +11,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Geolocation } from '@capacitor/geolocation';
+import { LocationService } from '../../core/services/location.service';
 import {
   IonContent,
   IonHeader,
@@ -45,6 +46,7 @@ import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze
   templateUrl: './explore.page.html',
   styleUrls: ['./explore.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     FormsModule,
@@ -116,6 +118,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     private router: Router,
     private breakpoint: BreakpointService,
     private toastController: ToastController,
+    private locationService: LocationService,
   ) {
     addIcons({ optionsOutline, locateOutline, gridOutline, listOutline, mapOutline });
     // Usar BreakpointService en lugar de window.innerWidth
@@ -153,11 +156,13 @@ export class ExplorePage implements OnInit, AfterViewInit {
 
   async getUserLocation() {
     try {
-      const position = await Geolocation.getCurrentPosition();
-      this.userLocation.set({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      });
+      const position = await this.locationService.getCurrentPosition();
+      if (position) {
+        this.userLocation.set({
+          lat: position.lat,
+          lng: position.lng,
+        });
+      }
     } catch (error) {
       console.error('Error getting location:', error);
       const toast = await this.toastController.create({

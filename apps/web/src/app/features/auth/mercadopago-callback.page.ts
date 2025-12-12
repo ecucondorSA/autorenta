@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MercadoPagoOAuthService } from '../../core/services/mercadopago-oauth.service';
@@ -6,6 +7,7 @@ import { MercadoPagoOAuthService } from '../../core/services/mercadopago-oauth.s
 @Component({
   selector: 'app-mercadopago-callback',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="callback-container">

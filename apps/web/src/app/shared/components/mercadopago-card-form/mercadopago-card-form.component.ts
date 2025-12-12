@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   OnDestroy,
   AfterViewInit,
   Output,
@@ -10,7 +9,7 @@ import {
   NgZone,
   ElementRef,
   ViewChild,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { environment } from '@environment';
 import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
@@ -110,6 +109,7 @@ interface BrickError {
 @Component({
   selector: 'app-mercadopago-card-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="mp-payment-brick-container">

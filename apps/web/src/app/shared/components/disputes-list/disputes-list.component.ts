@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, Output, EventEmitter, signal, inject } from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisputesService, Dispute, DisputeEvidence } from '../../../core/services/disputes.service';
 import { DisputeDetailComponent } from '../../../features/disputes/components/dispute-detail/dispute-detail.component';
@@ -6,6 +7,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
 @Component({
   selector: 'app-disputes-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, DisputeDetailComponent],
   template: `
     <div class="space-y-4">

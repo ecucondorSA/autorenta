@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import {Component, computed, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { PwaService } from '../../../core/services/pwa.service';
@@ -13,6 +14,7 @@ interface CapabilityInfo {
 @Component({
   selector: 'app-pwa-capabilities',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   templateUrl: './pwa-capabilities.component.html',
   styleUrl: './pwa-capabilities.component.css',

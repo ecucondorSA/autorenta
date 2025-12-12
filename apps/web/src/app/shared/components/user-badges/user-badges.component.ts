@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import type { UserStats } from '../../../core/models';
@@ -14,6 +15,7 @@ interface BadgeDisplay {
 @Component({
   selector: 'app-user-badges',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   templateUrl: './user-badges.component.html',
   styleUrls: ['./user-badges.component.css'],

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserProfile } from '../../../core/models';
@@ -24,6 +25,7 @@ import { VerificationService } from '../../../core/services/verification.service
 @Component({
   selector: 'app-verification-prompt-banner',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, TranslateModule],
   template: `
     <div

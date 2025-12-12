@@ -1,6 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   Component,
   computed,
   ElementRef,
@@ -9,7 +8,7 @@ import {
   PLATFORM_ID,
   signal,
   ViewChild,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -30,6 +29,7 @@ import {
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, BlockDateModalComponent],
   templateUrl: './availability-calendar.page.html',
   styleUrls: ['./availability-calendar.page.css'],

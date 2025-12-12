@@ -2,34 +2,11 @@
 <section class="hero-section">
   <div class="hero-content">
     <div class="hero-text">
-      <h1 class="hero-title">Encuentra tu auto perfecto</h1>
-      <p class="hero-subtitle">
-        Más de 2,500 autos disponibles. Reserva en minutos, conduce en horas.
-      </p>
-      <p class="hero-price">Desde <strong>$15.000</strong>/día</p>
-    </div>
-
-    <!-- Hero Search Component -->
-    <div class="hero-search-container">
-      <div class="search-box">
-        <app-icon name="search" [size]="24" cssClass="search-icon" />
-        <input
-          type="text"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
-          (keyup.enter)="onSearchSubmit()"
-          placeholder="Buscar por marca, modelo o ciudad..."
-          class="search-input"
-          aria-label="Buscar autos"
-        />
-        <button
-          type="button"
-          (click)="onSearchSubmit()"
-          class="search-button"
-          aria-label="Buscar autos"
-        >
-          Buscar autos
-        </button>
+      <h1 class="hero-title">Encuentra el auto ideal, cerca de ti.</h1>
+      <p class="hero-subtitle">Conecta con dueños locales y conduce el auto que realmente quieres. Seguro incluido en cada viaje.</p>
+      <p class="hero-price">Desde económicos a $15.000 hasta lujo.</p>
+      <div class="hero-cta">
+        <a routerLink="/cars/list" class="btn-primary btn-large">Explorar autos</a>
       </div>
     </div>
   </div>

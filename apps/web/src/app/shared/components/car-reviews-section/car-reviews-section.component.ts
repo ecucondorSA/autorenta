@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {Component, Input, OnInit, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { ReviewCardComponent } from '../review-card/review-card.component';
 
@@ -21,6 +22,7 @@ import { ReviewCardComponent } from '../review-card/review-card.component';
 @Component({
   selector: 'app-car-reviews-section',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReviewCardComponent],
   templateUrl: './car-reviews-section.component.html',
   styleUrls: ['./car-reviews-section.component.css'],

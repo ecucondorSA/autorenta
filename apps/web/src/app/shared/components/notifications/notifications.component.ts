@@ -1,4 +1,5 @@
-import { Component, signal, inject, computed, ViewChild, ElementRef } from '@angular/core';
+import {Component, signal, inject, computed, ViewChild, ElementRef,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import {
@@ -11,6 +12,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-notifications',
   imports: [CommonModule, ClickOutsideDirective, HeaderIconComponent],
   templateUrl: './notifications.component.html',

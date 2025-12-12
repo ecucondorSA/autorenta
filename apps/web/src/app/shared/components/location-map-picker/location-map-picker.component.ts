@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -10,7 +9,7 @@ import {
   Output,
   signal,
   ViewChild,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import type mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
@@ -27,6 +26,7 @@ export interface LocationCoordinates {
 @Component({
   selector: 'app-location-map-picker',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   template: `
     <div class="location-map-picker">

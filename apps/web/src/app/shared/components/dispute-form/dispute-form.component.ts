@@ -1,4 +1,5 @@
-import { Component, input, output, signal, inject } from '@angular/core';
+import {Component, input, output, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DisputesService, DisputeKind, Dispute } from '../../../core/services/disputes.service';
@@ -8,6 +9,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
 @Component({
   selector: 'app-dispute-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, EvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
   template: `
     <div

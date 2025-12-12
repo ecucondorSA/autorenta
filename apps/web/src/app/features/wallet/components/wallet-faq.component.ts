@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import {Component, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface FaqItem {
@@ -10,6 +11,7 @@ interface FaqItem {
 @Component({
   selector: 'app-wallet-faq',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

@@ -1,4 +1,5 @@
-import { Component, signal, output } from '@angular/core';
+import {Component, signal, output,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -27,6 +28,7 @@ export interface SidebarMenuItem {
 @Component({
   selector: 'app-facebook-sidebar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <!-- Backdrop -->

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -8,6 +9,7 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
 @Component({
   selector: 'app-reviews-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, ReviewCardComponent],
   templateUrl: './reviews.page.html',
   styleUrls: ['./reviews.page.css'],

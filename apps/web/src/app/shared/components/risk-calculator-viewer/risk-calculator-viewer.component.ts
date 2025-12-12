@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, input } from '@angular/core';
+import {Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, input,
+  ChangeDetectionStrategy} from '@angular/core';
 import {
   RiskCalculation,
   RiskCalculatorService,
@@ -8,6 +9,7 @@ import {
 @Component({
   selector: 'app-risk-calculator-viewer',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './risk-calculator-viewer.component.html',

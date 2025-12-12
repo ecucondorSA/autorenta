@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import {
   DynamicPricingResponse,
   DynamicPricingService,
@@ -9,6 +10,7 @@ import {
 @Component({
   selector: 'app-dynamic-price-display',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="stack-sm">

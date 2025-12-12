@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { BankAccount, PayoutService } from '../../../core/services/payout.service';
@@ -16,6 +17,7 @@ import { BankAccount, PayoutService } from '../../../core/services/payout.servic
 @Component({
   selector: 'app-bank-accounts',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="bank-accounts">

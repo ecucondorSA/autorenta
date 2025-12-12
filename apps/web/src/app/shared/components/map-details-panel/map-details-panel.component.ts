@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import {Component, Input, Output, EventEmitter, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarMapLocation } from '@core/services/car-locations.service';
 import { RouterModule } from '@angular/router';
@@ -9,6 +10,7 @@ import { NavigationService } from '../../../core/services/navigation.service';
   templateUrl: './map-details-panel.component.html',
   styleUrls: ['./map-details-panel.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule],
 })
 export class MapDetailsPanelComponent {

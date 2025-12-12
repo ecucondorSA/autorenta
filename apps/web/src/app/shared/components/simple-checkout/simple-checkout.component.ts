@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   Input,
   Output,
   EventEmitter,
@@ -7,7 +6,7 @@ import {
   inject,
   computed,
   effect,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -40,6 +39,7 @@ interface CheckoutStep {
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-simple-checkout',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe, IconComponent],
   templateUrl: './simple-checkout.component.html',

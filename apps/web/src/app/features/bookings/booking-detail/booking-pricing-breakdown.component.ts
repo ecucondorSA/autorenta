@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../core/models';
 
@@ -11,6 +12,7 @@ import { Booking } from '../../../core/models';
 @Component({
   selector: 'app-booking-pricing-breakdown',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

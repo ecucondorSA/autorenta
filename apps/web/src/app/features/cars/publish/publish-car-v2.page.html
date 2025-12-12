@@ -362,16 +362,13 @@
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Detalles básicos</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label class="label-text">Kilometraje</label>
-                <div class="relative">
-                  <input
-                    type="number"
-                    formControlName="mileage"
-                    class="input-modern pl-10"
-                    placeholder="Ej: 45000"
-                  />
-                  <span class="absolute left-3.5 top-3.5 text-slate-500 text-xs font-bold">KM</span>
-                </div>
+                <label class="label-text">Kilometraje (km)</label>
+                <input
+                  type="number"
+                  formControlName="mileage"
+                  class="input-modern"
+                  placeholder="Ej: 45000"
+                />
                 @if (
                   publishForm.get('mileage')?.invalid &&
                   (publishForm.get('mileage')?.dirty || publishForm.get('mileage')?.touched)

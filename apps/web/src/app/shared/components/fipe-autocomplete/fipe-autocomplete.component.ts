@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, signal, computed, OnChanges, inject } from '@angular/core';
+import {Component, Input, Output, EventEmitter, signal, computed, OnChanges, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarBrandsService } from '../../../core/services/car-brands.service';
 
@@ -14,6 +15,7 @@ export interface FipeAutocompleteOption {
 @Component({
   selector: 'app-fipe-autocomplete',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="relative">

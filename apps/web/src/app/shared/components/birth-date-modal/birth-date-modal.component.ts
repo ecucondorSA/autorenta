@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import {Component, EventEmitter, inject, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '../../../core/services/profile.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -12,6 +13,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
 @Component({
   selector: 'app-birth-date-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <!-- Modal Overlay -->

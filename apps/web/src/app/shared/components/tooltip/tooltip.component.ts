@@ -1,4 +1,5 @@
-import { Component, input, signal } from '@angular/core';
+import {Component, input, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -20,6 +21,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-tooltip',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="tooltip-wrapper" (mouseenter)="show()" (mouseleave)="hide()" (click)="toggle()">

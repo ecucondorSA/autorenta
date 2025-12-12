@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import {Component, EventEmitter, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 export interface MapControlsEvent {
@@ -10,6 +11,7 @@ export interface MapControlsEvent {
 @Component({
   selector: 'app-map-controls',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <div class="map-controls-container">

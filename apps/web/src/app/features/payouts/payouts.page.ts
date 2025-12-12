@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { BankAccount, PayoutService } from '../../core/services/payout.service';
@@ -21,6 +22,7 @@ import { RequestPayoutModalComponent } from './components/request-payout-modal.c
 @Component({
   selector: 'app-payouts-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,

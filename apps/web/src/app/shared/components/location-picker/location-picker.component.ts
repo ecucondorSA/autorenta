@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import {Component, EventEmitter, inject, Output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { LocationChoice, LocationService } from '../../../core/services/location.service';
@@ -24,6 +25,7 @@ export interface LocationSelection {
 @Component({
   selector: 'app-location-picker',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="location-picker">

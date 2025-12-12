@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Car } from '../../../core/models';
@@ -9,6 +10,7 @@ import { CarsService } from '../../../core/services/cars.service';
 @Component({
   selector: 'app-bulk-blocking',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './bulk-blocking.page.html',
   styleUrls: ['./bulk-blocking.page.scss'],

@@ -32,13 +32,15 @@
  * ```
  */
 
-import { Component, Input, Output, EventEmitter, signal, WritableSignal } from '@angular/core';
+import {Component, Input, Output, EventEmitter, signal, WritableSignal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-section-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   templateUrl: './section-card.component.html',
   styleUrls: ['./section-card.component.scss'],

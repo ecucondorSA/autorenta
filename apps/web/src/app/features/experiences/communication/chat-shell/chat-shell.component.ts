@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, effect, inject, input, output, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -15,6 +16,7 @@ import type { ChatContext } from '../types/chat-context';
 @Component({
   selector: 'app-chat-shell',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './chat-shell.component.html',
   // Mantener selector legacy para compatibilidad temporal

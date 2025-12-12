@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, FinancialHealth } from '../../../../core/services/accounting.service';
@@ -6,6 +7,7 @@ import { AccountingService, FinancialHealth } from '../../../../core/services/ac
 @Component({
   selector: 'app-financial-health',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   templateUrl: './financial-health.page.html',
   styleUrls: ['./financial-health.page.scss'],

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { OnboardingService } from '../../../core/services/onboarding.service';
 
@@ -16,6 +17,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
 @Component({
   selector: 'app-initial-goal-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   template: `
     <div

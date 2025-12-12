@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,6 +28,7 @@ interface PendingApproval {
 @Component({
   selector: 'app-pending-approval',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, RouterModule, TranslateModule, RenterProfileBadgeComponent, SkeletonLoaderComponent],
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',

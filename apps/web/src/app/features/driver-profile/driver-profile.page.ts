@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import {Component, computed, inject, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
@@ -21,6 +22,7 @@ import { MetaService } from '../../core/services/meta.service';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-driver-profile-page',
   imports: [CommonModule, IonicModule, RouterLink],
   template: `

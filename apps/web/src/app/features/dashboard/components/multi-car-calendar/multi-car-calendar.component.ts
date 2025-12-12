@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { addMonths, eachDayOfInterval, endOfMonth, format, startOfMonth } from 'date-fns';
@@ -31,6 +32,7 @@ interface CarCalendarData {
 @Component({
   selector: 'app-multi-car-calendar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, BlockDateModalComponent],
   templateUrl: './multi-car-calendar.component.html',
   styleUrls: ['./multi-car-calendar.component.css'],

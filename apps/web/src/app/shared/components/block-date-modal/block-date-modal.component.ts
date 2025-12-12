@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   signal,
   output,
   input,
@@ -10,7 +9,7 @@ import {
   effect,
   inject,
   PLATFORM_ID,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import flatpickr from 'flatpickr';
@@ -30,6 +29,7 @@ export interface BlockDateRequest {
 @Component({
   selector: 'app-block-date-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, FocusTrapDirective],
   template: `
     <div

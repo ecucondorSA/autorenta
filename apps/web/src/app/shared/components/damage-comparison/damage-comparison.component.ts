@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
+import {Component,
   CUSTOM_ELEMENTS_SCHEMA,
   inject,
   input,
   OnInit,
   output,
   signal,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { DamageItem, SettlementService } from '../../../core/services/settlement.service';
 
 @Component({
   selector: 'app-damage-comparison',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './damage-comparison.component.html',

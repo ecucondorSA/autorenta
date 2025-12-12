@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, ProvisionDetail } from '../../../../core/services/accounting.service';
@@ -6,6 +7,7 @@ import { AccountingService, ProvisionDetail } from '../../../../core/services/ac
 @Component({
   selector: 'app-provisions',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-header>

@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -11,6 +12,7 @@ import { EvidenceUploaderComponent } from '../../components/evidence-uploader/ev
 @Component({
   selector: 'app-dispute-detail-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, EvidenceUploaderComponent], // Añadir EvidenceUploaderComponent
   template: `
     <div class="container mx-auto p-6">

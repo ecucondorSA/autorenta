@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { injectSupabase } from '@app/core/services/supabase-client.service';
 
@@ -30,6 +31,7 @@ interface WalletLedgerEntry {
 @Component({
   selector: 'app-coverage-fund-dashboard',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="max-w-6xl mx-auto p-6">

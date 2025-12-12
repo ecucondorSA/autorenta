@@ -1,4 +1,5 @@
-import { Component, input, output, signal, inject } from '@angular/core';
+import {Component, input, output, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefundService } from '../../../core/services/refund.service';
@@ -7,6 +8,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
 @Component({
   selector: 'app-refund-request',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div

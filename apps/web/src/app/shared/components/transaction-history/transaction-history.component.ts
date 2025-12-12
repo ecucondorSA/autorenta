@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import {Component, OnInit, inject, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,6 +43,7 @@ interface WalletHistoryEntry {
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, TranslateModule, RouterLink, DepositStatusBadgeComponent],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.css'],

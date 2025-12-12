@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import {Component, OnInit, OnDestroy, inject, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -18,6 +19,7 @@ import { CarChatComponent } from './components/car-chat.component';
 @Component({
   selector: 'app-messages',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
   hostDirectives: [],
   template: `

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import {Component, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,6 +19,7 @@ import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
 @Component({
   selector: 'app-public-profile',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule, TranslateModule, ReviewRadarChartComponent],
   templateUrl: './public-profile.page.html',
 })

@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import {Component, inject, signal, computed, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TelemetryService } from '../../../core/services/telemetry.service';
@@ -27,6 +28,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
 @Component({
   selector: 'app-driving-stats',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './driving-stats.page.html',
   styleUrls: ['./driving-stats.page.css'],

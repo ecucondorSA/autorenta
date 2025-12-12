@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   Input,
   OnInit,
   OnDestroy,
@@ -10,7 +9,7 @@ import {
   signal,
   inject,
   PLATFORM_ID,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TrackingSession } from '@core/services/location-tracking.service';
 import { environment } from '../../../../environments/environment';
@@ -27,6 +26,7 @@ interface MarkerData {
 @Component({
   selector: 'app-live-tracking-map',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="live-tracking-map-container">

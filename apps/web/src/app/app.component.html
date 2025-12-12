@@ -340,8 +340,8 @@
     [class.max-w-none]="fullBleedLayout()" [class.px-container]="!fullBleedLayout()"
     [class.py-section-sm]="!fullBleedLayout()" [class.px-0]="fullBleedLayout()"
     [class.py-0]="fullBleedLayout()" [class.full-bleed-safe]="fullBleedLayout()">
-    <div>
-      <router-outlet></router-outlet>
+    <div [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
     </div>
   </main>
 

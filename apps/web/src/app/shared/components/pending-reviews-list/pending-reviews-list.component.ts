@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
 
 @Component({
   selector: 'app-pending-reviews-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   template: `
     <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   Component,
   computed,
   effect,
@@ -8,7 +7,7 @@ import {
   OnInit,
   signal,
   ViewChild,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
@@ -54,6 +53,7 @@ import { WalletTransfersComponent } from './components/wallet-transfers.componen
 @Component({
   selector: 'app-wallet',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     WalletBalanceCardComponent,

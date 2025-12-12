@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
@@ -15,6 +16,7 @@ interface PendingReview {
 @Component({
   selector: 'app-pending-reviews',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised py-8">

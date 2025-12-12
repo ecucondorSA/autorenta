@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { DatabaseExportService } from '../../../core/services/database-export.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 
 @Component({
   selector: 'app-database-export',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="container mx-auto px-4 py-8">

@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, signal, inject, computed } from '@angular/core';
+import {Component, Input, OnInit, signal, inject, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SettlementService } from '../../../../core/services/settlement.service';
@@ -22,6 +23,7 @@ import {
 @Component({
   selector: 'app-waterfall-simulator',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="waterfall-simulator">

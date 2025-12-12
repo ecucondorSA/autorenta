@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BookingsService } from '../../../core/services/bookings.service';
 
@@ -14,6 +15,7 @@ interface BookingEvent {
 @Component({
   selector: 'app-dashboard-calendar-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   templateUrl: './calendar.page.html',
   styleUrls: ['./calendar.page.css'],

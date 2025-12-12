@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, signal, inject } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
@@ -10,6 +11,7 @@ import { Booking } from '../../../core/models';
 @Component({
   selector: 'app-report-owner-no-show',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './report-owner-no-show.component.html',
   styleUrls: ['./report-owner-no-show.component.scss'],

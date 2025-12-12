@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 
 export interface TrackingSessionSnapshot {
   active: boolean;
@@ -11,6 +12,7 @@ export interface TrackingSessionSnapshot {
 @Component({
   selector: 'app-booking-tracking',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

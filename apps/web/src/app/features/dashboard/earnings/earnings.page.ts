@@ -1,5 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import type { Car } from '../../../core/models';
 import type { DashboardStats } from '../../../core/models/dashboard.model';
@@ -13,6 +14,7 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 @Component({
   selector: 'app-earnings-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, MoneyPipe, DatePipe, IconComponent],
   templateUrl: './earnings.page.html',
   styleUrls: ['./earnings.page.css'],

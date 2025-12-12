@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import {Component, Input, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RefundService } from '../../../core/services/refund.service';
 
 @Component({
   selector: 'app-refund-status',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     @if (loading()) {

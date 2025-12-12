@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -11,6 +12,7 @@ import { InsuranceAddon } from '../../../core/models/insurance.model';
 @Component({
   selector: 'app-insurance-selector',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-card class="insurance-card">

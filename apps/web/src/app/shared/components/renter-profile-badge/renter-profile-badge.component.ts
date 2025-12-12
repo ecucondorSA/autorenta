@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import {Component, Input, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
@@ -14,6 +15,7 @@ export interface RenterProfileBadge {
 @Component({
   selector: 'app-renter-profile-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="renter-badge" *ngIf="profile() as p" [class]="'badge-' + p.badge_level">

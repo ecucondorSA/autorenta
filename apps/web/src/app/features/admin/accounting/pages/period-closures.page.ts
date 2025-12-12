@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -7,6 +8,7 @@ import { AccountingService, PeriodClosure } from '../../../../core/services/acco
 @Component({
   selector: 'app-period-closures',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './period-closures.page.html',
   styleUrls: ['./period-closures.page.scss'],

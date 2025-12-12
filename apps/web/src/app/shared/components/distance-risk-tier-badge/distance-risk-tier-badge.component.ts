@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type DistanceRiskTier = 'local' | 'regional' | 'long_distance';
@@ -29,6 +30,7 @@ interface TierConfig {
 @Component({
   selector: 'app-distance-risk-tier-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="inline-flex items-center gap-1.5 group relative">

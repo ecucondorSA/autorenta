@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
+import {Component, Input, Output, EventEmitter, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -22,6 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-renter-confirmation',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, TranslateModule],
   templateUrl: './renter-confirmation.component.html',
   styles: [

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import {Component, computed, OnDestroy, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -51,6 +52,7 @@ interface DatabaseTransactionRow {
 @Component({
   selector: 'app-deposits-monitoring',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './deposits-monitoring.page.html',
   styleUrls: ['./deposits-monitoring.page.css'],

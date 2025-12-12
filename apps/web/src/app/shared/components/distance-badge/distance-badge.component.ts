@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import {Component, computed, input,
+  ChangeDetectionStrategy} from '@angular/core';
 
 /**
  * Distance badge component
@@ -9,6 +10,7 @@ import { Component, computed, input } from '@angular/core';
 @Component({
   selector: 'app-distance-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="distance-badge" [class]="badgeClass()">

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 @Component({
   selector: 'app-insurance-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   templateUrl: './insurance.page.html',
   styleUrls: ['./insurance.page.css'],

@@ -1,4 +1,5 @@
-import { Component, inject, signal, computed, HostListener } from '@angular/core';
+import {Component, inject, signal, computed, HostListener,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DebugService, DebugLogEntry } from '../../../core/services/debug.service';
@@ -22,6 +23,7 @@ import { DebugService, DebugLogEntry } from '../../../core/services/debug.servic
 @Component({
   selector: 'app-debug-panel',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <!-- Floating Toggle Button -->

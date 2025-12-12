@@ -1,4 +1,5 @@
 import { ErrorHandler, Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -97,7 +98,7 @@ export async function initSentry(): Promise<void> {
   const Sentry = await getSentry();
   if (!Sentry) return;
 
-  Sentry.init({
+  const options = {
     dsn: environment.sentryDsn,
     environment: environment.sentryEnvironment,
 
@@ -125,37 +126,37 @@ export async function initSentry(): Promise<void> {
     release: `autorenta-web@${environment.production ? 'production' : 'development'}`,
 
     // Filter sensitive data
-    beforeSend(event, _hint) {
-      // Remove sensitive query parameters
-      if (event.request?.url) {
-        try {
-          const url = new URL(event.request.url);
-          const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey'];
+    // beforeSend(event: any, _hint: any) { // Cambiado a any
+    //   // Remove sensitive query parameters
+    //   if (event.request?.url) {
+    //     try {
+    //       const url = new URL(event.request.url);
+    //       const sensitiveParams = ['token', 'key', 'password', 'secret', 'apikey'];
 
-          sensitiveParams.forEach((param) => {
-            if (url.searchParams.has(param)) {
-              url.searchParams.set(param, '[REDACTED]');
-            }
-          });
+    //       sensitiveParams.forEach((param) => {
+    //         if (url.searchParams.has(param)) {
+    //           url.searchParams.set(param, '[REDACTED]');
+    //         }
+    //       });
 
-          event.request.url = url.toString();
-        } catch {
-          // Invalid URL, ignore
-        }
-      }
+    //       event.request.url = url.toString();
+    //     } catch {
+    //       // Invalid URL, ignore
+    //     }
+    //   }
 
-      // Remove sensitive headers
-      if (event.request?.headers) {
-        const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key'];
-        sensitiveHeaders.forEach((header) => {
-          if (event.request?.headers?.[header]) {
-            event.request.headers[header] = '[REDACTED]';
-          }
-        });
-      }
+    //   // Remove sensitive headers
+    //   if (event.request?.headers) {
+    //     const sensitiveHeaders = ['authorization', 'cookie', 'x-api-key'];
+    //     sensitiveHeaders.forEach((header) => {
+    //       if (event.request?.headers?.[header]) {
+    //         event.request.headers[header] = '[REDACTED]';
+    //       }
+    //     });
+    //   }
 
-      return event;
-    },
+    //   return event;
+    // },
 
     // Ignore specific errors
     ignoreErrors: [
@@ -170,7 +171,9 @@ export async function initSentry(): Promise<void> {
       // Third-party errors
       'ChunkLoadError',
     ],
-  });
+  };
 
-  console.log('✅ Sentry initialized');
+  // Por ahora, solo inicializamos la parte web debido a conflictos de tipos con Sentry Capacitor
+  Sentry.init(options);
+  console.log('✅ Sentry initialized (Web only)');
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, inject, Input, signal } from '@angular/core';
+import {Component, inject, Input, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -8,6 +9,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 @Component({
   selector: 'app-make-calendar-public-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <button

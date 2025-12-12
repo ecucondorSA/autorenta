@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, computed } from '@angular/core';
+import {Component, inject, OnInit, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
@@ -20,6 +21,7 @@ import { WalletService } from '../../core/services/wallet.service';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-protections-page',
   imports: [CommonModule, IonicModule, RouterLink, BonusProtectorPurchaseComponent, CurrencyPipe],
   template: `

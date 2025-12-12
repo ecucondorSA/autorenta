@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, signal, computed, effect } from '@angular/core';
+import {Component, EventEmitter, Input, Output, signal, computed, effect,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -20,6 +21,7 @@ import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/
 @Component({
   selector: 'app-withdrawal-request-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './withdrawal-request-form.component.html',
   styleUrl: './withdrawal-request-form.component.css',

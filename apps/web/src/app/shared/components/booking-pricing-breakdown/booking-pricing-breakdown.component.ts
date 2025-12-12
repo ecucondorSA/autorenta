@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject, signal, OnInit } from '@angular/core';
+import {Component, Input, inject, signal, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { BonusMalusService } from '../../../core/services/bonus-malus.service';
 import type { BonusMalusDisplay } from '../../../core/models';
 
@@ -17,6 +18,7 @@ export interface PricingBreakdownInput {
 @Component({
   selector: 'app-booking-pricing-breakdown',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

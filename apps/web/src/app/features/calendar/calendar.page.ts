@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CarsService } from '../../core/services/cars.service';
 import {
@@ -24,6 +25,7 @@ interface CalendarDay {
 @Component({
   selector: 'app-calendar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule, IconComponent],
   templateUrl: './calendar.page.html',
   styleUrls: ['./calendar.page.css'],

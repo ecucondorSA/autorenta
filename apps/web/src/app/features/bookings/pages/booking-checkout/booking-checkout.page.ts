@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
 import { BookingsService } from '../../../../core/services/bookings.service';
@@ -27,6 +28,7 @@ import { PayPalButtonComponent } from '../../../../shared/components/paypal-butt
 @Component({
   selector: 'app-booking-checkout',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink, PaymentProviderSelectorComponent, PayPalButtonComponent],
   templateUrl: './booking-checkout.page.html',
   styleUrls: ['./booking-checkout.page.css'],

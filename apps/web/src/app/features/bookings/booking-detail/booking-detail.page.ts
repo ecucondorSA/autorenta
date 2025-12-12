@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -69,6 +70,7 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
 @Component({
   selector: 'app-booking-detail',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,

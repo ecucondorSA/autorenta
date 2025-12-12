@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { PayoutService } from '../../../core/services/payout.service';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-payout-stats',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">

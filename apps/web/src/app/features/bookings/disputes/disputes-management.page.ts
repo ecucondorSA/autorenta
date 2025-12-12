@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -17,6 +18,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 @Component({
   selector: 'app-disputes-management',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule, RouterModule],
   templateUrl: './disputes-management.page.html',
   styleUrls: ['./disputes-management.page.scss'],

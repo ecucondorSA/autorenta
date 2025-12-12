@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
@@ -13,6 +14,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
 @Component({
   selector: 'app-report-claim',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   template: `
     <ion-header>

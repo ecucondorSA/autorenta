@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { MarketplaceOnboardingService } from '../../core/services/marketplace-onboarding.service';
@@ -18,6 +19,7 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
 @Component({
   selector: 'app-mp-callback',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, RouterModule],
   template: `
     <ion-content class="ion-padding">

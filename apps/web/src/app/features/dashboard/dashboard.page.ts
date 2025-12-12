@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {Component,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CalendarWidgetComponent } from './widgets/calendar.component';
 import { PayoutsWidgetComponent } from './widgets/payouts.component';
 import { StatisticsWidgetComponent } from './widgets/statistics.component';
@@ -7,6 +8,7 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     StatisticsWidgetComponent,

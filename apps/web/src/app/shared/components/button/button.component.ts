@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, output } from '@angular/core';
+import {Component, computed, inject, input, output,
+  ChangeDetectionStrategy} from '@angular/core';
 import { HapticFeedbackService } from '../../../core/services/haptic-feedback.service';
 
 /**
@@ -27,6 +28,7 @@ import { HapticFeedbackService } from '../../../core/services/haptic-feedback.se
 @Component({
   selector: 'app-button',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <button

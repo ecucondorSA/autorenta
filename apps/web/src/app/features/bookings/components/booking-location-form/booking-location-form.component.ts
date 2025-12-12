@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   Output,
   EventEmitter,
   Input,
@@ -7,7 +6,7 @@ import {
   inject,
   computed,
   effect,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,6 +50,7 @@ export interface LocationData {
 @Component({
   selector: 'app-booking-location-form',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './booking-location-form.component.html',
   styles: [

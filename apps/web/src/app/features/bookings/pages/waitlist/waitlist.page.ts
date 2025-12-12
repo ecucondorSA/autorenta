@@ -1,10 +1,12 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { WaitlistService, WaitlistEntry } from '../../../../core/services/waitlist.service';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-waitlist-page',
   imports: [CommonModule, RouterLink],
   templateUrl: './waitlist.page.html',

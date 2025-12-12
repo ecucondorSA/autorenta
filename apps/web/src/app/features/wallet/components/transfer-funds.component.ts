@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import {Component, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TransferResponse, WalletLedgerService } from '@app/core/services/wallet-ledger.service';
 import { WalletService } from '@app/core/services/wallet.service';
@@ -15,6 +16,7 @@ interface UserSearchResult {
 @Component({
   selector: 'app-transfer-funds',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './transfer-funds.component.html',
   styleUrls: ['./transfer-funds.component.css'],

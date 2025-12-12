@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, Input, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
@@ -26,6 +27,7 @@ import { FgoService } from '../../../core/services/fgo.service';
 @Component({
   selector: 'app-fgo-management',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <!-- Pricing Breakdown Card -->

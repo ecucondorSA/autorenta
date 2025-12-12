@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import {Component, OnInit, inject, signal, computed,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -22,6 +23,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
 @Component({
   selector: 'app-my-claims',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   templateUrl: './my-claims.page.html',
   styleUrls: ['./my-claims.page.css'],

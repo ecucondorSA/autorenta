@@ -1,10 +1,12 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import {Component, Input, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisputeEvidenceService, EvidenceItem } from '../../services/dispute-evidence.service';
 
 @Component({
   selector: 'app-evidence-uploader',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="evidence-upload p-4 border rounded-lg bg-base-100">

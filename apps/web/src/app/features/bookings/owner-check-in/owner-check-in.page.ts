@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
@@ -24,6 +25,7 @@ import { LiveTrackingMapComponent } from '../../../shared/components/live-tracki
 @Component({
   selector: 'app-owner-check-in',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, LiveTrackingMapComponent, InspectionUploaderComponent],
   templateUrl: './owner-check-in.page.html',
   styleUrl: './owner-check-in.page.css',

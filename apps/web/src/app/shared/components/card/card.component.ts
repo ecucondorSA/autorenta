@@ -1,9 +1,11 @@
-import { Component, computed, input } from '@angular/core';
+import {Component, computed, input,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div [class]="cardClasses()">

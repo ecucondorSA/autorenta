@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, signal, inject, OnInit } from '@angular/core';
+import {Component, Input, Output, EventEmitter, signal, inject, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
@@ -16,6 +17,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 @Component({
   selector: 'app-contract-sign-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="modal-overlay" (click)="onClose()">

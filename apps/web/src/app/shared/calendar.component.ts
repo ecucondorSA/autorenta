@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {Component, EventEmitter, Input, Output, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CarAvailabilityService } from '../core/services/car-availability.service';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="p-4 bg-white rounded shadow">

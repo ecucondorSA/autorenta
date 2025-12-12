@@ -1,4 +1,5 @@
-import { Component, computed, input, output } from '@angular/core';
+import {Component, computed, input, output,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface WizardStep {
@@ -42,6 +43,7 @@ export interface WizardStep {
 @Component({
   selector: 'app-wizard',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="wizard-container">

@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { AccountingService } from '../../../../core/services/accounting.service';
 import type { AuditLog, PaginatedResult } from '../../../../core/services/accounting.service';
 
 @Component({
   selector: 'app-audit-logs',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
     <div class="container mx-auto px-4 py-8">

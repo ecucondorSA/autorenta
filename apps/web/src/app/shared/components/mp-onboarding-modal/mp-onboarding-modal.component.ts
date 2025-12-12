@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { AuthService } from '../../../core/services/auth.service';
 import {
@@ -28,6 +29,7 @@ import {
 @Component({
   selector: 'app-mp-onboarding-modal',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-header>

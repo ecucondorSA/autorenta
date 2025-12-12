@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   OnInit,
   Input,
   Output,
@@ -7,7 +6,7 @@ import {
   signal,
   inject,
   computed,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaymentProvider } from '../../../core/interfaces/payment-gateway.interface';
@@ -37,6 +36,7 @@ import { FxService } from '../../../core/services/fx.service';
 @Component({
   selector: 'app-payment-provider-selector',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './payment-provider-selector.component.html',
   styleUrls: ['./payment-provider-selector.component.css'],

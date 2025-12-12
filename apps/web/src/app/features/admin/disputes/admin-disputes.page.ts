@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import {Component, OnInit, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -14,6 +15,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
 @Component({
   selector: 'app-admin-disputes',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './admin-disputes.page.html',
   styleUrls: ['./admin-disputes.page.scss'],

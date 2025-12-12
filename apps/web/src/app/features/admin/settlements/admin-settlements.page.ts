@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Claim, SettlementService } from '../../../core/services/settlement.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -16,6 +17,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 @Component({
   selector: 'app-admin-settlements-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterLink],
   templateUrl: './admin-settlements.page.html',
   styleUrls: ['./admin-settlements.page.css'],

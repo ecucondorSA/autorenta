@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { WalletLedgerService } from '../../../core/services/wallet-ledger.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
@@ -7,6 +8,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
 @Component({
   selector: 'app-wallet-transfers',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <div

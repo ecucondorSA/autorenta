@@ -19,7 +19,8 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
@@ -32,6 +33,7 @@ import { SectionCardComponent } from '../../shared/section-card';
 @Component({
   selector: 'app-profile-contact-section',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, ReactiveFormsModule, IonicModule, SectionCardComponent],
   templateUrl: './profile-contact-section.component.html',
   styleUrls: ['./profile-contact-section.component.scss'],

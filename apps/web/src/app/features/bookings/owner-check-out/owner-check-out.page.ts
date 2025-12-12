@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
@@ -20,6 +21,7 @@ import { InspectionUploaderComponent } from '../../../shared/components/inspecti
 @Component({
   selector: 'app-owner-check-out',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, InspectionUploaderComponent],
   templateUrl: './owner-check-out.page.html',
   styleUrl: './owner-check-out.page.css',

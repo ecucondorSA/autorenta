@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnInit,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -19,6 +20,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
 @Component({
   selector: 'app-profile-contact',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, ProfileContactSectionComponent],
   template: `
     <ion-header>

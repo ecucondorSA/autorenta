@@ -8,33 +8,14 @@
       class="max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]"
     >
       <!-- Search Bar (Expanded style) -->
-      <div class="flex-1 max-w-2xl relative group">
-        <div
-          class="relative transition-all duration-200 group-focus-within:transform group-focus-within:-translate-y-0.5"
-        >
-          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg
-              class="w-5 h-5 text-slate-500 group-focus-within:text-cyan-500 transition-colors duration-200"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (input)="onSearch()"
-            placeholder="Buscar por marca, modelo o ciudad..."
-            class="w-full pl-11 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border border-transparent focus:bg-white dark:focus:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-900 dark:text-white placeholder:text-slate-500 transition-all duration-200 shadow-sm"
-          />
-        </div>
+      <div class="flex-1 max-w-2xl">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()"
+          placeholder="Buscar por marca, modelo o ciudad..."
+          class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-900 text-slate-900 dark:text-white placeholder:text-gray-400 transition-all duration-200 shadow-sm"
+        />
       </div>
 
       <!-- View Toggles & Filters -->

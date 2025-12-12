@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import {Component, Input, OnInit, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { InsuranceSummary } from '../../../core/models/insurance.model';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -11,6 +12,7 @@ import { InsuranceService } from '../../../core/services/insurance.service';
 @Component({
   selector: 'app-insurance-summary-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
     <ion-card *ngIf="summary" class="insurance-summary-card">

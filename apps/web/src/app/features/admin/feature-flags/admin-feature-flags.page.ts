@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {Component, computed, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService, PrimeTemplate } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -21,6 +22,7 @@ import { FeatureFlagService } from '../../../core/services/feature-flag.service'
 @Component({
   selector: 'app-admin-feature-flags',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     FormsModule,

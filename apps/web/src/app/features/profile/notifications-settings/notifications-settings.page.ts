@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import {Component, inject, OnInit, PLATFORM_ID, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -21,6 +22,7 @@ import { NotificationsService } from '../../../core/services/user-notifications.
 @Component({
   selector: 'app-notifications-settings',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './notifications-settings.page.html',
   styleUrls: ['./notifications-settings.page.css'],

@@ -1,5 +1,4 @@
-import {
-  Component,
+import {Component,
   Input,
   OnInit,
   OnChanges,
@@ -8,7 +7,7 @@ import {
   PLATFORM_ID,
   signal,
   computed,
-} from '@angular/core';
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
@@ -51,6 +50,7 @@ export interface WazeMapOptions {
 @Component({
   selector: 'app-waze-live-map',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div class="waze-live-map-container relative w-full h-full">

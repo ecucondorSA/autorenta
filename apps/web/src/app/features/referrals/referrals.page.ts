@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import {Component, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReferralsService } from '../../core/services/referrals.service';
@@ -7,6 +8,7 @@ import { MEDIUM_TIMEOUT_MS } from '../../core/constants/timing.constants';
 @Component({
   selector: 'app-referrals',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   templateUrl: './referrals.page.html',
 })

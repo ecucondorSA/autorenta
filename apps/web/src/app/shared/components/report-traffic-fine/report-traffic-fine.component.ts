@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, signal, inject } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { TrafficInfractionsService } from '../../../core/services/traffic-infractions.service';
@@ -11,6 +12,7 @@ import { Booking } from '../../../core/models'; // To get owner_id, renter_id, b
 @Component({
   selector: 'app-report-traffic-fine',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './report-traffic-fine.component.html',
   styleUrls: ['./report-traffic-fine.component.scss'],

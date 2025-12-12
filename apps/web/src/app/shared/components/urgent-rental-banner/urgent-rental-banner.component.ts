@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
 import {
   UrgentRentalAvailability,
@@ -10,6 +11,7 @@ import {
 @Component({
   selector: 'app-urgent-rental-banner',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
     <div

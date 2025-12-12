@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import {Component, OnInit, OnDestroy, signal, inject,
+  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -11,6 +12,7 @@ type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
 @Component({
   selector: 'app-booking-success',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule, RouterModule],
   templateUrl: './booking-success.page.html',
   styleUrls: ['./booking-success.page.scss'],

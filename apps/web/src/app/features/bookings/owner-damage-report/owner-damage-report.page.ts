@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {Component, OnInit, computed, inject, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -23,6 +24,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
 @Component({
   selector: 'app-owner-damage-report',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IonicModule],
   templateUrl: './owner-damage-report.page.html',
   styleUrl: './owner-damage-report.page.css',

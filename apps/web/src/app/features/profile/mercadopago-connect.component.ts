@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import {Component, inject, OnInit, signal,
+  ChangeDetectionStrategy} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
   MercadoPagoOAuthService,
@@ -9,6 +10,7 @@ import {
 @Component({
   selector: 'app-mercadopago-connect',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, RouterModule],
   templateUrl: './mercadopago-connect.component.html',
   styleUrls: ['./mercadopago-connect.component.css'],
