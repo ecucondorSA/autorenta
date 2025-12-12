@@ -291,7 +291,7 @@ ion-toast.toast-modern {
     --safe-area-right: env(safe-area-inset-right, 0px);
 
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #f8f4ec; /* Ivory - Fondo principal */
+    --surface-base: #ede8d6; /* Ivory - Fondo principal (mas fuerte) */
     --surface-raised: #ffffff; /* White - Tarjetas elevadas */
     --surface-secondary: #dfd2bf; /* Beige - Paneles secundarios */
     --surface-elevated: #f5f5f5; /* Gray G05 - Elevación */
