@@ -3,16 +3,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   OnDestroy,
   OnInit,
   signal,
+  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { combineLatest, from, of, Subject } from 'rxjs';
-import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatest, from, of, Subject, fromEvent } from 'rxjs';
+import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
 
 // Services
 import { AuthService } from '../../../core/services/auth.service';
@@ -82,18 +85,20 @@ interface CarDetailState {
   selector: 'app-car-detail-page',
   imports: [
     CommonModule,
-    RouterLink,
     DateRangePickerComponent,
     CarReviewsSectionComponent,
     TranslateModule,
     StickyCtaMobileComponent,
     IconComponent,
-    RiskCalculatorViewerComponent,
   ],
   templateUrl: './car-detail.page.html',
+  styleUrls: ['./car-detail.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarDetailPage implements OnInit, OnDestroy {
+export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
+  // ✅ NEW: ViewChild references for scroll behavior
+  @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('mainHeader', { read: ElementRef }) mainHeaderRef?: ElementRef<HTMLDivElement>;
   private readonly route = inject(ActivatedRoute);
   public readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -230,6 +235,15 @@ export class CarDetailPage implements OnInit, OnDestroy {
           let errorMessage = 'Error al cargar el auto';
           if (err?.code === 'PGRST116') {
             errorMessage = 'Auto no encontrado';
+          } else if (err?.code === 'PGRST200') { // Ignore missing relationship error
+             console.warn('Review relationship missing (PGRST200), returning empty reviews');
+             return of({
+               car: null, // This will trigger the overall error state if car is also null
+               reviews: [],
+               stats: null,
+               loading: false,
+               error: null // Allow loading to complete if it was just reviews failing
+             });
           } else if (err?.message?.includes('permission') || err?.code === '42501') {
             errorMessage = 'No tienes permiso para ver este auto';
           } else if (err?.message?.includes('network') || err?.message?.includes('fetch')) {
@@ -573,6 +587,41 @@ export class CarDetailPage implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  /**
+   * ✅ NEW: Setup scroll behavior for sticky header (Turo-style)
+   */
+  ngAfterViewInit(): void {
+    // Setup scroll listener for collapsing header
+    if (typeof window !== 'undefined') {
+      let lastScrollY = 0;
+      const threshold = 200; // Trigger sticky header after 200px scroll
+
+      fromEvent(window, 'scroll')
+        .pipe(
+          throttleTime(100, undefined, { leading: true, trailing: true }),
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          const currentScrollY = window.scrollY;
+          const stickyHeader = this.stickyHeaderRef?.nativeElement;
+
+          if (!stickyHeader) return;
+
+          // Show sticky header when scrolling down past threshold
+          if (currentScrollY > threshold) {
+            stickyHeader.classList.remove('sticky-header-hidden');
+            stickyHeader.classList.add('sticky-header-visible');
+          } else {
+            // Hide when scrolling back up to top
+            stickyHeader.classList.remove('sticky-header-visible');
+            stickyHeader.classList.add('sticky-header-hidden');
+          }
+
+          lastScrollY = currentScrollY;
+        });
+    }
   }
 
   onContactOwner(): void {
@@ -1009,10 +1058,14 @@ export class CarDetailPage implements OnInit, OnDestroy {
         try {
           const isAvailable = await this.carsService.isCarAvailable(car.id, startDate, endDate);
           if (!isAvailable) {
+            const conflictInfo = await this.getAvailabilityConflictInfo(car.id, startDate, endDate);
+
             // Track: Booking failed due to availability
             this.analytics.trackEvent('booking_failed', {
               car_id: car.id,
-              error: 'Fechas no disponibles - reserva confirmada en ese período',
+              error: conflictInfo.hasPendingActive
+                ? 'Fechas no disponibles - reserva temporal (pendiente/pago)'
+                : 'Fechas no disponibles - reserva confirmada/en curso',
             });
 
             // Try to suggest alternative dates
@@ -1028,12 +1081,22 @@ export class CarDetailPage implements OnInit, OnDestroy {
               this.bookingError.set(
                 'El auto no está disponible para esas fechas. Te sugerimos las siguientes alternativas:',
               );
-              this.canWaitlist.set(false);
+              // Aun con sugerencias, permitir waitlist para fechas exactas
+              this.canWaitlist.set(true);
             } else {
               this.suggestedDateRanges.set([]);
-              this.bookingError.set(
-                'El auto no está disponible para esas fechas. Hay una reserva confirmada en ese período.',
-              );
+              if (conflictInfo.hasPendingActive && !conflictInfo.hasConfirmed) {
+                const minutes = conflictInfo.pendingMinutesLeft;
+                this.bookingError.set(
+                  minutes && minutes > 0
+                    ? `El auto está reservado temporalmente (pendiente de pago). Se libera aprox. en ${minutes} min.`
+                    : 'El auto está reservado temporalmente (pendiente de pago). Se libera en breve.',
+                );
+              } else {
+                this.bookingError.set(
+                  'El auto no está disponible para esas fechas. Hay una reserva confirmada en ese período.',
+                );
+              }
               this.canWaitlist.set(true);
             }
 
@@ -1071,6 +1134,7 @@ export class CarDetailPage implements OnInit, OnDestroy {
         });
 
         this.bookingError.set(result.error || 'No pudimos crear la reserva.');
+        this.canWaitlist.set(Boolean(result.canWaitlist));
         return;
       }
 
@@ -1085,19 +1149,80 @@ export class CarDetailPage implements OnInit, OnDestroy {
       // Close form and navigate
       this.pendingBookingData.set(null);
 
-      this.router.navigate(['/bookings/detail-payment'], {
-        queryParams: { bookingId: result.booking.id },
-      });
-    } catch (err) {
+      // After creating a booking, take the user to the payment flow (wallet/card hub)
+      this.router.navigate(['/bookings', result.booking.id, 'payment']);
+    } catch (err: any) { // Type as any to access code property
       // Track: Booking failed (exception)
       this.analytics.trackEvent('booking_failed', {
         car_id: car.id,
         error: err instanceof Error ? err.message : 'Exception during booking',
       });
 
-      this.bookingError.set(err instanceof Error ? err.message : 'Error al crear la reserva');
+      let userMessage = err instanceof Error ? err.message : 'Error al crear la reserva';
+
+      // Handle OVERLAP error specifically
+      if (userMessage.includes('OVERLAP') || err?.code === 'P0001') {
+        userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
+        
+        // Load blocked dates to refresh calendar
+        void this.loadBlockedDates(car.id);
+        
+        // Show waitlist option
+        this.canWaitlist.set(true);
+      }
+
+      this.bookingError.set(userMessage);
     } finally {
       this.bookingInProgress.set(false);
+    }
+  }
+
+  private async getAvailabilityConflictInfo(
+    carId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<{
+    hasPendingActive: boolean;
+    pendingMinutesLeft: number | null;
+    hasConfirmed: boolean;
+  }> {
+    try {
+      const { data } = await this.supabase
+        .from('bookings')
+        .select('status, expires_at')
+        .eq('car_id', carId)
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
+        .lt('start_at', endDate)
+        .gt('end_at', startDate);
+
+      const rows = (data ?? []) as Array<{ status: string; expires_at: string | null }>;
+      const nowMs = Date.now();
+
+      const pendingRows = rows.filter((r) => r.status === 'pending' || r.status === 'pending_payment');
+      const confirmedRows = rows.filter((r) => r.status === 'confirmed' || r.status === 'in_progress');
+
+      const activePending = pendingRows.filter((r) => {
+        if (!r.expires_at) return true;
+        return new Date(r.expires_at).getTime() > nowMs;
+      });
+
+      let pendingMinutesLeft: number | null = null;
+      const pendingExpiries = activePending
+        .map((r) => (r.expires_at ? new Date(r.expires_at).getTime() : null))
+        .filter((t): t is number => typeof t === 'number' && t > nowMs);
+
+      if (pendingExpiries.length) {
+        const earliest = Math.min(...pendingExpiries);
+        pendingMinutesLeft = Math.max(1, Math.ceil((earliest - nowMs) / (1000 * 60)));
+      }
+
+      return {
+        hasPendingActive: activePending.length > 0,
+        pendingMinutesLeft,
+        hasConfirmed: confirmedRows.length > 0,
+      };
+    } catch {
+      return { hasPendingActive: false, pendingMinutesLeft: null, hasConfirmed: false };
     }
   }
 

@@ -2,6 +2,12 @@
 /* ALL @import RULES MUST COME FIRST */
 /* ============================================ */
 
+/* 🔠 Satoshi Font (New Standard - Masterplan v2.1) */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,300,400&display=swap');
+
+/* 🔠 Google Fonts - JetBrains Mono (Tech/Data) */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 /* 🎚️ Responsive Tokens - CSS custom properties */
 @import './styles/responsive-tokens.css';
 
@@ -54,28 +60,27 @@ html {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  height: auto !important;
-  min-height: 100vh !important;
-  position: relative !important;
+  overflow: hidden !important; /* App Shell: Prevent body scroll */
   background-color: var(--surface-base);
   color: var(--text-primary);
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh on body */
 }
 
+/* Fix for PWA/Mobile viewport height */
 @supports (height: 100svh) {
   body,
   html {
-    min-height: 100svh !important;
+    height: 100svh !important;
   }
 }
 
 app-root,
 #app-root {
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
   display: block;
+  overflow: hidden; /* App Shell: Contain children */
   background-color: var(--surface-base);
-  /* Asegurar que app-root no cree nuevo stacking context que afecte position:fixed */
   transform: none !important;
   will-change: auto !important;
   isolation: auto !important;
@@ -291,46 +296,50 @@ ion-toast.toast-modern {
     --safe-area-right: env(safe-area-inset-right, 0px);
 
     /* ─── Superficies (Surfaces) ─── */
-    --surface-base: #ede8d6; /* Ivory - Fondo principal (mas fuerte) */
-    --surface-raised: #ffffff; /* White - Tarjetas elevadas */
-    --surface-secondary: #dfd2bf; /* Beige - Paneles secundarios */
-    --surface-elevated: #f5f5f5; /* Gray G05 - Elevación */
-    --surface-hover: #f8f4ec; /* Ivory - Hover state */
-    --surface-pressed: #dfd2bf; /* Beige - Pressed state */
+    --surface-base: #FFFFFF; /* Pure White - Dominante (v2.1) */
+    --surface-raised: #FFFFFF; /* White - Tarjetas elevadas */
+    --surface-secondary: #F9FAFB; /* Warm Gray - Fondos suaves (v2.1) */
+    --surface-elevated: #F5F5F5; /* Gray G05 - Elevación */
+    --surface-hover: #F8F4EC; /* Ivory - Hover state */
+    --surface-pressed: #E3E3E3; /* Gray G10 - Pressed state */
 
     /* ─── Textos ─── */
-    --text-primary: #050505; /* Black */
-    --text-secondary: #4e4e4e; /* Gray G60 */
-    --text-muted: #7b7b7b; /* Gray G40 */
-    --text-inverse: #f8f4ec; /* Ivory */
-    --text-link: #a7d8f4; /* Blue primary */
-    --text-link-hover: #8ec9ec; /* Blue hover */
-    --text-placeholder: #7b7b7b; /* Gray G40 */
+    --text-primary: #000000; /* Pure Black (v2.1) */
+    --text-secondary: #1A1A1A; /* Soft Dark (v2.1) */
+    --text-muted: #7B7B7B; /* Gray G40 */
+    --text-inverse: #FFFFFF; /* White */
+    --text-link: #0066FF; /* Safety Blue */
+    --text-link-hover: #0052CC; /* Blue hover */
+    --text-placeholder: #7B7B7B; /* Gray G40 */
 
     /* ─── Bordes ─── */
-    --border-default: #bcbcbc; /* Gray G20 */
-    --border-muted: #e3e3e3; /* Gray G10 */
-    --border-focus: #3b6e8f; /* Blue focus */
-    --border-hover: #a7d8f4; /* Blue primary */
-    --border-error: #b25e5e; /* Rust */
-    --border-success: #9db38b; /* Olive */
+    --border-default: #E3E3E3; /* Gray G10 */
+    --border-muted: #F3F4F6; /* Gray 50 */
+    --border-focus: #39FF14; /* Neón Focus (v2.1) */
+    --border-hover: #1A1A1A; /* Dark hover */
+    --border-error: #FF2A2A; /* Digital Red */
+    --border-success: #39FF14; /* Neón Green */
 
-    /* ─── CTAs y Acciones (Azul Pastel - Default) ─── */
-    --cta-default: #A7D8F4; /* Azul Pastel - Synced with colors.ts */
-    --cta-hover: #8EC9EC; /* Estado hover */
-    --cta-pressed: #7DBDE3; /* Estado pressed */
-    --cta-text: #050505; /* Negro para contraste sobre azul pastel */
+    /* ─── CTAs y Acciones (Secure Energy v2.1) ─── */
+    --cta-default: #39FF14; /* Verde Neón - Primary Action */
+    --cta-hover: #2ECC11; /* Shade */
+    --cta-pressed: #25A50E; /* Pressed */
+    --cta-text: #000000; /* Negro para máximo contraste */
 
-    /* ─── CTA Neon (Verde Neón - Alto Impacto) ─── */
-    --cta-neon: #00D95F; /* Verde Neón - Synced with colors.ts accent.neon.primary */
-    --cta-neon-hover: #00C553; /* Estado hover */
-    --cta-neon-pressed: #00B048; /* Estado pressed/active */
-    --cta-neon-text: #000000; /* Negro para máximo contraste */
+    /* ─── CTA Secondary (Amarillo Voltage) ─── */
+    --cta-secondary: #FAFF00; /* Amarillo Vivo - Voltage */
+    --cta-secondary-hover: #D4D900; /* Shade */
+    --cta-secondary-text: #000000; /* Negro */
 
-    /* ─── CTA Secondary (Amarillo) ─── */
-    --cta-secondary: #FBBF24; /* Amarillo Ámbar/Oro - Cálido y premium */
-    --cta-secondary-hover: #F59E0B; /* Amber hover */
-    --cta-secondary-text: #1F2937; /* Gris carbón para contraste */
+    /* ─── CTA Info / Safety (Azul) ─── */
+    --cta-info: #0066FF; /* Safety Blue */
+    --cta-info-text: #FFFFFF; /* Blanco */
+
+    /* ─── CTA Neon (Alias) ─── */
+    --cta-neon: #39FF14; /* Verde Neón */
+    --cta-neon-hover: #2ECC11;
+    --cta-neon-pressed: #25A50E;
+    --cta-neon-text: #000000;
 
     /* ─── Estados y Feedback ─── */
     --info-50: #eff6ff;
@@ -338,10 +347,10 @@ ion-toast.toast-modern {
     --info-200: #bfdbfe;
     --info-300: #93c5fd;
     --info-400: #60a5fa;
-    --info-500: #a7d8f4; /* Blue primary */
-    --info-600: #6ba8d4;
-    --info-700: #4f46e5;
-    --info-800: #3730a3;
+    --info-500: #0066FF; /* Safety Blue */
+    --info-600: #2563eb;
+    --info-700: #1d4ed8;
+    --info-800: #1e40af;
     --info-900: #1e1b4b;
 
     --success-50: #f0fdf4;
@@ -349,7 +358,7 @@ ion-toast.toast-modern {
     --success-200: #bbf7d0;
     --success-300: #86efac;
     --success-400: #4ade80;
-    --success-500: #9db38b; /* Olive */
+    --success-500: #39FF14; /* Neón Green */
     --success-600: #16a34a;
     --success-700: #15803d;
     --success-800: #166534;
@@ -360,7 +369,7 @@ ion-toast.toast-modern {
     --warning-200: #fef08a;
     --warning-300: #fde047;
     --warning-400: #facc15;
-    --warning-500: #c4a882; /* Beige cálido */
+    --warning-500: #FAFF00; /* Voltage Yellow */
     --warning-600: #ca8a04;
     --warning-700: #a16207;
     --warning-800: #854d0e;
@@ -371,7 +380,7 @@ ion-toast.toast-modern {
     --error-200: #fecaca;
     --error-300: #fca5a5;
     --error-400: #f87171;
-    --error-500: #b25e5e; /* Rust */
+    --error-500: #FF2A2A; /* Digital Red */
     --error-600: #dc2626;
     --error-700: #b91c1c;
     --error-800: #991b1b;
@@ -416,9 +425,9 @@ ion-toast.toast-modern {
     --info-icon: var(--info-600);
 
     /* ─── Overlays ─── */
-    --overlay-dark: #4E4E4E; /* Standard dark overlay */
-    --overlay-light: #E3E3E3; /* Standard light overlay */
-    --surface-overlay: #4E4E4E;
+    --overlay-dark: rgba(0, 0, 0, 0.6); /* Standard dark overlay */
+    --overlay-light: rgba(255, 255, 255, 0.9); /* Standard light overlay */
+    --surface-overlay: rgba(0, 0, 0, 0.6);
 
     /* ─── Elevation System (Sombras) ─── */
     --elevation-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
@@ -428,8 +437,8 @@ ion-toast.toast-modern {
     --elevation-5: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
     /* ─── Focus Rings (Accesibilidad) ─── */
-    --ring-focus: 0 0 0 3px rgba(59, 110, 143, 0.3);
-    --ring-error: 0 0 0 3px rgba(239, 68, 68, 0.3);
+    --ring-focus: 0 0 0 3px rgba(57, 255, 20, 0.3); /* Neon Focus */
+    --ring-error: 0 0 0 3px rgba(255, 42, 42, 0.3); /* Error Red Focus */
 
     /* ─── Typography Tokens ─── */
     /* Font sizes, weights, and line-heights are defined in tailwind.config.js
@@ -437,7 +446,7 @@ ion-toast.toast-modern {
        text-xs, text-sm, text-base, font-normal, font-medium, etc. */
 
     /* Monospace font family for code, numbers, IDs */
-    --font-mono: 'Monaco', 'Courier New', 'Consolas', 'Menlo', monospace;
+    --font-mono: 'JetBrains Mono', 'Monaco', 'Courier New', 'Consolas', monospace;
 
     /* ─── Border Radius Tokens ─── */
     --radius-sm: 0.25rem; /* 4px */
@@ -448,11 +457,11 @@ ion-toast.toast-modern {
     --radius-full: 9999px; /* Circular */
 
     /* ─── Legacy Compatibility ─── */
-    --info-light: var(--info-400); /* Legacy */
-    --info-dark: var(--info-500); /* Legacy */
-    --success-light: var(--success-300); /* Legacy */
-    --warning-light: var(--warning-500); /* Legacy */
-    --error-light: var(--error-500); /* Legacy */
+    --info-light: var(--info-500); /* Safety Blue */
+    --info-dark: #3385FF;
+    --success-light: #00A86B; /* Jade Green for texts */
+    --warning-light: var(--warning-500); /* Voltage Yellow */
+    --error-light: var(--error-500); /* Digital Red */
 
     /* ─── Variables Legacy (Compatibilidad) ─── */
     /* TODO: Migrar gradualmente a tokens semánticos */
@@ -555,6 +564,7 @@ ion-toast.toast-modern {
 
   html {
     font-family:
+      'Satoshi',
       'Inter',
       -apple-system,
       BlinkMacSystemFont,
@@ -615,11 +625,11 @@ ion-toast.toast-modern {
 
   h1,
   .h1 {
-    @apply text-4xl font-bold text-text-primary;
+    @apply text-4xl font-black text-text-primary;
     /* Clamp evita títulos desbordados en móvil sin perder presencia en desktop */
     font-size: clamp(2rem, 4vw + 0.5rem, 2.75rem);
-    line-height: 1.2;
-    letter-spacing: -0.02em; /* Tracking refinado para grandes títulos */
+    line-height: 1.1;
+    letter-spacing: -0.04em; /* Tracking Satoshi: Tight & Bold */
     margin: 0;
   }
 
@@ -627,17 +637,17 @@ ion-toast.toast-modern {
   .h2 {
     @apply text-3xl font-bold text-text-primary;
     font-size: clamp(1.75rem, 3vw + 0.4rem, 2.25rem);
-    line-height: 1.25;
-    letter-spacing: -0.015em; /* Tracking progresivo */
+    line-height: 1.2;
+    letter-spacing: -0.03em; /* Tracking Satoshi */
     margin: 0;
   }
 
   h3,
   .h3 {
-    @apply text-2xl font-semibold text-text-primary;
+    @apply text-2xl font-bold text-text-primary;
     font-size: clamp(1.5rem, 2.5vw + 0.35rem, 1.875rem);
-    line-height: 1.3;
-    letter-spacing: -0.01em; /* Tracking moderado */
+    line-height: 1.25;
+    letter-spacing: -0.02em;
     margin: 0;
   }
 
@@ -1088,53 +1098,49 @@ ion-toast.toast-modern {
   }
 
   /* ─────────────────────────────────────────────────────────────
-     Botones - Sistema Mejorado
+     Botones - Sistema Tech Brutalism (Masterplan v2.1)
      ───────────────────────────────────────────────────────────── */
 
   .btn-base {
-    @apply px-6 py-3 rounded-xl font-semibold text-sm;
-    @apply transition-all;
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply px-6 py-3 rounded-tech font-bold text-sm tracking-wide;
+    @apply transition-all uppercase;
+    @apply focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2;
     transition-duration: var(--duration-fast);
-    transition-timing-function: var(--easing-standard);
   }
 
   .btn-primary {
     @apply btn-base bg-text-primary text-text-inverse;
-    @apply hover:bg-text-secondary active:scale-95;
-    @apply shadow-soft hover:shadow-medium;
+    @apply border-2 border-transparent;
+    @apply hover:bg-text-secondary hover:-translate-y-1 hover:shadow-hard;
+    @apply active:translate-y-0 active:shadow-none;
     @apply focus-visible:ring-text-primary;
   }
 
   .btn-secondary {
-    @apply btn-base bg-surface-raised text-text-primary;
-    border-color: var(--border-default);
-    @apply border-2 hover:bg-surface-secondary active:scale-95;
+    @apply btn-base bg-surface-base text-text-primary;
+    @apply border-2 border-text-primary;
+    @apply hover:bg-surface-secondary hover:-translate-y-1 hover:shadow-hard;
+    @apply active:translate-y-0 active:shadow-none;
     @apply focus-visible:ring-text-secondary;
   }
 
-  .btn-secondary:hover {
-    border-color: var(--text-secondary);
-  }
-
   .btn-accent {
-    @apply btn-base active:scale-95;
-    @apply shadow-soft hover:shadow-medium;
-    background-color: var(--cta-default);
+    @apply btn-base;
+    @apply border-2 border-black;
+    @apply hover:-translate-y-1 hover:shadow-hard;
+    @apply active:translate-y-0 active:shadow-none;
+    background-color: var(--cta-default); /* Neón */
     color: var(--cta-text);
   }
 
   .btn-accent:hover {
     background-color: var(--cta-hover);
-  }
-
-  .btn-accent:focus-visible {
-    @apply ring-2 ring-offset-2;
-    --tw-ring-color: var(--cta-default);
+    box-shadow: 4px 4px 0px 0px #000000, 0 0 20px rgba(57, 255, 20, 0.4); /* Hard + Glow */
   }
 
   .btn-ghost {
     @apply btn-base bg-transparent text-text-secondary;
+    @apply rounded-xl normal-case font-medium; /* "Soft Human" para ghost buttons */
     @apply hover:bg-surface-secondary active:scale-95;
     @apply focus-visible:ring-text-secondary;
   }
@@ -1167,37 +1173,33 @@ ion-toast.toast-modern {
     background-color: var(--border-default);
     border-color: var(--border-default);
     @apply border;
+    box-shadow: none !important;
+    transform: none !important;
     opacity: 1; /* Use explicit colors instead of opacity for better contrast */
   }
 
   /* ─────────────────────────────────────────────────────────────
-     Cards - Sistema Mejorado
+     Cards - Sistema Secure Energy
      ───────────────────────────────────────────────────────────── */
 
   .card-premium {
-    @apply bg-surface-raised rounded-2xl shadow-card;
-    @apply border-2 transition-all;
-    border-color: var(--border-muted);
-    transition-duration: var(--duration-normal);
-    transition-timing-function: var(--easing-standard);
+    @apply bg-surface-base rounded-xl overflow-hidden;
+    @apply border border-border-default;
+    @apply transition-all duration-300;
   }
 
   .card-premium:hover {
-    @apply shadow-elevated;
-    border-color: rgba(196, 168, 130, 0.5); /* warning-light con opacidad */
+    @apply border-black shadow-hard;
     transform: translateY(-4px);
   }
 
   .card-premium:active {
-    @apply scale-[0.98] shadow-medium; /* Sutil feedback al tocar */
-    transition-duration: var(--duration-fast);
+    @apply shadow-hard-sm;
+    transform: translateY(-2px);
   }
 
   .card-premium.selected {
-    @apply shadow-elevated ring-4;
-    border-color: var(--cta-default);
-    --tw-ring-color: rgba(167, 216, 244, 0.15); /* cta-default con opacidad */
-    transform: scale(1.02) translateY(-4px);
+    @apply border-2 border-cta-default shadow-neon-glow;
     z-index: 10;
   }
 
@@ -1226,7 +1228,7 @@ ion-toast.toast-modern {
 
   .input-premium:focus {
     border-color: var(--cta-default);
-    --tw-ring-color: rgba(167, 216, 244, 0.15);
+    --tw-ring-color: rgba(57, 255, 20, 0.15);
   }
 
   .input-premium:hover {
@@ -1244,36 +1246,36 @@ ion-toast.toast-modern {
     transition-duration: var(--duration-fast);
   }
 
-  /* Badge de información - Azul pastel */
+  /* Badge de información - Azul safety */
   .badge-info {
     @apply border;
-    background-color: rgba(167, 216, 244, 0.1); /* cta-default/10 */
-    color: var(--cta-default);
-    border-color: rgba(167, 216, 244, 0.2); /* cta-default/20 */
+    background-color: rgba(0, 102, 255, 0.1); /* safety-blue/10 */
+    color: var(--info-500);
+    border-color: rgba(0, 102, 255, 0.2);
   }
 
-  /* Badge de éxito - Verde oliva */
+  /* Badge de éxito - Verde Neón */
   .badge-success {
     @apply border;
-    background-color: rgba(157, 179, 139, 0.2); /* success-light/20 */
-    color: var(--success-light);
-    border-color: rgba(157, 179, 139, 0.3); /* success-light/30 */
+    background-color: rgba(57, 255, 20, 0.1); /* neon/10 */
+    color: #008000; /* Darker green for text readability on neon bg */
+    border-color: rgba(57, 255, 20, 0.3);
   }
 
-  /* Badge de advertencia - Warning */
+  /* Badge de advertencia - Voltage */
   .badge-warning {
     @apply border;
-    background-color: rgba(196, 168, 130, 0.1); /* warning-light/10 */
-    color: var(--warning-light);
-    border-color: rgba(196, 168, 130, 0.2); /* warning-light/20 */
+    background-color: rgba(250, 255, 0, 0.1); /* voltage/10 */
+    color: #856404; /* Dark gold for text */
+    border-color: rgba(250, 255, 0, 0.3);
   }
 
   /* Badge de peligro - Error */
   .badge-danger {
     @apply border;
-    background-color: rgba(178, 94, 94, 0.2); /* error-light/20 */
-    color: var(--error-light);
-    border-color: rgba(178, 94, 94, 0.3); /* error-light/30 */
+    background-color: rgba(255, 42, 42, 0.1); /* error/10 */
+    color: var(--error-500);
+    border-color: rgba(255, 42, 42, 0.3);
   }
 
   /* Badge neutral - Sistema gris */
@@ -1303,15 +1305,15 @@ ion-toast.toast-modern {
   /* Info card cta variant */
   .info-card-petrol {
     @apply info-card;
-    background-color: rgba(167, 216, 244, 0.05); /* cta-default/5 */
-    border-color: rgba(167, 216, 244, 0.2); /* cta-default/20 */
+    background-color: rgba(0, 102, 255, 0.05); /* safety-blue/5 */
+    border-color: rgba(0, 102, 255, 0.2);
   }
 
   /* Info card warning variant */
   .info-card-warm {
     @apply info-card;
-    background-color: rgba(196, 168, 130, 0.05); /* warning-light/5 */
-    border-color: rgba(196, 168, 130, 0.2); /* warning-light/20 */
+    background-color: rgba(250, 255, 0, 0.05); /* voltage/5 */
+    border-color: rgba(250, 255, 0, 0.2);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1329,6 +1331,24 @@ ion-toast.toast-modern {
   .app-main.full-bleed-safe {
     padding-left: env(safe-area-inset-left, 0);
     padding-right: env(safe-area-inset-right, 0);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Router Outlet Layout
+     (Evita colapsos de altura con `ion-content` y mejora el scroll)
+     ───────────────────────────────────────────────────────────── */
+
+  .route-viewport > router-outlet + * {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .route-viewport > router-outlet + * > ion-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
   }
 
   @media (max-width: 375px) {
@@ -1470,34 +1490,42 @@ ion-toast.toast-modern {
   }
 
   .nav-link-primary {
-    background-color: rgba(167, 216, 244, 0.1); /* cta-default/10 */
-    color: var(--cta-default);
-    box-shadow: 0 4px 14px rgba(167, 216, 244, 0.12);
+    background-color: var(--surface-raised);
+    color: #000000 !important;
+    font-weight: 700;
+    border: 1px solid var(--border-muted);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   }
 
   .nav-link-primary:hover {
-    background-color: rgba(167, 216, 244, 0.15); /* cta-default/15 */
-    color: var(--cta-default);
+    background-color: var(--surface-secondary);
+    border-color: var(--border-default);
+    color: #000000 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   .nav-link-highlight {
-    /* Consistent with primary CTA color for unified visual hierarchy */
-    background-color: var(--cta-default);
-    color: var(--cta-text);
-    box-shadow: 0 10px 35px rgba(167, 216, 244, 0.35);
+    /* Radioactive Identity - High Contrast */
+    background-color: #39FF14 !important; /* Neón */
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(57, 255, 20, 0.3);
     border: none;
+    font-weight: 800;
+    letter-spacing: -0.01em;
   }
 
   .nav-link-highlight:hover {
-    background-color: var(--cta-hover);
-    box-shadow: 0 15px 40px rgba(167, 216, 244, 0.45);
-    color: var(--cta-text);
+    background-color: #2ECC11 !important;
+    box-shadow: 0 12px 30px rgba(57, 255, 20, 0.4);
+    color: #000000 !important;
+    transform: translateY(-1px);
   }
 
   .nav-link-active {
-    background-color: rgba(167, 216, 244, 0.15); /* cta-default/15 */
-    color: var(--cta-default);
-    @apply font-semibold;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #000000 !important;
+    font-weight: 800;
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -1638,4 +1666,42 @@ app-pwa-install-banner > div {
   app-cars-list-page app-cars-map app-map-details-panel {
     display: none !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   🔢 DATOS TÉCNICOS - JetBrains Mono Typography
+   Para precios, kilometraje, VINs, números de reserva, etc.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Clase base para todos los datos técnicos */
+.font-tech {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+  letter-spacing: -0.01em;
+}
+
+/* Precios - Bold, visible, con tabular nums para alineación */
+.price {
+  @apply font-tech font-bold;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+/* Números de identificación (VIN, booking ID, etc) */
+.tech-id {
+  @apply font-tech text-sm;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Kilometraje y datos numéricos generales */
+.tech-metric {
+  @apply font-tech font-medium;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Timestamps y fechas técnicas */
+.tech-timestamp {
+  @apply font-tech text-xs text-text-secondary;
+  font-feature-settings: 'tnum' 1;
 }
