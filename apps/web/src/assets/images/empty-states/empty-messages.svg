@@ -1,89 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Empty State: Sin Mensajes
-  Concepto: Chat bubbles vacíos y silenciosos
-  Paleta: Ivory, Beige, Blue Pastel
--->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <title>No tienes mensajes</title>
+
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#F8FAFC"/>
+  <circle cx="200" cy="150" r="80" fill="#E2E8F0"/>
+  <circle cx="200" cy="150" r="60" fill="#CBD5E1"/>
+  <g transform="translate(164, 114) scale(3)" style="color: #64748B">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" fill="currentColor"/>
+  </g>
   <defs>
-    <filter id="msg-shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#050505" flood-opacity="0.08"/>
-    </filter>
-    <linearGradient id="bubble-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#F8F4EC;stop-opacity:1" />
+    <linearGradient id="paint0_linear" x1="200" y1="0" x2="200" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F1F5F9"/>
+      <stop offset="1" stop-color="#E2E8F0"/>
     </linearGradient>
   </defs>
-
-  <!-- Fondo decorativo -->
-  <circle cx="100" cy="100" r="85" fill="#F8F4EC" opacity="0.4"/>
-
-  <!-- Bubble grande principal (izquierda) -->
-  <g filter="url(#msg-shadow)">
-    <path d="M35 70
-             Q35 55 50 55
-             L110 55
-             Q125 55 125 70
-             L125 100
-             Q125 115 110 115
-             L55 115
-             L40 130
-             L45 115
-             Q35 115 35 100
-             Z"
-          fill="url(#bubble-grad)" stroke="#DFD2BF" stroke-width="1.5"/>
-    <!-- Líneas de texto vacío -->
-    <g opacity="0.3">
-      <rect x="50" y="70" width="55" height="6" rx="3" fill="#BCBCBC"/>
-      <rect x="50" y="82" width="40" height="6" rx="3" fill="#BCBCBC"/>
-      <rect x="50" y="94" width="48" height="6" rx="3" fill="#BCBCBC"/>
-    </g>
-  </g>
-
-  <!-- Bubble secundario (derecha, más pequeño) -->
-  <g filter="url(#msg-shadow)">
-    <path d="M85 125
-             Q85 115 95 115
-             L155 115
-             Q165 115 165 125
-             L165 150
-             Q165 160 155 160
-             L100 160
-             Q85 160 85 150
-             Z
-             M155 160 L165 175 L152 160"
-          fill="#A7D8F4" fill-opacity="0.3" stroke="#A7D8F4" stroke-width="1.5"/>
-    <!-- Líneas de texto vacío -->
-    <g opacity="0.4">
-      <rect x="95" y="125" width="45" height="5" rx="2.5" fill="#8EC9EC"/>
-      <rect x="95" y="135" width="55" height="5" rx="2.5" fill="#8EC9EC"/>
-      <rect x="95" y="145" width="35" height="5" rx="2.5" fill="#8EC9EC"/>
-    </g>
-  </g>
-
-  <!-- Zzz dormido flotando -->
-  <g transform="translate(130, 35)" fill="none" stroke="#BCBCBC" stroke-width="1.5" stroke-linecap="round">
-    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#BCBCBC" opacity="0.6">z</text>
-    <text x="12" y="-8" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#BCBCBC" opacity="0.5">z</text>
-    <text x="20" y="-14" font-family="system-ui, sans-serif" font-size="8" font-weight="500" fill="#BCBCBC" opacity="0.4">z</text>
-  </g>
-
-  <!-- Puntos suspensivos animables -->
-  <g transform="translate(70, 85)" opacity="0.5">
-    <circle cx="0" cy="0" r="2.5" fill="#7B7B7B"/>
-    <circle cx="10" cy="0" r="2.5" fill="#7B7B7B"/>
-    <circle cx="20" cy="0" r="2.5" fill="#7B7B7B"/>
-  </g>
-
-  <!-- Decoración: pequeños bubbles flotando -->
-  <circle cx="175" cy="80" r="6" fill="none" stroke="#DFD2BF" stroke-width="1" opacity="0.5"/>
-  <circle cx="25" cy="140" r="4" fill="none" stroke="#A7D8F4" stroke-width="1" opacity="0.4"/>
-  <circle cx="180" cy="130" r="3" fill="#DFD2BF" opacity="0.4"/>
-
-  <!-- Línea de silencio -->
-  <g stroke="#E3E3E3" stroke-width="1" stroke-linecap="round" opacity="0.5">
-    <line x1="30" y1="180" x2="50" y2="180"/>
-    <line x1="150" y1="180" x2="170" y2="180"/>
-  </g>
 </svg>

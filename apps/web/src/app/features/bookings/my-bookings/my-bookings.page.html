@@ -44,9 +44,7 @@
   <!-- Empty state -->
   @if (!loading() && !error() && bookings().length === 0) {
     <div class="text-center py-16">
-      <div class="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
-      </div>
+      <img src="/assets/images/empty-states/empty-bookings.svg" alt="No hay reservas" class="w-48 h-48 mx-auto mb-6">
       <h3 class="text-xl font-semibold text-text-primary dark:text-white mb-2 font-satoshi">No tenés reservas todavía</h3>
       <p class="text-text-secondary dark:text-text-secondary/70 mb-6">
         Explorá autos disponibles y hacé tu primera reserva
