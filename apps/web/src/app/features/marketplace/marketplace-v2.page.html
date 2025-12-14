@@ -639,6 +639,38 @@ text-text-secondary uppercase tracking-widest mb-3">
                 <p class="text-text-primary font-semibold mt-2 font-luxury">— Martín, anfitrión desde enero (3 autos gestionados)</p>
               </div>
             </div>
+
+            <!-- Mobile: Expandable testimonial -->
+            <div class="mt-4 md:hidden">
+              @if (!showFullTestimonial()) {
+                <button
+                  (click)="showFullTestimonial.set(true)"
+                  class="text-cta-default hover:text-cta-hover font-medium inline-flex items-center gap-1 transition-colors">
+                  Leer historia completa
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+              } @else {
+                <p class="text-text-muted text-sm">
+                  "Me sumé sabiendo que asumía un riesgo operativo. El primer mes la renta no alcanzó para cubrir la cuota del Corolla (aprox. $820.000). Pero al revisar los datos, hice el clic: casi pago el auto entero sin tocar un peso de mi sueldo, algo impensable antes.
+                  <br /><br />
+                  Entendí que era un problema de maduración de la plataforma, no de demanda. Sostuve la posición y hoy redoblo la apuesta: con 3 autos rodando, los números validan el riesgo inicial.
+                  <br /><br />
+                  <span class="text-amber-600">No creo que esto sea para siempre. Comprás en pesos, cobrás en dólares... eventualmente el mercado se va a aplanar cuando todos quieran hacer lo mismo. No sé si va a durar 2 años o 5, ni me importa. Mientras la matemática sirva, yo sigo escalando. El día que se aplane, vendo todo y busco otra cosa.</span>"
+                </p>
+                <button
+                  (click)="showFullTestimonial.set(false)"
+                  class="text-cta-default hover:text-cta-hover font-medium inline-flex items-center gap-1 mt-3 transition-colors">
+                  Mostrar menos
+                  <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
+              }
+            </div>
+
+            <!-- Desktop: Always visible -->
             <p class="text-text-muted text-sm mt-4 hidden md:block">
               "Me sumé sabiendo que asumía un riesgo operativo. El primer mes la renta no alcanzó para cubrir la cuota del Corolla (aprox. $820.000). Pero al revisar los datos, hice el clic: casi pago el auto entero sin tocar un peso de mi sueldo, algo impensable antes.
               <br /><br />

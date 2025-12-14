@@ -338,6 +338,9 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   // Splash Screen State
   readonly showSplash = signal(true);
 
+  // Testimonial State (Mobile)
+  readonly showFullTestimonial = signal(false);
+
   constructor() {
     // Hide splash immediately to show skeletons or content
     this.showSplash.set(false);
