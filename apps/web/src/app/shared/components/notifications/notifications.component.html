@@ -9,17 +9,19 @@
     "
     title="Notificaciones"
     #bellButton
-  >
+    >
     <app-header-icon
       [name]="hasUnread() ? 'bell-badge' : 'bell'"
       [size]="22"
       cssClass="bell-icon"
-    />
+      />
 
     <!-- Unread badge -->
-    <span *ngIf="hasUnread()" class="unread-badge">
-      {{ unreadCount() > 99 ? '99+' : unreadCount() }}
-    </span>
+    @if (hasUnread()) {
+      <span class="unread-badge">
+        {{ unreadCount() > 99 ? '99+' : unreadCount() }}
+      </span>
+    }
   </button>
 
   <!-- Dropdown Panel -->
@@ -29,7 +31,7 @@
     appClickOutside
     [exclude]="excludedElements"
     (clickOutside)="closeDropdown()"
-  >
+    >
     <div class="dropdown-header">
       <h3>Notificaciones</h3>
       <div class="header-actions">
@@ -39,7 +41,7 @@
           [class.connected]="isConnected()"
           [class.error]="hasConnectionError()"
           [class.connecting]="isConnecting()"
-        >
+          >
           <span class="status-dot"></span>
           <span class="status-text">{{ getConnectionStatusMessage() }}</span>
         </div>
@@ -48,108 +50,116 @@
           (click)="refreshNotifications(); $event.stopPropagation()"
           title="Actualizar notificaciones"
           type="button"
-        >
+          >
           <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
+              />
           </svg>
         </button>
-        <button
-          *ngIf="hasConnectionError()"
-          class="reconnect-btn"
-          (click)="reconnect(); $event.stopPropagation()"
-          title="Reconectar"
-          type="button"
-        >
-          🔄 Reconectar
-        </button>
-        <button *ngIf="unreadCount() > 0" class="mark-all-read" (click)="markAllAsRead()">
-          Marcar todas como leídas
-        </button>
+        @if (hasConnectionError()) {
+          <button
+            class="reconnect-btn"
+            (click)="reconnect(); $event.stopPropagation()"
+            title="Reconectar"
+            type="button"
+            >
+            🔄 Reconectar
+          </button>
+        }
+        @if (unreadCount() > 0) {
+          <button class="mark-all-read" (click)="markAllAsRead()">
+            Marcar todas como leídas
+          </button>
+        }
       </div>
     </div>
 
     <div class="notifications-list">
       <!-- No notifications -->
-      <div *ngIf="notifications().length === 0" class="empty-state">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        <p>No tienes notificaciones</p>
-        <button
-          class="generate-notifications-btn"
-          (click)="generateMissingDocumentNotifications(); $event.stopPropagation()"
-          type="button"
-        >
-          Verificar documentos faltantes
-        </button>
-      </div>
-
-      <!-- Notifications -->
-      <div
-        *ngFor="let notification of recentNotifications()"
-        class="notification-item"
-        [class.unread]="!notification.read"
-      >
-        <div class="notification-main" (click)="handleNotificationClick(notification)">
-          <div class="notification-icon">
-            {{ getNotificationIcon(notification.type) }}
-          </div>
-
-          <div class="notification-content">
-            <div class="notification-header">
-              <h4 class="notification-title">{{ notification.title }}</h4>
-              <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
-            </div>
-            <p class="notification-message">{{ notification.message }}</p>
-
-            <div *ngIf="notification.actionText" class="notification-action">
-              <span class="action-text">{{ notification.actionText }}</span>
-              <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <!-- Unread indicator -->
-          <div *ngIf="!notification.read" class="unread-dot"></div>
-        </div>
-
-        <!-- Delete button -->
-        <button
-          class="notification-delete-btn"
-          (click)="deleteNotification(notification); $event.stopPropagation()"
-          title="Eliminar notificación"
-          type="button"
-        >
-          <svg class="delete-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      @if (notifications().length === 0) {
+        <div class="empty-state">
+          <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              />
           </svg>
-        </button>
-      </div>
+          <p>No tienes notificaciones</p>
+          <button
+            class="generate-notifications-btn"
+            (click)="generateMissingDocumentNotifications(); $event.stopPropagation()"
+            type="button"
+            >
+            Verificar documentos faltantes
+          </button>
+        </div>
+      }
+
+      <!-- Notifications -->
+      @for (notification of recentNotifications(); track notification) {
+        <div
+          class="notification-item"
+          [class.unread]="!notification.read"
+          >
+          <div class="notification-main" (click)="handleNotificationClick(notification)">
+            <div class="notification-icon">
+              {{ getNotificationIcon(notification.type) }}
+            </div>
+            <div class="notification-content">
+              <div class="notification-header">
+                <h4 class="notification-title font-bold font-satoshi">{{ notification.title }}</h4>
+                <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+              </div>
+              <p class="notification-message">{{ notification.message }}</p>
+              @if (notification.actionText) {
+                <div class="notification-action">
+                  <span class="action-text">{{ notification.actionText }}</span>
+                  <svg class="action-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                      />
+                  </svg>
+                </div>
+              }
+            </div>
+            <!-- Unread indicator -->
+            @if (!notification.read) {
+              <div class="unread-dot"></div>
+            }
+          </div>
+          <!-- Delete button -->
+          <button
+            class="notification-delete-btn"
+            (click)="deleteNotification(notification); $event.stopPropagation()"
+            title="Eliminar notificación"
+            type="button"
+            >
+            <svg class="delete-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+            </svg>
+          </button>
+        </div>
+      }
     </div>
 
-    <div *ngIf="notifications().length > 5" class="dropdown-footer">
-      <a href="/notifications" class="view-all-link"> Ver todas las notificaciones </a>
-    </div>
+    @if (notifications().length > 5) {
+      <div class="dropdown-footer">
+        <a href="/notifications" class="view-all-link"> Ver todas las notificaciones </a>
+      </div>
+    }
   </div>
 </div>

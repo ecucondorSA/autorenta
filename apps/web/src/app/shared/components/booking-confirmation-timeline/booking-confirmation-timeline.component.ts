@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, computed, inject, input, output, Signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -49,7 +49,7 @@ export interface TimelineStep {
   selector: 'app-booking-confirmation-timeline',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './booking-confirmation-timeline.component.html',
   styleUrl: './booking-confirmation-timeline.component.css',
 })

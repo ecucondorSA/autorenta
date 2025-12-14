@@ -1,12 +1,12 @@
 import {Component, computed, input, output,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-error-state',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div [class]="containerClasses()">
       <div class="flex items-start gap-3">

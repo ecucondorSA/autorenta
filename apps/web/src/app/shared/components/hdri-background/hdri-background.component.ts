@@ -387,10 +387,11 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Step 1: Load low-res placeholder first (fast FCP)
     const lowResImage = new Image();
-    lowResImage.crossOrigin = 'anonymous';
+    // lowResImage.crossOrigin = 'anonymous'; // Commented out to fix local dev CORS issue
 
     lowResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
+      console.log('[HdriBackground] Low-res loaded:', sources.low);
 
       this.updateTexture(lowResImage);
 
@@ -401,8 +402,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // High-res is already loading in parallel (started below)
     };
 
-    lowResImage.onerror = () => {
-      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', sources.low);
+    lowResImage.onerror = (err) => {
+      console.warn('[HdriBackground] Failed to load low-res, falling back to high-res:', sources.low, err);
       // Fallback: load high-res directly
       this.loadHighResTexture(sources.high);
     };
@@ -418,10 +419,11 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    */
   private loadHighResTexture(highResSrc: string): void {
     const highResImage = new Image();
-    highResImage.crossOrigin = 'anonymous';
+    // highResImage.crossOrigin = 'anonymous'; // Commented out to fix local dev CORS issue
 
     highResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
+      console.log('[HdriBackground] High-res loaded:', highResSrc);
 
       this.updateTexture(highResImage);
       this.isHighResLoaded = true;
@@ -434,8 +436,8 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       }
     };
 
-    highResImage.onerror = () => {
-      console.error('[HdriBackground] Failed to load high-res image:', highResSrc);
+    highResImage.onerror = (err) => {
+      console.error('[HdriBackground] Failed to load high-res image:', highResSrc, err);
     };
 
     highResImage.src = highResSrc;

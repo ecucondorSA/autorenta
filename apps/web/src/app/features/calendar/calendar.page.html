@@ -5,7 +5,7 @@
       <a routerLink="/bookings" class="back-link">
         <app-icon name="arrow-left" [size]="20" />
       </a>
-      <h1 class="page-title">Mi Calendario</h1>
+      <h1 class="page-title font-bold font-satoshi">Mi Calendario</h1>
     </div>
   </header>
 
@@ -79,7 +79,7 @@
           <button type="button" class="nav-btn" (click)="previousMonth()" title="Mes anterior" aria-label="Mes anterior">
             <app-icon name="chevron-left" [size]="20" />
           </button>
-          <h3 class="month-name">{{ monthName() }}</h3>
+          <h3 class="month-name font-bold font-satoshi">{{ monthName() }}</h3>
           <button type="button" class="nav-btn" (click)="nextMonth()" title="Mes siguiente" aria-label="Mes siguiente">
             <app-icon name="chevron-right" [size]="20" />
           </button>

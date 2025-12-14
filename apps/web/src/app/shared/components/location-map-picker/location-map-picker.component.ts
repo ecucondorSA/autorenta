@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {AfterViewInit,
   Component,
   ElementRef,
@@ -27,12 +27,12 @@ export interface LocationCoordinates {
   selector: 'app-location-map-picker',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   template: `
     <div class="location-map-picker">
       <!-- Map container -->
       <div #mapContainer class="map-container"></div>
-
+    
       <!-- Info panel -->
       <div class="info-panel">
         <div class="flex items-start gap-2">
@@ -43,29 +43,31 @@ export interface LocationCoordinates {
             </p>
             <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
               {{
-                isLoading()
-                  ? 'Por favor espera...'
-                  : 'Arrastra el marcador para ajustar la ubicación exacta de tu auto'
+              isLoading()
+              ? 'Por favor espera...'
+              : 'Arrastra el marcador para ajustar la ubicación exacta de tu auto'
               }}
             </p>
-            <div
-              *ngIf="currentAddress()"
-              class="mt-2 text-xs text-text-primary bg-surface-base p-2 rounded"
-            >
-              📍 {{ currentAddress() }}
-            </div>
-            <div
-              *ngIf="coordinates()"
-              class="mt-1 text-xs text-text-secondary dark:text-text-secondary"
-            >
-              Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
-              {{ coordinates()!.longitude.toFixed(6) }}
-            </div>
+            @if (currentAddress()) {
+              <div
+                class="mt-2 text-xs text-text-primary bg-surface-base p-2 rounded"
+                >
+                📍 {{ currentAddress() }}
+              </div>
+            }
+            @if (coordinates()) {
+              <div
+                class="mt-1 text-xs text-text-secondary dark:text-text-secondary"
+                >
+                Lat: {{ coordinates()!.latitude.toFixed(6) }}, Lng:
+                {{ coordinates()!.longitude.toFixed(6) }}
+              </div>
+            }
           </div>
         </div>
       </div>
     </div>
-  `,
+    `,
   styles: [
     `
       .location-map-picker {

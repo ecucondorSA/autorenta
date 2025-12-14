@@ -2,7 +2,7 @@ import {Component, inject, signal, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { CarsService } from '../../../core/services/cars.service';
@@ -12,7 +12,7 @@ import { Car } from '../../../core/models';
   selector: 'app-cars-conversion',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, IconComponent, FormsModule, CarCardComponent],
+  imports: [RouterLink, IconComponent, FormsModule, CarCardComponent],
   templateUrl: './cars-conversion.page.html',
   styleUrls: ['./cars-conversion.page.css'],
 })

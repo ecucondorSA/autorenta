@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -33,7 +33,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   selector: 'app-claim-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent],
   templateUrl: './claim-form.component.html',
   styleUrl: './claim-form.component.css',
 })

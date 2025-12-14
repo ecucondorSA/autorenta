@@ -8,22 +8,24 @@
           stroke-linejoin="round"
           stroke-width="2"
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-        />
+          />
       </svg>
       <label class="label-text">{{ label }}</label>
     </div>
 
-    <button type="button" *ngIf="from() || to()" (click)="clearRange()" class="clear-button">
-      <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-      <span>Limpiar</span>
-    </button>
+    @if (from() || to()) {
+      <button type="button" (click)="clearRange()" class="clear-button">
+        <svg class="clear-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+            />
+        </svg>
+        <span>Limpiar</span>
+      </button>
+    }
   </div>
 
   <!-- Date Selection Input -->
@@ -32,214 +34,225 @@
     (click)="handleDateInputClick()"
     (keydown.enter)="handleDateInputClick()"
     tabindex="0"
-  >
+    >
     <!-- Hidden Flatpickr Input (Covers the entire wrapper) -->
     <input
       type="text"
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
       placeholder="Fecha inicio  →  Fecha fin"
       #dateRangeInput
-    />
+      />
 
     <div class="date-display">
-      <div class="date-placeholder" *ngIf="!from() && !to()">
-        <span class="placeholder-text">Recogida y Devolución</span>
-        <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </div>
-
-      <div class="date-selected" *ngIf="from() || to()">
-        <div class="date-range">
-          <span class="date-from" data-testid="date-from">{{
-            from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
-          }}</span>
-          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      @if (!from() && !to()) {
+        <div class="date-placeholder">
+          <span class="placeholder-text">Recogida y Devolución</span>
+          <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M14 5l7 7m0 0l-7 7m7-7H3"
-            />
+              d="M19 9l-7 7-7-7"
+              />
           </svg>
-          <span class="date-to" data-testid="date-to">{{
-            to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
-          }}</span>
         </div>
-        <span class="duration-badge" *ngIf="selectedDays()">
-          {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}
-        </span>
-      </div>
+      }
+
+      @if (from() || to()) {
+        <div class="date-selected">
+          <div class="date-range">
+            <span class="date-from" data-testid="date-from">{{
+              from() ? (from() | date: 'dd MMM yyyy') : 'Fecha inicio'
+            }}</span>
+            <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+            </svg>
+            <span class="date-to" data-testid="date-to">{{
+              to() ? (to() | date: 'dd MMM yyyy') : 'Fecha fin'
+            }}</span>
+          </div>
+          @if (selectedDays()) {
+            <span class="duration-badge">
+              {{ selectedDays() }} día{{ (selectedDays() ?? 0) > 1 ? 's' : '' }}
+            </span>
+          }
+        </div>
+      }
     </div>
   </div>
 
   <!-- Availability feedback -->
-  <div *ngIf="from() && to()" class="mt-1">
-    <!-- Loading state -->
-    <div
-      *ngIf="isCheckingAvailability()"
-      class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary"
-    >
-      <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation">
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-      <span>Verificando disponibilidad...</span>
-    </div>
-
-    <!-- Available -->
-    <div
-      *ngIf="!isCheckingAvailability() && isAvailable() === true"
-      class="flex items-center gap-2 text-xs font-medium text-success-strong"
-    >
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        ></path>
-      </svg>
-      <span>¡Disponible para estas fechas!</span>
-    </div>
-
-    <!-- Not available -->
-    <div
-      *ngIf="!isCheckingAvailability() && isAvailable() === false"
-      class="flex items-center gap-2 text-xs font-medium text-error-text"
-    >
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        ></path>
-      </svg>
-      <span>No disponible para estas fechas. Probá otras fechas.</span>
-    </div>
-
-    <!-- Alternative Date Suggestions -->
-    <div
-      *ngIf="showingSuggestions() && alternativeSuggestions().length > 0"
-      class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 dark:bg-cta-default/20 dark:border-cta-default p-4"
-    >
-      <div class="flex items-center gap-2 mb-3">
-        <svg class="h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <h4 class="text-sm font-bold text-cta-default dark:text-cta-default">
-          Fechas similares disponibles ({{ selectedDays() }} días):
-        </h4>
-      </div>
-
-      <div class="space-y-2">
-        <button
-          *ngFor="let suggestion of alternativeSuggestions().slice(0, 3); let i = index"
-          type="button"
-          (click)="applySuggestion(suggestion)"
-          class="w-full flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-secondary rounded-lg border border-cta-default/40 dark:border-cta-default hover:border-cta-default hover:shadow-md transition-all group"
-        >
-          <div class="flex flex-col items-start gap-1">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-text-primary dark:text-text-secondary">
-                {{ suggestion.from | date: 'dd MMM' }} - {{ suggestion.to | date: 'dd MMM' }}
-              </span>
-              <span class="text-xs text-text-secondary dark:text-text-secondary/70">
-                ({{ suggestion.days }} días)
-              </span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span *ngIf="suggestion.totalPrice" class="text-sm font-bold text-cta-default">
-                ${{ suggestion.totalPrice | number: '1.0-0' }}
-              </span>
-              <span
-                *ngIf="suggestion.discount > 0"
-                class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-700 dark:text-success-strong rounded-full font-medium"
-              >
-                -{{ suggestion.discount }}% OFF
-              </span>
-              <span
-                *ngIf="suggestion.savings"
-                class="text-xs text-success-700 dark:text-success-strong"
-              >
-                (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
-              </span>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <svg
-              class="h-5 w-5 text-success-strong"
-              fill="none"
+  @if (from() && to()) {
+    <div class="mt-1">
+      <!-- Loading state -->
+      @if (isCheckingAvailability()) {
+        <div
+          class="flex items-center gap-2 text-xs text-text-secondary dark:text-text-secondary"
+          >
+          <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
               stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          <span>Verificando disponibilidad...</span>
+        </div>
+      }
+      <!-- Available -->
+      @if (!isCheckingAvailability() && isAvailable() === true) {
+        <div
+          class="flex items-center gap-2 text-xs font-medium text-success-strong"
+          >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            ></path>
+          </svg>
+          <span>¡Disponible para estas fechas!</span>
+        </div>
+      }
+      <!-- Not available -->
+      @if (!isCheckingAvailability() && isAvailable() === false) {
+        <div
+          class="flex items-center gap-2 text-xs font-medium text-error-text"
+          >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+          <span>No disponible para estas fechas. Probá otras fechas.</span>
+        </div>
+      }
+      <!-- Alternative Date Suggestions -->
+      @if (showingSuggestions() && alternativeSuggestions().length > 0) {
+        <div
+          class="mt-3 rounded-xl border border-cta-default/40 bg-cta-default/10 dark:bg-cta-default/20 dark:border-cta-default p-4"
+          >
+          <div class="flex items-center gap-2 mb-3">
+            <svg class="h-5 w-5 text-cta-default" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
             </svg>
-            <svg
-              class="h-5 w-5 text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <h4 class="text-sm font-bold text-cta-default dark:text-cta-default font-satoshi">
+              Fechas similares disponibles ({{ selectedDays() }} días):
+            </h4>
           </div>
-        </button>
-      </div>
-
-      <p class="mt-3 text-xs text-center text-cta-default dark:text-cta-default">
-        💡 Click en una fecha para seleccionarla automáticamente
-      </p>
+          <div class="space-y-2">
+            @for (suggestion of alternativeSuggestions().slice(0, 3); track suggestion; let i = $index) {
+              <button
+                type="button"
+                (click)="applySuggestion(suggestion)"
+                class="w-full flex items-center justify-between p-3 bg-surface-raised dark:bg-surface-secondary rounded-lg border border-cta-default/40 dark:border-cta-default hover:border-cta-default hover:shadow-md transition-all group"
+                >
+                <div class="flex flex-col items-start gap-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-text-primary dark:text-text-secondary">
+                      {{ suggestion.from | date: 'dd MMM' }} - {{ suggestion.to | date: 'dd MMM' }}
+                    </span>
+                    <span class="text-xs text-text-secondary dark:text-text-secondary/70">
+                      ({{ suggestion.days }} días)
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    @if (suggestion.totalPrice) {
+                      <span class="text-sm font-bold text-cta-default">
+                        ${{ suggestion.totalPrice | number: '1.0-0' }}
+                      </span>
+                    }
+                    @if (suggestion.discount > 0) {
+                      <span
+                        class="text-xs px-2 py-0.5 bg-success-light/20 dark:bg-success-light/30 text-success-700 dark:text-success-strong rounded-full font-medium"
+                        >
+                        -{{ suggestion.discount }}% OFF
+                      </span>
+                    }
+                    @if (suggestion.savings) {
+                      <span
+                        class="text-xs text-success-700 dark:text-success-strong"
+                        >
+                        (Ahorrás ${{ suggestion.savings | number: '1.0-0' }})
+                      </span>
+                    }
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <svg
+                    class="h-5 w-5 text-success-strong"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                      />
+                  </svg>
+                  <svg
+                    class="h-5 w-5 text-cta-default opacity-0 group-hover:opacity-100 transition-opacity"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                      />
+                  </svg>
+                </div>
+              </button>
+            }
+          </div>
+          <p class="mt-3 text-xs text-center text-cta-default dark:text-cta-default">
+            💡 Click en una fecha para seleccionarla automáticamente
+          </p>
+        </div>
+      }
+      @if (availabilityHint()) {
+        <div
+          class="mt-2 flex items-start gap-2 rounded-lg border border-cta-default/30 bg-cta-default/10 px-3 py-2 text-xs text-cta-default"
+          >
+          <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+            ></path>
+          </svg>
+          <span>{{ availabilityHint() }}</span>
+        </div>
+      }
     </div>
-
-    <div
-      *ngIf="availabilityHint()"
-      class="mt-2 flex items-start gap-2 rounded-lg border border-cta-default/30 bg-cta-default/10 px-3 py-2 text-xs text-cta-default"
-    >
-      <svg class="h-4 w-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-        ></path>
-      </svg>
-      <span>{{ availabilityHint() }}</span>
-    </div>
-  </div>
+  }
 
   <!-- Modal de calendario inline - REMOVIDO: Componente de Ionic eliminado -->
 </div>
@@ -247,11 +260,11 @@
 <ng-template #fromPlaceholder>
   <span class="text-base font-semibold text-text-secondary dark:text-text-secondary/60"
     >Elegí fecha</span
-  >
-</ng-template>
+    >
+  </ng-template>
 
-<ng-template #toPlaceholder>
-  <span class="text-base font-semibold text-text-secondary dark:text-text-secondary/60"
-    >Elegí fecha</span
-  >
-</ng-template>
+  <ng-template #toPlaceholder>
+    <span class="text-base font-semibold text-text-secondary dark:text-text-secondary/60"
+      >Elegí fecha</span
+      >
+    </ng-template>

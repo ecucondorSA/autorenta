@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export interface RadarChartData {
   cleanliness: number;
@@ -20,7 +20,7 @@ interface Point {
   selector: 'app-review-radar-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './review-radar-chart.component.html',
   styleUrls: ['./review-radar-chart.component.css'],
 })

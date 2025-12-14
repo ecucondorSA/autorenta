@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * Skeleton Component V2
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-skeleton',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div [class]="skeletonClasses()" [style]="skeletonStyles()">
       <ng-content />

@@ -1,6 +1,6 @@
 import {Component, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 interface FaqItem {
   question: string;
@@ -12,11 +12,11 @@ interface FaqItem {
   selector: 'app-wallet-faq',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="bg-surface-raised dark:bg-surface-raised rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
-    >
+      >
       <!-- Header -->
       <div class="mb-6">
         <h2 class="text-2xl font-bold text-text-primary dark:text-text-secondary mb-2">
@@ -26,68 +26,69 @@ interface FaqItem {
           Todo lo que necesitás saber sobre cómo funciona tu billetera virtual
         </p>
       </div>
-
+    
       <!-- FAQ Items -->
       <div class="space-y-3">
-        <div
-          *ngFor="let item of faqItems(); let i = index"
-          class="border border-border-default dark:border-border-muted rounded-lg overflow-hidden transition-all duration-200"
-          [class.ring-2]="item.expanded"
-          [class.ring-cta-default]="item.expanded"
-        >
-          <!-- Question -->
-          <button
-            type="button"
-            (click)="toggleItem(i)"
-            class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-border-default/20 dark:hover:bg-surface-base transition-colors duration-200"
-          >
-            <span class="font-semibold text-text-primary dark:text-text-secondary pr-4">
-              {{ item.question }}
-            </span>
-            <svg
-              class="w-5 h-5 text-cta-default flex-shrink-0 transition-transform duration-200"
-              [class.rotate-180]="item.expanded"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-
-          <!-- Answer -->
+        @for (item of faqItems(); track item; let i = $index) {
           <div
-            *ngIf="item.expanded"
-            class="px-4 pb-4 pt-2 bg-border-default/10 dark:bg-surface-base/50 border-t border-border-default dark:border-border-muted"
-          >
-            <p
-              class="text-sm text-text-secondary dark:text-text-secondary leading-relaxed"
-              [innerHTML]="item.answer"
-            ></p>
+            class="border border-border-default dark:border-border-muted rounded-lg overflow-hidden transition-all duration-200"
+            [class.ring-2]="item.expanded"
+            [class.ring-cta-default]="item.expanded"
+            >
+            <!-- Question -->
+            <button
+              type="button"
+              (click)="toggleItem(i)"
+              class="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-border-default/20 dark:hover:bg-surface-base transition-colors duration-200"
+              >
+              <span class="font-semibold text-text-primary dark:text-text-secondary pr-4">
+                {{ item.question }}
+              </span>
+              <svg
+                class="w-5 h-5 text-cta-default flex-shrink-0 transition-transform duration-200"
+                [class.rotate-180]="item.expanded"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                  />
+              </svg>
+            </button>
+            <!-- Answer -->
+            @if (item.expanded) {
+              <div
+                class="px-4 pb-4 pt-2 bg-border-default/10 dark:bg-surface-base/50 border-t border-border-default dark:border-border-muted"
+                >
+                <p
+                  class="text-sm text-text-secondary dark:text-text-secondary leading-relaxed"
+                  [innerHTML]="item.answer"
+                ></p>
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
-
+    
       <!-- Additional Help -->
       <div
         class="mt-6 p-4 bg-cta-default/10 dark:bg-cta-default/20 border border-cta-default/40 dark:border-cta-default rounded-lg"
-      >
+        >
         <div class="flex items-start gap-3">
           <svg
             class="w-5 h-5 text-cta-default dark:text-cta-default flex-shrink-0 mt-0.5"
             fill="currentColor"
             viewBox="0 0 20 20"
-          >
+            >
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
               clip-rule="evenodd"
-            />
+              />
           </svg>
           <div>
             <h3 class="font-semibold text-cta-default dark:text-cta-default mb-1">
@@ -97,13 +98,13 @@ interface FaqItem {
               Contactá a nuestro equipo de soporte en
               <a href="mailto:autorentardev@gmail.com" class="underline hover:text-cta-default"
                 >autorentardev&#64;gmail.com</a
-              >
-            </p>
+                >
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `,
+    `,
 })
 export class WalletFaqComponent {
   readonly faqItems = signal<FaqItem[]>([

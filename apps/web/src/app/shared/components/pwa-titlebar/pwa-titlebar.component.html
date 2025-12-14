@@ -1,85 +1,88 @@
-<div *ngIf="isWCOActive()" class="pwa-titlebar" [style.height.px]="titlebarRect()?.height || 40">
-  <!-- Región draggable (izquierda) -->
-  <div class="titlebar-drag-region">
-    <button
-      class="titlebar-logo-btn"
-      (click)="navigateToHome()"
-      type="button"
-      aria-label="Ir al inicio"
-    >
-      <svg class="titlebar-logo" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="titlebarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#3B82F6"/>
-            <stop offset="100%" stop-color="#60A5FA"/>
-          </linearGradient>
-        </defs>
-        <!-- Car body -->
-        <path d="M4 24 C4 24 7 16 10 14 C13 12 18 12 23 12 C28 12 31 14 33 17 C35 20 35 24 35 24 L35 28 L4 28 Z" fill="currentColor"/>
-        <!-- Window -->
-        <path d="M12 22 L15 15 L27 15 L30 22 Z" fill="url(#titlebarGradient)" opacity="0.9"/>
-        <!-- Key -->
-        <circle cx="19.5" cy="7" r="3.5" fill="none" stroke="url(#titlebarGradient)" stroke-width="1.5"/>
-        <circle cx="19.5" cy="7" r="1.5" fill="url(#titlebarGradient)"/>
-        <line x1="19.5" y1="10.5" x2="19.5" y2="12" stroke="url(#titlebarGradient)" stroke-width="1.5"/>
-        <!-- Wheels -->
-        <circle cx="12" cy="28" r="3.5" fill="currentColor"/>
-        <circle cx="12" cy="28" r="1.5" fill="#3B82F6"/>
-        <circle cx="27" cy="28" r="3.5" fill="currentColor"/>
-        <circle cx="27" cy="28" r="1.5" fill="#3B82F6"/>
-      </svg>
-      <span class="titlebar-brand">AutoRenta</span>
-    </button>
-  </div>
-
-  <!-- Acciones centrales (no draggable) -->
-  <div class="titlebar-actions">
-    <div class="titlebar-search">
-      <input
-        type="search"
-        class="titlebar-search-input titlebar-search-input--clean"
-        placeholder="Buscar autos..."
-        (focus)="navigateToSearch()"
-        readonly
-      />
+@if (isWCOActive()) {
+  <div class="pwa-titlebar" [style.height.px]="titlebarRect()?.height || 40">
+    <!-- Región draggable (izquierda) -->
+    <div class="titlebar-drag-region">
+      <button
+        class="titlebar-logo-btn"
+        (click)="navigateToHome()"
+        type="button"
+        aria-label="Ir al inicio"
+        >
+        <svg class="titlebar-logo" viewBox="0 0 48 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="titlebarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3B82F6"/>
+              <stop offset="100%" stop-color="#60A5FA"/>
+            </linearGradient>
+          </defs>
+          <!-- Car body -->
+          <path d="M4 24 C4 24 7 16 10 14 C13 12 18 12 23 12 C28 12 31 14 33 17 C35 20 35 24 35 24 L35 28 L4 28 Z" fill="currentColor"/>
+          <!-- Window -->
+          <path d="M12 22 L15 15 L27 15 L30 22 Z" fill="url(#titlebarGradient)" opacity="0.9"/>
+          <!-- Key -->
+          <circle cx="19.5" cy="7" r="3.5" fill="none" stroke="url(#titlebarGradient)" stroke-width="1.5"/>
+          <circle cx="19.5" cy="7" r="1.5" fill="url(#titlebarGradient)"/>
+          <line x1="19.5" y1="10.5" x2="19.5" y2="12" stroke="url(#titlebarGradient)" stroke-width="1.5"/>
+          <!-- Wheels -->
+          <circle cx="12" cy="28" r="3.5" fill="currentColor"/>
+          <circle cx="12" cy="28" r="1.5" fill="#3B82F6"/>
+          <circle cx="27" cy="28" r="3.5" fill="currentColor"/>
+          <circle cx="27" cy="28" r="1.5" fill="#3B82F6"/>
+        </svg>
+        <span class="titlebar-brand">AutoRenta</span>
+      </button>
     </div>
-
-    <button
-      class="titlebar-btn"
-      (click)="navigateToProfile()"
-      type="button"
-      [attr.aria-label]="isAuthenticated() ? 'Ver perfil' : 'Iniciar sesión'"
-    >
-      <svg *ngIf="!isAuthenticated()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-        ></path>
-      </svg>
-      <img
-        *ngIf="isAuthenticated() && userProfile()?.avatar_url"
-        [src]="userProfile()?.avatar_url"
-        [alt]="userProfile()?.full_name || 'Usuario'"
-        class="titlebar-avatar"
-      />
-      <svg
-        *ngIf="isAuthenticated() && !userProfile()?.avatar_url"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"
-        ></path>
-      </svg>
-    </button>
+    <!-- Acciones centrales (no draggable) -->
+    <div class="titlebar-actions">
+      <div class="titlebar-search">
+        <input
+          type="search"
+          class="titlebar-search-input titlebar-search-input--clean"
+          placeholder="Buscar autos..."
+          (focus)="navigateToSearch()"
+          readonly
+          />
+      </div>
+      <button
+        class="titlebar-btn"
+        (click)="navigateToProfile()"
+        type="button"
+        [attr.aria-label]="isAuthenticated() ? 'Ver perfil' : 'Iniciar sesión'"
+        >
+        @if (!isAuthenticated()) {
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            ></path>
+          </svg>
+        }
+        @if (isAuthenticated() && userProfile()?.avatar_url) {
+          <img
+            [src]="userProfile()?.avatar_url"
+            [alt]="userProfile()?.full_name || 'Usuario'"
+            class="titlebar-avatar"
+            />
+        }
+        @if (isAuthenticated() && !userProfile()?.avatar_url) {
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+        }
+      </button>
+    </div>
+    <!-- Espaciador derecho para los controles de Windows -->
+    <div class="titlebar-spacer" [style.width.px]="140"></div>
   </div>
-
-  <!-- Espaciador derecho para los controles de Windows -->
-  <div class="titlebar-spacer" [style.width.px]="140"></div>
-</div>
+}

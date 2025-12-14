@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import {
@@ -11,115 +11,118 @@ import {
   selector: 'app-dynamic-price-display',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="stack-sm">
       <!-- Loading State -->
-      <div *ngIf="loading()" class="animate-pulse">
-        <div class="h-8 bg-border-default dark:bg-surface-secondary rounded w-32"></div>
-        <div class="h-4 bg-border-default dark:bg-surface-secondary rounded w-24 mt-2"></div>
-      </div>
-
+      @if (loading()) {
+        <div class="animate-pulse">
+          <div class="h-8 bg-border-default dark:bg-surface-secondary rounded w-32"></div>
+          <div class="h-4 bg-border-default dark:bg-surface-secondary rounded w-24 mt-2"></div>
+        </div>
+      }
+    
       <!-- Price Display -->
-      <div *ngIf="!loading() && pricing()" class="stack-sm">
-        <!-- Main Price -->
-        <div class="flex items-baseline gap-2">
-          <span class="h3 text-text-primary dark:text-text-inverse-pure">
-            {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
-          </span>
-          <span class="text-sm text-text-secondary dark:text-text-secondary">/hora</span>
-        </div>
-
-        <!-- Total Price -->
-        <div *ngIf="showTotal" class="text-sm text-text-secondary dark:text-text-secondary">
-          Total:
-          <span class="font-semibold">{{
-            formatPrice(pricing()!.total_price, pricing()!.currency)
-          }}</span>
-          <span class="text-xs ml-1">({{ rentalHours }} horas)</span>
-        </div>
-
-        <!-- Surge Badge -->
-        <div
-          *ngIf="surgeBadge().show"
+      @if (!loading() && pricing()) {
+        <div class="stack-sm">
+          <!-- Main Price -->
+          <div class="flex items-baseline gap-2">
+            <span class="h3 text-text-primary dark:text-text-inverse-pure">
+              {{ formatPrice(pricing()!.price_per_hour, pricing()!.currency) }}
+            </span>
+            <span class="text-sm text-text-secondary dark:text-text-secondary">/hora</span>
+          </div>
+          <!-- Total Price -->
+          @if (showTotal) {
+            <div class="text-sm text-text-secondary dark:text-text-secondary">
+              Total:
+              <span class="font-semibold">{{
+                formatPrice(pricing()!.total_price, pricing()!.currency)
+              }}</span>
+              <span class="text-xs ml-1">({{ rentalHours }} horas)</span>
+            </div>
+          }
+          <!-- Surge Badge -->
+          @if (surgeBadge().show) {
+            <div
           class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold {{
             surgeBadge().color
           }}"
-        >
-          <span>{{ surgeBadge().icon }}</span>
-          <span>{{ surgeBadge().text }}</span>
-        </div>
-
-        <!-- Breakdown Toggle -->
-        <button
-          *ngIf="showBreakdown"
-          type="button"
-          (click)="breakdownExpanded.set(!breakdownExpanded())"
-          class="text-sm text-cta-default dark:text-cta-default hover:underline flex items-center gap-1"
-        >
-          <span>Ver detalle</span>
-          <svg
-            class="w-4 h-4 transition-transform"
-            [class.rotate-180]="breakdownExpanded()"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-
-        <!-- Breakdown Details -->
-        <div
-          *ngIf="showBreakdown && breakdownExpanded()"
-          class="mt-3 p-4 rounded-lg bg-surface-secondary/50 dark:bg-surface-secondary/30 space-y-2.5 text-sm"
-        >
-          <!-- Base Price -->
-          <div
-            class="flex justify-between items-center pb-2 border-b border-border-default dark:border-charcoal-medium"
-          >
-            <span class="text-text-secondary dark:text-text-secondary">Tarifa base</span>
-            <span class="font-semibold text-text-primary dark:text-text-inverse-pure">
-              {{ formatPrice(pricing()!.breakdown.base_price, pricing()!.currency) }}
-            </span>
-          </div>
-
-          <!-- Factors -->
-          <div *ngFor="let factor of getVisibleFactors()" class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-              <span class="text-text-secondary dark:text-text-secondary">{{ factor.label }}</span>
-              <span
-                class="text-xs px-2 py-0.5 rounded"
-                [class.bg-success-light/20]="factor.value < 0"
-                [class.text-success-strong]="factor.value < 0"
-                [class.bg-warning-bg-hover]="factor.value > 0"
-                [class.text-warning-strong]="factor.value > 0"
-                [class.bg-surface-raised]="factor.value === 0"
-                [class.text-text-secondary
-                dark:text-text-secondary]="factor.value === 0"
               >
-                {{ formatFactor(factor.value) }}
-              </span>
+              <span>{{ surgeBadge().icon }}</span>
+              <span>{{ surgeBadge().text }}</span>
             </div>
-            <span class="text-sm text-text-secondary dark:text-text-secondary">{{
-              factor.description
-            }}</span>
-          </div>
-
-          <!-- Total Multiplier -->
-          <div
-            class="flex justify-between items-center pt-2 border-t border-border-default dark:border-charcoal-medium font-semibold"
-          >
-            <span class="text-text-primary dark:text-text-inverse-pure">Multiplicador total</span>
-            <span
-              class="text-lg"
-              [class.text-success-strong]="pricing()!.breakdown.total_multiplier < 1"
-              [class.text-warning-text]="pricing()!.breakdown.total_multiplier > 1.1"
+          }
+          <!-- Breakdown Toggle -->
+          @if (showBreakdown) {
+            <button
+              type="button"
+              (click)="breakdownExpanded.set(!breakdownExpanded())"
+              class="text-sm text-cta-default dark:text-cta-default hover:underline flex items-center gap-1"
+              >
+              <span>Ver detalle</span>
+              <svg
+                class="w-4 h-4 transition-transform"
+                [class.rotate-180]="breakdownExpanded()"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                  />
+              </svg>
+            </button>
+          }
+          <!-- Breakdown Details -->
+          @if (showBreakdown && breakdownExpanded()) {
+            <div
+              class="mt-3 p-4 rounded-lg bg-surface-secondary/50 dark:bg-surface-secondary/30 space-y-2.5 text-sm"
+              >
+              <!-- Base Price -->
+              <div
+                class="flex justify-between items-center pb-2 border-b border-border-default dark:border-charcoal-medium"
+                >
+                <span class="text-text-secondary dark:text-text-secondary">Tarifa base</span>
+                <span class="font-semibold text-text-primary dark:text-text-inverse-pure">
+                  {{ formatPrice(pricing()!.breakdown.base_price, pricing()!.currency) }}
+                </span>
+              </div>
+              <!-- Factors -->
+              @for (factor of getVisibleFactors(); track factor) {
+                <div class="flex justify-between items-center">
+                  <div class="flex items-center gap-2">
+                    <span class="text-text-secondary dark:text-text-secondary">{{ factor.label }}</span>
+                    <span
+                      class="text-xs px-2 py-0.5 rounded"
+                      [class.bg-success-light/20]="factor.value < 0"
+                      [class.text-success-strong]="factor.value < 0"
+                      [class.bg-warning-bg-hover]="factor.value > 0"
+                      [class.text-warning-strong]="factor.value > 0"
+                      [class.bg-surface-raised]="factor.value === 0"
+                      [class.text-text-secondary
+                      dark:text-text-secondary]="factor.value === 0"
+                      >
+                      {{ formatFactor(factor.value) }}
+                    </span>
+                  </div>
+                  <span class="text-sm text-text-secondary dark:text-text-secondary">{{
+                    factor.description
+                  }}</span>
+                </div>
+              }
+              <!-- Total Multiplier -->
+              <div
+                class="flex justify-between items-center pt-2 border-t border-border-default dark:border-charcoal-medium font-semibold"
+                >
+                <span class="text-text-primary dark:text-text-inverse-pure">Multiplicador total</span>
+                <span
+                  class="text-lg"
+                  [class.text-success-strong]="pricing()!.breakdown.total_multiplier < 1"
+                  [class.text-warning-text]="pricing()!.breakdown.total_multiplier > 1.1"
               [class.text-text-primary]="
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
@@ -128,32 +131,37 @@ import {
                 pricing()!.breakdown.total_multiplier >= 1 &&
                 pricing()!.breakdown.total_multiplier <= 1.1
               "
-            >
-              ×{{ pricing()!.breakdown.total_multiplier.toFixed(2) }}
-            </span>
-          </div>
-
-          <!-- Context Info -->
-          <div
-            class="mt-3 pt-3 border-t border-border-default dark:border-charcoal-medium text-xs text-text-secondary dark:text-text-secondary/70"
-          >
-            <p>
-              {{ getDayName(pricing()!.details.day_of_week) }} •
-              {{ getHourDescription(pricing()!.details.hour_of_day) }}
-            </p>
-            <p *ngIf="pricing()!.details.user_rentals > 0" class="mt-1">
-              Has completado {{ pricing()!.details.user_rentals }} alquileres
-            </p>
-          </div>
+                  >
+                  ×{{ pricing()!.breakdown.total_multiplier.toFixed(2) }}
+                </span>
+              </div>
+              <!-- Context Info -->
+              <div
+                class="mt-3 pt-3 border-t border-border-default dark:border-charcoal-medium text-xs text-text-secondary dark:text-text-secondary/70"
+                >
+                <p>
+                  {{ getDayName(pricing()!.details.day_of_week) }} •
+                  {{ getHourDescription(pricing()!.details.hour_of_day) }}
+                </p>
+                @if (pricing()!.details.user_rentals > 0) {
+                  <p class="mt-1">
+                    Has completado {{ pricing()!.details.user_rentals }} alquileres
+                  </p>
+                }
+              </div>
+            </div>
+          }
         </div>
-      </div>
-
+      }
+    
       <!-- Error State -->
-      <div *ngIf="error()" class="text-sm text-error-text">
-        {{ error() }}
-      </div>
+      @if (error()) {
+        <div class="text-sm text-error-text">
+          {{ error() }}
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [],
 })
 export class DynamicPriceDisplayComponent implements OnInit, OnDestroy {

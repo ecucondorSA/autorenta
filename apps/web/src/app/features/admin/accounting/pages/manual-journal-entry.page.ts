@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, AccountingAccount } from '../../../../core/services/accounting.service';
@@ -17,7 +17,7 @@ interface JournalEntryLine {
   selector: 'app-manual-journal-entry',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule],
   templateUrl: './manual-journal-entry.page.html',
   styleUrls: ['./manual-journal-entry.page.scss'],
 })

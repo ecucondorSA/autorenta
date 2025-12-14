@@ -1,6 +1,6 @@
 import {Component, Input,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * Badge simple para indicar que un auto usa pricing dinámico
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-dynamic-pricing-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="dynamic-pricing-badge" [class.with-surge]="surgeActive">
       <div class="badge-content" [title]="tooltipText">

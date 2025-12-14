@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ThemeService } from '../../../core/services/theme.service';
 
@@ -14,7 +14,7 @@ import { ThemeService } from '../../../core/services/theme.service';
 @Component({
   selector: 'app-dark-mode-toggle',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <button
       type="button"

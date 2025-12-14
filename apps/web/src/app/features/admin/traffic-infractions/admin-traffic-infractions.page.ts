@@ -248,11 +248,11 @@ export class AdminTrafficInfractionsPage implements OnInit {
 
       if (error) throw error;
 
-      const mapped = (data || []).map((i: any) => ({
+      const mapped = (data || []).map((i: Record<string, any>) => ({
         ...i,
         renter_name: i.renter?.full_name,
         owner_name: i.owner?.full_name
-      }));
+      })) as unknown as TrafficInfraction[];
 
       this.infractions.set(mapped);
     } catch (err) {

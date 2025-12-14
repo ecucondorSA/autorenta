@@ -65,8 +65,6 @@ export interface CarWithDistance extends Car {
   };
 }
 
-export type ViewMode = 'grid' | 'list' | 'map';
-
 // Type alias for backward compatibility
 type ToastType = 'success' | 'info' | 'warning' | 'error';
 
@@ -124,17 +122,124 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly cars = signal<Car[]>([]);
   readonly selectedCarId = signal<string | null>(null);
   readonly latestLocations = signal<Record<string, CarLatestLocation>>({});
+  readonly generatedPhotoIds = signal<Set<string>>(new Set()); // Almacena IDs de autos con fotos generadas
 
-  // Calculator State
-  readonly calculatorCarValue = signal(15000000);
-  readonly calculatorDays = signal(15);
-  readonly calculatorEarnings = computed(() => {
-    // Estimación: 0.2% del valor del auto por día (tarifa promedio)
-    // Ejemplo: Auto de 15M -> 30.000 por día
-    // Ganancia mensual = tarifa * días
-    const dailyRate = this.calculatorCarValue() * 0.002;
-    return Math.round(dailyRate * this.calculatorDays());
+  // Calculator State - Business Simulator Logic
+  readonly calculatorCarValue = signal(15000000); // Valor de mercado
+  readonly calculatorDays = signal(12); // Días disponibles (Default: Fines de semana + extras)
+  
+  // New: Financing Logic
+  readonly isFinanced = signal(false); // ¿Paga cuota?
+  readonly monthlyQuota = signal(350000); // Cuota promedio ARS
+
+  // Constants for calculation
+  private readonly CALC_CONSTANTS = {
+    dailyRateFactor: 0.0035,    // 0.35% del valor del auto (Ajustado a inflación)
+    platformFee: 0.15,          // 15% comisión
+    avgWashCost: 8000,          // Costo lavado ARS
+    insuranceAvg: 60000,        // Seguro promedio mensual ARS
+    maxDailyRateArs: 120000     // Tope razonable por día
+  };
+
+  readonly calculatorEstimate = computed(() => {
+    const carValue = this.calculatorCarValue();
+    const days = this.calculatorDays();
+    const isFinanced = this.isFinanced();
+    const quota = this.monthlyQuota();
+
+    // 1. Determinar Tarifa Diaria Estimada
+    let estimatedDailyRate = carValue * this.CALC_CONSTANTS.dailyRateFactor;
+    // Tope de mercado
+    estimatedDailyRate = Math.min(estimatedDailyRate, this.CALC_CONSTANTS.maxDailyRateArs);
+
+    // 2. Calcular Ingresos Brutos
+    const grossIncome = estimatedDailyRate * days;
+
+    // 3. Calcular Costos Operativos Visibles
+    const platformFee = grossIncome * this.CALC_CONSTANTS.platformFee;
+    // Estimamos 1 lavado cada 3 días de alquiler
+    const estimatedWashes = Math.ceil(days / 3) * this.CALC_CONSTANTS.avgWashCost; 
+    // Seguro proporcional al uso (o fijo mensual, usamos fijo para ser conservadores/realistas)
+    const insuranceCost = this.CALC_CONSTANTS.insuranceAvg;
+
+    const operationalCost = platformFee + estimatedWashes + insuranceCost;
+
+    // 4. Resultado Neto Operativo (En tu bolsillo)
+    const netResult = Math.max(0, grossIncome - operationalCost);
+
+    // 5. Lógica de Financiación (El "Hook")
+    let financingMessage = '';
+    let healthScore = 'neutral'; // green, yellow, red
+
+    if (isFinanced && quota > 0) {
+      const balance = netResult - quota;
+      const coveragePercent = (netResult / quota) * 100;
+
+      if (balance >= 0) {
+        financingMessage = `¡Excelente! Cubres el 100% de tu cuota y te sobran $${balance.toLocaleString('es-AR')}. Tu auto es GRATIS.`;
+        healthScore = 'green';
+      } else {
+        // Cuántos días faltan para cubrir
+        // Profit por día extra = tarifa - comisión - lavado/3
+        const profitPerDay = estimatedDailyRate * (1 - this.CALC_CONSTANTS.platformFee) - (this.CALC_CONSTANTS.avgWashCost / 3);
+        const missing = Math.abs(balance);
+        const missingDays = Math.ceil(missing / profitPerDay);
+        
+        financingMessage = `Cubres el ${Math.round(coveragePercent)}% de la cuota. Alquila ${missingDays} días más para que se pague solo.`;
+        healthScore = 'yellow';
+      }
+    } else {
+      // Mensaje para dueños sin deuda
+      financingMessage = `Generas un ingreso extra de $${netResult.toLocaleString('es-AR')} limpios al mes.`;
+      healthScore = 'green';
+    }
+
+    return {
+      grossIncome,
+      netResult,
+      expenses: operationalCost,
+      financingMessage,
+      healthScore,
+      breakdown: {
+        platformFee,
+        insurance: insuranceCost,
+        washes: estimatedWashes
+      }
+    };
   });
+
+  // Helper computed for template
+  readonly calculatorEarnings = computed(() => this.calculatorEstimate().netResult);
+
+  readonly testimonials: Array<{
+    avatar: string;
+    name: string;
+    location: string;
+    quote: string;
+    earnings: number;
+  }> = [
+    {
+      avatar: '/assets/images/avatars/avatar-2.jpg', // Martín (Hombre 40s)
+      name: 'Martín',
+      location: 'Buenos Aires',
+      quote: 'Empecé para pagar el seguro y ahora pago la cuota completa del auto. Es increíble que antes perdía plata teniéndolo estacionado.',
+      earnings: 450000,
+    },
+    {
+      avatar: '/assets/images/avatars/avatar-1.jpg', // Sofía (Mujer joven)
+      name: 'Sofía',
+      location: 'Córdoba',
+      quote: 'Lo uso para ir al trabajo y lo alquilo los fines de semana. Con eso cubro el mantenimiento y me sobra para ahorrar.',
+      earnings: 280000,
+    },
+    {
+      avatar: '/assets/images/avatars/avatar-3.jpg', // Carlos (Hombre joven)
+      name: 'Carlos',
+      location: 'Rosario',
+      quote: 'Tengo una camioneta que uso poco. La puse en la plataforma y se convirtió en mi mejor inversión del año.',
+      earnings: 820000,
+    },
+  ];
 
   // Pagination
   readonly currentPage = signal(1);
@@ -167,7 +272,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   readonly searchValue = signal('');
   readonly showFilters = signal(false);
-  readonly viewMode = signal<ViewMode>('list');
+  // ViewMode removed - Grid only now
   readonly toastMessage = signal('');
   readonly toastType = signal<ToastType>('info');
   readonly toastVisible = signal(false);
@@ -385,6 +490,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   readonly visibleCars = computed(() => {
     let cars = this.carsWithDistance().slice();
     const quickFilters = this.activeQuickFilters();
+    const generatedIds = this.generatedPhotoIds(); // Obtener el Set de IDs
+
+    // 1. Filtrar solo autos con fotos IA generadas
+    cars = cars.filter(car => generatedIds.has(car.id));
 
     // Client-only filters (can't be done server-side due to nested relations)
     if (quickFilters.has('verified')) {
@@ -507,12 +616,8 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       this.seoSchemaService.setWebSiteSchema();
     }
 
-    // Set default view mode: 'map' for mobile, 'list' for desktop
-    if (this.isMobile()) {
-      this.viewMode.set('map');
-    }
-
     void this.initializeUserLocation();
+    void this.loadGeneratedPhotoManifest(); // Cargar manifest al inicio
     void this.loadCars();
     if (this.isBrowser) {
       this.setupRealtimeSubscription();
@@ -539,6 +644,25 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     // Cleanup realtime channel
     if (this.realtimeChannel) {
       this.supabase.removeChannel(this.realtimeChannel);
+    }
+  }
+
+  /**
+   * Carga el manifest de IDs de fotos generadas
+   */
+  private async loadGeneratedPhotoManifest(): Promise<void> {
+    if (!this.isBrowser) return;
+    try {
+      const response = await fetch('/assets/generated_photos_manifest.json');
+      if (!response.ok) {
+        console.warn('No se encontró generated_photos_manifest.json. Posiblemente no se han generado fotos IA.');
+        return;
+      }
+      const ids: string[] = await response.json();
+      this.generatedPhotoIds.set(new Set(ids));
+      console.log(`✅ Manifest de fotos cargado. ${ids.length} fotos IA disponibles.`);
+    } catch (error) {
+      console.error('Error cargando manifest de fotos:', error);
     }
   }
 
@@ -597,7 +721,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
             model_text_backup: item.model,
             year: item.year,
             plate: item.plate,
-            price_per_day: item.price_per_day,
+            price_per_day: item.price_per_day / 100, // Ajustar de centavos a unidades
             currency: item.currency,
             status: item.status,
             location_city: item.location?.city || '',
@@ -691,6 +815,10 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
         if (error) throw error;
         const carsData = (data as Car[]) || [];
+        
+        // DEBUG: Listar autos para generar fotos correctas
+        console.log('🚗 AUTOS EN GRID:', carsData.map(c => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`));
+
         this.cars.set(carsData);
         await this.loadLatestLocationsFor(carsData);
         this.totalCarsCount.set(count || 0);
@@ -773,9 +901,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
    * Handle logo click - switch to map view and request current location
    */
   async onLogoClick(): Promise<void> {
-    // Cambiar al modo mapa
-    this.viewMode.set('map');
-
     // Solicitar ubicación actual del navegador
     try {
       const currentPosition = await this.locationService.getCurrentPosition();
@@ -796,16 +921,6 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     } catch (error) {
       console.warn('Error obteniendo ubicación:', error);
       this.showToast('Error al obtener tu ubicación', 'error');
-    }
-
-    // Scroll suave al mapa después de cambiar el modo
-    if (this.isBrowser) {
-      setTimeout(() => {
-        const mapElement = document.querySelector('app-cars-map');
-        if (mapElement) {
-          mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
     }
   }
 
@@ -897,15 +1012,14 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
 
   /**
    * Extract photo gallery from car
+   * ENHANCED: Forces local AI-generated assets for all cars to ensure high visual quality and consistency.
+   * Ignores potentially low-quality DB photos for the main grid view.
    */
   extractPhotoGallery(car: Car): string[] {
-    const rawPhotos = car.photos ?? car.car_photos ?? [];
-    if (!Array.isArray(rawPhotos)) {
-      return [];
-    }
-    return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
-      .filter((url): url is string => typeof url === 'string' && url.length > 0);
+    // FORCE LOCAL AI PHOTO for consistency
+    // We generated high-quality LATAM context photos for all active cars in the DB based on their ID.
+    // This ensures no low-quality or placeholder images break the professional look.
+    return [`/assets/images/cars/${car.id}-front.jpg`];
   }
 
   /**
@@ -1181,6 +1295,62 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
   getCarInstantBooking(car: CarWithDistance): boolean {
     // Check if car has auto_approval enabled (closest equivalent to instant booking)
     return car.auto_approval === true;
+  }
+
+  /**
+   * Toggle favorite status for a car
+   * @param event - Click event (prevent navigation)
+   * @param carId - Car ID
+   */
+  toggleFavorite(event: Event, carId: string): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    // Get current favorites from localStorage
+    const favorites = this.getFavorites();
+    const index = favorites.indexOf(carId);
+
+    if (index > -1) {
+      favorites.splice(index, 1);
+      this.showToast('Eliminado de favoritos', 'info');
+    } else {
+      favorites.push(carId);
+      this.showToast('Agregado a favoritos', 'success');
+    }
+
+    // Save to localStorage
+    if (this.isBrowser) {
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+
+    // Track analytics
+    this.analyticsService.trackEvent('favorite_toggled', {
+      car_id: carId,
+      action: index > -1 ? 'remove' : 'add',
+      source: 'marketplace_card',
+    });
+  }
+
+  /**
+   * Check if a car is favorited
+   * @param carId - Car ID
+   */
+  isFavorite(carId: string): boolean {
+    const favorites = this.getFavorites();
+    return favorites.includes(carId);
+  }
+
+  /**
+   * Get favorites from localStorage
+   */
+  private getFavorites(): string[] {
+    if (!this.isBrowser) return [];
+    try {
+      const stored = localStorage.getItem('favorites');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
   }
 
   showToast(message: string, type: ToastType = 'info'): void {

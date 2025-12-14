@@ -4,8 +4,18 @@ import type {
   BonusMalusCalculation,
   BonusMalusDisplay,
   BonusMalusType,
+  AutorentaTier,
 } from '../models';
 import { injectSupabase } from './supabase-client.service';
+
+export interface TierDisplay {
+  label: string;
+  color: string;
+  icon: string;
+  badgeClass: string;
+  description: string;
+  benefits: string[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -46,9 +56,94 @@ export class BonusMalusService {
         return await this.getUserBonusMalus(targetUserId);
       }
 
-      return data as UserBonusMalus;
+      // Fallback: Calcular tier si no viene de la BD (para compatibilidad inmediata)
+      const bonusMalus = data as UserBonusMalus;
+      if (!bonusMalus.tier) {
+        bonusMalus.tier = this.calculateTierFallback(bonusMalus);
+      }
+
+      return bonusMalus;
     } catch {
       return null;
+    }
+  }
+
+  /**
+   * Fallback para determinar el nivel si la DB no lo tiene
+   */
+  private calculateTierFallback(data: UserBonusMalus): AutorentaTier {
+    const isVerified = data.metrics?.is_verified ?? false;
+    
+    // Elite: Factor excelente Y verificado
+    if (isVerified && data.total_factor <= -0.05) return 'elite';
+    
+    // Trusted: Factor bueno/neutral Y verificado
+    if (isVerified && data.total_factor <= 0.0) return 'trusted';
+    
+    // Standard: Todo lo demas
+    return 'standard';
+  }
+
+  /**
+   * Obtiene el nivel actual del usuario
+   */
+  async getUserTier(userId?: string): Promise<AutorentaTier> {
+    const data = await this.getUserBonusMalus(userId);
+    return data?.tier || 'standard';
+  }
+
+  /**
+   * Verifica si el usuario está exento de pagar depósito (Elite Tier)
+   */
+  async shouldWaiveDeposit(userId?: string): Promise<boolean> {
+    const tier = await this.getUserTier(userId);
+    return tier === 'elite';
+  }
+
+  /**
+   * Obtiene el porcentaje de descuento para el depósito (0.0 a 1.0)
+   */
+  async getDepositDiscount(userId?: string): Promise<number> {
+    const tier = await this.getUserTier(userId);
+    switch (tier) {
+      case 'elite': return 1.0;   // 100% OFF (Sin depósito)
+      case 'trusted': return 0.5; // 50% OFF
+      default: return 0.0;        // 0% OFF (Full depósito)
+    }
+  }
+
+  /**
+   * Obtiene la configuración visual para un nivel
+   */
+  getTierDisplay(tier: AutorentaTier): TierDisplay {
+    switch (tier) {
+      case 'elite':
+        return {
+          label: 'Elite',
+          color: '#10B981', // emerald-500
+          icon: 'trophy',
+          badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          description: 'Nivel máximo de confianza',
+          benefits: ['Sin depósito de garantía', 'Descuento máximo en tarifas', 'Soporte prioritario']
+        };
+      case 'trusted':
+        return {
+          label: 'Trusted',
+          color: '#8B5CF6', // violet-500
+          icon: 'shield-checkmark',
+          badgeClass: 'bg-violet-100 text-violet-800 border-violet-200',
+          description: 'Usuario verificado y confiable',
+          benefits: ['50% descuento en depósito', 'Acceso a mejores autos']
+        };
+      default:
+        return {
+          label: 'Standard',
+          color: '#6B7280', // gray-500
+          icon: 'person',
+          badgeClass: 'bg-gray-100 text-gray-800 border-gray-200',
+          description: 'Nivel inicial',
+          benefits: ['Acceso básico a la plataforma']
+        };
     }
   }
 
@@ -325,26 +420,23 @@ export class BonusMalusService {
     savings: number;
   }> {
     try {
-      let targetUserId = userId;
-      if (!targetUserId) {
-        const { data: { user } } = await this.supabase.auth.getUser();
-        targetUserId = user?.id;
-      }
-
-      const { data, error } = await this.supabase.rpc('apply_bonus_malus_to_deposit', {
-        p_user_id: targetUserId,
-        p_base_deposit_cents: baseDepositCents,
-      });
-
-      if (error) throw error;
-
+      // Nueva lógica basada en Tiers
+      const tier = await this.getUserTier(userId);
+      let discount = 0;
+      
+      if (tier === 'elite') discount = 1.0;
+      else if (tier === 'trusted') discount = 0.5;
+      
+      const savings = Math.round(baseDepositCents * discount);
+      const adjustedDepositCents = baseDepositCents - savings;
+      
       return {
-        adjustedDepositCents: data?.adjusted_deposit_cents ?? baseDepositCents,
-        factor: data?.factor ?? 0,
-        savings: baseDepositCents - (data?.adjusted_deposit_cents ?? baseDepositCents),
+        adjustedDepositCents,
+        factor: -discount, // Factor negativo para indicar descuento
+        savings
       };
     } catch {
-      // Fallback: return base deposit without adjustment
+      // Fallback
       return {
         adjustedDepositCents: baseDepositCents,
         factor: 0,

@@ -1,6 +1,6 @@
 import {Component, Input, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ShareService } from '../../../core/services/share.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { HeaderIconComponent } from '../header-icon/header-icon.component';
@@ -11,7 +11,7 @@ export type ShareType = 'car' | 'booking' | 'app' | 'custom';
   selector: 'app-share-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, HeaderIconComponent],
+  imports: [HeaderIconComponent],
   template: `
     <button
       type="button"

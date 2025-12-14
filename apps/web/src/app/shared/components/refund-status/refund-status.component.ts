@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RefundService } from '../../../core/services/refund.service';
@@ -7,7 +7,7 @@ import { RefundService } from '../../../core/services/refund.service';
   selector: 'app-refund-status',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (loading()) {
       <div class="flex items-center justify-center py-4">

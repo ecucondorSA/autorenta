@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, computed, inject, PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
 
@@ -28,7 +28,7 @@ interface UserProfile {
   selector: 'app-pwa-titlebar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './pwa-titlebar.component.html',
   styleUrls: ['./pwa-titlebar.component.css'],
 })

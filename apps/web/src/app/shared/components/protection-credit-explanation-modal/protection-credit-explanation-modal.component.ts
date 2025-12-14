@@ -1,6 +1,6 @@
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule, ModalController } from '@ionic/angular';
 
 /**
@@ -20,7 +20,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
   selector: 'app-protection-credit-explanation-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-header>
       <ion-toolbar>

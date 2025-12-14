@@ -36,95 +36,113 @@ import { FgoService } from '../../../core/services/fgo.service';
         <h3 class="h5">🛡️ Garantías y cobertura FGO</h3>
         <span class="fgo-card__badge">{{ fgoEventCapUsdDisplay() }}</span>
       </div>
-
+    
       <!-- 🇦🇷 Argentina Franchise Matrix Info -->
       <div
         class="fgo-card__hint"
         style="margin-bottom: 1.5rem; background: rgba(33, 150, 83, 0.08);"
-      >
+        >
         <strong>Categoría del vehículo:</strong> {{ franchiseMatrix().bucket | uppercase }} ({{
-          franchiseMatrix().carValueRange
+        franchiseMatrix().carValueRange
         }})<br />
         <strong>Franquicia estándar:</strong> {{ formatUsd(franchiseMatrix().standardFranchiseUsd)
         }}<br />
         <strong>Franquicia por vuelco:</strong>
         {{ formatUsd(franchiseMatrix().rolloverFranchiseUsd) }}
       </div>
-
+    
       <div class="fgo-card__stat-grid">
         <!-- Security Source (Card/Wallet) -->
         <div class="fgo-card__stat">
           <p class="fgo-card__stat-label">{{ securitySourceLabel() }}</p>
-
+    
           <!-- For Credit Card: Show hold amount -->
-          <p class="fgo-card__stat-value" *ngIf="securitySource() === 'card'">
-            {{ formatUsd(holdAmountCard().usd) }}
-          </p>
-          <p
-            class="fgo-card__stat-hint"
-            *ngIf="securitySource() === 'card' && holdAmountCard().local !== null && exchangeRate"
-          >
-            Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}
-          </p>
-          <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'card'">
-            Hold calculado: 35% × franquicia vuelco × FX snapshot
-          </p>
-
+          @if (securitySource() === 'card') {
+            <p class="fgo-card__stat-value">
+              {{ formatUsd(holdAmountCard().usd) }}
+            </p>
+          }
+          @if (securitySource() === 'card' && holdAmountCard().local !== null && exchangeRate) {
+            <p
+              class="fgo-card__stat-hint"
+              >
+              Equivalente: {{ formatCurrency(holdAmountCard().local!, booking.currency) }}
+            </p>
+          }
+          @if (securitySource() === 'card') {
+            <p class="fgo-card__stat-hint">
+              Hold calculado: 35% × franquicia vuelco × FX snapshot
+            </p>
+          }
+    
           <!-- For Wallet: Show security credit amount -->
-          <p class="fgo-card__stat-value" *ngIf="securitySource() === 'wallet'">
-            {{ formatUsd(walletSecurityCreditUsd()) }}
-          </p>
-          <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'wallet' && exchangeRate">
-            Equivalente:
-            {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
-          </p>
-          <p class="fgo-card__stat-hint" *ngIf="securitySource() === 'wallet'">
-            Crédito de seguridad bloqueado en tu wallet
-          </p>
-
+          @if (securitySource() === 'wallet') {
+            <p class="fgo-card__stat-value">
+              {{ formatUsd(walletSecurityCreditUsd()) }}
+            </p>
+          }
+          @if (securitySource() === 'wallet' && exchangeRate) {
+            <p class="fgo-card__stat-hint">
+              Equivalente:
+              {{ formatCurrency(walletSecurityCreditUsd() * exchangeRate! * 100, booking.currency) }}
+            </p>
+          }
+          @if (securitySource() === 'wallet') {
+            <p class="fgo-card__stat-hint">
+              Crédito de seguridad bloqueado en tu wallet
+            </p>
+          }
+    
           <!-- For Mixed or None -->
-          <p
-            class="fgo-card__stat-value"
-            *ngIf="securitySource() === 'mixed' || securitySource() === 'none'"
-          >
-            {{ depositAmountUsdDisplay() ?? '—' }}
-          </p>
-          <p class="fgo-card__stat-hint" *ngIf="depositAmountLocalDisplay()">
-            Equivalente: {{ depositAmountLocalDisplay() }}
-          </p>
+          @if (securitySource() === 'mixed' || securitySource() === 'none') {
+            <p
+              class="fgo-card__stat-value"
+              >
+              {{ depositAmountUsdDisplay() ?? '—' }}
+            </p>
+          }
+          @if (depositAmountLocalDisplay()) {
+            <p class="fgo-card__stat-hint">
+              Equivalente: {{ depositAmountLocalDisplay() }}
+            </p>
+          }
           <p class="fgo-card__stat-hint">{{ securitySourceDescription() }}</p>
         </div>
-
+    
         <!-- FGO Maximum Coverage -->
         <div class="fgo-card__stat">
           <p class="fgo-card__stat-label">Cobertura máxima FGO</p>
           <p class="fgo-card__stat-value">{{ fgoEventCapUsdDisplay() }}</p>
-          <p class="fgo-card__stat-hint" *ngIf="fgoEventCapLocalDisplay()">
-            Equivalente: {{ fgoEventCapLocalDisplay() }}
-          </p>
+          @if (fgoEventCapLocalDisplay()) {
+            <p class="fgo-card__stat-hint">
+              Equivalente: {{ fgoEventCapLocalDisplay() }}
+            </p>
+          }
           <p class="fgo-card__stat-hint">
             Cubre daños hasta USD 800 por evento cuando la documentación está completa y RC ≥ 1.0.
           </p>
         </div>
       </div>
-
+    
       <!-- 🇦🇷 Waterfall Payment Logic -->
       <div class="fgo-waterfall">
-        <div class="fgo-step" *ngFor="let step of guaranteeWaterfallSteps(); let idx = index">
-          <span class="fgo-step__marker">{{ idx + 1 }}</span>
-          <div>
-            <p class="fgo-step__title">{{ step.label }}</p>
-            <p class="fgo-step__description">{{ step.description }}</p>
+        @for (step of guaranteeWaterfallSteps(); track step; let idx = $index) {
+          <div class="fgo-step">
+            <span class="fgo-step__marker">{{ idx + 1 }}</span>
+            <div>
+              <p class="fgo-step__title">{{ step.label }}</p>
+              <p class="fgo-step__description">{{ step.description }}</p>
+            </div>
           </div>
-        </div>
+        }
       </div>
-
+    
       <div class="fgo-card__hint">
         ℹ️ El FGO interviene cuando la reserva está verificada, la evidencia está cargada y el fondo
         mantiene RC (Reserve Coverage) ≥ 1.0.
       </div>
     </section>
-  `,
+    `,
 })
 export class FgoManagementComponent implements OnInit {
   @Input({ required: true }) booking!: Booking;

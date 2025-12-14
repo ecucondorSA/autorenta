@@ -10,7 +10,7 @@ import {
   effect,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
 
 /**
@@ -26,7 +26,7 @@ import type { PriceLock } from '../../../../core/models/dynamic-pricing.model';
 @Component({
   selector: 'app-dynamic-price-lock-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="price-lock-panel" [class.expiring-soon]="isExpiringSoon()">

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -31,7 +31,7 @@ type Car = Database['public']['Tables']['cars']['Row'];
 @Component({
   selector: 'app-booking-pending',
   standalone: true,
-  imports: [CommonModule, TranslateModule, LoadingStateComponent, ButtonComponent, MoneyPipe],
+  imports: [TranslateModule, LoadingStateComponent, ButtonComponent, MoneyPipe],
   templateUrl: './booking-pending.page.html',
   styleUrls: ['./booking-pending.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

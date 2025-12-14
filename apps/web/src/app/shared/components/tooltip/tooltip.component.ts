@@ -1,6 +1,6 @@
 import {Component, input, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * TooltipComponent - Generic tooltip for displaying help text
@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-tooltip',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="tooltip-wrapper" (mouseenter)="show()" (mouseleave)="hide()" (click)="toggle()">
       <ng-content></ng-content>

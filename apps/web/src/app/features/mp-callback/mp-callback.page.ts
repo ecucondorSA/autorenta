@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -20,86 +20,87 @@ import { MarketplaceOnboardingService } from '../../core/services/marketplace-on
   selector: 'app-mp-callback',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterModule],
+  imports: [IonicModule, RouterModule],
   template: `
     <ion-content class="ion-padding">
       <div class="callback-container">
         <!-- Processing State -->
-        <div *ngIf="state() === 'processing'" class="state-card">
-          <ion-spinner name="crescent" color="primary"></ion-spinner>
-          <h2>Vinculando tu cuenta...</h2>
-          <p>Por favor esperá un momento mientras completamos la vinculación con Mercado Pago.</p>
-        </div>
-
+        @if (state() === 'processing') {
+          <div class="state-card">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <h2>Vinculando tu cuenta...</h2>
+            <p>Por favor esperá un momento mientras completamos la vinculación con Mercado Pago.</p>
+          </div>
+        }
+    
         <!-- Success State -->
-        <div *ngIf="state() === 'success'" class="state-card success">
-          <ion-icon name="checkmark-circle" color="success"></ion-icon>
-          <h2>¡Listo! Cuenta vinculada</h2>
-          <p>Ya podés listar tu auto y empezar a recibir pagos automáticamente.</p>
-
-          <div class="next-steps">
-            <h3>Próximos pasos:</h3>
-            <ol>
-              <li>Publicá tu vehículo con fotos y descripción</li>
-              <li>Configurá precio y disponibilidad</li>
-              <li>¡Recibí tu primer alquiler!</li>
-            </ol>
+        @if (state() === 'success') {
+          <div class="state-card success">
+            <ion-icon name="checkmark-circle" color="success"></ion-icon>
+            <h2>¡Listo! Cuenta vinculada</h2>
+            <p>Ya podés listar tu auto y empezar a recibir pagos automáticamente.</p>
+            <div class="next-steps">
+              <h3>Próximos pasos:</h3>
+              <ol>
+                <li>Publicá tu vehículo con fotos y descripción</li>
+                <li>Configurá precio y disponibilidad</li>
+                <li>¡Recibí tu primer alquiler!</li>
+              </ol>
+            </div>
+            <ion-button expand="block" size="large" [routerLink]="['/cars/new']">
+              <ion-icon slot="start" name="car"></ion-icon>
+              Listar Mi Auto
+            </ion-button>
+            <ion-button expand="block" fill="clear" [routerLink]="['/profile']">
+              Ir a Mi Perfil
+            </ion-button>
+            <div class="auto-redirect-note">
+              <ion-icon name="information-circle"></ion-icon>
+              Serás redirigido automáticamente en {{ countdown() }} segundos...
+            </div>
           </div>
-
-          <ion-button expand="block" size="large" [routerLink]="['/cars/new']">
-            <ion-icon slot="start" name="car"></ion-icon>
-            Listar Mi Auto
-          </ion-button>
-
-          <ion-button expand="block" fill="clear" [routerLink]="['/profile']">
-            Ir a Mi Perfil
-          </ion-button>
-
-          <div class="auto-redirect-note">
-            <ion-icon name="information-circle"></ion-icon>
-            Serás redirigido automáticamente en {{ countdown() }} segundos...
-          </div>
-        </div>
-
+        }
+    
         <!-- Error State -->
-        <div *ngIf="state() === 'error'" class="state-card error">
-          <ion-icon name="close-circle" color="danger"></ion-icon>
-          <h2>No se pudo vincular la cuenta</h2>
-          <p class="error-message">{{ errorMessage() }}</p>
-
-          <ion-card color="warning">
-            <ion-card-content>
-              <ion-icon name="help-circle"></ion-icon>
-              <div class="help-text">
-                <strong>¿Qué puede haber salido mal?</strong>
-                <ul>
-                  <li>Cancelaste la autorización en Mercado Pago</li>
-                  <li>El enlace de autorización expiró (dura 10 minutos)</li>
-                  <li>Hubo un problema de conexión</li>
-                  <li>Ya vinculaste esta cuenta anteriormente</li>
-                </ul>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <ion-button expand="block" size="large" (click)="retry()">
-            <ion-icon slot="start" name="refresh"></ion-icon>
-            Intentar Nuevamente
-          </ion-button>
-
-          <ion-button expand="block" fill="clear" [routerLink]="['/profile']">
-            Volver a Mi Perfil
-          </ion-button>
-        </div>
-
+        @if (state() === 'error') {
+          <div class="state-card error">
+            <ion-icon name="close-circle" color="danger"></ion-icon>
+            <h2>No se pudo vincular la cuenta</h2>
+            <p class="error-message">{{ errorMessage() }}</p>
+            <ion-card color="warning">
+              <ion-card-content>
+                <ion-icon name="help-circle"></ion-icon>
+                <div class="help-text">
+                  <strong>¿Qué puede haber salido mal?</strong>
+                  <ul>
+                    <li>Cancelaste la autorización en Mercado Pago</li>
+                    <li>El enlace de autorización expiró (dura 10 minutos)</li>
+                    <li>Hubo un problema de conexión</li>
+                    <li>Ya vinculaste esta cuenta anteriormente</li>
+                  </ul>
+                </div>
+              </ion-card-content>
+            </ion-card>
+            <ion-button expand="block" size="large" (click)="retry()">
+              <ion-icon slot="start" name="refresh"></ion-icon>
+              Intentar Nuevamente
+            </ion-button>
+            <ion-button expand="block" fill="clear" [routerLink]="['/profile']">
+              Volver a Mi Perfil
+            </ion-button>
+          </div>
+        }
+    
         <!-- Loading State (initial) -->
-        <div *ngIf="state() === 'loading'" class="state-card">
-          <ion-spinner name="dots" color="primary"></ion-spinner>
-          <p>Cargando...</p>
-        </div>
+        @if (state() === 'loading') {
+          <div class="state-card">
+            <ion-spinner name="dots" color="primary"></ion-spinner>
+            <p>Cargando...</p>
+          </div>
+        }
       </div>
     </ion-content>
-  `,
+    `,
   styles: [
     `
       :host {

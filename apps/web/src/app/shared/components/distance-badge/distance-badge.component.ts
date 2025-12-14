@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, computed, input,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -11,7 +11,7 @@ import {Component, computed, input,
   selector: 'app-distance-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="distance-badge" [class]="badgeClass()">
       <span class="icon">📍</span>

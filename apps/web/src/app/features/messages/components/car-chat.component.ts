@@ -1,6 +1,6 @@
 import {Component, computed, input,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
   BaseChatComponent,
   ChatContext,
@@ -14,7 +14,7 @@ import {
   selector: 'app-car-chat',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, BaseChatComponent],
+  imports: [BaseChatComponent],
   template: `
     <app-base-chat
       [context]="chatContext()"

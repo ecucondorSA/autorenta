@@ -62,6 +62,7 @@ const ANALYTICS_EVENT = 'autorenta:analytics';
 const ECONOMY_RADIUS_KM = 50;
 const PREMIUM_SCORE_PRICE_WEIGHT = 0.7;
 const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
+const PAGE_SIZE = 12;
 
 @Component({
   standalone: true,
@@ -114,6 +115,8 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly loading = signal(false);
   readonly cars = signal<Car[]>([]);
+  readonly page = signal(1); // Client-side pagination
+
   readonly carMapLocations = computed(() =>
     this.cars().map((car) => {
       const gallery = this.extractPhotoGallery(car);
@@ -217,6 +220,21 @@ export class CarsListPage implements OnInit, OnDestroy {
     },
     { allowSignalWrites: true },
   );
+
+  // Efecto para resetear la página al cambiar filtros
+  private readonly resetPageEffect = effect(() => {
+    // Dependencias que deben resetear la paginación
+    this.sortBy();
+    this.searchQuery();
+    this.minPrice();
+    this.maxPrice();
+    this.minRating();
+    this.maxDistance();
+    this.dateRange();
+    
+    // Resetear a página 1 (allowSignalWrites true es necesario en effects)
+    this.page.set(1);
+  }, { allowSignalWrites: true });
 
 
   // Contadores para badge de resultados
@@ -386,7 +404,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     };
   });
 
-  readonly premiumCars = computed<CarWithDistance[]>(() => {
+  // Lista COMPLETA de autos filtrados y ordenados (sin paginar)
+  private readonly sortedFilteredCars = computed<CarWithDistance[]>(() => {
     const segmentation = this.premiumSegmentation();
     const cars = this.filteredCarsWithDistance();
 
@@ -499,6 +518,21 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     return sorted;
   });
+
+  // Lista PAGINADA para mostrar en la vista
+  readonly premiumCars = computed<CarWithDistance[]>(() => {
+    return this.sortedFilteredCars().slice(0, this.page() * PAGE_SIZE);
+  });
+  
+  // Computed para saber si hay más autos para cargar
+  readonly hasMoreCars = computed(() => {
+      return this.premiumCars().length < this.sortedFilteredCars().length;
+  });
+
+  // Método para cargar más autos
+  loadMore(): void {
+      this.page.update(p => p + 1);
+  }
 
   readonly recommendedCars = computed<CarWithDistance[]>(() => {
     const cars = this.filteredCarsWithDistance();
@@ -659,10 +693,11 @@ export class CarsListPage implements OnInit, OnDestroy {
         }
       }
 
-      // 📱 Default to map view on mobile for better UX (Airbnb-style)
-      if (this.isMobile()) {
-        this.viewMode.set('map');
-      }
+      // 📱 Default to grid view (Tinder-style) on mobile for better engagement
+      // Previously defaulted to map, but the new swipe UI is superior
+      // if (this.isMobile()) {
+      //   this.viewMode.set('map');
+      // }
     }
 
     this.sortInitialized = true;

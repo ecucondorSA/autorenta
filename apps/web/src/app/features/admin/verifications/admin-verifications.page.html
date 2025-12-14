@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-text-primary">Cola de Verificaciones</h1>
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">Cola de Verificaciones</h1>
       <p class="mt-2 text-sm text-text-secondary">
         Revisa y aprueba las solicitudes de verificación de identidad de usuarios
       </p>
@@ -399,7 +399,7 @@
           <!-- Header -->
           <div class="flex justify-between items-start mb-6">
             <div>
-              <h3 class="text-lg leading-6 font-medium text-text-primary" id="modal-title">
+              <h3 class="text-lg leading-6 font-medium text-text-primary font-satoshi" id="modal-title">
                 Revisión de Verificación - {{ selectedVerification()!.full_name }}
               </h3>
               <p class="mt-1 text-sm text-text-secondary">
@@ -413,7 +413,7 @@
 
           <!-- User Info -->
           <div class="mb-6 bg-surface-base p-4 rounded-lg">
-            <h4 class="font-medium text-text-primary mb-2">Información del Usuario</h4>
+            <h4 class="font-medium text-text-primary mb-2 font-satoshi">Información del Usuario</h4>
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span class="text-text-secondary">Nombre:</span>
@@ -439,7 +439,7 @@
           <!-- Level 2 Documents -->
           @if (selectedVerification()!.document_front_url) {
             <div class="mb-6">
-              <h4 class="font-medium text-text-primary mb-3">Documentos de Identidad (Nivel 2)</h4>
+              <h4 class="font-medium text-text-primary mb-3 font-satoshi">Documentos de Identidad (Nivel 2)</h4>
               <div class="grid grid-cols-2 gap-4">
                 <!-- Document Front -->
                 <div>
@@ -540,7 +540,7 @@
           <!-- Level 3 Selfie -->
           @if (selectedVerification()!.selfie_url) {
             <div class="mb-6">
-              <h4 class="font-medium text-text-primary mb-3">Selfie con Documento (Nivel 3)</h4>
+              <h4 class="font-medium text-text-primary mb-3 font-satoshi">Selfie con Documento (Nivel 3)</h4>
               <div class="max-w-md">
                 <a
                   [href]="getDocumentUrl(selectedVerification()!.selfie_url)"
@@ -586,7 +586,7 @@
           <!-- Previous Review Notes -->
           @if (selectedVerification()!.manual_review_notes) {
             <div class="mb-6 p-4 bg-warning-bg rounded-lg">
-              <h4 class="font-medium text-warning-strong mb-2">Notas de Revisión Anterior</h4>
+              <h4 class="font-medium text-warning-strong mb-2 font-satoshi">Notas de Revisión Anterior</h4>
               <p class="text-sm text-warning-strong">
                 {{ selectedVerification()!.manual_review_notes }}
               </p>

@@ -1,6 +1,6 @@
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { OfflineManagerService } from '../../../core/services/offline-manager.service';
 
 /**
@@ -17,7 +17,7 @@ import { OfflineManagerService } from '../../../core/services/offline-manager.se
   selector: 'app-offline-banner',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (offlineManager.isOffline()) {
       <div class="offline-banner" role="alert" aria-live="assertive">

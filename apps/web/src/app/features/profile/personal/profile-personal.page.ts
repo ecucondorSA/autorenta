@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, signal, computed, effect,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -25,12 +25,12 @@ import type { UserProfile, Role } from '../../../core/models';
   selector: 'app-profile-personal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, ReactiveFormsModule, SectionCardComponent],
+  imports: [IonicModule, ReactiveFormsModule, SectionCardComponent],
   template: `
     <ion-header>
       <ion-toolbar
         class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
-      >
+        >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -43,7 +43,7 @@ import type { UserProfile, Role } from '../../../core/models';
         </ion-title>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="bg-surface-base dark:bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
@@ -55,254 +55,254 @@ import type { UserProfile, Role } from '../../../core/models';
             Mantén tus datos personales actualizados para una mejor experiencia.
           </p>
         </div>
-
+    
         <!-- Loading State -->
-        <div *ngIf="loading()" class="flex justify-center py-12">
-          <div
-            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
-          ></div>
-        </div>
-
+        @if (loading()) {
+          <div class="flex justify-center py-12">
+            <div
+              class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
+            ></div>
+          </div>
+        }
+    
         <!-- Form -->
-        <form *ngIf="!loading() && personalForm" [formGroup]="personalForm" class="space-y-6">
-          <!-- Save Status Indicator -->
-          <div
-            *ngIf="saveStatus()"
-            class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg"
-            [class.bg-success-bg]="saveStatus() === 'saved'"
-            [class.bg-warning-bg]="saveStatus() === 'saving'"
-            [class.text-success-text]="saveStatus() === 'saved'"
-            [class.text-warning-text]="saveStatus() === 'saving'"
-          >
-            <svg
-              *ngIf="saveStatus() === 'saving'"
-              class="h-4 w-4 animate-spin"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            <svg
-              *ngIf="saveStatus() === 'saved'"
-              class="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>{{ saveStatus() === 'saving' ? 'Guardando...' : 'Guardado' }}</span>
-          </div>
-
-          <!-- Basic Info Section -->
-          <app-section-card title="Información Básica" icon="person">
-            <div class="space-y-4">
-              <!-- Full Name -->
-              <div>
-                <label for="full_name" class="block text-sm font-medium text-text-primary mb-1">
-                  Nombre Completo *
-                </label>
-                <input
-                  id="full_name"
-                  type="text"
-                  formControlName="full_name"
+        @if (!loading() && personalForm) {
+          <form [formGroup]="personalForm" class="space-y-6">
+            <!-- Save Status Indicator -->
+            @if (saveStatus()) {
+              <div
+                class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg"
+                [class.bg-success-bg]="saveStatus() === 'saved'"
+                [class.bg-warning-bg]="saveStatus() === 'saving'"
+                [class.text-success-text]="saveStatus() === 'saved'"
+                [class.text-warning-text]="saveStatus() === 'saving'"
+                >
+                @if (saveStatus() === 'saving') {
+                  <svg
+                    class="h-4 w-4 animate-spin"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                  </svg>
+                }
+                @if (saveStatus() === 'saved') {
+                  <svg
+                    class="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                }
+                <span>{{ saveStatus() === 'saving' ? 'Guardando...' : 'Guardado' }}</span>
+              </div>
+            }
+            <!-- Basic Info Section -->
+            <app-section-card title="Información Básica" icon="person">
+              <div class="space-y-4">
+                <!-- Full Name -->
+                <div>
+                  <label for="full_name" class="block text-sm font-medium text-text-primary mb-1">
+                    Nombre Completo *
+                  </label>
+                  <input
+                    id="full_name"
+                    type="text"
+                    formControlName="full_name"
                   class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
                          text-text-primary dark:text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
-                  placeholder="Ej: Juan Pérez"
-                />
-                <p
-                  *ngIf="personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched"
-                  class="mt-1 text-xs text-error-text"
-                >
-                  El nombre es requerido
-                </p>
-              </div>
-
-              <!-- Date of Birth -->
-              <div>
-                <label for="date_of_birth" class="block text-sm font-medium text-text-primary mb-1">
-                  Fecha de Nacimiento
-                </label>
-                <input
-                  id="date_of_birth"
-                  type="date"
-                  formControlName="date_of_birth"
+                    placeholder="Ej: Juan Pérez"
+                    />
+                  @if (personalForm.get('full_name')?.invalid && personalForm.get('full_name')?.touched) {
+                    <p
+                      class="mt-1 text-xs text-error-text"
+                      >
+                      El nombre es requerido
+                    </p>
+                  }
+                </div>
+                <!-- Date of Birth -->
+                <div>
+                  <label for="date_of_birth" class="block text-sm font-medium text-text-primary mb-1">
+                    Fecha de Nacimiento
+                  </label>
+                  <input
+                    id="date_of_birth"
+                    type="date"
+                    formControlName="date_of_birth"
                   class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
                          text-text-primary dark:text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
-                  [max]="maxBirthDate()"
-                />
-                <p class="mt-1 text-xs text-text-muted">
-                  Debes tener al menos 18 años para alquilar un vehículo
-                </p>
-                <p
-                  *ngIf="ageError()"
-                  class="mt-1 text-xs text-error-text"
-                >
-                  {{ ageError() }}
-                </p>
+                    [max]="maxBirthDate()"
+                    />
+                  <p class="mt-1 text-xs text-text-muted">
+                    Debes tener al menos 18 años para alquilar un vehículo
+                  </p>
+                  @if (ageError()) {
+                    <p
+                      class="mt-1 text-xs text-error-text"
+                      >
+                      {{ ageError() }}
+                    </p>
+                  }
+                </div>
               </div>
-            </div>
-          </app-section-card>
-
-          <!-- Identity Documents Section -->
-          <app-section-card title="Documentos de Identidad" icon="card">
-            <div class="space-y-4">
-              <!-- Gov ID Type -->
-              <div>
-                <label for="gov_id_type" class="block text-sm font-medium text-text-primary mb-1">
-                  Tipo de Documento
-                </label>
-                <select
-                  id="gov_id_type"
-                  formControlName="gov_id_type"
+            </app-section-card>
+            <!-- Identity Documents Section -->
+            <app-section-card title="Documentos de Identidad" icon="card">
+              <div class="space-y-4">
+                <!-- Gov ID Type -->
+                <div>
+                  <label for="gov_id_type" class="block text-sm font-medium text-text-primary mb-1">
+                    Tipo de Documento
+                  </label>
+                  <select
+                    id="gov_id_type"
+                    formControlName="gov_id_type"
                   class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
                          text-text-primary dark:text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default"
-                >
-                  <option value="">Seleccionar...</option>
-                  <option value="dni">DNI</option>
-                  <option value="cuit">CUIT</option>
-                  <option value="passport">Pasaporte</option>
-                </select>
-              </div>
-
-              <!-- Gov ID Number -->
-              <div>
-                <label for="gov_id_number" class="block text-sm font-medium text-text-primary mb-1">
-                  Número de Documento
-                </label>
-                <input
-                  id="gov_id_number"
-                  type="text"
-                  formControlName="gov_id_number"
+                    >
+                    <option value="">Seleccionar...</option>
+                    <option value="dni">DNI</option>
+                    <option value="cuit">CUIT</option>
+                    <option value="passport">Pasaporte</option>
+                  </select>
+                </div>
+                <!-- Gov ID Number -->
+                <div>
+                  <label for="gov_id_number" class="block text-sm font-medium text-text-primary mb-1">
+                    Número de Documento
+                  </label>
+                  <input
+                    id="gov_id_number"
+                    type="text"
+                    formControlName="gov_id_number"
                   class="w-full px-3 py-2 rounded-lg border bg-surface-base dark:bg-surface-secondary
                          text-text-primary dark:text-text-primary
                          border-border-default focus:border-cta-default focus:ring-1 focus:ring-cta-default
                          placeholder:text-text-muted"
-                  placeholder="Ej: 12345678"
-                />
-                <p class="mt-1 text-xs text-text-muted">
-                  Este documento será verificado para habilitar ciertas funciones
+                    placeholder="Ej: 12345678"
+                    />
+                  <p class="mt-1 text-xs text-text-muted">
+                    Este documento será verificado para habilitar ciertas funciones
+                  </p>
+                </div>
+              </div>
+            </app-section-card>
+            <!-- Role Section -->
+            <app-section-card title="Tipo de Usuario" icon="people">
+              <div class="space-y-4">
+                <p class="text-sm text-text-secondary mb-4">
+                  Selecciona cómo deseas usar AutoRenta. Puedes cambiar esto en cualquier momento.
                 </p>
+                <div class="space-y-3">
+                  <!-- Renter Option -->
+                  <label
+                    class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
+                    [class.border-cta-default]="personalForm.get('role')?.value === 'renter'"
+                    [class.bg-cta-default/5]="personalForm.get('role')?.value === 'renter'"
+                    [class.border-border-default]="personalForm.get('role')?.value !== 'renter'"
+                    >
+                    <input
+                      type="radio"
+                      formControlName="role"
+                      value="renter"
+                      class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
+                      />
+                    <div>
+                      <span class="block font-medium text-text-primary">Locatario</span>
+                      <span class="text-sm text-text-secondary">
+                        Solo quiero alquilar vehículos de otros usuarios
+                      </span>
+                    </div>
+                  </label>
+                  <!-- Owner Option -->
+                  <label
+                    class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
+                    [class.border-cta-default]="personalForm.get('role')?.value === 'owner'"
+                    [class.bg-cta-default/5]="personalForm.get('role')?.value === 'owner'"
+                    [class.border-border-default]="personalForm.get('role')?.value !== 'owner'"
+                    >
+                    <input
+                      type="radio"
+                      formControlName="role"
+                      value="owner"
+                      class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
+                      />
+                    <div>
+                      <span class="block font-medium text-text-primary">Locador</span>
+                      <span class="text-sm text-text-secondary">
+                        Quiero publicar mis vehículos para que otros los alquilen
+                      </span>
+                    </div>
+                  </label>
+                  <!-- Both Option -->
+                  <label
+                    class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
+                    [class.border-cta-default]="personalForm.get('role')?.value === 'both'"
+                    [class.bg-cta-default/5]="personalForm.get('role')?.value === 'both'"
+                    [class.border-border-default]="personalForm.get('role')?.value !== 'both'"
+                    >
+                    <input
+                      type="radio"
+                      formControlName="role"
+                      value="both"
+                      class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
+                      />
+                    <div>
+                      <span class="block font-medium text-text-primary">Ambos</span>
+                      <span class="text-sm text-text-secondary">
+                        Quiero alquilar vehículos y también publicar los míos
+                      </span>
+                    </div>
+                  </label>
+                </div>
               </div>
+            </app-section-card>
+            <!-- Help Text -->
+            <div class="p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
+              <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                </svg>
+                Información Importante
+              </h4>
+              <ul class="text-xs text-info-text space-y-1.5">
+                <li class="flex gap-2">
+                  <span>•</span>
+                  <span>Tu <strong>fecha de nacimiento</strong> se usa para calcular tarifas de seguro</span>
+                </li>
+                <li class="flex gap-2">
+                  <span>•</span>
+                  <span>El <strong>documento de identidad</strong> es necesario para verificar tu cuenta</span>
+                </li>
+                <li class="flex gap-2">
+                  <span>•</span>
+                  <span>Cambiar tu <strong>rol</strong> puede afectar las funciones disponibles</span>
+                </li>
+              </ul>
             </div>
-          </app-section-card>
-
-          <!-- Role Section -->
-          <app-section-card title="Tipo de Usuario" icon="people">
-            <div class="space-y-4">
-              <p class="text-sm text-text-secondary mb-4">
-                Selecciona cómo deseas usar AutoRenta. Puedes cambiar esto en cualquier momento.
-              </p>
-
-              <div class="space-y-3">
-                <!-- Renter Option -->
-                <label
-                  class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
-                  [class.border-cta-default]="personalForm.get('role')?.value === 'renter'"
-                  [class.bg-cta-default/5]="personalForm.get('role')?.value === 'renter'"
-                  [class.border-border-default]="personalForm.get('role')?.value !== 'renter'"
-                >
-                  <input
-                    type="radio"
-                    formControlName="role"
-                    value="renter"
-                    class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                  />
-                  <div>
-                    <span class="block font-medium text-text-primary">Locatario</span>
-                    <span class="text-sm text-text-secondary">
-                      Solo quiero alquilar vehículos de otros usuarios
-                    </span>
-                  </div>
-                </label>
-
-                <!-- Owner Option -->
-                <label
-                  class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
-                  [class.border-cta-default]="personalForm.get('role')?.value === 'owner'"
-                  [class.bg-cta-default/5]="personalForm.get('role')?.value === 'owner'"
-                  [class.border-border-default]="personalForm.get('role')?.value !== 'owner'"
-                >
-                  <input
-                    type="radio"
-                    formControlName="role"
-                    value="owner"
-                    class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                  />
-                  <div>
-                    <span class="block font-medium text-text-primary">Locador</span>
-                    <span class="text-sm text-text-secondary">
-                      Quiero publicar mis vehículos para que otros los alquilen
-                    </span>
-                  </div>
-                </label>
-
-                <!-- Both Option -->
-                <label
-                  class="flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all"
-                  [class.border-cta-default]="personalForm.get('role')?.value === 'both'"
-                  [class.bg-cta-default/5]="personalForm.get('role')?.value === 'both'"
-                  [class.border-border-default]="personalForm.get('role')?.value !== 'both'"
-                >
-                  <input
-                    type="radio"
-                    formControlName="role"
-                    value="both"
-                    class="mt-1 h-4 w-4 text-cta-default focus:ring-cta-default"
-                  />
-                  <div>
-                    <span class="block font-medium text-text-primary">Ambos</span>
-                    <span class="text-sm text-text-secondary">
-                      Quiero alquilar vehículos y también publicar los míos
-                    </span>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </app-section-card>
-
-          <!-- Help Text -->
-          <div class="p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
-            <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Información Importante
-            </h4>
-            <ul class="text-xs text-info-text space-y-1.5">
-              <li class="flex gap-2">
-                <span>•</span>
-                <span>Tu <strong>fecha de nacimiento</strong> se usa para calcular tarifas de seguro</span>
-              </li>
-              <li class="flex gap-2">
-                <span>•</span>
-                <span>El <strong>documento de identidad</strong> es necesario para verificar tu cuenta</span>
-              </li>
-              <li class="flex gap-2">
-                <span>•</span>
-                <span>Cambiar tu <strong>rol</strong> puede afectar las funciones disponibles</span>
-              </li>
-            </ul>
-          </div>
-        </form>
+          </form>
+        }
       </div>
     </ion-content>
-  `,
+    `,
   styles: [
     `
       :host {

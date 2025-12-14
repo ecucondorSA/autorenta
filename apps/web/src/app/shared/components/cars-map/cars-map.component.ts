@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {AfterViewInit,
   ApplicationRef,
   Component,
@@ -182,11 +182,10 @@ class QuadTree {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     MapBookingPanelComponent,
     MapDetailsPanelComponent,
-    MapLayersControlComponent,
-  ],
+    MapLayersControlComponent
+],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
   encapsulation: ViewEncapsulation.None,

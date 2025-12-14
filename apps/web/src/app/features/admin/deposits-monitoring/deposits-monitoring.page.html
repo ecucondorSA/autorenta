@@ -6,7 +6,7 @@
         <button
           (click)="goBack()"
           class="mb-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary hover:text-text-primary dark:hover:text-gray-100 flex items-center gap-2"
-        >
+          >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -17,7 +17,7 @@
           </svg>
           Volver al Dashboard
         </button>
-        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
+        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse tracking-tight font-satoshi">
           💰 Monitoreo de Depósitos
         </h1>
         <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-2">
@@ -29,36 +29,39 @@
         (click)="retryPendingPayments()"
         [disabled]="loading()"
         class="px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-      >
-        <svg
-          *ngIf="!loading()"
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          ></path>
-        </svg>
-        <svg *ngIf="loading()" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
+        @if (!loading()) {
+          <svg
+            class="w-5 h-5"
+            fill="none"
             stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
+            viewBox="0 0 24 24"
+            >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            ></path>
+          </svg>
+        }
+        @if (loading()) {
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        }
         {{ loading() ? 'Actualizando...' : 'Forzar Verificación' }}
       </button>
     </div>
@@ -69,7 +72,7 @@
         <div class="flex items-center justify-between mb-2">
           <p
             class="text-sm font-medium text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-          >
+            >
             Total Depósitos
           </p>
           <span class="text-2xl">📊</span>
@@ -122,7 +125,7 @@
             [class.text-cta-default]="selectedTab() === 'pending'"
             [class.dark:text-cta-default]="selectedTab() === 'pending'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
-          >
+            >
             ⏳ Pendientes ({{ pendingDeposits().length }})
           </button>
           <button
@@ -131,7 +134,7 @@
             [class.text-cta-default]="selectedTab() === 'recent'"
             [class.dark:text-cta-default]="selectedTab() === 'recent'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
-          >
+            >
             ✅ Recientes ({{ recentDeposits().length }})
           </button>
           <button
@@ -140,131 +143,151 @@
             [class.text-cta-default]="selectedTab() === 'failed'"
             [class.dark:text-cta-default]="selectedTab() === 'failed'"
             class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-text-secondary dark:text-text-secondary hover:text-text-primary dark:text-text-muted dark:hover:text-gray-500"
-          >
+            >
             ❌ Fallidos ({{ failedDeposits().length }})
           </button>
         </nav>
       </div>
 
       <!-- Pending Deposits -->
-      <div *ngIf="selectedTab() === 'pending'" class="p-6">
-        <div
-          *ngIf="pendingDeposits().length === 0"
-          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-        >
-          No hay depósitos pendientes
-        </div>
-        <div *ngIf="pendingDeposits().length > 0" class="space-y-4">
-          <div
-            *ngFor="let deposit of pendingDeposits()"
-            class="border border-warning-border dark:border-warning-800 rounded-lg p-4 bg-warning-bg dark:bg-warning-900/10"
-          >
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-medium text-text-primary dark:text-text-inverse">
-                  {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
-                </p>
-                <p
-                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                >
-                  {{ formatCurrency(deposit.amount, deposit.currency) }}
-                </p>
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
-                >
-                  {{ formatRelativeTime(deposit.created_at) }}
-                </p>
-              </div>
-              <span
-                class="px-3 py-1 bg-warning-bg-hover dark:bg-warning-800 text-warning-strong dark:text-warning-100 text-xs font-medium rounded-full"
+      @if (selectedTab() === 'pending') {
+        <div class="p-6">
+          @if (pendingDeposits().length === 0) {
+            <div
+              class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
               >
-                Pendiente
-              </span>
+              No hay depósitos pendientes
             </div>
-          </div>
+          }
+          @if (pendingDeposits().length > 0) {
+            <div class="space-y-4">
+              @for (deposit of pendingDeposits(); track deposit) {
+                <div
+                  class="border border-warning-border dark:border-warning-800 rounded-lg p-4 bg-warning-bg dark:bg-warning-900/10"
+                  >
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="font-medium text-text-primary dark:text-text-inverse">
+                        {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
+                      </p>
+                      <p
+                        class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                        >
+                        {{ formatCurrency(deposit.amount, deposit.currency) }}
+                      </p>
+                      <p
+                        class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                        >
+                        {{ formatRelativeTime(deposit.created_at) }}
+                      </p>
+                    </div>
+                    <span
+                      class="px-3 py-1 bg-warning-bg-hover dark:bg-warning-800 text-warning-strong dark:text-warning-100 text-xs font-medium rounded-full"
+                      >
+                      Pendiente
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
 
       <!-- Recent Deposits -->
-      <div *ngIf="selectedTab() === 'recent'" class="p-6">
-        <div
-          *ngIf="recentDeposits().length === 0"
-          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-        >
-          No hay depósitos recientes
-        </div>
-        <div *ngIf="recentDeposits().length > 0" class="space-y-4">
-          <div
-            *ngFor="let deposit of recentDeposits()"
-            class="border border-success-light/40 dark:border-success-light rounded-lg p-4 bg-success-light/10 dark:bg-success-light/10"
-          >
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-medium text-text-primary dark:text-text-inverse">
-                  {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
-                </p>
-                <p
-                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                >
-                  {{ formatCurrency(deposit.amount, deposit.currency) }}
-                </p>
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
-                >
-                  {{ formatRelativeTime(deposit.completed_at || deposit.created_at) }}
-                  <span *ngIf="deposit.time_to_complete_minutes" class="ml-2">
-                    (Confirmado en {{ formatDuration(deposit.time_to_complete_minutes) }})
-                  </span>
-                </p>
-              </div>
-              <span
-                class="px-3 py-1 bg-success-light/20 dark:bg-success-light text-success-700 dark:text-success-strong text-xs font-medium rounded-full"
+      @if (selectedTab() === 'recent') {
+        <div class="p-6">
+          @if (recentDeposits().length === 0) {
+            <div
+              class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
               >
-                Completado
-              </span>
+              No hay depósitos recientes
             </div>
-          </div>
+          }
+          @if (recentDeposits().length > 0) {
+            <div class="space-y-4">
+              @for (deposit of recentDeposits(); track deposit) {
+                <div
+                  class="border border-success-light/40 dark:border-success-light rounded-lg p-4 bg-success-light/10 dark:bg-success-light/10"
+                  >
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="font-medium text-text-primary dark:text-text-inverse">
+                        {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
+                      </p>
+                      <p
+                        class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                        >
+                        {{ formatCurrency(deposit.amount, deposit.currency) }}
+                      </p>
+                      <p
+                        class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                        >
+                        {{ formatRelativeTime(deposit.completed_at || deposit.created_at) }}
+                        @if (deposit.time_to_complete_minutes) {
+                          <span class="ml-2">
+                            (Confirmado en {{ formatDuration(deposit.time_to_complete_minutes) }})
+                          </span>
+                        }
+                      </p>
+                    </div>
+                    <span
+                      class="px-3 py-1 bg-success-light/20 dark:bg-success-light text-success-700 dark:text-success-strong text-xs font-medium rounded-full"
+                      >
+                      Completado
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
 
       <!-- Failed Deposits -->
-      <div *ngIf="selectedTab() === 'failed'" class="p-6">
-        <div
-          *ngIf="failedDeposits().length === 0"
-          class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-        >
-          No hay depósitos fallidos
-        </div>
-        <div *ngIf="failedDeposits().length > 0" class="space-y-4">
-          <div
-            *ngFor="let deposit of failedDeposits()"
-            class="border border-error-border dark:border-error-800 rounded-lg p-4 bg-error-bg dark:bg-error-900/10"
-          >
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="font-medium text-text-primary dark:text-text-inverse">
-                  {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
-                </p>
-                <p
-                  class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                >
-                  {{ formatCurrency(deposit.amount, deposit.currency) }}
-                </p>
-                <p
-                  class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
-                >
-                  {{ formatRelativeTime(deposit.updated_at) }}
-                </p>
-              </div>
-              <span
-                class="px-3 py-1 bg-error-bg-hover dark:bg-error-800 text-error-strong text-xs font-medium rounded-full"
+      @if (selectedTab() === 'failed') {
+        <div class="p-6">
+          @if (failedDeposits().length === 0) {
+            <div
+              class="text-center py-12 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
               >
-                Fallido
-              </span>
+              No hay depósitos fallidos
             </div>
-          </div>
+          }
+          @if (failedDeposits().length > 0) {
+            <div class="space-y-4">
+              @for (deposit of failedDeposits(); track deposit) {
+                <div
+                  class="border border-error-border dark:border-error-800 rounded-lg p-4 bg-error-bg dark:bg-error-900/10"
+                  >
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="font-medium text-text-primary dark:text-text-inverse">
+                        {{ deposit.user_name || 'Usuario ' + deposit.user_id.substring(0, 8) }}
+                      </p>
+                      <p
+                        class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
+                        >
+                        {{ formatCurrency(deposit.amount, deposit.currency) }}
+                      </p>
+                      <p
+                        class="text-xs text-text-secondary dark:text-text-secondary dark:text-text-secondary mt-1"
+                        >
+                        {{ formatRelativeTime(deposit.updated_at) }}
+                      </p>
+                    </div>
+                    <span
+                      class="px-3 py-1 bg-error-bg-hover dark:bg-error-800 text-error-strong text-xs font-medium rounded-full"
+                      >
+                      Fallido
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
   </div>
 </div>

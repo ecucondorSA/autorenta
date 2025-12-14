@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-text-primary">Gestión de Retiros</h1>
+      <h1 class="text-3xl font-bold text-text-primary tracking-tight font-satoshi">Gestión de Retiros</h1>
       <p class="mt-2 text-text-secondary dark:text-text-secondary">
         Administra las solicitudes de retiro de fondos de los locadores
       </p>
@@ -179,7 +179,7 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary">No hay solicitudes de retiro</h3>
+          <h3 class="mt-2 text-sm font-medium text-text-primary font-satoshi">No hay solicitudes de retiro</h3>
           <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
             @if (filterStatus()) {
               Prueba cambiando el filtro.
@@ -307,7 +307,7 @@
     >
       <div class="px-6 py-4 border-b border-border-default dark:border-border-muted">
         <div class="flex justify-between items-start">
-          <h3 class="text-lg font-medium text-text-primary">Detalles de Solicitud de Retiro</h3>
+          <h3 class="text-lg font-medium text-text-primary font-satoshi">Detalles de Solicitud de Retiro</h3>
           <button
             (click)="closeModal()"
             class="text-text-muted dark:text-text-secondary hover:text-text-secondary dark:text-text-secondary"
@@ -327,7 +327,7 @@
       <div class="px-6 py-4">
         <!-- User Info -->
         <div class="mb-6">
-          <h4 class="text-sm font-medium text-text-primary mb-2">Usuario</h4>
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Usuario</h4>
           <p class="text-sm text-text-primary">{{ selectedWithdrawal()!.user_name || 'N/A' }}</p>
           <p class="text-sm text-text-secondary dark:text-text-secondary">
             {{ selectedWithdrawal()!.user_email || 'N/A' }}
@@ -336,7 +336,7 @@
 
         <!-- Bank Account Info -->
         <div class="mb-6">
-          <h4 class="text-sm font-medium text-text-primary mb-2">Cuenta Bancaria</h4>
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Cuenta Bancaria</h4>
           <div class="bg-surface-base dark:bg-surface-base rounded p-3">
             <p class="text-sm">
               <span class="font-medium">Tipo:</span>
@@ -365,7 +365,7 @@
 
         <!-- Amounts -->
         <div class="mb-6">
-          <h4 class="text-sm font-medium text-text-primary mb-2">Montos</h4>
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Montos</h4>
           <div class="bg-surface-base dark:bg-surface-base rounded p-3">
             <div class="flex justify-between text-sm mb-1">
               <span>Monto solicitado:</span>
@@ -394,7 +394,7 @@
 
         <!-- Status and Dates -->
         <div class="mb-6">
-          <h4 class="text-sm font-medium text-text-primary mb-2">Estado</h4>
+          <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Estado</h4>
           <span
             [class]="getStatusBadgeClass(selectedWithdrawal()!.status)"
             class="px-3 py-1 inline-flex text-sm font-semibold rounded-full"
@@ -419,7 +419,7 @@
         <!-- User Notes -->
         @if (selectedWithdrawal()!.user_notes) {
           <div class="mb-6">
-            <h4 class="text-sm font-medium text-text-primary mb-2">Notas del Usuario</h4>
+            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Notas del Usuario</h4>
             <p class="text-sm text-text-primary bg-cta-default/10 rounded p-3">
               {{ selectedWithdrawal()!.user_notes }}
             </p>
@@ -429,7 +429,7 @@
         <!-- Admin Notes -->
         @if (selectedWithdrawal()!.admin_notes) {
           <div class="mb-6">
-            <h4 class="text-sm font-medium text-text-primary mb-2">Notas del Admin</h4>
+            <h4 class="text-sm font-medium text-text-primary mb-2 font-satoshi">Notas del Admin</h4>
             <p class="text-sm text-text-primary bg-warning-bg rounded p-3">
               {{ selectedWithdrawal()!.admin_notes }}
             </p>

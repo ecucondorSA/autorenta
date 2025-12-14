@@ -1,6 +1,6 @@
 import {Component, OnInit, inject, signal, effect, PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { injectSupabase } from '../../../core/services/supabase-client.service';
@@ -29,7 +29,7 @@ interface NotificationPreferencesPayload {
   selector: 'app-notification-preferences',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">
       <!-- Header -->

@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 import {
   AccountingService,
@@ -11,7 +11,7 @@ import {
   selector: 'app-reconciliation',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -21,23 +21,27 @@ import {
         <ion-title>Conciliación Wallet</ion-title>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="ion-padding">
-      <ion-card *ngIf="reconciliation().length > 0">
-        <ion-card-header>
-          <ion-card-title>Wallet vs Contabilidad</ion-card-title>
-        </ion-card-header>
-        <ion-list>
-          <ion-item *ngFor="let item of reconciliation()">
-            <ion-label>{{ item.source }}</ion-label>
-            <ion-note slot="end" [color]="getColor(item)">
-              {{ formatCurrency(item.amount) }}
-            </ion-note>
-          </ion-item>
-        </ion-list>
-      </ion-card>
+      @if (reconciliation().length > 0) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Wallet vs Contabilidad</ion-card-title>
+          </ion-card-header>
+          <ion-list>
+            @for (item of reconciliation(); track item) {
+              <ion-item>
+                <ion-label>{{ item.source }}</ion-label>
+                <ion-note slot="end" [color]="getColor(item)">
+                  {{ formatCurrency(item.amount) }}
+                </ion-note>
+              </ion-item>
+            }
+          </ion-list>
+        </ion-card>
+      }
     </ion-content>
-  `,
+    `,
 })
 export class ReconciliationPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

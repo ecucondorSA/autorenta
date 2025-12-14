@@ -1,30 +1,32 @@
 <div class="user-badges flex flex-wrap gap-2">
-  <div
-    *ngFor="let badge of activeBadges"
-    class="badge-container"
-    [attr.data-tooltip]="badge.description"
-  >
+  @for (badge of activeBadges; track badge) {
     <div
-      class="badge bg-gradient-to-r rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
-      [ngClass]="[getBadgeSizeClass(), badge.color]"
-      [attr.aria-label]="badge.label"
-    >
-      <span class="badge-icon">{{ badge.icon }}</span>
+      class="badge-container"
+      [attr.data-tooltip]="badge.description"
+      >
+      <div
+        class="badge bg-gradient-to-r rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow"
+        [ngClass]="[getBadgeSizeClass(), badge.color]"
+        [attr.aria-label]="badge.label"
+        >
+        <span class="badge-icon">{{ badge.icon }}</span>
+      </div>
+      @if (showLabels) {
+        <p
+          class="badge-label text-xs text-text-secondary dark:text-text-secondary mt-1 text-center font-medium"
+          >
+          {{ badge.label }}
+        </p>
+      }
     </div>
-
-    <p
-      *ngIf="showLabels"
-      class="badge-label text-xs text-text-secondary dark:text-text-secondary mt-1 text-center font-medium"
-    >
-      {{ badge.label }}
-    </p>
-  </div>
+  }
 
   <!-- No badges message -->
-  <div
-    *ngIf="activeBadges.length === 0"
-    class="text-text-muted dark:text-text-secondary text-sm italic"
-  >
-    Sin insignias aún
-  </div>
+  @if (activeBadges.length === 0) {
+    <div
+      class="text-text-muted dark:text-text-secondary text-sm italic"
+      >
+      Sin insignias aún
+    </div>
+  }
 </div>

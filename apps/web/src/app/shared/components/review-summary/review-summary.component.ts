@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ReviewsService } from '../../../core/services/reviews.service';
@@ -8,7 +8,7 @@ import type { ReviewSummary } from '../../../core/models';
   selector: 'app-review-summary',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-text-primary">Resumen de Reviews</h3>

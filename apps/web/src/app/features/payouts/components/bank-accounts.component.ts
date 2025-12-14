@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, EventEmitter, inject, Input, OnInit, Output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,157 +18,173 @@ import { BankAccount, PayoutService } from '../../../core/services/payout.servic
   selector: 'app-bank-accounts',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   template: `
     <div class="bank-accounts">
       <!-- Accounts List -->
-      <div class="accounts-list" *ngIf="accounts().length > 0">
-        <div
-          *ngFor="let account of accounts()"
-          class="account-card"
-          [class.default]="account.isDefault"
-        >
-          <div class="account-info">
-            <div class="account-header">
-              <h4 class="account-holder">{{ account.accountHolder }}</h4>
-              <span *ngIf="account.isDefault" class="badge badge-primary"> Predeterminada </span>
-              <span *ngIf="!account.isDefault" class="badge badge-secondary"> Adicional </span>
-            </div>
-            <div class="account-details">
-              <span class="account-type">
-                {{ account.accountType === 'checking' ? 'Cuenta Corriente' : 'Caja de Ahorro' }}
-              </span>
-              <span class="account-number">
-                {{ formatAccountNumber(account.accountNumber) }}
-              </span>
-            </div>
-            <div class="account-status">
-              <span
-                class="status-badge"
-                [class.verified]="account.status === 'verified'"
-                [class.unverified]="account.status === 'unverified'"
-                [class.invalid]="account.status === 'invalid'"
+      @if (accounts().length > 0) {
+        <div class="accounts-list">
+          @for (account of accounts(); track account) {
+            <div
+              class="account-card"
+              [class.default]="account.isDefault"
               >
-                {{ getStatusText(account.status) }}
-              </span>
+              <div class="account-info">
+                <div class="account-header">
+                  <h4 class="account-holder">{{ account.accountHolder }}</h4>
+                  @if (account.isDefault) {
+                    <span class="badge badge-primary"> Predeterminada </span>
+                  }
+                  @if (!account.isDefault) {
+                    <span class="badge badge-secondary"> Adicional </span>
+                  }
+                </div>
+                <div class="account-details">
+                  <span class="account-type">
+                    {{ account.accountType === 'checking' ? 'Cuenta Corriente' : 'Caja de Ahorro' }}
+                  </span>
+                  <span class="account-number">
+                    {{ formatAccountNumber(account.accountNumber) }}
+                  </span>
+                </div>
+                <div class="account-status">
+                  <span
+                    class="status-badge"
+                    [class.verified]="account.status === 'verified'"
+                    [class.unverified]="account.status === 'unverified'"
+                    [class.invalid]="account.status === 'invalid'"
+                    >
+                    {{ getStatusText(account.status) }}
+                  </span>
+                </div>
+              </div>
+              <div class="account-actions">
+                @if (!account.isDefault) {
+                  <button
+                    type="button"
+                    class="btn-text"
+                    (click)="setAsDefault(account.id)"
+                    [disabled]="loading()"
+                    >
+                    Usar como predeterminada
+                  </button>
+                }
+              </div>
             </div>
-          </div>
-          <div class="account-actions">
-            <button
-              *ngIf="!account.isDefault"
-              type="button"
-              class="btn-text"
-              (click)="setAsDefault(account.id)"
-              [disabled]="loading()"
-            >
-              Usar como predeterminada
-            </button>
-          </div>
+          }
         </div>
-      </div>
-
+      }
+    
       <!-- Empty State -->
-      <div *ngIf="accounts().length === 0" class="empty-state">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-          />
-        </svg>
-        <p class="empty-text">No tenés cuentas bancarias configuradas</p>
-        <p class="empty-hint">Agregá una cuenta para poder retirar fondos</p>
-      </div>
-
+      @if (accounts().length === 0) {
+        <div class="empty-state">
+          <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              />
+          </svg>
+          <p class="empty-text">No tenés cuentas bancarias configuradas</p>
+          <p class="empty-hint">Agregá una cuenta para poder retirar fondos</p>
+        </div>
+      }
+    
       <!-- Add Account Button -->
-      <button type="button" class="btn-secondary" (click)="toggleAddForm()" *ngIf="!showAddForm()">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Agregar Cuenta Bancaria
-      </button>
-
+      @if (!showAddForm()) {
+        <button type="button" class="btn-secondary" (click)="toggleAddForm()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+              />
+          </svg>
+          Agregar Cuenta Bancaria
+        </button>
+      }
+    
       <!-- Add Account Form -->
-      <div *ngIf="showAddForm()" class="add-form">
-        <h3 class="form-title">Nueva Cuenta Bancaria</h3>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="form-group">
-            <label>Titular de la Cuenta</label>
-            <input
-              type="text"
-              formControlName="accountHolder"
-              placeholder="Juan Pérez"
-              class="form-input"
-            />
-            <span
-              *ngIf="form.controls.accountHolder.invalid && form.controls.accountHolder.touched"
-              class="error-text"
-            >
-              El nombre del titular es requerido
-            </span>
-          </div>
-
-          <div class="form-group">
-            <label>CBU/CVU</label>
-            <input
-              type="text"
-              formControlName="accountNumber"
-              placeholder="0000003100010000000000"
-              maxlength="22"
-              class="form-input"
-            />
-            <span class="hint-text">22 dígitos sin espacios</span>
-            <span
-              *ngIf="form.controls.accountNumber.invalid && form.controls.accountNumber.touched"
-              class="error-text"
-            >
-              CBU/CVU debe tener 22 dígitos
-            </span>
-          </div>
-
-          <div class="form-group">
-            <label>Tipo de Cuenta</label>
-            <select formControlName="accountType" class="form-select">
-              <option value="savings">Caja de Ahorro</option>
-              <option value="checking">Cuenta Corriente</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" formControlName="isDefault" />
-              <span>Usar como cuenta predeterminada</span>
-            </label>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-text" (click)="toggleAddForm()" [disabled]="loading()">
-              Cancelar
-            </button>
-            <button type="submit" class="btn-primary" [disabled]="form.invalid || loading()">
-              {{ loading() ? 'Guardando...' : 'Agregar Cuenta' }}
-            </button>
-          </div>
-        </form>
-      </div>
-
+      @if (showAddForm()) {
+        <div class="add-form">
+          <h3 class="form-title">Nueva Cuenta Bancaria</h3>
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label>Titular de la Cuenta</label>
+              <input
+                type="text"
+                formControlName="accountHolder"
+                placeholder="Juan Pérez"
+                class="form-input"
+                />
+              @if (form.controls.accountHolder.invalid && form.controls.accountHolder.touched) {
+                <span
+                  class="error-text"
+                  >
+                  El nombre del titular es requerido
+                </span>
+              }
+            </div>
+            <div class="form-group">
+              <label>CBU/CVU</label>
+              <input
+                type="text"
+                formControlName="accountNumber"
+                placeholder="0000003100010000000000"
+                maxlength="22"
+                class="form-input"
+                />
+              <span class="hint-text">22 dígitos sin espacios</span>
+              @if (form.controls.accountNumber.invalid && form.controls.accountNumber.touched) {
+                <span
+                  class="error-text"
+                  >
+                  CBU/CVU debe tener 22 dígitos
+                </span>
+              }
+            </div>
+            <div class="form-group">
+              <label>Tipo de Cuenta</label>
+              <select formControlName="accountType" class="form-select">
+                <option value="savings">Caja de Ahorro</option>
+                <option value="checking">Cuenta Corriente</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="isDefault" />
+                <span>Usar como cuenta predeterminada</span>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-text" (click)="toggleAddForm()" [disabled]="loading()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn-primary" [disabled]="form.invalid || loading()">
+                {{ loading() ? 'Guardando...' : 'Agregar Cuenta' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+    
       <!-- Error Message -->
-      <div *ngIf="error()" class="alert alert-error">
-        {{ error() }}
-      </div>
-
+      @if (error()) {
+        <div class="alert alert-error">
+          {{ error() }}
+        </div>
+      }
+    
       <!-- Success Message -->
-      <div *ngIf="success()" class="alert alert-success">
-        {{ success() }}
-      </div>
+      @if (success()) {
+        <div class="alert alert-success">
+          {{ success() }}
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .bank-accounts {

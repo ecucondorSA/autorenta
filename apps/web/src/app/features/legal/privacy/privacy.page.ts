@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-privacy',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './privacy.page.html',
   styleUrls: ['../legal-shared.css'],
 })

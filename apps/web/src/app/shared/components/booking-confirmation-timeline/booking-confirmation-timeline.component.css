@@ -126,13 +126,13 @@
 }
 
 .timeline-step-badge--completed {
-  @apply bg-success-light/20 text-success-strong;
-  @apply dark:bg-success-light/20 dark:text-success-strong;
+  @apply bg-success-light/20 text-success-800;
+  @apply dark:bg-success-light/20 dark:text-success-800;
 }
 
 .timeline-step-badge--pending {
-  @apply bg-warning-light/20 text-warning-strong;
-  @apply dark:bg-warning-light/20 dark:text-warning-strong;
+  @apply bg-warning-light/20 text-warning-900;
+  @apply dark:bg-warning-light/20 dark:text-warning-900;
 }
 
 .timeline-step-description {

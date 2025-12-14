@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -19,61 +19,67 @@ import { ReviewCardComponent } from '../../../shared/components/review-card/revi
   selector: 'app-review-management',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReviewFormComponent, ReviewCardComponent],
+  imports: [ReviewFormComponent, ReviewCardComponent],
   template: `
     <!-- Completed Actions -->
-    <div *ngIf="showCompletedActions()" class="flex flex-col sm:flex-row gap-3">
-      <button
-        *ngIf="canReview() && !existingReview()"
-        (click)="handleShowReviewForm()"
-        class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
-      >
-        ⭐ Dejar reseña
-      </button>
-      <button
-        *ngIf="existingReview()"
-        class="info-card-petrol flex-1 px-6 py-3 font-semibold cursor-default text-center"
-        disabled
-      >
-        ✅ Ya calificaste esta reserva
-      </button>
-      <button class="btn-secondary flex-1 px-6 py-3 font-semibold">📄 Ver factura</button>
-    </div>
-
+    @if (showCompletedActions()) {
+      <div class="flex flex-col sm:flex-row gap-3">
+        @if (canReview() && !existingReview()) {
+          <button
+            (click)="handleShowReviewForm()"
+            class="btn-primary flex-1 px-6 py-3 font-semibold shadow-soft"
+            >
+            ⭐ Dejar reseña
+          </button>
+        }
+        @if (existingReview()) {
+          <button
+            class="info-card-petrol flex-1 px-6 py-3 font-semibold cursor-default text-center"
+            disabled
+            >
+            ✅ Ya calificaste esta reserva
+          </button>
+        }
+        <button class="btn-secondary flex-1 px-6 py-3 font-semibold">📄 Ver factura</button>
+      </div>
+    }
+    
     <!-- Review Form Modal -->
-    <div
-      *ngIf="showReviewForm() && reviewData()"
-      class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
-    >
-      <div class="my-8">
-        <app-review-form
-          [bookingId]="booking.id"
-          [revieweeId]="reviewData()!.revieweeId"
-          [carId]="reviewData()!.carId"
-          [reviewType]="reviewData()!.reviewType"
-          [revieweeName]="reviewData()!.revieweeName"
-          [carTitle]="reviewData()!.carTitle"
-          (submitReview)="handleSubmitReview($event)"
-          (cancelReview)="handleCancelReview()"
-        ></app-review-form>
+    @if (showReviewForm() && reviewData()) {
+      <div
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+        >
+        <div class="my-8">
+          <app-review-form
+            [bookingId]="booking.id"
+            [revieweeId]="reviewData()!.revieweeId"
+            [carId]="reviewData()!.carId"
+            [reviewType]="reviewData()!.reviewType"
+            [revieweeName]="reviewData()!.revieweeName"
+            [carTitle]="reviewData()!.carTitle"
+            (submitReview)="handleSubmitReview($event)"
+            (cancelReview)="handleCancelReview()"
+          ></app-review-form>
+        </div>
       </div>
-    </div>
-
+    }
+    
     <!-- Existing Review Display -->
-    <div
-      *ngIf="existingReview() && !showReviewForm()"
-      class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
-    >
-      <h3 class="h5 mb-4">📝 Tu Calificación</h3>
-      <div class="info-card-warm p-4 mb-4">
-        <p class="text-sm font-semibold text-warning-strong">⏳ Review pendiente de publicación</p>
-        <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
-          Se publicará cuando ambas partes hayan calificado, o después de 14 días.
-        </p>
+    @if (existingReview() && !showReviewForm()) {
+      <div
+        class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft"
+        >
+        <h3 class="h5 mb-4">📝 Tu Calificación</h3>
+        <div class="info-card-warm p-4 mb-4">
+          <p class="text-sm font-semibold text-warning-strong">⏳ Review pendiente de publicación</p>
+          <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+            Se publicará cuando ambas partes hayan calificado, o después de 14 días.
+          </p>
+        </div>
+        <app-review-card [review]="existingReview()!" [showCarTitle]="false"></app-review-card>
       </div>
-      <app-review-card [review]="existingReview()!" [showCarTitle]="false"></app-review-card>
-    </div>
-  `,
+    }
+    `,
 })
 export class ReviewManagementComponent implements OnInit {
   @Input({ required: true }) booking!: Booking;

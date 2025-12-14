@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { VerificationService } from '../../../core/services/verification.service';
 
 interface DocumentConfig {
@@ -69,7 +69,7 @@ const DOCUMENT_CONFIGS: Record<string, DocumentConfig> = {
   selector: 'app-document-upload-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"

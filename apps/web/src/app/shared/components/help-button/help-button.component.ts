@@ -1,6 +1,6 @@
 import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { GuidedTourService } from '../../../core/guided-tour/guided-tour.service';
@@ -12,7 +12,7 @@ import { HeaderIconComponent } from '../header-icon/header-icon.component';
   selector: 'app-help-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule, HeaderIconComponent],
+  imports: [TranslateModule, HeaderIconComponent],
   template: `
     <div class="relative">
       <button

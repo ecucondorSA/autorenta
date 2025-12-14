@@ -32,172 +32,175 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M6 18L18 6M6 6l12 12"
-              />
+                />
             </svg>
           </button>
         </div>
-
+    
         <!-- Body -->
         <div class="modal-body">
           <!-- Loading State -->
-          <div *ngIf="loading()" class="loading-state">
-            <div class="spinner"></div>
-            <p>Cargando contrato...</p>
-          </div>
-
+          @if (loading()) {
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Cargando contrato...</p>
+            </div>
+          }
+    
           <!-- Error State -->
-          <div *ngIf="error()" class="alert alert-error">
-            <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            {{ error() }}
-          </div>
-
-          <!-- Contract Content -->
-          <div *ngIf="!loading() && !error() && contract()" class="contract-content">
-            <!-- Contract Info -->
-            <div class="contract-info">
-              <div class="info-row">
-                <span class="info-label">Booking ID:</span>
-                <span class="info-value">{{ bookingId.substring(0, 8) }}...</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Versión de Términos:</span>
-                <span class="info-value">{{ contract()!.terms_version }}</span>
-              </div>
-              <div class="info-row" *ngIf="contract()!.accepted_at">
-                <span class="info-label">Aceptado el:</span>
-                <span class="info-value">{{
-                  contract()!.accepted_at | date: 'dd/MM/yyyy HH:mm'
-                }}</span>
-              </div>
-            </div>
-
-            <!-- Terms Content -->
-            <div class="terms-container">
-              <h3 class="terms-title">Términos y Condiciones</h3>
-              <div class="terms-content">
-                <h4>1. Objeto del Contrato</h4>
-                <p>
-                  El presente contrato tiene por objeto regular el alquiler del vehículo
-                  identificado en el booking, estableciendo los derechos y obligaciones de ambas
-                  partes.
-                </p>
-
-                <h4>2. Responsabilidad del Locatario</h4>
-                <p>El locatario se compromete a:</p>
-                <ul>
-                  <li>Usar el vehículo de manera responsable y conforme a su uso habitual</li>
-                  <li>Mantener el vehículo en buen estado durante el período de alquiler</li>
-                  <li>Devolver el vehículo en las mismas condiciones en que lo recibió</li>
-                  <li>Reportar cualquier daño o incidente de manera inmediata</li>
-                  <li>No ceder ni transferir el vehículo a terceros sin autorización</li>
-                </ul>
-
-                <h4>3. Seguro y Cobertura</h4>
-                <p>
-                  El vehículo cuenta con cobertura de seguro según lo establecido en las políticas
-                  de AutoRenta. El locatario es responsable por:
-                </p>
-                <ul>
-                  <li>Daños intencionales o por negligencia grave</li>
-                  <li>Multas y sanciones de tránsito</li>
-                  <li>Franquicia en caso de siniestros cubiertos por el Fondo de Garantía</li>
-                </ul>
-
-                <h4>4. Inspección del Vehículo</h4>
-                <p>
-                  Al inicio (check-in) y final (check-out) del alquiler se realizará una inspección
-                  completa del vehículo con registro fotográfico. Cualquier daño nuevo será
-                  responsabilidad del locatario.
-                </p>
-
-                <h4>5. Política de Cancelación</h4>
-                <p>
-                  Las cancelaciones están sujetas a las políticas publicadas en la plataforma al
-                  momento de realizar la reserva. Los reembolsos se procesarán según corresponda.
-                </p>
-
-                <h4>6. Resolución de Disputas</h4>
-                <p>
-                  Cualquier disputa relacionada con este contrato será resuelta según el proceso de
-                  mediación establecido por AutoRenta. En caso de no llegar a un acuerdo, las partes
-                  podrán recurrir a la justicia ordinaria.
-                </p>
-
-                <h4>7. Protección de Datos</h4>
-                <p>
-                  Los datos personales serán tratados conforme a nuestra Política de Privacidad y la
-                  Ley de Protección de Datos Personales vigente.
-                </p>
-
-                <h4>8. Aceptación</h4>
-                <p>
-                  Al firmar este contrato digitalmente, el locatario declara haber leído y aceptado
-                  todos los términos y condiciones establecidos.
-                </p>
-              </div>
-            </div>
-
-            <!-- Already Accepted Notice -->
-            <div *ngIf="contract()!.accepted_by_renter" class="notice notice-success">
-              <svg class="notice-icon" fill="currentColor" viewBox="0 0 20 20">
+          @if (error()) {
+            <div class="alert alert-error">
+              <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                   clip-rule="evenodd"
-                />
-              </svg>
-              <span
-                >Ya aceptaste este contrato el
-                {{ contract()!.accepted_at | date: 'dd/MM/yyyy HH:mm' }}</span
-              >
-            </div>
-
-            <!-- Acceptance Section -->
-            <div *ngIf="!contract()!.accepted_by_renter" class="acceptance-section">
-              <label class="checkbox-label">
-                <input type="checkbox" [(ngModel)]="termsAccepted" [disabled]="signing()" />
-                <span>He leído y acepto todos los términos y condiciones del contrato</span>
-              </label>
-
-              <button
-                type="button"
-                class="btn-primary"
-                (click)="signContract()"
-                [disabled]="!termsAccepted || signing()"
-              >
-                <svg
-                  *ngIf="!signing()"
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
-                </svg>
-                <div *ngIf="signing()" class="spinner-small"></div>
-                {{ signing() ? 'Firmando...' : 'Firmar Contrato' }}
-              </button>
-
-              <p class="acceptance-hint">
-                Al firmar este contrato, aceptas estar vinculado legalmente por estos términos
-              </p>
+              </svg>
+              {{ error() }}
             </div>
+          }
+    
+          <!-- Contract Content -->
+          @if (!loading() && !error() && contract()) {
+            <div class="contract-content">
+              <!-- Contract Info -->
+              <div class="contract-info">
+                <div class="info-row">
+                  <span class="info-label">Booking ID:</span>
+                  <span class="info-value">{{ bookingId.substring(0, 8) }}...</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Versión de Términos:</span>
+                  <span class="info-value">{{ contract()!.terms_version }}</span>
+                </div>
+                @if (contract()!.accepted_at) {
+                  <div class="info-row">
+                    <span class="info-label">Aceptado el:</span>
+                    <span class="info-value">{{
+                      contract()!.accepted_at | date: 'dd/MM/yyyy HH:mm'
+                    }}</span>
+                  </div>
+                }
+              </div>
+              <!-- Terms Content -->
+              <div class="terms-container">
+                <h3 class="terms-title">Términos y Condiciones</h3>
+                <div class="terms-content">
+                  <h4>1. Objeto del Contrato</h4>
+                  <p>
+                    El presente contrato tiene por objeto regular el alquiler del vehículo
+                    identificado en el booking, estableciendo los derechos y obligaciones de ambas
+                    partes.
+                  </p>
+                  <h4>2. Responsabilidad del Locatario</h4>
+                  <p>El locatario se compromete a:</p>
+                  <ul>
+                    <li>Usar el vehículo de manera responsable y conforme a su uso habitual</li>
+                    <li>Mantener el vehículo en buen estado durante el período de alquiler</li>
+                    <li>Devolver el vehículo en las mismas condiciones en que lo recibió</li>
+                    <li>Reportar cualquier daño o incidente de manera inmediata</li>
+                    <li>No ceder ni transferir el vehículo a terceros sin autorización</li>
+                  </ul>
+                  <h4>3. Seguro y Cobertura</h4>
+                  <p>
+                    El vehículo cuenta con cobertura de seguro según lo establecido en las políticas
+                    de AutoRenta. El locatario es responsable por:
+                  </p>
+                  <ul>
+                    <li>Daños intencionales o por negligencia grave</li>
+                    <li>Multas y sanciones de tránsito</li>
+                    <li>Franquicia en caso de siniestros cubiertos por el Fondo de Garantía</li>
+                  </ul>
+                  <h4>4. Inspección del Vehículo</h4>
+                  <p>
+                    Al inicio (check-in) y final (check-out) del alquiler se realizará una inspección
+                    completa del vehículo con registro fotográfico. Cualquier daño nuevo será
+                    responsabilidad del locatario.
+                  </p>
+                  <h4>5. Política de Cancelación</h4>
+                  <p>
+                    Las cancelaciones están sujetas a las políticas publicadas en la plataforma al
+                    momento de realizar la reserva. Los reembolsos se procesarán según corresponda.
+                  </p>
+                  <h4>6. Resolución de Disputas</h4>
+                  <p>
+                    Cualquier disputa relacionada con este contrato será resuelta según el proceso de
+                    mediación establecido por AutoRenta. En caso de no llegar a un acuerdo, las partes
+                    podrán recurrir a la justicia ordinaria.
+                  </p>
+                  <h4>7. Protección de Datos</h4>
+                  <p>
+                    Los datos personales serán tratados conforme a nuestra Política de Privacidad y la
+                    Ley de Protección de Datos Personales vigente.
+                  </p>
+                  <h4>8. Aceptación</h4>
+                  <p>
+                    Al firmar este contrato digitalmente, el locatario declara haber leído y aceptado
+                    todos los términos y condiciones establecidos.
+                  </p>
+                </div>
+              </div>
+              <!-- Already Accepted Notice -->
+              @if (contract()!.accepted_by_renter) {
+                <div class="notice notice-success">
+                  <svg class="notice-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                  <span
+                    >Ya aceptaste este contrato el
+                    {{ contract()!.accepted_at | date: 'dd/MM/yyyy HH:mm' }}</span
+                    >
+                  </div>
+                }
+                <!-- Acceptance Section -->
+                @if (!contract()!.accepted_by_renter) {
+                  <div class="acceptance-section">
+                    <label class="checkbox-label">
+                      <input type="checkbox" [(ngModel)]="termsAccepted" [disabled]="signing()" />
+                      <span>He leído y acepto todos los términos y condiciones del contrato</span>
+                    </label>
+                    <button
+                      type="button"
+                      class="btn-primary"
+                      (click)="signContract()"
+                      [disabled]="!termsAccepted || signing()"
+                      >
+                      @if (!signing()) {
+                        <svg
+                          class="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                      }
+                      @if (signing()) {
+                        <div class="spinner-small"></div>
+                      }
+                      {{ signing() ? 'Firmando...' : 'Firmar Contrato' }}
+                    </button>
+                    <p class="acceptance-hint">
+                      Al firmar este contrato, aceptas estar vinculado legalmente por estos términos
+                    </p>
+                  </div>
+                }
+              </div>
+            }
           </div>
         </div>
       </div>
-    </div>
-  `,
+    `,
   styles: [
     `
       .modal-overlay {

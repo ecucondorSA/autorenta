@@ -1,6 +1,6 @@
 import {Component, input,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * WizardStepComponent - Container for wizard step content
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-wizard-step',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="wizard-step">
       @if (title()) {

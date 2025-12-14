@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,7 +22,7 @@ export interface LocationCircle {
 @Component({
   selector: 'app-personalized-location',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './personalized-location.component.html',
   styleUrls: ['./personalized-location.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

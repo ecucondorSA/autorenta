@@ -1,6 +1,6 @@
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ProfileService } from '../../../core/services/profile.service';
@@ -27,78 +27,80 @@ import { ProfileService } from '../../../core/services/profile.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-auth-callback-page',
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [NgOptimizedImage],
   template: `
     <div
       class="min-h-screen bg-surface-base dark:bg-surface-base flex items-center justify-center py-12 px-4"
-    >
+      >
       <div class="w-full max-w-md text-center">
         <!-- Loading State -->
-        <div *ngIf="!error()" class="space-y-6">
-          <div class="h-16 flex items-center justify-center mb-4">
-            <img
-              ngSrc="/assets/images/autorentar-logo.png"
-              alt="Autorentar"
-              width="500"
-              height="500"
-              priority
-              class="h-full w-auto object-contain scale-[2]"
-            />
+        @if (!error()) {
+          <div class="space-y-6">
+            <div class="h-16 flex items-center justify-center mb-4">
+              <img
+                ngSrc="/assets/images/autorentar-logo.png"
+                alt="Autorentar"
+                width="500"
+                height="500"
+                priority
+                class="h-full w-auto object-contain scale-[2]"
+                />
+            </div>
+            <div class="flex justify-center">
+              <svg
+                class="animate-spin h-12 w-12 text-cta-default"
+                fill="none"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+            <div class="space-y-2">
+              <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary">
+                Completando inicio de sesión...
+              </h1>
+              <p class="text-text-secondary dark:text-text-secondary">
+                Por favor esperá mientras procesamos tu autenticación
+              </p>
+            </div>
           </div>
-
-          <div class="flex justify-center">
-            <svg
-              class="animate-spin h-12 w-12 text-cta-default"
-              fill="none"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </div>
-
-          <div class="space-y-2">
-            <h1 class="text-2xl font-bold text-text-primary dark:text-text-primary">
-              Completando inicio de sesión...
-            </h1>
-            <p class="text-text-secondary dark:text-text-secondary">
-              Por favor esperá mientras procesamos tu autenticación
-            </p>
-          </div>
-        </div>
-
+        }
+    
         <!-- Error State -->
-        <div *ngIf="error()" class="space-y-6">
-          <div
-            class="bg-error-bg dark:bg-error-900/20 border-2 border-error-border dark:border-error-800 rounded-lg p-6"
-          >
-            <h2 class="text-xl font-bold text-error-strong mb-2">Error de autenticación</h2>
-            <p class="text-error-text mb-4">
-              {{ error() }}
-            </p>
-            <button
-              (click)="redirectToLogin()"
-              class="rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all shadow-md"
-            >
-              Volver al inicio de sesión
-            </button>
+        @if (error()) {
+          <div class="space-y-6">
+            <div
+              class="bg-error-bg dark:bg-error-900/20 border-2 border-error-border dark:border-error-800 rounded-lg p-6"
+              >
+              <h2 class="text-xl font-bold text-error-strong mb-2">Error de autenticación</h2>
+              <p class="text-error-text mb-4">
+                {{ error() }}
+              </p>
+              <button
+                (click)="redirectToLogin()"
+                class="rounded-lg bg-cta-default text-cta-text hover:opacity-90 transition-all shadow-md"
+                >
+                Volver al inicio de sesión
+              </button>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </div>
-  `,
+    `,
 })
 export class AuthCallbackPage implements OnInit {
   private readonly auth = inject(AuthService);

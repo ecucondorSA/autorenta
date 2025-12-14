@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule, ModalController } from '@ionic/angular';
 import { ProtectionCreditService } from '../../../core/services/protection-credit.service';
 import { ProtectionCreditExplanationModalComponent } from '../protection-credit-explanation-modal/protection-credit-explanation-modal.component';
@@ -28,7 +28,7 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
   selector: 'app-protection-credit-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-card>
       <ion-card-header>
@@ -38,145 +38,155 @@ import { ProtectionCreditExplanationModalComponent } from '../protection-credit-
         </ion-card-title>
         <ion-card-subtitle> Balance no retirable para siniestros </ion-card-subtitle>
       </ion-card-header>
-
+    
       <ion-card-content>
         <!-- Loading State -->
-        <div *ngIf="protectionCreditService.loading()" class="loading-container">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Cargando balance...</p>
-        </div>
-
-        <!-- Error State -->
-        <div *ngIf="protectionCreditService.error()" class="error-container">
-          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
-          <p>{{ protectionCreditService.error() }}</p>
-        </div>
-
-        <!-- Balance Loaded -->
-        <div
-          *ngIf="
-            !protectionCreditService.loading() && !protectionCreditService.error() && balance()
-          "
-        >
-          <!-- Balance Display -->
-          <div class="balance-section">
-            <div class="balance-header">
-              <span class="balance-label">Balance Actual</span>
-              <ion-badge [color]="statusBadgeColor()">
-                {{ statusIcon() }}
-              </ion-badge>
-            </div>
-            <div class="balance-amount">
-              <span class="amount">{{ formattedBalance() }}</span>
-            </div>
+        @if (protectionCreditService.loading()) {
+          <div class="loading-container">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando balance...</p>
           </div>
-
-          <!-- Usage Bar -->
-          <div class="usage-section" *ngIf="hasBalance()">
-            <div class="usage-header">
-              <span class="usage-label">CP Usado</span>
-              <span class="usage-percentage">{{ usagePercentage() }}%</span>
+        }
+    
+        <!-- Error State -->
+        @if (protectionCreditService.error()) {
+          <div class="error-container">
+            <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+            <p>{{ protectionCreditService.error() }}</p>
+          </div>
+        }
+    
+        <!-- Balance Loaded -->
+        @if (
+          !protectionCreditService.loading() && !protectionCreditService.error() && balance()
+          ) {
+          <div
+            >
+            <!-- Balance Display -->
+            <div class="balance-section">
+              <div class="balance-header">
+                <span class="balance-label">Balance Actual</span>
+                <ion-badge [color]="statusBadgeColor()">
+                  {{ statusIcon() }}
+                </ion-badge>
+              </div>
+              <div class="balance-amount">
+                <span class="amount">{{ formattedBalance() }}</span>
+              </div>
             </div>
-            <ion-progress-bar
-              [value]="usagePercentage() / 100"
+            <!-- Usage Bar -->
+            @if (hasBalance()) {
+              <div class="usage-section">
+                <div class="usage-header">
+                  <span class="usage-label">CP Usado</span>
+                  <span class="usage-percentage">{{ usagePercentage() }}%</span>
+                </div>
+                <ion-progress-bar
+                  [value]="usagePercentage() / 100"
               [color]="
                 usagePercentage() > 75 ? 'danger' : usagePercentage() > 50 ? 'warning' : 'success'
               "
-            ></ion-progress-bar>
-            <p class="usage-message">{{ 100 - usagePercentage() }}% disponible para siniestros</p>
-          </div>
-
-          <!-- Expiration Info -->
-          <div class="expiration-section" *ngIf="hasBalance() && !isExpired()">
-            <div class="expiration-item">
-              <ion-icon name="calendar-outline" color="medium"></ion-icon>
-              <div class="expiration-content">
-                <span class="expiration-label">Expira el</span>
-                <span class="expiration-value">{{ formattedExpiry() }}</span>
+                ></ion-progress-bar>
+                <p class="usage-message">{{ 100 - usagePercentage() }}% disponible para siniestros</p>
               </div>
-            </div>
-            <div class="expiration-item" *ngIf="daysUntilExpiry() !== null">
-              <ion-icon
-                name="time-outline"
-                [color]="isNearExpiry() ? 'warning' : 'medium'"
-              ></ion-icon>
-              <div class="expiration-content">
-                <span class="expiration-label">Tiempo restante</span>
-                <span class="expiration-value" [class.warning]="isNearExpiry()">
-                  {{ daysRemainingText() }}
-                </span>
+            }
+            <!-- Expiration Info -->
+            @if (hasBalance() && !isExpired()) {
+              <div class="expiration-section">
+                <div class="expiration-item">
+                  <ion-icon name="calendar-outline" color="medium"></ion-icon>
+                  <div class="expiration-content">
+                    <span class="expiration-label">Expira el</span>
+                    <span class="expiration-value">{{ formattedExpiry() }}</span>
+                  </div>
+                </div>
+                @if (daysUntilExpiry() !== null) {
+                  <div class="expiration-item">
+                    <ion-icon
+                      name="time-outline"
+                      [color]="isNearExpiry() ? 'warning' : 'medium'"
+                    ></ion-icon>
+                    <div class="expiration-content">
+                      <span class="expiration-label">Tiempo restante</span>
+                      <span class="expiration-value" [class.warning]="isNearExpiry()">
+                        {{ daysRemainingText() }}
+                      </span>
+                    </div>
+                  </div>
+                }
               </div>
-            </div>
-          </div>
-
-          <!-- Expired Warning -->
-          <ion-card class="warning-card" *ngIf="isExpired()">
-            <ion-card-content>
-              <div class="warning-content">
-                <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
-                <p>Tu Crédito de Protección ha expirado.</p>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Renewal Progress -->
-          <div class="renewal-section">
-            <h3>Renovación Gratuita</h3>
-            <p class="renewal-description">
-              Completa 10 bookings sin siniestros para renovar gratis tu CP ($300 USD).
-            </p>
-
-            <div class="renewal-progress" *ngIf="renewalProgress()">
-              <div class="progress-header">
-                <span class="progress-label">Progreso</span>
-                <span class="progress-value">{{ renewalProgress()!.progress }}%</span>
-              </div>
-              <ion-progress-bar
-                [value]="renewalProgress()!.progress / 100"
-                [color]="renewalProgress()!.eligible ? 'success' : 'primary'"
-              ></ion-progress-bar>
-              <p class="progress-message" [class.eligible]="renewalProgress()!.eligible">
-                <ion-icon
+            }
+            <!-- Expired Warning -->
+            @if (isExpired()) {
+              <ion-card class="warning-card">
+                <ion-card-content>
+                  <div class="warning-content">
+                    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+                    <p>Tu Crédito de Protección ha expirado.</p>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            }
+            <!-- Renewal Progress -->
+            <div class="renewal-section">
+              <h3>Renovación Gratuita</h3>
+              <p class="renewal-description">
+                Completa 10 bookings sin siniestros para renovar gratis tu CP ($300 USD).
+              </p>
+              @if (renewalProgress()) {
+                <div class="renewal-progress">
+                  <div class="progress-header">
+                    <span class="progress-label">Progreso</span>
+                    <span class="progress-value">{{ renewalProgress()!.progress }}%</span>
+                  </div>
+                  <ion-progress-bar
+                    [value]="renewalProgress()!.progress / 100"
+                    [color]="renewalProgress()!.eligible ? 'success' : 'primary'"
+                  ></ion-progress-bar>
+                  <p class="progress-message" [class.eligible]="renewalProgress()!.eligible">
+                    <ion-icon
                   [name]="
                     renewalProgress()!.eligible
                       ? 'checkmark-circle-outline'
                       : 'information-circle-outline'
                   "
-                  [color]="renewalProgress()!.eligible ? 'success' : 'medium'"
-                ></ion-icon>
-                {{ renewalProgress()!.message }}
-              </p>
+                      [color]="renewalProgress()!.eligible ? 'success' : 'medium'"
+                    ></ion-icon>
+                    {{ renewalProgress()!.message }}
+                  </p>
+                </div>
+              }
             </div>
+            <!-- Info Message -->
+            <ion-card class="info-card">
+              <ion-card-content>
+                <div class="info-content">
+                  <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+                  <p>{{ infoMessage() }}</p>
+                </div>
+              </ion-card-content>
+            </ion-card>
+            <!-- Learn More Button -->
+            <ion-button expand="block" fill="outline" (click)="onLearnMore()">
+              <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+              ¿Cómo funciona el CP?
+            </ion-button>
           </div>
-
-          <!-- Info Message -->
-          <ion-card class="info-card">
-            <ion-card-content>
-              <div class="info-content">
-                <ion-icon name="information-circle-outline" color="primary"></ion-icon>
-                <p>{{ infoMessage() }}</p>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Learn More Button -->
-          <ion-button expand="block" fill="outline" (click)="onLearnMore()">
-            <ion-icon slot="start" name="help-circle-outline"></ion-icon>
-            ¿Cómo funciona el CP?
-          </ion-button>
-        </div>
-
+        }
+    
         <!-- No Balance State -->
-        <div *ngIf="!protectionCreditService.loading() && !balance()" class="no-balance">
-          <ion-icon name="shield-outline" color="medium"></ion-icon>
-          <p>No tienes Crédito de Protección disponible.</p>
-          <p class="no-balance-hint">
-            Completa 10 bookings sin siniestros para obtener $300 USD de crédito gratis.
-          </p>
-        </div>
+        @if (!protectionCreditService.loading() && !balance()) {
+          <div class="no-balance">
+            <ion-icon name="shield-outline" color="medium"></ion-icon>
+            <p>No tienes Crédito de Protección disponible.</p>
+            <p class="no-balance-hint">
+              Completa 10 bookings sin siniestros para obtener $300 USD de crédito gratis.
+            </p>
+          </div>
+        }
       </ion-card-content>
     </ion-card>
-  `,
+    `,
   styles: [
     `
       ion-card {

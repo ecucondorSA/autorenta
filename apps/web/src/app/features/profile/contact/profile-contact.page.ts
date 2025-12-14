@@ -1,6 +1,6 @@
 import {Component, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
@@ -21,12 +21,12 @@ import { ProfileStore } from '../../../core/stores/profile.store';
   selector: 'app-profile-contact',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, ProfileContactSectionComponent],
+  imports: [IonicModule, ProfileContactSectionComponent],
   template: `
     <ion-header>
       <ion-toolbar
         class="bg-surface-raised dark:bg-surface-secondary border-b border-border-default"
-      >
+        >
         <ion-buttons slot="start">
           <ion-back-button
             defaultHref="/profile"
@@ -39,7 +39,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
         </ion-title>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="bg-surface-base dark:bg-surface-base">
       <div class="min-h-full py-6 px-4 max-w-4xl mx-auto">
         <!-- Header -->
@@ -51,17 +51,21 @@ import { ProfileStore } from '../../../core/stores/profile.store';
             Mantén tu información de contacto actualizada para una mejor comunicación.
           </p>
         </div>
-
+    
         <!-- Loading State -->
-        <div *ngIf="loading()" class="flex justify-center py-12">
-          <div
-            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
-          ></div>
-        </div>
-
+        @if (loading()) {
+          <div class="flex justify-center py-12">
+            <div
+              class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cta-default border-r-transparent"
+            ></div>
+          </div>
+        }
+    
         <!-- Contact Section Component -->
-        <app-profile-contact-section *ngIf="!loading()" [profile]="profile()" />
-
+        @if (!loading()) {
+          <app-profile-contact-section [profile]="profile()" />
+        }
+    
         <!-- Help Text -->
         <div class="mt-8 p-4 rounded-lg bg-info-bg border border-info-border dark:bg-info-bg/20">
           <h4 class="text-sm font-semibold text-info-text mb-2 flex items-center gap-2">
@@ -71,7 +75,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+                />
             </svg>
             ¿Por qué necesitamos esta información?
           </h4>
@@ -81,24 +85,24 @@ import { ProfileStore } from '../../../core/stores/profile.store';
               <span
                 ><strong>Teléfono:</strong> Para coordinar entregas y devoluciones de
                 vehículos</span
-              >
-            </li>
-            <li class="flex gap-2">
-              <span>•</span>
-              <span><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span>
-            </li>
-            <li class="flex gap-2">
-              <span>•</span>
-              <span
-                ><strong>Dirección:</strong> Para servicios de entrega a domicilio (cuando estén
-                disponibles)</span
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </ion-content>
-  `,
+                >
+              </li>
+              <li class="flex gap-2">
+                <span>•</span>
+                <span><strong>WhatsApp:</strong> Comunicación rápida durante las reservas</span>
+              </li>
+              <li class="flex gap-2">
+                <span>•</span>
+                <span
+                  ><strong>Dirección:</strong> Para servicios de entrega a domicilio (cuando estén
+                  disponibles)</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ion-content>
+    `,
   styles: [
     `
       :host {

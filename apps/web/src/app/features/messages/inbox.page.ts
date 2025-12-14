@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { UnreadMessagesService } from '../../core/services/unread-messages.servi
   selector: 'app-inbox',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   styleUrls: ['./inbox-pro.styles.css'],
   template: `
     <!-- WhatsApp-style Messages Inbox -->

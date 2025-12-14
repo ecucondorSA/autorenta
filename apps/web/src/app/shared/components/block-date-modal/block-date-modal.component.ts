@@ -10,7 +10,7 @@ import {Component,
   inject,
   PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
@@ -30,176 +30,174 @@ export interface BlockDateRequest {
   selector: 'app-block-date-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, FocusTrapDirective],
+  imports: [FormsModule, FocusTrapDirective],
   template: `
-    <div
-      *ngIf="isOpen()"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
-      (click)="onBackdropClick($event)"
-    >
+    @if (isOpen()) {
       <div
-        class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
-        (click)="$event.stopPropagation()"
-        [appFocusTrap]="isOpen()"
-        role="dialog"
-        aria-modal="true"
-        [attr.aria-labelledby]="'block-date-modal-title'"
-      >
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <h2
-            id="block-date-modal-title"
-            class="text-xl font-bold text-text-primary dark:text-text-secondary"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
+        (click)="onBackdropClick($event)"
+        >
+        <div
+          class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all"
+          (click)="$event.stopPropagation()"
+          [appFocusTrap]="isOpen()"
+          role="dialog"
+          aria-modal="true"
+          [attr.aria-labelledby]="'block-date-modal-title'"
           >
-            {{ title() || 'Bloquear Fechas' }}
-          </h2>
-          <button
-            type="button"
-            (click)="close()"
-            class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
-            aria-label="Cerrar"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Form -->
-        <div class="space-y-4">
-          <!-- Date Range Picker -->
-          <div>
-            <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-            >
-              Rango de Fechas *
-            </label>
-            <input
-              #dateInput
-              type="text"
-              placeholder="Seleccionar fechas"
-              readonly
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
-            />
-            <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
-              {{ dateRangeText() }}
-            </p>
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-6">
+            <h2
+              id="block-date-modal-title"
+              class="text-xl font-bold text-text-primary dark:text-text-secondary"
+              >
+              {{ title() || 'Bloquear Fechas' }}
+            </h2>
+            <button
+              type="button"
+              (click)="close()"
+              class="text-text-secondary hover:text-text-primary dark:hover:text-pearl-light transition-colors"
+              aria-label="Cerrar"
+              >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                  />
+              </svg>
+            </button>
           </div>
-
-          <!-- Reason Selector -->
-          <div>
-            <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-            >
-              Motivo *
-            </label>
-            <select
-              [(ngModel)]="selectedReason"
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
-            >
-              <option value="">-- Seleccionar motivo --</option>
-              <option value="maintenance">🔧 Mantenimiento</option>
-              <option value="personal_use">🚗 Uso Personal</option>
-              <option value="vacation">🏖️ Vacaciones</option>
-              <option value="other">📝 Otro</option>
-            </select>
-          </div>
-
-          <!-- Notes (Optional) -->
-          <div>
-            <label
-              class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-            >
-              Notas (opcional)
-            </label>
-            <textarea
-              [(ngModel)]="notes"
-              rows="3"
-              placeholder="Ej: Cambio de aceite programado, revisión técnica, etc."
-              class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
-            ></textarea>
-          </div>
-
-          <!-- Apply to All Cars (only show if has multiple cars) -->
-          <div
-            *ngIf="hasMultipleCars()"
-            class="flex items-start gap-3 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-xl"
-          >
-            <input
-              type="checkbox"
-              id="applyToAll"
-              [(ngModel)]="applyToAllCars"
-              class="mt-1 w-4 h-4 text-cta-default border-border-default rounded focus:ring-cta-default"
-            />
-            <label
-              for="applyToAll"
-              class="flex-1 text-sm text-text-primary dark:text-text-secondary cursor-pointer"
-            >
-              <span class="font-semibold">Aplicar a todos mis autos</span>
-              <p class="text-xs text-text-secondary dark:text-text-muted mt-0.5">
-                Bloqueará estas fechas en todos tus vehículos
+          <!-- Form -->
+          <div class="space-y-4">
+            <!-- Date Range Picker -->
+            <div>
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                >
+                Rango de Fechas *
+              </label>
+              <input
+                #dateInput
+                type="text"
+                placeholder="Seleccionar fechas"
+                readonly
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all cursor-pointer"
+                />
+              <p class="text-xs text-text-secondary dark:text-text-secondary mt-1">
+                {{ dateRangeText() }}
               </p>
-            </label>
+            </div>
+            <!-- Reason Selector -->
+            <div>
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                >
+                Motivo *
+              </label>
+              <select
+                [(ngModel)]="selectedReason"
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all"
+                >
+                <option value="">-- Seleccionar motivo --</option>
+                <option value="maintenance">🔧 Mantenimiento</option>
+                <option value="personal_use">🚗 Uso Personal</option>
+                <option value="vacation">🏖️ Vacaciones</option>
+                <option value="other">📝 Otro</option>
+              </select>
+            </div>
+            <!-- Notes (Optional) -->
+            <div>
+              <label
+                class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                >
+                Notas (opcional)
+              </label>
+              <textarea
+                [(ngModel)]="notes"
+                rows="3"
+                placeholder="Ej: Cambio de aceite programado, revisión técnica, etc."
+                class="w-full px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default bg-surface-raised dark:bg-surface-secondary focus:border-cta-default focus:ring-2 focus:ring-cta-default/20 transition-all resize-none"
+              ></textarea>
+            </div>
+            <!-- Apply to All Cars (only show if has multiple cars) -->
+            @if (hasMultipleCars()) {
+              <div
+                class="flex items-start gap-3 p-4 bg-warning-bg dark:bg-warning-900/20 rounded-xl"
+                >
+                <input
+                  type="checkbox"
+                  id="applyToAll"
+                  [(ngModel)]="applyToAllCars"
+                  class="mt-1 w-4 h-4 text-cta-default border-border-default rounded focus:ring-cta-default"
+                  />
+                <label
+                  for="applyToAll"
+                  class="flex-1 text-sm text-text-primary dark:text-text-secondary cursor-pointer"
+                  >
+                  <span class="font-semibold">Aplicar a todos mis autos</span>
+                  <p class="text-xs text-text-secondary dark:text-text-muted mt-0.5">
+                    Bloqueará estas fechas en todos tus vehículos
+                  </p>
+                </label>
+              </div>
+            }
+            <!-- Error Message -->
+            @if (errorMessage()) {
+              <div
+                class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
+                >
+                {{ errorMessage() }}
+              </div>
+            }
           </div>
-
-          <!-- Error Message -->
-          <div
-            *ngIf="errorMessage()"
-            class="p-3 bg-error-bg dark:bg-error-900/20 border border-error-border dark:border-error-800 rounded-xl text-sm text-error-strong"
-          >
-            {{ errorMessage() }}
+          <!-- Actions -->
+          <div class="flex gap-3 mt-6">
+            <button
+              type="button"
+              (click)="close()"
+              class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
+              >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              (click)="submit()"
+              [disabled]="!canSubmit() || loading()"
+              [class.opacity-50]="!canSubmit() || loading()"
+              [class.cursor-not-allowed]="!canSubmit() || loading()"
+              class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
+              >
+              @if (loading()) {
+                <svg
+                  class="animate-spin h-5 w-5 text-text-inverse"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              }
+              <span>{{ loading() ? 'Bloqueando...' : 'Bloquear Fechas' }}</span>
+            </button>
           </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="flex gap-3 mt-6">
-          <button
-            type="button"
-            (click)="close()"
-            class="flex-1 px-4 py-3 rounded-xl border-2 border-border-default dark:border-border-default text-text-secondary hover:bg-surface-raised dark:hover:bg-slate-deep transition-all font-medium"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            (click)="submit()"
-            [disabled]="!canSubmit() || loading()"
-            [class.opacity-50]="!canSubmit() || loading()"
-            [class.cursor-not-allowed]="!canSubmit() || loading()"
-            class="flex-1 px-4 py-3 rounded-xl bg-cta-default text-cta-text hover:bg-cta-default/90 transition-all font-medium flex items-center justify-center gap-2"
-          >
-            <svg
-              *ngIf="loading()"
-              class="animate-spin h-5 w-5 text-text-inverse"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span>{{ loading() ? 'Bloqueando...' : 'Bloquear Fechas' }}</span>
-          </button>
         </div>
       </div>
-    </div>
-  `,
+    }
+    `,
   styles: [
     `
       /* Flatpickr theme override for this modal */

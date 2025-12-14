@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,7 +33,7 @@ interface OnboardingQuestion {
 @Component({
   standalone: true,
   selector: 'app-smart-onboarding',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './smart-onboarding.component.html',
   styleUrls: ['./smart-onboarding.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

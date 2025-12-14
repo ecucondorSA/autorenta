@@ -1,6 +1,6 @@
 import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { AccountingService, IncomeStatement } from '../../../../core/services/accounting.service';
@@ -9,7 +9,7 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
   selector: 'app-income-statement',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [IonicModule, FormsModule],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -28,105 +28,112 @@ import { AccountingService, IncomeStatement } from '../../../../core/services/ac
           <ion-label>Período:</ion-label>
           <ion-select [(ngModel)]="selectedPeriod" (ionChange)="loadData()" interface="popover">
             <ion-select-option [value]="null">Todos los períodos</ion-select-option>
-            <ion-select-option *ngFor="let p of availablePeriods()" [value]="p">{{
-              p
-            }}</ion-select-option>
+            @for (p of availablePeriods(); track p) {
+              <ion-select-option [value]="p">{{
+                p
+              }}</ion-select-option>
+            }
           </ion-select>
         </ion-item>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="ion-padding">
-      <div *ngIf="loading()" class="flex justify-center py-8">
-        <ion-spinner></ion-spinner>
-      </div>
-
-      <div *ngIf="!loading()">
-        <!-- Summary Card -->
-        <ion-card color="primary" class="mb-4">
-          <ion-card-content class="text-center">
-            <h3 class="text-lg font-bold mb-2">Resumen del Período</h3>
-            <div class="grid grid-cols-3 gap-4">
-              <div>
-                <p class="text-sm opacity-70">Ingresos</p>
-                <p class="text-xl font-bold">{{ formatCurrency(totalIncome()) }}</p>
+      @if (loading()) {
+        <div class="flex justify-center py-8">
+          <ion-spinner></ion-spinner>
+        </div>
+      }
+    
+      @if (!loading()) {
+        <div>
+          <!-- Summary Card -->
+          <ion-card color="primary" class="mb-4">
+            <ion-card-content class="text-center">
+              <h3 class="text-lg font-bold mb-2">Resumen del Período</h3>
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <p class="text-sm opacity-70">Ingresos</p>
+                  <p class="text-xl font-bold">{{ formatCurrency(totalIncome()) }}</p>
+                </div>
+                <div>
+                  <p class="text-sm opacity-70">Gastos</p>
+                  <p class="text-xl font-bold">{{ formatCurrency(totalExpenses()) }}</p>
+                </div>
+                <div>
+                  <p class="text-sm opacity-70">Utilidad Neta</p>
+                  <p class="text-xl font-bold" [class.text-error-500]="netProfit() < 0">
+                    {{ formatCurrency(netProfit()) }}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p class="text-sm opacity-70">Gastos</p>
-                <p class="text-xl font-bold">{{ formatCurrency(totalExpenses()) }}</p>
-              </div>
-              <div>
-                <p class="text-sm opacity-70">Utilidad Neta</p>
-                <p class="text-xl font-bold" [class.text-error-500]="netProfit() < 0">
-                  {{ formatCurrency(netProfit()) }}
-                </p>
-              </div>
-            </div>
-            <p class="mt-2">Margen: {{ profitMargin().toFixed(1) }}%</p>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- INGRESOS -->
-        <h3 class="text-lg font-bold mt-4 mb-2 flex items-center">
-          <ion-icon name="arrow-down-circle" color="success" class="mr-2"></ion-icon>
-          INGRESOS
-        </h3>
-        <ion-card>
-          <ion-list>
-            <ion-item *ngFor="let item of incomeItems()" lines="full">
-              <ion-label>
-                <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-text-secondary">{{ item.period }}</p>
-              </ion-label>
-              <ion-note slot="end" class="text-lg font-semibold" color="success">
-                {{ formatCurrency(item.amount) }}
-              </ion-note>
-            </ion-item>
-            <ion-item class="bg-surface-raised">
-              <ion-label><strong>Total Ingresos</strong></ion-label>
-              <ion-note slot="end" class="text-xl font-bold" color="success">
-                {{ formatCurrency(totalIncome()) }}
-              </ion-note>
-            </ion-item>
-          </ion-list>
-        </ion-card>
-
-        <!-- GASTOS -->
-        <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
-          <ion-icon name="arrow-up-circle" color="danger" class="mr-2"></ion-icon>
-          GASTOS
-        </h3>
-        <ion-card>
-          <ion-list>
-            <ion-item *ngFor="let item of expenseItems()" lines="full">
-              <ion-label>
-                <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-text-secondary">{{ item.period }}</p>
-              </ion-label>
-              <ion-note slot="end" class="text-lg font-semibold" color="danger">
-                {{ formatCurrency(item.amount) }}
-              </ion-note>
-            </ion-item>
-            <ion-item class="bg-surface-raised">
-              <ion-label><strong>Total Gastos</strong></ion-label>
-              <ion-note slot="end" class="text-xl font-bold" color="danger">
-                {{ formatCurrency(totalExpenses()) }}
-              </ion-note>
-            </ion-item>
-          </ion-list>
-        </ion-card>
-
-        <!-- UTILIDAD NETA -->
-        <ion-card [color]="netProfit() >= 0 ? 'success' : 'danger'" class="mt-4">
-          <ion-card-content class="text-center">
-            <h3 class="text-lg font-bold">UTILIDAD NETA</h3>
-            <p class="text-3xl font-bold mt-2">{{ formatCurrency(netProfit()) }}</p>
-            <p class="mt-1">Margen de Utilidad: {{ profitMargin().toFixed(2) }}%</p>
-          </ion-card-content>
-        </ion-card>
-      </div>
+              <p class="mt-2">Margen: {{ profitMargin().toFixed(1) }}%</p>
+            </ion-card-content>
+          </ion-card>
+          <!-- INGRESOS -->
+          <h3 class="text-lg font-bold mt-4 mb-2 flex items-center">
+            <ion-icon name="arrow-down-circle" color="success" class="mr-2"></ion-icon>
+            INGRESOS
+          </h3>
+          <ion-card>
+            <ion-list>
+              @for (item of incomeItems(); track item) {
+                <ion-item lines="full">
+                  <ion-label>
+                    <h4>{{ item.code }} - {{ item.name }}</h4>
+                    <p class="text-sm text-text-secondary">{{ item.period }}</p>
+                  </ion-label>
+                  <ion-note slot="end" class="text-lg font-semibold" color="success">
+                    {{ formatCurrency(item.amount) }}
+                  </ion-note>
+                </ion-item>
+              }
+              <ion-item class="bg-surface-raised">
+                <ion-label><strong>Total Ingresos</strong></ion-label>
+                <ion-note slot="end" class="text-xl font-bold" color="success">
+                  {{ formatCurrency(totalIncome()) }}
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+          <!-- GASTOS -->
+          <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
+            <ion-icon name="arrow-up-circle" color="danger" class="mr-2"></ion-icon>
+            GASTOS
+          </h3>
+          <ion-card>
+            <ion-list>
+              @for (item of expenseItems(); track item) {
+                <ion-item lines="full">
+                  <ion-label>
+                    <h4>{{ item.code }} - {{ item.name }}</h4>
+                    <p class="text-sm text-text-secondary">{{ item.period }}</p>
+                  </ion-label>
+                  <ion-note slot="end" class="text-lg font-semibold" color="danger">
+                    {{ formatCurrency(item.amount) }}
+                  </ion-note>
+                </ion-item>
+              }
+              <ion-item class="bg-surface-raised">
+                <ion-label><strong>Total Gastos</strong></ion-label>
+                <ion-note slot="end" class="text-xl font-bold" color="danger">
+                  {{ formatCurrency(totalExpenses()) }}
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+          <!-- UTILIDAD NETA -->
+          <ion-card [color]="netProfit() >= 0 ? 'success' : 'danger'" class="mt-4">
+            <ion-card-content class="text-center">
+              <h3 class="text-lg font-bold">UTILIDAD NETA</h3>
+              <p class="text-3xl font-bold mt-2">{{ formatCurrency(netProfit()) }}</p>
+              <p class="mt-1">Margen de Utilidad: {{ profitMargin().toFixed(2) }}%</p>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      }
     </ion-content>
-  `,
+    `,
   styles: [
     `
       .flex {

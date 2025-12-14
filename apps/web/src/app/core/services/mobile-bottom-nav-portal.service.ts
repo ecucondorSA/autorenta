@@ -57,4 +57,13 @@ export class MobileBottomNavPortalService {
     this.componentRef.destroy();
     this.componentRef = undefined;
   }
+
+  setHidden(hidden: boolean): void {
+    if (!this.componentRef || !this.isBrowser) {
+      return;
+    }
+
+    const element = this.componentRef.location.nativeElement as HTMLElement;
+    element.classList.toggle('hidden', hidden);
+  }
 }

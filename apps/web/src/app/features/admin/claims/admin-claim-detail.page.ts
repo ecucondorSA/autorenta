@@ -24,327 +24,348 @@ import {
   template: `
     <div class="max-w-6xl mx-auto py-8 px-4">
       <!-- Loading State -->
-      <div *ngIf="loading()" class="text-center py-12">
-        <p class="text-text-secondary dark:text-text-secondary">Cargando siniestro...</p>
-      </div>
-
+      @if (loading()) {
+        <div class="text-center py-12">
+          <p class="text-text-secondary dark:text-text-secondary">Cargando siniestro...</p>
+        </div>
+      }
+    
       <!-- Error State -->
-      <div
-        *ngIf="error() && !loading()"
-        class="bg-error-bg border border-error-border rounded-xl p-6"
-      >
-        <p class="text-error-strong">{{ error() }}</p>
-        <button
-          routerLink="/admin/claims"
-          class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700"
-        >
-          Volver a Siniestros
-        </button>
-      </div>
-
-      <!-- Claim Detail -->
-      <div *ngIf="claim() && !loading()" class="space-y-6">
-        <!-- Header -->
-        <div class="mb-6">
+      @if (error() && !loading()) {
+        <div
+          class="bg-error-bg border border-error-border rounded-xl p-6"
+          >
+          <p class="text-error-strong">{{ error() }}</p>
           <button
             routerLink="/admin/claims"
-            class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700"
+            >
+            Volver a Siniestros
+          </button>
+        </div>
+      }
+    
+      <!-- Claim Detail -->
+      @if (claim() && !loading()) {
+        <div class="space-y-6">
+          <!-- Header -->
+          <div class="mb-6">
+            <button
+              routerLink="/admin/claims"
+              class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-4"
+              >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+              </svg>
+              Volver a Siniestros
+            </button>
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-3 mb-2">
+                  <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
+                    Detalle del Siniestro
+                  </h1>
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-semibold rounded-full"
+                    [ngClass]="getStatusBadgeClass(claim()!.status)"
+                    >
+                    {{ CLAIM_STATUS_LABELS[claim()!.status] }}
+                  </span>
+                </div>
+                <p class="text-text-secondary dark:text-text-secondary">
+                  ID: <span class="font-mono">{{ claim()!.id }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+              <!-- Claim Info Card -->
+              <div
+                class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
+                >
+                <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+                  Información del Siniestro
+                </h2>
+                <dl class="space-y-3">
+                  <div>
+                    <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">Tipo</dt>
+                    <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                      {{ CLAIM_TYPE_LABELS[claim()!.claim_type] }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                      Descripción
+                    </dt>
+                    <dd
+                      class="mt-1 text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap"
+                      >
+                      {{ claim()!.description }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                      Fecha del Incidente
+                    </dt>
+                    <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                      {{ formatDateTime(claim()!.incident_date) }}
+                    </dd>
+                  </div>
+                  @if (claim()!.location) {
+                    <div>
+                      <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                        Ubicación
+                      </dt>
+                      <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                        {{ claim()!.location }}
+                      </dd>
+                    </div>
+                  }
+                  @if (claim()!.police_report_number) {
+                    <div>
+                      <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                        N° Denuncia Policial
+                      </dt>
+                      <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                        {{ claim()!.police_report_number }}
+                      </dd>
+                    </div>
+                  }
+                  <div>
+                    <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                      Reportado por
+                    </dt>
+                    <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                      {{ claim()!.reporter_role === 'driver' ? 'Conductor' : 'Propietario' }}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
+                      Fecha de reporte
+                    </dt>
+                    <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
+                      {{ formatDateTime(claim()!.created_at) }}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+              <!-- Evidence Gallery -->
+              @if (claim()!.photos && claim()!.photos!.length > 0) {
+                <div
+                  class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
+                  >
+                  <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+                    📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
+                  </h2>
+                  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    @for (photo of claim()!.photos; track photo; let i = $index) {
+                      <div
+                        class="relative aspect-square rounded-lg overflow-hidden bg-surface-raised dark:bg-surface-base cursor-pointer hover:opacity-90 transition-opacity"
+                        (click)="openPhotoModal(i)"
+                        >
+                        <img
+                          [src]="getPhotoUrl(photo)"
+                          [alt]="'Evidencia ' + (i + 1)"
+                          class="w-full h-full object-cover"
+                          loading="lazy"
+                          />
+                        <div
+                          class="absolute bottom-2 right-2 bg-surface-overlay/60 text-text-inverse text-xs px-2 py-1 rounded"
+                          >
+                          {{ i + 1 }}/{{ claim()!.photos!.length }}
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+              <!-- Resolution Notes -->
+              @if (claim()!.resolution_notes) {
+                <div
+                  class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
+                  >
+                  <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+                    Notas de Resolución
+                  </h2>
+                  <p class="text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap">
+                    {{ claim()!.resolution_notes }}
+                  </p>
+                </div>
+              }
+            </div>
+            <!-- Sidebar -->
+            <div class="space-y-6">
+              <!-- Actions Card -->
+              @if (canResolve()) {
+                <div
+                  class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
+                  >
+                  <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+                    Acciones de Admin
+                  </h2>
+                  <div class="space-y-4">
+                    <!-- Resolution Notes -->
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
+                        >
+                        Notas de resolución
+                      </label>
+                      <textarea
+                        [(ngModel)]="resolutionNotes"
+                        rows="4"
+                        placeholder="Escribe notas sobre la resolución..."
+                        class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
+                      ></textarea>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col gap-2">
+                      @if (claim()!.status === 'reported') {
+                        <button
+                          (click)="updateStatus('under_review')"
+                          [disabled]="submitting()"
+                          class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg font-medium transition-colors"
+                          >
+                          @if (!submitting()) {
+                            <span>Poner en Revisión</span>
+                          }
+                          @if (submitting()) {
+                            <span>Procesando...</span>
+                          }
+                        </button>
+                      }
+                      @if (claim()!.status === 'reported' || claim()!.status === 'under_review') {
+                        <button
+                          (click)="updateStatus('approved')"
+                          [disabled]="submitting()"
+                          class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
+                          >
+                          @if (!submitting()) {
+                            <span>✓ Aprobar Siniestro</span>
+                          }
+                          @if (submitting()) {
+                            <span>Procesando...</span>
+                          }
+                        </button>
+                      }
+                      @if (claim()!.status === 'reported' || claim()!.status === 'under_review') {
+                        <button
+                          (click)="updateStatus('rejected')"
+                          [disabled]="submitting()"
+                          class="w-full px-4 py-2 bg-error-600 hover:bg-error-700 disabled:bg-error-400 text-text-inverse rounded-lg font-medium transition-colors"
+                          >
+                          @if (!submitting()) {
+                            <span>✗ Rechazar Siniestro</span>
+                          }
+                          @if (submitting()) {
+                            <span>Procesando...</span>
+                          }
+                        </button>
+                      }
+                      @if (claim()!.status === 'approved') {
+                        <button
+                          (click)="updateStatus('paid')"
+                          [disabled]="submitting()"
+                          class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
+                          >
+                          @if (!submitting()) {
+                            <span>Marcar como Pagado</span>
+                          }
+                          @if (submitting()) {
+                            <span>Procesando...</span>
+                          }
+                        </button>
+                      }
+                      @if (claim()!.status === 'paid' || claim()!.status === 'rejected') {
+                        <button
+                          (click)="updateStatus('closed')"
+                          [disabled]="submitting()"
+                          class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-text-inverse rounded-lg font-medium transition-colors"
+                          >
+                          @if (!submitting()) {
+                            <span>Cerrar Siniestro</span>
+                          }
+                          @if (submitting()) {
+                            <span>Procesando...</span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+              <!-- Status Info -->
+              <div
+                class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
+                >
+                <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
+                  Estado Actual
+                </h2>
+                <div class="space-y-3">
+                  <div>
+                    <p class="text-xs text-text-secondary dark:text-text-muted mb-1">Estado</p>
+                    <span
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
+                      [ngClass]="getStatusBadgeClass(claim()!.status)"
+                      >
+                      {{ CLAIM_STATUS_LABELS[claim()!.status] }}
+                    </span>
+                  </div>
+                  @if (claim()!.closed_at) {
+                    <div>
+                      <p class="text-xs text-text-secondary dark:text-text-muted mb-1">
+                        Fecha de cierre
+                      </p>
+                      <p class="text-sm text-text-primary dark:text-text-inverse">
+                        {{ formatDateTime(claim()!.closed_at) }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Photo Modal (Simple lightbox) -->
+    @if (selectedPhotoIndex() !== null) {
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/90 p-4"
+        (click)="closePhotoModal()"
+        >
+        <div class="relative max-w-6xl max-h-full">
+          <button
+            class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-raised/10 hover:bg-surface-raised/20 flex items-center justify-center text-text-inverse"
+            (click)="closePhotoModal()"
+            >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
+                d="M6 18L18 6M6 6l12 12"
+                />
             </svg>
-            Volver a Siniestros
           </button>
-
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
-                  Detalle del Siniestro
-                </h1>
-                <span
-                  class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-semibold rounded-full"
-                  [ngClass]="getStatusBadgeClass(claim()!.status)"
-                >
-                  {{ CLAIM_STATUS_LABELS[claim()!.status] }}
-                </span>
-              </div>
-              <p class="text-text-secondary dark:text-text-secondary">
-                ID: <span class="font-mono">{{ claim()!.id }}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Main Content -->
-          <div class="lg:col-span-2 space-y-6">
-            <!-- Claim Info Card -->
-            <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
-            >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
-                Información del Siniestro
-              </h2>
-
-              <dl class="space-y-3">
-                <div>
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">Tipo</dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ CLAIM_TYPE_LABELS[claim()!.claim_type] }}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    Descripción
-                  </dt>
-                  <dd
-                    class="mt-1 text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap"
-                  >
-                    {{ claim()!.description }}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    Fecha del Incidente
-                  </dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ formatDateTime(claim()!.incident_date) }}
-                  </dd>
-                </div>
-
-                <div *ngIf="claim()!.location">
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    Ubicación
-                  </dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ claim()!.location }}
-                  </dd>
-                </div>
-
-                <div *ngIf="claim()!.police_report_number">
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    N° Denuncia Policial
-                  </dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ claim()!.police_report_number }}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    Reportado por
-                  </dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ claim()!.reporter_role === 'driver' ? 'Conductor' : 'Propietario' }}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt class="text-sm font-medium text-text-secondary dark:text-text-muted">
-                    Fecha de reporte
-                  </dt>
-                  <dd class="mt-1 text-sm text-text-primary dark:text-text-inverse">
-                    {{ formatDateTime(claim()!.created_at) }}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-
-            <!-- Evidence Gallery -->
-            <div
-              *ngIf="claim()!.photos && claim()!.photos!.length > 0"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
-            >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
-                📸 Evidencia Fotográfica ({{ claim()!.photos!.length }})
-              </h2>
-
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div
-                  *ngFor="let photo of claim()!.photos; let i = index"
-                  class="relative aspect-square rounded-lg overflow-hidden bg-surface-raised dark:bg-surface-base cursor-pointer hover:opacity-90 transition-opacity"
-                  (click)="openPhotoModal(i)"
-                >
-                  <img
-                    [src]="getPhotoUrl(photo)"
-                    [alt]="'Evidencia ' + (i + 1)"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div
-                    class="absolute bottom-2 right-2 bg-surface-overlay/60 text-text-inverse text-xs px-2 py-1 rounded"
-                  >
-                    {{ i + 1 }}/{{ claim()!.photos!.length }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Resolution Notes -->
-            <div
-              *ngIf="claim()!.resolution_notes"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
-            >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
-                Notas de Resolución
-              </h2>
-              <p class="text-sm text-text-primary dark:text-text-inverse whitespace-pre-wrap">
-                {{ claim()!.resolution_notes }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Sidebar -->
-          <div class="space-y-6">
-            <!-- Actions Card -->
-            <div
-              *ngIf="canResolve()"
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
-            >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
-                Acciones de Admin
-              </h2>
-
-              <div class="space-y-4">
-                <!-- Resolution Notes -->
-                <div>
-                  <label
-                    class="block text-sm font-medium text-text-primary dark:text-text-secondary mb-2"
-                  >
-                    Notas de resolución
-                  </label>
-                  <textarea
-                    [(ngModel)]="resolutionNotes"
-                    rows="4"
-                    placeholder="Escribe notas sobre la resolución..."
-                    class="w-full rounded-lg border border-border-muted dark:border-border-default bg-surface-raised dark:bg-surface-base px-3 py-2 text-sm"
-                  ></textarea>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col gap-2">
-                  <button
-                    *ngIf="claim()!.status === 'reported'"
-                    (click)="updateStatus('under_review')"
-                    [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-cta-default text-cta-text rounded-lg font-medium transition-colors"
-                  >
-                    <span *ngIf="!submitting()">Poner en Revisión</span>
-                    <span *ngIf="submitting()">Procesando...</span>
-                  </button>
-
-                  <button
-                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
-                    (click)="updateStatus('approved')"
-                    [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
-                  >
-                    <span *ngIf="!submitting()">✓ Aprobar Siniestro</span>
-                    <span *ngIf="submitting()">Procesando...</span>
-                  </button>
-
-                  <button
-                    *ngIf="claim()!.status === 'reported' || claim()!.status === 'under_review'"
-                    (click)="updateStatus('rejected')"
-                    [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-error-600 hover:bg-error-700 disabled:bg-error-400 text-text-inverse rounded-lg font-medium transition-colors"
-                  >
-                    <span *ngIf="!submitting()">✗ Rechazar Siniestro</span>
-                    <span *ngIf="submitting()">Procesando...</span>
-                  </button>
-
-                  <button
-                    *ngIf="claim()!.status === 'approved'"
-                    (click)="updateStatus('paid')"
-                    [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-success-light text-text-primary rounded-lg font-medium transition-colors"
-                  >
-                    <span *ngIf="!submitting()">Marcar como Pagado</span>
-                    <span *ngIf="submitting()">Procesando...</span>
-                  </button>
-
-                  <button
-                    *ngIf="claim()!.status === 'paid' || claim()!.status === 'rejected'"
-                    (click)="updateStatus('closed')"
-                    [disabled]="submitting()"
-                    class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-text-inverse rounded-lg font-medium transition-colors"
-                  >
-                    <span *ngIf="!submitting()">Cerrar Siniestro</span>
-                    <span *ngIf="submitting()">Procesando...</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Status Info -->
-            <div
-              class="bg-surface-raised dark:bg-surface-secondary rounded-lg border border-border-default dark:border-border-muted p-6 shadow-sm"
-            >
-              <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-4">
-                Estado Actual
-              </h2>
-              <div class="space-y-3">
-                <div>
-                  <p class="text-xs text-text-secondary dark:text-text-muted mb-1">Estado</p>
-                  <span
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
-                    [ngClass]="getStatusBadgeClass(claim()!.status)"
-                  >
-                    {{ CLAIM_STATUS_LABELS[claim()!.status] }}
-                  </span>
-                </div>
-                <div *ngIf="claim()!.closed_at">
-                  <p class="text-xs text-text-secondary dark:text-text-muted mb-1">
-                    Fecha de cierre
-                  </p>
-                  <p class="text-sm text-text-primary dark:text-text-inverse">
-                    {{ formatDateTime(claim()!.closed_at) }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Photo Modal (Simple lightbox) -->
-    <div
-      *ngIf="selectedPhotoIndex() !== null"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/90 p-4"
-      (click)="closePhotoModal()"
-    >
-      <div class="relative max-w-6xl max-h-full">
-        <button
-          class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-raised/10 hover:bg-surface-raised/20 flex items-center justify-center text-text-inverse"
-          (click)="closePhotoModal()"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
+          <img
+            [src]="getPhotoUrl(claim()!.photos![selectedPhotoIndex()!])"
+            [alt]="'Evidencia ' + (selectedPhotoIndex()! + 1)"
+            class="max-w-full max-h-[90vh] object-contain"
+            (click)="$event.stopPropagation()"
             />
-          </svg>
-        </button>
-        <img
-          [src]="getPhotoUrl(claim()!.photos![selectedPhotoIndex()!])"
-          [alt]="'Evidencia ' + (selectedPhotoIndex()! + 1)"
-          class="max-w-full max-h-[90vh] object-contain"
-          (click)="$event.stopPropagation()"
-        />
+        </div>
       </div>
-    </div>
-  `,
+    }
+    `,
   styles: [
     `
       :host {

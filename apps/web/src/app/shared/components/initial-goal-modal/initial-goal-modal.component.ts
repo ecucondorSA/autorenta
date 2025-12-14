@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,7 +18,7 @@ import { OnboardingService } from '../../../core/services/onboarding.service';
   selector: 'app-initial-goal-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"

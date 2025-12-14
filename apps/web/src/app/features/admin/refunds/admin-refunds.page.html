@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="mb-8 flex justify-between items-center">
       <div>
-        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse">
+        <h1 class="text-3xl font-bold text-text-primary dark:text-text-inverse tracking-tight font-satoshi">
           Gestión de Reembolsos
         </h1>
         <p class="mt-2 text-text-secondary dark:text-text-secondary">
@@ -201,7 +201,7 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-inverse">
+          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-inverse font-satoshi">
             No hay reembolsos
           </h3>
           <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary">
@@ -323,7 +323,7 @@
       <div
         class="sticky top-0 bg-surface-raised dark:bg-surface-secondary border-b border-border-default dark:border-border-muted px-6 py-4 flex justify-between items-center"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse">
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse font-satoshi">
           Detalle del Reembolso
         </h2>
         <button
@@ -388,7 +388,7 @@
 
         <!-- Timestamps -->
         <div class="border-t border-border-default dark:border-border-muted pt-4">
-          <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2">
+          <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2 font-satoshi">
             Cronología
           </h3>
           <div class="space-y-2 text-sm">
@@ -428,7 +428,7 @@
         <!-- Reason/Notes -->
         @if (selectedRefund()!.request_reason) {
           <div class="border-t border-border-default dark:border-border-muted pt-4">
-            <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2">
+            <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2 font-satoshi">
               Motivo
             </h3>
             <p class="text-sm text-text-primary dark:text-text-secondary">
@@ -438,7 +438,7 @@
         }
         @if (selectedRefund()!.admin_notes) {
           <div class="border-t border-border-default dark:border-border-muted pt-4">
-            <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2">
+            <h3 class="text-sm font-medium text-text-primary dark:text-text-inverse mb-2 font-satoshi">
               Notas del Admin
             </h3>
             <p class="text-sm text-text-primary dark:text-text-secondary">
@@ -473,7 +473,7 @@
       <div
         class="sticky top-0 bg-surface-raised dark:bg-surface-secondary border-b border-border-default dark:border-border-muted px-6 py-4 flex justify-between items-center"
       >
-        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse">
+        <h2 class="text-xl font-semibold text-text-primary dark:text-text-inverse font-satoshi">
           Procesar Nuevo Reembolso
         </h2>
         <button
@@ -494,7 +494,7 @@
       <div class="px-6 py-4 space-y-6">
         <!-- Step 1: Search Booking -->
         <div>
-          <h3 class="text-lg font-medium text-text-primary dark:text-text-inverse mb-4">
+          <h3 class="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 font-satoshi">
             1. Buscar Booking
           </h3>
           <div class="flex gap-2">
@@ -574,7 +574,7 @@
         <!-- Step 2: Refund Details -->
         @if (refundForm().bookingId) {
           <div class="border-t border-border-default dark:border-border-muted pt-6">
-            <h3 class="text-lg font-medium text-text-primary dark:text-text-inverse mb-4">
+            <h3 class="text-lg font-medium text-text-primary dark:text-text-inverse mb-4 font-satoshi">
               2. Detalles del Reembolso
             </h3>
 

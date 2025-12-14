@@ -12,20 +12,20 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <ion-card color="success">
       <ion-card-content>
-        <p class="text-sm text-text-secondary">Ingresos Brutos Reconocidos</p>
-        <p class="text-2xl font-bold">${{ getTotalRevenue().toFixed(2) }}</p>
+        <p class="text-sm text-text-secondary font-luxury">Ingresos Brutos Reconocidos</p>
+        <p class="text-2xl font-bold font-mono">${{ getTotalRevenue().toFixed(2) }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card color="primary">
       <ion-card-content>
         <p class="text-sm text-text-secondary">Comisiones</p>
-        <p class="text-2xl font-bold">${{ getTotalCommission().toFixed(2) }}</p>
+        <p class="text-2xl font-bold font-mono">${{ getTotalCommission().toFixed(2) }}</p>
       </ion-card-content>
     </ion-card>
     <ion-card color="tertiary">
       <ion-card-content>
         <p class="text-sm text-text-secondary">Monto Locador</p>
-        <p class="text-2xl font-bold">${{ getTotalOwnerAmount().toFixed(2) }}</p>
+        <p class="text-2xl font-bold font-mono">${{ getTotalOwnerAmount().toFixed(2) }}</p>
       </ion-card-content>
     </ion-card>
   </div>
@@ -53,7 +53,7 @@
             [(ngModel)]="filters"
             [ngModelOptions]="{ standalone: true }"
             name="isRecognized"
-          >
+            >
             <ion-select-option value="">Todos</ion-select-option>
             <ion-select-option value="true">Reconocido</ion-select-option>
             <ion-select-option value="false">Pendiente</ion-select-option>
@@ -89,50 +89,59 @@
   </ion-card>
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-text-secondary">Cargando reconocimiento de ingresos...</p>
-  </div>
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-12">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary font-luxury">Cargando reconocimiento de ingresos...</p>
+    </div>
+  }
 
   <!-- Revenue Recognition List -->
-  <ion-card *ngIf="!loading()">
-    <ion-card-header>
-      <ion-card-title>
-        Registros de Reconocimiento ({{ revenueRecognition().length }})
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <div *ngIf="revenueRecognition().length === 0" class="text-center py-8 text-text-secondary">
-        <p>No hay registros que coincidan con los filtros</p>
-      </div>
-
-      <div *ngIf="revenueRecognition().length > 0" class="space-y-4">
-        <ion-item *ngFor="let record of revenueRecognition()" class="mb-4">
-          <ion-label>
-            <h3>Booking: {{ record.booking_id.slice(0, 8) }}</h3>
-            <p class="text-sm">
-              Tipo: {{ record.revenue_type }} • Fecha: {{ record.recognition_date | date: 'short' }}
-            </p>
-            <div class="mt-2 grid grid-cols-3 gap-2 text-xs">
-              <div>
-                <p class="text-text-secondary">Bruto</p>
-                <p class="font-semibold">${{ record.gross_amount.toFixed(2) }}</p>
-              </div>
-              <div>
-                <p class="text-text-secondary">Comisión</p>
-                <p class="font-semibold">${{ record.commission_amount.toFixed(2) }}</p>
-              </div>
-              <div>
-                <p class="text-text-secondary">Locador</p>
-                <p class="font-semibold">${{ record.owner_amount.toFixed(2) }}</p>
-              </div>
-            </div>
-          </ion-label>
-          <ion-badge slot="end" [color]="record.is_recognized ? 'success' : 'warning'">
-            {{ record.is_recognized ? 'Reconocido' : 'Pendiente' }}
-          </ion-badge>
-        </ion-item>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  @if (!loading()) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          Registros de Reconocimiento ({{ revenueRecognition().length }})
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        @if (revenueRecognition().length === 0) {
+          <div class="text-center py-8 text-text-secondary">
+            <p>No hay registros que coincidan con los filtros</p>
+          </div>
+        }
+        @if (revenueRecognition().length > 0) {
+          <div class="space-y-4">
+            @for (record of revenueRecognition(); track record) {
+              <ion-item class="mb-4">
+                <ion-label>
+                  <h3>Booking: {{ record.booking_id.slice(0, 8) }}</h3>
+                  <p class="text-sm">
+                    Tipo: {{ record.revenue_type }} • Fecha: {{ record.recognition_date | date: 'short' }}
+                  </p>
+                  <div class="mt-2 grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <p class="text-text-secondary">Bruto</p>
+                      <p class="font-semibold font-mono">${{ record.gross_amount.toFixed(2) }}</p>
+                    </div>
+                    <div>
+                      <p class="text-text-secondary">Comisión</p>
+                      <p class="font-semibold font-mono">${{ record.commission_amount.toFixed(2) }}</p>
+                    </div>
+                    <div>
+                      <p class="text-text-secondary">Locador</p>
+                      <p class="font-semibold font-mono">${{ record.owner_amount.toFixed(2) }}</p>
+                    </div>
+                  </div>
+                </ion-label>
+                <ion-badge slot="end" [color]="record.is_recognized ? 'success' : 'warning'">
+                  {{ record.is_recognized ? 'Reconocido' : 'Pendiente' }}
+                </ion-badge>
+              </ion-item>
+            }
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+  }
 </ion-content>

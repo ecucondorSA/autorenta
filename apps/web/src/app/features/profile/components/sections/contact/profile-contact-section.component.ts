@@ -34,7 +34,7 @@ import { SectionCardComponent } from '../../shared/section-card';
   selector: 'app-profile-contact-section',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, IonicModule, SectionCardComponent],
+  imports: [ReactiveFormsModule, IonicModule, SectionCardComponent],
   templateUrl: './profile-contact-section.component.html',
   styleUrls: ['./profile-contact-section.component.scss'],
 })

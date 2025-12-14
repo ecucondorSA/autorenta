@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -6,7 +6,7 @@ import {Component, signal,
   selector: 'app-statistics-widget',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="p-4 bg-white rounded shadow">
       <h2 class="text-lg font-medium mb-2">Estadísticas</h2>

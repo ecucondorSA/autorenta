@@ -17,104 +17,120 @@ import { Payout, PayoutService } from '../../../core/services/payout.service';
   template: `
     <div class="payout-history">
       <!-- Loading State -->
-      <div *ngIf="loading()" class="loading">
-        <div class="spinner-small"></div>
-        <span>Cargando historial...</span>
-      </div>
-
-      <!-- Payouts List -->
-      <div *ngIf="!loading() && payouts().length > 0" class="payouts-list">
-        <div *ngFor="let payout of payouts()" class="payout-item">
-          <div class="payout-icon" [ngClass]="'status-' + payout.status">
-            <svg *ngIf="payout.status === 'completed'" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <svg
-              *ngIf="payout.status === 'pending' || payout.status === 'processing'"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            <svg
-              *ngIf="payout.status === 'failed' || payout.status === 'cancelled'"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-
-          <div class="payout-content">
-            <div class="payout-header">
-              <h4 class="payout-amount">
-                {{ payout.amount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
-              </h4>
-              <span class="payout-status" [ngClass]="'badge-' + payout.status">
-                {{ getStatusText(payout.status) }}
-              </span>
-            </div>
-
-            <div class="payout-details">
-              <span class="payout-date">
-                {{ payout.createdAt | date: 'dd/MM/yyyy HH:mm' }}
-              </span>
-              <span *ngIf="payout.completedAt" class="payout-completed">
-                Completado: {{ payout.completedAt | date: 'dd/MM/yyyy HH:mm' }}
-              </span>
-            </div>
-
-            <div *ngIf="payout.failureReason" class="payout-error">
-              <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>{{ payout.failureReason }}</span>
-            </div>
-
-            <div *ngIf="payout.providerPayoutId" class="payout-id">
-              <span class="id-label">ID:</span>
-              <span class="id-value">{{ payout.providerPayoutId }}</span>
-            </div>
-          </div>
+      @if (loading()) {
+        <div class="loading">
+          <div class="spinner-small"></div>
+          <span>Cargando historial...</span>
         </div>
-      </div>
-
+      }
+    
+      <!-- Payouts List -->
+      @if (!loading() && payouts().length > 0) {
+        <div class="payouts-list">
+          @for (payout of payouts(); track payout) {
+            <div class="payout-item">
+              <div class="payout-icon" [ngClass]="'status-' + payout.status">
+                @if (payout.status === 'completed') {
+                  <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                }
+                @if (payout.status === 'pending' || payout.status === 'processing') {
+                  <svg
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                }
+                @if (payout.status === 'failed' || payout.status === 'cancelled') {
+                  <svg
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                }
+              </div>
+              <div class="payout-content">
+                <div class="payout-header">
+                  <h4 class="payout-amount">
+                    {{ payout.amount | number: '1.0-0' | currency: 'ARS' : 'symbol-narrow' }}
+                  </h4>
+                  <span class="payout-status" [ngClass]="'badge-' + payout.status">
+                    {{ getStatusText(payout.status) }}
+                  </span>
+                </div>
+                <div class="payout-details">
+                  <span class="payout-date">
+                    {{ payout.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                  </span>
+                  @if (payout.completedAt) {
+                    <span class="payout-completed">
+                      Completado: {{ payout.completedAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  }
+                </div>
+                @if (payout.failureReason) {
+                  <div class="payout-error">
+                    <svg class="error-icon" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd"
+                        />
+                    </svg>
+                    <span>{{ payout.failureReason }}</span>
+                  </div>
+                }
+                @if (payout.providerPayoutId) {
+                  <div class="payout-id">
+                    <span class="id-label">ID:</span>
+                    <span class="id-value">{{ payout.providerPayoutId }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    
       <!-- Empty State -->
-      <div *ngIf="!loading() && payouts().length === 0" class="empty-state">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-          />
-        </svg>
-        <p class="empty-text">No tenés retiros registrados</p>
-        <p class="empty-hint">Tus retiros aparecerán aquí una vez que los solicites</p>
-      </div>
-
+      @if (!loading() && payouts().length === 0) {
+        <div class="empty-state">
+          <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+          </svg>
+          <p class="empty-text">No tenés retiros registrados</p>
+          <p class="empty-hint">Tus retiros aparecerán aquí una vez que los solicites</p>
+        </div>
+      }
+    
       <!-- Error Message -->
-      <div *ngIf="error()" class="alert alert-error">
-        {{ error() }}
-      </div>
+      @if (error()) {
+        <div class="alert alert-error">
+          {{ error() }}
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .payout-history {

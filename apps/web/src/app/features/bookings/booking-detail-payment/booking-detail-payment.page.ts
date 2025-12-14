@@ -14,13 +14,12 @@ import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booki
 
 // Models
 import { Car } from '../../../core/models';
-import { FxSnapshot, RiskSnapshot, PaymentAuthorization } from '../../../core/models/booking-detail-payment.model';
+import { FxSnapshot, RiskSnapshot, PaymentAuthorization, PaymentMode } from '../../../core/models/booking-detail-payment.model';
 
 // Components
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
-import { PaymentMode } from '../../../core/models/booking-detail-payment.model';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {

@@ -7,7 +7,7 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { CarCardComponent } from '../car-card/car-card.component';
 import { StickyCtaMobileComponent } from '../sticky-cta-mobile/sticky-cta-mobile.component';
 import type { Car } from '../../../core/models';
@@ -21,92 +21,99 @@ export interface CarWithDistance extends Car {
   selector: 'app-cars-drawer',
   standalone: true,
   imports: [
-    CommonModule,
     CarCardComponent,
-    StickyCtaMobileComponent,
-  ],
+    StickyCtaMobileComponent
+],
   template: `
     <div class="cars-drawer" [class.cars-drawer--open]="isOpen()">
       <!-- Header -->
       <div class="drawer-header">
         <div class="drawer-header-content">
           <h2 class="drawer-title">Autos disponibles</h2>
-          <p class="drawer-subtitle" *ngIf="cars().length > 0">
-            {{ cars().length }} {{ cars().length === 1 ? 'auto encontrado' : 'autos encontrados' }}
-          </p>
+          @if (cars().length > 0) {
+            <p class="drawer-subtitle">
+              {{ cars().length }} {{ cars().length === 1 ? 'auto encontrado' : 'autos encontrados' }}
+            </p>
+          }
         </div>
         <button
           type="button"
           (click)="onClose()"
           class="drawer-close-btn"
           aria-label="Cerrar panel"
-        >
+          >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M6 18L18 6M6 6l12 12"
-            />
+              />
           </svg>
         </button>
       </div>
-
+    
       <!-- Content -->
       <div class="drawer-content">
         <!-- Empty state -->
-        <div *ngIf="cars().length === 0" class="drawer-empty">
-          <svg
-            class="w-16 h-16 text-text-secondary dark:text-text-secondary/50 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-            />
-          </svg>
-          <p class="text-text-secondary dark:text-text-secondary">No hay autos disponibles</p>
-          <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-2">
-            Intenta ajustar los filtros
-          </p>
-        </div>
-
-        <!-- Car cards list -->
-        <div
-          *ngIf="cars().length > 0"
-          class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          <div
-            *ngFor="let car of cars(); trackBy: trackByCarId"
-            class="drawer-card-wrapper flex flex-col gap-2 h-full"
-            [class.drawer-card-wrapper--selected]="selectedCarId() === car.id"
-          >
-            <app-car-card
-              [car]="car"
-              [selected]="selectedCarId() === car.id"
-              [distance]="car.distanceText"
-              (click)="onCarSelected(car.id)"
-              class="drawer-card"
-            />
+        @if (cars().length === 0) {
+          <div class="drawer-empty">
+            <svg
+              class="w-16 h-16 text-text-secondary dark:text-text-secondary/50 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+            </svg>
+            <p class="text-text-secondary dark:text-text-secondary">No hay autos disponibles</p>
+            <p class="text-sm text-text-secondary dark:text-text-secondary/70 mt-2">
+              Intenta ajustar los filtros
+            </p>
           </div>
-        </div>
+        }
+    
+        <!-- Car cards list -->
+        @if (cars().length > 0) {
+          <div
+            class="drawer-cards grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
+            @for (car of cars(); track trackByCarId($index, car)) {
+              <div
+                class="drawer-card-wrapper flex flex-col gap-2 h-full"
+                [class.drawer-card-wrapper--selected]="selectedCarId() === car.id"
+                >
+                <app-car-card
+                  [car]="car"
+                  [selected]="selectedCarId() === car.id"
+                  [distance]="car.distanceText"
+                  (click)="onCarSelected(car.id)"
+                  class="drawer-card"
+                  />
+              </div>
+            }
+          </div>
+        }
       </div>
-
+    
       <!-- Footer with CTA (desktop only) -->
-      <div *ngIf="selectedCarId() && selectedCar()" class="drawer-footer">
-        <app-sticky-cta-mobile
-          [pricePerDay]="selectedCar()!.price_per_day"
-          [ctaText]="'Reservar sin tarjeta'"
-          [expressMode]="false"
-          (ctaClick)="onReserveClick()"
-        />
-      </div>
+      @if (selectedCarId() && selectedCar()) {
+        <div class="drawer-footer">
+          <app-sticky-cta-mobile
+            [pricePerDay]="selectedCar()!.price_per_day"
+            [ctaText]="'Reservar sin tarjeta'"
+            [expressMode]="false"
+            (ctaClick)="onReserveClick()"
+            />
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .cars-drawer {

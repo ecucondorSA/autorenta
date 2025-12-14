@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {Component, inject, OnInit, PLATFORM_ID, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,7 @@ import { NotificationsService } from '../../../core/services/user-notifications.
   selector: 'app-notifications-settings',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './notifications-settings.page.html',
   styleUrls: ['./notifications-settings.page.css'],
 })

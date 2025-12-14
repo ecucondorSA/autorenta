@@ -10,7 +10,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -37,18 +37,17 @@ export interface BookingFormData {
   selector: 'app-map-booking-panel',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MoneyPipe,
     BirthDateModalComponent,
-    DynamicPricingBadgeComponent,
-  ],
+    DynamicPricingBadgeComponent
+],
   template: `
     <div
       class="map-booking-panel fixed inset-y-0 right-0 w-full max-w-md bg-surface-raised shadow-2xl z-50 transform transition-transform duration-300 ease-in-out overflow-y-auto"
       [class.translate-x-0]="isOpen()"
       [class.translate-x-full]="!isOpen()"
-    >
+      >
       <!-- Header -->
       <div class="sticky top-0 bg-surface-raised border-b border-border-default p-4 z-10">
         <div class="flex items-center justify-between mb-4">
@@ -58,45 +57,48 @@ export interface BookingFormData {
             (click)="onClose()"
             class="p-2 rounded-lg hover:bg-surface-secondary transition-colors"
             aria-label="Cerrar panel"
-          >
+            >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M6 18L18 6M6 6l12 12"
-              />
+                />
             </svg>
           </button>
         </div>
-
+    
         <!-- Car Info Summary -->
-        <div *ngIf="car" class="flex items-center gap-3">
-          <img
-            *ngIf="car.photoUrl"
-            [src]="car.photoUrl"
-            [alt]="car.title"
-            class="w-16 h-16 rounded-lg object-cover"
-          />
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="text-base font-semibold text-text-primary truncate">{{ car.title }}</h3>
-              <!-- ✅ NEW: Dynamic pricing badge -->
-              @if (car.usesDynamicPricing) {
-                <app-dynamic-pricing-badge />
-              }
-            </div>
-            <p class="text-sm text-text-secondary">{{ car.locationLabel }}</p>
-            <div class="flex items-baseline gap-1 mt-1">
-              <span class="text-lg font-bold text-cta-default">
-                {{ car.pricePerDay | money: car.currency || 'ARS' }}
-              </span>
-              <span class="text-xs text-text-secondary">/día</span>
+        @if (car) {
+          <div class="flex items-center gap-3">
+            @if (car.photoUrl) {
+              <img
+                [src]="car.photoUrl"
+                [alt]="car.title"
+                class="w-16 h-16 rounded-lg object-cover"
+                />
+            }
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-base font-semibold text-text-primary truncate">{{ car.title }}</h3>
+                <!-- ✅ NEW: Dynamic pricing badge -->
+                @if (car.usesDynamicPricing) {
+                  <app-dynamic-pricing-badge />
+                }
+              </div>
+              <p class="text-sm text-text-secondary">{{ car.locationLabel }}</p>
+              <div class="flex items-baseline gap-1 mt-1">
+                <span class="text-lg font-bold text-cta-default">
+                  {{ car.pricePerDay | money: car.currency || 'ARS' }}
+                </span>
+                <span class="text-xs text-text-secondary">/día</span>
+              </div>
             </div>
           </div>
-        </div>
+        }
       </div>
-
+    
       <!-- Content -->
       <div class="p-4 space-y-6">
         <!-- Date Range Picker -->
@@ -115,7 +117,7 @@ export interface BookingFormData {
                 (change)="onStartDateChange($any($event.target).value)"
                 class="w-full px-3 py-2 border border-border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
                 [class.border-error]="availabilityError()"
-              />
+                />
             </div>
             <div>
               <label class="block text-xs text-text-secondary mb-1">Hasta</label>
@@ -127,88 +129,97 @@ export interface BookingFormData {
                 (change)="onEndDateChange($any($event.target).value)"
                 class="w-full px-3 py-2 border border-border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-cta-default"
                 [class.border-error]="availabilityError()"
-              />
+                />
             </div>
           </div>
-
+    
           <!-- Availability Status -->
-          <div *ngIf="isCheckingAvailability()" class="mt-2 text-sm text-text-secondary">
-            Verificando disponibilidad...
-          </div>
-          <div
-            *ngIf="
-              !isCheckingAvailability() && startDate() && endDate() && availabilityStatus() !== null
-            "
-            class="mt-2"
-          >
-            <div
-              *ngIf="availabilityStatus() === true"
-              class="flex items-center gap-2 text-sm text-success-strong"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>Disponible</span>
+          @if (isCheckingAvailability()) {
+            <div class="mt-2 text-sm text-text-secondary">
+              Verificando disponibilidad...
             </div>
+          }
+          @if (
+            !isCheckingAvailability() && startDate() && endDate() && availabilityStatus() !== null
+            ) {
             <div
-              *ngIf="availabilityStatus() === false"
-              class="flex items-center gap-2 text-sm text-error"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <span>No disponible en estas fechas</span>
+              class="mt-2"
+              >
+              @if (availabilityStatus() === true) {
+                <div
+                  class="flex items-center gap-2 text-sm text-success-strong"
+                  >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                  <span>Disponible</span>
+                </div>
+              }
+              @if (availabilityStatus() === false) {
+                <div
+                  class="flex items-center gap-2 text-sm text-error"
+                  >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clip-rule="evenodd"
+                      />
+                  </svg>
+                  <span>No disponible en estas fechas</span>
+                </div>
+              }
             </div>
-          </div>
+          }
         </div>
-
+    
         <!-- Price Breakdown -->
-        <div *ngIf="priceBreakdown()" class="bg-surface-secondary rounded-lg p-4 space-y-2">
-          <h4 class="text-sm font-semibold text-text-primary">Resumen de precio</h4>
-          <div class="flex justify-between text-sm">
-            <span class="text-text-secondary">
-              {{ priceBreakdown()!.days }} día{{ priceBreakdown()!.days !== 1 ? 's' : '' }}
-            </span>
-            <span class="text-text-primary font-medium">
-              {{ priceBreakdown()!.subtotal | money: car?.currency || 'ARS' }}
-            </span>
+        @if (priceBreakdown()) {
+          <div class="bg-surface-secondary rounded-lg p-4 space-y-2">
+            <h4 class="text-sm font-semibold text-text-primary">Resumen de precio</h4>
+            <div class="flex justify-between text-sm">
+              <span class="text-text-secondary">
+                {{ priceBreakdown()!.days }} día{{ priceBreakdown()!.days !== 1 ? 's' : '' }}
+              </span>
+              <span class="text-text-primary font-medium">
+                {{ priceBreakdown()!.subtotal | money: car?.currency || 'ARS' }}
+              </span>
+            </div>
+            @if (priceBreakdown()!.fees > 0) {
+              <div class="flex justify-between text-sm">
+                <span class="text-text-secondary">Comisión</span>
+                <span class="text-text-primary font-medium">
+                  {{ priceBreakdown()!.fees | money: car?.currency || 'ARS' }}
+                </span>
+              </div>
+            }
+            <div class="border-t border-border-default pt-2 flex justify-between">
+              <span class="font-semibold text-text-primary">Total</span>
+              <span class="text-xl font-bold text-cta-default">
+                {{ priceBreakdown()!.total | money: car?.currency || 'ARS' }}
+              </span>
+            </div>
           </div>
-          <div *ngIf="priceBreakdown()!.fees > 0" class="flex justify-between text-sm">
-            <span class="text-text-secondary">Comisión</span>
-            <span class="text-text-primary font-medium">
-              {{ priceBreakdown()!.fees | money: car?.currency || 'ARS' }}
-            </span>
-          </div>
-          <div class="border-t border-border-default pt-2 flex justify-between">
-            <span class="font-semibold text-text-primary">Total</span>
-            <span class="text-xl font-bold text-cta-default">
-              {{ priceBreakdown()!.total | money: car?.currency || 'ARS' }}
-            </span>
-          </div>
-        </div>
-
+        }
+    
         <!-- Payment Method -->
         <div>
           <label class="block text-sm font-medium text-text-primary mb-2">Método de pago</label>
           <div class="space-y-2">
             <label
               class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors"
-            >
+              >
               <input
                 type="radio"
                 name="paymentMethod"
                 value="wallet"
                 [(ngModel)]="paymentMethod"
                 class="w-4 h-4 text-cta-default"
-              />
+                />
               <div class="flex-1">
                 <div class="font-medium text-text-primary">Wallet AutoRenta</div>
                 <div class="text-xs text-text-secondary">Pago rápido sin tarjeta</div>
@@ -216,14 +227,14 @@ export interface BookingFormData {
             </label>
             <label
               class="flex items-center gap-3 p-3 border border-border-default rounded-lg cursor-pointer hover:bg-surface-secondary transition-colors"
-            >
+              >
               <input
                 type="radio"
                 name="paymentMethod"
                 value="card"
                 [(ngModel)]="paymentMethod"
                 class="w-4 h-4 text-cta-default"
-              />
+                />
               <div class="flex-1">
                 <div class="font-medium text-text-primary">Tarjeta de crédito</div>
                 <div class="text-xs text-text-secondary">MercadoPago</div>
@@ -231,91 +242,97 @@ export interface BookingFormData {
             </label>
           </div>
         </div>
-
+    
         <!-- Navigate Buttons -->
-        <div *ngIf="car">
-          <label class="block text-sm font-medium text-text-primary mb-2">¿Cómo llegar?</label>
-          <div class="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              (click)="navigateWithWaze(); $event.stopPropagation()"
-              class="flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-text-primary font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
-              title="Navegar con Waze"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
-                />
-                <path
-                  d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
-                />
-              </svg>
-              <span>Waze</span>
-            </button>
-
-            <button
-              type="button"
-              (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
-              class="flex items-center justify-center gap-1.5 bg-[var(--brand-google-maps-default,#2B55C7)] hover:bg-[var(--brand-google-maps-hover,#2447AD)] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
-              title="Navegar con Google Maps"
-            >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                />
-              </svg>
-              <span>Maps</span>
-            </button>
+        @if (car) {
+          <div>
+            <label class="block text-sm font-medium text-text-primary mb-2">¿Cómo llegar?</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                (click)="navigateWithWaze(); $event.stopPropagation()"
+                class="flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-text-primary font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+                title="Navegar con Waze"
+                >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
+                    />
+                  <path
+                    d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
+                    />
+                </svg>
+                <span>Waze</span>
+              </button>
+              <button
+                type="button"
+                (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
+                class="flex items-center justify-center gap-1.5 bg-[var(--brand-google-maps-default,#2B55C7)] hover:bg-[var(--brand-google-maps-hover,#2447AD)] text-white font-semibold py-2.5 px-3 rounded-lg transition-colors duration-200 text-sm"
+                title="Navegar con Google Maps"
+                >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                    />
+                </svg>
+                <span>Maps</span>
+              </button>
+            </div>
           </div>
-        </div>
-
+        }
+    
         <!-- Error Message -->
-        <div *ngIf="error()" class="bg-error/10 border border-error rounded-lg p-3">
-          <p class="text-sm text-error">{{ error() }}</p>
-        </div>
-
+        @if (error()) {
+          <div class="bg-error/10 border border-error rounded-lg p-3">
+            <p class="text-sm text-error">{{ error() }}</p>
+          </div>
+        }
+    
         <!-- CTA Button -->
         <button
           type="button"
           (click)="onConfirmBooking()"
           [disabled]="!canBook() || isProcessing()"
           class="w-full py-3 px-4 rounded-lg bg-cta-default hover:bg-cta-hover text-cta-text font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          <svg *ngIf="isProcessing()" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          >
+          @if (isProcessing()) {
+            <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          }
           <span>{{ isProcessing() ? 'Procesando...' : 'Confirmar reserva' }}</span>
         </button>
       </div>
     </div>
-
+    
     <!-- ✅ NUEVO: Modal para solicitar fecha de nacimiento -->
     @if (showBirthDateModal()) {
       <app-birth-date-modal
         (completed)="onBirthDateCompleted($event)"
         (cancelled)="onBirthDateCancelled()"
-      />
+        />
     }
-
+    
     <!-- Backdrop -->
-    <div
-      *ngIf="isOpen()"
-      class="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-      (click)="onClose()"
-    ></div>
-  `,
+    @if (isOpen()) {
+      <div
+        class="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+        (click)="onClose()"
+      ></div>
+    }
+    `,
   styles: [
     `
       .map-booking-panel {

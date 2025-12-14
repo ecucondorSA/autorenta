@@ -1,6 +1,6 @@
 import {Component, computed, input, output,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export interface WizardStep {
   id: string;
@@ -44,7 +44,7 @@ export interface WizardStep {
   selector: 'app-wizard',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="wizard-container">
       <!-- Progress Indicator -->

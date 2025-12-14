@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -24,7 +24,7 @@ interface RefundFormData {
 @Component({
   selector: 'autorenta-admin-refunds-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, TranslateModule],
+  imports: [FormsModule, MoneyPipe, TranslateModule],
   templateUrl: './admin-refunds.page.html',
   styleUrl: './admin-refunds.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

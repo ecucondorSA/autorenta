@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter, signal, computed, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.page';
@@ -7,7 +7,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
 @Component({
   selector: 'app-booking-driver-step',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="driver-step-container">

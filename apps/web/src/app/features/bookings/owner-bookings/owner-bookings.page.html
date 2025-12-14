@@ -1,12 +1,12 @@
 <div
   class="owner-bookings-page bg-surface-base dark:bg-surface-base min-h-screen transition-colors duration-300"
->
+  >
   <!-- Header -->
   <div
     class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised border-b border-border-default dark:border-neutral-800/60 transition-colors duration-300"
-  >
+    >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary">
+      <h1 class="text-3xl font-bold text-text-primary dark:text-text-primary tracking-tight font-satoshi">
         Reservas de Mis Autos
       </h1>
       <p class="mt-2 text-text-secondary dark:text-text-secondary/70">
@@ -23,7 +23,7 @@
           class="animate-spin h-12 w-12 text-primary-600 dark:text-cta-default"
           fill="none"
           viewBox="0 0 24 24"
-        >
+          >
           <circle
             class="opacity-25"
             cx="12"
@@ -48,7 +48,7 @@
     @if (error(); as errorMsg) {
       <div
         class="bg-error-bg border border-error-border dark:bg-error-900/30 dark:border-error-700/60 rounded-lg p-4"
-      >
+        >
         <p class="text-sm text-error-strong">{{ errorMsg }}</p>
         <button (click)="loadBookings()" class="mt-2 text-sm font-medium text-error-text underline">
           Intentar de nuevo
@@ -61,12 +61,12 @@
         @if (!mpStatus.isApproved) {
           <div
             class="mb-8 rounded-lg border border-warning-300 bg-warning-bg px-4 py-4 text-sm text-warning-strong dark:border-warning-600/60 dark:bg-warning-900/25 dark:text-warning-100"
-          >
+            >
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div class="flex items-start gap-3">
                 <span class="mt-0.5 text-lg">⚠️</span>
                 <div>
-                  <p class="font-semibold">Pagos automáticos pendientes</p>
+                  <p class="font-semibold font-luxury">Pagos automáticos pendientes</p>
                   <p>
                     Aún no vinculaste Mercado Pago. Las reservas se liquidarán en tu wallet de
                     Autorenta hasta que completes el onboarding.
@@ -77,7 +77,7 @@
                 [routerLink]="['/profile']"
                 [queryParams]="{ section: 'payments' }"
                 class="inline-flex items-center gap-2 rounded-lg border border-warning-400 bg-surface-raised dark:bg-surface-secondary px-3 py-2 text-sm font-medium text-warning-strong transition hover:bg-warning-bg-hover dark:border-warning-border/70 dark:bg-transparent dark:text-warning-100 dark:hover:bg-warning-900/40"
-              >
+                >
                 Vincular ahora →
               </a>
             </div>
@@ -87,7 +87,7 @@
       <section class="mb-10">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary">
+            <h2 class="text-xl font-semibold text-text-primary dark:text-text-primary font-satoshi">
               Consultas sobre tus autos
             </h2>
             <p class="text-sm text-text-secondary dark:text-text-secondary/70">
@@ -99,12 +99,12 @@
         @if (leadsLoading()) {
           <div
             class="flex items-center gap-3 rounded-lg border border-border-default dark:border-border-default/60 dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised px-4 py-3 text-sm text-text-secondary dark:text-text-secondary/70"
-          >
+            >
             <svg
               class="h-5 w-5 animate-spin text-primary-600 dark:text-cta-default"
               viewBox="0 0 24 24"
               fill="none"
-            >
+              >
               <circle
                 class="opacity-25"
                 cx="12"
@@ -124,7 +124,7 @@
         } @else if (carLeads().length === 0) {
           <div
             class="rounded-lg border border-dashed border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary/40 dark:bg-surface-raised/40 px-4 py-6 text-center"
-          >
+            >
             <p class="text-sm text-text-secondary dark:text-text-secondary/70">
               Aún no hay consultas pendientes sin reserva.
             </p>
@@ -134,22 +134,22 @@
             @for (lead of carLeads(); track lead.carId + lead.participantId) {
               <div
                 class="rounded-lg border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised p-4 shadow-sm transition"
-              >
+                >
                 <div class="flex items-start justify-between gap-3">
                   <div>
                     <p
                       class="text-xs uppercase tracking-wide text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/60"
-                    >
+                      >
                       {{ lead.carTitle }}
                     </p>
-                    <h3 class="text-base font-semibold text-text-primary dark:text-text-primary">
+                    <h3 class="text-base font-semibold text-text-primary dark:text-text-primary font-satoshi">
                       {{ lead.participantName ?? 'Interesado' }}
                     </h3>
                   </div>
                   @if (lead.unreadCount > 0) {
                     <span
                       class="inline-flex items-center justify-center rounded-full bg-cta-default text-cta-text"
-                    >
+                      >
                       {{ lead.unreadCount }}
                       {{ lead.unreadCount === 1 ? 'mensaje sin leer' : 'mensajes sin leer' }}
                     </span>
@@ -158,12 +158,12 @@
 
                 <p
                   class="mt-3 text-sm text-text-secondary dark:text-text-secondary/70 line-clamp-3"
-                >
+                  >
                   {{ lead.lastMessage.body }}
                 </p>
                 <p
                   class="mt-2 text-xs text-text-secondary dark:text-text-secondary/70 dark:text-text-secondary/50"
-                >
+                  >
                   {{ lead.lastMessage.created_at | date: 'dd/MM/yyyy HH:mm' }}
                 </p>
 
@@ -171,12 +171,12 @@
                   (click)="openCarChat(lead)"
                   class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-cta-text transition hover:bg-primary-700 dark:bg-cta-default dark:hover:bg-cta-default/90"
                   type="button"
-                >
+                  >
                   Abrir chat
                   <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       d="M12.293 4.293a1 1 0 011.414 0l4 4a.997.997 0 01.083 1.32l-.083.094-4 4a1 1 0 01-1.497-1.32l.083-.094L14.585 10H4a1 1 0 01-.117-1.993L4 8h10.585l-2.292-2.293a1 1 0 01-.083-1.32l.083-.094z"
-                    />
+                      />
                   </svg>
                 </button>
               </div>
@@ -193,15 +193,15 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-          >
+            >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
               d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-            />
+              />
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-primary">
+          <h3 class="mt-2 text-sm font-medium text-text-primary dark:text-text-primary font-satoshi">
             No tenés reservas
           </h3>
           <p class="mt-1 text-sm text-text-secondary dark:text-text-secondary/70">
@@ -213,25 +213,26 @@
           @for (booking of bookings(); track booking.id) {
             <div
               class="bg-surface-raised dark:bg-surface-raised dark:bg-surface-raised rounded-lg shadow-sm border border-border-default dark:border-neutral-800/60 p-6 transition-colors duration-300"
-            >
+              >
               <!-- Header -->
               <div class="flex items-start justify-between mb-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2 flex-wrap">
                     <span class="text-2xl">{{ statusIcon(booking) }}</span>
-                    <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary">
+                    <h3 class="text-lg font-semibold text-text-primary dark:text-text-primary font-satoshi">
                       Vehículo ID: {{ booking.car_id }}
                     </h3>
                     <span
                       class="px-2 py-1 text-xs font-medium rounded-full"
                       [ngClass]="statusBadgeClass(booking)"
-                    >
+                      >
                       {{ statusLabel(booking) }}
                     </span>
-                    <app-deposit-status-badge
-                      *ngIf="booking.deposit_status"
-                      [status]="booking.deposit_status"
-                    ></app-deposit-status-badge>
+                    @if (booking.deposit_status) {
+                      <app-deposit-status-badge
+                        [status]="booking.deposit_status"
+                      ></app-deposit-status-badge>
+                    }
                   </div>
                   <div class="space-y-1">
                     <p class="text-sm text-text-secondary dark:text-text-secondary/70">
@@ -243,14 +244,14 @@
                     @if (renterEmail(booking); as renterEmail) {
                       <p
                         class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60"
-                      >
+                        >
                         Email: {{ renterEmail }}
                       </p>
                     }
                     @if (renterPhone(booking); as renterPhone) {
                       <p
                         class="text-xs text-text-secondary dark:text-text-secondary/80 dark:text-text-secondary/60"
-                      >
+                        >
                         Teléfono: {{ renterPhone }}
                       </p>
                     }
@@ -297,7 +298,7 @@
                   <a
                     [routerLink]="['/bookings', booking.id, 'owner-check-in']"
                     class="px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg transition-colors"
-                  >
+                    >
                     📝 Check-In (Entregar Auto)
                   </a>
                 }
@@ -306,7 +307,7 @@
                   <a
                     [routerLink]="['/bookings', booking.id, 'owner-check-out']"
                     class="px-4 py-2 bg-cta-default text-cta-text text-sm font-medium rounded-lg transition-colors"
-                  >
+                    >
                     🏁 Check-Out (Recibir Auto)
                   </a>
                 }
@@ -316,7 +317,7 @@
                     (click)="onStartRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
+                    >
                     {{ processingAction() === booking.id ? '...' : '🚗 Iniciar Alquiler (Manual)' }}
                   </button>
                 }
@@ -326,9 +327,9 @@
                     (click)="onCompleteRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
+                    >
                     {{
-                      processingAction() === booking.id ? '...' : '✅ Finalizar Alquiler (Manual)'
+                    processingAction() === booking.id ? '...' : '✅ Finalizar Alquiler (Manual)'
                     }}
                   </button>
                 }
@@ -338,7 +339,7 @@
                     (click)="onCancelBooking(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="px-4 py-2 bg-error-600 hover:bg-error-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
+                    >
                     {{ processingAction() === booking.id ? '...' : '❌ Cancelar' }}
                   </button>
                 }
@@ -346,18 +347,19 @@
                 <a
                   [routerLink]="['/bookings', booking.id]"
                   class="px-4 py-2 border border-border-default dark:border-neutral-700 text-text-primary dark:text-text-primary text-sm font-medium rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
-                >
+                  >
                   Ver Detalles →
                 </a>
 
                 <!-- NEW: Abrir Disputa Button -->
-                <a
-                  *ngIf="canOpenDispute(booking)"
-                  [routerLink]="['/bookings', booking.id, 'disputes']"
-                  class="px-4 py-2 bg-error-light text-error-strong text-sm font-medium rounded-lg transition-colors hover:bg-error-200"
-                >
-                  ⚠️ Abrir Disputa
-                </a>
+                @if (canOpenDispute(booking)) {
+                  <a
+                    [routerLink]="['/bookings', booking.id, 'disputes']"
+                    class="px-4 py-2 bg-error-light text-error-strong text-sm font-medium rounded-lg transition-colors hover:bg-error-200"
+                    >
+                    ⚠️ Abrir Disputa
+                  </a>
+                }
               </div>
             </div>
           }

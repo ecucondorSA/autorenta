@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { DriverProfileService } from '../../../core/services/driver-profile.service';
@@ -32,7 +32,7 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
   selector: 'app-driver-profile-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-card>
       <ion-card-header>
@@ -41,225 +41,235 @@ import { ClassBenefitsModalComponent } from '../class-benefits-modal/class-benef
           Perfil de Conductor
         </ion-card-title>
       </ion-card-header>
-
+    
       <ion-card-content>
         <!-- Loading State -->
-        <div *ngIf="driverProfileService.loading()" class="loading-container">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Cargando perfil...</p>
-        </div>
-
+        @if (driverProfileService.loading()) {
+          <div class="loading-container">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando perfil...</p>
+          </div>
+        }
+    
         <!-- Error State -->
-        <div *ngIf="driverProfileService.error()" class="error-container">
-          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
-          <p>{{ driverProfileService.error() }}</p>
-        </div>
-
+        @if (driverProfileService.error()) {
+          <div class="error-container">
+            <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+            <p>{{ driverProfileService.error() }}</p>
+          </div>
+        }
+    
         <!-- Profile Loaded -->
-        <div *ngIf="!driverProfileService.loading() && !driverProfileService.error() && profile()">
-          <!-- Class Badge -->
-          <div class="class-section">
-            <div class="class-badge-container">
-              <ion-badge [color]="classBadge().color" class="class-badge">
-                <span class="class-icon">{{ classBadge().icon }}</span>
-                <span class="class-label">Clase {{ driverClass() }}</span>
-              </ion-badge>
+        @if (!driverProfileService.loading() && !driverProfileService.error() && profile()) {
+          <div>
+            <!-- Class Badge -->
+            <div class="class-section">
+              <div class="class-badge-container">
+                <ion-badge [color]="classBadge().color" class="class-badge">
+                  <span class="class-icon">{{ classBadge().icon }}</span>
+                  <span class="class-label">Clase {{ driverClass() }}</span>
+                </ion-badge>
+              </div>
+              <p class="class-description">{{ classDescription() }}</p>
             </div>
-            <p class="class-description">{{ classDescription() }}</p>
-          </div>
-
-          <!-- Bonus Protector Status (NEW) -->
-          <div class="protector-section" *ngIf="!bonusProtectorService.loading()">
-            <!-- Active Protector -->
-            <ion-card class="protector-card" *ngIf="hasActiveProtector() && !isProtectorExpired()">
-              <ion-card-content>
-                <div class="protector-active">
-                  <div class="protector-header">
-                    <ion-badge [color]="protectorBadgeColor()" class="protector-badge">
-                      <ion-icon [name]="protectorIcon()"></ion-icon>
-                      <span>{{ protectorBadgeText() }}</span>
-                    </ion-badge>
-                  </div>
-                  <div class="protector-info">
-                    <div class="protector-detail">
-                      <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
-                      <span
-                        >{{ remainingClaims() }} uso{{
-                          remainingClaims() === 1 ? '' : 's'
-                        }}
-                        restante{{ remainingClaims() === 1 ? '' : 's' }}</span
+            <!-- Bonus Protector Status (NEW) -->
+            @if (!bonusProtectorService.loading()) {
+              <div class="protector-section">
+                <!-- Active Protector -->
+                @if (hasActiveProtector() && !isProtectorExpired()) {
+                  <ion-card class="protector-card">
+                    <ion-card-content>
+                      <div class="protector-active">
+                        <div class="protector-header">
+                          <ion-badge [color]="protectorBadgeColor()" class="protector-badge">
+                            <ion-icon [name]="protectorIcon()"></ion-icon>
+                            <span>{{ protectorBadgeText() }}</span>
+                          </ion-badge>
+                        </div>
+                        <div class="protector-info">
+                          <div class="protector-detail">
+                            <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
+                            <span
+                              >{{ remainingClaims() }} uso{{
+                              remainingClaims() === 1 ? '' : 's'
+                              }}
+                              restante{{ remainingClaims() === 1 ? '' : 's' }}</span
+                              >
+                            </div>
+                            <div class="protector-detail">
+                              <ion-icon
+                                name="calendar-outline"
+                                [color]="isNearExpiry() ? 'warning' : 'medium'"
+                              ></ion-icon>
+                              <span>{{ expiryMessage() }}</span>
+                            </div>
+                          </div>
+                          <ion-button
+                            fill="clear"
+                            size="small"
+                            (click)="onManageProtector()"
+                            class="manage-button"
+                            >
+                            <ion-icon slot="start" name="settings-outline"></ion-icon>
+                            Gestionar
+                          </ion-button>
+                        </div>
+                      </ion-card-content>
+                    </ion-card>
+                  }
+                  <!-- Expired or No Protector -->
+                  @if (!hasActiveProtector() || isProtectorExpired()) {
+                    <ion-card
+                      class="protector-card warning"
                       >
+                      <ion-card-content>
+                        <div class="protector-warning">
+                          <ion-icon name="shield-outline" color="medium"></ion-icon>
+                          <div class="warning-content">
+                            <p class="warning-title">
+                              {{ isProtectorExpired() ? 'Tu protección expiró' : 'Sin protección activa' }}
+                            </p>
+                            <p class="warning-message">
+                              {{
+                              isProtectorExpired()
+                              ? 'Renueva tu Bonus Protector para seguir protegido'
+                              : 'Protege tu clase de conductor de siniestros inesperados'
+                              }}
+                            </p>
+                          </div>
+                        </div>
+                        <ion-button
+                          expand="block"
+                          size="small"
+                          color="primary"
+                          (click)="onPurchaseProtector()"
+                          >
+                          <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
+                          {{ isProtectorExpired() ? 'Renovar Protección' : 'Comprar Protección' }}
+                        </ion-button>
+                      </ion-card-content>
+                    </ion-card>
+                  }
+                </div>
+              }
+              <!-- Score Section -->
+              <div class="score-section">
+                <div class="score-header">
+                  <span class="score-label">Score Telemático</span>
+                  <span class="score-value" [style.color]="scoreColor()">
+                    {{ driverScore() }}/100
+                  </span>
+                </div>
+                <ion-progress-bar
+                  [value]="driverScore() / 100"
+                  [color]="scoreBarColor()"
+                ></ion-progress-bar>
+                <p class="score-message">{{ scoreMessage() }}</p>
+              </div>
+              <!-- Benefits Section -->
+              <div class="benefits-section">
+                <h3>Beneficios Actuales</h3>
+                <!-- Fee Discount/Surcharge -->
+                <div class="benefit-item">
+                  <ion-icon
+                    [name]="hasDiscount() ? 'trending-down-outline' : 'trending-up-outline'"
+                    [color]="hasDiscount() ? 'success' : 'danger'"
+                  ></ion-icon>
+                  <div class="benefit-content">
+                    <span class="benefit-label">Tarifa de Servicio</span>
+                    <span
+                      class="benefit-value"
+                      [class.discount]="hasDiscount()"
+                      [class.surcharge]="hasSurcharge()"
+                      >
+                      {{ feeDiscountPct() > 0 ? '-' : '+' }}{{ Math.abs(feeDiscountPct()) }}%
+                    </span>
+                  </div>
+                </div>
+                <!-- Guarantee Discount/Surcharge -->
+                <div class="benefit-item">
+                  <ion-icon
+                    [name]="hasDiscount() ? 'shield-checkmark-outline' : 'shield-outline'"
+                    [color]="hasDiscount() ? 'success' : 'danger'"
+                  ></ion-icon>
+                  <div class="benefit-content">
+                    <span class="benefit-label">Garantía</span>
+                    <span
+                      class="benefit-value"
+                      [class.discount]="hasDiscount()"
+                      [class.surcharge]="hasSurcharge()"
+                      >
+                      {{ guaranteeDiscountPct() > 0 ? '-' : '+'
+                      }}{{ Math.abs(guaranteeDiscountPct()) }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <!-- Claims History -->
+              @if (profile()) {
+                <div class="claims-section">
+                  <h3>Historial de Siniestros</h3>
+                  <div class="claims-stats">
+                    <div class="claim-stat">
+                      <span class="claim-label">Total</span>
+                      <span class="claim-value">{{ profile()!.total_claims }}</span>
                     </div>
-                    <div class="protector-detail">
-                      <ion-icon
-                        name="calendar-outline"
-                        [color]="isNearExpiry() ? 'warning' : 'medium'"
-                      ></ion-icon>
-                      <span>{{ expiryMessage() }}</span>
+                    <div class="claim-stat">
+                      <span class="claim-label">Con Responsabilidad</span>
+                      <span class="claim-value">{{ profile()!.claims_with_fault }}</span>
+                    </div>
+                    <div class="claim-stat">
+                      <span class="claim-label">Años Buenos</span>
+                      <span class="claim-value">{{ profile()!.good_years }}</span>
                     </div>
                   </div>
-                  <ion-button
-                    fill="clear"
-                    size="small"
-                    (click)="onManageProtector()"
-                    class="manage-button"
-                  >
-                    <ion-icon slot="start" name="settings-outline"></ion-icon>
-                    Gestionar
-                  </ion-button>
-                </div>
-              </ion-card-content>
-            </ion-card>
-
-            <!-- Expired or No Protector -->
-            <ion-card
-              class="protector-card warning"
-              *ngIf="!hasActiveProtector() || isProtectorExpired()"
-            >
-              <ion-card-content>
-                <div class="protector-warning">
-                  <ion-icon name="shield-outline" color="medium"></ion-icon>
-                  <div class="warning-content">
-                    <p class="warning-title">
-                      {{ isProtectorExpired() ? 'Tu protección expiró' : 'Sin protección activa' }}
+                  @if (profile()!.last_claim_at) {
+                    <p class="last-claim">
+                      <ion-icon name="time-outline"></ion-icon>
+                      Último siniestro: {{ formatDate(profile()!.last_claim_at) }}
                     </p>
-                    <p class="warning-message">
-                      {{
-                        isProtectorExpired()
-                          ? 'Renueva tu Bonus Protector para seguir protegido'
-                          : 'Protege tu clase de conductor de siniestros inesperados'
-                      }}
-                    </p>
-                  </div>
+                  }
                 </div>
-                <ion-button
-                  expand="block"
-                  size="small"
-                  color="primary"
-                  (click)="onPurchaseProtector()"
-                >
-                  <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
-                  {{ isProtectorExpired() ? 'Renovar Protección' : 'Comprar Protección' }}
-                </ion-button>
-              </ion-card-content>
-            </ion-card>
-          </div>
-
-          <!-- Score Section -->
-          <div class="score-section">
-            <div class="score-header">
-              <span class="score-label">Score Telemático</span>
-              <span class="score-value" [style.color]="scoreColor()">
-                {{ driverScore() }}/100
-              </span>
+              }
+              <!-- Progress to Next Class -->
+              @if (progress().canImprove) {
+                <div class="progress-section">
+                  <h3>Progreso hacia Clase {{ progress().nextClass }}</h3>
+                  <p class="progress-message">
+                    <ion-icon name="trophy-outline" color="primary"></ion-icon>
+                    Necesitas {{ progress().yearsNeeded }} año{{ progress().yearsNeeded > 1 ? 's' : '' }}
+                    sin siniestros con responsabilidad para mejorar tu clase.
+                  </p>
+                </div>
+              }
+              <!-- Maximum Class Reached -->
+              @if (!progress().canImprove && driverClass() === 0) {
+                <div class="progress-section">
+                  <p class="max-class-message">
+                    <ion-icon name="star-outline" color="success"></ion-icon>
+                    ¡Felicitaciones! Alcanzaste la clase máxima (0).
+                  </p>
+                </div>
+              }
+              <!-- View Details Button -->
+              <ion-button expand="block" fill="outline" (click)="onViewDetails()">
+                <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+                Ver Detalles del Sistema
+              </ion-button>
             </div>
-            <ion-progress-bar
-              [value]="driverScore() / 100"
-              [color]="scoreBarColor()"
-            ></ion-progress-bar>
-            <p class="score-message">{{ scoreMessage() }}</p>
-          </div>
-
-          <!-- Benefits Section -->
-          <div class="benefits-section">
-            <h3>Beneficios Actuales</h3>
-
-            <!-- Fee Discount/Surcharge -->
-            <div class="benefit-item">
-              <ion-icon
-                [name]="hasDiscount() ? 'trending-down-outline' : 'trending-up-outline'"
-                [color]="hasDiscount() ? 'success' : 'danger'"
-              ></ion-icon>
-              <div class="benefit-content">
-                <span class="benefit-label">Tarifa de Servicio</span>
-                <span
-                  class="benefit-value"
-                  [class.discount]="hasDiscount()"
-                  [class.surcharge]="hasSurcharge()"
-                >
-                  {{ feeDiscountPct() > 0 ? '-' : '+' }}{{ Math.abs(feeDiscountPct()) }}%
-                </span>
-              </div>
+          }
+    
+          <!-- No Profile Yet -->
+          @if (!driverProfileService.loading() && !profile()) {
+            <div class="no-profile">
+              <ion-icon name="person-add-outline" color="medium"></ion-icon>
+              <p>No tienes perfil de conductor aún.</p>
+              <ion-button (click)="onInitializeProfile()"> Inicializar Perfil </ion-button>
             </div>
-
-            <!-- Guarantee Discount/Surcharge -->
-            <div class="benefit-item">
-              <ion-icon
-                [name]="hasDiscount() ? 'shield-checkmark-outline' : 'shield-outline'"
-                [color]="hasDiscount() ? 'success' : 'danger'"
-              ></ion-icon>
-              <div class="benefit-content">
-                <span class="benefit-label">Garantía</span>
-                <span
-                  class="benefit-value"
-                  [class.discount]="hasDiscount()"
-                  [class.surcharge]="hasSurcharge()"
-                >
-                  {{ guaranteeDiscountPct() > 0 ? '-' : '+'
-                  }}{{ Math.abs(guaranteeDiscountPct()) }}%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Claims History -->
-          <div class="claims-section" *ngIf="profile()">
-            <h3>Historial de Siniestros</h3>
-            <div class="claims-stats">
-              <div class="claim-stat">
-                <span class="claim-label">Total</span>
-                <span class="claim-value">{{ profile()!.total_claims }}</span>
-              </div>
-              <div class="claim-stat">
-                <span class="claim-label">Con Responsabilidad</span>
-                <span class="claim-value">{{ profile()!.claims_with_fault }}</span>
-              </div>
-              <div class="claim-stat">
-                <span class="claim-label">Años Buenos</span>
-                <span class="claim-value">{{ profile()!.good_years }}</span>
-              </div>
-            </div>
-
-            <p class="last-claim" *ngIf="profile()!.last_claim_at">
-              <ion-icon name="time-outline"></ion-icon>
-              Último siniestro: {{ formatDate(profile()!.last_claim_at) }}
-            </p>
-          </div>
-
-          <!-- Progress to Next Class -->
-          <div class="progress-section" *ngIf="progress().canImprove">
-            <h3>Progreso hacia Clase {{ progress().nextClass }}</h3>
-            <p class="progress-message">
-              <ion-icon name="trophy-outline" color="primary"></ion-icon>
-              Necesitas {{ progress().yearsNeeded }} año{{ progress().yearsNeeded > 1 ? 's' : '' }}
-              sin siniestros con responsabilidad para mejorar tu clase.
-            </p>
-          </div>
-
-          <!-- Maximum Class Reached -->
-          <div class="progress-section" *ngIf="!progress().canImprove && driverClass() === 0">
-            <p class="max-class-message">
-              <ion-icon name="star-outline" color="success"></ion-icon>
-              ¡Felicitaciones! Alcanzaste la clase máxima (0).
-            </p>
-          </div>
-
-          <!-- View Details Button -->
-          <ion-button expand="block" fill="outline" (click)="onViewDetails()">
-            <ion-icon slot="start" name="information-circle-outline"></ion-icon>
-            Ver Detalles del Sistema
-          </ion-button>
-        </div>
-
-        <!-- No Profile Yet -->
-        <div *ngIf="!driverProfileService.loading() && !profile()" class="no-profile">
-          <ion-icon name="person-add-outline" color="medium"></ion-icon>
-          <p>No tienes perfil de conductor aún.</p>
-          <ion-button (click)="onInitializeProfile()"> Inicializar Perfil </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  `,
+          }
+        </ion-card-content>
+      </ion-card>
+    `,
   styles: [
     `
       ion-card {

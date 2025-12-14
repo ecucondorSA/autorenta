@@ -14,250 +14,264 @@
 
 <ion-content class="ion-padding">
   <!-- Booking Info -->
-  <ion-card *ngIf="booking()" class="mb-4">
-    <ion-card-header>
-      <ion-card-title>Reserva #{{ booking()!.id.slice(0, 8) }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p class="text-sm">
-        <strong>Auto:</strong> {{ booking()!.car?.brand }} {{ booking()!.car?.model }}
-      </p>
-      <p class="text-sm">
-        <strong>Período:</strong> {{ booking()!.start_at | date: 'short' }} -
-        {{ booking()!.end_at | date: 'short' }}
-      </p>
-    </ion-card-content>
-  </ion-card>
+  @if (booking()) {
+    <ion-card class="mb-4">
+      <ion-card-header>
+        <ion-card-title>Reserva #{{ booking()!.id.slice(0, 8) }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="text-sm">
+          <strong>Auto:</strong> {{ booking()!.car?.brand }} {{ booking()!.car?.model }}
+        </p>
+        <p class="text-sm">
+          <strong>Período:</strong> {{ booking()!.start_at | date: 'short' }} -
+          {{ booking()!.end_at | date: 'short' }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+  }
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-text-secondary">Cargando disputas...</p>
-  </div>
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-12">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary">Cargando disputas...</p>
+    </div>
+  }
 
   <!-- Empty State -->
-  <div *ngIf="!loading() && disputes().length === 0" class="text-center py-12">
-    <ion-icon name="document-text-outline" class="text-6xl text-text-muted mb-4"></ion-icon>
-    <p class="text-text-secondary mb-4">No hay disputas para esta reserva</p>
-    <ion-button (click)="openCreateModal()">
-      <ion-icon name="add" slot="start"></ion-icon>
-      Crear Disputa
-    </ion-button>
-  </div>
+  @if (!loading() && disputes().length === 0) {
+    <div class="text-center py-12">
+      <ion-icon name="document-text-outline" class="text-6xl text-text-muted mb-4"></ion-icon>
+      <p class="text-text-secondary mb-4">No hay disputas para esta reserva</p>
+      <ion-button (click)="openCreateModal()">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Crear Disputa
+      </ion-button>
+    </div>
+  }
 
   <!-- Disputes List -->
-  <div *ngIf="!loading() && disputes().length > 0" class="space-y-4">
-    <ion-card *ngFor="let dispute of disputes()" class="mb-4">
-      <ion-card-header>
-        <div class="flex items-center justify-between">
-          <ion-card-title class="text-base"> Disputa #{{ dispute.id.slice(0, 8) }} </ion-card-title>
-          <ion-badge [color]="getStatusColor(dispute.status)">
-            {{ getStatusLabel(dispute.status) }}
-          </ion-badge>
-        </div>
-        <ion-card-subtitle>
-          {{ getKindLabel(dispute.kind) }} • {{ formatDate(dispute.created_at) }}
-        </ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <p class="text-sm mb-4">{{ dispute.description || 'Sin descripción' }}</p>
-
-        <div class="flex gap-2">
-          <ion-button fill="outline" size="small" (click)="openEvidenceModal(dispute)">
-            <ion-icon name="images" slot="start"></ion-icon>
-            Ver Evidencias
-          </ion-button>
-        </div>
-
-        <div *ngIf="dispute.resolved_at" class="mt-4 pt-4 border-t">
-          <p class="text-xs text-text-secondary">
-            Resuelto el {{ formatDate(dispute.resolved_at) }}
-          </p>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
+  @if (!loading() && disputes().length > 0) {
+    <div class="space-y-4">
+      @for (dispute of disputes(); track dispute) {
+        <ion-card class="mb-4">
+          <ion-card-header>
+            <div class="flex items-center justify-between">
+              <ion-card-title class="text-base"> Disputa #{{ dispute.id.slice(0, 8) }} </ion-card-title>
+              <ion-badge [color]="getStatusColor(dispute.status)">
+                {{ getStatusLabel(dispute.status) }}
+              </ion-badge>
+            </div>
+            <ion-card-subtitle>
+              {{ getKindLabel(dispute.kind) }} • {{ formatDate(dispute.created_at) }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="text-sm mb-4">{{ dispute.description || 'Sin descripción' }}</p>
+            <div class="flex gap-2">
+              <ion-button fill="outline" size="small" (click)="openEvidenceModal(dispute)">
+                <ion-icon name="images" slot="start"></ion-icon>
+                Ver Evidencias
+              </ion-button>
+            </div>
+            @if (dispute.resolved_at) {
+              <div class="mt-4 pt-4 border-t">
+                <p class="text-xs text-text-secondary">
+                  Resuelto el {{ formatDate(dispute.resolved_at) }}
+                </p>
+              </div>
+            }
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
 
   <!-- Create Dispute Modal -->
-  <div
-    *ngIf="showCreateModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
-    (click)="closeCreateModal()"
-  >
-    <ion-card
-      class="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-      (click)="$event.stopPropagation()"
-    >
-      <ion-card-header>
-        <ion-card-title>Crear Disputa</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <form (ngSubmit)="createDispute()">
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Tipo de Disputa *</ion-label>
-            <ion-select
-              [(ngModel)]="newDispute"
-              [ngModelOptions]="{ standalone: true }"
-              name="kind"
-              required
-            >
-              <ion-select-option value="damage">Daños al vehículo</ion-select-option>
-              <ion-select-option value="no_show">No se presentó</ion-select-option>
-              <ion-select-option value="late_return">Devolución tardía</ion-select-option>
-              <ion-select-option value="other">Otro</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Descripción *</ion-label>
-            <ion-textarea
-              [(ngModel)]="newDispute"
-              [ngModelOptions]="{ standalone: true }"
-              name="description"
-              rows="6"
-              placeholder="Describe el problema en detalle..."
-              required
-            ></ion-textarea>
-          </ion-item>
-
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Evidencias (opcional)</ion-label>
-            <ion-input
-              type="file"
-              multiple
-              accept="image/*,.pdf"
-              (change)="onEvidenceFilesSelected($event)"
-            ></ion-input>
-            <p class="text-xs text-text-secondary mt-2">
-              Puedes subir imágenes o documentos PDF como evidencia
-            </p>
-          </ion-item>
-
-          <div class="flex gap-2">
-            <ion-button expand="block" type="submit" [disabled]="loading()">
-              Crear Disputa
-            </ion-button>
-            <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
-              Cancelar
-            </ion-button>
-          </div>
-        </form>
-      </ion-card-content>
-    </ion-card>
-  </div>
+  @if (showCreateModal()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
+      (click)="closeCreateModal()"
+      >
+      <ion-card
+        class="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+        >
+        <ion-card-header>
+          <ion-card-title>Crear Disputa</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <form (ngSubmit)="createDispute()">
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Tipo de Disputa *</ion-label>
+              <ion-select
+                [(ngModel)]="newDispute"
+                [ngModelOptions]="{ standalone: true }"
+                name="kind"
+                required
+                >
+                <ion-select-option value="damage">Daños al vehículo</ion-select-option>
+                <ion-select-option value="no_show">No se presentó</ion-select-option>
+                <ion-select-option value="late_return">Devolución tardía</ion-select-option>
+                <ion-select-option value="other">Otro</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Descripción *</ion-label>
+              <ion-textarea
+                [(ngModel)]="newDispute"
+                [ngModelOptions]="{ standalone: true }"
+                name="description"
+                rows="6"
+                placeholder="Describe el problema en detalle..."
+                required
+              ></ion-textarea>
+            </ion-item>
+            <ion-item class="mb-4">
+              <ion-label position="stacked">Evidencias (opcional)</ion-label>
+              <ion-input
+                type="file"
+                multiple
+                accept="image/*,.pdf"
+                (change)="onEvidenceFilesSelected($event)"
+              ></ion-input>
+              <p class="text-xs text-text-secondary mt-2">
+                Puedes subir imágenes o documentos PDF como evidencia
+              </p>
+            </ion-item>
+            <div class="flex gap-2">
+              <ion-button expand="block" type="submit" [disabled]="loading()">
+                Crear Disputa
+              </ion-button>
+              <ion-button expand="block" fill="outline" (click)="closeCreateModal()">
+                Cancelar
+              </ion-button>
+            </div>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  }
 
   <!-- Evidence Modal -->
-  <div
-    *ngIf="showEvidenceModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
-    (click)="closeEvidenceModal()"
-  >
-    <ion-card
-      class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-      (click)="$event.stopPropagation()"
-    >
-      <ion-card-header>
-        <ion-card-title
-          >Evidencias - Disputa #{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-title
+  @if (showEvidenceModal()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 p-4"
+      (click)="closeEvidenceModal()"
+      >
+      <ion-card
+        class="max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
         >
-      </ion-card-header>
-      <ion-card-content>
-        <!-- Evidence Gallery -->
-        <div *ngIf="evidence().length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-          <div *ngFor="let item of evidence()" class="relative p-3 rounded-lg border border-border-default bg-surface-base">
-            <div *ngIf="item.path; else textCommentTemplate" class="h-48">
-              <img
-                *ngIf="isImage(item.path)"
-                [src]="item.path"
-                [alt]="item.note || 'Evidencia'"
-                class="w-full h-full object-cover rounded"
-              />
-              <div
-                *ngIf="!isImage(item.path)"
-                class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
-              >
-                <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+        <ion-card-header>
+          <ion-card-title
+            >Evidencias - Disputa #{{ selectedDispute()?.id?.slice(0, 8) }}</ion-card-title
+            >
+          </ion-card-header>
+          <ion-card-content>
+            <!-- Evidence Gallery -->
+            @if (evidence().length > 0) {
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                @for (item of evidence(); track item) {
+                  <div class="relative p-3 rounded-lg border border-border-default bg-surface-base">
+                    @if (item.path) {
+                      <div class="h-48">
+                        @if (isImage(item.path)) {
+                          <img
+                            [src]="item.path"
+                            [alt]="item.note || 'Evidencia'"
+                            class="w-full h-full object-cover rounded"
+                            />
+                        }
+                        @if (!isImage(item.path)) {
+                          <div
+                            class="w-full h-full bg-surface-raised rounded flex items-center justify-center"
+                            >
+                            <ion-icon name="document" class="text-4xl text-text-muted"></ion-icon>
+                          </div>
+                        }
+                        @if (item.note) {
+                          <p class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
+                        }
+                        <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
+                          Ver completo
+                        </a>
+                      </div>
+                    } @else {
+                      <div class="flex flex-col h-full justify-between">
+                        <div>
+                          <h4 class="font-semibold text-text-primary mb-1 font-satoshi">Comentario:</h4>
+                          <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
+                        </div>
+                        <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
+                      </div>
+                    }
+                  </div>
+                }
               </div>
-              <p *ngIf="item.note" class="text-xs text-text-secondary mt-2">{{ item.note }}</p>
-              <a [href]="item.path" target="_blank" class="text-xs text-cta-default mt-1 block">
-                Ver completo
-              </a>
+            }
+            @if (evidence().length === 0) {
+              <div class="text-center py-8 text-text-secondary">
+                <p>No hay evidencias para esta disputa</p>
+              </div>
+            }
+            <!-- Add Evidence Form -->
+            <div class="mt-6 pt-6 border-t">
+              <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Evidencia</h3>
+              <ion-item class="mb-4">
+                <ion-label position="stacked">Archivos</ion-label>
+                <ion-input
+                  type="file"
+                  multiple
+                  accept="image/*,.pdf"
+                  (change)="onEvidenceFilesSelected($event)"
+                ></ion-input>
+              </ion-item>
+              <ion-item class="mb-4">
+                <ion-label position="stacked">Nota (opcional)</ion-label>
+                <ion-input
+                  [(ngModel)]="evidenceNote"
+                  name="evidenceNote"
+                  placeholder="Descripción de la evidencia"
+                ></ion-input>
+              </ion-item>
+              <ion-button
+                expand="block"
+                (click)="addEvidenceToSelectedDispute()"
+                [disabled]="evidenceFiles().length === 0 || uploadingEvidence()"
+                >
+                <ion-icon name="cloud-upload" slot="start"></ion-icon>
+                {{ uploadingEvidence() ? 'Subiendo...' : 'Subir Evidencias' }}
+              </ion-button>
             </div>
-            <ng-template #textCommentTemplate>
-              <div class="flex flex-col h-full justify-between">
-                <div>
-                  <h4 class="font-semibold text-text-primary mb-1">Comentario:</h4>
-                  <p class="text-sm text-text-secondary whitespace-pre-wrap">{{ item.note }}</p>
-                </div>
-                <p class="text-xs text-text-muted mt-2 text-right">{{ formatDate(item.created_at) }}</p>
-              </div>
-            </ng-template>
-          </div>
-        </div>
-
-        <div *ngIf="evidence().length === 0" class="text-center py-8 text-text-secondary">
-          <p>No hay evidencias para esta disputa</p>
-        </div>
-
-        <!-- Add Evidence Form -->
-        <div class="mt-6 pt-6 border-t">
-          <h3 class="text-lg font-semibold mb-3">Agregar Evidencia</h3>
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Archivos</ion-label>
-            <ion-input
-              type="file"
-              multiple
-              accept="image/*,.pdf"
-              (change)="onEvidenceFilesSelected($event)"
-            ></ion-input>
-          </ion-item>
-
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Nota (opcional)</ion-label>
-            <ion-input
-              [(ngModel)]="evidenceNote"
-              name="evidenceNote"
-              placeholder="Descripción de la evidencia"
-            ></ion-input>
-          </ion-item>
-
-          <ion-button
-            expand="block"
-            (click)="addEvidenceToSelectedDispute()"
-            [disabled]="evidenceFiles().length === 0 || uploadingEvidence()"
-          >
-            <ion-icon name="cloud-upload" slot="start"></ion-icon>
-            {{ uploadingEvidence() ? 'Subiendo...' : 'Subir Evidencias' }}
-          </ion-button>
-        </div>
-
-        <!-- NEW: Add Comment Section -->
-        <div class="mt-6 pt-6 border-t">
-          <h3 class="text-lg font-semibold mb-3">Agregar Comentario</h3>
-          <ion-item class="mb-4">
-            <ion-label position="stacked">Tu Comentario</ion-label>
-            <ion-textarea
-              [(ngModel)]="newComment"
-              name="newComment"
-              rows="3"
-              placeholder="Escribe tu respuesta o comentario..."
-            ></ion-textarea>
-          </ion-item>
-          <ion-button
-            expand="block"
-            (click)="addCommentToSelectedDispute()"
-            [disabled]="!newComment() || newComment().trim() === '' || uploadingEvidence()"
-          >
-            <ion-icon name="send" slot="start"></ion-icon>
-            Enviar Comentario
-          </ion-button>
-        </div>
-        <!-- END NEW -->
-
-        <ion-button expand="block" fill="outline" class="mt-4" (click)="closeEvidenceModal()">
-          Cerrar
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
-  </div>
-</ion-content>
+            <!-- NEW: Add Comment Section -->
+            <div class="mt-6 pt-6 border-t">
+              <h3 class="text-lg font-semibold mb-3 font-satoshi">Agregar Comentario</h3>
+              <ion-item class="mb-4">
+                <ion-label position="stacked">Tu Comentario</ion-label>
+                <ion-textarea
+                  [(ngModel)]="newComment"
+                  name="newComment"
+                  rows="3"
+                  placeholder="Escribe tu respuesta o comentario..."
+                ></ion-textarea>
+              </ion-item>
+              <ion-button
+                expand="block"
+                (click)="addCommentToSelectedDispute()"
+                [disabled]="!newComment() || newComment().trim() === '' || uploadingEvidence()"
+                >
+                <ion-icon name="send" slot="start"></ion-icon>
+                Enviar Comentario
+              </ion-button>
+            </div>
+            <!-- END NEW -->
+            <ion-button expand="block" fill="outline" class="mt-4" (click)="closeEvidenceModal()">
+              Cerrar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    }
+  </ion-content>

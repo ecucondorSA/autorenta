@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component,
   CUSTOM_ELEMENTS_SCHEMA,
   inject,
@@ -14,7 +14,7 @@ import { DamageItem, SettlementService } from '../../../core/services/settlement
   selector: 'app-damage-comparison',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './damage-comparison.component.html',
   styleUrls: ['./damage-comparison.component.scss'],

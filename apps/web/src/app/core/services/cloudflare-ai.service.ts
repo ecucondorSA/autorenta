@@ -18,13 +18,13 @@ export interface CloudflareAIRequest {
     | 'minivan';
   trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
   angle?: 'front' | 'side' | 'rear' | '3/4-front' | 'interior';
-  style?: 'showroom' | 'street' | 'studio' | 'outdoor';
+  style?: 'showroom' | 'street' | 'studio' | 'outdoor' | string;
   num_steps?: number;
 }
 
 export interface CloudflareAIResponse {
   success: boolean;
-  image?: string; // Base64 PNG
+  image?: string; // Base64 PNG/JPEG
   error?: string;
   metadata?: {
     prompt: string;
@@ -50,6 +50,16 @@ export class CloudflareAiService {
   private readonly WORKER_URL =
     'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev';
 
+  // Estilos "marketplace" realistas (Amateur / Phone Quality)
+  private readonly REALISTIC_STYLES = [
+    'photo taken with iphone, parked on crowded street, harsh afternoon sun, hard shadows, dirty car, unwashed, amateur shot',
+    'shot on samsung galaxy, dusty dirt road, overcast sky, mud on tires, candid photo, slightly tilted angle, realistic',
+    'craigslist car ad photo, parked in driveway, suburbs, boring lighting, unedited, daily driver car, leaves on ground',
+    'gas station parking lot, night time, fluorescent lights, grainy phone photo, reflection on hood, wet ground',
+    'random street parking, trees reflection on window, sunny day, lens flare, shot from sidewalk, real life, used car',
+    'parking garage, concrete background, dim lighting, flash photography, dust particles, raw photo, no filter'
+  ];
+
   /**
    * Genera una imagen de un auto usando FLUX.1-schnell
    */
@@ -63,8 +73,8 @@ export class CloudflareAiService {
         throw new Error(response.error || 'Failed to generate image');
       }
 
-      // Convertir base64 a Blob
-      const blob = this.base64ToBlob(response.image, 'image/png');
+      // Convertir base64 a Blob (La API devuelve JPEGs a menudo, aunque diga PNG)
+      const blob = this.base64ToBlob(response.image, 'image/jpeg');
 
       return blob;
     } catch {
@@ -94,11 +104,16 @@ export class CloudflareAiService {
   }): Promise<Blob[]> {
     const angles = params.angles || ['3/4-front', 'side', 'interior'];
 
+    // Seleccionar un estilo aleatorio para todo el set de fotos de este auto
+    // para mantener coherencia (mismo clima/lugar para el mismo auto)
+    const randomStyle =
+      this.REALISTIC_STYLES[Math.floor(Math.random() * this.REALISTIC_STYLES.length)];
+
     const promises = angles.map((angle) =>
       this.generateCarImage({
         ...params,
         angle,
-        style: 'showroom',
+        style: randomStyle,
         num_steps: 8, // Max quality for FLUX.1-schnell
       }),
     );

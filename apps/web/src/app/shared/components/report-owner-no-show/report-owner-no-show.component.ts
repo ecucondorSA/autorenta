@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, EventEmitter, Input, OnInit, Output, signal, inject,
+import {Component, EventEmitter, Input, Output, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -16,7 +16,7 @@ import { Booking } from '../../../core/models';
   templateUrl: './report-owner-no-show.component.html',
   styleUrls: ['./report-owner-no-show.component.scss'],
 })
-export class ReportOwnerNoShowComponent implements OnInit {
+export class ReportOwnerNoShowComponent {
   @Input({ required: true }) isOpen!: boolean;
   @Input({ required: true }) booking!: Booking;
   @Output() closeModal = new EventEmitter<void>();
@@ -31,9 +31,7 @@ export class ReportOwnerNoShowComponent implements OnInit {
   details = signal<string>('');
   evidenceUrls = signal<string[]>([]); // To be populated by EvidenceUploader
 
-  ngOnInit(): void {
-    // Optionally pre-fill details or set defaults
-  }
+
 
   onEvidenceUploaded(urls: string[]): void {
     this.evidenceUrls.set(urls);

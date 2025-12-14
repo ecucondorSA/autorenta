@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +26,7 @@ import { QUICK_FILTERS } from '../../../../core/models/marketplace.model';
 @Component({
   selector: 'app-bottom-sheet-filters',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Backdrop -->
     @if (isOpen()) {

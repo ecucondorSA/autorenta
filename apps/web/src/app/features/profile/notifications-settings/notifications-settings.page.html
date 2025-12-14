@@ -7,7 +7,7 @@
       </svg>
     </button>
     <div>
-      <h1 class="page-title">Configuración de Notificaciones</h1>
+      <h1 class="page-title font-bold font-satoshi">Configuración de Notificaciones</h1>
       <p class="page-subtitle">Personaliza cómo y cuándo recibir notificaciones</p>
     </div>
   </div>
@@ -16,7 +16,7 @@
   <div class="settings-section">
     <div class="section-header">
       <div>
-        <h2 class="section-title">Notificaciones Push del Navegador</h2>
+        <h2 class="section-title font-bold font-satoshi">Notificaciones Push del Navegador</h2>
         <p class="section-description">
           Recibe notificaciones en tiempo real incluso cuando no estés en la app
         </p>
@@ -32,7 +32,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Habilitar notificaciones push</h3>
+          <h3 class="setting-title font-bold font-satoshi">Habilitar notificaciones push</h3>
           <p class="setting-description">
             Estado:
             <span
@@ -43,13 +43,13 @@
                     ? 'status-denied'
                     : 'status-default'
               "
-            >
+              >
               {{
-                settings().browserPushPermission === 'granted'
-                  ? 'Permitido'
-                  : settings().browserPushPermission === 'denied'
-                    ? 'Bloqueado'
-                    : 'Sin configurar'
+              settings().browserPushPermission === 'granted'
+              ? 'Permitido'
+              : settings().browserPushPermission === 'denied'
+              ? 'Bloqueado'
+              : 'Sin configurar'
               }}
             </span>
           </p>
@@ -61,33 +61,35 @@
           [checked]="settings().browserPushEnabled"
           [disabled]="settings().browserPushPermission === 'denied'"
           (change)="toggleBrowserPush()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
 
-    <div *ngIf="settings().browserPushPermission === 'denied'" class="alert alert-warning">
-      <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
-      <div>
-        <p class="alert-text">
-          Las notificaciones push están bloqueadas en tu navegador.
-          <button class="alert-link" (click)="openBrowserSettings()">Ver cómo cambiar esto</button>
-        </p>
+    @if (settings().browserPushPermission === 'denied') {
+      <div class="alert alert-warning">
+        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+        </svg>
+        <div>
+          <p class="alert-text">
+            Las notificaciones push están bloqueadas en tu navegador.
+            <button class="alert-link" (click)="openBrowserSettings()">Ver cómo cambiar esto</button>
+          </p>
+        </div>
       </div>
-    </div>
+    }
   </div>
 
   <!-- Notification Types -->
   <div class="settings-section">
     <div class="section-header">
-      <h2 class="section-title">Tipos de Notificaciones</h2>
+      <h2 class="section-title font-bold font-satoshi">Tipos de Notificaciones</h2>
       <p class="section-description">Elige qué notificaciones quieres recibir</p>
     </div>
 
@@ -100,7 +102,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Actualizaciones de reservas</h3>
+          <h3 class="setting-title font-bold font-satoshi">Actualizaciones de reservas</h3>
           <p class="setting-description">
             Nuevas reservas, aprobaciones, cancelaciones, recordatorios
           </p>
@@ -121,8 +123,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Notificaciones de pagos</h3>
-          <p class="setting-description">Pagos recibidos, retiros procesados, reembolsos</p>
+          <h3 class="setting-title font-bold font-satoshi font-luxury">Notificaciones de pagos</h3>
+          <p class="setting-description font-luxury">Pagos recibidos, retiros procesados, reembolsos</p>
         </div>
       </div>
       <label class="toggle-switch">
@@ -130,7 +132,7 @@
           type="checkbox"
           [(ngModel)]="settings().paymentNotifications"
           (change)="saveSettings()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -143,7 +145,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Mensajes nuevos</h3>
+          <h3 class="setting-title font-bold font-satoshi">Mensajes nuevos</h3>
           <p class="setting-description">
             Notificaciones cuando recibas mensajes de otros usuarios
           </p>
@@ -154,7 +156,7 @@
           type="checkbox"
           [(ngModel)]="settings().messageNotifications"
           (change)="saveSettings()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -167,8 +169,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Promociones y ofertas</h3>
-          <p class="setting-description">Descuentos exclusivos, códigos promocionales</p>
+          <h3 class="setting-title font-bold font-satoshi">Promociones y ofertas</h3>
+          <p class="setting-description font-luxury">Descuentos exclusivos, códigos promocionales</p>
         </div>
       </div>
       <label class="toggle-switch">
@@ -176,7 +178,7 @@
           type="checkbox"
           [(ngModel)]="settings().promotionsAndOffers"
           (change)="saveSettings()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -189,7 +191,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Actualizaciones del sistema</h3>
+          <h3 class="setting-title font-bold font-satoshi">Actualizaciones del sistema</h3>
           <p class="setting-description">Nuevas funcionalidades, mantenimientos programados</p>
         </div>
       </div>
@@ -203,7 +205,7 @@
   <!-- Notification Channels -->
   <div class="settings-section">
     <div class="section-header">
-      <h2 class="section-title">Canales de Notificación</h2>
+      <h2 class="section-title font-bold font-satoshi">Canales de Notificación</h2>
       <p class="section-description">Dónde recibir las notificaciones</p>
     </div>
 
@@ -216,7 +218,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Notificaciones en la app</h3>
+          <h3 class="setting-title font-bold font-satoshi">Notificaciones en la app</h3>
           <p class="setting-description">Ver notificaciones dentro de AutoRenta</p>
         </div>
       </div>
@@ -225,7 +227,7 @@
           type="checkbox"
           [(ngModel)]="settings().inAppNotifications"
           (change)="saveSettings()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -239,7 +241,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Notificaciones por email</h3>
+          <h3 class="setting-title font-bold font-satoshi">Notificaciones por email</h3>
           <p class="setting-description">Recibir resúmenes diarios por correo electrónico</p>
         </div>
       </div>
@@ -248,7 +250,7 @@
           type="checkbox"
           [(ngModel)]="settings().emailNotifications"
           (change)="saveSettings()"
-        />
+          />
         <span class="toggle-slider"></span>
       </label>
     </div>
@@ -257,7 +259,7 @@
   <!-- Sound Settings -->
   <div class="settings-section">
     <div class="section-header">
-      <h2 class="section-title">Sonido</h2>
+      <h2 class="section-title font-bold font-satoshi">Sonido</h2>
       <p class="section-description">Configuración de sonido para notificaciones</p>
     </div>
 
@@ -269,7 +271,7 @@
           </svg>
         </div>
         <div>
-          <h3 class="setting-title">Reproducir sonido</h3>
+          <h3 class="setting-title font-bold font-satoshi">Reproducir sonido</h3>
           <p class="setting-description">Escuchar un sonido cuando llegue una notificación</p>
         </div>
       </div>
@@ -281,15 +283,17 @@
   </div>
 
   <!-- Save Indicator -->
-  <div class="save-indicator" *ngIf="saving()">
-    <svg class="save-icon spinning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-      />
-    </svg>
-    Guardando...
-  </div>
+  @if (saving()) {
+    <div class="save-indicator">
+      <svg class="save-icon spinning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+      </svg>
+      Guardando...
+    </div>
+  }
 </div>

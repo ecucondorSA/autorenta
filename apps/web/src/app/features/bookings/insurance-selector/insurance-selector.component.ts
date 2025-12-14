@@ -25,7 +25,7 @@ import { InsuranceAddon } from '../../../core/models/insurance.model';
           </div>
         </div>
       </ion-card-header>
-
+    
       <ion-card-content>
         <!-- Cobertura Básica Incluida -->
         <div class="included-coverage">
@@ -52,108 +52,123 @@ import { InsuranceAddon } from '../../../core/models/insurance.model';
               <span>Asistencia mecánica 24/7</span>
             </li>
           </ul>
-
+    
           <div class="premium-info">
-            <div class="premium-row" *ngIf="!hasOwnerInsurance">
-              <span class="label">Seguro:</span>
-              <span class="value"
-                >{{ dailyPremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}/día</span
-              >
+            @if (!hasOwnerInsurance) {
+              <div class="premium-row">
+                <span class="label">Seguro:</span>
+                <span class="value"
+                  >{{ dailyPremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}/día</span
+                  >
+                </div>
+              }
+              @if (!hasOwnerInsurance) {
+                <div class="premium-row total">
+                  <span class="label">Total {{ rentalDays }} días:</span>
+                  <span class="value highlight">{{
+                    totalBasePremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
+                  }}</span>
+                </div>
+              }
+              @if (hasOwnerInsurance) {
+                <div class="owner-insurance-badge">
+                  <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                  <span>Este auto tiene seguro propio del dueño - <strong>Sin cargo</strong></span>
+                </div>
+              }
             </div>
-            <div class="premium-row total" *ngIf="!hasOwnerInsurance">
-              <span class="label">Total {{ rentalDays }} días:</span>
-              <span class="value highlight">{{
-                totalBasePremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
-              }}</span>
-            </div>
-            <div class="owner-insurance-badge" *ngIf="hasOwnerInsurance">
-              <ion-icon name="checkmark-circle" color="success"></ion-icon>
-              <span>Este auto tiene seguro propio del dueño - <strong>Sin cargo</strong></span>
-            </div>
-          </div>
-
-          <div class="deposit-info">
-            <ion-icon name="information-circle" color="warning"></ion-icon>
-            <div class="deposit-text">
-              <strong>Tu Responsabilidad (Franquicia):</strong>
-              <p>{{ depositAmount | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</p>
-              <small
-                >Este monto se congela en tu tarjeta durante el alquiler. Se devuelve
-                automáticamente si no hay daños.</small
-              >
-            </div>
-          </div>
-        </div>
-
-        <!-- Add-ons Opcionales -->
-        <div class="addons-section" *ngIf="availableAddons.length > 0">
-          <h3>
-            <ion-icon name="star" color="warning"></ion-icon>
-            Mejora tu cobertura (opcional):
-          </h3>
-
-          <div class="addon-item" *ngFor="let addon of availableAddons">
-            <ion-checkbox
-              [checked]="isAddonSelected(addon.id)"
-              (ionChange)="toggleAddon(addon)"
-              labelPlacement="end"
-            >
-            </ion-checkbox>
-            <div class="addon-content" (click)="toggleAddon(addon)">
-              <div class="addon-header">
-                <h4>{{ addon.name }}</h4>
-                <span class="addon-price"
-                  >+{{ addon.daily_cost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}/día</span
-                >
-              </div>
-              <p class="addon-description">{{ addon.description }}</p>
-              <div class="addon-total" *ngIf="isAddonSelected(addon.id)">
-                <ion-icon name="calculator" color="primary"></ion-icon>
-                <span
-                  >Total:
-                  {{
-                    addon.daily_cost * rentalDays | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
-                  }}</span
-                >
+    
+            <div class="deposit-info">
+              <ion-icon name="information-circle" color="warning"></ion-icon>
+              <div class="deposit-text">
+                <strong>Tu Responsabilidad (Franquicia):</strong>
+                <p>{{ depositAmount | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</p>
+                <small
+                  >Este monto se congela en tu tarjeta durante el alquiler. Se devuelve
+                  automáticamente si no hay daños.</small
+                  >
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Resumen Total con Add-ons -->
-        <div class="total-section" *ngIf="totalAddonsCost > 0">
-          <div class="total-row">
-            <span>Seguro base:</span>
-            <span>{{ totalBasePremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
-          </div>
-          <div class="total-row">
-            <span>Add-ons seleccionados:</span>
-            <span>+{{ totalAddonsCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
-          </div>
-          <div class="total-row grand-total">
-            <strong>Total Seguro:</strong>
-            <strong>{{ totalInsuranceCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</strong>
-          </div>
-        </div>
-
-        <!-- Información Importante -->
-        <ion-note color="medium" class="important-note">
-          <ion-icon name="information-circle"></ion-icon>
-          <div>
-            <strong>En caso de accidente:</strong> Contacta inmediatamente al
-            <strong>0800-AUTORENTAR</strong> (24/7). La franquicia se descuenta del depósito solo si
-            hay daños.
-          </div>
-        </ion-note>
-
-        <!-- Loading State -->
-        <div class="loading-state" *ngIf="loading">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Calculando cobertura...</p>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  `,
+    
+            <!-- Add-ons Opcionales -->
+            @if (availableAddons.length > 0) {
+              <div class="addons-section">
+                <h3>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  Mejora tu cobertura (opcional):
+                </h3>
+                @for (addon of availableAddons; track addon) {
+                  <div class="addon-item">
+                    <ion-checkbox
+                      [checked]="isAddonSelected(addon.id)"
+                      (ionChange)="toggleAddon(addon)"
+                      labelPlacement="end"
+                      >
+                    </ion-checkbox>
+                    <div class="addon-content" (click)="toggleAddon(addon)">
+                      <div class="addon-header">
+                        <h4>{{ addon.name }}</h4>
+                        <span class="addon-price"
+                          >+{{ addon.daily_cost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}/día</span
+                          >
+                        </div>
+                        <p class="addon-description">{{ addon.description }}</p>
+                        @if (isAddonSelected(addon.id)) {
+                          <div class="addon-total">
+                            <ion-icon name="calculator" color="primary"></ion-icon>
+                            <span
+                              >Total:
+                              {{
+                              addon.daily_cost * rentalDays | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
+                              }}</span
+                              >
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+    
+                <!-- Resumen Total con Add-ons -->
+                @if (totalAddonsCost > 0) {
+                  <div class="total-section">
+                    <div class="total-row">
+                      <span>Seguro base:</span>
+                      <span>{{ totalBasePremium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+                    </div>
+                    <div class="total-row">
+                      <span>Add-ons seleccionados:</span>
+                      <span>+{{ totalAddonsCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+                    </div>
+                    <div class="total-row grand-total">
+                      <strong>Total Seguro:</strong>
+                      <strong>{{ totalInsuranceCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</strong>
+                    </div>
+                  </div>
+                }
+    
+                <!-- Información Importante -->
+                <ion-note color="medium" class="important-note">
+                  <ion-icon name="information-circle"></ion-icon>
+                  <div>
+                    <strong>En caso de accidente:</strong> Contacta inmediatamente al
+                    <strong>0800-AUTORENTAR</strong> (24/7). La franquicia se descuenta del depósito solo si
+                    hay daños.
+                  </div>
+                </ion-note>
+    
+                <!-- Loading State -->
+                @if (loading) {
+                  <div class="loading-state">
+                    <ion-spinner name="crescent"></ion-spinner>
+                    <p>Calculando cobertura...</p>
+                  </div>
+                }
+              </ion-card-content>
+            </ion-card>
+    `,
   styles: [
     `
       .insurance-card {

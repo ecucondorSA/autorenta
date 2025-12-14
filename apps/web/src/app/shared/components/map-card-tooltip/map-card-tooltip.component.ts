@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, Input, OnInit, signal } from '@angular/core';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
@@ -7,64 +7,68 @@ import { DistanceBadgeComponent } from '../distance-badge/distance-badge.compone
 @Component({
   selector: 'app-map-card-tooltip',
   standalone: true,
-  imports: [CommonModule, MoneyPipe, DistanceBadgeComponent],
+  imports: [MoneyPipe, DistanceBadgeComponent],
   template: `
     <div
       class="map-tooltip-card bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl border border-border-default dark:border-border-default overflow-hidden max-w-[280px] transition-all duration-200"
       [class.map-tooltip-card--selected]="selected"
-    >
+      >
       <!-- Imagen del auto -->
       <div class="relative w-full aspect-[4/3] bg-surface-secondary overflow-hidden">
-        <img
-          *ngIf="car.photoUrl"
-          [src]="car.photoUrl"
-          [alt]="car.title"
-          class="w-full h-full object-cover"
-        />
-        <div
-          *ngIf="!car.photoUrl"
-          class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-warning-light/10 to-cta-default/10"
-        >
-          <svg
-            class="w-12 h-12 text-cta-default/40"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+        @if (car.photoUrl) {
+          <img
+            [src]="car.photoUrl"
+            [alt]="car.title"
+            class="w-full h-full object-cover"
             />
-          </svg>
-        </div>
-
+        }
+        @if (!car.photoUrl) {
+          <div
+            class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-warning-light/10 to-cta-default/10"
+            >
+            <svg
+              class="w-12 h-12 text-cta-default/40"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                />
+            </svg>
+          </div>
+        }
+    
         <!-- Badge de confianza (si aplica) -->
-        <div *ngIf="isVerified()" class="absolute top-2 right-2">
-          <span
-            class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-strong border border-success-light/40 px-2 py-0.5 text-xs font-semibold"
-          >
-            <span>✓</span>
-            <span>Verificado</span>
-          </span>
-        </div>
+        @if (isVerified()) {
+          <div class="absolute top-2 right-2">
+            <span
+              class="inline-flex items-center gap-1 rounded-full bg-success-light/20 text-success-strong border border-success-light/40 px-2 py-0.5 text-xs font-semibold"
+              >
+              <span>✓</span>
+              <span>Verificado</span>
+            </span>
+          </div>
+        }
       </div>
-
+    
       <!-- Contenido -->
       <div class="p-3 space-y-2">
         <!-- Título y ubicación -->
         <div>
           <h3
             class="text-sm font-semibold text-text-primary dark:text-text-inverse-pure line-clamp-1"
-          >
+            >
             {{ car.title }}
           </h3>
           <p class="text-xs text-text-secondary dark:text-text-secondary mt-0.5">
             {{ car.locationLabel }}
           </p>
         </div>
-
+    
         <!-- Precio -->
         <div class="flex items-baseline gap-1">
           <span class="text-xl font-bold text-cta-default">
@@ -72,23 +76,25 @@ import { DistanceBadgeComponent } from '../distance-badge/distance-badge.compone
           </span>
           <span class="text-xs text-text-secondary dark:text-text-secondary">/día</span>
         </div>
-
+    
         <!-- Badge de distancia (si está disponible) -->
-        <div *ngIf="distanceKm() !== null" class="flex items-center gap-1">
-          <app-distance-badge [distanceKm]="distanceKm()!" />
-        </div>
-
+        @if (distanceKm() !== null) {
+          <div class="flex items-center gap-1">
+            <app-distance-badge [distanceKm]="distanceKm()!" />
+          </div>
+        }
+    
         <!-- CTA -->
         <button
           type="button"
           (click)="onViewDetails()"
           class="w-full py-2 px-3 rounded-lg bg-cta-default text-cta-text text-sm font-semibold hover:bg-cta-default/90 transition-colors duration-200"
-        >
+          >
           Ver detalles rápidos
         </button>
       </div>
     </div>
-  `,
+    `,
   styles: [
     `
       .map-tooltip-card {

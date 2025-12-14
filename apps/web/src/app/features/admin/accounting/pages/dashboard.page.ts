@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, computed, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import {
@@ -14,7 +14,7 @@ import { KpiCardComponent } from '../components/kpi-card.component';
   selector: 'app-accounting-dashboard',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterModule, KpiCardComponent],
+  imports: [IonicModule, RouterModule, KpiCardComponent],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })

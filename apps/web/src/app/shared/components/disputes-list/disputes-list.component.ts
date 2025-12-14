@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, Output, EventEmitter, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DisputesService, Dispute, DisputeEvidence } from '../../../core/services/disputes.service';
 import { DisputeDetailComponent } from '../../../features/disputes/components/dispute-detail/dispute-detail.component';
 
@@ -8,7 +8,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
   selector: 'app-disputes-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, DisputeDetailComponent],
+  imports: [DisputeDetailComponent],
   template: `
     <div class="space-y-4">
       <!-- Header -->
@@ -16,22 +16,23 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
         <h3 class="text-lg font-semibold text-text-primary dark:text-text-inverse">
           Disputas ({{ disputes().length }})
         </h3>
-        <button
-          *ngIf="showCreateButton"
-          (click)="createDispute.emit()"
-          class="text-sm px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
-        >
-          + Crear Disputa
-        </button>
+        @if (showCreateButton) {
+          <button
+            (click)="createDispute.emit()"
+            class="text-sm px-4 py-2 bg-cta-default text-cta-text rounded-lg hover:bg-cta-default transition-colors"
+            >
+            + Crear Disputa
+          </button>
+        }
       </div>
-
+    
       <!-- Loading State -->
       @if (loading()) {
         <div class="flex items-center justify-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-cta-default"></div>
         </div>
       }
-
+    
       <!-- Empty State -->
       @if (!loading() && disputes().length === 0) {
         <div class="bg-surface-base dark:bg-surface-base rounded-lg p-6 text-center">
@@ -40,7 +41,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
           </p>
         </div>
       }
-
+    
       <!-- Disputes List -->
       @if (!loading() && disputes().length > 0) {
         <div class="space-y-3">
@@ -48,7 +49,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
             <div
               (click)="openDetail(dispute.id)"
               class="bg-surface-raised dark:bg-surface-base rounded-lg border border-border-default dark:border-border-muted p-4 cursor-pointer hover:border-cta-default transition-colors group"
-            >
+              >
               <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
                   <div class="flex items-center gap-2 mb-2">
@@ -62,7 +63,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
                       [class.text-success-strong]="dispute.status === 'resolved'"
                       [class.bg-error-bg-hover]="dispute.status === 'rejected'"
                       [class.text-error-strong]="dispute.status === 'rejected'"
-                    >
+                      >
                       {{ getStatusLabel(dispute.status) }}
                     </span>
                     <span class="text-xs text-text-secondary dark:text-text-muted">
@@ -80,7 +81,7 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
                   <span class="text-xs text-cta-default opacity-0 group-hover:opacity-100 transition-opacity">Ver detalle →</span>
                 </div>
               </div>
-
+    
               <!-- Evidence Section -->
               @if (disputeEvidenceMap().has(dispute.id)) {
                 <div class="mt-3 pt-3 border-t border-border-default dark:border-border-muted">
@@ -100,16 +101,16 @@ import { DisputeDetailComponent } from '../../../features/disputes/components/di
           }
         </div>
       }
-
+    
       <!-- Detail Modal -->
       @if (selectedDisputeId()) {
-        <app-dispute-detail 
-          [disputeId]="selectedDisputeId()!" 
+        <app-dispute-detail
+          [disputeId]="selectedDisputeId()!"
           (closeDetail)="closeDetail()"
         ></app-dispute-detail>
       }
     </div>
-  `,
+    `,
 })
 export class DisputesListComponent implements OnInit {
   @Input() bookingId!: string;

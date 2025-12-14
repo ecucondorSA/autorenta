@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
@@ -30,7 +30,7 @@ import {
   selector: 'app-mp-onboarding-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-header>
       <ion-toolbar color="primary">
@@ -42,165 +42,165 @@ import {
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="ion-padding">
       <!-- Loading State -->
-      <div *ngIf="loading()" class="loading-container">
-        <ion-spinner name="crescent"></ion-spinner>
-        <p>Preparando conexión...</p>
-      </div>
-
+      @if (loading()) {
+        <div class="loading-container">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Preparando conexión...</p>
+        </div>
+      }
+    
       <!-- Main Content -->
-      <div *ngIf="!loading()" class="onboarding-content">
-        <!-- Payment Methods Logos -->
-        <div class="payment-logos-section">
-          <div class="payment-logos">
-            <!-- Mercado Pago -->
-            <div class="payment-logo-item">
-              <svg width="60" height="60" viewBox="0 0 80 80" fill="none">
-                <rect
-                  width="80"
-                  height="80"
-                  rx="16"
-                  fill="var(--brand-mercadopago-default, #00B4E5)"
-                />
-                <path d="M20 20h40v40H20z" fill="white" />
-                <path
-                  d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z"
-                  fill="var(--brand-mercadopago-default, #00B4E5)"
-                />
-              </svg>
-              <span class="logo-label">Mercado Pago</span>
+      @if (!loading()) {
+        <div class="onboarding-content">
+          <!-- Payment Methods Logos -->
+          <div class="payment-logos-section">
+            <div class="payment-logos">
+              <!-- Mercado Pago -->
+              <div class="payment-logo-item">
+                <svg width="60" height="60" viewBox="0 0 80 80" fill="none">
+                  <rect
+                    width="80"
+                    height="80"
+                    rx="16"
+                    fill="var(--brand-mercadopago-default, #00B4E5)"
+                    />
+                  <path d="M20 20h40v40H20z" fill="white" />
+                  <path
+                    d="M32 32h16v4H32v-4zm0 8h16v4H32v-4zm0 8h12v4H32v-4z"
+                    fill="var(--brand-mercadopago-default, #00B4E5)"
+                    />
+                </svg>
+                <span class="logo-label">Mercado Pago</span>
+              </div>
+              <!-- PayPal -->
+              <div class="payment-logo-item">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                  <rect width="60" height="60" rx="12" fill="var(--brand-paypal-default, #0070BA)" />
+                  <path
+                    d="M8.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H14v7.5H8.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
+                    fill="white"
+                    />
+                  <path
+                    d="M35.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H41v7.5h-5.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
+                    fill="white"
+                    />
+                </svg>
+                <span class="logo-label">PayPal</span>
+              </div>
             </div>
-
-            <!-- PayPal -->
-            <div class="payment-logo-item">
-              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                <rect width="60" height="60" rx="12" fill="var(--brand-paypal-default, #0070BA)" />
-                <path
-                  d="M8.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H14v7.5H8.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
-                  fill="white"
-                />
-                <path
-                  d="M35.5 15.5h12.5c6.5 0 11.5 5 11.5 11.5 0 6.5-5 11.5-11.5 11.5H41v7.5h-5.5V15.5zm6.5 15h6c3.5 0 6-2.5 6-6s-2.5-6-6-6h-6v12z"
-                  fill="white"
-                />
-              </svg>
-              <span class="logo-label">PayPal</span>
+            <p class="logos-subtitle">Pagos seguros y confiables</p>
+          </div>
+          <!-- Main Message -->
+          <div class="hero-section">
+            <h1 class="hero-title">¡Conectá tus pagos y empezá a ganar!</h1>
+            <p class="hero-subtitle">
+              Recibí el dinero de tus alquileres directamente en Mercado Pago o PayPal. Miles de
+              anfitriones ya lo hicieron.
+            </p>
+          </div>
+          <!-- Key Benefit -->
+          <div class="benefit-highlight">
+            <div class="benefit-icon">
+              <ion-icon name="cash" color="success"></ion-icon>
+            </div>
+            <div class="benefit-content">
+              <h3 class="benefit-title">Dinero directo a tu cuenta</h3>
+              <p class="benefit-description">
+                Cuando alguien alquila tu auto, el pago llega automáticamente a tu Mercado Pago.
+              </p>
             </div>
           </div>
-
-          <p class="logos-subtitle">Pagos seguros y confiables</p>
-        </div>
-
-        <!-- Main Message -->
-        <div class="hero-section">
-          <h1 class="hero-title">¡Conectá tus pagos y empezá a ganar!</h1>
-          <p class="hero-subtitle">
-            Recibí el dinero de tus alquileres directamente en Mercado Pago o PayPal. Miles de
-            anfitriones ya lo hicieron.
-          </p>
-        </div>
-
-        <!-- Key Benefit -->
-        <div class="benefit-highlight">
-          <div class="benefit-icon">
-            <ion-icon name="cash" color="success"></ion-icon>
+          <!-- Trust Indicators -->
+          <div class="trust-section">
+            <div class="trust-item">
+              <ion-icon name="shield-checkmark" color="success"></ion-icon>
+              <span>100% Seguro</span>
+            </div>
+            <div class="trust-item">
+              <ion-icon name="time" color="primary"></ion-icon>
+              <span>Toma 30 segundos</span>
+            </div>
+            <div class="trust-item">
+              <ion-icon name="refresh-circle" color="primary"></ion-icon>
+              <span>Podés desconectar cuando quieras</span>
+            </div>
           </div>
-          <div class="benefit-content">
-            <h3 class="benefit-title">Dinero directo a tu cuenta</h3>
-            <p class="benefit-description">
-              Cuando alguien alquila tu auto, el pago llega automáticamente a tu Mercado Pago.
+          <!-- Social Proof -->
+          <div class="social-proof">
+            <div class="social-proof-content">
+              <div class="social-proof-icon">
+                <ion-icon name="people" color="primary"></ion-icon>
+              </div>
+              <div class="social-proof-text">
+                <p><strong>+2,000 anfitriones</strong> ya conectaron su cuenta</p>
+              </div>
+            </div>
+          </div>
+          <!-- Primary CTA -->
+          <div class="cta-section">
+            <ion-button
+              expand="block"
+              size="large"
+              class="primary-cta"
+              (click)="startOnboarding()"
+              [disabled]="processing()"
+              >
+              @if (!processing()) {
+                <ion-icon slot="start" name="logo-mercadopago"></ion-icon>
+              }
+              @if (processing()) {
+                <ion-spinner name="crescent" slot="start"></ion-spinner>
+              }
+              <span class="cta-text">{{ processing() ? 'Conectando...' : 'Conectar pagos' }}</span>
+            </ion-button>
+            <p class="cta-disclaimer">
+              Te redirigiremos a Mercado Pago o PayPal para autorizar la conexión de forma segura.
+            </p>
+          </div>
+          <!-- Secondary Actions -->
+          <div class="secondary-actions">
+            <ion-button
+              expand="block"
+              fill="clear"
+              size="small"
+              (click)="refreshStatus()"
+              [disabled]="processing() || loading()"
+              class="secondary-btn"
+              >
+              <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+              Ya conecté mi cuenta
+            </ion-button>
+          </div>
+          <!-- Minimal Terms -->
+          <div class="terms-section">
+            <p class="terms-text">
+              Autorizás a AutoRenta a procesar pagos en tu nombre.
+              <a href="/terms" target="_blank" class="terms-link">Ver términos</a>
             </p>
           </div>
         </div>
-
-        <!-- Trust Indicators -->
-        <div class="trust-section">
-          <div class="trust-item">
-            <ion-icon name="shield-checkmark" color="success"></ion-icon>
-            <span>100% Seguro</span>
-          </div>
-          <div class="trust-item">
-            <ion-icon name="time" color="primary"></ion-icon>
-            <span>Toma 30 segundos</span>
-          </div>
-          <div class="trust-item">
-            <ion-icon name="refresh-circle" color="primary"></ion-icon>
-            <span>Podés desconectar cuando quieras</span>
-          </div>
-        </div>
-
-        <!-- Social Proof -->
-        <div class="social-proof">
-          <div class="social-proof-content">
-            <div class="social-proof-icon">
-              <ion-icon name="people" color="primary"></ion-icon>
-            </div>
-            <div class="social-proof-text">
-              <p><strong>+2,000 anfitriones</strong> ya conectaron su cuenta</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Primary CTA -->
-        <div class="cta-section">
-          <ion-button
-            expand="block"
-            size="large"
-            class="primary-cta"
-            (click)="startOnboarding()"
-            [disabled]="processing()"
-          >
-            <ion-icon slot="start" name="logo-mercadopago" *ngIf="!processing()"></ion-icon>
-            <ion-spinner name="crescent" slot="start" *ngIf="processing()"></ion-spinner>
-            <span class="cta-text">{{ processing() ? 'Conectando...' : 'Conectar pagos' }}</span>
-          </ion-button>
-
-          <p class="cta-disclaimer">
-            Te redirigiremos a Mercado Pago o PayPal para autorizar la conexión de forma segura.
-          </p>
-        </div>
-
-        <!-- Secondary Actions -->
-        <div class="secondary-actions">
-          <ion-button
-            expand="block"
-            fill="clear"
-            size="small"
-            (click)="refreshStatus()"
-            [disabled]="processing() || loading()"
-            class="secondary-btn"
-          >
-            <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
-            Ya conecté mi cuenta
-          </ion-button>
-        </div>
-
-        <!-- Minimal Terms -->
-        <div class="terms-section">
-          <p class="terms-text">
-            Autorizás a AutoRenta a procesar pagos en tu nombre.
-            <a href="/terms" target="_blank" class="terms-link">Ver términos</a>
-          </p>
-        </div>
-      </div>
-
+      }
+    
       <!-- Error State -->
-      <ion-card *ngIf="error()" color="danger" class="error-card">
-        <ion-card-content>
-          <ion-icon name="alert-circle"></ion-icon>
-          <div class="error-content">
-            <strong>Error al vincular</strong>
-            <p>{{ error() }}</p>
-            <ion-button size="small" fill="clear" (click)="error.set(null)">
-              Reintentar
-            </ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
+      @if (error()) {
+        <ion-card color="danger" class="error-card">
+          <ion-card-content>
+            <ion-icon name="alert-circle"></ion-icon>
+            <div class="error-content">
+              <strong>Error al vincular</strong>
+              <p>{{ error() }}</p>
+              <ion-button size="small" fill="clear" (click)="error.set(null)">
+                Reintentar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
     </ion-content>
-  `,
+    `,
   styles: [
     `
       .loading-container {

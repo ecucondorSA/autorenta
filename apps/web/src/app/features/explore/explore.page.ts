@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LocationService } from '../../core/services/location.service';
 import {
   IonContent,
   IonHeader,
@@ -27,6 +26,7 @@ import {
   mapOutline,
   optionsOutline,
 } from 'ionicons/icons';
+import { LocationService } from '../../core/services/location.service';
 import { Car } from '../../core/models';
 import { BreakpointService } from '../../core/services/breakpoint.service';
 import type { CarMapLocation } from '../../core/services/car-locations.service';

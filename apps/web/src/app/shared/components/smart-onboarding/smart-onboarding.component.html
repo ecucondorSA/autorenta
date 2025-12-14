@@ -16,98 +16,122 @@
   <!-- Contenido principal -->
   <div class="onboarding-content">
     <!-- Loading state -->
-    <div *ngIf="loading()" class="loading-state">
-      <div class="spinner"></div>
-      <p>Configurando tu experiencia...</p>
-    </div>
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Configurando tu experiencia...</p>
+      </div>
+    }
 
     <!-- Question content -->
-    <div *ngIf="!loading() && getCurrentQuestion() as question" class="question-container">
-      <!-- Question header -->
-      <div class="question-header">
-        <h1 class="question-title">{{ question.title }}</h1>
-        <p *ngIf="question.subtitle" class="question-subtitle">{{ question.subtitle }}</p>
-      </div>
-
-      <!-- Options -->
-      <div class="options-container">
-        <!-- Single/Radio selection -->
-        <div *ngIf="question.type === 'single' || question.type === 'role'" class="options-grid">
-          <button
-            *ngFor="let option of question.options"
-            class="option-card"
-            [class.selected]="answers()[question.id] === option.value"
-            (click)="selectAnswer(question.id, option.value)"
-          >
-            <div class="option-icon">{{ option.icon }}</div>
-            <div class="option-content">
-              <div class="option-label">{{ option.label }}</div>
-              <div *ngIf="option.description" class="option-description">
-                {{ option.description }}
-              </div>
+    @if (!loading() && getCurrentQuestion(); as question) {
+      <div class="question-container">
+        <!-- Question header -->
+        <div class="question-header">
+          <h1 class="question-title font-bold font-satoshi">{{ question.title }}</h1>
+          @if (question.subtitle) {
+            <p class="question-subtitle">{{ question.subtitle }}</p>
+          }
+        </div>
+        <!-- Options -->
+        <div class="options-container">
+          <!-- Single/Radio selection -->
+          @if (question.type === 'single' || question.type === 'role') {
+            <div class="options-grid">
+              @for (option of question.options; track option) {
+                <button
+                  class="option-card"
+                  [class.selected]="answers()[question.id] === option.value"
+                  (click)="selectAnswer(question.id, option.value)"
+                  >
+                  <div class="option-icon">{{ option.icon }}</div>
+                  <div class="option-content">
+                    <div class="option-label">{{ option.label }}</div>
+                    @if (option.description) {
+                      <div class="option-description">
+                        {{ option.description }}
+                      </div>
+                    }
+                  </div>
+                </button>
+              }
             </div>
-          </button>
-        </div>
-
-        <!-- Multiple selection -->
-        <div *ngIf="question.type === 'multiple'" class="options-grid">
-          <button
-            *ngFor="let option of question.options"
-            class="option-card multiple"
-            [class.selected]="isOptionSelected(question.id, option.value)"
-            (click)="toggleMultipleAnswer(question.id, option.value)"
-          >
-            <div class="option-icon">{{ option.icon }}</div>
-            <div class="option-content">
-              <div class="option-label">{{ option.label }}</div>
-              <div *ngIf="option.description" class="option-description">
-                {{ option.description }}
-              </div>
+          }
+          <!-- Multiple selection -->
+          @if (question.type === 'multiple') {
+            <div class="options-grid">
+              @for (option of question.options; track option) {
+                <button
+                  class="option-card multiple"
+                  [class.selected]="isOptionSelected(question.id, option.value)"
+                  (click)="toggleMultipleAnswer(question.id, option.value)"
+                  >
+                  <div class="option-icon">{{ option.icon }}</div>
+                  <div class="option-content">
+                    <div class="option-label">{{ option.label }}</div>
+                    @if (option.description) {
+                      <div class="option-description">
+                        {{ option.description }}
+                      </div>
+                    }
+                  </div>
+                  @if (isOptionSelected(question.id, option.value)) {
+                    <i class="fas fa-check"></i>
+                  }
+                </button>
+              }
             </div>
-            <i class="fas fa-check" *ngIf="isOptionSelected(question.id, option.value)"></i>
-          </button>
+          }
+          <!-- Location selection -->
+          @if (question.type === 'location') {
+            <div class="options-grid">
+              @for (option of question.options; track option) {
+                <button
+                  class="location-option"
+                  [class.selected]="answers()[question.id] === option.value"
+                  (click)="selectAnswer(question.id, option.value)"
+                  >
+                  <div class="location-icon">{{ option.icon }}</div>
+                  <div class="location-label">{{ option.label }}</div>
+                </button>
+              }
+            </div>
+          }
         </div>
-
-        <!-- Location selection -->
-        <div *ngIf="question.type === 'location'" class="options-grid">
-          <button
-            *ngFor="let option of question.options"
-            class="location-option"
-            [class.selected]="answers()[question.id] === option.value"
-            (click)="selectAnswer(question.id, option.value)"
-          >
-            <div class="location-icon">{{ option.icon }}</div>
-            <div class="location-label">{{ option.label }}</div>
-          </button>
-        </div>
+        <!-- Error message -->
+        @if (question.required && !isAnswered(question.id)) {
+          <div class="error-message">
+            Esta pregunta es obligatoria
+          </div>
+        }
       </div>
-
-      <!-- Error message -->
-      <div *ngIf="question.required && !isAnswered(question.id)" class="error-message">
-        Esta pregunta es obligatoria
-      </div>
-    </div>
+    }
   </div>
 
   <!-- Navigation footer -->
-  <div *ngIf="!loading()" class="onboarding-footer">
-    <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      Anterior
-    </button>
-
-    <button
-      class="nav-button primary"
-      (click)="nextStep()"
-      [disabled]="getCurrentQuestion()?.required && !isAnswered(getCurrentQuestion()!.id)"
-    >
-      <span *ngIf="currentStep() < filteredQuestions().length - 1">Siguiente</span>
-      <span *ngIf="currentStep() >= filteredQuestions().length - 1">Completar</span>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
+  @if (!loading()) {
+    <div class="onboarding-footer">
+      <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Anterior
+      </button>
+      <button
+        class="nav-button primary"
+        (click)="nextStep()"
+        [disabled]="getCurrentQuestion()?.required && !isAnswered(getCurrentQuestion()!.id)"
+        >
+        @if (currentStep() < filteredQuestions().length - 1) {
+          <span>Siguiente</span>
+        }
+        @if (currentStep() >= filteredQuestions().length - 1) {
+          <span>Completar</span>
+        }
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  }
 </div>

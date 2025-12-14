@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { SmartOnboardingComponent } from '../../shared/components/smart-onboardi
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-onboarding-page',
-  imports: [CommonModule, SmartOnboardingComponent],
+  imports: [SmartOnboardingComponent],
   template: `
     <app-smart-onboarding (completed)="onOnboardingCompleted($event)"></app-smart-onboarding>
   `,

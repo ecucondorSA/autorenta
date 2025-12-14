@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -26,7 +26,7 @@ interface CalendarDay {
   selector: 'app-calendar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, IconComponent],
+  imports: [RouterModule, IconComponent],
   templateUrl: './calendar.page.html',
   styleUrls: ['./calendar.page.css'],
 })

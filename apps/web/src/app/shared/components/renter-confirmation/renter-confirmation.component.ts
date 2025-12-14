@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import {
   BookingConfirmationService,
@@ -24,7 +24,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-renter-confirmation',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './renter-confirmation.component.html',
   styles: [
     `

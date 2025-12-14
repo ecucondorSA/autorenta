@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export interface MapLayer {
   id: string;
@@ -14,7 +14,7 @@ export interface MapLayer {
   selector: 'app-map-layers-control',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './map-layers-control.component.html',
   styleUrls: ['./map-layers-control.component.css'],
 })

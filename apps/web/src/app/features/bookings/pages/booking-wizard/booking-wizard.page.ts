@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {Component, computed, inject, OnInit, PLATFORM_ID, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -118,7 +118,6 @@ interface PreparedBookingData {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     IonicModule,
     BookingStepIndicatorComponent,
@@ -127,8 +126,8 @@ interface PreparedBookingData {
     BookingExtrasStepComponent,
     BookingDriverStepComponent,
     BookingPaymentStepComponent,
-    BookingReviewStepComponent,
-  ],
+    BookingReviewStepComponent
+],
   templateUrl: './booking-wizard.page.html',
   styleUrls: ['./booking-wizard.page.scss'],
 })

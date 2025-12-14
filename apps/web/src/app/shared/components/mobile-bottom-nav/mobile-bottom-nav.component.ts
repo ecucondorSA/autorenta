@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,7 +29,7 @@ interface NavItem {
 @Component({
   selector: 'app-mobile-bottom-nav',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavIconComponent],
+  imports: [RouterModule, NavIconComponent],
   templateUrl: './mobile-bottom-nav.component.html',
   styleUrls: ['./mobile-bottom-nav.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost

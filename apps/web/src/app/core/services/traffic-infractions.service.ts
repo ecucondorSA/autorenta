@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { injectSupabase } from './supabase-client.service';
 import { TrafficInfraction } from '../../features/admin/traffic-infractions/admin-traffic-infractions.page'; // Re-use the interface
+import { injectSupabase } from './supabase-client.service';
 import { NotificationManagerService } from './notification-manager.service'; // For toasts
 
 @Injectable({

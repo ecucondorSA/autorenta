@@ -1,130 +1,134 @@
-<div class="risk-calculator-viewer" *ngIf="riskCalculation()">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Cálculo de Riesgo</ion-card-title>
-      <ion-card-subtitle> Análisis completo de garantías y franquicias </ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      <!-- Bucket -->
-      <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-2">Categoría del Auto</h3>
-        <ion-badge [color]="getBucketColor(riskCalculation()!.bucket)" class="text-lg">
-          {{ getBucketLabel(riskCalculation()!.bucket) }}
-        </ion-badge>
-        <p class="text-sm text-text-secondary mt-2">
-          Valor del auto: {{ formatCurrency(carValueUsd()) }}
-        </p>
-      </div>
-
-      <!-- Guarantee Information -->
-      <div class="mb-6" *ngIf="guaranteeCopy()">
-        <h3 class="text-lg font-semibold mb-3">{{ guaranteeCopy()!.title }}</h3>
-        <ion-card [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'">
-          <ion-card-content>
-            <p class="text-sm mb-3">{{ guaranteeCopy()!.description }}</p>
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <p class="text-xs text-text-secondary">Monto en ARS</p>
-                <p class="text-lg font-bold">{{ guaranteeCopy()!.amountArs }}</p>
-              </div>
-              <div>
-                <p class="text-xs text-text-secondary">Monto en USD</p>
-                <p class="text-lg font-bold">{{ guaranteeCopy()!.amountUsd }}</p>
-              </div>
-            </div>
-            <div *ngIf="guaranteeCopy()!.discountBadge" class="mt-3 p-2 bg-warning-bg rounded">
-              <p class="text-sm text-warning-strong">{{ guaranteeCopy()!.discountBadge }}</p>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
-
-      <!-- Franchise Table -->
-      <div class="mb-6" *ngIf="franchiseTable()">
-        <h3 class="text-lg font-semibold mb-3">Tabla de Franquicias</h3>
-        <ion-card>
-          <ion-card-content>
-            <table class="w-full">
-              <thead>
-                <tr class="border-b">
-                  <th class="text-left py-2 px-3 text-sm font-semibold">Concepto</th>
-                  <th class="text-right py-2 px-3 text-sm font-semibold">USD</th>
-                  <th class="text-right py-2 px-3 text-sm font-semibold">ARS</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of franchiseTable()!.rows" class="border-b">
-                  <td class="py-2 px-3 text-sm">{{ row.label }}</td>
-                  <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountUsd }}</td>
-                  <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountArs }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </ion-card-content>
-        </ion-card>
-      </div>
-
-      <!-- Risk Details -->
-      <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-3">Detalles del Riesgo</h3>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
-            <span class="text-sm font-medium">Tipo de Garantía</span>
-            <ion-badge
-              [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'"
-            >
-              {{
-                riskCalculation()!.guaranteeType === 'hold'
-                  ? 'Preautorización (Hold)'
-                  : 'Crédito de Seguridad'
-              }}
-            </ion-badge>
-          </div>
-
-          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
-            <span class="text-sm font-medium">Tiene Tarjeta</span>
-            <ion-icon
-              [name]="riskCalculation()!.hasCard ? 'checkmark-circle' : 'close-circle'"
-              [color]="riskCalculation()!.hasCard ? 'success' : 'danger'"
-            ></ion-icon>
-          </div>
-
-          <div class="flex items-center justify-between p-3 bg-surface-base rounded">
-            <span class="text-sm font-medium">Requiere Revalidación</span>
-            <ion-icon
-              [name]="riskCalculation()!.requiresRevalidation ? 'warning' : 'checkmark-circle'"
-              [color]="riskCalculation()!.requiresRevalidation ? 'warning' : 'success'"
-            ></ion-icon>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-3 bg-surface-base rounded"
-            *ngIf="riskCalculation()!.driverClass !== undefined"
-          >
-            <span class="text-sm font-medium">Clase del Conductor</span>
-            <ion-badge [color]="getClassColor(riskCalculation()!.driverClass!)">
-              Clase {{ riskCalculation()!.driverClass }}
-            </ion-badge>
-          </div>
-
-          <div
-            class="flex items-center justify-between p-3 bg-surface-base rounded"
-            *ngIf="riskCalculation()!.guaranteeMultiplier !== undefined"
-          >
-            <span class="text-sm font-medium">Multiplicador de Garantía</span>
-            <span class="text-sm font-semibold"
-              >{{ riskCalculation()!.guaranteeMultiplier!.toFixed(2) }}x</span
-            >
-          </div>
-
-          <div class="p-3 bg-cta-default/10 rounded">
-            <p class="text-xs text-cta-default">
-              <strong>Tasa de cambio:</strong> {{ riskCalculation()!.fxRate.toFixed(2) }} ARS/USD
-              ({{ riskCalculation()!.fxSnapshotDate | date: 'short' }})
-            </p>
-          </div>
+@if (riskCalculation()) {
+  <div class="risk-calculator-viewer">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Cálculo de Riesgo</ion-card-title>
+        <ion-card-subtitle> Análisis completo de garantías y franquicias </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- Bucket -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-2 font-satoshi">Categoría del Auto</h3>
+          <ion-badge [color]="getBucketColor(riskCalculation()!.bucket)" class="text-lg">
+            {{ getBucketLabel(riskCalculation()!.bucket) }}
+          </ion-badge>
+          <p class="text-sm text-text-secondary mt-2">
+            Valor del auto: {{ formatCurrency(carValueUsd()) }}
+          </p>
         </div>
-      </div>
-    </ion-card-content>
-  </ion-card>
-</div>
+        <!-- Guarantee Information -->
+        @if (guaranteeCopy()) {
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-3 font-satoshi">{{ guaranteeCopy()!.title }}</h3>
+            <ion-card [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'">
+              <ion-card-content>
+                <p class="text-sm mb-3">{{ guaranteeCopy()!.description }}</p>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-xs text-text-secondary">Monto en ARS</p>
+                    <p class="text-lg font-bold">{{ guaranteeCopy()!.amountArs }}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-text-secondary">Monto en USD</p>
+                    <p class="text-lg font-bold">{{ guaranteeCopy()!.amountUsd }}</p>
+                  </div>
+                </div>
+                @if (guaranteeCopy()!.discountBadge) {
+                  <div class="mt-3 p-2 bg-warning-bg rounded">
+                    <p class="text-sm text-warning-strong">{{ guaranteeCopy()!.discountBadge }}</p>
+                  </div>
+                }
+              </ion-card-content>
+            </ion-card>
+          </div>
+        }
+        <!-- Franchise Table -->
+        @if (franchiseTable()) {
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-3 font-satoshi">Tabla de Franquicias</h3>
+            <ion-card>
+              <ion-card-content>
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b">
+                      <th class="text-left py-2 px-3 text-sm font-semibold">Concepto</th>
+                      <th class="text-right py-2 px-3 text-sm font-semibold">USD</th>
+                      <th class="text-right py-2 px-3 text-sm font-semibold">ARS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of franchiseTable()!.rows; track row) {
+                      <tr class="border-b">
+                        <td class="py-2 px-3 text-sm">{{ row.label }}</td>
+                        <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountUsd }}</td>
+                        <td class="py-2 px-3 text-sm text-right font-semibold">{{ row.amountArs }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        }
+        <!-- Risk Details -->
+        <div class="mb-6">
+          <h3 class="text-lg font-semibold mb-3 font-satoshi">Detalles del Riesgo</h3>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 bg-surface-base rounded">
+              <span class="text-sm font-medium">Tipo de Garantía</span>
+              <ion-badge
+                [color]="riskCalculation()!.guaranteeType === 'hold' ? 'primary' : 'warning'"
+                >
+                {{
+                riskCalculation()!.guaranteeType === 'hold'
+                ? 'Preautorización (Hold)'
+                : 'Crédito de Seguridad'
+                }}
+              </ion-badge>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-surface-base rounded">
+              <span class="text-sm font-medium">Tiene Tarjeta</span>
+              <ion-icon
+                [name]="riskCalculation()!.hasCard ? 'checkmark-circle' : 'close-circle'"
+                [color]="riskCalculation()!.hasCard ? 'success' : 'danger'"
+              ></ion-icon>
+            </div>
+            <div class="flex items-center justify-between p-3 bg-surface-base rounded">
+              <span class="text-sm font-medium">Requiere Revalidación</span>
+              <ion-icon
+                [name]="riskCalculation()!.requiresRevalidation ? 'warning' : 'checkmark-circle'"
+                [color]="riskCalculation()!.requiresRevalidation ? 'warning' : 'success'"
+              ></ion-icon>
+            </div>
+            @if (riskCalculation()!.driverClass !== undefined) {
+              <div
+                class="flex items-center justify-between p-3 bg-surface-base rounded"
+                >
+                <span class="text-sm font-medium">Clase del Conductor</span>
+                <ion-badge [color]="getClassColor(riskCalculation()!.driverClass!)">
+                  Clase {{ riskCalculation()!.driverClass }}
+                </ion-badge>
+              </div>
+            }
+            @if (riskCalculation()!.guaranteeMultiplier !== undefined) {
+              <div
+                class="flex items-center justify-between p-3 bg-surface-base rounded"
+                >
+                <span class="text-sm font-medium">Multiplicador de Garantía</span>
+                <span class="text-sm font-semibold"
+                  >{{ riskCalculation()!.guaranteeMultiplier!.toFixed(2) }}x</span
+                  >
+                </div>
+              }
+              <div class="p-3 bg-cta-default/10 rounded">
+                <p class="text-xs text-cta-default">
+                  <strong>Tasa de cambio:</strong> {{ riskCalculation()!.fxRate.toFixed(2) }} ARS/USD
+                  ({{ riskCalculation()!.fxSnapshotDate | date: 'short' }})
+                </p>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  }

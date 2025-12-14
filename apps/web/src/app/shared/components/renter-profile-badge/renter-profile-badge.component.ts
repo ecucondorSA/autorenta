@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 
 export interface RenterProfileBadge {
@@ -16,36 +16,43 @@ export interface RenterProfileBadge {
   selector: 'app-renter-profile-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
-    <div class="renter-badge" *ngIf="profile() as p" [class]="'badge-' + p.badge_level">
-      <div class="badge-header">
-        <span class="badge-icon">{{ getBadgeIcon(p.badge_level) }}</span>
-        <span class="badge-label">{{ getBadgeLabel(p.badge_level) }}</span>
-      </div>
-
-      <div class="badge-details">
-        <span class="renter-name">{{ p.renter_name }}</span>
-
-        <div class="badge-stats">
-          <span class="stat" *ngIf="p.total_rentals > 0" title="Alquileres completados">
-            🚗 {{ p.total_rentals }}
-          </span>
-          <span class="stat" *ngIf="p.years_without_claims > 0" title="Años sin siniestros">
-            ✨ {{ p.years_without_claims }} año{{ p.years_without_claims > 1 ? 's' : '' }}
-          </span>
+    @if (profile(); as p) {
+      <div class="renter-badge" [class]="'badge-' + p.badge_level">
+        <div class="badge-header">
+          <span class="badge-icon">{{ getBadgeIcon(p.badge_level) }}</span>
+          <span class="badge-label">{{ getBadgeLabel(p.badge_level) }}</span>
         </div>
+        <div class="badge-details">
+          <span class="renter-name">{{ p.renter_name }}</span>
+          <div class="badge-stats">
+            @if (p.total_rentals > 0) {
+              <span class="stat" title="Alquileres completados">
+                🚗 {{ p.total_rentals }}
+              </span>
+            }
+            @if (p.years_without_claims > 0) {
+              <span class="stat" title="Años sin siniestros">
+                ✨ {{ p.years_without_claims }} año{{ p.years_without_claims > 1 ? 's' : '' }}
+              </span>
+            }
+          </div>
+        </div>
+        @if (p.has_protection) {
+          <div class="protection-badge" title="Tiene Protector de Bonus activo">
+            🛡️
+          </div>
+        }
       </div>
-
-      <div class="protection-badge" *ngIf="p.has_protection" title="Tiene Protector de Bonus activo">
-        🛡️
+    }
+    
+    @if (loading()) {
+      <div class="renter-badge loading">
+        <div class="skeleton"></div>
       </div>
-    </div>
-
-    <div class="renter-badge loading" *ngIf="loading()">
-      <div class="skeleton"></div>
-    </div>
-  `,
+    }
+    `,
   styles: [`
     .renter-badge {
       display: flex;

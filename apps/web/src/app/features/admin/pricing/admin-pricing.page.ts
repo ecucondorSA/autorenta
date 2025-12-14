@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { PricingService } from '../../../core/services/pricing.service';
@@ -27,7 +27,7 @@ interface DeliveryPricingConfig {
 @Component({
   standalone: true,
   selector: 'app-admin-pricing-page',
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './admin-pricing.page.html',
   styleUrl: './admin-pricing.page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

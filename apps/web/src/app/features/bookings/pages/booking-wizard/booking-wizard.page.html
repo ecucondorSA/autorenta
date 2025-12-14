@@ -27,7 +27,7 @@
       [totalSteps]="totalSteps"
       (stepClick)="goToStep($event)"
       data-testid="booking-step-indicator"
-    />
+      />
 
     <!-- Step Content -->
     <div class="step-content" data-testid="booking-step-content">
@@ -37,21 +37,21 @@
             [car]="car()"
             [data]="wizardData()"
             (dataChange)="onStepDataChange($event)"
-          />
+            />
         }
         @case (2) {
           <app-booking-insurance-step
             [car]="car()"
             [data]="wizardData()"
             (dataChange)="onStepDataChange($event)"
-          />
+            />
         }
         @case (3) {
           <app-booking-extras-step
             [car]="car()"
             [data]="wizardData()"
             (dataChange)="onStepDataChange($event)"
-          />
+            />
         }
         @case (4) {
           <app-booking-driver-step [data]="wizardData()" (dataChange)="onStepDataChange($event)" />
@@ -61,14 +61,14 @@
             [car]="car()"
             [data]="wizardData()"
             (dataChange)="onStepDataChange($event)"
-          />
+            />
         }
         @case (6) {
           <app-booking-review-step
             [car]="car()"
             [data]="wizardData()"
             (dataChange)="onStepDataChange($event)"
-          />
+            />
         }
       }
     </div>
@@ -78,15 +78,16 @@
 <!-- Navigation Buttons -->
 <ion-footer class="booking-wizard-footer">
   <div class="navigation-buttons">
-    <ion-button
-      *ngIf="canGoBack()"
-      fill="outline"
-      (click)="previousStep()"
-      class="nav-button back-button"
-    >
-      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-      Anterior
-    </ion-button>
+    @if (canGoBack()) {
+      <ion-button
+        fill="outline"
+        (click)="previousStep()"
+        class="nav-button back-button"
+        >
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        Anterior
+      </ion-button>
+    }
 
     @if (isLastStep()) {
       <ion-button
@@ -95,7 +96,7 @@
         class="nav-button submit-button"
         color="success"
         data-testid="booking-submit-button"
-      >
+        >
         @if (isLoading()) {
           <ion-spinner name="dots"></ion-spinner>
         } @else {
@@ -109,7 +110,7 @@
         (click)="nextStep()"
         class="nav-button next-button"
         data-testid="booking-next-button"
-      >
+        >
         Siguiente
         <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
       </ion-button>

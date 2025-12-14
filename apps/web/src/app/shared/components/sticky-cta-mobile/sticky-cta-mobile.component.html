@@ -2,29 +2,33 @@
 <div
   class="fixed bottom-0 left-0 right-0 z-fixed lg:hidden bg-surface-raised border-t border-border-default shadow-lg backdrop-blur-lg"
   style="padding-bottom: env(safe-area-inset-bottom)"
->
+  >
   <div class="px-4 py-3 flex items-center justify-between gap-3">
     <!-- Price Section -->
-    <div *ngIf="showPrice" class="flex-shrink-0">
-      <!-- Has dates selected - show total -->
-      <div *ngIf="totalPrice !== null && daysCount > 0" class="flex flex-col">
-        <p class="text-xs text-text-secondary dark:text-text-secondary">Total</p>
-        <p class="text-lg font-bold text-text-primary">{{ totalPrice | money }}</p>
-        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">
-          {{ daysCount }} {{ daysCount === 1 ? 'día' : 'días' }}
-        </p>
+    @if (showPrice) {
+      <div class="flex-shrink-0">
+        <!-- Has dates selected - show total -->
+        @if (totalPrice !== null && daysCount > 0) {
+          <div class="flex flex-col">
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Total</p>
+            <p class="text-lg font-bold text-text-primary">{{ totalPrice | money }}</p>
+            <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">
+              {{ daysCount }} {{ daysCount === 1 ? 'día' : 'días' }}
+            </p>
+          </div>
+        }
+        <!-- No dates selected - show per day -->
+        @if ((totalPrice === null || daysCount === 0) && pricePerDay !== null) {
+          <div
+            class="flex flex-col"
+            >
+            <p class="text-xs text-text-secondary dark:text-text-secondary">Desde</p>
+            <p class="text-lg font-bold text-text-primary">{{ pricePerDay | money }}</p>
+            <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">por día</p>
+          </div>
+        }
       </div>
-
-      <!-- No dates selected - show per day -->
-      <div
-        *ngIf="(totalPrice === null || daysCount === 0) && pricePerDay !== null"
-        class="flex flex-col"
-      >
-        <p class="text-xs text-text-secondary dark:text-text-secondary">Desde</p>
-        <p class="text-lg font-bold text-text-primary">{{ pricePerDay | money }}</p>
-        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">por día</p>
-      </div>
-    </div>
+    }
 
     <!-- CTA Button -->
     <button
@@ -32,36 +36,38 @@
       [disabled]="disabled || loading"
       [ngClass]="buttonClasses"
       class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 min-h-[44px]"
-    >
-      <ng-container *ngIf="!loading">
+      >
+      @if (!loading) {
         <!-- Icon -->
-        <svg
-          *ngIf="!disabled"
-          class="h-5 w-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <svg *ngIf="disabled" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-
+        @if (!disabled) {
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+              />
+          </svg>
+        }
+        @if (disabled) {
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+          </svg>
+        }
         <span>{{ ctaText }}</span>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="loading">
+      @if (loading) {
         <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
@@ -78,7 +84,7 @@
           ></path>
         </svg>
         <span>Procesando...</span>
-      </ng-container>
+      }
     </button>
   </div>
 </div>

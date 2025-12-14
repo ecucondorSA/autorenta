@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ReviewsService } from '../../../../core/services/reviews.service';
@@ -9,7 +9,7 @@ import type { Review } from '../../../../core/models';
   selector: 'app-moderate-reviews',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="container mx-auto px-4 py-8">
       <div class="mb-6">

@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { Review } from '../../../core/models';
@@ -10,7 +10,7 @@ import { FlagReviewModalComponent } from '../flag-review-modal/flag-review-modal
   selector: 'app-review-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, TranslateModule, FlagReviewModalComponent],
+  imports: [RouterLink, TranslateModule, FlagReviewModalComponent],
   templateUrl: './review-card.component.html',
   styleUrls: ['./review-card.component.css'],
 })

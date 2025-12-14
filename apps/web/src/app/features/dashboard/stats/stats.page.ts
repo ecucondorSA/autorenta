@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, computed, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
@@ -10,7 +10,7 @@ import type { DashboardStats } from '../../../core/models/dashboard.model';
   selector: 'app-stats-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, MoneyPipe],
+  imports: [RouterLink, MoneyPipe],
   templateUrl: './stats.page.html',
   styleUrls: ['./stats.page.css'],
 })

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component,
   EventEmitter,
   Input,
@@ -51,7 +51,7 @@ interface WindowWithInspectionCallback extends Window {
   selector: 'app-inspection-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent],
   templateUrl: './inspection-uploader.component.html',
   styleUrl: './inspection-uploader.component.css',
 })

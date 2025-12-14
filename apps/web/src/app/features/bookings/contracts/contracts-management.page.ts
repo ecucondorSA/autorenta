@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { BookingContract, ContractsService } from '../../../core/services/contra
   selector: 'app-contracts-management',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule, RouterModule],
+  imports: [FormsModule, IonicModule, RouterModule],
   templateUrl: './contracts-management.page.html',
   styleUrls: ['./contracts-management.page.scss'],
 })

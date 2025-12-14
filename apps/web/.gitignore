@@ -47,3 +47,10 @@ Thumbs.db
 .env
 .env.test
 app_start.log
+
+# Browser profile caches created during e2e runs
+e2e/.browser-profile*/
+e2e/.browser-profile-test/
+
+# E2E reports (generated)
+e2e/reports/

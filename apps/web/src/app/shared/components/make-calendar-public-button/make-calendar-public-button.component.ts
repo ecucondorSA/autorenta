@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Component, inject, Input, signal,
   ChangeDetectionStrategy} from '@angular/core';
@@ -10,7 +10,7 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
   selector: 'app-make-calendar-public-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <button
       (click)="makePublic()"

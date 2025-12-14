@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
@@ -41,7 +41,7 @@ interface CarWithOwner {
   selector: 'app-favorites-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FavoriteButtonComponent],
+  imports: [FavoriteButtonComponent],
   template: `
     <div class="favorites-page">
       <!-- Header -->

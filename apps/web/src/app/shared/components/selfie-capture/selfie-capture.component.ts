@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +16,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
 @Component({
   standalone: true,
   selector: 'app-selfie-capture',
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   template: `
     <div class="bg-surface-raised rounded-lg border border-border-default p-6">
       <!-- Header -->
@@ -25,7 +25,7 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center text-lg"
             [class]="getStatusBadgeClass()"
-          >
+            >
             {{ getStatusIcon() }}
           </div>
           <div>
@@ -39,202 +39,207 @@ import { IdentityLevelService } from '../../../core/services/identity-level.serv
           {{ getStatusLabel() }}
         </span>
       </div>
-
+    
       <!-- Verified State -->
-      <div
-        *ngIf="status().isVerified"
-        class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
-      >
-        <div class="flex items-center gap-2 text-success-strong">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span class="text-sm font-medium">Identidad verificada exitosamente</span>
-        </div>
-        <div class="mt-3 space-y-1 text-sm">
-          <p class="text-success-strong">✓ Face Match: {{ status().faceMatchScore }}%</p>
-          <p class="text-success-strong">✓ Liveness: {{ status().livenessScore }}%</p>
-        </div>
-      </div>
-
-      <!-- Level 2 Required -->
-      <div
-        *ngIf="status().requiresLevel2"
-        class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
-      >
-        <p class="text-sm text-warning-strong">
-          ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
-        </p>
-      </div>
-
-      <!-- Capture State -->
-      <div *ngIf="!status().isVerified && !status().requiresLevel2" class="space-y-4">
-        <!-- Instructions -->
+      @if (status().isVerified) {
         <div
-          *ngIf="!isRecording() && !hasVideo()"
-          class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg space-y-2"
-        >
-          <p class="text-sm font-medium text-cta-default">Instrucciones:</p>
-          <ul class="text-sm text-cta-default space-y-1 ml-4 list-disc">
-            <li>Asegúrate de estar en un lugar bien iluminado</li>
-            <li>Mira directamente a la cámara</li>
-            <li>Mantén tu rostro centrado en el recuadro</li>
-            <li>La grabación durará 3-5 segundos</li>
-          </ul>
-        </div>
-
-        <!-- Camera Preview / Video Preview -->
-        <div
-          class="relative rounded-lg overflow-hidden bg-surface-raised"
-          style="aspect-ratio: 4/3;"
-        >
-          <video
-            #videoPreview
-            [hidden]="!isRecording() && !hasVideo()"
-            [autoplay]="isRecording()"
-            [muted]="isRecording()"
-            [controls]="hasVideo()"
-            playsinline
-            class="w-full h-full object-cover"
-          ></video>
-
-          <!-- Recording Indicator -->
-          <div
-            *ngIf="isRecording()"
-            class="absolute top-4 right-4 flex items-center gap-2 bg-error-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
+          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg"
           >
-            <span class="w-2 h-2 bg-surface-raised rounded-full"></span>
-            <span>REC {{ recordingSeconds() }}s</span>
-          </div>
-
-          <!-- Face Frame Overlay -->
-          <div
-            *ngIf="isRecording()"
-            class="absolute inset-0 flex items-center justify-center pointer-events-none"
-          >
-            <div
-              class="border-4 border-white rounded-full"
-              style="width: 200px; height: 250px;"
-            ></div>
-          </div>
-
-          <!-- Placeholder -->
-          <div
-            *ngIf="!isRecording() && !hasVideo()"
-            class="absolute inset-0 flex flex-col items-center justify-center text-text-inverse"
-          >
-            <svg
-              class="w-20 h-20 mb-4 opacity-50"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <div class="flex items-center gap-2 text-success-strong">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-              />
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+                />
             </svg>
-            <p class="text-sm opacity-75">Cámara lista para grabar</p>
+            <span class="text-sm font-medium">Identidad verificada exitosamente</span>
+          </div>
+          <div class="mt-3 space-y-1 text-sm">
+            <p class="text-success-strong">✓ Face Match: {{ status().faceMatchScore }}%</p>
+            <p class="text-success-strong">✓ Liveness: {{ status().livenessScore }}%</p>
           </div>
         </div>
-
-        <!-- Actions -->
-        <div class="flex gap-3">
-          <!-- Start Recording -->
-          <button
-            *ngIf="!isRecording() && !hasVideo()"
-            type="button"
-            (click)="startRecording()"
-            [disabled]="processing()"
-            class="flex-grow px-6 py-3 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          >
-            <span class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
-                />
-              </svg>
-              <span>Iniciar Grabación</span>
-            </span>
-          </button>
-
-          <!-- Submit Video -->
-          <button
-            *ngIf="hasVideo() && !processing()"
-            type="button"
-            (click)="submitVideo()"
-            class="flex-grow px-6 py-3 bg-success-light text-text-primary rounded-lg font-medium hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2 transition-all"
-          >
-            <span class="flex items-center justify-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <span>Verificar Identidad</span>
-            </span>
-          </button>
-
-          <!-- Retake -->
-          <button
-            *ngIf="hasVideo() && !processing()"
-            type="button"
-            (click)="retake()"
-            class="px-6 py-3 bg-surface-raised border border-border-muted text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
-          >
-            Volver a Grabar
-          </button>
-        </div>
-
-        <!-- Processing State -->
+      }
+    
+      <!-- Level 2 Required -->
+      @if (status().requiresLevel2) {
         <div
-          *ngIf="processing()"
-          class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
-        >
-          <div class="flex items-center gap-3">
-            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
-            <div class="flex-grow">
-              <p class="text-sm font-medium text-cta-default">Procesando verificación facial...</p>
-              <p class="text-xs text-cta-default mt-1">Esto puede tardar unos segundos</p>
+          class="p-4 bg-warning-light/10 border border-warning-light/40 rounded-lg"
+          >
+          <p class="text-sm text-warning-strong">
+            ⚠️ Debes completar Level 2 (documentos) antes de verificar tu identidad con selfie.
+          </p>
+        </div>
+      }
+    
+      <!-- Capture State -->
+      @if (!status().isVerified && !status().requiresLevel2) {
+        <div class="space-y-4">
+          <!-- Instructions -->
+          @if (!isRecording() && !hasVideo()) {
+            <div
+              class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg space-y-2"
+              >
+              <p class="text-sm font-medium text-cta-default">Instrucciones:</p>
+              <ul class="text-sm text-cta-default space-y-1 ml-4 list-disc">
+                <li>Asegúrate de estar en un lugar bien iluminado</li>
+                <li>Mira directamente a la cámara</li>
+                <li>Mantén tu rostro centrado en el recuadro</li>
+                <li>La grabación durará 3-5 segundos</li>
+              </ul>
             </div>
+          }
+          <!-- Camera Preview / Video Preview -->
+          <div
+            class="relative rounded-lg overflow-hidden bg-surface-raised"
+            style="aspect-ratio: 4/3;"
+            >
+            <video
+              #videoPreview
+              [hidden]="!isRecording() && !hasVideo()"
+              [autoplay]="isRecording()"
+              [muted]="isRecording()"
+              [controls]="hasVideo()"
+              playsinline
+              class="w-full h-full object-cover"
+            ></video>
+            <!-- Recording Indicator -->
+            @if (isRecording()) {
+              <div
+                class="absolute top-4 right-4 flex items-center gap-2 bg-error-600 text-text-inverse px-3 py-2 rounded-full text-sm font-medium animate-pulse"
+                >
+                <span class="w-2 h-2 bg-surface-raised rounded-full"></span>
+                <span>REC {{ recordingSeconds() }}s</span>
+              </div>
+            }
+            <!-- Face Frame Overlay -->
+            @if (isRecording()) {
+              <div
+                class="absolute inset-0 flex items-center justify-center pointer-events-none"
+                >
+                <div
+                  class="border-4 border-white rounded-full"
+                  style="width: 200px; height: 250px;"
+                ></div>
+              </div>
+            }
+            <!-- Placeholder -->
+            @if (!isRecording() && !hasVideo()) {
+              <div
+                class="absolute inset-0 flex flex-col items-center justify-center text-text-inverse"
+                >
+                <svg
+                  class="w-20 h-20 mb-4 opacity-50"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                </svg>
+                <p class="text-sm opacity-75">Cámara lista para grabar</p>
+              </div>
+            }
           </div>
+          <!-- Actions -->
+          <div class="flex gap-3">
+            <!-- Start Recording -->
+            @if (!isRecording() && !hasVideo()) {
+              <button
+                type="button"
+                (click)="startRecording()"
+                [disabled]="processing()"
+                class="flex-grow px-6 py-3 bg-cta-default text-cta-text rounded-lg font-medium hover:bg-cta-default focus:ring-2 focus:ring-cta-default focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
+                      />
+                  </svg>
+                  <span>Iniciar Grabación</span>
+                </span>
+              </button>
+            }
+            <!-- Submit Video -->
+            @if (hasVideo() && !processing()) {
+              <button
+                type="button"
+                (click)="submitVideo()"
+                class="flex-grow px-6 py-3 bg-success-light text-text-primary rounded-lg font-medium hover:bg-success-light focus:ring-2 focus:ring-success-light focus:ring-offset-2 transition-all"
+                >
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                      />
+                  </svg>
+                  <span>Verificar Identidad</span>
+                </span>
+              </button>
+            }
+            <!-- Retake -->
+            @if (hasVideo() && !processing()) {
+              <button
+                type="button"
+                (click)="retake()"
+                class="px-6 py-3 bg-surface-raised border border-border-muted text-text-primary rounded-lg font-medium hover:bg-surface-base focus:ring-2 focus:ring-cta-default focus:ring-offset-2 transition-all"
+                >
+                Volver a Grabar
+              </button>
+            }
+          </div>
+          <!-- Processing State -->
+          @if (processing()) {
+            <div
+              class="p-4 bg-cta-default/10 border border-cta-default/40 rounded-lg"
+              >
+              <div class="flex items-center gap-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-cta-default"></div>
+                <div class="flex-grow">
+                  <p class="text-sm font-medium text-cta-default">Procesando verificación facial...</p>
+                  <p class="text-xs text-cta-default mt-1">Esto puede tardar unos segundos</p>
+                </div>
+              </div>
+            </div>
+          }
+          <!-- Success Message -->
+          @if (successMessage()) {
+            <div
+              class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
+              >
+              {{ successMessage() }}
+            </div>
+          }
+          <!-- Error Message -->
+          @if (error()) {
+            <div
+              class="p-4 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
+              >
+              {{ error() }}
+              @if (hasVideo()) {
+                <button
+                  type="button"
+                  (click)="retake()"
+                  class="mt-2 text-sm font-medium underline"
+                  >
+                  Intentar nuevamente
+                </button>
+              }
+            </div>
+          }
         </div>
-
-        <!-- Success Message -->
-        <div
-          *ngIf="successMessage()"
-          class="p-4 bg-success-light/10 border border-success-light/40 rounded-lg text-sm text-success-strong"
-        >
-          {{ successMessage() }}
-        </div>
-
-        <!-- Error Message -->
-        <div
-          *ngIf="error()"
-          class="p-4 bg-error-bg border border-error-border rounded-lg text-sm text-error-strong"
-        >
-          {{ error() }}
-          <button
-            *ngIf="hasVideo()"
-            type="button"
-            (click)="retake()"
-            class="mt-2 text-sm font-medium underline"
-          >
-            Intentar nuevamente
-          </button>
-        </div>
-      </div>
+      }
     </div>
-  `,
+    `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelfieCaptureComponent implements OnInit, OnDestroy {

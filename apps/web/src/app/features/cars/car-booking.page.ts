@@ -13,22 +13,28 @@ import { CalendarComponent } from '../../shared/calendar.component';
     <div class="p-6">
       <h2 class="text-xl font-bold">Reservar coche</h2>
       <app-calendar [carId]="carId" (rangeSelected)="onRange($event)"></app-calendar>
-
-      <div *ngIf="selectedRange" class="mt-4">
-        <p>Rango seleccionado: {{ selectedRange.start }} → {{ selectedRange.end }}</p>
-        <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded" (click)="book()">
-          Reservar (card)
-        </button>
-      </div>
-
-      <div *ngIf="result" class="mt-4 p-3 border rounded bg-gray-50">
-        Result: {{ result | json }}
-      </div>
-      <div *ngIf="error" class="mt-4 p-3 border rounded bg-red-50 text-red-700">
-        Error: {{ error }}
-      </div>
+    
+      @if (selectedRange) {
+        <div class="mt-4">
+          <p>Rango seleccionado: {{ selectedRange.start }} → {{ selectedRange.end }}</p>
+          <button class="mt-2 px-4 py-2 bg-green-600 text-white rounded" (click)="book()">
+            Reservar (card)
+          </button>
+        </div>
+      }
+    
+      @if (result) {
+        <div class="mt-4 p-3 border rounded bg-gray-50">
+          Result: {{ result | json }}
+        </div>
+      }
+      @if (error) {
+        <div class="mt-4 p-3 border rounded bg-red-50 text-red-700">
+          Error: {{ error }}
+        </div>
+      }
     </div>
-  `,
+    `,
 })
 export class CarBookingPage {
   carId = '11111111-1111-1111-1111-111111111111';

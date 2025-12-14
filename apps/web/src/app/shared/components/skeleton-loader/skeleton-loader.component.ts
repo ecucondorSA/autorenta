@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation' | 'table';
 
@@ -16,69 +16,90 @@ type SkeletonType = 'text' | 'circle' | 'rect' | 'card' | 'list' | 'conversation
 @Component({
   selector: 'app-skeleton-loader',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="skeleton-wrapper">
       <!-- Card Skeleton -->
-      <div *ngIf="type === 'card'" class="skeleton-card">
-        <div class="skeleton-image"></div>
-        <div class="skeleton-content">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-text"></div>
-          <div class="skeleton-line skeleton-text short"></div>
-        </div>
-      </div>
-
-      <!-- Text Skeleton -->
-      <div *ngIf="type === 'text'" class="skeleton-text-wrapper">
-        <div *ngFor="let _ of counter" class="skeleton-line"></div>
-      </div>
-
-      <!-- Circle Skeleton (para avatares) -->
-      <div *ngIf="type === 'circle'" class="skeleton-circle"></div>
-
-      <!-- Rectangle Skeleton -->
-      <div
-        *ngIf="type === 'rect'"
-        class="skeleton-rect"
-        [style.width.px]="width"
-        [style.height.px]="height"
-      ></div>
-
-      <!-- List Skeleton (para listas de items) -->
-      <div *ngIf="type === 'list'" class="skeleton-list">
-        <div *ngFor="let _ of counter" class="skeleton-list-item">
-          <div class="skeleton-circle small"></div>
-          <div class="skeleton-list-content">
-            <div class="skeleton-line skeleton-title"></div>
-            <div class="skeleton-line skeleton-text short"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Conversation Skeleton (para lista de conversaciones) -->
-      <div *ngIf="type === 'conversation'" class="skeleton-conversation">
-        <div *ngFor="let _ of counter" class="skeleton-conversation-item">
-          <div class="skeleton-circle"></div>
-          <div class="skeleton-conversation-content">
+      @if (type === 'card') {
+        <div class="skeleton-card">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-content">
             <div class="skeleton-line skeleton-title"></div>
             <div class="skeleton-line skeleton-text"></div>
             <div class="skeleton-line skeleton-text short"></div>
           </div>
         </div>
-      </div>
-
+      }
+    
+      <!-- Text Skeleton -->
+      @if (type === 'text') {
+        <div class="skeleton-text-wrapper">
+          @for (_ of counter; track _) {
+            <div class="skeleton-line"></div>
+          }
+        </div>
+      }
+    
+      <!-- Circle Skeleton (para avatares) -->
+      @if (type === 'circle') {
+        <div class="skeleton-circle"></div>
+      }
+    
+      <!-- Rectangle Skeleton -->
+      @if (type === 'rect') {
+        <div
+          class="skeleton-rect"
+          [style.width.px]="width"
+          [style.height.px]="height"
+        ></div>
+      }
+    
+      <!-- List Skeleton (para listas de items) -->
+      @if (type === 'list') {
+        <div class="skeleton-list">
+          @for (_ of counter; track _) {
+            <div class="skeleton-list-item">
+              <div class="skeleton-circle small"></div>
+              <div class="skeleton-list-content">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-text short"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    
+      <!-- Conversation Skeleton (para lista de conversaciones) -->
+      @if (type === 'conversation') {
+        <div class="skeleton-conversation">
+          @for (_ of counter; track _) {
+            <div class="skeleton-conversation-item">
+              <div class="skeleton-circle"></div>
+              <div class="skeleton-conversation-content">
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-text"></div>
+                <div class="skeleton-line skeleton-text short"></div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    
       <!-- Table Skeleton (para tablas) -->
-      <div *ngIf="type === 'table'" class="skeleton-table">
-        <div class="skeleton-table-header">
-          <div class="skeleton-line"></div>
+      @if (type === 'table') {
+        <div class="skeleton-table">
+          <div class="skeleton-table-header">
+            <div class="skeleton-line"></div>
+          </div>
+          @for (_ of counter; track _) {
+            <div class="skeleton-table-row">
+              <div class="skeleton-line"></div>
+            </div>
+          }
         </div>
-        <div *ngFor="let _ of counter" class="skeleton-table-row">
-          <div class="skeleton-line"></div>
-        </div>
-      </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .skeleton-wrapper {

@@ -1,9 +1,8 @@
 import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import { BonusMalusService, TierDisplay } from '../../../core/services/bonus-malus.service';
 import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
 
@@ -11,12 +10,18 @@ import { BonusProtectorService } from '../../../core/services/bonus-protector.se
   selector: 'app-bonus-malus-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterLink],
+  imports: [CommonModule, IonicModule],
   templateUrl: './bonus-malus-card.component.html',
+  styles: [`
+    :host { display: block; }
+    .tier-badge {
+      @apply px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider;
+    }
+  `]
 })
 export class BonusMalusCardComponent implements OnInit {
   private readonly bonusMalusService = inject(BonusMalusService);
-  private readonly bonusProtectorService = inject(BonusProtectorService); // NEW
+  private readonly bonusProtectorService = inject(BonusProtectorService);
 
   readonly loading = signal(true);
   readonly bonusMalus = signal<UserBonusMalus | null>(null);
@@ -29,15 +34,34 @@ export class BonusMalusCardComponent implements OnInit {
     return this.bonusMalusService.getBonusMalusDisplay(bm.total_factor);
   });
 
+  readonly tierDisplay = computed<TierDisplay | null>(() => {
+    const bm = this.bonusMalus();
+    if (!bm || !bm.tier) return null;
+    return this.bonusMalusService.getTierDisplay(bm.tier);
+  });
+
+  readonly depositBenefit = computed(() => {
+    const bm = this.bonusMalus();
+    if (!bm || !bm.tier) return 'Depósito estándar';
+    
+    switch(bm.tier) {
+      case 'elite': return '✨ Sin Depósito';
+      case 'trusted': return '50% OFF en Depósito';
+      default: return 'Depósito estándar';
+    }
+  });
+
   readonly scorePercentage = computed(() => {
     const bm = this.bonusMalus();
     if (!bm) return 50;
-    // Convert factor to 0-100 scale where 0 is best (bonus) and 100 is worst (malus)
-    // Factor range: -0.30 (max bonus) to +0.50 (max malus)
-    // Map to: 100 (best) to 0 (worst)
+    // Map factor (-0.15 to +0.20) to 0-100 score
+    // -0.15 => 100 (Perfect)
+    // 0.00 => 70 (Good)
+    // +0.20 => 40 (Poor)
     const factor = bm.total_factor;
-    const normalizedScore = ((factor + 0.30) / 0.80) * 100;
-    return Math.max(0, Math.min(100, 100 - normalizedScore));
+    // Formula aproximada
+    let score = 70 - (factor * 100); 
+    return Math.max(0, Math.min(100, score));
   });
 
   // NEW: Bonus Protector Signals
@@ -77,19 +101,5 @@ export class BonusMalusCardComponent implements OnInit {
 
   toggleDetails(): void {
     this.showDetails.update(v => !v);
-  }
-
-  getScoreColor(): string {
-    const score = this.scorePercentage();
-    if (score >= 75) return 'text-success-strong';
-    if (score >= 50) return 'text-warning-strong';
-    return 'text-error-strong';
-  }
-
-  getProgressBarColor(): string {
-    const score = this.scorePercentage();
-    if (score >= 75) return 'bg-success-500';
-    if (score >= 50) return 'bg-warning-500';
-    return 'bg-error-500';
   }
 }

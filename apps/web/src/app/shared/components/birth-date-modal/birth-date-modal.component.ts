@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, EventEmitter, inject, Output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,14 +14,14 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
   selector: 'app-birth-date-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   template: `
     <!-- Modal Overlay -->
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div
         class="w-full max-w-md rounded-2xl bg-white dark:bg-surface-raised shadow-xl"
         (click)="$event.stopPropagation()"
-      >
+        >
         <!-- Header -->
         <div class="px-6 pt-6 pb-4 border-b border-border-default dark:border-border-muted">
           <h2 class="text-xl font-bold text-text-primary dark:text-text-inverse">
@@ -31,13 +31,13 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             Para calcular el precio exacto del seguro, necesitamos conocer tu edad
           </p>
         </div>
-
+    
         <!-- Body -->
         <form [formGroup]="form" class="p-6 space-y-4">
           <div>
             <label
               class="block text-sm font-semibold text-text-primary dark:text-text-primary mb-2"
-            >
+              >
               Fecha de Nacimiento
             </label>
             <input
@@ -46,44 +46,49 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
               [max]="getMaxBirthDate()"
               class="w-full px-4 py-2.5 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-base text-text-primary dark:text-text-inverse focus:outline-none focus:ring-2 focus:ring-cta-default/50 focus:border-cta-default transition-colors"
               [class.border-error-text]="showError()"
-            />
-
+              />
+    
             <!-- Age Display -->
-            <p *ngIf="calculatedAge()" class="mt-2 text-sm text-success-strong">
-              ✓ Edad: {{ calculatedAge() }} años
-            </p>
-
+            @if (calculatedAge()) {
+              <p class="mt-2 text-sm text-success-strong">
+                ✓ Edad: {{ calculatedAge() }} años
+              </p>
+            }
+    
             <!-- Validation Error -->
-            <p *ngIf="showError()" class="mt-2 text-sm text-error-text">
-              {{ errorMessage() }}
-            </p>
-
+            @if (showError()) {
+              <p class="mt-2 text-sm text-error-text">
+                {{ errorMessage() }}
+              </p>
+            }
+    
             <!-- Helper Text -->
-            <p
-              *ngIf="!form.value.date_of_birth"
-              class="mt-2 text-xs text-text-secondary dark:text-text-secondary"
-            >
-              Debes tener al menos 18 años para alquilar un vehículo
-            </p>
+            @if (!form.value.date_of_birth) {
+              <p
+                class="mt-2 text-xs text-text-secondary dark:text-text-secondary"
+                >
+                Debes tener al menos 18 años para alquilar un vehículo
+              </p>
+            }
           </div>
-
+    
           <!-- Privacy Notice -->
           <div
             class="rounded-lg bg-surface-hover dark:bg-surface-base/50 p-4 border border-border-default dark:border-border-muted/50"
-          >
+            >
             <div class="flex gap-3">
               <svg
                 class="h-5 w-5 text-cta-default flex-shrink-0 mt-0.5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-              >
+                >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
+                  />
               </svg>
               <div>
                 <h4 class="text-sm font-semibold text-text-primary dark:text-text-primary">
@@ -97,7 +102,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             </div>
           </div>
         </form>
-
+    
         <!-- Footer -->
         <div class="flex gap-3 px-6 pb-6">
           <button
@@ -105,7 +110,7 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             (click)="onCancel()"
             [disabled]="saving()"
             class="flex-1 px-4 py-2.5 rounded-lg border border-border-default dark:border-border-muted text-text-primary dark:text-text-inverse hover:bg-surface-hover dark:hover:bg-surface-base/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
-          >
+            >
             Cancelar
           </button>
           <button
@@ -113,14 +118,18 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
             (click)="onSubmit()"
             [disabled]="!canSubmit() || saving()"
             class="flex-1 px-4 py-2.5 rounded-lg bg-cta-default hover:bg-cta-hover text-text-inverse-pure font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          >
-            <span *ngIf="saving()">Guardando...</span>
-            <span *ngIf="!saving()">Continuar</span>
+            >
+            @if (saving()) {
+              <span>Guardando...</span>
+            }
+            @if (!saving()) {
+              <span>Continuar</span>
+            }
           </button>
         </div>
       </div>
     </div>
-  `,
+    `,
   styles: [
     `
       :host {

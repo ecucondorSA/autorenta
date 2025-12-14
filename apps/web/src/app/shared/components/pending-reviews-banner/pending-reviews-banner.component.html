@@ -1,106 +1,105 @@
-<div
-  *ngIf="hasPendingReviews && !isDismissed() && !loading()"
-  class="pending-reviews-banner bg-gradient-to-r from-warning-50 to-orange-50 border-l-4 border-warning-border p-4 mb-4 rounded-r-lg shadow-md"
->
-  <div class="flex items-start justify-between">
-    <div class="flex-1">
-      <!-- Header -->
-      <div class="flex items-center gap-2 mb-2">
-        <svg
-          class="w-6 h-6 text-warning-text"
-          [class.animate-bounce]="hasUrgentReviews"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-          />
-        </svg>
-        <h3 class="font-semibold text-warning-strong">
-          {{ hasUrgentReviews ? '¡Urgente!' : '' }}
-          Tenés {{ pendingReviews().length }}
-          {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
-        </h3>
-      </div>
-
-      <!-- Message -->
-      <p class="text-sm text-warning-strong mb-3">
-        <ng-container *ngIf="hasUrgentReviews">
-          <strong>{{ urgentReviews.length }}</strong>
-          {{ urgentReviews.length === 1 ? 'reseña vence' : 'reseñas vencen' }} en menos de 3 días.
-        </ng-container>
-        <ng-container *ngIf="!hasUrgentReviews">
-          Calificá tus viajes recientes para ayudar a la comunidad.
-        </ng-container>
-      </p>
-
-      <!-- List of pending reviews -->
-      <div class="space-y-2">
-        <div
-          *ngFor="let review of pendingReviews().slice(0, 2)"
-          class="flex items-center justify-between text-sm bg-surface-raised rounded-lg p-2 shadow-sm"
-        >
-          <div class="flex-1">
-            <p class="font-medium text-text-primary">{{ review.car_title }}</p>
-            <p class="text-xs text-text-secondary dark:text-text-secondary">
-              {{ review.reviewee_name }}
-            </p>
-          </div>
-          <div class="text-right">
-            <p
-              class="text-xs font-semibold"
-              [class.text-error-text]="review.days_remaining <= 3"
-              [class.text-warning-text]="review.days_remaining > 3"
-            >
-              {{ review.days_remaining }}
-              {{ review.days_remaining === 1 ? 'día' : 'días' }}
-            </p>
-            <a
-              [routerLink]="['/bookings', review.booking_id]"
-              class="text-xs text-cta-default hover:text-cta-default underline"
-            >
-              Calificar →
-            </a>
-          </div>
-        </div>
-
-        <!-- Show more indicator -->
-        <p *ngIf="pendingReviews().length > 2" class="text-xs text-warning-strong text-center">
-          + {{ pendingReviews().length - 2 }} más
-        </p>
-      </div>
-
-      <!-- Action buttons -->
-      <div class="mt-3 flex gap-2">
-        <a
-          routerLink="/reviews/pending"
-          class="inline-flex items-center px-4 py-2 bg-warning-600 text-text-inverse text-sm font-medium rounded-lg hover:bg-warning-700 transition-colors"
-        >
-          Ver todas las reseñas pendientes
-        </a>
-        <a
-          routerLink="/bookings"
-          class="inline-flex items-center px-4 py-2 bg-surface-raised text-warning-text text-sm font-medium rounded-lg border border-warning-600 hover:bg-warning-bg transition-colors"
-        >
-          Ver mis reservas
-        </a>
-      </div>
-    </div>
-
-    <!-- Dismiss button -->
-    <button
-      (click)="dismiss()"
-      class="ml-4 text-warning-text hover:text-warning-strong transition-colors"
-      aria-label="Cerrar"
+@if (hasPendingReviews && !isDismissed() && !loading()) {
+  <div
+    class="pending-reviews-banner bg-gradient-to-r from-warning-50 to-orange-50 border-l-4 border-warning-border p-4 mb-4 rounded-r-lg shadow-md"
     >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
+    <div class="flex items-start justify-between">
+      <div class="flex-1">
+        <!-- Header -->
+        <div class="flex items-center gap-2 mb-2">
+          <svg
+            class="w-6 h-6 text-warning-text"
+            [class.animate-bounce]="hasUrgentReviews"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            >
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+              />
+          </svg>
+          <h3 class="font-semibold text-warning-strong font-satoshi">
+            {{ hasUrgentReviews ? '¡Urgente!' : '' }}
+            Tenés {{ pendingReviews().length }}
+            {{ pendingReviews().length === 1 ? 'reseña pendiente' : 'reseñas pendientes' }}
+          </h3>
+        </div>
+        <!-- Message -->
+        <p class="text-sm text-warning-strong mb-3">
+          @if (hasUrgentReviews) {
+            <strong>{{ urgentReviews.length }}</strong>
+            {{ urgentReviews.length === 1 ? 'reseña vence' : 'reseñas vencen' }} en menos de 3 días.
+          }
+          @if (!hasUrgentReviews) {
+            Calificá tus viajes recientes para ayudar a la comunidad.
+          }
+        </p>
+        <!-- List of pending reviews -->
+        <div class="space-y-2">
+          @for (review of pendingReviews().slice(0, 2); track review) {
+            <div
+              class="flex items-center justify-between text-sm bg-surface-raised rounded-lg p-2 shadow-sm"
+              >
+              <div class="flex-1">
+                <p class="font-medium text-text-primary">{{ review.car_title }}</p>
+                <p class="text-xs text-text-secondary dark:text-text-secondary">
+                  {{ review.reviewee_name }}
+                </p>
+              </div>
+              <div class="text-right">
+                <p
+                  class="text-xs font-semibold"
+                  [class.text-error-text]="review.days_remaining <= 3"
+                  [class.text-warning-text]="review.days_remaining > 3"
+                  >
+                  {{ review.days_remaining }}
+                  {{ review.days_remaining === 1 ? 'día' : 'días' }}
+                </p>
+                <a
+                  [routerLink]="['/bookings', review.booking_id]"
+                  class="text-xs text-cta-default hover:text-cta-default underline"
+                  >
+                  Calificar →
+                </a>
+              </div>
+            </div>
+          }
+          <!-- Show more indicator -->
+          @if (pendingReviews().length > 2) {
+            <p class="text-xs text-warning-strong text-center">
+              + {{ pendingReviews().length - 2 }} más
+            </p>
+          }
+        </div>
+        <!-- Action buttons -->
+        <div class="mt-3 flex gap-2">
+          <a
+            routerLink="/reviews/pending"
+            class="inline-flex items-center px-4 py-2 bg-warning-600 text-text-inverse text-sm font-medium rounded-lg hover:bg-warning-700 transition-colors"
+            >
+            Ver todas las reseñas pendientes
+          </a>
+          <a
+            routerLink="/bookings"
+            class="inline-flex items-center px-4 py-2 bg-surface-raised text-warning-text text-sm font-medium rounded-lg border border-warning-600 hover:bg-warning-bg transition-colors"
+            >
+            Ver mis reservas
+          </a>
+        </div>
+      </div>
+      <!-- Dismiss button -->
+      <button
+        (click)="dismiss()"
+        class="ml-4 text-warning-text hover:text-warning-strong transition-colors"
+        aria-label="Cerrar"
+        >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+            />
+        </svg>
+      </button>
+    </div>
   </div>
-</div>
+}

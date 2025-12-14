@@ -42,7 +42,7 @@
                 <div class="flex items-center mb-2">
                   <ion-spinner name="crescent" class="mr-3"></ion-spinner>
                   <div class="flex-1">
-                    <h3 class="font-semibold">Verificando pago...</h3>
+                    <h3 class="font-semibold font-satoshi font-luxury">Verificando pago...</h3>
                     <p class="text-sm">
                       Esperando confirmación de MercadoPago
                       @if (pollAttempts > 0) {
@@ -70,8 +70,8 @@
               <ion-card-content class="flex items-center">
                 <ion-icon name="checkmark-circle" class="text-3xl mr-3"></ion-icon>
                 <div>
-                  <h3 class="font-semibold">¡Pago confirmado!</h3>
-                  <p class="text-sm">MercadoPago procesó tu pago exitosamente</p>
+                  <h3 class="font-semibold font-satoshi font-luxury">¡Pago confirmado!</h3>
+                  <p class="text-sm font-luxury">MercadoPago procesó tu pago exitosamente</p>
                 </div>
               </ion-card-content>
             </ion-card>
@@ -81,7 +81,7 @@
                 <div class="flex items-center mb-3">
                   <ion-icon name="close-circle" class="text-3xl mr-3"></ion-icon>
                   <div>
-                    <h3 class="font-semibold">Pago rechazado</h3>
+                    <h3 class="font-semibold font-satoshi font-luxury">Pago rechazado</h3>
                     <p class="text-sm">
                       MercadoPago no pudo procesar tu pago. Esto puede deberse a fondos
                       insuficientes, tarjeta vencida o problemas de seguridad.
@@ -117,7 +117,7 @@
                 <div class="flex items-center mb-3">
                   <ion-icon name="time-outline" class="text-3xl mr-3"></ion-icon>
                   <div>
-                    <h3 class="font-semibold">Verificación en proceso</h3>
+                    <h3 class="font-semibold font-satoshi">Verificación en proceso</h3>
                     <p class="text-sm">
                       El pago puede tardar unos minutos en confirmarse. Revisa tu email o consulta
                       el detalle de la reserva más tarde.
@@ -146,7 +146,7 @@
       </div>
 
       <!-- Main Message -->
-      <h1 class="text-3xl font-bold text-center mb-2 text-text-primary dark:text-text-inverse">
+      <h1 class="text-3xl font-bold text-center mb-2 text-text-primary dark:text-text-inverse tracking-tight font-satoshi">
         ¡Tu reserva está confirmada!
       </h1>
 
@@ -179,7 +179,7 @@
                 ></ion-icon>
               </div>
               <div>
-                <h3 class="font-semibold text-lg">{{ getCarName() }}</h3>
+                <h3 class="font-semibold text-lg font-satoshi">{{ getCarName() }}</h3>
                 <p
                   class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                 >
@@ -243,7 +243,7 @@
             <ion-item>
               <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
-                <h3 class="font-semibold">Revisa tu email</h3>
+                <h3 class="font-semibold font-satoshi">Revisa tu email</h3>
                 <p
                   class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                 >
@@ -255,7 +255,7 @@
             <ion-item>
               <ion-icon name="chatbubble-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
-                <h3 class="font-semibold">Contacta al propietario</h3>
+                <h3 class="font-semibold font-satoshi font-luxury">Contacta al propietario</h3>
                 <p
                   class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                 >
@@ -267,7 +267,7 @@
             <ion-item>
               <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
-                <h3 class="font-semibold">Prepara tu documentación</h3>
+                <h3 class="font-semibold font-satoshi">Prepara tu documentación</h3>
                 <p
                   class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                 >
@@ -279,7 +279,7 @@
             <ion-item lines="none">
               <ion-icon name="car-outline" slot="start" color="primary"></ion-icon>
               <ion-label class="ion-text-wrap">
-                <h3 class="font-semibold">¡Disfruta tu viaje!</h3>
+                <h3 class="font-semibold font-satoshi font-friendly">¡Disfruta tu viaje!</h3>
                 <p
                   class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
                 >

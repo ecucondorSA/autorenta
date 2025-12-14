@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, computed, OnDestroy, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
@@ -53,7 +53,7 @@ interface DatabaseTransactionRow {
   selector: 'app-deposits-monitoring',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './deposits-monitoring.page.html',
   styleUrls: ['./deposits-monitoring.page.css'],
 })

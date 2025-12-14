@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, EventEmitter, inject, Output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +26,7 @@ export interface LocationSelection {
   selector: 'app-location-picker',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div class="location-picker">
       <div class="location-picker-header">

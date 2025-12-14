@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { SettlementService } from '../../../core/services/settlement.service';
   selector: 'app-settlement-simulator',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './settlement-simulator.component.html',
 })
 export class SettlementSimulatorComponent {

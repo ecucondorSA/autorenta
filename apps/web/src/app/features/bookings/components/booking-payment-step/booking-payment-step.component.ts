@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -8,7 +8,7 @@ import { BookingWizardData } from '../../pages/booking-wizard/booking-wizard.pag
 @Component({
   selector: 'app-booking-payment-step',
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="payment-step-container">

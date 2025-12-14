@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { DriverProfileService } from '../../core/services/driver-profile.service';
@@ -24,7 +24,7 @@ import { MetaService } from '../../core/services/meta.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-driver-profile-page',
-  imports: [CommonModule, IonicModule, RouterLink],
+  imports: [IonicModule, RouterLink],
   template: `
     <ion-header class="header-primary">
       <ion-toolbar>
@@ -39,326 +39,334 @@ import { MetaService } from '../../core/services/meta.service';
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="profile-content">
       <!-- Loading State -->
-      <div *ngIf="driverService.loading()" class="loading-section">
-        <ion-card>
-          <ion-card-content class="loading-content">
-            <ion-spinner name="crescent" color="primary"></ion-spinner>
-            <p>Cargando tu perfil de conductor...</p>
-          </ion-card-content>
-        </ion-card>
-      </div>
-
+      @if (driverService.loading()) {
+        <div class="loading-section">
+          <ion-card>
+            <ion-card-content class="loading-content">
+              <ion-spinner name="crescent" color="primary"></ion-spinner>
+              <p>Cargando tu perfil de conductor...</p>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      }
+    
       <!-- Profile Loaded -->
-      <div *ngIf="!driverService.loading() && profile()">
-        <!-- Hero Section - Class Overview -->
-        <div class="hero-section">
-          <ion-card class="hero-card">
-            <ion-card-content>
-              <div class="hero-content">
-                <div class="class-display">
-                  <div class="class-badge" [class]="getClassStyle()">
-                    <div class="class-number">{{ driverClass() }}</div>
-                    <div class="class-label">CLASE</div>
+      @if (!driverService.loading() && profile()) {
+        <div>
+          <!-- Hero Section - Class Overview -->
+          <div class="hero-section">
+            <ion-card class="hero-card">
+              <ion-card-content>
+                <div class="hero-content">
+                  <div class="class-display">
+                    <div class="class-badge" [class]="getClassStyle()">
+                      <div class="class-number">{{ driverClass() }}</div>
+                      <div class="class-label">CLASE</div>
+                    </div>
+                    <div class="class-info">
+                      <h1>{{ getClassTitle() }}</h1>
+                      <p class="class-description">{{ classDescription() }}</p>
+                      <div class="benefit-highlight" [class]="getBenefitStyle()">
+                        <ion-icon [name]="getBenefitIcon()"></ion-icon>
+                        <span>{{ getBenefitText() }}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div class="class-info">
-                    <h1>{{ getClassTitle() }}</h1>
-                    <p class="class-description">{{ classDescription() }}</p>
-                    <div class="benefit-highlight" [class]="getBenefitStyle()">
-                      <ion-icon [name]="getBenefitIcon()"></ion-icon>
-                      <span>{{ getBenefitText() }}</span>
+                  <!-- Status Indicator -->
+                  <div class="status-indicator">
+                    <div class="status-dot" [class]="getStatusColor()"></div>
+                    <span class="status-text">{{ getStatusText() }}</span>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <!-- Protection Status -->
+          @if (!bonusProtectorService.loading()) {
+            <div class="protection-section">
+              <ion-card class="protection-card" [class]="getProtectionCardStyle()">
+                <ion-card-content>
+                  <div class="protection-header">
+                    <ion-icon
+                      [name]="getProtectionIcon()"
+                      [color]="getProtectionIconColor()"
+                    ></ion-icon>
+                    <div class="protection-info">
+                      <h3>{{ getProtectionTitle() }}</h3>
+                      <p>{{ getProtectionMessage() }}</p>
+                    </div>
+                    @if (needsProtection()) {
+                      <ion-button
+                        fill="solid"
+                        size="small"
+                        (click)="buyProtection()"
+                        >
+                        Proteger
+                      </ion-button>
+                    }
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </div>
+          }
+          <!-- Score Telemático -->
+          <div class="score-section">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="analytics-outline" color="primary"></ion-icon>
+                  Score Telemático
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="score-display">
+                  <div class="score-gauge">
+                    <svg viewBox="0 0 200 120" class="gauge-svg">
+                      <!-- Background arc -->
+                      <path
+                        d="M 20 100 A 80 80 0 0 1 180 100"
+                        stroke="#e0e0e0"
+                        stroke-width="20"
+                        fill="none"
+                      ></path>
+                      <!-- Score arc -->
+                      <path
+                        d="M 20 100 A 80 80 0 0 1 180 100"
+                        [attr.stroke]="getScoreColor()"
+                        stroke-width="20"
+                        fill="none"
+                        [attr.stroke-dasharray]="getScoreArcLength()"
+                        [attr.stroke-dashoffset]="getScoreArcOffset()"
+                        class="score-arc"
+                      ></path>
+                    </svg>
+                    <div class="score-number">
+                      <span class="score-value">{{ driverScore() }}</span>
+                      <span class="score-max">/100</span>
+                    </div>
+                  </div>
+                  <div class="score-breakdown">
+                    <div class="score-category">
+                      <div class="category-bar">
+                        <div
+                          class="bar-fill"
+                          [style.width]="getSpeedScore() + '%'"
+                          [style.background]="'var(--system-blue-default, #3880ff)'"
+                        ></div>
+                      </div>
+                      <span>Velocidad: {{ getSpeedScore() }}%</span>
+                    </div>
+                    <div class="score-category">
+                      <div class="category-bar">
+                        <div
+                          class="bar-fill"
+                          [style.width]="getBrakingScore() + '%'"
+                          [style.background]="'var(--success-default, #2dd36f)'"
+                        ></div>
+                      </div>
+                      <span>Frenado: {{ getBrakingScore() }}%</span>
+                    </div>
+                    <div class="score-category">
+                      <div class="category-bar">
+                        <div
+                          class="bar-fill"
+                          [style.width]="getAccelerationScore() + '%'"
+                          [style.background]="'var(--warning-default, #ffc409)'"
+                        ></div>
+                      </div>
+                      <span>Aceleración: {{ getAccelerationScore() }}%</span>
                     </div>
                   </div>
                 </div>
-
-                <!-- Status Indicator -->
-                <div class="status-indicator">
-                  <div class="status-dot" [class]="getStatusColor()"></div>
-                  <span class="status-text">{{ getStatusText() }}</span>
-                </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
-
-        <!-- Protection Status -->
-        <div class="protection-section" *ngIf="!bonusProtectorService.loading()">
-          <ion-card class="protection-card" [class]="getProtectionCardStyle()">
-            <ion-card-content>
-              <div class="protection-header">
-                <ion-icon
-                  [name]="getProtectionIcon()"
-                  [color]="getProtectionIconColor()"
-                ></ion-icon>
-                <div class="protection-info">
-                  <h3>{{ getProtectionTitle() }}</h3>
-                  <p>{{ getProtectionMessage() }}</p>
-                </div>
-                <ion-button
-                  *ngIf="needsProtection()"
-                  fill="solid"
-                  size="small"
-                  (click)="buyProtection()"
-                >
-                  Proteger
-                </ion-button>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
-
-        <!-- Score Telemático -->
-        <div class="score-section">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
-                <ion-icon name="analytics-outline" color="primary"></ion-icon>
-                Score Telemático
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <div class="score-display">
-                <div class="score-gauge">
-                  <svg viewBox="0 0 200 120" class="gauge-svg">
-                    <!-- Background arc -->
-                    <path
-                      d="M 20 100 A 80 80 0 0 1 180 100"
-                      stroke="#e0e0e0"
-                      stroke-width="20"
-                      fill="none"
-                    ></path>
-                    <!-- Score arc -->
-                    <path
-                      d="M 20 100 A 80 80 0 0 1 180 100"
-                      [attr.stroke]="getScoreColor()"
-                      stroke-width="20"
-                      fill="none"
-                      [attr.stroke-dasharray]="getScoreArcLength()"
-                      [attr.stroke-dashoffset]="getScoreArcOffset()"
-                      class="score-arc"
-                    ></path>
-                  </svg>
-                  <div class="score-number">
-                    <span class="score-value">{{ driverScore() }}</span>
-                    <span class="score-max">/100</span>
-                  </div>
-                </div>
-                <div class="score-breakdown">
-                  <div class="score-category">
-                    <div class="category-bar">
-                      <div
-                        class="bar-fill"
-                        [style.width]="getSpeedScore() + '%'"
-                        [style.background]="'var(--system-blue-default, #3880ff)'"
-                      ></div>
+                <p class="score-message">{{ getScoreMessage() }}</p>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <!-- Benefits Comparison -->
+          <div class="benefits-section">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="trophy-outline" color="warning"></ion-icon>
+                  Tus Beneficios Actuales
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="benefits-grid">
+                  <div class="benefit-item" [class]="getFeeStyle()">
+                    <div class="benefit-icon">
+                      <ion-icon [name]="getFeeIcon()"></ion-icon>
                     </div>
-                    <span>Velocidad: {{ getSpeedScore() }}%</span>
-                  </div>
-                  <div class="score-category">
-                    <div class="category-bar">
-                      <div
-                        class="bar-fill"
-                        [style.width]="getBrakingScore() + '%'"
-                        [style.background]="'var(--success-default, #2dd36f)'"
-                      ></div>
+                    <div class="benefit-content">
+                      <h4>Tarifa de Servicio</h4>
+                      <p class="benefit-value">{{ getFeeText() }}</p>
+                      <p class="benefit-description">{{ getFeeDescription() }}</p>
                     </div>
-                    <span>Frenado: {{ getBrakingScore() }}%</span>
                   </div>
-                  <div class="score-category">
-                    <div class="category-bar">
-                      <div
-                        class="bar-fill"
-                        [style.width]="getAccelerationScore() + '%'"
-                        [style.background]="'var(--warning-default, #ffc409)'"
-                      ></div>
+                  <div class="benefit-item" [class]="getGuaranteeStyle()">
+                    <div class="benefit-icon">
+                      <ion-icon [name]="getGuaranteeIcon()"></ion-icon>
                     </div>
-                    <span>Aceleración: {{ getAccelerationScore() }}%</span>
+                    <div class="benefit-content">
+                      <h4>Garantía</h4>
+                      <p class="benefit-value">{{ getGuaranteeText() }}</p>
+                      <p class="benefit-description">{{ getGuaranteeDescription() }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <p class="score-message">{{ getScoreMessage() }}</p>
-            </ion-card-content>
-          </ion-card>
-        </div>
-
-        <!-- Benefits Comparison -->
-        <div class="benefits-section">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
-                <ion-icon name="trophy-outline" color="warning"></ion-icon>
-                Tus Beneficios Actuales
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <div class="benefits-grid">
-                <div class="benefit-item" [class]="getFeeStyle()">
-                  <div class="benefit-icon">
-                    <ion-icon [name]="getFeeIcon()"></ion-icon>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <!-- Claims History -->
+          <div class="claims-section">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="document-text-outline" color="medium"></ion-icon>
+                  Historial de Siniestros
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="claims-overview">
+                  <div class="claim-metric">
+                    <div class="metric-number total">{{ profile()?.total_claims || 0 }}</div>
+                    <p>Total de Siniestros</p>
                   </div>
-                  <div class="benefit-content">
-                    <h4>Tarifa de Servicio</h4>
-                    <p class="benefit-value">{{ getFeeText() }}</p>
-                    <p class="benefit-description">{{ getFeeDescription() }}</p>
+                  <div class="claim-metric">
+                    <div class="metric-number fault">{{ profile()?.claims_with_fault || 0 }}</div>
+                    <p>Con Responsabilidad</p>
                   </div>
-                </div>
-
-                <div class="benefit-item" [class]="getGuaranteeStyle()">
-                  <div class="benefit-icon">
-                    <ion-icon [name]="getGuaranteeIcon()"></ion-icon>
-                  </div>
-                  <div class="benefit-content">
-                    <h4>Garantía</h4>
-                    <p class="benefit-value">{{ getGuaranteeText() }}</p>
-                    <p class="benefit-description">{{ getGuaranteeDescription() }}</p>
+                  <div class="claim-metric">
+                    <div class="metric-number good">{{ profile()?.good_years || 0 }}</div>
+                    <p>Años Sin Siniestros</p>
                   </div>
                 </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
-
-        <!-- Claims History -->
-        <div class="claims-section">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
-                <ion-icon name="document-text-outline" color="medium"></ion-icon>
-                Historial de Siniestros
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <div class="claims-overview">
-                <div class="claim-metric">
-                  <div class="metric-number total">{{ profile()?.total_claims || 0 }}</div>
-                  <p>Total de Siniestros</p>
-                </div>
-                <div class="claim-metric">
-                  <div class="metric-number fault">{{ profile()?.claims_with_fault || 0 }}</div>
-                  <p>Con Responsabilidad</p>
-                </div>
-                <div class="claim-metric">
-                  <div class="metric-number good">{{ profile()?.good_years || 0 }}</div>
-                  <p>Años Sin Siniestros</p>
-                </div>
-              </div>
-
-              <div class="claims-timeline" *ngIf="profile()?.last_claim_at">
-                <div class="timeline-item">
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h4>Último Siniestro</h4>
-                    <p>{{ formatDate(profile()?.last_claim_at) }}</p>
-                    <ion-badge [color]="profile()?.last_claim_with_fault ? 'danger' : 'medium'">
-                      {{
-                        profile()?.last_claim_with_fault
+                @if (profile()?.last_claim_at) {
+                  <div class="claims-timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <div class="timeline-content">
+                        <h4>Último Siniestro</h4>
+                        <p>{{ formatDate(profile()?.last_claim_at) }}</p>
+                        <ion-badge [color]="profile()?.last_claim_with_fault ? 'danger' : 'medium'">
+                          {{
+                          profile()?.last_claim_with_fault
                           ? 'Con responsabilidad'
                           : 'Sin responsabilidad'
-                      }}
-                    </ion-badge>
+                          }}
+                        </ion-badge>
+                      </div>
+                    </div>
                   </div>
+                }
+                @if (!profile()?.total_claims) {
+                  <div class="no-claims">
+                    <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+                    <p>¡Excelente! No tienes siniestros registrados</p>
+                  </div>
+                }
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <!-- Class Progression -->
+          <div class="progression-section">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="trending-up-outline" color="success"></ion-icon>
+                  Progreso de Clase
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="class-ladder">
+                  @for (classItem of getClassLadder(); track classItem) {
+                    <div
+                      class="ladder-item"
+                      [class.current]="classItem.class === driverClass()"
+                      [class.better]="classItem.class < driverClass()"
+                      [class.worse]="classItem.class > driverClass()"
+                      >
+                      <div class="ladder-class">{{ classItem.class }}</div>
+                      <div class="ladder-info">
+                        <h4>{{ classItem.title }}</h4>
+                        <p>{{ classItem.benefit }}</p>
+                      </div>
+                      <div class="ladder-status">
+                        @if (classItem.class === driverClass()) {
+                          <ion-icon
+                            name="location"
+                            color="primary"
+                          ></ion-icon>
+                        }
+                        @if (classItem.class < driverClass()) {
+                          <ion-icon
+                            name="arrow-up"
+                            color="success"
+                          ></ion-icon>
+                        }
+                        @if (classItem.class > driverClass()) {
+                          <ion-icon
+                            name="arrow-down"
+                            color="danger"
+                          ></ion-icon>
+                        }
+                      </div>
+                    </div>
+                  }
                 </div>
-              </div>
-
-              <div class="no-claims" *ngIf="!profile()?.total_claims">
-                <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
-                <p>¡Excelente! No tienes siniestros registrados</p>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
-
-        <!-- Class Progression -->
-        <div class="progression-section">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>
-                <ion-icon name="trending-up-outline" color="success"></ion-icon>
-                Progreso de Clase
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <div class="class-ladder">
-                <div
-                  class="ladder-item"
-                  *ngFor="let classItem of getClassLadder()"
-                  [class.current]="classItem.class === driverClass()"
-                  [class.better]="classItem.class < driverClass()"
-                  [class.worse]="classItem.class > driverClass()"
-                >
-                  <div class="ladder-class">{{ classItem.class }}</div>
-                  <div class="ladder-info">
-                    <h4>{{ classItem.title }}</h4>
-                    <p>{{ classItem.benefit }}</p>
+                @if (canImprove()) {
+                  <div class="progression-message">
+                    <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+                    <p>
+                      Mantén un historial limpio por
+                      <strong>{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong>
+                      para mejorar a Clase {{ getNextBetterClass() }}
+                    </p>
                   </div>
-                  <div class="ladder-status">
-                    <ion-icon
-                      *ngIf="classItem.class === driverClass()"
-                      name="location"
-                      color="primary"
-                    ></ion-icon>
-                    <ion-icon
-                      *ngIf="classItem.class < driverClass()"
-                      name="arrow-up"
-                      color="success"
-                    ></ion-icon>
-                    <ion-icon
-                      *ngIf="classItem.class > driverClass()"
-                      name="arrow-down"
-                      color="danger"
-                    ></ion-icon>
-                  </div>
-                </div>
-              </div>
-
-              <div class="progression-message" *ngIf="canImprove()">
-                <ion-icon name="information-circle-outline" color="primary"></ion-icon>
-                <p>
-                  Mantén un historial limpio por
-                  <strong>{{ yearsToImprove() }} año{{ yearsToImprove() > 1 ? 's' : '' }}</strong>
-                  para mejorar a Clase {{ getNextBetterClass() }}
-                </p>
-              </div>
-            </ion-card-content>
-          </ion-card>
+                }
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <!-- Quick Actions -->
+          <div class="actions-section">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-button expand="block" fill="outline" [routerLink]="['/wallet']">
+                    <ion-icon slot="start" name="wallet-outline"></ion-icon>
+                    Mi Wallet
+                  </ion-button>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-button expand="block" fill="outline" [routerLink]="['/protections']">
+                    <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
+                    Proteger
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
         </div>
-
-        <!-- Quick Actions -->
-        <div class="actions-section">
-          <ion-grid>
-            <ion-row>
-              <ion-col size="6">
-                <ion-button expand="block" fill="outline" [routerLink]="['/wallet']">
-                  <ion-icon slot="start" name="wallet-outline"></ion-icon>
-                  Mi Wallet
-                </ion-button>
-              </ion-col>
-              <ion-col size="6">
-                <ion-button expand="block" fill="outline" [routerLink]="['/protections']">
-                  <ion-icon slot="start" name="shield-checkmark-outline"></ion-icon>
-                  Proteger
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </div>
-      </div>
-
+      }
+    
       <!-- No Profile State -->
-      <div *ngIf="!driverService.loading() && !profile()" class="no-profile-section">
-        <ion-card>
-          <ion-card-content class="no-profile-content">
-            <ion-icon name="person-add-outline" color="medium"></ion-icon>
-            <h2>Crear Perfil de Conductor</h2>
-            <p>Inicia tu perfil de riesgo para acceder a beneficios y descuentos</p>
-            <ion-button expand="block" (click)="initializeProfile()"> Crear Perfil </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </div>
+      @if (!driverService.loading() && !profile()) {
+        <div class="no-profile-section">
+          <ion-card>
+            <ion-card-content class="no-profile-content">
+              <ion-icon name="person-add-outline" color="medium"></ion-icon>
+              <h2>Crear Perfil de Conductor</h2>
+              <p>Inicia tu perfil de riesgo para acceder a beneficios y descuentos</p>
+              <ion-button expand="block" (click)="initializeProfile()"> Crear Perfil </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      }
     </ion-content>
-  `,
+    `,
   styles: [
     `
       /* ===== GLOBAL VARIABLES ===== */

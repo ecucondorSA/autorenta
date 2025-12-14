@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { PayoutService } from '../../../core/services/payout.service';
@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-payout-stats',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="rounded-lg border border-border-default bg-surface-raised p-6 shadow-sm">
       <h3 class="mb-4 text-lg font-semibold text-text-primary">Estadísticas de Payouts</h3>

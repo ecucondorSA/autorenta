@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,13 +22,12 @@ import { CarsService } from '../../../core/services/cars.service';
   standalone: true,
   selector: 'app-quick-book-page',
   imports: [
-    CommonModule,
     DateRangePickerComponent,
     CarChatComponent,
     PaymentMethodButtonsComponent,
     TranslateModule,
-    MoneyPipe,
-  ],
+    MoneyPipe
+],
   templateUrl: './quick-book.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

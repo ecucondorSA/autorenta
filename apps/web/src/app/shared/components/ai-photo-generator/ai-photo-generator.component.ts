@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import {
   AiPhotoEnhancerService,
@@ -13,7 +13,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
   selector: 'app-ai-photo-generator',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div class="ai-photo-generator">
       <!-- Method Selector -->

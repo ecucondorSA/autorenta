@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 
 interface Step {
@@ -14,7 +14,7 @@ interface Step {
 @Component({
   selector: 'app-booking-step-indicator',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './booking-step-indicator.component.html',
   styleUrls: ['./booking-step-indicator.component.scss'],

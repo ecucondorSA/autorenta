@@ -1,7 +1,7 @@
 <div class="claim-form stack-lg">
   <!-- Header -->
   <header class="header">
-    <h2 class="h2">Reportar Daños</h2>
+    <h2 class="h2 font-bold font-satoshi">Reportar Daños</h2>
     <button class="close-btn" (click)="cancel()" [disabled]="creating()">
       <app-icon name="close" [size]="20" />
     </button>
@@ -24,7 +24,7 @@
 
   <!-- Damages list -->
   <section class="damages-section stack-md">
-    <h3 class="h3">Daños Reportados ({{ damageCount() }})</h3>
+    <h3 class="h3 font-bold font-satoshi">Daños Reportados ({{ damageCount() }})</h3>
 
     @for (damage of damages(); track $index; let i = $index) {
       <article class="damage-card stack-md">
@@ -179,7 +179,7 @@
 
   <!-- Notes section -->
   <section class="notes-section stack-sm">
-    <h3 class="h3">Observaciones Generales (opcional)</h3>
+    <h3 class="h3 font-bold font-satoshi">Observaciones Generales (opcional)</h3>
     <textarea
       [(ngModel)]="notes"
       rows="3"
@@ -190,7 +190,7 @@
 
   <!-- Summary -->
   <section class="summary-section stack-sm">
-    <h3 class="h3">Resumen del Claim</h3>
+    <h3 class="h3 font-bold font-satoshi">Resumen del Claim</h3>
     <div class="summary-grid">
       <div class="summary-item">
         <span class="label">Total de daños:</span>
@@ -198,7 +198,7 @@
       </div>
       <div class="summary-item highlight">
         <span class="label">Costo total estimado:</span>
-        <span class="value total">USD ${{ totalCost().toFixed(2) }}</span>
+        <span class="value total font-mono">USD ${{ totalCost().toFixed(2) }}</span>
       </div>
     </div>
 

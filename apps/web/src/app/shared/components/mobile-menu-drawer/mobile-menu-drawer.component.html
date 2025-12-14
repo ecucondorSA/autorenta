@@ -1,104 +1,103 @@
 <!-- Mobile Menu Drawer - Bottom Sheet Style -->
-<div
-  *ngIf="isOpen()"
-  class="drawer-overlay"
-  (click)="onBackdropClick()"
-  aria-hidden="true">
-</div>
-
-<div
-  *ngIf="isOpen()"
-  #drawerContent
-  class="drawer-container"
-  [class.drawer-container--animating]="isAnimating()"
-  role="dialog"
-  aria-modal="true"
-  aria-label="Menu de navegacion"
-  (touchstart)="onTouchStart($event)"
-  (touchmove)="onTouchMove($event)"
-  (touchend)="onTouchEnd($event)">
-
-  <!-- Drag Handle -->
-  <div class="drawer-handle" aria-hidden="true">
-    <div class="drawer-handle__bar"></div>
+@if (isOpen()) {
+  <div
+    class="drawer-overlay"
+    (click)="onBackdropClick()"
+    aria-hidden="true">
   </div>
+}
 
-  <!-- Header with User Info -->
-  <div class="drawer-header">
-    <div class="drawer-header__user">
-      <div class="drawer-header__avatar">
-        <img
-          *ngIf="userProfile?.avatar_url"
-          [src]="userProfile!.avatar_url"
-          [alt]="userProfile?.full_name || 'Profile'"
-          class="drawer-header__avatar-img" />
-        <app-menu-icon
-          *ngIf="!userProfile?.avatar_url"
-          name="user-circle"
-          [size]="28"
-          cssClass="text-gray-400" />
-      </div>
-      <div class="drawer-header__info">
-        <p class="drawer-header__name">{{ userProfile?.full_name || 'Usuario' }}</p>
-        <p class="drawer-header__email">{{ userEmail() || '' }}</p>
-      </div>
+@if (isOpen()) {
+  <div
+    #drawerContent
+    class="drawer-container"
+    [class.drawer-container--animating]="isAnimating()"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu de navegacion"
+    (touchstart)="onTouchStart($event)"
+    (touchmove)="onTouchMove($event)"
+    (touchend)="onTouchEnd($event)">
+    <!-- Drag Handle -->
+    <div class="drawer-handle" aria-hidden="true">
+      <div class="drawer-handle__bar"></div>
     </div>
-    <button
-      type="button"
-      class="drawer-header__close"
-      (click)="close()"
-      aria-label="Cerrar menu">
-      <app-menu-icon name="close" [size]="24" />
-    </button>
-  </div>
-
-  <!-- Menu Content -->
-  <div class="drawer-content">
-    <!-- Menu Sections -->
-    <ng-container *ngFor="let section of menuSections; trackBy: trackBySection">
-      <div class="drawer-section">
-        <p class="drawer-section__title" [class]="section.color">
-          {{ section.title }}
-        </p>
-
-        <a
-          *ngFor="let item of section.items; trackBy: trackByItem"
-          class="drawer-item group"
-          (click)="navigateAndClose(item.route)">
-          <div
-            class="drawer-item__icon"
-            [class]="section.iconBgColor + ' ' + section.iconTextColor + ' group-hover:opacity-80'">
-            <app-menu-icon [name]="item.icon" [size]="20" />
-          </div>
-          <span class="drawer-item__label">{{ item.label }}</span>
-          <span
-            *ngIf="item.badge"
-            class="drawer-item__badge"
-            [class.drawer-item__badge--new]="item.badge === 'NEW'">
-            {{ item.badge }}
-          </span>
-          <app-menu-icon
-            name="chevron-right"
-            [size]="18"
-            cssClass="drawer-item__chevron" />
-        </a>
+    <!-- Header with User Info -->
+    <div class="drawer-header">
+      <div class="drawer-header__user">
+        <div class="drawer-header__avatar">
+          @if (userProfile?.avatar_url) {
+            <img
+              [src]="userProfile!.avatar_url"
+              [alt]="userProfile?.full_name || 'Profile'"
+              class="drawer-header__avatar-img" />
+          }
+          @if (!userProfile?.avatar_url) {
+            <app-menu-icon
+              name="user-circle"
+              [size]="28"
+              cssClass="text-gray-400" />
+          }
+        </div>
+        <div class="drawer-header__info">
+          <p class="drawer-header__name">{{ userProfile?.full_name || 'Usuario' }}</p>
+          <p class="drawer-header__email">{{ userEmail() || '' }}</p>
+        </div>
       </div>
-
-      <div class="drawer-divider"></div>
-    </ng-container>
-
-    <!-- Sign Out Button -->
-    <button
-      type="button"
-      class="drawer-item drawer-item--logout group"
-      (click)="signOut()">
-      <div class="drawer-item__icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20">
-        <app-menu-icon name="logout" [size]="20" />
-      </div>
-      <span class="drawer-item__label text-red-600">Cerrar Sesion</span>
-    </button>
+      <button
+        type="button"
+        class="drawer-header__close"
+        (click)="close()"
+        aria-label="Cerrar menu">
+        <app-menu-icon name="close" [size]="24" />
+      </button>
+    </div>
+    <!-- Menu Content -->
+    <div class="drawer-content">
+      <!-- Menu Sections -->
+      @for (section of menuSections; track trackBySection($index, section)) {
+        <div class="drawer-section">
+          <p class="drawer-section__title" [class]="section.color">
+            {{ section.title }}
+          </p>
+          @for (item of section.items; track trackByItem($index, item)) {
+            <a
+              class="drawer-item group"
+              (click)="navigateAndClose(item.route)">
+              <div
+                class="drawer-item__icon"
+                [class]="section.iconBgColor + ' ' + section.iconTextColor + ' group-hover:opacity-80'">
+                <app-menu-icon [name]="item.icon" [size]="20" />
+              </div>
+              <span class="drawer-item__label">{{ item.label }}</span>
+              @if (item.badge) {
+                <span
+                  class="drawer-item__badge"
+                  [class.drawer-item__badge--new]="item.badge === 'NEW'">
+                  {{ item.badge }}
+                </span>
+              }
+              <app-menu-icon
+                name="chevron-right"
+                [size]="18"
+                cssClass="drawer-item__chevron" />
+            </a>
+          }
+        </div>
+        <div class="drawer-divider"></div>
+      }
+      <!-- Sign Out Button -->
+      <button
+        type="button"
+        class="drawer-item drawer-item--logout group"
+        (click)="signOut()">
+        <div class="drawer-item__icon bg-red-500/10 text-red-600 group-hover:bg-red-500/20">
+          <app-menu-icon name="logout" [size]="20" />
+        </div>
+        <span class="drawer-item__label text-red-600">Cerrar Sesion</span>
+      </button>
+    </div>
+    <!-- Safe Area Bottom Padding -->
+    <div class="drawer-safe-area"></div>
   </div>
-
-  <!-- Safe Area Bottom Padding -->
-  <div class="drawer-safe-area"></div>
-</div>
+}

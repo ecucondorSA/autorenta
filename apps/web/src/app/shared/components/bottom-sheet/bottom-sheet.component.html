@@ -1,11 +1,12 @@
 <!-- Backdrop -->
-<div
-  *ngIf="isOpen()"
-  class="bottom-sheet-backdrop fixed inset-0 bg-surface-overlay/50 backdrop-blur-sm z-40 transition-opacity duration-300"
-  [class.opacity-0]="!isOpen()"
-  [class.opacity-100]="isOpen()"
-  (click)="onClose()"
-></div>
+@if (isOpen()) {
+  <div
+    class="bottom-sheet-backdrop fixed inset-0 bg-surface-overlay/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+    [class.opacity-0]="!isOpen()"
+    [class.opacity-100]="isOpen()"
+    (click)="onClose()"
+  ></div>
+}
 
 <!-- Bottom Sheet -->
 <div
@@ -17,25 +18,26 @@
   [class.bottom-sheet--full]="currentHeight() === 'full'"
   [style.transform]="getTransform()"
   [class.hidden]="!isOpen()"
->
-  <!-- Drag Handle -->
-  <div
-    *ngIf="showDragHandle"
-    class="drag-handle-wrapper flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
-    (touchstart)="onDragStart($event)"
-    (touchmove)="onDragMove($event)"
-    (touchend)="onDragEnd()"
-    (mousedown)="onDragStart($event)"
   >
-    <div class="drag-handle w-12 h-1.5 bg-border-default dark:bg-gray-600 rounded-full"></div>
-  </div>
+  <!-- Drag Handle -->
+  @if (showDragHandle) {
+    <div
+      class="drag-handle-wrapper flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+      (touchstart)="onDragStart($event)"
+      (touchmove)="onDragMove($event)"
+      (touchend)="onDragEnd()"
+      (mousedown)="onDragStart($event)"
+      >
+      <div class="drag-handle w-12 h-1.5 bg-border-default dark:bg-gray-600 rounded-full"></div>
+    </div>
+  }
 
   <!-- Header -->
   <div
     class="bottom-sheet-header px-4 pb-3 border-b border-border-default dark:border-border-default flex-shrink-0"
-  >
+    >
     <div class="flex items-center justify-between">
-      <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure">
+      <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse-pure font-satoshi">
         <ng-content select="[slot=header]"></ng-content>
       </h2>
       <button
@@ -43,19 +45,19 @@
         (click)="onClose()"
         class="p-2 rounded-lg hover:bg-surface-secondary dark:hover:bg-charcoal-medium transition-colors"
         aria-label="Cerrar"
-      >
+        >
         <svg
           class="w-6 h-6 text-text-secondary dark:text-text-secondary"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-        >
+          >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
             d="M6 18L18 6M6 6l12 12"
-          />
+            />
         </svg>
       </button>
     </div>
@@ -67,10 +69,11 @@
   </div>
 
   <!-- Footer (optional) -->
-  <div
-    *ngIf="currentHeight() !== 'full'"
-    class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-border-default flex-shrink-0"
-  >
-    <ng-content select="[slot=footer]"></ng-content>
-  </div>
+  @if (currentHeight() !== 'full') {
+    <div
+      class="bottom-sheet-footer px-4 py-3 border-t border-border-default dark:border-border-default flex-shrink-0"
+      >
+      <ng-content select="[slot=footer]"></ng-content>
+    </div>
+  }
 </div>

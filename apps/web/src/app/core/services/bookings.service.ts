@@ -788,7 +788,7 @@ export class BookingsService {
       const estimatedAdditionalCostCents = Math.round(pricePerDay * additionalDays * 100);
 
       // INSERT a new extension request
-      const { data: newRequest, error: insertError } = await this.supabase
+      const { error: insertError } = await this.supabase
         .from('booking_extension_requests')
         .insert({
           booking_id: booking.id,

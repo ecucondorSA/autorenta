@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-pricing.model';
 
 /**
@@ -15,7 +15,7 @@ import type { DynamicPriceSnapshot } from '../../../../core/models/dynamic-prici
 @Component({
   selector: 'app-dynamic-price-breakdown-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (isOpen) {

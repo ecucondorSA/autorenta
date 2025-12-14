@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, effect, ElementRef, input, output, ViewChild } from '@angular/core';
 import { FocusTrapDirective } from '../../../../core/directives/focus-trap.directive';
 
@@ -23,7 +23,7 @@ import { FocusTrapDirective } from '../../../../core/directives/focus-trap.direc
   selector: 'app-modal',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FocusTrapDirective],
+  imports: [FocusTrapDirective],
   animations: [
     trigger('backdrop', [
       transition(':enter', [

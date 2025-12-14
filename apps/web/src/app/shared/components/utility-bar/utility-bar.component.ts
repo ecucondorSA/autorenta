@@ -10,7 +10,7 @@ import {
   PLATFORM_ID,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export interface QuickFilter {
@@ -23,7 +23,7 @@ export interface QuickFilter {
 @Component({
   selector: 'app-utility-bar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './utility-bar.component.html',
   styleUrls: ['./utility-bar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

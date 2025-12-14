@@ -4,19 +4,20 @@
     class="fab-actions flex flex-col gap-3 mb-3 transition-all duration-300"
     [class.fab-actions--visible]="expanded()"
     [class.fab-actions--hidden]="!expanded()"
-  >
-    <button
-      *ngFor="let action of actions; let i = index"
-      type="button"
-      (click)="onActionClick(action.id)"
-      [class]="getActionColorClass(action)"
-      class="fab-action w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
-      [style.transition-delay.ms]="expanded() ? i * 50 : 0"
-      [attr.aria-label]="action.label"
-      [title]="action.label"
     >
-      <app-icon [name]="action.icon" [size]="22" />
-    </button>
+    @for (action of actions; track action; let i = $index) {
+      <button
+        type="button"
+        (click)="onActionClick(action.id)"
+        [class]="getActionColorClass(action)"
+        class="fab-action w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cta-default"
+        [style.transition-delay.ms]="expanded() ? i * 50 : 0"
+        [attr.aria-label]="action.label"
+        [title]="action.label"
+        >
+        <app-icon [name]="action.icon" [size]="22" />
+      </button>
+    }
   </div>
 
   <!-- Main toggle button -->
@@ -27,7 +28,7 @@
     [attr.aria-label]="expanded() ? 'Cerrar acciones' : 'Abrir acciones'"
     [attr.aria-expanded]="expanded()"
     [title]="expanded() ? 'Cerrar' : 'Acciones rápidas'"
-  >
+    >
     <svg
       class="w-6 h-6 transition-transform duration-300"
       [class.rotate-45]="expanded()"
@@ -35,7 +36,7 @@
       stroke="currentColor"
       viewBox="0 0 24 24"
       aria-hidden="true"
-    >
+      >
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
     </svg>
   </button>

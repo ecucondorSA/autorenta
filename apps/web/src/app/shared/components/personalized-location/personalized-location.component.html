@@ -1,84 +1,85 @@
 <!-- Permission Modal -->
-<div
-  *ngIf="showPermissionModal()"
-  class="permission-modal fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
-  (click)="dismissPermissionModal()"
->
+@if (showPermissionModal()) {
   <div
-    class="permission-modal-content bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl p-6 max-w-md mx-4"
-    (click)="$event.stopPropagation()"
-  >
-    <h3 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-2">
-      Ubicación personalizada
-    </h3>
-    <p class="text-sm text-text-secondary dark:text-text-secondary mb-6">
-      Permite el acceso a tu ubicación para mostrar autos cercanos y personalizar tu experiencia.
-    </p>
-    <div class="flex gap-3">
-      <button
-        type="button"
-        (click)="dismissPermissionModal()"
-        class="flex-1 px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary bg-surface-secondary dark:bg-charcoal-medium rounded-lg hover:bg-border-default transition-colors"
+    class="permission-modal fixed inset-0 z-50 flex items-center justify-center bg-surface-overlay/50 backdrop-blur-sm"
+    (click)="dismissPermissionModal()"
+    >
+    <div
+      class="permission-modal-content bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-xl p-6 max-w-md mx-4"
+      (click)="$event.stopPropagation()"
       >
-        Cancelar
-      </button>
-      <button
-        type="button"
-        (click)="requestPermission()"
-        class="flex-1 px-4 py-2 text-sm font-semibold text-cta-text bg-cta-default hover:bg-cta-default/90 rounded-lg transition-colors"
-      >
-        Permitir ubicación
-      </button>
+      <h3 class="text-lg font-semibold text-text-primary dark:text-text-secondary mb-2 font-satoshi">
+        Ubicación personalizada
+      </h3>
+      <p class="text-sm text-text-secondary dark:text-text-secondary mb-6">
+        Permite el acceso a tu ubicación para mostrar autos cercanos y personalizar tu experiencia.
+      </p>
+      <div class="flex gap-3">
+        <button
+          type="button"
+          (click)="dismissPermissionModal()"
+          class="flex-1 px-4 py-2 text-sm font-medium text-text-secondary dark:text-text-secondary bg-surface-secondary dark:bg-charcoal-medium rounded-lg hover:bg-border-default transition-colors"
+          >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="requestPermission()"
+          class="flex-1 px-4 py-2 text-sm font-semibold text-cta-text bg-cta-default hover:bg-cta-default/90 rounded-lg transition-colors"
+          >
+          Permitir ubicación
+        </button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <!-- Radius Control Panel -->
-<div
-  *ngIf="permissionGranted() && showRadiusSlider"
-  class="radius-control fixed bottom-20 right-4 z-40 bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-lg p-4 border border-border-default dark:border-border-default"
->
-  <div class="flex items-center justify-between mb-3">
-    <span class="text-sm font-medium text-text-primary dark:text-text-secondary"
-      >Radio de búsqueda</span
+@if (permissionGranted() && showRadiusSlider) {
+  <div
+    class="radius-control fixed bottom-20 right-4 z-40 bg-surface-raised dark:bg-surface-secondary rounded-lg shadow-lg p-4 border border-border-default dark:border-border-default"
     >
-    <button
-      type="button"
-      (click)="toggleRadiusControl()"
-      class="text-text-muted hover:text-text-secondary transition-colors"
-      aria-label="Cerrar"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  </div>
-
-  <!-- Quick radius buttons -->
-  <div class="flex gap-2 mb-3">
-    <button
-      *ngFor="let radius of radiusOptions"
-      type="button"
-      (click)="onRadiusChange(radius)"
-      class="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
-      [class.bg-cta-default]="radiusKm() === radius"
-      [class.text-text-inverse]="radiusKm() === radius"
-      [class.border-cta-default]="radiusKm() === radius"
-      [class.border-border-default]="radiusKm() !== radius"
-      [class.text-text-secondary]="radiusKm() !== radius"
-      [class.dark:text-text-secondary]="radiusKm() !== radius"
-    >
-      {{ radius }} km
-    </button>
-  </div>
-
-  <!-- Count display -->
-  <p class="text-xs text-text-secondary dark:text-text-secondary text-center">
-    Autos en tu zona: <span class="font-semibold">{{ radiusKm() }} km</span>
-  </p>
-</div>
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm font-medium text-text-primary dark:text-text-secondary"
+        >Radio de búsqueda</span
+        >
+        <button
+          type="button"
+          (click)="toggleRadiusControl()"
+          class="text-text-muted hover:text-text-secondary transition-colors"
+          aria-label="Cerrar"
+          >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+              />
+          </svg>
+        </button>
+      </div>
+      <!-- Quick radius buttons -->
+      <div class="flex gap-2 mb-3">
+        @for (radius of radiusOptions; track radius) {
+          <button
+            type="button"
+            (click)="onRadiusChange(radius)"
+            class="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
+            [class.bg-cta-default]="radiusKm() === radius"
+            [class.text-text-inverse]="radiusKm() === radius"
+            [class.border-cta-default]="radiusKm() === radius"
+            [class.border-border-default]="radiusKm() !== radius"
+            [class.text-text-secondary]="radiusKm() !== radius"
+            [class.dark:text-text-secondary]="radiusKm() !== radius"
+            >
+            {{ radius }} km
+          </button>
+        }
+      </div>
+      <!-- Count display -->
+      <p class="text-xs text-text-secondary dark:text-text-secondary text-center">
+        Autos en tu zona: <span class="font-semibold">{{ radiusKm() }} km</span>
+      </p>
+    </div>
+  }

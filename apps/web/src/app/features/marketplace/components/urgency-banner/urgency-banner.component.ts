@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, Input, signal } from '@angular/core';
 import type { UrgencyIndicator } from '../../../../core/models/marketplace.model';
 
@@ -14,7 +14,7 @@ import type { UrgencyIndicator } from '../../../../core/models/marketplace.model
 @Component({
   selector: 'app-urgency-banner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (!dismissed() && indicator) {
       <div class="urgency-banner" [class]="urgencyClass()">

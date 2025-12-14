@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * 🔄 Pull to Refresh Component
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-pull-to-refresh',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="pull-to-refresh-wrapper"

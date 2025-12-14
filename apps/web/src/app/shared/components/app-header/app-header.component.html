@@ -10,12 +10,14 @@
     </a>
 
     <!-- Search Input (compact when compact=true) -->
-    <div *ngIf="showSearch" class="flex-1 max-w-md mx-4" [class.max-w-xs]="compact">
-      <input type="text" [value]="searchInputValue()"
-        (input)="onSearchInput($any($event.target).value)"
-        (keydown.enter)="onSearchSubmit(searchInputValue())" placeholder="Buscar autos..."
-        class="w-full h-10 px-4 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-elevated text-text-primary dark:text-text-inverse placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all" />
-    </div>
+    @if (showSearch) {
+      <div class="flex-1 max-w-md mx-4" [class.max-w-xs]="compact">
+        <input type="text" [value]="searchInputValue()"
+          (input)="onSearchInput($any($event.target).value)"
+          (keydown.enter)="onSearchSubmit(searchInputValue())" placeholder="Buscar autos..."
+          class="w-full h-10 px-4 rounded-lg border border-border-default dark:border-border-muted bg-surface-base dark:bg-surface-elevated text-text-primary dark:text-text-inverse placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cta-default focus:border-transparent transition-all" />
+      </div>
+    }
 
     <!-- CTAs -->
     <div class="flex items-center gap-2 flex-shrink-0">

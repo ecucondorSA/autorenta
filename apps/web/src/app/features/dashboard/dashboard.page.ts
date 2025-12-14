@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 import { CalendarWidgetComponent } from './widgets/calendar.component';
@@ -10,11 +10,10 @@ import { StatisticsWidgetComponent } from './widgets/statistics.component';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     StatisticsWidgetComponent,
     CalendarWidgetComponent,
-    PayoutsWidgetComponent,
-  ],
+    PayoutsWidgetComponent
+],
   template: `
     <div class="p-4">
       <h1 class="text-2xl font-semibold mb-4">Dashboard — Locadores / Locatarios</h1>

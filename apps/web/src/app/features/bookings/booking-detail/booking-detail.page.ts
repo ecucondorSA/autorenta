@@ -49,11 +49,11 @@ import {
   BookingPaymentRow,
   BookingPricingRow,
 } from '../../../core/services/booking-ops.service';
-import { BookingStatusComponent } from './booking-status.component';
-import { ReviewManagementComponent } from './review-management.component';
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
+import { BookingStatusComponent } from './booking-status.component';
+import { ReviewManagementComponent } from './review-management.component';
 
 /**
  * BookingDetailPage
@@ -1108,7 +1108,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
                 });
                 await errorAlert.present();
               }
-            } catch (error) {
+            } catch {
               const errorAlert = await this.alertController.create({
                 header: '❌ Error',
                 message: 'Ocurrió un error inesperado al cancelar la reserva.',

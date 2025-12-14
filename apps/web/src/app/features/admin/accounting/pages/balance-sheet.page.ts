@@ -1,6 +1,6 @@
 import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 import { AccountingService, BalanceSheet } from '../../../../core/services/accounting.service';
 
@@ -8,7 +8,7 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
   selector: 'app-balance-sheet',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-header>
       <ion-toolbar>
@@ -23,106 +23,113 @@ import { AccountingService, BalanceSheet } from '../../../../core/services/accou
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="ion-padding">
-      <div *ngIf="loading()" class="flex justify-center py-8">
-        <ion-spinner></ion-spinner>
-      </div>
-
-      <div *ngIf="!loading() && balanceSheet().length > 0">
-        <!-- Accounting Equation Summary -->
-        <ion-card color="primary" class="mb-4">
-          <ion-card-content>
-            <div class="text-center">
-              <h2 class="text-xl font-bold mb-2">Ecuación Contable</h2>
-              <p class="text-lg">
-                {{ formatCurrency(totalAssets()) }} = {{ formatCurrency(totalLiabilities()) }} +
-                {{ formatCurrency(totalEquity()) }}
-              </p>
-              <ion-badge [color]="isBalanced() ? 'success' : 'danger'" class="mt-2">
-                {{ isBalanced() ? '✓ Balanceado' : '✗ Descuadrado' }}
-              </ion-badge>
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <!-- ACTIVOS -->
-        <h3 class="text-lg font-bold mt-4 mb-2 flex items-center">
-          <ion-icon name="cash" class="mr-2"></ion-icon>
-          ACTIVOS
-        </h3>
-        <ion-card>
-          <ion-list>
-            <ion-item *ngFor="let item of assets()" lines="full">
-              <ion-label>
-                <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
-              </ion-label>
-              <ion-note slot="end" class="text-lg font-semibold" color="success">
-                {{ formatCurrency(item.balance) }}
-              </ion-note>
-            </ion-item>
-            <ion-item class="bg-surface-raised">
-              <ion-label><strong>Total Activos</strong></ion-label>
-              <ion-note slot="end" class="text-xl font-bold" color="success">
-                {{ formatCurrency(totalAssets()) }}
-              </ion-note>
-            </ion-item>
-          </ion-list>
-        </ion-card>
-
-        <!-- PASIVOS -->
-        <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
-          <ion-icon name="document-text" class="mr-2"></ion-icon>
-          PASIVOS
-        </h3>
-        <ion-card>
-          <ion-list>
-            <ion-item *ngFor="let item of liabilities()" lines="full">
-              <ion-label>
-                <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
-              </ion-label>
-              <ion-note slot="end" class="text-lg font-semibold" color="danger">
-                {{ formatCurrency(item.balance) }}
-              </ion-note>
-            </ion-item>
-            <ion-item class="bg-surface-raised">
-              <ion-label><strong>Total Pasivos</strong></ion-label>
-              <ion-note slot="end" class="text-xl font-bold" color="danger">
-                {{ formatCurrency(totalLiabilities()) }}
-              </ion-note>
-            </ion-item>
-          </ion-list>
-        </ion-card>
-
-        <!-- PATRIMONIO -->
-        <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
-          <ion-icon name="business" class="mr-2"></ion-icon>
-          PATRIMONIO
-        </h3>
-        <ion-card>
-          <ion-list>
-            <ion-item *ngFor="let item of equity()" lines="full">
-              <ion-label>
-                <h4>{{ item.code }} - {{ item.name }}</h4>
-                <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
-              </ion-label>
-              <ion-note slot="end" class="text-lg font-semibold" color="primary">
-                {{ formatCurrency(item.balance) }}
-              </ion-note>
-            </ion-item>
-            <ion-item class="bg-surface-raised">
-              <ion-label><strong>Total Patrimonio</strong></ion-label>
-              <ion-note slot="end" class="text-xl font-bold" color="primary">
-                {{ formatCurrency(totalEquity()) }}
-              </ion-note>
-            </ion-item>
-          </ion-list>
-        </ion-card>
-      </div>
+      @if (loading()) {
+        <div class="flex justify-center py-8">
+          <ion-spinner></ion-spinner>
+        </div>
+      }
+    
+      @if (!loading() && balanceSheet().length > 0) {
+        <div>
+          <!-- Accounting Equation Summary -->
+          <ion-card color="primary" class="mb-4">
+            <ion-card-content>
+              <div class="text-center">
+                <h2 class="text-xl font-bold mb-2">Ecuación Contable</h2>
+                <p class="text-lg">
+                  {{ formatCurrency(totalAssets()) }} = {{ formatCurrency(totalLiabilities()) }} +
+                  {{ formatCurrency(totalEquity()) }}
+                </p>
+                <ion-badge [color]="isBalanced() ? 'success' : 'danger'" class="mt-2">
+                  {{ isBalanced() ? '✓ Balanceado' : '✗ Descuadrado' }}
+                </ion-badge>
+              </div>
+            </ion-card-content>
+          </ion-card>
+          <!-- ACTIVOS -->
+          <h3 class="text-lg font-bold mt-4 mb-2 flex items-center">
+            <ion-icon name="cash" class="mr-2"></ion-icon>
+            ACTIVOS
+          </h3>
+          <ion-card>
+            <ion-list>
+              @for (item of assets(); track item) {
+                <ion-item lines="full">
+                  <ion-label>
+                    <h4>{{ item.code }} - {{ item.name }}</h4>
+                    <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
+                  </ion-label>
+                  <ion-note slot="end" class="text-lg font-semibold" color="success">
+                    {{ formatCurrency(item.balance) }}
+                  </ion-note>
+                </ion-item>
+              }
+              <ion-item class="bg-surface-raised">
+                <ion-label><strong>Total Activos</strong></ion-label>
+                <ion-note slot="end" class="text-xl font-bold" color="success">
+                  {{ formatCurrency(totalAssets()) }}
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+          <!-- PASIVOS -->
+          <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
+            <ion-icon name="document-text" class="mr-2"></ion-icon>
+            PASIVOS
+          </h3>
+          <ion-card>
+            <ion-list>
+              @for (item of liabilities(); track item) {
+                <ion-item lines="full">
+                  <ion-label>
+                    <h4>{{ item.code }} - {{ item.name }}</h4>
+                    <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
+                  </ion-label>
+                  <ion-note slot="end" class="text-lg font-semibold" color="danger">
+                    {{ formatCurrency(item.balance) }}
+                  </ion-note>
+                </ion-item>
+              }
+              <ion-item class="bg-surface-raised">
+                <ion-label><strong>Total Pasivos</strong></ion-label>
+                <ion-note slot="end" class="text-xl font-bold" color="danger">
+                  {{ formatCurrency(totalLiabilities()) }}
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+          <!-- PATRIMONIO -->
+          <h3 class="text-lg font-bold mt-6 mb-2 flex items-center">
+            <ion-icon name="business" class="mr-2"></ion-icon>
+            PATRIMONIO
+          </h3>
+          <ion-card>
+            <ion-list>
+              @for (item of equity(); track item) {
+                <ion-item lines="full">
+                  <ion-label>
+                    <h4>{{ item.code }} - {{ item.name }}</h4>
+                    <p class="text-sm text-text-secondary">{{ item.sub_type }}</p>
+                  </ion-label>
+                  <ion-note slot="end" class="text-lg font-semibold" color="primary">
+                    {{ formatCurrency(item.balance) }}
+                  </ion-note>
+                </ion-item>
+              }
+              <ion-item class="bg-surface-raised">
+                <ion-label><strong>Total Patrimonio</strong></ion-label>
+                <ion-note slot="end" class="text-xl font-bold" color="primary">
+                  {{ formatCurrency(totalEquity()) }}
+                </ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+        </div>
+      }
     </ion-content>
-  `,
+    `,
   styles: [
     `
       .flex {

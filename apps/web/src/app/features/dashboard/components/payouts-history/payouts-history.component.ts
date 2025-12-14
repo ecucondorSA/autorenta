@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { firstValueFrom } from 'rxjs';
 import { PayoutService, Payout } from '../../../../core/services/payout.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -9,7 +9,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   selector: 'app-payouts-history',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="space-y-4">
       <!-- Header -->

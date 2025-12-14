@@ -1,71 +1,124 @@
 import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { IonicModule } from '@ionic/angular';
+import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import type { UserBonusMalus, AutorentaTier } from '../../../core/models';
 
-export interface RenterLevelData {
-  success: boolean;
-  user_id: string;
-  level: 'basic' | 'verified' | 'premium';
-  level_label: string;
-  benefits: string[];
-  requirements_met: Array<{ requirement: string; met: boolean; current?: number }>;
-  requirements_missing: Array<{ requirement: string; met: boolean; current?: number }>;
-  stats: {
-    total_rentals: number;
-    average_rating: number;
-    disputes_lost: number;
-  };
+interface LevelRequirement {
+  label: string;
+  current: number | boolean;
+  target: number | boolean;
+  met: boolean;
+  type: 'rating' | 'count' | 'boolean';
 }
 
 @Component({
   selector: 'app-renter-level-progress',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [CommonModule, IonicModule],
   templateUrl: './renter-level-progress.component.html',
 })
 export class RenterLevelProgressComponent implements OnInit {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly bonusMalusService = inject(BonusMalusService);
 
   readonly loading = signal(true);
-  readonly levelData = signal<RenterLevelData | null>(null);
+  readonly bonusMalus = signal<UserBonusMalus | null>(null);
+  readonly currentTier = signal<AutorentaTier>('standard');
   readonly showDetails = signal(false);
 
-  readonly progressPercentage = computed(() => {
-    const data = this.levelData();
-    if (!data) return 0;
-    const met = data.requirements_met.length;
-    const total = met + data.requirements_missing.length;
-    return total > 0 ? (met / total) * 100 : 0;
-  });
+  readonly nextLevelInfo = computed(() => {
+    const tier = this.currentTier();
+    const bm = this.bonusMalus();
+    if (!bm) return null;
 
-  readonly nextLevel = computed(() => {
-    const data = this.levelData();
-    if (!data) return null;
-    if (data.level === 'basic') return 'Verificado';
-    if (data.level === 'verified') return 'Premium';
-    return null;
+    if (tier === 'elite') {
+      return {
+        label: '¡Nivel Máximo!',
+        progress: 100,
+        requirements: []
+      };
+    }
+
+    const isStandard = tier === 'standard';
+    const targetLabel = isStandard ? 'Trusted' : 'Elite';
+    
+    // Requirements
+    const reqs: LevelRequirement[] = [];
+
+    if (isStandard) {
+      // Standard -> Trusted Requirements
+      // 1. Identity Verified
+      reqs.push({
+        label: 'Identidad Verificada',
+        current: bm.metrics.is_verified,
+        target: true,
+        met: bm.metrics.is_verified,
+        type: 'boolean'
+      });
+      // 2. Rating > 4.0 (if has ratings)
+      if (bm.metrics.average_rating > 0) {
+        reqs.push({
+          label: 'Rating Promedio',
+          current: bm.metrics.average_rating,
+          target: 4.0,
+          met: bm.metrics.average_rating >= 4.0,
+          type: 'rating'
+        });
+      }
+    } else {
+      // Trusted -> Elite Requirements
+      // 1. Rating > 4.8
+      reqs.push({
+        label: 'Rating Excelencia',
+        current: bm.metrics.average_rating,
+        target: 4.8,
+        met: bm.metrics.average_rating >= 4.8,
+        type: 'rating'
+      });
+      // 2. 20+ Rentals
+      reqs.push({
+        label: 'Viajes Completados',
+        current: bm.metrics.completed_rentals,
+        target: 20,
+        met: bm.metrics.completed_rentals >= 20,
+        type: 'count'
+      });
+      // 3. Low Cancellation (< 5%)
+      reqs.push({
+        label: 'Tasa Cancelación',
+        current: bm.metrics.cancellation_rate * 100, // display as %
+        target: 5, // < 5%
+        met: bm.metrics.cancellation_rate <= 0.05,
+        type: 'count' // inverted logic handled in template
+      });
+    }
+
+    // Calculate progress based on met requirements count vs total
+    const metCount = reqs.filter(r => r.met).length;
+    const progress = reqs.length > 0 ? (metCount / reqs.length) * 100 : 0;
+
+    return {
+      label: targetLabel,
+      progress,
+      requirements: reqs
+    };
   });
 
   async ngOnInit(): Promise<void> {
-    await this.loadRenterLevel();
+    await this.loadData();
   }
 
-  async loadRenterLevel(): Promise<void> {
+  async loadData(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data: { user } } = await this.supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await this.supabase.rpc('get_renter_level', {
-        p_user_id: user.id
-      });
-
-      if (error) throw error;
-      this.levelData.set(data as RenterLevelData);
-    } catch (err) {
-      console.error('Error loading renter level:', err);
+      const bm = await this.bonusMalusService.getUserBonusMalus();
+      this.bonusMalus.set(bm);
+      
+      if (bm) {
+        this.currentTier.set(await this.bonusMalusService.getUserTier());
+      }
     } finally {
       this.loading.set(false);
     }
@@ -73,32 +126,5 @@ export class RenterLevelProgressComponent implements OnInit {
 
   toggleDetails(): void {
     this.showDetails.update(v => !v);
-  }
-
-  getLevelIcon(level: string): string {
-    switch (level) {
-      case 'basic': return '🔰';
-      case 'verified': return '✅';
-      case 'premium': return '⭐';
-      default: return '👤';
-    }
-  }
-
-  getLevelColor(level: string): string {
-    switch (level) {
-      case 'basic': return 'text-text-secondary';
-      case 'verified': return 'text-cta-default';
-      case 'premium': return 'text-warning-strong';
-      default: return 'text-text-muted';
-    }
-  }
-
-  getLevelBgColor(level: string): string {
-    switch (level) {
-      case 'basic': return 'bg-surface-secondary';
-      case 'verified': return 'bg-cta-default/10';
-      case 'premium': return 'bg-warning-bg';
-      default: return 'bg-surface-secondary';
-    }
   }
 }

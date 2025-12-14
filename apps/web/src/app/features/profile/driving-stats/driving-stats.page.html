@@ -7,251 +7,253 @@
       </svg>
     </button>
     <div>
-      <h1 class="page-title">Estadísticas de Conducción</h1>
+      <h1 class="page-title font-bold font-satoshi">Estadísticas de Conducción</h1>
       <p class="page-subtitle">Tu score y métricas de manejo</p>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="loading-container">
-    <div class="loading-spinner"></div>
-    <p class="loading-text">Cargando estadísticas...</p>
-  </div>
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando estadísticas...</p>
+    </div>
+  }
 
   <!-- Empty State -->
-  <div *ngIf="!loading() && !hasData()" class="empty-state">
-    <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-      />
-    </svg>
-    <h3 class="empty-title">Sin datos de telemetría</h3>
-    <p class="empty-description">
-      Realiza tu primer viaje para empezar a recopilar estadísticas de conducción
-    </p>
-  </div>
+  @if (!loading() && !hasData()) {
+    <div class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
+      </svg>
+      <h3 class="empty-title font-bold font-satoshi">Sin datos de telemetría</h3>
+      <p class="empty-description">
+        Realiza tu primer viaje para empezar a recopilar estadísticas de conducción
+      </p>
+    </div>
+  }
 
   <!-- Main Content -->
-  <div *ngIf="!loading() && hasData()" class="stats-content">
-    <!-- Score Card -->
-    <div class="score-section">
-      <div class="score-card" [ngClass]="scoreColor()">
-        <div class="score-header">
-          <h2 class="score-title">Tu Score de Conducción</h2>
-          <div class="score-trend" [ngClass]="trendColor()">
-            <span class="trend-icon">{{ trendIcon() }}</span>
-            <span class="trend-label">{{ trendLabel() }}</span>
-          </div>
-        </div>
-
-        <div class="score-display">
-          <div class="score-circle">
-            <svg class="score-ring" viewBox="0 0 120 120">
-              <circle
-                class="score-ring-bg"
-                cx="60"
-                cy="60"
-                r="54"
-                fill="none"
-                stroke-width="8"
-              ></circle>
-              <circle
-                class="score-ring-fill"
-                cx="60"
-                cy="60"
-                r="54"
-                fill="none"
-                stroke-width="8"
-                [attr.stroke-dasharray]="339.292"
-                [attr.stroke-dashoffset]="339.292 - (339.292 * currentScore()) / 100"
-              ></circle>
-            </svg>
-            <div class="score-value">
-              <span class="score-number">{{ currentScore() }}</span>
-              <span class="score-max">/100</span>
+  @if (!loading() && hasData()) {
+    <div class="stats-content">
+      <!-- Score Card -->
+      <div class="score-section">
+        <div class="score-card" [ngClass]="scoreColor()">
+          <div class="score-header">
+            <h2 class="score-title font-bold font-satoshi">Tu Score de Conducción</h2>
+            <div class="score-trend" [ngClass]="trendColor()">
+              <span class="trend-icon">{{ trendIcon() }}</span>
+              <span class="trend-label">{{ trendLabel() }}</span>
             </div>
           </div>
-
-          <div class="score-info">
-            <div class="score-label-large">{{ scoreLabel() }}</div>
-            <p class="score-description">
-              Basado en {{ summary()?.total_trips || 0 }} viajes en los últimos 3 meses
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Metrics Grid -->
-    <div class="metrics-section">
-      <h3 class="section-title">Métricas Detalladas</h3>
-
-      <div class="metrics-grid">
-        <!-- Total KM -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M3 21h18M4 18h16M4 18V6l4-4M20 18V6l-4-4M8 2v4M16 2v4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_km?.toFixed(0) || 0 }}</div>
-            <div class="metric-label">Kilómetros</div>
-          </div>
-        </div>
-
-        <!-- Hard Brakes -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 12l10 10 10-10L12 2zM12 8v4M12 16h.01" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_hard_brakes || 0 }}</div>
-            <div class="metric-label">Frenadas Bruscas</div>
-          </div>
-        </div>
-
-        <!-- Speed Violations -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_speed_violations || 0 }}</div>
-            <div class="metric-label">Excesos de Velocidad</div>
-          </div>
-        </div>
-
-        <!-- Night Driving -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_night_hours?.toFixed(1) || 0 }}</div>
-            <div class="metric-label">Horas Nocturnas</div>
-          </div>
-        </div>
-
-        <!-- Risk Zones -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_risk_zones || 0 }}</div>
-            <div class="metric-label">Zonas de Riesgo</div>
-          </div>
-        </div>
-
-        <!-- Total Trips -->
-        <div class="metric-card">
-          <div class="metric-icon">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
-              <circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/>
-              <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="metric-content">
-            <div class="metric-value">{{ summary()?.total_trips || 0 }}</div>
-            <div class="metric-label">Viajes Totales</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Insights Section -->
-    <div *ngIf="insights()" class="insights-section">
-      <h3 class="section-title">Recomendaciones</h3>
-
-      <div class="insights-card">
-        <div class="insight-item">
-          <div class="insight-icon">{{ getMainIssueIcon(insights()?.main_issue || '') }}</div>
-          <div class="insight-content">
-            <div class="insight-label">Principal área de mejora</div>
-            <div class="insight-value">{{ insights()?.main_issue || 'N/A' }}</div>
-          </div>
-        </div>
-
-        <div class="insight-item">
-          <div class="insight-icon">
-            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="insight-content">
-            <div class="insight-label">Recomendación</div>
-            <div class="insight-value">{{ insights()!.recommendation }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trip History -->
-    <div class="history-section">
-      <h3 class="section-title">Historial de Viajes</h3>
-
-      <div *ngIf="history().length === 0" class="empty-history">
-        <p>No hay historial de viajes disponible</p>
-      </div>
-
-      <div class="history-list" *ngIf="history().length > 0">
-        <div
-          *ngFor="let trip of history()"
-          class="trip-card"
-          (click)="viewTripDetails(trip.booking_id)"
-        >
-          <div class="trip-header">
-            <div class="trip-info">
-              <div class="trip-car">{{ trip.car_brand }} {{ trip.car_model }}</div>
-              <div class="trip-date">{{ formatDate(trip.trip_date) }}</div>
+          <div class="score-display">
+            <div class="score-circle">
+              <svg class="score-ring" viewBox="0 0 120 120">
+                <circle
+                  class="score-ring-bg"
+                  cx="60"
+                  cy="60"
+                  r="54"
+                  fill="none"
+                  stroke-width="8"
+                ></circle>
+                <circle
+                  class="score-ring-fill"
+                  cx="60"
+                  cy="60"
+                  r="54"
+                  fill="none"
+                  stroke-width="8"
+                  [attr.stroke-dasharray]="339.292"
+                  [attr.stroke-dashoffset]="339.292 - (339.292 * currentScore()) / 100"
+                ></circle>
+              </svg>
+              <div class="score-value">
+                <span class="score-number">{{ currentScore() }}</span>
+                <span class="score-max">/100</span>
+              </div>
             </div>
-
-            <div class="trip-score" [ngClass]="getTripScoreColor(trip.driver_score)">
-              {{ trip.driver_score }}/100
+            <div class="score-info">
+              <div class="score-label-large">{{ scoreLabel() }}</div>
+              <p class="score-description">
+                Basado en {{ summary()?.total_trips || 0 }} viajes en los últimos 3 meses
+              </p>
             </div>
           </div>
-
-          <div class="trip-metrics">
-            <div class="trip-metric">
-              <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        </div>
+      </div>
+      <!-- Metrics Grid -->
+      <div class="metrics-section">
+        <h3 class="section-title font-bold font-satoshi">Métricas Detalladas</h3>
+        <div class="metrics-grid">
+          <!-- Total KM -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M3 21h18M4 18h16M4 18V6l4-4M20 18V6l-4-4M8 2v4M16 2v4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              {{ trip.total_km.toFixed(1) }} km
             </div>
-            <div class="trip-metric" *ngIf="trip.hard_brakes > 0">
-              <svg class="w-4 h-4 inline text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_km?.toFixed(0) || 0 }}</div>
+              <div class="metric-label">Kilómetros</div>
+            </div>
+          </div>
+          <!-- Hard Brakes -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2L2 12l10 10 10-10L12 2zM12 8v4M12 16h.01" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              {{ trip.hard_brakes }} frenadas
             </div>
-            <div class="trip-metric" *ngIf="trip.speed_violations > 0">
-              <svg class="w-4 h-4 inline text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_hard_brakes || 0 }}</div>
+              <div class="metric-label">Frenadas Bruscas</div>
+            </div>
+          </div>
+          <!-- Speed Violations -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              {{ trip.speed_violations }} excesos
             </div>
-            <div class="trip-metric" *ngIf="trip.night_driving_hours > 0">
-              <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_speed_violations || 0 }}</div>
+              <div class="metric-label">Excesos de Velocidad</div>
+            </div>
+          </div>
+          <!-- Night Driving -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              {{ trip.night_driving_hours.toFixed(1) }} h
+            </div>
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_night_hours?.toFixed(1) || 0 }}</div>
+              <div class="metric-label">Horas Nocturnas</div>
+            </div>
+          </div>
+          <!-- Risk Zones -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6 text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_risk_zones || 0 }}</div>
+              <div class="metric-label">Zonas de Riesgo</div>
+            </div>
+          </div>
+          <!-- Total Trips -->
+          <div class="metric-card">
+            <div class="metric-icon">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/>
+                <circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/>
+                <circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="metric-content">
+              <div class="metric-value">{{ summary()?.total_trips || 0 }}</div>
+              <div class="metric-label font-friendly">Viajes Totales</div>
             </div>
           </div>
         </div>
       </div>
+      <!-- Insights Section -->
+      @if (insights()) {
+        <div class="insights-section">
+          <h3 class="section-title font-bold font-satoshi">Recomendaciones</h3>
+          <div class="insights-card">
+            <div class="insight-item">
+              <div class="insight-icon">{{ getMainIssueIcon(insights()?.main_issue || '') }}</div>
+              <div class="insight-content">
+                <div class="insight-label">Principal área de mejora</div>
+                <div class="insight-value">{{ insights()?.main_issue || 'N/A' }}</div>
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 21h6M12 3a6 6 0 0 0-4 10.5V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3.5A6 6 0 0 0 12 3z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="insight-content">
+                <div class="insight-label">Recomendación</div>
+                <div class="insight-value">{{ insights()!.recommendation }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      <!-- Trip History -->
+      <div class="history-section">
+        <h3 class="section-title font-bold font-satoshi font-friendly">Historial de Viajes</h3>
+        @if (history().length === 0) {
+          <div class="empty-history">
+            <p>No hay historial de viajes disponible</p>
+          </div>
+        }
+        @if (history().length > 0) {
+          <div class="history-list">
+            @for (trip of history(); track trip) {
+              <div
+                class="trip-card"
+                (click)="viewTripDetails(trip.booking_id)"
+                >
+                <div class="trip-header">
+                  <div class="trip-info">
+                    <div class="trip-car">{{ trip.car_brand }} {{ trip.car_model }}</div>
+                    <div class="trip-date">{{ formatDate(trip.trip_date) }}</div>
+                  </div>
+                  <div class="trip-score" [ngClass]="getTripScoreColor(trip.driver_score)">
+                    {{ trip.driver_score }}/100
+                  </div>
+                </div>
+                <div class="trip-metrics">
+                  <div class="trip-metric">
+                    <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 21h18M4 18h16M4 18V6l4-4M20 18V6l-4-4M8 2v4M16 2v4" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ trip.total_km.toFixed(1) }} km
+                  </div>
+                  @if (trip.hard_brakes > 0) {
+                    <div class="trip-metric">
+                      <svg class="w-4 h-4 inline text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 12l10 10 10-10L12 2zM12 8v4M12 16h.01" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      {{ trip.hard_brakes }} frenadas
+                    </div>
+                  }
+                  @if (trip.speed_violations > 0) {
+                    <div class="trip-metric">
+                      <svg class="w-4 h-4 inline text-warning-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      {{ trip.speed_violations }} excesos
+                    </div>
+                  }
+                  @if (trip.night_driving_hours > 0) {
+                    <div class="trip-metric">
+                      <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      {{ trip.night_driving_hours.toFixed(1) }} h
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>

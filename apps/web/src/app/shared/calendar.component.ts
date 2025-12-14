@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, EventEmitter, Input, Output, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { CarAvailabilityService } from '../core/services/car-availability.service';
@@ -7,7 +7,7 @@ import { CarAvailabilityService } from '../core/services/car-availability.servic
   selector: 'app-calendar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="p-4 bg-white rounded shadow">
       <div class="text-sm text-gray-600 mb-2">Calendario (componente mínimo)</div>
@@ -24,12 +24,16 @@ import { CarAvailabilityService } from '../core/services/car-availability.servic
           Seleccionar rango
         </button>
       </div>
-      <div *ngIf="available === false" class="text-red-600 mt-2">
-        El rango seleccionado no está disponible.
-      </div>
-      <div *ngIf="available === true" class="text-green-600 mt-2">Rango disponible.</div>
+      @if (available === false) {
+        <div class="text-red-600 mt-2">
+          El rango seleccionado no está disponible.
+        </div>
+      }
+      @if (available === true) {
+        <div class="text-green-600 mt-2">Rango disponible.</div>
+      }
     </div>
-  `,
+    `,
   styles: [],
 })
 export class CalendarComponent {

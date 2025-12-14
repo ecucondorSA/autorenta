@@ -1,6 +1,6 @@
 import {Component, Input,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IonicModule } from '@ionic/angular';
 
 /**
@@ -23,7 +23,7 @@ import { IonicModule } from '@ionic/angular';
   selector: 'app-kpi-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule],
+  imports: [IonicModule],
   template: `
     <ion-card [color]="cardColor" class="kpi-card">
       <ion-card-content class="p-4">
@@ -31,33 +31,39 @@ import { IonicModule } from '@ionic/angular';
           <div class="flex-1">
             <p class="text-sm opacity-70 mb-1">{{ title }}</p>
             <h2 class="text-2xl font-bold mb-1">{{ formattedValue }}</h2>
-            <div *ngIf="change !== undefined" class="flex items-center text-sm">
-              <ion-icon
+            @if (change !== undefined) {
+              <div class="flex items-center text-sm">
+                <ion-icon
                 [name]="
                   trend === 'up' ? 'trending-up' : trend === 'down' ? 'trending-down' : 'remove'
                 "
-                [class.text-success-strong]="trend === 'up'"
-                [class.text-error-500]="trend === 'down'"
-                [class.text-text-secondary]="trend === 'neutral'"
-                class="mr-1"
-              ></ion-icon>
-              <span
-                [class.text-success-strong]="trend === 'up'"
-                [class.text-error-500]="trend === 'down'"
-                [class.text-text-secondary]="trend === 'neutral'"
-              >
-                {{ change }}%
-              </span>
-              <span class="ml-1 opacity-60" *ngIf="changeLabel">{{ changeLabel }}</span>
+                  [class.text-success-strong]="trend === 'up'"
+                  [class.text-error-500]="trend === 'down'"
+                  [class.text-text-secondary]="trend === 'neutral'"
+                  class="mr-1"
+                ></ion-icon>
+                <span
+                  [class.text-success-strong]="trend === 'up'"
+                  [class.text-error-500]="trend === 'down'"
+                  [class.text-text-secondary]="trend === 'neutral'"
+                  >
+                  {{ change }}%
+                </span>
+                @if (changeLabel) {
+                  <span class="ml-1 opacity-60">{{ changeLabel }}</span>
+                }
+              </div>
+            }
+          </div>
+          @if (icon) {
+            <div class="ml-4">
+              <ion-icon [name]="icon" class="text-4xl opacity-30"></ion-icon>
             </div>
-          </div>
-          <div *ngIf="icon" class="ml-4">
-            <ion-icon [name]="icon" class="text-4xl opacity-30"></ion-icon>
-          </div>
+          }
         </div>
       </ion-card-content>
     </ion-card>
-  `,
+    `,
   styles: [
     `
       .kpi-card {

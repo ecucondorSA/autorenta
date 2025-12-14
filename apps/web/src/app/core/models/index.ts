@@ -868,10 +868,12 @@ export interface UserWallet {
 // ============================================
 
 export type BonusMalusType = 'BONUS' | 'MALUS' | 'NEUTRAL';
+export type AutorentaTier = 'standard' | 'trusted' | 'elite'; // NUEVO TIER
 
 export interface UserBonusMalus {
   user_id: string;
   total_factor: number; // -0.15 a +0.20 (negativo = bonus/descuento, positivo = malus/recargo)
+  tier?: AutorentaTier; // NUEVO: Nivel de confianza
   rating_factor: number;
   cancellation_factor: number;
   completion_factor: number;

@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 
 /**
@@ -19,7 +19,7 @@ import { ChangeDetectionStrategy, Component, effect, input, output, signal } fro
   selector: 'app-toast',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   animations: [
     trigger('slideIn', [
       transition(':enter', [

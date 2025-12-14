@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +20,7 @@ import { CarChatComponent } from './components/car-chat.component';
   selector: 'app-messages',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, BookingChatComponent, CarChatComponent],
+  imports: [RouterLink, BookingChatComponent, CarChatComponent],
   hostDirectives: [],
   template: `
     <div class="min-h-screen bg-surface-base dark:bg-surface-raised">

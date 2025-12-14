@@ -13,7 +13,7 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { HapticFeedbackService } from '../../../core/services/haptic-feedback.service';
 
 export type BottomSheetHeight = 'peek' | 'half' | 'full';
@@ -21,7 +21,7 @@ export type BottomSheetHeight = 'peek' | 'half' | 'full';
 @Component({
   selector: 'app-bottom-sheet',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './bottom-sheet.component.html',
   styleUrls: ['./bottom-sheet.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

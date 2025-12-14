@@ -18,7 +18,7 @@
           <div class="car-details">
             <h3>{{ car.brand }} {{ car.model }}</h3>
             @if (car.price_per_day && car.price_per_day > 0) {
-              <p class="car-price">${{ car.price_per_day }}/día</p>
+              <p class="car-price font-mono">${{ car.price_per_day }}/día</p>
             } @else {
               <p class="car-price text-primary-600">Consultar precio</p>
             }
@@ -36,7 +36,7 @@
 
   <!-- Date Range Picker -->
   <div class="section">
-    <h3 class="section-title">
+    <h3 class="section-title font-bold font-satoshi">
       <ion-icon name="calendar-outline"></ion-icon>
       Fechas del viaje
     </h3>
@@ -64,7 +64,7 @@
 
   <!-- Pickup Location -->
   <div class="section">
-    <h3 class="section-title">
+    <h3 class="section-title font-bold font-satoshi">
       <ion-icon name="pin-outline"></ion-icon>
       Lugar de recogida
     </h3>
@@ -92,7 +92,7 @@
   <!-- Dropoff Location (if different) -->
   @if (!sameLocation()) {
     <div class="section">
-      <h3 class="section-title">
+      <h3 class="section-title font-bold font-satoshi">
         <ion-icon name="pin-outline"></ion-icon>
         Lugar de devolución
       </h3>

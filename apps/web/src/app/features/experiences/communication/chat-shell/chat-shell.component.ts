@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import type { ChatContext } from '../types/chat-context';
   selector: 'app-chat-shell',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './chat-shell.component.html',
   // Mantener selector legacy para compatibilidad temporal
   // selector: 'app-base-chat' también disponible si es necesario

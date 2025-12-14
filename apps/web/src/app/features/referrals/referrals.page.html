@@ -1,5 +1,5 @@
 <div class="container-page px-container py-8">
-  <h1 class="text-3xl font-bold mb-6">Programa de Referidos</h1>
+  <h1 class="text-3xl font-bold mb-6 tracking-tight font-satoshi">Programa de Referidos</h1>
 
   @if (loading()) {
     <div class="text-center py-12">
@@ -10,7 +10,7 @@
   } @else {
     <!-- Código de referido -->
     <div class="card-premium p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">Tu código de referido</h2>
+      <h2 class="text-xl font-semibold mb-4 font-satoshi">Tu código de referido</h2>
       @if (referralCode()) {
         <div class="flex items-center gap-4">
           <div
@@ -24,7 +24,7 @@
         </div>
 
         <div class="mt-4">
-          <label class="block text-sm font-medium mb-2">Link para compartir:</label>
+          <label class="block text-sm font-medium mb-2 font-friendly">Link para compartir:</label>
           <div class="flex items-center gap-2">
             <input
               type="text"
@@ -73,7 +73,7 @@
 
     <!-- Cómo funciona -->
     <div class="card-premium p-6">
-      <h2 class="text-xl font-semibold mb-4">¿Cómo funciona?</h2>
+      <h2 class="text-xl font-semibold mb-4 font-satoshi">¿Cómo funciona?</h2>
       <ol class="list-decimal list-inside space-y-2 text-text-secondary dark:text-gray-500">
         <li>Compartí tu código o link con amigos propietarios</li>
         <li>Cuando se registren usando tu código, reciben $500 ARS de bienvenida</li>

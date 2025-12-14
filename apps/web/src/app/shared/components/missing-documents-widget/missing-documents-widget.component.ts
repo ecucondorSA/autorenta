@@ -1,6 +1,6 @@
 import {Component, OnInit, signal, computed, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { VerificationService } from '../../../core/services/verification.service';
@@ -10,7 +10,7 @@ import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/documen
   selector: 'app-missing-documents-widget',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule],
   template: `
     <div class="missing-documents-widget">
       @if (hasVerificationStatus()) {

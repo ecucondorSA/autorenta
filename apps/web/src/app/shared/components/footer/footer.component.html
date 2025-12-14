@@ -4,26 +4,33 @@
   <div class="footer-content">
     <div class="footer-grid">
       <!-- Footer Sections (Support, Community, Company) -->
-      <div *ngFor="let section of sections()" class="footer-section">
-        <h3 class="footer-section-title">{{ section.title }}</h3>
-        <ul class="footer-links">
-          <li *ngFor="let link of section.links">
-            <a *ngIf="!link.external" [routerLink]="link.url" class="footer-link">
-              {{ link.label }}
-            </a>
-            <a
-              *ngIf="link.external"
-              [href]="link.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="footer-link"
-            >
-              {{ link.label }}
-              <span class="external-icon">↗</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+      @for (section of sections(); track section) {
+        <div class="footer-section">
+          <h3 class="footer-section-title font-bold font-satoshi">{{ section.title }}</h3>
+          <ul class="footer-links">
+            @for (link of section.links; track link) {
+              <li>
+                @if (!link.external) {
+                  <a [routerLink]="link.url" class="footer-link">
+                    {{ link.label }}
+                  </a>
+                }
+                @if (link.external) {
+                  <a
+                    [href]="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="footer-link"
+                    >
+                    {{ link.label }}
+                    <span class="external-icon">↗</span>
+                  </a>
+                }
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </div>
   </div>
 
@@ -36,14 +43,17 @@
         <p class="copyright">© {{ currentYear }} Autorentar · Hecho en Buenos Aires, Argentina</p>
         <span class="separator">·</span>
         <nav class="legal-links" aria-label="Vínculos legales">
-          <a
-            *ngFor="let link of legalLinks(); let isLast = last"
-            [routerLink]="link.url"
-            class="legal-link"
-          >
-            {{ link.label }}
-            <span *ngIf="!isLast" class="separator">·</span>
-          </a>
+          @for (link of legalLinks(); track link; let isLast = $last) {
+            <a
+              [routerLink]="link.url"
+              class="legal-link"
+              >
+              {{ link.label }}
+              @if (!isLast) {
+                <span class="separator">·</span>
+              }
+            </a>
+          }
         </nav>
       </div>
 
@@ -55,7 +65,7 @@
           class="selector-button"
           (click)="onLanguageChange()"
           aria-label="Elegir idioma"
-        >
+          >
           <span class="selector-icon">🌐</span>
           <span class="selector-text">{{ currentLanguage() }}</span>
         </button>
@@ -66,23 +76,24 @@
           class="selector-button"
           (click)="onCurrencyChange()"
           aria-label="Elegir moneda"
-        >
+          >
           <span class="selector-icon">$</span>
           <span class="selector-text">{{ currentCurrency() }}</span>
         </button>
 
         <!-- Social Media Links -->
         <div class="social-links" aria-label="Redes sociales">
-          <a
-            *ngFor="let social of socialLinks()"
-            [href]="social.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="social-link"
-            [attr.aria-label]="social.ariaLabel"
-          >
-            <span class="social-icon">{{ social.icon }}</span>
-          </a>
+          @for (social of socialLinks(); track social) {
+            <a
+              [href]="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+              [attr.aria-label]="social.ariaLabel"
+              >
+              <span class="social-icon">{{ social.icon }}</span>
+            </a>
+          }
         </div>
       </div>
     </div>

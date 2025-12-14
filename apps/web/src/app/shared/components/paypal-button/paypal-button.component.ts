@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {AfterViewInit,
   Component,
   EventEmitter,
@@ -48,7 +48,7 @@ declare const window: PayPalWindow;
   selector: 'app-paypal-button',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './paypal-button.component.html',
   styleUrls: ['./paypal-button.component.css'],
 })

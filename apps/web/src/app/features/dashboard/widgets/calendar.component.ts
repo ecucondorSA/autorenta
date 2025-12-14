@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -6,7 +6,7 @@ import {Component,
   selector: 'app-calendar-widget',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="p-4 bg-white rounded shadow">
       <h2 class="text-lg font-medium mb-2">Calendario</h2>

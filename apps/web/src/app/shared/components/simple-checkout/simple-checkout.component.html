@@ -2,15 +2,16 @@
 <div class="checkout-header">
   <div class="progress-container">
     <div class="progress-steps">
-      <div
-        *ngFor="let step of steps; let i = index"
-        class="progress-step"
-        [class.active]="i === currentStep()"
-        [class.completed]="step.completed"
-      >
-        <div class="step-number">{{ i + 1 }}</div>
-        <div class="step-title">{{ step.title }}</div>
-      </div>
+      @for (step of steps; track step; let i = $index) {
+        <div
+          class="progress-step"
+          [class.active]="i === currentStep()"
+          [class.completed]="step.completed"
+          >
+          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-title">{{ step.title }}</div>
+        </div>
+      }
     </div>
   </div>
   <button class="close-button" (click)="cancel()" [disabled]="loading()">
@@ -20,7 +21,7 @@
         stroke-linejoin="round"
         stroke-width="2"
         d="M6 18L18 6M6 6l12 12"
-      />
+        />
     </svg>
   </button>
 </div>
@@ -28,331 +29,339 @@
 <!-- Content -->
 <div class="checkout-content">
   <!-- Loading State -->
-  <div *ngIf="loading()" class="loading-state">
-    <div class="spinner"></div>
-    <h3>Procesando tu reserva...</h3>
-    <p>Esto tomará solo unos segundos</p>
-  </div>
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <h3>Procesando tu reserva...</h3>
+      <p>Esto tomará solo unos segundos</p>
+    </div>
+  }
 
   <!-- Error State -->
-  <div *ngIf="error() && !loading()" class="error-state">
-    <div class="error-icon"><app-icon name="alert-triangle" [size]="32" /></div>
-    <h3>No disponible</h3>
-    <p class="error-message">{{ error() }}</p>
-
-    <!-- Opción de Waitlist cuando hay conflicto de constraint -->
-    <div *ngIf="canWaitlist()" class="waitlist-option">
-      <div class="waitlist-info">
-        <div class="waitlist-icon"><app-icon name="clipboard" [size]="24" /></div>
-        <div class="waitlist-text">
-          <h4>¿Quieres que te notifiquemos cuando esté disponible?</h4>
-          <p>
-            El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te
-            notificaremos automáticamente cuando otro usuario cancele o expire su reserva
-            (generalmente en 30 minutos).
-          </p>
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <div class="error-icon"><app-icon name="alert-triangle" [size]="32" /></div>
+      <h3>No disponible</h3>
+      <p class="error-message">{{ error() }}</p>
+      <!-- Opción de Waitlist cuando hay conflicto de constraint -->
+      @if (canWaitlist()) {
+        <div class="waitlist-option">
+          <div class="waitlist-info">
+            <div class="waitlist-icon"><app-icon name="clipboard" [size]="24" /></div>
+            <div class="waitlist-text">
+              <h4>¿Quieres que te notifiquemos cuando esté disponible?</h4>
+              <p>
+                El auto está ocupado en esas fechas, pero puedes agregarte a la lista de espera. Te
+                notificaremos automáticamente cuando otro usuario cancele o expire su reserva
+                (generalmente en 30 minutos).
+              </p>
+            </div>
+          </div>
+          <button class="waitlist-button" (click)="addToWaitlist()" [disabled]="addingToWaitlist()">
+            @if (!addingToWaitlist()) {
+              <span>
+                <app-icon name="bell" [size]="16" cssClass="inline-block mr-1" />
+                Agregar a lista de espera
+              </span>
+            }
+            @if (addingToWaitlist()) {
+              <span>
+                <span class="button-spinner"></span>
+                Agregando...
+              </span>
+            }
+          </button>
         </div>
-      </div>
-      <button class="waitlist-button" (click)="addToWaitlist()" [disabled]="addingToWaitlist()">
-        <span *ngIf="!addingToWaitlist()">
-          <app-icon name="bell" [size]="16" cssClass="inline-block mr-1" />
-          Agregar a lista de espera
-        </span>
-        <span *ngIf="addingToWaitlist()">
-          <span class="button-spinner"></span>
-          Agregando...
-        </span>
-      </button>
+      }
+      <button class="retry-button" (click)="onRetry()">Intentar nuevamente</button>
     </div>
-
-    <button class="retry-button" (click)="onRetry()">Intentar nuevamente</button>
-  </div>
+  }
 
   <!-- Step Content -->
-  <div *ngIf="!loading() && !error()" class="step-content">
-    <!-- Step 1: Fechas -->
-    <div *ngIf="currentStep() === 0" class="step-dates">
-      <div class="step-header">
-        <h2>¿Cuándo necesitas el auto?</h2>
-        <p>Selecciona las fechas de recogida y devolución</p>
-      </div>
-
-      <div class="car-preview">
-        <img [src]="getCarPhotoUrl()" [alt]="car.title" />
-        <div class="car-info">
-          <h3>{{ car.title }}</h3>
-          <p>{{ car.location_city }}, {{ car.location_state }}</p>
-          @if (car.price_per_day && car.price_per_day > 0) {
-            <p class="price">{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}/día</p>
-          } @else {
-            <p class="price text-primary-600">Consultar precio</p>
-          }
-        </div>
-      </div>
-
-      <div class="date-selection">
-        <div class="date-field">
-          <label>Fecha de recogida</label>
-          <input
-            type="date"
-            [value]="startDate()"
-            (input)="onDateInput('start', $event)"
-            [min]="getMinDate()"
-            [max]="getMaxDate()"
-          />
-        </div>
-
-        <div class="date-field">
-          <label>Fecha de devolución</label>
-          <input
-            type="date"
-            [value]="endDate()"
-            (input)="onDateInput('end', $event)"
-            [min]="startDate() || getMinDate()"
-            [max]="getMaxDate()"
-          />
-        </div>
-      </div>
-
-      <div *ngIf="availabilityInfo()" class="availability-hint">
-        <div class="hint-icon"><app-icon name="refresh" [size]="20" /></div>
-        <div>
-          <p>{{ availabilityInfo() }}</p>
-          <small *ngIf="availabilitySuggestion()">
-            Si preferís tus fechas originales, podés intentar más tarde o usar la lista de espera.
-          </small>
-        </div>
-      </div>
-
-      <div *ngIf="totalDays() > 0" class="booking-summary">
-        <h4>Resumen de tu reserva</h4>
-        <div class="summary-item">
-          <span>Duración</span>
-          <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
-        </div>
-        <div class="summary-item">
-          <span>Precio por día</span>
-          @if (car.price_per_day && car.price_per_day > 0) {
-            <span>{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
-          } @else {
-            <span class="text-primary-600">Consultar</span>
-          }
-        </div>
-        <div class="summary-total">
-          <span>Total alquiler</span>
-          <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step 2: Review -->
-    <div *ngIf="currentStep() === 1" class="step-review">
-      <div class="step-header">
-        <h2>Confirma tu reserva</h2>
-        <p>Revisa los detalles antes de continuar</p>
-      </div>
-
-      <div class="booking-details">
-        <div class="detail-section">
-          <h3>Auto</h3>
-          <div class="car-summary">
+  @if (!loading() && !error()) {
+    <div class="step-content">
+      <!-- Step 1: Fechas -->
+      @if (currentStep() === 0) {
+        <div class="step-dates">
+          <div class="step-header">
+            <h2>¿Cuándo necesitas el auto?</h2>
+            <p>Selecciona las fechas de recogida y devolución</p>
+          </div>
+          <div class="car-preview">
             <img [src]="getCarPhotoUrl()" [alt]="car.title" />
-            <div>
-              <h4>{{ car.title }}</h4>
+            <div class="car-info">
+              <h3>{{ car.title }}</h3>
               <p>{{ car.location_city }}, {{ car.location_state }}</p>
+              @if (car.price_per_day && car.price_per_day > 0) {
+                <p class="price font-mono">{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}/día</p>
+              } @else {
+                <p class="price text-primary-600">Consultar precio</p>
+              }
+            </div>
+          </div>
+          <div class="date-selection">
+            <div class="date-field">
+              <label>Fecha de recogida</label>
+              <input
+                type="date"
+                [value]="startDate()"
+                (input)="onDateInput('start', $event)"
+                [min]="getMinDate()"
+                [max]="getMaxDate()"
+                />
+            </div>
+            <div class="date-field">
+              <label>Fecha de devolución</label>
+              <input
+                type="date"
+                [value]="endDate()"
+                (input)="onDateInput('end', $event)"
+                [min]="startDate() || getMinDate()"
+                [max]="getMaxDate()"
+                />
+            </div>
+          </div>
+          @if (availabilityInfo()) {
+            <div class="availability-hint">
+              <div class="hint-icon"><app-icon name="refresh" [size]="20" /></div>
+              <div>
+                <p>{{ availabilityInfo() }}</p>
+                @if (availabilitySuggestion()) {
+                  <small>
+                    Si preferís tus fechas originales, podés intentar más tarde o usar la lista de espera.
+                  </small>
+                }
+              </div>
+            </div>
+          }
+          @if (totalDays() > 0) {
+            <div class="booking-summary">
+              <h4>Resumen de tu reserva</h4>
+              <div class="summary-item">
+                <span>Duración</span>
+                <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+              </div>
+              <div class="summary-item">
+                <span>Precio por día</span>
+                @if (car.price_per_day && car.price_per_day > 0) {
+                  <span>{{ car.price_per_day | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+                } @else {
+                  <span class="text-primary-600">Consultar</span>
+                }
+              </div>
+              <div class="summary-total">
+                <span>Total alquiler</span>
+                <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      <!-- Step 2: Review -->
+      @if (currentStep() === 1) {
+        <div class="step-review">
+          <div class="step-header">
+            <h2>Confirma tu reserva</h2>
+            <p>Revisa los detalles antes de continuar</p>
+          </div>
+          <div class="booking-details">
+            <div class="detail-section">
+              <h3>Auto</h3>
+              <div class="car-summary">
+                <img [src]="getCarPhotoUrl()" [alt]="car.title" />
+                <div>
+                  <h4>{{ car.title }}</h4>
+                  <p>{{ car.location_city }}, {{ car.location_state }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <h3>Fechas</h3>
+              <div class="date-summary">
+                <div class="date-item">
+                  <span>Recogida</span>
+                  <span>{{ startDate() | date: 'EEEE dd/MM/yyyy' }}</span>
+                </div>
+                <div class="date-item">
+                  <span>Devolución</span>
+                  <span>{{ endDate() | date: 'EEEE dd/MM/yyyy' }}</span>
+                </div>
+                <div class="date-item total">
+                  <span>Total</span>
+                  <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <h3>Costos</h3>
+              <div class="cost-breakdown">
+                <div class="cost-item">
+                  <span>Alquiler ({{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }})</span>
+                  <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+                </div>
+                <div class="cost-item">
+                  <span>Depósito de garantía</span>
+                  <span>{{ depositAmount() | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+                </div>
+                <div class="cost-total">
+                  <span>Total a pagar</span>
+                  <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="detail-section">
-          <h3>Fechas</h3>
-          <div class="date-summary">
-            <div class="date-item">
-              <span>Recogida</span>
-              <span>{{ startDate() | date: 'EEEE dd/MM/yyyy' }}</span>
-            </div>
-            <div class="date-item">
-              <span>Devolución</span>
-              <span>{{ endDate() | date: 'EEEE dd/MM/yyyy' }}</span>
-            </div>
-            <div class="date-item total">
-              <span>Total</span>
-              <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
-            </div>
+      }
+      <!-- Step 3: Payment -->
+      @if (currentStep() === 2) {
+        <div class="step-payment">
+          <div class="step-header">
+            <h2>Elige tu método de pago</h2>
+            <p>Tu reserva está protegida y segura</p>
           </div>
-        </div>
-
-        <div class="detail-section">
-          <h3>Costos</h3>
-          <div class="cost-breakdown">
-            <div class="cost-item">
-              <span>Alquiler ({{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }})</span>
-              <span>{{ totalPrice() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
-            </div>
-            <div class="cost-item">
-              <span>Depósito de garantía</span>
-              <span>{{ depositAmount() | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
-            </div>
-            <div class="cost-total">
-              <span>Total a pagar</span>
-              <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step 3: Payment -->
-    <div *ngIf="currentStep() === 2" class="step-payment">
-      <div class="step-header">
-        <h2>Elige tu método de pago</h2>
-        <p>Tu reserva está protegida y segura</p>
-      </div>
-
-      <div class="payment-methods">
-        <!-- Wallet Payment -->
-        <div
-          class="payment-method wallet-method"
-          [class.selected]="paymentMethod() === 'wallet'"
-          (click)="paymentMethod.set('wallet')"
-        >
-          <div class="payment-icon"><app-icon name="wallet" [size]="24" /></div>
-          <div class="payment-info">
-            <h4>Wallet AutoRenta</h4>
-            <p>Saldo disponible: {{ walletBalance() | currency: 'ARS' : 'symbol' : '1.0-0' }}</p>
-            <p class="payment-description">
-              <strong>¡Alquila sin tarjeta de crédito!</strong> Pago instantáneo y sin comisiones
-            </p>
-            <div class="wallet-benefits">
-              <span class="benefit-badge"
-                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
-                tarjeta</span
+          <div class="payment-methods">
+            <!-- Wallet Payment -->
+            <div
+              class="payment-method wallet-method"
+              [class.selected]="paymentMethod() === 'wallet'"
+              (click)="paymentMethod.set('wallet')"
               >
-              <span class="benefit-badge"
-                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
-                comisiones</span
-              >
-              <span class="benefit-badge"
-                ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" />
-                Instantáneo</span
-              >
-            </div>
+              <div class="payment-icon"><app-icon name="wallet" [size]="24" /></div>
+              <div class="payment-info">
+                <h4>Wallet AutoRenta</h4>
+                <p>Saldo disponible: {{ walletBalance() | currency: 'ARS' : 'symbol' : '1.0-0' }}</p>
+                <p class="payment-description">
+                  <strong>¡Alquila sin tarjeta de crédito!</strong> Pago instantáneo y sin comisiones
+                </p>
+                <div class="wallet-benefits">
+                  <span class="benefit-badge"
+                    ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
+                    tarjeta</span
+                    >
+                    <span class="benefit-badge"
+                      ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" /> Sin
+                      comisiones</span
+                      >
+                      <span class="benefit-badge"
+                        ><app-icon name="check" [size]="12" cssClass="inline-block mr-1" />
+                        Instantáneo</span
+                        >
+                      </div>
+                    </div>
+                    <div class="payment-radio">
+                      <div class="radio" [class.checked]="paymentMethod() === 'wallet'"></div>
+                    </div>
+                  </div>
+                  <!-- Cash Payment -->
+                  <div
+                    class="payment-method"
+                    [class.selected]="paymentMethod() === 'cash'"
+                    (click)="paymentMethod.set('cash')"
+                    >
+                    <div class="payment-icon"><app-icon name="dollar" [size]="24" /></div>
+                    <div class="payment-info">
+                      <h4>Efectivo</h4>
+                      <p>Paga al retirar el auto</p>
+                      <p class="payment-description">
+                        Paga en efectivo directamente al propietario cuando retires el vehículo
+                      </p>
+                    </div>
+                    <div class="payment-radio">
+                      <div class="radio" [class.checked]="paymentMethod() === 'cash'"></div>
+                    </div>
+                  </div>
+                  <!-- Card Payment -->
+                  <div
+                    class="payment-method"
+                    [class.selected]="paymentMethod() === 'card'"
+                    (click)="paymentMethod.set('card')"
+                    >
+                    <div class="payment-icon"><app-icon name="credit-card" [size]="24" /></div>
+                    <div class="payment-info">
+                      <h4>Tarjeta de Crédito/Débito</h4>
+                      <p>A través de MercadoPago</p>
+                      <p class="payment-description">Aceptamos todas las tarjetas</p>
+                    </div>
+                    <div class="payment-radio">
+                      <div class="radio" [class.checked]="paymentMethod() === 'card'"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="payment-notice wallet-highlight">
+                  <div class="notice-icon"><app-icon name="lightbulb" [size]="24" /></div>
+                  <div class="notice-text">
+                    <h4>¿Sabías que con Wallet AutoRenta no necesitas tarjeta de crédito?</h4>
+                    <p>
+                      La Wallet AutoRenta te permite alquilar vehículos de forma rápida y segura sin necesidad
+                      de tener una tarjeta de crédito. Solo carga saldo en tu wallet y podrás alquilar
+                      cualquier vehículo disponible. ¡Es la forma más conveniente de alquilar!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            }
+            <!-- Step 4: Confirmation -->
+            @if (currentStep() === 3) {
+              <div class="step-confirmation">
+                <div class="step-header">
+                  <h2>¡Ya casi está!</h2>
+                  <p>Confirma tu reserva para completar el proceso</p>
+                </div>
+                <div class="confirmation-summary">
+                  <div class="summary-card">
+                    <h3>Resumen Final</h3>
+                    <div class="confirmation-item">
+                      <span>Auto</span>
+                      <span>{{ car.title }}</span>
+                    </div>
+                    <div class="confirmation-item">
+                      <span>Período</span>
+                      <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
+                    </div>
+                    <div class="confirmation-item">
+                      <span>Método de pago</span>
+                      <span>
+                        {{
+                        paymentMethod() === 'wallet'
+                        ? 'Wallet AutoRenta'
+                        : paymentMethod() === 'cash'
+                        ? 'Efectivo al retirar'
+                        : 'Tarjeta de Crédito'
+                        }}
+                      </span>
+                    </div>
+                    <div class="confirmation-total">
+                      <span>Total</span>
+                      <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
+                    </div>
+                  </div>
+                  <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required />
+                    <label for="terms">
+                      Acepto los <a href="/terminos" target="_blank">términos y condiciones</a> y las
+                      <a href="/politicas" target="_blank">políticas de alquiler</a>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
-          <div class="payment-radio">
-            <div class="radio" [class.checked]="paymentMethod() === 'wallet'"></div>
-          </div>
-        </div>
-
-        <!-- Cash Payment -->
-        <div
-          class="payment-method"
-          [class.selected]="paymentMethod() === 'cash'"
-          (click)="paymentMethod.set('cash')"
-        >
-          <div class="payment-icon"><app-icon name="dollar" [size]="24" /></div>
-          <div class="payment-info">
-            <h4>Efectivo</h4>
-            <p>Paga al retirar el auto</p>
-            <p class="payment-description">
-              Paga en efectivo directamente al propietario cuando retires el vehículo
-            </p>
-          </div>
-          <div class="payment-radio">
-            <div class="radio" [class.checked]="paymentMethod() === 'cash'"></div>
-          </div>
-        </div>
-
-        <!-- Card Payment -->
-        <div
-          class="payment-method"
-          [class.selected]="paymentMethod() === 'card'"
-          (click)="paymentMethod.set('card')"
-        >
-          <div class="payment-icon"><app-icon name="credit-card" [size]="24" /></div>
-          <div class="payment-info">
-            <h4>Tarjeta de Crédito/Débito</h4>
-            <p>A través de MercadoPago</p>
-            <p class="payment-description">Aceptamos todas las tarjetas</p>
-          </div>
-          <div class="payment-radio">
-            <div class="radio" [class.checked]="paymentMethod() === 'card'"></div>
-          </div>
-        </div>
+        }
       </div>
 
-      <div class="payment-notice wallet-highlight">
-        <div class="notice-icon"><app-icon name="lightbulb" [size]="24" /></div>
-        <div class="notice-text">
-          <h4>¿Sabías que con Wallet AutoRenta no necesitas tarjeta de crédito?</h4>
-          <p>
-            La Wallet AutoRenta te permite alquilar vehículos de forma rápida y segura sin necesidad
-            de tener una tarjeta de crédito. Solo carga saldo en tu wallet y podrás alquilar
-            cualquier vehículo disponible. ¡Es la forma más conveniente de alquilar!
-          </p>
+      <!-- Footer con navegación -->
+      @if (!loading() && !error()) {
+        <div class="checkout-footer">
+          <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
+            ← Anterior
+          </button>
+          <button class="nav-button primary" (click)="nextStep()" [disabled]="!validateCurrentStep()">
+            @if (currentStep() < steps.length - 1) {
+              <span> Continuar </span>
+            }
+            @if (currentStep() >= steps.length - 1) {
+              <span> Confirmar Reserva </span>
+            }
+          </button>
         </div>
-      </div>
-    </div>
-
-    <!-- Step 4: Confirmation -->
-    <div *ngIf="currentStep() === 3" class="step-confirmation">
-      <div class="step-header">
-        <h2>¡Ya casi está!</h2>
-        <p>Confirma tu reserva para completar el proceso</p>
-      </div>
-
-      <div class="confirmation-summary">
-        <div class="summary-card">
-          <h3>Resumen Final</h3>
-
-          <div class="confirmation-item">
-            <span>Auto</span>
-            <span>{{ car.title }}</span>
-          </div>
-
-          <div class="confirmation-item">
-            <span>Período</span>
-            <span>{{ totalDays() }} día{{ totalDays() !== 1 ? 's' : '' }}</span>
-          </div>
-
-          <div class="confirmation-item">
-            <span>Método de pago</span>
-            <span>
-              {{
-                paymentMethod() === 'wallet'
-                  ? 'Wallet AutoRenta'
-                  : paymentMethod() === 'cash'
-                    ? 'Efectivo al retirar'
-                    : 'Tarjeta de Crédito'
-              }}
-            </span>
-          </div>
-
-          <div class="confirmation-total">
-            <span>Total</span>
-            <span>{{ finalTotal() | currency: 'ARS' : 'symbol' : '1.0-0' }}</span>
-          </div>
-        </div>
-
-        <div class="terms-checkbox">
-          <input type="checkbox" id="terms" required />
-          <label for="terms">
-            Acepto los <a href="/terminos" target="_blank">términos y condiciones</a> y las
-            <a href="/politicas" target="_blank">políticas de alquiler</a>
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Footer con navegación -->
-<div *ngIf="!loading() && !error()" class="checkout-footer">
-  <button class="nav-button secondary" (click)="previousStep()" [disabled]="currentStep() === 0">
-    ← Anterior
-  </button>
-
-  <button class="nav-button primary" (click)="nextStep()" [disabled]="!validateCurrentStep()">
-    <span *ngIf="currentStep() < steps.length - 1"> Continuar </span>
-    <span *ngIf="currentStep() >= steps.length - 1"> Confirmar Reserva </span>
-  </button>
-</div>
+      }

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -21,7 +21,7 @@ import { ReferralsService } from '../../core/services/referrals.service';
   selector: 'app-referral-landing',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   template: `
     <div
       class="min-h-screen flex items-center justify-center bg-gradient-to-br from-cta-default/5 via-surface-base to-cta-hover/5 dark:from-cyan-900/20 dark:via-slate-900 dark:to-cyan-800/20 py-16 px-4"

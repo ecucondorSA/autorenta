@@ -108,7 +108,7 @@
           class="aspect-square lg:aspect-auto lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-slate-950"
         >
           <img
-            src="/BM.png"
+            src="/BM.webp"
             alt="Convertite en Renter"
             class="w-full h-full object-cover"
             loading="lazy"
@@ -145,7 +145,7 @@
   <div class="container-page px-container">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
           Calculá tus ingresos potenciales
         </h2>
         <p class="text-lg text-text-secondary dark:text-gray-500">
@@ -162,7 +162,7 @@
                 <label class="block text-sm font-medium text-text-primary dark:text-white">
                   Valor de tu auto
                 </label>
-                <span class="value-chip">{{ carValue() | number: '1.0-0' }} ARS</span>
+                <span class="value-chip font-mono">{{ carValue() | number: '1.0-0' }} ARS</span>
               </div>
               <input
                 type="range"
@@ -179,7 +179,7 @@
                 <label class="block text-sm font-medium text-text-primary dark:text-white">
                   Días rentados por mes
                 </label>
-                <span class="value-chip">{{ daysPerMonth() }} días</span>
+                <span class="value-chip font-mono">{{ daysPerMonth() }} días</span>
               </div>
               <input
                 type="range"
@@ -196,7 +196,7 @@
                 <label class="block text-sm font-medium text-text-primary dark:text-white">
                   Precio por día
                 </label>
-                <span class="value-chip">{{ pricePerDay() | number: '1.0-0' }} ARS/día</span>
+                <span class="value-chip font-mono">{{ pricePerDay() | number: '1.0-0' }} ARS/día</span>
               </div>
               <input
                 type="range"
@@ -217,7 +217,7 @@
               <div class="text-sm font-medium text-text-muted dark:text-gray-500 mb-2">
                 Ingresos mensuales estimados
               </div>
-              <div class="text-4xl lg:text-5xl font-bold text-cta-default dark:text-cyan-400">
+              <div class="text-4xl lg:text-5xl font-bold font-mono text-cta-default dark:text-cyan-400">
                 ${{ estimatedMonthlyIncome() | number: '1.0-0' }}
               </div>
             </div>
@@ -227,21 +227,21 @@
                 <span class="text-sm text-text-secondary dark:text-gray-500"
                   >Ingresos anuales:</span
                 >
-                <span class="text-lg font-semibold text-text-primary dark:text-white">
+                <span class="text-lg font-semibold font-mono text-text-primary dark:text-white">
                   ${{ estimatedYearlyIncome() | number: '1.0-0' }}
                 </span>
               </div>
 
               <div class="flex justify-between items-center">
-                <span class="text-sm text-text-secondary dark:text-gray-500">ROI aproximado:</span>
-                <span class="text-lg font-semibold text-text-primary dark:text-white">
+                <span class="text-sm text-text-secondary dark:text-gray-500 font-luxury">ROI aproximado:</span>
+                <span class="text-lg font-semibold font-mono text-text-primary dark:text-white">
                   {{ estimatedROI() | number: '1.1-1' }}%
                 </span>
               </div>
 
               <div class="flex justify-between items-center">
                 <span class="text-sm text-text-secondary dark:text-gray-500">Te quedás (85%):</span>
-                <span class="text-lg font-semibold text-green-600 dark:text-green-400">
+                <span class="text-lg font-semibold font-mono text-green-600 dark:text-green-400">
                   ${{ estimatedMonthlyIncome() * 0.85 | number: '1.0-0' }}
                 </span>
               </div>
@@ -261,7 +261,7 @@
 <section class="py-16 bg-surface-raised dark:bg-slate-900">
   <div class="container-page px-container">
     <div class="text-center mb-12">
-      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
         ¿Por qué elegir Autorentar?
       </h2>
       <p class="text-lg text-text-secondary dark:text-gray-500">
@@ -308,7 +308,7 @@
               </svg>
             }
           </div>
-          <h3 class="text-xl font-semibold mb-2 text-text-primary dark:text-white">
+          <h3 class="text-xl font-semibold mb-2 text-text-primary dark:text-white font-satoshi">
             {{ benefit.title }}
           </h3>
           <p class="text-text-secondary dark:text-gray-500">
@@ -324,7 +324,7 @@
 <section class="py-16 bg-surface-base dark:bg-slate-950">
   <div class="container-page px-container">
     <div class="text-center mb-12">
-      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
         ¿Cómo funciona?
       </h2>
       <p class="text-lg text-text-secondary dark:text-gray-500">
@@ -365,7 +365,7 @@
               >
                 {{ step.number }}
               </div>
-              <h3 class="text-lg font-semibold mb-2 text-text-primary dark:text-white">
+              <h3 class="text-lg font-semibold mb-2 text-text-primary dark:text-white font-satoshi">
                 {{ step.title }}
               </h3>
               <p class="text-sm text-text-secondary dark:text-gray-500">
@@ -406,7 +406,7 @@
 <section class="py-16 bg-surface-raised dark:bg-slate-900">
   <div class="container-page px-container">
     <div class="text-center mb-12">
-      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
         Lo que dicen nuestros Renters
       </h2>
       <p class="text-lg text-text-secondary dark:text-gray-500">
@@ -470,7 +470,7 @@
         <path d="M21 8h-3M6 8H3" stroke-width="1.75" stroke-linecap="round"/>
         <path d="M12 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" stroke-width="1.5"/>
       </svg>
-      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+      <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
         Ganás más con nuestro programa de referidos
       </h2>
       <p class="text-lg text-text-secondary dark:text-gray-500 mb-8">
@@ -517,7 +517,7 @@
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto">
       <div class="text-center mb-12">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-text-primary dark:text-white tracking-tight font-satoshi">
           Preguntas frecuentes
         </h2>
       </div>
@@ -566,7 +566,7 @@
 >
   <div class="container-page px-container">
     <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl lg:text-5xl font-bold mb-6">¿Listo para comenzar a ganar?</h2>
+      <h2 class="text-3xl lg:text-5xl font-bold mb-6 tracking-tight font-satoshi">¿Listo para comenzar a ganar?</h2>
       <p class="text-xl mb-8 opacity-90">
         Unite a miles de Renters que ya están generando ingresos con sus autos.
       </p>

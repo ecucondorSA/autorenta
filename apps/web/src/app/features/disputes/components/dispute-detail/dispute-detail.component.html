@@ -1,10 +1,10 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
   <div class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-slide-up">
-    
+
     <!-- Header -->
     <div class="flex items-center justify-between p-6 border-b border-border-default dark:border-border-muted bg-surface-raised z-10">
       <div>
-        <h2 class="text-xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2">
+        <h2 class="text-xl font-bold text-text-primary dark:text-text-primary flex items-center gap-2 font-satoshi">
           Disputa #{{ disputeId().slice(0,8) }}
           <span
             class="px-2.5 py-0.5 rounded-full text-xs font-medium"
@@ -14,7 +14,7 @@
               'bg-success-light/20 text-success-strong': dispute()?.status === 'resolved',
               'bg-error-bg-hover text-error-strong': dispute()?.status === 'rejected'
             }"
-          >
+            >
             {{ dispute() ? getStatusLabel(dispute()!.status) : 'Cargando...' }}
           </span>
         </h2>
@@ -26,7 +26,7 @@
         type="button"
         (click)="closeDetail.emit()"
         class="p-2 rounded-full hover:bg-surface-base dark:hover:bg-surface-base text-text-secondary transition-colors"
-      >
+        >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -42,14 +42,14 @@
       } @else if (dispute()) {
         <!-- Descripción Original -->
         <div class="bg-surface-base dark:bg-surface-base rounded-xl p-4 border border-border-default dark:border-border-muted">
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-2">Descripción del Problema</h3>
+          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary mb-2 font-satoshi">Descripción del Problema</h3>
           <p class="text-text-secondary dark:text-text-secondary whitespace-pre-wrap">{{ dispute()!.description }}</p>
         </div>
 
         <!-- Timeline / Evidencia -->
         <div class="space-y-4">
-          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary sticky top-0 bg-surface-raised py-2 z-10">Historial y Evidencia</h3>
-          
+          <h3 class="text-sm font-semibold text-text-primary dark:text-text-primary sticky top-0 bg-surface-raised py-2 z-10 font-satoshi">Historial y Evidencia</h3>
+
           @if (evidence().length === 0) {
             <p class="text-center text-sm text-text-muted italic py-4">No hay evidencia adicional o mensajes.</p>
           }
@@ -85,24 +85,24 @@
     <!-- Admin Resolution Panel -->
     @if (isAdmin() && dispute()?.status !== 'resolved' && dispute()?.status !== 'rejected') {
       <div class="p-6 bg-surface-base dark:bg-surface-base border-t border-border-default dark:border-border-muted z-10 space-y-4">
-        <h3 class="text-sm font-bold text-text-primary dark:text-text-primary uppercase tracking-wider">Panel de Administración</h3>
-        
+        <h3 class="text-sm font-bold text-text-primary dark:text-text-primary uppercase tracking-wider font-satoshi">Panel de Administración</h3>
+
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-medium text-text-secondary mb-1">Monto a cobrar (USD)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="adminResolutionAmount" 
+            <label class="block text-xs font-medium text-text-secondary mb-1 font-luxury">Monto a cobrar (USD)</label>
+            <input
+              type="number"
+              [(ngModel)]="adminResolutionAmount"
               placeholder="0.00"
               class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default dark:border-border-muted text-sm"
-            >
+              >
           </div>
           <div>
             <label class="block text-xs font-medium text-text-secondary mb-1">Parte Responsable</label>
-            <select 
-              [(ngModel)]="adminResolutionParty" 
+            <select
+              [(ngModel)]="adminResolutionParty"
               class="w-full px-3 py-2 rounded-lg bg-surface-raised border border-border-default dark:border-border-muted text-sm"
-            >
+              >
               <option value="">-- Seleccionar --</option>
               <option value="renter">Locatario (Renter)</option>
               <option value="owner">Propietario (Owner)</option>
@@ -111,16 +111,16 @@
         </div>
 
         <div class="flex gap-3 pt-2">
-          <button 
-            (click)="resolveAsAdmin('rejected')" 
+          <button
+            (click)="resolveAsAdmin('rejected')"
             class="flex-1 px-4 py-2 border border-error-border text-error-strong rounded-lg hover:bg-error-bg transition-colors text-sm font-medium"
-          >
+            >
             Rechazar Disputa
           </button>
-          <button 
-            (click)="resolveAsAdmin('resolved')" 
+          <button
+            (click)="resolveAsAdmin('resolved')"
             class="flex-1 px-4 py-2 bg-success-light text-success-strong rounded-lg hover:bg-success-light/90 transition-colors text-sm font-medium"
-          >
+            >
             Resolver a Favor (Cobrar)
           </button>
         </div>
@@ -132,23 +132,27 @@
       <div class="p-4 border-t border-border-default dark:border-border-muted bg-surface-raised z-10 space-y-4">
         <!-- New Evidence / Message Input -->
         <div class="flex gap-2">
-          <input 
-            type="text" 
-            [(ngModel)]="newMessage" 
+          <input
+            type="text"
+            [(ngModel)]="newMessage"
             (keyup.enter)="sendMessage()"
-            placeholder="Escribe un mensaje o respuesta..." 
+            placeholder="Escribe un mensaje o respuesta..."
             class="flex-1 px-4 py-2 rounded-xl bg-surface-base dark:bg-surface-base border border-border-default dark:border-border-muted focus:ring-2 focus:ring-cta-default outline-none transition-all"
-          >
-          <button 
-            (click)="sendMessage()" 
+            >
+          <button
+            (click)="sendMessage()"
             [disabled]="!newMessage.trim() || sendingMessage()"
             class="px-4 py-2 bg-cta-default text-cta-text rounded-xl font-medium hover:bg-cta-default/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <svg *ngIf="!sendingMessage()" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
-            <span *ngIf="sendingMessage()" class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full block"></span>
+            >
+            @if (!sendingMessage()) {
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+            }
+            @if (sendingMessage()) {
+              <span class="animate-spin h-5 w-5 border-2 border-white/30 border-t-white rounded-full block"></span>
+            }
           </button>
         </div>
-        
+
         <!-- Evidence Uploader Toggle -->
         <app-evidence-uploader [disputeId]="disputeId()" (uploadComplete)="loadDisputeDetails()"></app-evidence-uploader>
       </div>
@@ -157,16 +161,16 @@
         <p class="text-text-secondary mb-3">
           Esta disputa ha sido revisada. Se ha determinado que debes pagar
           @if (dispute()!.resolution_amount) {
-            <strong class="text-error-strong">{{ dispute()!.resolution_amount | currency:dispute()!.resolution_currency:'symbol':'1.2-2' }}</strong>
+            <strong class="text-error-strong font-mono">{{ dispute()!.resolution_amount | currency:dispute()!.resolution_currency:'symbol':'1.2-2' }}</strong>
           } @else {
             "un monto"
           }
           por la resolución.
         </p>
-        <button 
-          (click)="acceptResolution()" 
+        <button
+          (click)="acceptResolution()"
           class="w-full px-4 py-3 bg-error-default text-cta-text rounded-xl font-medium hover:bg-error-default/90 transition-colors flex items-center justify-center gap-2"
-        >
+          >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           Aceptar y Pagar Resolución
         </button>

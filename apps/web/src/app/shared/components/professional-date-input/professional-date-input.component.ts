@@ -8,14 +8,14 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 
 @Component({
   selector: 'app-professional-date-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './professional-date-input.component.html',
   styleUrls: ['./professional-date-input.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

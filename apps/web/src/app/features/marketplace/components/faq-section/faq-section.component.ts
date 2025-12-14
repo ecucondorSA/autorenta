@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, signal } from '@angular/core';
 import type { FAQItem } from '../../../../core/models/marketplace.model';
 import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
@@ -15,7 +15,7 @@ import { SeoSchemaService } from '../../../../core/services/seo-schema.service';
 @Component({
   selector: 'app-faq-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="faq-section" aria-labelledby="faq-title">
       <header class="faq-header">

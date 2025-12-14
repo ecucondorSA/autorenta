@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * Chip Component V2
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-chip',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       [class]="chipClasses()"

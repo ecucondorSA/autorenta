@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -25,7 +25,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-owner-confirmation',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './owner-confirmation.component.html',
   styles: [
     `

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -43,7 +43,7 @@ export type PaymentMethod = 'credit_card' | 'wallet';
 @Component({
   selector: 'app-payment-method-buttons',
   standalone: true,
-  imports: [CommonModule, TranslateModule, MoneyPipe, IconComponent],
+  imports: [TranslateModule, MoneyPipe, IconComponent],
   templateUrl: './payment-method-buttons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

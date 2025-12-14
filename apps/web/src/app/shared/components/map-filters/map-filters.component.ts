@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -40,7 +40,7 @@ export type { FilterState } from '../../../core/models/marketplace.model';
 @Component({
   selector: 'app-map-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, DateRangePickerComponent, IconComponent],
+  imports: [FormsModule, DateRangePickerComponent, IconComponent],
   templateUrl: './map-filters.component.html',
   styleUrls: ['./map-filters.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

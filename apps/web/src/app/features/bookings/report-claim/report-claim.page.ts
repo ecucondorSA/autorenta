@@ -1,6 +1,6 @@
 import {Component, OnInit, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
   selector: 'app-report-claim',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule],
   template: `
     <ion-header>
       <ion-toolbar color="danger">
@@ -25,7 +25,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
         <ion-title>Reportar Siniestro</ion-title>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content>
       <form #claimForm="ngForm" (ngSubmit)="submitClaim()">
         <!-- Advertencia Importante -->
@@ -41,7 +41,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                   color="light"
                   href="tel:0800-AUTORENTAR"
                   class="emergency-button"
-                >
+                  >
                   <ion-icon slot="start" name="call"></ion-icon>
                   0800-AUTORENTAR (24/7)
                 </ion-button>
@@ -49,12 +49,12 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
             </div>
           </ion-card-content>
         </ion-card>
-
+    
         <ion-card>
           <ion-card-header>
             <ion-card-title>Información del Siniestro</ion-card-title>
           </ion-card-header>
-
+    
           <ion-card-content>
             <!-- Tipo de Siniestro -->
             <ion-item>
@@ -68,13 +68,15 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 required
                 interface="action-sheet"
                 placeholder="Selecciona el tipo"
-              >
-                <ion-select-option *ngFor="let type of claimTypes" [value]="type.value">
-                  {{ type.label }}
-                </ion-select-option>
+                >
+                @for (type of claimTypes; track type) {
+                  <ion-select-option [value]="type.value">
+                    {{ type.label }}
+                  </ion-select-option>
+                }
               </ion-select>
             </ion-item>
-
+    
             <!-- Fecha y Hora -->
             <ion-item>
               <ion-label position="stacked">
@@ -87,10 +89,10 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 presentation="date-time"
                 [max]="maxDate"
                 required
-              >
+                >
               </ion-datetime>
             </ion-item>
-
+    
             <!-- Ubicación -->
             <ion-item>
               <ion-label position="stacked">
@@ -102,19 +104,19 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 name="location"
                 placeholder="Ej: Av. Corrientes 1234, CABA"
                 type="text"
-              >
+                >
               </ion-input>
               <ion-button
                 slot="end"
                 fill="clear"
                 (click)="useCurrentLocation()"
                 [disabled]="gettingLocation"
-              >
+                >
                 <ion-icon [name]="gettingLocation ? 'hourglass' : 'location'" slot="icon-only">
                 </ion-icon>
               </ion-button>
             </ion-item>
-
+    
             <!-- Descripción -->
             <ion-item lines="none">
               <ion-label position="stacked">
@@ -131,10 +133,10 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 required
                 counter="true"
                 maxlength="1000"
-              >
+                >
               </ion-textarea>
             </ion-item>
-
+    
             <!-- Fotos -->
             <div class="photos-section">
               <h3>📸 Fotos del Siniestro</h3>
@@ -142,7 +144,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 <ion-icon name="information-circle"></ion-icon>
                 Toma fotos de todos los ángulos del vehículo, especialmente los daños visibles.
               </p>
-
+    
               <input
                 type="file"
                 accept="image/*"
@@ -150,40 +152,44 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 (change)="onPhotosSelected($event)"
                 #fileInput
                 style="display: none;"
-              />
-
+                />
+    
               <ion-button
                 expand="block"
                 fill="outline"
                 (click)="fileInput.click()"
                 [disabled]="uploadedPhotoPreviews.length >= 10 || uploadingPhotos"
-              >
+                >
                 <ion-icon slot="start" [name]="uploadingPhotos ? 'hourglass' : 'camera'"></ion-icon>
                 {{
-                  uploadingPhotos
-                    ? 'Subiendo...'
-                    : uploadedPhotoPreviews.length > 0
-                      ? 'Agregar más fotos'
-                      : 'Tomar/Subir Fotos'
+                uploadingPhotos
+                ? 'Subiendo...'
+                : uploadedPhotoPreviews.length > 0
+                ? 'Agregar más fotos'
+                : 'Tomar/Subir Fotos'
                 }}
                 ({{ uploadedPhotoPreviews.length }}/10)
               </ion-button>
-
-              <div class="photo-preview" *ngIf="uploadedPhotoPreviews.length > 0">
-                <div class="photo-item" *ngFor="let photo of uploadedPhotoPreviews; let i = index">
-                  <img [src]="photo" [alt]="'Foto ' + (i + 1)" />
-                  <ion-button
-                    fill="clear"
-                    color="danger"
-                    class="delete-photo"
-                    (click)="removePhoto(i)"
-                  >
-                    <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-                  </ion-button>
+    
+              @if (uploadedPhotoPreviews.length > 0) {
+                <div class="photo-preview">
+                  @for (photo of uploadedPhotoPreviews; track photo; let i = $index) {
+                    <div class="photo-item">
+                      <img [src]="photo" [alt]="'Foto ' + (i + 1)" />
+                      <ion-button
+                        fill="clear"
+                        color="danger"
+                        class="delete-photo"
+                        (click)="removePhoto(i)"
+                        >
+                        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </div>
+                  }
                 </div>
-              </div>
+              }
             </div>
-
+    
             <!-- Denuncia Policial -->
             <ion-item>
               <ion-label position="stacked">
@@ -195,17 +201,17 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
                 name="policeReport"
                 placeholder="Ej: 12345/2025"
                 type="text"
-              >
+                >
               </ion-input>
             </ion-item>
-
+    
             <!-- Checkbox de confirmación -->
             <ion-item lines="none">
               <ion-checkbox [(ngModel)]="confirmDeclaration" name="confirm" labelPlacement="end">
                 Declaro que la información proporcionada es verdadera y completa
               </ion-checkbox>
             </ion-item>
-
+    
             <!-- Botón Submit -->
             <ion-button
               expand="block"
@@ -213,17 +219,17 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
               [disabled]="!claimForm.valid || submitting || uploadingPhotos || !confirmDeclaration"
               color="danger"
               class="submit-button"
-            >
+              >
               <ion-icon slot="start" [name]="submitting ? 'hourglass' : 'alert-circle'"></ion-icon>
               {{
-                submitting
-                  ? 'Enviando...'
-                  : uploadingPhotos
-                    ? 'Subiendo fotos...'
-                    : 'Reportar Siniestro'
+              submitting
+              ? 'Enviando...'
+              : uploadingPhotos
+              ? 'Subiendo fotos...'
+              : 'Reportar Siniestro'
               }}
             </ion-button>
-
+    
             <!-- Información Legal -->
             <ion-note color="medium" class="legal-note">
               <ion-icon name="information-circle"></ion-icon>
@@ -233,7 +239,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
             </ion-note>
           </ion-card-content>
         </ion-card>
-
+    
         <!-- Qué hacer después -->
         <ion-card>
           <ion-card-header>
@@ -270,7 +276,7 @@ import { ClaimType, CLAIM_TYPE_LABELS } from '../../../core/models/insurance.mod
         </ion-card>
       </form>
     </ion-content>
-  `,
+    `,
   styles: [
     `
       :host {

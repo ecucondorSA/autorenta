@@ -16,10 +16,12 @@ import { BookingsService } from '../../../core/services/bookings.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule],
   template: `
-    <div *ngIf="booking" class="status-badge" [ngClass]="statusClass()">
-      {{ statusIcon() }} {{ statusLabel() }}
-    </div>
-  `,
+    @if (booking) {
+      <div class="status-badge" [ngClass]="statusClass()">
+        {{ statusIcon() }} {{ statusLabel() }}
+      </div>
+    }
+    `,
   styles: [
     `
       .status-badge {

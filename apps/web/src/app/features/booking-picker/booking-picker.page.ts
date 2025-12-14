@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ import { format, parseISO } from 'date-fns';
   selector: 'app-booking-picker',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './booking-picker.page.html',
 })
 export class BookingPickerPage {

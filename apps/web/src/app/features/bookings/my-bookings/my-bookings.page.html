@@ -1,58 +1,68 @@
 <section class="space-y-6">
   <header>
-    <h1 class="h2">Mis reservas</h1>
+    <h1 class="h2 font-bold font-satoshi">Mis reservas</h1>
     <p class="text-body text-text-secondary dark:text-text-secondary/80">
       Seguimiento de tus pedidos y su estado actual.
     </p>
   </header>
 
   <!-- Loading state (Skeletons) -->
-  <ng-container *ngIf="loading() && !error()">
+  @if (loading() && !error()) {
     <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-      <div *ngFor="let _ of [1,2,3]" class="h-24 rounded-2xl bg-surface-raised animate-pulse border-2 border-transparent"></div>
+      @for (_ of [1,2,3]; track _) {
+        <div class="h-24 rounded-2xl bg-surface-raised animate-pulse border-2 border-transparent"></div>
+      }
     </div>
     <div class="space-y-4">
-      <div *ngFor="let _ of [1,2]" class="rounded-2xl border border-gray-300 dark:border-gray-700 overflow-hidden">
-        <div class="h-16 bg-gray-50 dark:bg-gray-800/50 animate-pulse"></div>
-        <div class="p-3 space-y-3">
-          <div *ngFor="let __ of [1,2]" class="h-24 rounded-xl bg-surface-raised animate-pulse"></div>
+      @for (_ of [1,2]; track _) {
+        <div class="rounded-2xl border border-gray-300 dark:border-gray-700 overflow-hidden">
+          <div class="h-16 bg-gray-50 dark:bg-gray-800/50 animate-pulse"></div>
+          <div class="p-3 space-y-3">
+            @for (__ of [1,2]; track __) {
+              <div class="h-24 rounded-xl bg-surface-raised animate-pulse"></div>
+            }
+          </div>
         </div>
-      </div>
+      }
     </div>
-  </ng-container>
+  }
 
   <!-- Error message -->
-  <div *ngIf="error()" class="info-card-warm">
-    <p class="font-semibold text-text-primary dark:text-text-secondary">Error al cargar reservas</p>
-    <p class="mt-1 text-text-secondary dark:text-text-secondary/80">{{ error() }}</p>
-    <button
-      (click)="loadBookings()"
-      class="mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base"
-    >
-      Reintentar
-    </button>
-  </div>
+  @if (error()) {
+    <div class="info-card-warm">
+      <p class="font-semibold text-text-primary dark:text-text-secondary">Error al cargar reservas</p>
+      <p class="mt-1 text-text-secondary dark:text-text-secondary/80">{{ error() }}</p>
+      <button
+        (click)="loadBookings()"
+        class="mt-3 px-3 py-2 bg-warning-light text-cta-text rounded-xl text-xs font-semibold hover:bg-cta-default transition-base"
+        >
+        Reintentar
+      </button>
+    </div>
+  }
 
   <!-- Empty state -->
-  <div *ngIf="!loading() && !error() && bookings().length === 0" class="text-center py-16">
-    <div class="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-      <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
+  @if (!loading() && !error() && bookings().length === 0) {
+    <div class="text-center py-16">
+      <div class="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
+      </div>
+      <h3 class="text-xl font-semibold text-text-primary dark:text-white mb-2 font-satoshi">No tenés reservas todavía</h3>
+      <p class="text-text-secondary dark:text-text-secondary/70 mb-6">
+        Explorá autos disponibles y hacé tu primera reserva
+      </p>
+      <a
+        routerLink="/cars"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-[#00D95F] hover:bg-[#00C553] text-black rounded-xl font-semibold transition-all"
+        >
+        <app-icon name="car-outline" [size]="20"></app-icon>
+        <span class="pr-0.5 font-friendly">Explorar Autos</span>
+      </a>
     </div>
-    <h3 class="text-xl font-semibold text-text-primary dark:text-white mb-2">No tenés reservas todavía</h3>
-    <p class="text-text-secondary dark:text-text-secondary/70 mb-6">
-      Explorá autos disponibles y hacé tu primera reserva
-    </p>
-    <a
-      routerLink="/cars"
-      class="inline-flex items-center gap-2 px-6 py-3 bg-[#00D95F] hover:bg-[#00C553] text-black rounded-xl font-semibold transition-all"
-    >
-      <app-icon name="car-outline" [size]="20"></app-icon>
-      <span class="pr-0.5">Explorar Autos</span>
-    </a>
-  </div>
+  }
 
   <!-- Main Content (when bookings exist) -->
-  <ng-container *ngIf="!loading() && !error() && bookings().length > 0">
+  @if (!loading() && !error() && bookings().length > 0) {
     <!-- ===== DASHBOARD SUMMARY ===== -->
     <div class="grid grid-cols-3 gap-3 sm:gap-4">
       <!-- Action Required Card -->
@@ -64,20 +74,20 @@
           'border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700 hover:shadow-lg hover:scale-[1.02] cursor-pointer': dashboardStats().actionRequired > 0,
           'border-gray-300 bg-gray-50 dark:bg-gray-900/30 dark:border-gray-700 opacity-60 cursor-default': dashboardStats().actionRequired === 0
         }"
-      >
+        >
         <div class="flex items-center gap-2 mb-1">
           <span class="text-xl sm:text-2xl">⚠️</span>
-          <span
-            *ngIf="dashboardStats().actionRequired > 0"
-            class="absolute top-2 right-2 w-3 h-3 bg-amber-500 rounded-full animate-pulse"
-          ></span>
+          @if (dashboardStats().actionRequired > 0) {
+            <span
+              class="absolute top-2 right-2 w-3 h-3 bg-amber-500 rounded-full animate-pulse"
+            ></span>
+          }
         </div>
         <p class="text-2xl sm:text-3xl font-bold text-amber-700 dark:text-amber-400">
           {{ dashboardStats().actionRequired }}
         </p>
         <p class="text-xs sm:text-sm text-amber-600 dark:text-amber-500 font-medium">Pendientes</p>
       </button>
-
       <!-- Active Card -->
       <button
         (click)="dashboardStats().active > 0 && setStatusFilter('confirmed')"
@@ -87,7 +97,7 @@
           'border-green-300 bg-green-50 dark:bg-green-950/30 dark:border-green-700 hover:shadow-lg hover:scale-[1.02] cursor-pointer': dashboardStats().active > 0,
           'border-gray-300 bg-gray-50 dark:bg-gray-900/30 dark:border-gray-700 opacity-60 cursor-default': dashboardStats().active === 0
         }"
-      >
+        >
         <div class="flex items-center gap-2 mb-1">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
@@ -96,7 +106,6 @@
         </p>
         <p class="text-xs sm:text-sm text-green-600 dark:text-green-500 font-medium">Activas</p>
       </button>
-
       <!-- History Card -->
       <button
         (click)="dashboardStats().history > 0 && setStatusFilter('completed')"
@@ -106,7 +115,7 @@
           'border-gray-300 bg-gray-50 dark:bg-gray-900/30 dark:border-gray-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer': dashboardStats().history > 0,
           'border-gray-300 bg-gray-50 dark:bg-gray-900/30 dark:border-gray-700 opacity-60 cursor-default': dashboardStats().history === 0
         }"
-      >
+        >
         <div class="flex items-center gap-2 mb-1">
           <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke-width="1.75"/><rect x="8" y="2" width="8" height="4" rx="1" stroke-width="1.75"/><path d="M8 10h8M8 14h8M8 18h5" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
@@ -116,97 +125,96 @@
         <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-500 font-medium">Historial</p>
       </button>
     </div>
-
     <!-- ===== COLLAPSIBLE SECTIONS ===== -->
     <div class="space-y-4">
-      <ng-container *ngFor="let section of bookingsBySection()">
+      @for (section of bookingsBySection(); track section) {
         <!-- Section (only show if has bookings) -->
-        <div
-          *ngIf="section.count > 0"
-          class="rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700 transition-all"
-        >
-          <!-- Section Header (clickable) -->
-          <button
-            (click)="toggleSection(section.id)"
-            class="w-full flex items-center justify-between p-4 sm:p-5 border-l-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/50"
-            [ngClass]="section.accentClass"
-          >
-            <div class="flex items-center gap-3">
-              <span class="text-xl">{{ section.icon }}</span>
-              <div class="text-left">
-                <h3 class="font-bold text-text-primary dark:text-white">
-                  {{ section.title }}
-                </h3>
-                <p class="text-sm text-text-secondary dark:text-text-secondary/70">
-                  {{ section.count }} {{ section.count === 1 ? 'reserva' : 'reservas' }}
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <span
-                *ngIf="section.id === 'action-required' && section.count > 0"
-                class="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-full animate-pulse"
-              >
-                Acción
-              </span>
-              <svg
-                class="w-5 h-5 text-gray-500 transition-transform duration-200"
-                [class.rotate-180]="section.expanded"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </button>
-
-          <!-- Section Content (collapsible) -->
+        @if (section.count > 0) {
           <div
-            *ngIf="section.expanded"
-            class="bg-white dark:bg-gray-900/50"
-            [@.disabled]="true"
-          >
-            <!-- Use Virtual Scrolling for History section with many items -->
-            <ng-container *ngIf="section.id === 'history' && section.count > 10; else normalList">
-              <cdk-virtual-scroll-viewport
-                itemSize="100"
-                class="h-[400px] overflow-y-auto"
+            class="rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700 transition-all"
+            >
+            <!-- Section Header (clickable) -->
+            <button
+              (click)="toggleSection(section.id)"
+              class="w-full flex items-center justify-between p-4 sm:p-5 border-l-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/50"
+              [ngClass]="section.accentClass"
               >
-                <div class="p-3 space-y-2">
-                  <ng-container *cdkVirtualFor="let booking of section.bookings">
-                    <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
-                  </ng-container>
+              <div class="flex items-center gap-3">
+                <span class="text-xl">{{ section.icon }}</span>
+                <div class="text-left">
+                  <h3 class="font-bold text-text-primary dark:text-white font-satoshi">
+                    {{ section.title }}
+                  </h3>
+                  <p class="text-sm text-text-secondary dark:text-text-secondary/70">
+                    {{ section.count }} {{ section.count === 1 ? 'reserva' : 'reservas' }}
+                  </p>
                 </div>
-              </cdk-virtual-scroll-viewport>
-            </ng-container>
-
-            <!-- Normal list for sections with fewer items -->
-            <ng-template #normalList>
-              <div class="p-3 space-y-2">
-                <ng-container *ngFor="let booking of section.bookings">
-                  <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
-                </ng-container>
               </div>
-            </ng-template>
+              <div class="flex items-center gap-2">
+                @if (section.id === 'action-required' && section.count > 0) {
+                  <span
+                    class="px-2 py-1 bg-amber-500 text-white text-xs font-bold rounded-full animate-pulse"
+                    >
+                    Acción
+                  </span>
+                }
+                <svg
+                  class="w-5 h-5 text-gray-500 transition-transform duration-200"
+                  [class.rotate-180]="section.expanded"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+            <!-- Section Content (collapsible) -->
+            @if (section.expanded) {
+              <div
+                class="bg-white dark:bg-gray-900/50"
+                [@.disabled]="true"
+                >
+                <!-- Use Virtual Scrolling for History section with many items -->
+                @if (section.id === 'history' && section.count > 10) {
+                  <cdk-virtual-scroll-viewport
+                    itemSize="100"
+                    class="h-[400px] overflow-y-auto"
+                    >
+                    <div class="p-3 space-y-2">
+                      <ng-container *cdkVirtualFor="let booking of section.bookings">
+                        <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
+                      </ng-container>
+                    </div>
+                  </cdk-virtual-scroll-viewport>
+                } @else {
+                  <div class="p-3 space-y-2">
+                    @for (booking of section.bookings; track booking) {
+                      <ng-container *ngTemplateOutlet="bookingCard; context: { $implicit: booking }"></ng-container>
+                    }
+                  </div>
+                }
+                <!-- Normal list for sections with fewer items -->
+              </div>
+            }
           </div>
-        </div>
-      </ng-container>
+        }
+      }
     </div>
-
     <!-- Show All Button (when using filters) -->
-    <div
-      *ngIf="statusFilter() !== 'all'"
-      class="text-center pt-4"
-    >
-      <button
-        (click)="setStatusFilter('all'); expandAllSections()"
-        class="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-500 rounded-xl font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
-      >
-        Ver todas las reservas ({{ dashboardStats().total }})
-      </button>
-    </div>
-  </ng-container>
+    @if (statusFilter() !== 'all') {
+      <div
+        class="text-center pt-4"
+        >
+        <button
+          (click)="setStatusFilter('all'); expandAllSections()"
+          class="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-500 rounded-xl font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
+          >
+          Ver todas las reservas ({{ dashboardStats().total }})
+        </button>
+      </div>
+    }
+  }
 </section>
 
 <!-- ===== BOOKING CARD TEMPLATE (COMPACT) ===== -->
@@ -215,27 +223,27 @@
     class="booking-card-compact rounded-xl overflow-hidden border-l-4 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all"
     [ngClass]="statusBorderClass(booking)"
     data-testid="booking-card"
-  >
+    >
     <a [routerLink]="['/bookings', booking.id]" class="flex gap-3 p-3">
       <!-- Thumbnail -->
       <div class="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
-        <img
-          *ngIf="booking.main_photo_url; else defaultThumb"
-          [src]="booking.main_photo_url"
-          [alt]="booking.car_title"
-          loading="lazy"
-          class="w-full h-full object-cover"
-        />
-        <ng-template #defaultThumb>
+        @if (booking.main_photo_url) {
+          <img
+            [src]="booking.main_photo_url"
+            [alt]="booking.car_title"
+            loading="lazy"
+            class="w-full h-full object-cover"
+            />
+        } @else {
           <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
             <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
           </div>
-        </ng-template>
+        }
         <!-- Status Icon Overlay -->
         <div
           class="absolute bottom-0 right-0 w-6 h-6 rounded-tl-lg flex items-center justify-center text-xs"
           [ngClass]="statusIconBgClass(booking)"
-        >
+          >
           {{ statusIcon(booking) }}
         </div>
       </div>
@@ -245,13 +253,13 @@
         <!-- Top: Car + Status -->
         <div>
           <div class="flex items-start justify-between gap-2">
-            <h3 class="font-semibold text-text-primary dark:text-white text-sm line-clamp-1">
+            <h3 class="font-semibold text-text-primary dark:text-white text-sm line-clamp-1 font-satoshi">
               {{ booking.car_title || 'Auto' }}
             </h3>
             <span
               class="flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide"
               [ngClass]="statusBadgeCompactClass(booking)"
-            >
+              >
               {{ statusLabelShort(booking) }}
             </span>
           </div>
@@ -265,41 +273,45 @@
           <p class="text-sm font-bold text-text-primary dark:text-white">
             {{ booking.total_amount | money }}
           </p>
-          <span
-            *ngIf="canCompletePay(booking)"
-            class="text-[10px] font-semibold text-amber-600 dark:text-amber-400 animate-pulse"
-          >
-            Pago pendiente →
-          </span>
-          <span
-            *ngIf="getEffectiveStatus(booking) === 'expired'"
-            class="text-[10px] font-semibold text-red-600 dark:text-red-400"
-          >
-            Vencida
-          </span>
-          <span
-            *ngIf="!canCompletePay(booking) && getEffectiveStatus(booking) !== 'expired'"
-            class="text-[10px] text-text-muted dark:text-text-secondary/60"
-          >
-            Ver detalle →
-          </span>
+          @if (canCompletePay(booking)) {
+            <span
+              class="text-[10px] font-semibold text-amber-600 dark:text-amber-400 animate-pulse"
+              >
+              Pago pendiente →
+            </span>
+          }
+          @if (getEffectiveStatus(booking) === 'expired') {
+            <span
+              class="text-[10px] font-semibold text-red-600 dark:text-red-400"
+              >
+              Vencida
+            </span>
+          }
+          @if (!canCompletePay(booking) && getEffectiveStatus(booking) !== 'expired') {
+            <span
+              class="text-[10px] text-text-muted dark:text-text-secondary/60"
+              >
+              Ver detalle →
+            </span>
+          }
         </div>
       </div>
     </a>
 
     <!-- Quick Pay Button (only for pending that can still be paid) -->
-    <div
-      *ngIf="canCompletePay(booking)"
-      class="px-3 pb-3"
-    >
-      <button
-        [routerLink]="['/bookings/detail-payment']"
-        [queryParams]="{ bookingId: booking.id }"
-        (click)="$event.stopPropagation()"
-        class="w-full px-3 py-2 bg-[#00D95F] hover:bg-[#00C553] text-black rounded-lg font-semibold text-xs transition-all flex items-center justify-center gap-1.5"
-      >
-        <app-icon name="credit-card" [size]="14" /> Completar Pago
-      </button>
-    </div>
+    @if (canCompletePay(booking)) {
+      <div
+        class="px-3 pb-3"
+        >
+        <button
+          [routerLink]="['/bookings/detail-payment']"
+          [queryParams]="{ bookingId: booking.id }"
+          (click)="$event.stopPropagation()"
+          class="w-full px-3 py-2 bg-[#00D95F] hover:bg-[#00C553] text-black rounded-lg font-semibold text-xs transition-all flex items-center justify-center gap-1.5"
+          >
+          <app-icon name="credit-card" [size]="14" /> Completar Pago
+        </button>
+      </div>
+    }
   </article>
 </ng-template>

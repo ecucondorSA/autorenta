@@ -1,6 +1,6 @@
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
@@ -33,7 +33,7 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
   selector: 'app-bonus-protector-purchase',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule],
   template: `
     <ion-card>
       <ion-card-header>
@@ -43,137 +43,148 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
         </ion-card-title>
         <ion-card-subtitle> Protege tu clase de conductor tras siniestros </ion-card-subtitle>
       </ion-card-header>
-
+    
       <ion-card-content>
         <!-- Loading State -->
-        <div *ngIf="bonusProtectorService.loading()" class="loading-container">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Cargando opciones...</p>
-        </div>
-
+        @if (bonusProtectorService.loading()) {
+          <div class="loading-container">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando opciones...</p>
+          </div>
+        }
+    
         <!-- Error State -->
-        <div *ngIf="bonusProtectorService.error()" class="error-container">
-          <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
-          <p>{{ bonusProtectorService.error() }}</p>
-        </div>
-
+        @if (bonusProtectorService.error()) {
+          <div class="error-container">
+            <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+            <p>{{ bonusProtectorService.error() }}</p>
+          </div>
+        }
+    
         <!-- Options Loaded -->
-        <div *ngIf="!bonusProtectorService.loading() && !bonusProtectorService.error()">
-          <!-- Active Protector -->
-          <ion-card class="active-protector-card" *ngIf="hasActiveProtector() && !isExpired()">
-            <ion-card-content>
-              <div class="active-protector">
-                <div class="protector-header">
-                  <ion-badge [color]="statusBadgeColor()">
-                    {{ levelIcon() }} Nivel {{ protectionLevel() }}
-                  </ion-badge>
-                  <span class="protector-status">Activo</span>
-                </div>
-                <p class="protector-info">{{ infoMessage() }}</p>
-                <div class="protector-expiry">
-                  <ion-icon name="calendar-outline" color="medium"></ion-icon>
-                  <span>Expira: {{ formattedExpiry() }}</span>
-                </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Expired Protector Warning -->
-          <ion-card class="warning-card" *ngIf="hasActiveProtector() && isExpired()">
-            <ion-card-content>
-              <div class="warning-content">
-                <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
-                <p>Tu Protector de Bonus ha expirado. Compra uno nuevo para seguir protegido.</p>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Recommendation Banner -->
-          <ion-card class="recommendation-card" *ngIf="recommendedLevel() > 0">
-            <ion-card-content>
-              <div class="recommendation">
-                <ion-icon name="bulb-outline" color="primary"></ion-icon>
-                <div class="recommendation-content">
-                  <p class="recommendation-title">Recomendado para ti</p>
-                  <p class="recommendation-text">
-                    Basado en tu clase actual ({{ driverClass() }}), recomendamos el
-                    <strong>Nivel {{ recommendedLevel() }}</strong
-                    >.
-                  </p>
-                </div>
-              </div>
-            </ion-card-content>
-          </ion-card>
-
-          <!-- Purchase Options -->
-          <div class="options-section">
-            <h3>Opciones Disponibles</h3>
-
-            <div class="option-card" *ngFor="let option of options()">
-              <div class="option-header">
-                <div class="option-title">
-                  <span class="level-icon">{{ getLevelIcon(option.protection_level) }}</span>
-                  <span class="level-name">Nivel {{ option.protection_level }}</span>
-                  <ion-badge color="primary" *ngIf="option.protection_level === recommendedLevel()">
-                    Recomendado
-                  </ion-badge>
-                </div>
-                <div class="option-price">
-                  <span class="price">\${{ option.price_usd }}</span>
-                  <span class="currency">USD</span>
-                </div>
-              </div>
-
-              <p class="option-description">{{ option.description }}</p>
-
-              <!-- Protection Capacity -->
-              <div class="capacity-section">
-                <p class="capacity-title">Cobertura:</p>
-                <div class="capacity-grid">
-                  <div class="capacity-item">
-                    <ion-icon name="fitness-outline" color="success"></ion-icon>
-                    <span
-                      >{{ getCapacity(option.protection_level).leve }} Leve{{
-                        getCapacity(option.protection_level).leve > 1 ? 's' : ''
-                      }}</span
-                    >
+        @if (!bonusProtectorService.loading() && !bonusProtectorService.error()) {
+          <div>
+            <!-- Active Protector -->
+            @if (hasActiveProtector() && !isExpired()) {
+              <ion-card class="active-protector-card">
+                <ion-card-content>
+                  <div class="active-protector">
+                    <div class="protector-header">
+                      <ion-badge [color]="statusBadgeColor()">
+                        {{ levelIcon() }} Nivel {{ protectionLevel() }}
+                      </ion-badge>
+                      <span class="protector-status">Activo</span>
+                    </div>
+                    <p class="protector-info">{{ infoMessage() }}</p>
+                    <div class="protector-expiry">
+                      <ion-icon name="calendar-outline" color="medium"></ion-icon>
+                      <span>Expira: {{ formattedExpiry() }}</span>
+                    </div>
                   </div>
-                  <div
-                    class="capacity-item"
-                    *ngIf="getCapacity(option.protection_level).moderado > 0"
-                  >
-                    <ion-icon name="warning-outline" color="warning"></ion-icon>
-                    <span
-                      >{{ getCapacity(option.protection_level).moderado }} Moderado{{
-                        getCapacity(option.protection_level).moderado > 1 ? 's' : ''
-                      }}</span
-                    >
+                </ion-card-content>
+              </ion-card>
+            }
+            <!-- Expired Protector Warning -->
+            @if (hasActiveProtector() && isExpired()) {
+              <ion-card class="warning-card">
+                <ion-card-content>
+                  <div class="warning-content">
+                    <ion-icon name="alert-circle-outline" color="warning"></ion-icon>
+                    <p>Tu Protector de Bonus ha expirado. Compra uno nuevo para seguir protegido.</p>
                   </div>
-                  <div class="capacity-item" *ngIf="getCapacity(option.protection_level).grave > 0">
-                    <ion-icon name="alert-outline" color="danger"></ion-icon>
-                    <span
-                      >{{ getCapacity(option.protection_level).grave }} Grave{{
-                        getCapacity(option.protection_level).grave > 1 ? 's' : ''
-                      }}</span
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <!-- Savings Estimate -->
-              <div class="savings-section" *ngIf="showSavings()">
-                <p class="savings-title">Ahorro Estimado Anual:</p>
-                <div class="savings-amount">
-                  <span class="savings-value"
-                    >\${{ calculateSavings(option.protection_level).totalSavings }}</span
-                  >
-                  <span class="savings-label">USD</span>
-                </div>
-                <p
-                  class="savings-roi"
-                  [class.positive]="calculateSavings(option.protection_level).isWorthIt"
-                >
-                  <ion-icon
+                </ion-card-content>
+              </ion-card>
+            }
+            <!-- Recommendation Banner -->
+            @if (recommendedLevel() > 0) {
+              <ion-card class="recommendation-card">
+                <ion-card-content>
+                  <div class="recommendation">
+                    <ion-icon name="bulb-outline" color="primary"></ion-icon>
+                    <div class="recommendation-content">
+                      <p class="recommendation-title">Recomendado para ti</p>
+                      <p class="recommendation-text">
+                        Basado en tu clase actual ({{ driverClass() }}), recomendamos el
+                        <strong>Nivel {{ recommendedLevel() }}</strong
+                          >.
+                        </p>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              }
+              <!-- Purchase Options -->
+              <div class="options-section">
+                <h3>Opciones Disponibles</h3>
+                @for (option of options(); track option) {
+                  <div class="option-card">
+                    <div class="option-header">
+                      <div class="option-title">
+                        <span class="level-icon">{{ getLevelIcon(option.protection_level) }}</span>
+                        <span class="level-name">Nivel {{ option.protection_level }}</span>
+                        @if (option.protection_level === recommendedLevel()) {
+                          <ion-badge color="primary">
+                            Recomendado
+                          </ion-badge>
+                        }
+                      </div>
+                      <div class="option-price">
+                        <span class="price">\${{ option.price_usd }}</span>
+                        <span class="currency">USD</span>
+                      </div>
+                    </div>
+                    <p class="option-description">{{ option.description }}</p>
+                    <!-- Protection Capacity -->
+                    <div class="capacity-section">
+                      <p class="capacity-title">Cobertura:</p>
+                      <div class="capacity-grid">
+                        <div class="capacity-item">
+                          <ion-icon name="fitness-outline" color="success"></ion-icon>
+                          <span
+                            >{{ getCapacity(option.protection_level).leve }} Leve{{
+                            getCapacity(option.protection_level).leve > 1 ? 's' : ''
+                            }}</span
+                            >
+                          </div>
+                          @if (getCapacity(option.protection_level).moderado > 0) {
+                            <div
+                              class="capacity-item"
+                              >
+                              <ion-icon name="warning-outline" color="warning"></ion-icon>
+                              <span
+                                >{{ getCapacity(option.protection_level).moderado }} Moderado{{
+                                getCapacity(option.protection_level).moderado > 1 ? 's' : ''
+                                }}</span
+                                >
+                              </div>
+                            }
+                            @if (getCapacity(option.protection_level).grave > 0) {
+                              <div class="capacity-item">
+                                <ion-icon name="alert-outline" color="danger"></ion-icon>
+                                <span
+                                  >{{ getCapacity(option.protection_level).grave }} Grave{{
+                                  getCapacity(option.protection_level).grave > 1 ? 's' : ''
+                                  }}</span
+                                  >
+                                </div>
+                              }
+                            </div>
+                          </div>
+                          <!-- Savings Estimate -->
+                          @if (showSavings()) {
+                            <div class="savings-section">
+                              <p class="savings-title">Ahorro Estimado Anual:</p>
+                              <div class="savings-amount">
+                                <span class="savings-value"
+                                  >\${{ calculateSavings(option.protection_level).totalSavings }}</span
+                                  >
+                                  <span class="savings-label">USD</span>
+                                </div>
+                                <p
+                                  class="savings-roi"
+                                  [class.positive]="calculateSavings(option.protection_level).isWorthIt"
+                                  >
+                                  <ion-icon
                     [name]="
                       calculateSavings(option.protection_level).isWorthIt
                         ? 'trending-up-outline'
@@ -182,105 +193,104 @@ import { DriverProfileService } from '../../../core/services/driver-profile.serv
                     [color]="
                       calculateSavings(option.protection_level).isWorthIt ? 'success' : 'medium'
                     "
-                  ></ion-icon>
-                  {{
-                    calculateSavings(option.protection_level).isWorthIt
-                      ? 'Buena inversión'
-                      : 'ROI bajo'
-                  }}
-                </p>
-              </div>
-
-              <!-- Purchase Button -->
-              <ion-button
-                expand="block"
-                [color]="option.protection_level === recommendedLevel() ? 'primary' : 'medium'"
-                (click)="onPurchase(option.protection_level)"
-                [disabled]="!canPurchase() || purchasing()"
-              >
-                <ion-icon
-                  slot="start"
-                  [name]="purchasing() ? 'hourglass-outline' : 'cart-outline'"
-                ></ion-icon>
-                {{ purchasing() ? 'Comprando...' : 'Comprar Nivel ' + option.protection_level }}
-              </ion-button>
-            </div>
-          </div>
-
-          <!-- Simulation Section -->
-          <div class="simulation-section" *ngIf="driverClass() > 0">
-            <h3>Simulación de Siniestro</h3>
-            <p class="simulation-description">
-              Ve cómo el Protector de Bonus afecta tu clase tras un siniestro.
-            </p>
-
-            <div class="simulation-controls">
-              <ion-item>
-                <ion-label>Severidad del Siniestro</ion-label>
-                <ion-select [(ngModel)]="simulationSeverity" interface="popover">
-                  <ion-select-option [value]="1">Leve (+1 clase)</ion-select-option>
-                  <ion-select-option [value]="2">Moderado (+2 clases)</ion-select-option>
-                  <ion-select-option [value]="3">Grave (+3 clases)</ion-select-option>
-                </ion-select>
-              </ion-item>
-            </div>
-
-            <div class="simulation-results">
-              <div class="simulation-result">
-                <p class="result-title">Sin Protector</p>
-                <div class="result-class">
-                  <span class="old-class">Clase {{ driverClass() }}</span>
-                  <ion-icon name="arrow-forward-outline"></ion-icon>
-                  <span class="new-class danger">Clase {{ simulateWithout().newClass }}</span>
-                </div>
-                <p class="result-impact">
-                  Aumento: +{{ simulateWithout().increase }} clase{{
-                    simulateWithout().increase > 1 ? 's' : ''
-                  }}
-                </p>
-              </div>
-
-              <div class="simulation-result">
-                <p class="result-title">Con Protector (Nivel {{ selectedLevel() }})</p>
-                <div class="result-class">
-                  <span class="old-class">Clase {{ driverClass() }}</span>
-                  <ion-icon name="arrow-forward-outline"></ion-icon>
-                  <span class="new-class" [class.success]="simulateWith().protected">
-                    Clase {{ simulateWith().newClass }}
-                  </span>
-                </div>
-                <p class="result-impact" [class.protected]="simulateWith().protected">
-                  {{ simulateWith().protected ? '✅ Protegido' : 'Aumento reducido' }}:
-                  {{
-                    simulateWith().increase === 0
-                      ? 'Sin cambio'
-                      : '+' + simulateWith().increase + ' clase(s)'
-                  }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- How it Works -->
-          <ion-card class="info-card">
-            <ion-card-content>
-              <h4>
-                <ion-icon name="information-circle-outline" color="primary"></ion-icon>
-                ¿Cómo funciona?
-              </h4>
-              <ul>
-                <li>Válido por 1 año desde la compra</li>
-                <li>Se aplica automáticamente al registrar un siniestro</li>
-                <li>Reduce o elimina el aumento de clase</li>
-                <li>Se consume progresivamente según severidad</li>
-                <li>Solo puedes tener 1 protector activo a la vez</li>
-              </ul>
-            </ion-card-content>
-          </ion-card>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  `,
+                                  ></ion-icon>
+                                  {{
+                                  calculateSavings(option.protection_level).isWorthIt
+                                  ? 'Buena inversión'
+                                  : 'ROI bajo'
+                                  }}
+                                </p>
+                              </div>
+                            }
+                            <!-- Purchase Button -->
+                            <ion-button
+                              expand="block"
+                              [color]="option.protection_level === recommendedLevel() ? 'primary' : 'medium'"
+                              (click)="onPurchase(option.protection_level)"
+                              [disabled]="!canPurchase() || purchasing()"
+                              >
+                              <ion-icon
+                                slot="start"
+                                [name]="purchasing() ? 'hourglass-outline' : 'cart-outline'"
+                              ></ion-icon>
+                              {{ purchasing() ? 'Comprando...' : 'Comprar Nivel ' + option.protection_level }}
+                            </ion-button>
+                          </div>
+                        }
+                      </div>
+                      <!-- Simulation Section -->
+                      @if (driverClass() > 0) {
+                        <div class="simulation-section">
+                          <h3>Simulación de Siniestro</h3>
+                          <p class="simulation-description">
+                            Ve cómo el Protector de Bonus afecta tu clase tras un siniestro.
+                          </p>
+                          <div class="simulation-controls">
+                            <ion-item>
+                              <ion-label>Severidad del Siniestro</ion-label>
+                              <ion-select [(ngModel)]="simulationSeverity" interface="popover">
+                                <ion-select-option [value]="1">Leve (+1 clase)</ion-select-option>
+                                <ion-select-option [value]="2">Moderado (+2 clases)</ion-select-option>
+                                <ion-select-option [value]="3">Grave (+3 clases)</ion-select-option>
+                              </ion-select>
+                            </ion-item>
+                          </div>
+                          <div class="simulation-results">
+                            <div class="simulation-result">
+                              <p class="result-title">Sin Protector</p>
+                              <div class="result-class">
+                                <span class="old-class">Clase {{ driverClass() }}</span>
+                                <ion-icon name="arrow-forward-outline"></ion-icon>
+                                <span class="new-class danger">Clase {{ simulateWithout().newClass }}</span>
+                              </div>
+                              <p class="result-impact">
+                                Aumento: +{{ simulateWithout().increase }} clase{{
+                                simulateWithout().increase > 1 ? 's' : ''
+                                }}
+                              </p>
+                            </div>
+                            <div class="simulation-result">
+                              <p class="result-title">Con Protector (Nivel {{ selectedLevel() }})</p>
+                              <div class="result-class">
+                                <span class="old-class">Clase {{ driverClass() }}</span>
+                                <ion-icon name="arrow-forward-outline"></ion-icon>
+                                <span class="new-class" [class.success]="simulateWith().protected">
+                                  Clase {{ simulateWith().newClass }}
+                                </span>
+                              </div>
+                              <p class="result-impact" [class.protected]="simulateWith().protected">
+                                {{ simulateWith().protected ? '✅ Protegido' : 'Aumento reducido' }}:
+                                {{
+                                simulateWith().increase === 0
+                                ? 'Sin cambio'
+                                : '+' + simulateWith().increase + ' clase(s)'
+                                }}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      <!-- How it Works -->
+                      <ion-card class="info-card">
+                        <ion-card-content>
+                          <h4>
+                            <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+                            ¿Cómo funciona?
+                          </h4>
+                          <ul>
+                            <li>Válido por 1 año desde la compra</li>
+                            <li>Se aplica automáticamente al registrar un siniestro</li>
+                            <li>Reduce o elimina el aumento de clase</li>
+                            <li>Se consume progresivamente según severidad</li>
+                            <li>Solo puedes tener 1 protector activo a la vez</li>
+                          </ul>
+                        </ion-card-content>
+                      </ion-card>
+                    </div>
+                  }
+                </ion-card-content>
+              </ion-card>
+    `,
   styles: [
     `
       ion-card {

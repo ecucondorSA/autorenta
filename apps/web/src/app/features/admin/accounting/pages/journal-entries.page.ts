@@ -18,23 +18,27 @@ import { AccountingService, JournalEntry } from '../../../../core/services/accou
         <ion-title>Libro Diario</ion-title>
       </ion-toolbar>
     </ion-header>
-
+    
     <ion-content class="ion-padding">
-      <ion-list *ngIf="entries().length > 0">
-        <ion-item *ngFor="let entry of entries()">
-          <ion-label>
-            <h3>{{ entry.entry_number }} - {{ entry.description }}</h3>
-            <p>{{ entry.entry_date | date: 'short' }} | {{ entry.transaction_type }}</p>
-          </ion-label>
-          <ion-note slot="end">
-            <ion-badge [color]="entry.status === 'POSTED' ? 'success' : 'warning'">
-              {{ entry.status }}
-            </ion-badge>
-          </ion-note>
-        </ion-item>
-      </ion-list>
+      @if (entries().length > 0) {
+        <ion-list>
+          @for (entry of entries(); track entry) {
+            <ion-item>
+              <ion-label>
+                <h3>{{ entry.entry_number }} - {{ entry.description }}</h3>
+                <p>{{ entry.entry_date | date: 'short' }} | {{ entry.transaction_type }}</p>
+              </ion-label>
+              <ion-note slot="end">
+                <ion-badge [color]="entry.status === 'POSTED' ? 'success' : 'warning'">
+                  {{ entry.status }}
+                </ion-badge>
+              </ion-note>
+            </ion-item>
+          }
+        </ion-list>
+      }
     </ion-content>
-  `,
+    `,
 })
 export class JournalEntriesPage implements OnInit {
   private readonly accountingService = inject(AccountingService);

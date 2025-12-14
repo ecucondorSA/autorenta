@@ -12,7 +12,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { combineLatest, from, of, Subject, fromEvent } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
@@ -80,21 +80,22 @@ interface CarDetailState {
   error: string | null;
 }
 
-@Component({
-  standalone: true,
-  selector: 'app-car-detail-page',
-  imports: [
-    CommonModule,
-    DateRangePickerComponent,
-    CarReviewsSectionComponent,
-    TranslateModule,
-    StickyCtaMobileComponent,
-    IconComponent,
-  ],
-  templateUrl: './car-detail.page.html',
-  styleUrls: ['./car-detail.page.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
+  @Component({
+    standalone: true,
+    selector: 'app-car-detail-page',
+    imports: [
+      CommonModule,
+      DateRangePickerComponent,
+      CarReviewsSectionComponent,
+      TranslateModule,
+      StickyCtaMobileComponent,
+      IconComponent,
+      RiskCalculatorViewerComponent,
+    ],
+    templateUrl: './car-detail.page.html',
+    styleUrls: ['./car-detail.page.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+  })
 export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // ✅ NEW: ViewChild references for scroll behavior
   @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
@@ -595,7 +596,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     // Setup scroll listener for collapsing header
     if (typeof window !== 'undefined') {
-      let lastScrollY = 0;
       const threshold = 200; // Trigger sticky header after 200px scroll
 
       fromEvent(window, 'scroll')
@@ -618,8 +618,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
             stickyHeader.classList.remove('sticky-header-visible');
             stickyHeader.classList.add('sticky-header-hidden');
           }
-
-          lastScrollY = currentScrollY;
         });
     }
   }
@@ -1151,7 +1149,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
       // After creating a booking, take the user to the payment flow (wallet/card hub)
       this.router.navigate(['/bookings', result.booking.id, 'payment']);
-    } catch (err: any) { // Type as any to access code property
+    } catch (err: unknown) {
       // Track: Booking failed (exception)
       this.analytics.trackEvent('booking_failed', {
         car_id: car.id,
@@ -1161,7 +1159,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       let userMessage = err instanceof Error ? err.message : 'Error al crear la reserva';
 
       // Handle OVERLAP error specifically
-      if (userMessage.includes('OVERLAP') || err?.code === 'P0001') {
+      if (userMessage.includes('OVERLAP') || (err as Record<string, any>)?.code === 'P0001') {
         userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
         
         // Load blocked dates to refresh calendar

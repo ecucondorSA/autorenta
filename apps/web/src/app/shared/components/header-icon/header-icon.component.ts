@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * Componente de iconos SVG premium para el header.
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-header-icon',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <svg
       [attr.width]="size"

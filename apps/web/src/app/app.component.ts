@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -55,14 +55,13 @@ import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawe
 import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
 import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel.component';
-import { TouchFeedbackDirective } from './shared/directives/touch-feedback.directive';
+
 import { routeAnimations } from './core/animations/route-animations'; // Importar animaciones
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule,
     NgOptimizedImage,
     RouterOutlet,
     RouterLink,
@@ -70,7 +69,6 @@ import { routeAnimations } from './core/animations/route-animations'; // Importa
     TranslateModule,
     PendingReviewsBannerComponent,
     VerificationPromptBannerComponent,
-
     PwaInstallPromptComponent,
     PwaInstallBannerComponent,
     PwaUpdatePromptComponent,
@@ -86,9 +84,8 @@ import { routeAnimations } from './core/animations/route-animations'; // Importa
     MobileMenuDrawerComponent,
     HeaderIconComponent,
     ClickOutsideDirective,
-    DebugPanelComponent,
-    TouchFeedbackDirective,
-  ],
+    DebugPanelComponent
+],
   templateUrl: './app.component.html',
   styles: [
     `
@@ -223,6 +220,8 @@ export class AppComponent implements OnInit {
   readonly darkMode = false;
 
   readonly fullBleedLayout = signal(false);
+  readonly hideFooter = signal(false);
+  readonly hideMobileNav = signal(false);
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
   readonly isHomePage = signal(false); // Header transparente en homepage
@@ -307,6 +306,7 @@ export class AppComponent implements OnInit {
 
     // Renderizar barra inferior movil directamente en body para evitar issues de stacking
     this.mobileBottomNavPortal.create();
+    this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
     this.destroyRef.onDestroy(() => this.mobileBottomNavPortal.destroy());
 
     // Subscribe to mobile menu drawer open event
@@ -357,6 +357,10 @@ export class AppComponent implements OnInit {
 
     const layout = current?.snapshot.data?.['layout'];
     this.fullBleedLayout.set(layout === 'full-bleed');
+
+    this.hideFooter.set(Boolean(current?.snapshot.data?.['hideFooter']));
+    this.hideMobileNav.set(Boolean(current?.snapshot.data?.['hideMobileNav']));
+    this.mobileBottomNavPortal.setHidden(this.hideMobileNav());
 
     // Detectar si estamos en el homepage para header transparente
     const currentUrl = this.router.url.split('?')[0]; // Ignorar query params

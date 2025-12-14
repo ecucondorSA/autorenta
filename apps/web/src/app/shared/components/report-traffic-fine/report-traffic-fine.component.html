@@ -9,7 +9,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <h3 class="ion-text-center">Reportar multa para la reserva:</h3>
+      <h3 class="ion-text-center font-bold font-satoshi">Reportar multa para la reserva:</h3>
       <p class="ion-text-center ion-text-primary ion-text-bold">{{ booking.car_title }}</p>
       <p class="ion-text-center ion-text-secondary">
         ID de Reserva: {{ booking.id | slice:0:8 }}
@@ -58,17 +58,21 @@
           <ion-note>Funcionalidad de subida de evidencias próximamente</ion-note>
         </ion-item>
 
-        <div *ngIf="formError()" class="ion-padding-top ion-text-danger ion-text-center">
-          {{ formError() }}
-        </div>
+        @if (formError()) {
+          <div class="ion-padding-top ion-text-danger ion-text-center">
+            {{ formError() }}
+          </div>
+        }
 
         <ion-button
           expand="block"
           class="ion-margin-top"
           type="submit"
           [disabled]="loading()"
-        >
-          <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
+          >
+          @if (loading()) {
+            <ion-spinner name="crescent"></ion-spinner>
+          }
           Reportar Multa
         </ion-button>
 
@@ -78,7 +82,7 @@
           class="ion-margin-top"
           (click)="onCancel()"
           [disabled]="loading()"
-        >
+          >
           Cancelar
         </ion-button>
       </form>

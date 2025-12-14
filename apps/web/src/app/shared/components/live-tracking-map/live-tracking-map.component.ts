@@ -10,7 +10,7 @@ import {Component,
   inject,
   PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { TrackingSession } from '@core/services/location-tracking.service';
 import { environment } from '../../../../environments/environment';
 
@@ -27,54 +27,64 @@ interface MarkerData {
   selector: 'app-live-tracking-map',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="live-tracking-map-container">
       <div #mapContainer class="map-canvas"></div>
-
+    
       <!-- Loading overlay -->
-      <div *ngIf="loading()" class="map-overlay loading-overlay">
-        <div class="spinner"></div>
-        <p>Cargando mapa de tracking...</p>
-      </div>
-
-      <!-- Error overlay -->
-      <div *ngIf="error() && !loading()" class="map-overlay error-overlay">
-        <div class="error-content">
-          <svg class="error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <p class="error-message">{{ error() }}</p>
+      @if (loading()) {
+        <div class="map-overlay loading-overlay">
+          <div class="spinner"></div>
+          <p>Cargando mapa de tracking...</p>
         </div>
-      </div>
-
-      <!-- Stats overlay -->
-      <div *ngIf="!loading() && !error() && trackingSessions.length > 0" class="stats-overlay">
-        <div *ngFor="let session of trackingSessions" class="tracking-user">
-          <img
-            [src]="session.user_photo || 'assets/default-avatar.png'"
-            [alt]="session.user_name"
-            class="user-avatar"
-          />
-          <div class="user-info">
-            <p class="user-name">{{ session.user_name }}</p>
-            <p class="user-role">
-              {{ session.user_role === 'locador' ? 'Propietario' : 'Arrendatario' }}
-            </p>
-            <p class="last-update">📍 Actualizado hace {{ getTimeSince(session.last_updated) }}</p>
-            <p *ngIf="session.distance_remaining" class="distance">
-              🚗 A {{ formatDistance(session.distance_remaining) }}
-            </p>
+      }
+    
+      <!-- Error overlay -->
+      @if (error() && !loading()) {
+        <div class="map-overlay error-overlay">
+          <div class="error-content">
+            <svg class="error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+            </svg>
+            <p class="error-message">{{ error() }}</p>
           </div>
         </div>
-      </div>
+      }
+    
+      <!-- Stats overlay -->
+      @if (!loading() && !error() && trackingSessions.length > 0) {
+        <div class="stats-overlay">
+          @for (session of trackingSessions; track session) {
+            <div class="tracking-user">
+              <img
+                [src]="session.user_photo || 'assets/default-avatar.png'"
+                [alt]="session.user_name"
+                class="user-avatar"
+                />
+              <div class="user-info">
+                <p class="user-name">{{ session.user_name }}</p>
+                <p class="user-role">
+                  {{ session.user_role === 'locador' ? 'Propietario' : 'Arrendatario' }}
+                </p>
+                <p class="last-update">📍 Actualizado hace {{ getTimeSince(session.last_updated) }}</p>
+                @if (session.distance_remaining) {
+                  <p class="distance">
+                    🚗 A {{ formatDistance(session.distance_remaining) }}
+                  </p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .live-tracking-map-container {

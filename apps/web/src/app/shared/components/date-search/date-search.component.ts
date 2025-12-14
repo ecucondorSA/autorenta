@@ -7,7 +7,7 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { DateRange } from '../date-range-picker/date-range-picker.component';
 
@@ -29,7 +29,7 @@ export interface DateSearchQuery {
 @Component({
   selector: 'app-date-search',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './date-search.component.html',
   styleUrls: ['./date-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

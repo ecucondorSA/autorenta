@@ -79,87 +79,101 @@
   </ion-card>
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-12">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-text-secondary">Cargando libro mayor...</p>
-  </div>
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-12">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary">Cargando libro mayor...</p>
+    </div>
+  }
 
   <!-- Ledger Table -->
-  <ion-card *ngIf="!loading()">
-    <ion-card-header>
-      <ion-card-title>
-        Entradas del Libro Mayor
-        <span class="text-sm font-normal text-text-secondary">
-          ({{ ledgerData().total }} total)
-        </span>
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr class="border-b">
-              <th class="text-left py-2 px-3 text-sm font-semibold">Fecha</th>
-              <th class="text-left py-2 px-3 text-sm font-semibold">Cuenta</th>
-              <th class="text-right py-2 px-3 text-sm font-semibold">Débito</th>
-              <th class="text-right py-2 px-3 text-sm font-semibold">Crédito</th>
-              <th class="text-left py-2 px-3 text-sm font-semibold">Descripción</th>
-              <th class="text-left py-2 px-3 text-sm font-semibold">Referencia</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let entry of ledgerData().data" class="border-b hover:bg-surface-base">
-              <td class="py-2 px-3 text-sm">{{ entry.entry_date | date: 'short' }}</td>
-              <td class="py-2 px-3 text-sm">
-                {{ entry.account_code }}
-                <span *ngIf="entry.accounting_chart_of_accounts" class="text-text-secondary">
-                  - {{ entry.accounting_chart_of_accounts.name }}
-                </span>
-              </td>
-              <td class="py-2 px-3 text-sm text-right">
-                <span *ngIf="entry.debit > 0">{{ entry.debit | number: '1.2-2' }}</span>
-              </td>
-              <td class="py-2 px-3 text-sm text-right">
-                <span *ngIf="entry.credit > 0">{{ entry.credit | number: '1.2-2' }}</span>
-              </td>
-              <td class="py-2 px-3 text-sm">{{ entry.description }}</td>
-              <td class="py-2 px-3 text-sm">
-                <span
-                  *ngIf="entry.reference_type"
-                  class="text-xs bg-surface-raised px-2 py-1 rounded"
-                >
-                  {{ entry.reference_type }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div *ngIf="ledgerData().totalPages > 1" class="flex items-center justify-between mt-4">
-        <p class="text-sm text-text-secondary">
-          Página {{ ledgerData().page }} de {{ ledgerData().totalPages }}
-        </p>
-        <div class="flex gap-2">
-          <ion-button
-            fill="outline"
-            size="small"
-            [disabled]="ledgerData().page === 1"
-            (click)="changePage(ledgerData().page - 1)"
-          >
-            Anterior
-          </ion-button>
-          <ion-button
-            fill="outline"
-            size="small"
-            [disabled]="ledgerData().page === ledgerData().totalPages"
-            (click)="changePage(ledgerData().page + 1)"
-          >
-            Siguiente
-          </ion-button>
+  @if (!loading()) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          Entradas del Libro Mayor
+          <span class="text-sm font-normal text-text-secondary">
+            ({{ ledgerData().total }} total)
+          </span>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b">
+                <th class="text-left py-2 px-3 text-sm font-semibold">Fecha</th>
+                <th class="text-left py-2 px-3 text-sm font-semibold">Cuenta</th>
+                <th class="text-right py-2 px-3 text-sm font-semibold">Débito</th>
+                <th class="text-right py-2 px-3 text-sm font-semibold">Crédito</th>
+                <th class="text-left py-2 px-3 text-sm font-semibold">Descripción</th>
+                <th class="text-left py-2 px-3 text-sm font-semibold">Referencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (entry of ledgerData().data; track entry) {
+                <tr class="border-b hover:bg-surface-base">
+                  <td class="py-2 px-3 text-sm">{{ entry.entry_date | date: 'short' }}</td>
+                  <td class="py-2 px-3 text-sm">
+                    {{ entry.account_code }}
+                    @if (entry.accounting_chart_of_accounts) {
+                      <span class="text-text-secondary">
+                        - {{ entry.accounting_chart_of_accounts.name }}
+                      </span>
+                    }
+                  </td>
+                  <td class="py-2 px-3 text-sm text-right">
+                    @if (entry.debit > 0) {
+                      <span>{{ entry.debit | number: '1.2-2' }}</span>
+                    }
+                  </td>
+                  <td class="py-2 px-3 text-sm text-right">
+                    @if (entry.credit > 0) {
+                      <span>{{ entry.credit | number: '1.2-2' }}</span>
+                    }
+                  </td>
+                  <td class="py-2 px-3 text-sm">{{ entry.description }}</td>
+                  <td class="py-2 px-3 text-sm">
+                    @if (entry.reference_type) {
+                      <span
+                        class="text-xs bg-surface-raised px-2 py-1 rounded"
+                        >
+                        {{ entry.reference_type }}
+                      </span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
-      </div>
-    </ion-card-content>
-  </ion-card>
+        <!-- Pagination -->
+        @if (ledgerData().totalPages > 1) {
+          <div class="flex items-center justify-between mt-4">
+            <p class="text-sm text-text-secondary">
+              Página {{ ledgerData().page }} de {{ ledgerData().totalPages }}
+            </p>
+            <div class="flex gap-2">
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="ledgerData().page === 1"
+                (click)="changePage(ledgerData().page - 1)"
+                >
+                Anterior
+              </ion-button>
+              <ion-button
+                fill="outline"
+                size="small"
+                [disabled]="ledgerData().page === ledgerData().totalPages"
+                (click)="changePage(ledgerData().page + 1)"
+                >
+                Siguiente
+              </ion-button>
+            </div>
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+  }
 </ion-content>

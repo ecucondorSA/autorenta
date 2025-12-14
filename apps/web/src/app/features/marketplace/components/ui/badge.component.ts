@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 /**
  * Badge Component V2
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (variant() === 'dot') {
       <span [class]="badgeClasses()"></span>

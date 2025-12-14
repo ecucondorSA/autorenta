@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,7 +33,7 @@ interface MenuSection {
 @Component({
   selector: 'app-mobile-menu-drawer',
   standalone: true,
-  imports: [CommonModule, RouterModule, MenuIconComponent],
+  imports: [RouterModule, MenuIconComponent],
   templateUrl: './mobile-menu-drawer.component.html',
   styleUrls: ['./mobile-menu-drawer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

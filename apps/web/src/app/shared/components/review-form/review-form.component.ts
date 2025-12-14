@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import type { CreateReviewParams, ReviewType } from '../../../core/models';
@@ -19,7 +19,7 @@ interface RatingCategory {
   selector: 'app-review-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [ReactiveFormsModule, TranslateModule],
   templateUrl: './review-form.component.html',
   styleUrls: ['./review-form.component.css'],
 })

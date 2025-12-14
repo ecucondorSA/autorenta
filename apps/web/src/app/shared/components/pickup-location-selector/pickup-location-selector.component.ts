@@ -7,7 +7,7 @@ import {Component,
   OnInit,
   inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
   LocationMapPickerComponent,
@@ -27,7 +27,7 @@ export interface PickupLocationSelection {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-pickup-location-selector',
-  imports: [CommonModule, ReactiveFormsModule, LocationMapPickerComponent],
+  imports: [ReactiveFormsModule, LocationMapPickerComponent],
   templateUrl: './pickup-location-selector.component.html',
   styleUrls: ['./pickup-location-selector.component.css'],
 })

@@ -1,25 +1,27 @@
 <div class="professional-date-input">
   <!-- Label -->
-  <label
-    *ngIf="label"
-    class="mb-2 flex items-center gap-2 text-xs font-semibold text-text-primary dark:text-text-primary"
-  >
-    <svg
-      *ngIf="showIcon"
-      class="h-4 w-4 text-text-secondary dark:text-text-secondary/70"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
-    </svg>
-    {{ label }}
-  </label>
+  @if (label) {
+    <label
+      class="mb-2 flex items-center gap-2 text-xs font-semibold text-text-primary dark:text-text-primary"
+      >
+      @if (showIcon) {
+        <svg
+          class="h-4 w-4 text-text-secondary dark:text-text-secondary/70"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+        </svg>
+      }
+      {{ label }}
+    </label>
+  }
 
   <!-- Input Button -->
   <button
@@ -32,7 +34,7 @@
     class="date-input-button"
     [class.has-selection]="hasSelection()"
     [class.disabled]="disabled"
-  >
+    >
     <!-- Calendar Icon -->
     <svg
       class="calendar-icon"
@@ -40,13 +42,13 @@
       stroke="currentColor"
       viewBox="0 0 24 24"
       [class.text-cta-default]="hasSelection()"
-    >
+      >
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
         stroke-width="2"
         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-      />
+        />
     </svg>
 
     <!-- Date Display -->
@@ -55,27 +57,30 @@
     </span>
 
     <!-- Days Badge (when selected) -->
-    <span *ngIf="hasSelection() && selectedDays()" class="days-badge">
-      {{ selectedDays() }} {{ selectedDays() === 1 ? 'día' : 'días' }}
-    </span>
+    @if (hasSelection() && selectedDays()) {
+      <span class="days-badge">
+        {{ selectedDays() }} {{ selectedDays() === 1 ? 'día' : 'días' }}
+      </span>
+    }
 
     <!-- Clear Button (when selected) -->
-    <button
-      *ngIf="hasSelection() && !disabled"
-      type="button"
-      (click)="clearSelection($event)"
-      class="clear-button"
-      aria-label="Limpiar fechas"
-    >
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
+    @if (hasSelection() && !disabled) {
+      <button
+        type="button"
+        (click)="clearSelection($event)"
+        class="clear-button"
+        aria-label="Limpiar fechas"
+        >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+            />
+        </svg>
+      </button>
+    }
 
     <!-- Arrow Icon -->
     <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

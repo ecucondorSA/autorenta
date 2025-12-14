@@ -1,6 +1,6 @@
 import {Component, signal, inject, PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
@@ -11,7 +11,7 @@ import { PwaService } from '../../../core/services/pwa.service';
   selector: 'app-pwa-install-prompt',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './pwa-install-prompt.component.html',
   styleUrl: './pwa-install-prompt.component.css',
   animations: [

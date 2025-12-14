@@ -1,0 +1,28 @@
+/* 🔠 Satoshi Font (Self-Hosted Variable Font) */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/assets/fonts/satoshi/satoshi-variable.woff2') format('woff2-variations'),
+       url('/assets/fonts/satoshi/satoshi-variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* 🔠 Clash Display (Self-Hosted Variable Font) - Premium/Luxury */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/assets/fonts/clash-display/clash-display-variable.woff2') format('woff2-variations'),
+       url('/assets/fonts/clash-display/clash-display-variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* 🔠 Plus Jakarta Sans (Self-Hosted Variable Font) - Friendly/Community */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/assets/fonts/plus-jakarta-sans/plus-jakarta-sans-variable.ttf') format('truetype');
+  font-weight: 200 800;
+  font-display: swap;
+  font-style: normal;
+}

@@ -1,6 +1,6 @@
 import {Component,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 
 /**
@@ -15,7 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-deposit-warning',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   template: `
     <div
       class="bg-warning-bg dark:bg-warning-900/20 border-l-4 border-warning-border p-6 mb-6 rounded-r-lg"

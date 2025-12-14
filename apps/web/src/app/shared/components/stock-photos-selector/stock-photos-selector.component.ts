@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, signal, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { StockPhotosService, StockPhoto } from '../../../core/services/stock-photos.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -9,7 +9,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
   selector: 'app-stock-photos-selector',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div class="stock-photos-selector">
       <!-- Search Form -->

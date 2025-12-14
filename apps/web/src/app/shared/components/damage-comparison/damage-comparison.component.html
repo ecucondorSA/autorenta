@@ -23,14 +23,16 @@
   </div>
 
   <!-- Error Message -->
-  <ion-card *ngIf="error()" color="warning" class="mb-4">
-    <ion-card-content>
-      <div class="flex items-center">
-        <ion-icon name="alert-circle" class="text-xl mr-2"></ion-icon>
-        <p class="text-sm">{{ error() }}</p>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  @if (error()) {
+    <ion-card color="warning" class="mb-4">
+      <ion-card-content>
+        <div class="flex items-center">
+          <ion-icon name="alert-circle" class="text-xl mr-2"></ion-icon>
+          <p class="text-sm">{{ error() }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  }
 
   <!-- Compare Button -->
   <ion-button
@@ -38,78 +40,92 @@
     [disabled]="loading() || comparing() || !validationResult()?.valid"
     (click)="compareDamages()"
     class="mb-4"
-  >
+    >
     <ion-icon name="camera" slot="start"></ion-icon>
-    <span *ngIf="!comparing()">Comparar Daños (Check-in vs Check-out)</span>
-    <span *ngIf="comparing()">Comparando...</span>
-    <ion-spinner *ngIf="comparing()" name="crescent" slot="end"></ion-spinner>
+    @if (!comparing()) {
+      <span>Comparar Daños (Check-in vs Check-out)</span>
+    }
+    @if (comparing()) {
+      <span>Comparando...</span>
+    }
+    @if (comparing()) {
+      <ion-spinner name="crescent" slot="end"></ion-spinner>
+    }
   </ion-button>
 
   <!-- Loading State -->
-  <div *ngIf="loading()" class="flex flex-col items-center justify-center py-8">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p class="mt-4 text-text-secondary text-sm">Validando inspecciones...</p>
-  </div>
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-8">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p class="mt-4 text-text-secondary text-sm">Validando inspecciones...</p>
+    </div>
+  }
 
   <!-- Detected Damages -->
-  <div *ngIf="damages().length > 0" class="mt-4">
-    <h3 class="text-lg font-bold mb-3">Daños Detectados</h3>
-    <div class="space-y-3">
-      <ion-card *ngFor="let damage of damages(); let i = index" class="mb-3">
-        <ion-card-header>
-          <div class="flex items-center justify-between">
-            <ion-card-title class="text-base">
-              {{ i + 1 }}. {{ getDamageTypeLabel(damage.type) }}
-            </ion-card-title>
-            <ion-badge [color]="getSeverityColor(damage.severity)">
-              {{ getSeverityLabel(damage.severity) }}
-            </ion-badge>
-          </div>
-        </ion-card-header>
-        <ion-card-content>
-          <p class="text-sm mb-2">{{ damage.description }}</p>
-          <p class="text-sm font-semibold text-text-secondary">
-            Costo estimado: ${{ damage.estimatedCostUsd.toFixed(2) }} USD
-          </p>
-
-          <!-- Photos -->
-          <div *ngIf="damage.photos.length > 0" class="mt-3">
-            <p class="text-xs text-text-secondary mb-2">Evidencia fotográfica:</p>
-            <div class="grid grid-cols-2 gap-2">
-              <img
-                *ngFor="let photo of damage.photos"
-                [src]="photo"
-                [alt]="damage.description"
-                class="w-full h-32 object-cover rounded"
-              />
+  @if (damages().length > 0) {
+    <div class="mt-4">
+      <h3 class="text-lg font-bold mb-3 font-satoshi">Daños Detectados</h3>
+      <div class="space-y-3">
+        @for (damage of damages(); track damage; let i = $index) {
+          <ion-card class="mb-3">
+            <ion-card-header>
+              <div class="flex items-center justify-between">
+                <ion-card-title class="text-base">
+                  {{ i + 1 }}. {{ getDamageTypeLabel(damage.type) }}
+                </ion-card-title>
+                <ion-badge [color]="getSeverityColor(damage.severity)">
+                  {{ getSeverityLabel(damage.severity) }}
+                </ion-badge>
+              </div>
+            </ion-card-header>
+            <ion-card-content>
+              <p class="text-sm mb-2">{{ damage.description }}</p>
+              <p class="text-sm font-semibold text-text-secondary">
+                Costo estimado: ${{ damage.estimatedCostUsd.toFixed(2) }} USD
+              </p>
+              <!-- Photos -->
+              @if (damage.photos.length > 0) {
+                <div class="mt-3">
+                  <p class="text-xs text-text-secondary mb-2">Evidencia fotográfica:</p>
+                  <div class="grid grid-cols-2 gap-2">
+                    @for (photo of damage.photos; track photo) {
+                      <img
+                        [src]="photo"
+                        [alt]="damage.description"
+                        class="w-full h-32 object-cover rounded"
+                        />
+                    }
+                  </div>
+                </div>
+              }
+            </ion-card-content>
+          </ion-card>
+        }
+        <!-- Total -->
+        <ion-card color="primary" class="mt-4">
+          <ion-card-content>
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-lg">Total Estimado:</span>
+              <span class="font-bold text-xl"> {{ getTotalDamageCost() }} USD </span>
             </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-
-      <!-- Total -->
-      <ion-card color="primary" class="mt-4">
-        <ion-card-content>
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-lg">Total Estimado:</span>
-            <span class="font-bold text-xl"> {{ getTotalDamageCost() }} USD </span>
-          </div>
-        </ion-card-content>
-      </ion-card>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
-  </div>
+  }
 
   <!-- No Damages Message -->
-  <ion-card
-    *ngIf="!comparing() && !loading() && damages().length === 0 && validationResult()?.valid"
-    color="success"
-    class="mt-4"
-  >
-    <ion-card-content>
-      <div class="flex items-center">
-        <ion-icon name="checkmark-circle" class="text-xl mr-2"></ion-icon>
-        <p class="text-sm">No se detectaron daños nuevos. El auto está en buen estado.</p>
-      </div>
-    </ion-card-content>
-  </ion-card>
+  @if (!comparing() && !loading() && damages().length === 0 && validationResult()?.valid) {
+    <ion-card
+      color="success"
+      class="mt-4"
+      >
+      <ion-card-content>
+        <div class="flex items-center">
+          <ion-icon name="checkmark-circle" class="text-xl mr-2"></ion-icon>
+          <p class="text-sm">No se detectaron daños nuevos. El auto está en buen estado.</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  }
 </div>

@@ -294,11 +294,11 @@ export class AdminAccidentsPage implements OnInit {
 
       if (error) throw error;
 
-      const mapped = (data || []).map((a: any) => ({
+      const mapped = (data || []).map((a: Record<string, any>) => ({
         ...a,
         reporter_name: a.reporter?.full_name,
         car_info: a.booking?.car ? `${a.booking.car.brand} ${a.booking.car.model} (${a.booking.car.year})` : null
-      }));
+      })) as unknown as Accident[];
 
       this.accidents.set(mapped);
     } catch (err) {

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, inject, OnDestroy, OnInit, output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { MessagesService } from '../../../core/services/messages.service';
@@ -16,7 +16,7 @@ import { injectSupabase } from '../../../core/services/supabase-client.service';
   selector: 'app-offline-messages-panel',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <!-- Backdrop -->
     <div

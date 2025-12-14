@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -17,7 +17,7 @@ interface PendingReview {
   selector: 'app-pending-reviews-banner',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './pending-reviews-banner.component.html',
   styleUrls: ['./pending-reviews-banner.component.css'],
 })

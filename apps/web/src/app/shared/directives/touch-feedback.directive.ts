@@ -1,6 +1,5 @@
 import { Directive, HostListener, inject, Input } from '@angular/core';
 import { HapticFeedbackService } from '../../core/services/haptic-feedback.service';
-import { IonButton } from '@ionic/angular';
 
 /**
  * TouchFeedbackDirective

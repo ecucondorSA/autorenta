@@ -1,6 +1,6 @@
 import {Component,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TranslateModule } from '@ngx-translate/core';
 import { PwaService } from '../../../core/services/pwa.service';
 
@@ -8,7 +8,7 @@ import { PwaService } from '../../../core/services/pwa.service';
   selector: 'app-pwa-update-prompt',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './pwa-update-prompt.component.html',
   styleUrl: './pwa-update-prompt.component.css',
 })

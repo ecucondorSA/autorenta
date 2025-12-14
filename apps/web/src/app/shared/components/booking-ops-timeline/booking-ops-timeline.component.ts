@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component, Input,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -20,47 +20,55 @@ export interface BookingOpsData {
   selector: 'app-booking-ops-timeline',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div
       class="rounded-xl border border-border-default dark:border-neutral-800/60 bg-surface-raised dark:bg-surface-secondary p-4 space-y-4"
-    >
+      >
       <h3 class="text-sm font-semibold text-text-primary">Operaciones</h3>
-
+    
       <div class="space-y-3 text-sm">
-        <ng-container *ngFor="let item of timeline">
+        @for (item of timeline; track item) {
           <div class="flex justify-between items-start" [class.opacity-60]="!item.date">
             <div>
               <p class="font-medium">{{ item.label }}</p>
-              <p class="text-xs text-text-secondary" *ngIf="item.note">{{ item.note }}</p>
+              @if (item.note) {
+                <p class="text-xs text-text-secondary">{{ item.note }}</p>
+              }
             </div>
             <span class="text-xs font-mono text-text-secondary">
               {{ item.date || '—' }}
             </span>
           </div>
-        </ng-container>
+        }
       </div>
-
-      <div
-        *ngIf="data.cancellation_reason || data.cancellation_fee_cents"
-        class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm"
-      >
-        <p class="font-semibold text-error-strong">Cancelación</p>
-        <p *ngIf="data.cancellation_reason" class="text-text-secondary">
-          Motivo: {{ data.cancellation_reason }}
-        </p>
-        <p
-          *ngIf="data.cancellation_fee_cents !== null && data.cancellation_fee_cents !== undefined"
-          class="text-text-secondary"
-        >
-          Fee: {{ formatCents(data.cancellation_fee_cents) }}
-        </p>
-        <p *ngIf="data.cancelled_at" class="text-xs text-text-secondary/80">
-          Cancelado: {{ data.cancelled_at }}
-        </p>
-      </div>
+    
+      @if (data.cancellation_reason || data.cancellation_fee_cents) {
+        <div
+          class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm"
+          >
+          <p class="font-semibold text-error-strong">Cancelación</p>
+          @if (data.cancellation_reason) {
+            <p class="text-text-secondary">
+              Motivo: {{ data.cancellation_reason }}
+            </p>
+          }
+          @if (data.cancellation_fee_cents !== null && data.cancellation_fee_cents !== undefined) {
+            <p
+              class="text-text-secondary"
+              >
+              Fee: {{ formatCents(data.cancellation_fee_cents) }}
+            </p>
+          }
+          @if (data.cancelled_at) {
+            <p class="text-xs text-text-secondary/80">
+              Cancelado: {{ data.cancelled_at }}
+            </p>
+          }
+        </div>
+      }
     </div>
-  `,
+    `,
 })
 export class BookingOpsTimelineComponent {
   @Input({ required: true }) data!: BookingOpsData;

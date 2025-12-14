@@ -15,173 +15,195 @@ import { InsuranceService } from '../../../core/services/insurance.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, IonicModule],
   template: `
-    <ion-card *ngIf="summary" class="insurance-summary-card">
-      <ion-card-header>
-        <div class="header-with-icon">
-          <ion-icon name="shield-checkmark" color="success"></ion-icon>
-          <div>
-            <ion-card-title>Cobertura de Seguro</ion-card-title>
-            <ion-card-subtitle>{{ summary.insurer_display_name }}</ion-card-subtitle>
-          </div>
-        </div>
-        <ion-badge color="success" class="type-badge">
-          {{ summary.policy_type === 'platform_floating' ? 'Seguro Plataforma' : 'Seguro Propio' }}
-        </ion-badge>
-      </ion-card-header>
-
-      <ion-card-content>
-        <!-- Responsabilidad Civil -->
-        <div class="coverage-item">
-          <div class="coverage-icon">
-            <ion-icon name="people" color="primary"></ion-icon>
-          </div>
-          <div class="coverage-detail">
-            <strong>Responsabilidad Civil</strong>
-            <p class="coverage-value">
-              Hasta {{ summary.liability_coverage | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Franquicia / Depósito -->
-        <div class="coverage-item highlight">
-          <div class="coverage-icon">
-            <ion-icon name="wallet" color="warning"></ion-icon>
-          </div>
-          <div class="coverage-detail">
-            <strong>Tu Responsabilidad (Franquicia)</strong>
-            <p class="coverage-value warning">
-              {{ summary.deductible_amount | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}
-            </p>
-            <small>Monto máximo que pagarías en caso de daños</small>
-          </div>
-        </div>
-
-        <!-- Coberturas Incluidas -->
-        <div class="coverage-section">
-          <h4>✅ Coberturas Incluidas:</h4>
-          <div class="chips-container">
-            <ion-chip color="success" *ngIf="summary.coverage_details.rc">
-              <ion-icon name="people"></ion-icon>
-              <ion-label>RC Terceros</ion-label>
-            </ion-chip>
-            <ion-chip color="success" *ngIf="summary.coverage_details.own_damage">
-              <ion-icon name="construct"></ion-icon>
-              <ion-label>Daños Propios</ion-label>
-            </ion-chip>
-            <ion-chip color="success" *ngIf="summary.coverage_details.theft">
-              <ion-icon name="lock-closed"></ion-icon>
-              <ion-label>Robo</ion-label>
-            </ion-chip>
-            <ion-chip color="success" *ngIf="summary.coverage_details.fire">
-              <ion-icon name="flame"></ion-icon>
-              <ion-label>Incendio</ion-label>
-            </ion-chip>
-            <ion-chip color="success" *ngIf="summary.coverage_details.misappropriation">
-              <ion-icon name="warning"></ion-icon>
-              <ion-label>Apropiación Indebida</ion-label>
-            </ion-chip>
-          </div>
-        </div>
-
-        <!-- Add-ons Contratados -->
-        <div class="coverage-section" *ngIf="summary.addons && summary.addons.length > 0">
-          <h4>
-            <ion-icon name="star" color="warning"></ion-icon>
-            Add-ons Contratados:
-          </h4>
-          <div class="addon-list">
-            <div class="addon-item-summary" *ngFor="let addon of summary.addons">
-              <ion-icon name="checkmark-circle" color="primary"></ion-icon>
-              <div class="addon-info">
-                <span class="addon-name">{{ addon.name }}</span>
-                <span class="addon-cost">{{
-                  addon.total_cost | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
-                }}</span>
-              </div>
+    @if (summary) {
+      <ion-card class="insurance-summary-card">
+        <ion-card-header>
+          <div class="header-with-icon">
+            <ion-icon name="shield-checkmark" color="success"></ion-icon>
+            <div>
+              <ion-card-title>Cobertura de Seguro</ion-card-title>
+              <ion-card-subtitle>{{ summary.insurer_display_name }}</ion-card-subtitle>
             </div>
           </div>
-        </div>
-
-        <!-- Costos -->
-        <div class="cost-breakdown" *ngIf="summary.total_premium > 0">
-          <div class="cost-row">
-            <span>Seguro base:</span>
-            <span>{{ summary.total_premium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+          <ion-badge color="success" class="type-badge">
+            {{ summary.policy_type === 'platform_floating' ? 'Seguro Plataforma' : 'Seguro Propio' }}
+          </ion-badge>
+        </ion-card-header>
+        <ion-card-content>
+          <!-- Responsabilidad Civil -->
+          <div class="coverage-item">
+            <div class="coverage-icon">
+              <ion-icon name="people" color="primary"></ion-icon>
+            </div>
+            <div class="coverage-detail">
+              <strong>Responsabilidad Civil</strong>
+              <p class="coverage-value">
+                Hasta {{ summary.liability_coverage | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}
+              </p>
+            </div>
           </div>
-          <div class="cost-row" *ngIf="summary.daily_premium">
-            <small
-              >({{
-                summary.daily_premium | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
-              }}/día)</small
-            >
-            <span></span>
+          <!-- Franquicia / Depósito -->
+          <div class="coverage-item highlight">
+            <div class="coverage-icon">
+              <ion-icon name="wallet" color="warning"></ion-icon>
+            </div>
+            <div class="coverage-detail">
+              <strong>Tu Responsabilidad (Franquicia)</strong>
+              <p class="coverage-value warning">
+                {{ summary.deductible_amount | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}
+              </p>
+              <small>Monto máximo que pagarías en caso de daños</small>
+            </div>
           </div>
-          <div class="cost-row total" *ngIf="addonsTotalCost > 0">
-            <span>Add-ons:</span>
-            <span>+{{ addonsTotalCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+          <!-- Coberturas Incluidas -->
+          <div class="coverage-section">
+            <h4>✅ Coberturas Incluidas:</h4>
+            <div class="chips-container">
+              @if (summary.coverage_details.rc) {
+                <ion-chip color="success">
+                  <ion-icon name="people"></ion-icon>
+                  <ion-label>RC Terceros</ion-label>
+                </ion-chip>
+              }
+              @if (summary.coverage_details.own_damage) {
+                <ion-chip color="success">
+                  <ion-icon name="construct"></ion-icon>
+                  <ion-label>Daños Propios</ion-label>
+                </ion-chip>
+              }
+              @if (summary.coverage_details.theft) {
+                <ion-chip color="success">
+                  <ion-icon name="lock-closed"></ion-icon>
+                  <ion-label>Robo</ion-label>
+                </ion-chip>
+              }
+              @if (summary.coverage_details.fire) {
+                <ion-chip color="success">
+                  <ion-icon name="flame"></ion-icon>
+                  <ion-label>Incendio</ion-label>
+                </ion-chip>
+              }
+              @if (summary.coverage_details.misappropriation) {
+                <ion-chip color="success">
+                  <ion-icon name="warning"></ion-icon>
+                  <ion-label>Apropiación Indebida</ion-label>
+                </ion-chip>
+              }
+            </div>
           </div>
-          <div class="cost-row grand-total" *ngIf="addonsTotalCost > 0">
-            <strong>Total Seguro:</strong>
-            <strong>{{
-              summary.total_premium + addonsTotalCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
-            }}</strong>
-          </div>
-        </div>
-
-        <!-- Certificado -->
-        <ion-button
-          expand="block"
-          fill="outline"
-          size="small"
-          class="certificate-button"
-          *ngIf="summary.certificate_number"
-          (click)="downloadCertificate()"
-        >
-          <ion-icon slot="start" name="document-text"></ion-icon>
-          Certificado de Cobertura
-          <br />
-          <small>N° {{ summary.certificate_number }}</small>
-        </ion-button>
-
-        <!-- Información Emergencia -->
-        <div class="emergency-info">
-          <ion-icon name="call" color="danger"></ion-icon>
-          <div class="emergency-text">
-            <strong>En caso de accidente:</strong>
-            <p>
-              Contacta inmediatamente al
-              <a href="tel:0800-AUTORENTAR"><strong>0800-AUTORENTAR</strong></a>
-            </p>
-            <small>Disponible 24/7 - No muevas el vehículo hasta recibir instrucciones</small>
-          </div>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Loading State -->
-    <ion-card *ngIf="loading" class="loading-card">
-      <ion-card-content>
-        <div class="loading-content">
-          <ion-spinner name="crescent"></ion-spinner>
-          <p>Cargando información del seguro...</p>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Error State -->
-    <ion-card *ngIf="error && !loading" color="danger" class="error-card">
-      <ion-card-content>
-        <div class="error-content">
-          <ion-icon name="alert-circle"></ion-icon>
-          <p>No se pudo cargar la información del seguro</p>
-          <ion-button size="small" fill="clear" (click)="loadInsuranceSummary()">
-            Reintentar
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-  `,
+          <!-- Add-ons Contratados -->
+          @if (summary.addons && summary.addons.length > 0) {
+            <div class="coverage-section">
+              <h4>
+                <ion-icon name="star" color="warning"></ion-icon>
+                Add-ons Contratados:
+              </h4>
+              <div class="addon-list">
+                @for (addon of summary.addons; track addon) {
+                  <div class="addon-item-summary">
+                    <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+                    <div class="addon-info">
+                      <span class="addon-name">{{ addon.name }}</span>
+                      <span class="addon-cost">{{
+                        addon.total_cost | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
+                      }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          <!-- Costos -->
+          @if (summary.total_premium > 0) {
+            <div class="cost-breakdown">
+              <div class="cost-row">
+                <span>Seguro base:</span>
+                <span>{{ summary.total_premium | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+              </div>
+              @if (summary.daily_premium) {
+                <div class="cost-row">
+                  <small
+                    >({{
+                    summary.daily_premium | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
+                    }}/día)</small
+                    >
+                    <span></span>
+                  </div>
+                }
+                @if (addonsTotalCost > 0) {
+                  <div class="cost-row total">
+                    <span>Add-ons:</span>
+                    <span>+{{ addonsTotalCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0' }}</span>
+                  </div>
+                }
+                @if (addonsTotalCost > 0) {
+                  <div class="cost-row grand-total">
+                    <strong>Total Seguro:</strong>
+                    <strong>{{
+                      summary.total_premium + addonsTotalCost | currency: 'ARS' : 'symbol-narrow' : '1.0-0'
+                    }}</strong>
+                  </div>
+                }
+              </div>
+            }
+            <!-- Certificado -->
+            @if (summary.certificate_number) {
+              <ion-button
+                expand="block"
+                fill="outline"
+                size="small"
+                class="certificate-button"
+                (click)="downloadCertificate()"
+                >
+                <ion-icon slot="start" name="document-text"></ion-icon>
+                Certificado de Cobertura
+                <br />
+                <small>N° {{ summary.certificate_number }}</small>
+              </ion-button>
+            }
+            <!-- Información Emergencia -->
+            <div class="emergency-info">
+              <ion-icon name="call" color="danger"></ion-icon>
+              <div class="emergency-text">
+                <strong>En caso de accidente:</strong>
+                <p>
+                  Contacta inmediatamente al
+                  <a href="tel:0800-AUTORENTAR"><strong>0800-AUTORENTAR</strong></a>
+                </p>
+                <small>Disponible 24/7 - No muevas el vehículo hasta recibir instrucciones</small>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    
+      <!-- Loading State -->
+      @if (loading) {
+        <ion-card class="loading-card">
+          <ion-card-content>
+            <div class="loading-content">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Cargando información del seguro...</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    
+      <!-- Error State -->
+      @if (error && !loading) {
+        <ion-card color="danger" class="error-card">
+          <ion-card-content>
+            <div class="error-content">
+              <ion-icon name="alert-circle"></ion-icon>
+              <p>No se pudo cargar la información del seguro</p>
+              <ion-button size="small" fill="clear" (click)="loadInsuranceSummary()">
+                Reintentar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    `,
   styles: [
     `
       .insurance-summary-card {

@@ -17,6 +17,17 @@ module.exports = {
          ───────────────────────────────────────────────────────────── */
       fontFamily: {
         sans: [
+          'Inter', // Inter ahora es la primera opción para sans
+          'Satoshi',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'Roboto',
+          '"Helvetica Neue"',
+          'Arial',
+          'sans-serif',
+        ],
+        satoshi: [
           'Satoshi',
           'Inter',
           '-apple-system',
@@ -25,6 +36,19 @@ module.exports = {
           'Roboto',
           '"Helvetica Neue"',
           'Arial',
+          'sans-serif',
+        ],
+        // Friendly & Community (Airbnb style)
+        friendly: [
+          '"Plus Jakarta Sans"',
+          'Outfit',
+          'Inter',
+          'sans-serif',
+        ],
+        // Premium & Luxury (Uber Black style)
+        luxury: [
+          '"Clash Display"',
+          'Satoshi',
           'sans-serif',
         ],
         mono: 'var(--font-mono)',

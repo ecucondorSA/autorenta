@@ -13,53 +13,62 @@ import { SupabaseClientService } from '../../../core/services/supabase-client.se
   template: `
     <div
       class="rounded-2xl border border-border-default dark:border-border-muted bg-surface-raised dark:bg-surface-secondary p-4 space-y-3"
-    >
+      >
       <div class="flex items-center justify-between">
         <div>
           <h3 class="text-base font-semibold text-text-primary">Transferencias</h3>
           <p class="text-sm text-text-secondary">Enviadas y recibidas</p>
         </div>
-        <ion-spinner *ngIf="loading()" name="crescent"></ion-spinner>
+        @if (loading()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
       </div>
-
-      <div *ngIf="error()" class="text-sm text-error-strong">
-        {{ error() }}
-      </div>
-
-      <div *ngIf="!loading() && !transfers().length" class="text-sm text-text-secondary">
-        Aún no tienes transferencias.
-      </div>
-
-      <div class="space-y-3" *ngIf="transfers().length">
-        <div
-          *ngFor="let t of transfers()"
-          class="flex items-center justify-between rounded-xl border border-border-default/60 dark:border-border-muted/60 p-3"
-        >
-          <div class="space-y-0.5">
-            <p class="text-sm font-semibold text-text-primary">
-              {{ directionLabel(t) }}
-            </p>
-            <p class="text-xs text-text-secondary">
-              {{ t.created_at | date: 'short' }}
-              <span class="mx-1">•</span>
-              {{ t.status }}
-            </p>
-          </div>
-          <div class="text-right">
-            <p
+    
+      @if (error()) {
+        <div class="text-sm text-error-strong">
+          {{ error() }}
+        </div>
+      }
+    
+      @if (!loading() && !transfers().length) {
+        <div class="text-sm text-text-secondary">
+          Aún no tienes transferencias.
+        </div>
+      }
+    
+      @if (transfers().length) {
+        <div class="space-y-3">
+          @for (t of transfers(); track t) {
+            <div
+              class="flex items-center justify-between rounded-xl border border-border-default/60 dark:border-border-muted/60 p-3"
+              >
+              <div class="space-y-0.5">
+                <p class="text-sm font-semibold text-text-primary">
+                  {{ directionLabel(t) }}
+                </p>
+                <p class="text-xs text-text-secondary">
+                  {{ t.created_at | date: 'short' }}
+                  <span class="mx-1">•</span>
+                  {{ t.status }}
+                </p>
+              </div>
+              <div class="text-right">
+                <p
               [ngClass]="
                 t.from_user === currentUserId() ? 'text-error-strong' : 'text-success-strong'
               "
-              class="font-semibold"
-            >
-              {{ amountLabel(t.amount_cents, t.from_user === currentUserId()) }}
-            </p>
-            <p class="text-xs text-text-secondary">Ref: {{ t.ref }}</p>
-          </div>
+                  class="font-semibold"
+                  >
+                  {{ amountLabel(t.amount_cents, t.from_user === currentUserId()) }}
+                </p>
+                <p class="text-xs text-text-secondary">Ref: {{ t.ref }}</p>
+              </div>
+            </div>
+          }
         </div>
-      </div>
+      }
     </div>
-  `,
+    `,
 })
 export class WalletTransfersComponent implements OnInit {
   private readonly ledger = inject(WalletLedgerService);

@@ -1,17 +1,17 @@
 import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { VerificationService } from '../../../../core/services/verification.service';
 
 @Component({
   selector: 'app-license-uploader',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="space-y-6">
       <h3 class="text-lg font-bold">Licencia de Conducir</h3>
-
+    
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- FRENTE -->
         <div class="card bg-base-100 border border-base-300">
@@ -19,84 +19,93 @@ import { VerificationService } from '../../../../core/services/verification.serv
             <h4 class="card-title text-sm">Frente</h4>
             <div
               class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative"
-            >
-              <img
-                *ngIf="frontPreview()"
-                [src]="frontPreview()"
-                class="object-cover w-full h-full"
-              />
-              <span *ngIf="!frontPreview()" class="text-4xl text-base-content/20">🪪</span>
-
-              <!-- Loading Overlay -->
-              <div
-                *ngIf="uploadingFront()"
-                class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
               >
-                <span class="loading loading-spinner"></span>
-              </div>
+              @if (frontPreview()) {
+                <img
+                  [src]="frontPreview()"
+                  class="object-cover w-full h-full"
+                  />
+              }
+              @if (!frontPreview()) {
+                <span class="text-4xl text-base-content/20">🪪</span>
+              }
+    
+              <!-- Loading Overlay -->
+              @if (uploadingFront()) {
+                <div
+                  class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
+                  >
+                  <span class="loading loading-spinner"></span>
+                </div>
+              }
             </div>
-
+    
             <input
               #frontInput
               type="file"
               hidden
               accept="image/*"
               (change)="onFileSelected($event, 'license_front')"
-            />
+              />
             <button
               class="btn btn-sm btn-outline mt-2"
               (click)="frontInput.click()"
               [disabled]="uploadingFront()"
-            >
+              >
               {{ frontPreview() ? 'Cambiar' : 'Subir Foto' }}
             </button>
           </div>
         </div>
-
+    
         <!-- DORSO -->
         <div class="card bg-base-100 border border-base-300">
           <div class="card-body items-center text-center">
             <h4 class="card-title text-sm">Dorso</h4>
             <div
               class="w-full h-32 bg-base-200 rounded-lg flex items-center justify-center overflow-hidden relative"
-            >
-              <img *ngIf="backPreview()" [src]="backPreview()" class="object-cover w-full h-full" />
-              <span *ngIf="!backPreview()" class="text-4xl text-base-content/20">🔄</span>
-
-              <!-- Loading Overlay -->
-              <div
-                *ngIf="uploadingBack()"
-                class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
               >
-                <span class="loading loading-spinner"></span>
-              </div>
+              @if (backPreview()) {
+                <img [src]="backPreview()" class="object-cover w-full h-full" />
+              }
+              @if (!backPreview()) {
+                <span class="text-4xl text-base-content/20">🔄</span>
+              }
+    
+              <!-- Loading Overlay -->
+              @if (uploadingBack()) {
+                <div
+                  class="absolute inset-0 bg-base-100/50 flex items-center justify-center"
+                  >
+                  <span class="loading loading-spinner"></span>
+                </div>
+              }
             </div>
-
+    
             <input
               #backInput
               type="file"
               hidden
               accept="image/*"
               (change)="onFileSelected($event, 'license_back')"
-            />
+              />
             <button
               class="btn btn-sm btn-outline mt-2"
               (click)="backInput.click()"
               [disabled]="uploadingBack()"
-            >
+              >
               {{ backPreview() ? 'Cambiar' : 'Subir Foto' }}
             </button>
           </div>
         </div>
       </div>
-
+    
       <div class="alert alert-info text-sm">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           class="stroke-current shrink-0 w-6 h-6"
-        >
+          >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -107,7 +116,7 @@ import { VerificationService } from '../../../../core/services/verification.serv
         <span>Asegúrate de que el texto sea legible y no haya reflejos.</span>
       </div>
     </div>
-  `,
+    `,
 })
 export class LicenseUploaderComponent {
   private verificationService = inject(VerificationService);
