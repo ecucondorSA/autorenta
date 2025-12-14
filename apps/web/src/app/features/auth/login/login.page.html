@@ -1,21 +1,18 @@
 <div class="relative w-full h-full min-h-dvh overflow-hidden bg-black">
   <!-- HDRI Background -->
   <div class="absolute inset-0 z-0 brightness-[1.1] saturate-[1.2] contrast-[1.05]">
-    @defer (on viewport) {
     <app-hdri-background
-      [srcLowDay]="'assets/hdri/suburban_parking_area_1k.webp'"
-      [srcHighDay]="'assets/hdri/suburban_parking_area_8k.webp'"
-      [srcLowNight]="'assets/hdri/suburban_parking_area_1k.webp'"
-      [srcHighNight]="'assets/hdri/suburban_parking_area_8k.webp'"
+      [srcLowDay]="'/assets/hdri/laufenurg_church_1k.webp'"
+      [srcHighDay]="'/assets/hdri/laufenurg_church_8k.webp'"
+      [srcLowNight]="'/assets/hdri/laufenurg_church_1k.webp'"
+      [srcHighNight]="'/assets/hdri/laufenurg_church_8k.webp'"
       [autoRotate]="true"
+      [rotateSpeed]="0.0012"
       [enableInteraction]="true"
       class="w-full h-full">
     </app-hdri-background>
-    } @placeholder {
-    <div class="w-full h-full bg-[#050505]"></div>
-  }
+  </div>
   <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/10"></div>
-</div>
 
 <!-- Scenic CTAs -->
 <div class="relative z-10 flex h-full flex-col justify-end p-6 sm:p-10">
@@ -274,4 +271,3 @@
     </div>
   </div>
 }
-</div>

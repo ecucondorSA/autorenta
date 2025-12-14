@@ -10,8 +10,8 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
   standalone: true,
   selector: 'app-login-page',
   imports: [
-    NgOptimizedImage,
-    RouterLink,
+    // NgOptimizedImage,
+    // RouterLink,
     ReactiveFormsModule,
     TranslateModule,
     HdriBackgroundComponent

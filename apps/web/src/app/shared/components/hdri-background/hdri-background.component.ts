@@ -1,9 +1,11 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   Output,
@@ -35,7 +37,9 @@ import {
 @Component({
   selector: 'app-hdri-background',
   standalone: true,
-  template: `<canvas #canvas class="w-full h-full block transition-opacity duration-1000" [class.opacity-0]="!isLoaded" [class.opacity-100]="isLoaded"></canvas>`,
+  template: `
+    <canvas #canvas class="w-full h-full block transition-opacity duration-1000" [class.opacity-0]="!isLoaded" [class.opacity-100]="isLoaded" [style.background-image]="backgroundImage"></canvas>
+  `,
   styles: [
     `
       :host {
@@ -43,24 +47,29 @@ import {
         width: 100%;
         height: 100%;
       }
+      canvas {
+        background-size: cover;
+        background-position: center;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
+  private readonly cdr = inject(ChangeDetectorRef);
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   // Day HDRI (default, used 6am - 6pm)
   /** Low quality placeholder for day (LQIP pattern) */
-  @Input() srcLowDay = 'assets/hdri/suburban_parking_area_1k.webp';
+  @Input() srcLowDay = '/assets/hdri/suburban_parking_area_1k.webp';
   /** High quality day image loaded in background */
-  @Input() srcHighDay = 'assets/hdri/suburban_parking_area_8k.webp';
+  @Input() srcHighDay = '/assets/hdri/suburban_parking_area_8k.webp';
 
   // Night HDRI (used 6pm - 6am)
   /** Low quality placeholder for night (LQIP pattern) */
-  @Input() srcLowNight = 'assets/hdri/laufenurg_church_1k.webp';
+  @Input() srcLowNight = '/assets/hdri/laufenurg_church_1k.webp';
   /** High quality night image loaded in background */
-  @Input() srcHighNight = 'assets/hdri/laufenurg_church_8k.webp';
+  @Input() srcHighNight = '/assets/hdri/laufenurg_church_8k.webp';
 
   /** @deprecated Use srcHighDay instead. Kept for backward compatibility */
   @Input() set src(value: string) {
@@ -84,11 +93,17 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
   isLoaded = false;
 
+  get backgroundImage(): string {
+    const src = this.isNightTime() ? this.srcLowNight : this.srcLowDay;
+    return `url('${src}')`;
+  }
+
   private gl: WebGLRenderingContext | null = null;
   private program: WebGLProgram | null = null;
   private texture: WebGLTexture | null = null;
   private animationId: number | null = null;
   private isDestroyed = false;
+
 
   // Rotation state - start at initial position (showing the star)
   private rotationY = 0.3;
@@ -251,10 +266,13 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
     });
 
     if (!this.gl) {
-      console.warn('[HdriBackground] WebGL not supported');
+      console.warn('[HdriBackground] WebGL not supported, falling back to CSS background');
+      this.isLoaded = true;
+      this.hdriLoaded.emit();
+      this.cdr.markForCheck(); // FORCE UPDATE
       return;
     }
-
+    
     // Setup viewport
     this.resizeCanvas();
 
@@ -339,7 +357,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    * Detects if it's currently night time based on device's local time.
    * Night is defined as 6pm (18:00) to 6am (06:00).
    */
-  private isNightTime(): boolean {
+  public isNightTime(): boolean {
     const hour = new Date().getHours();
     return hour >= 18 || hour < 6;
   }
@@ -387,7 +405,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Step 1: Load low-res placeholder first (fast FCP)
     const lowResImage = new Image();
-    // lowResImage.crossOrigin = 'anonymous'; // Commented out to fix local dev CORS issue
+    lowResImage.crossOrigin = 'anonymous'; // Enable CORS for safety
 
     lowResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
@@ -398,6 +416,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       // Trigger fade-in immediately with low-res
       this.isLoaded = true;
       this.hdriLoaded.emit();
+      this.cdr.markForCheck(); // FORCE UPDATE
       this.startRenderLoop();
       // High-res is already loading in parallel (started below)
     };
@@ -419,7 +438,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
    */
   private loadHighResTexture(highResSrc: string): void {
     const highResImage = new Image();
-    // highResImage.crossOrigin = 'anonymous'; // Commented out to fix local dev CORS issue
+    highResImage.crossOrigin = 'anonymous'; // Enable CORS for safety
 
     highResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
@@ -434,10 +453,17 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
         this.hdriLoaded.emit();
         this.startRenderLoop();
       }
+      this.cdr.markForCheck(); // FORCE UPDATE
     };
 
     highResImage.onerror = (err) => {
       console.error('[HdriBackground] Failed to load high-res image:', highResSrc, err);
+      // Ensure component is visible even if loading fails (shows CSS fallback)
+      if (!this.isLoaded) {
+        this.isLoaded = true;
+        this.hdriLoaded.emit();
+      }
+      this.cdr.markForCheck(); // FORCE UPDATE
     };
 
     highResImage.src = highResSrc;
