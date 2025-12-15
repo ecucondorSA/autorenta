@@ -1,106 +1,60 @@
 @if (carLocation) {
+<div
+  class="bg-surface-raised dark:bg-surface-raised shadow-lg rounded-lg h-full flex flex-col relative">
+  <!-- Close Button -->
+  <button type="button" (click)="onClose(); $event.stopPropagation()" aria-label="Cerrar panel"
+    class="absolute top-2 right-2 bg-surface-base dark:bg-surface-base rounded-full p-1 z-50 text-text-secondary dark:text-text-secondary hover:bg-border-muted dark:hover:bg-border-muted transition-colors cursor-pointer">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+      stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <!-- Image -->
   <div
-    class="bg-surface-raised dark:bg-surface-raised shadow-lg rounded-lg h-full flex flex-col relative"
-    >
-    <!-- Close Button -->
-    <button
-      type="button"
-      (click)="onClose(); $event.stopPropagation()"
-      aria-label="Cerrar panel"
-      class="absolute top-2 right-2 bg-surface-base dark:bg-surface-base rounded-full p-1 z-50 text-text-secondary dark:text-text-secondary hover:bg-border-muted dark:hover:bg-border-muted transition-colors cursor-pointer"
-      >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-          />
-      </svg>
-    </button>
-    <!-- Image -->
-    <div
-      class="h-48 bg-surface-base dark:bg-surface-base flex items-center justify-center overflow-hidden"
-      >
-      @if (carLocation.photoUrl) {
-        <img
-          [src]="carLocation.photoUrl"
-          alt="Photo of {{ carLocation.title }}"
-          class="h-full w-full object-cover"
-          />
-      }
-      @if (!carLocation.photoUrl) {
-        <div class="text-text-muted dark:text-text-muted">
-          No photo available
-        </div>
-      }
+    class="h-48 bg-surface-base dark:bg-surface-base flex items-center justify-center overflow-hidden">
+    @if (carLocation.photoUrl) {
+    <img [src]="carLocation.photoUrl" alt="Photo of {{ carLocation.title }}"
+      class="h-full w-full object-cover" />
+    }
+    @if (!carLocation.photoUrl) {
+    <div class="text-text-muted dark:text-text-muted">
+      No photo available
     </div>
-    <!-- Content -->
-    <div class="p-4 flex-grow overflow-y-auto stack-sm">
-      <h2 class="h3 text-text-primary dark:text-text-primary font-bold font-satoshi">
-        {{ carLocation.title }}
-      </h2>
-      <p class="text-sm text-text-secondary dark:text-text-secondary">
-        {{ carLocation.locationLabel }}
-      </p>
-      <!-- Price -->
-      <div class="stack-xs">
-        <span class="h4 text-text-primary dark:text-text-primary">
-          ${{ carLocation.pricePerDay | number: '1.0-0' }}
-        </span>
-        <span class="text-text-secondary dark:text-text-secondary">/ día</span>
-      </div>
-      <!-- Description -->
-      @if (carLocation.description) {
-        <p class="text-sm text-text-secondary dark:text-text-secondary">
-          {{ carLocation.description }}
-        </p>
-      }
-    </div>
-    <!-- Action Buttons -->
-    <div class="p-4 border-t border-border-muted dark:border-border-muted stack-sm">
-      <!-- Navigate Buttons -->
-      <div class="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          (click)="navigateWithWaze(); $event.stopPropagation()"
-          class="btn-secondary flex items-center justify-center gap-1.5 text-sm"
-          title="Navegar con Waze"
-          >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
-              />
-            <path
-              d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
-              />
-          </svg>
-          <span>Waze</span>
-        </button>
-        <button
-          type="button"
-          (click)="navigateWithGoogleMaps(); $event.stopPropagation()"
-          class="btn-secondary flex items-center justify-center gap-1.5 text-sm"
-          title="Navegar con Google Maps"
-          >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-              />
-          </svg>
-          <span>Maps</span>
-        </button>
-      </div>
-      <!-- Ver Detalles Button -->
-      <a [routerLink]="['/cars', carLocation.carId]" class="block w-full text-center btn-primary">
-        Ver Detalles
-      </a>
-    </div>
+    }
   </div>
+  <!-- Content -->
+  <div class="p-4 flex-grow overflow-y-auto stack-sm">
+    <h2 class="h3 text-text-primary dark:text-text-primary font-bold font-satoshi">
+      {{ carLocation.title }}
+    </h2>
+    <p class="text-sm text-text-secondary dark:text-text-secondary">
+      {{ carLocation.locationLabel }}
+    </p>
+    <!-- Price -->
+    <div class="stack-xs">
+      <span class="h4 text-text-primary dark:text-text-primary">
+        ${{ carLocation.pricePerDay | number: '1.0-0' }}
+      </span>
+      <span class="text-text-secondary dark:text-text-secondary">/ día</span>
+    </div>
+    <!-- Description -->
+    @if (carLocation.description) {
+    <p class="text-sm text-text-secondary dark:text-text-secondary">
+      {{ carLocation.description }}
+    </p>
+    }
+  </div>
+  <!-- Action Buttons -->
+  <div class="p-4 border-t border-border-muted dark:border-border-muted stack-sm">
+    <button type="button" (click)="onQuickBook(); $event.stopPropagation()"
+      class="btn-primary w-full">
+      Alquilar ahora
+    </button>
+    <!-- Ver Detalles Button -->
+    <a [routerLink]="['/cars', carLocation.carId]" class="block w-full text-center btn-secondary">
+      Ver Detalles
+    </a>
+  </div>
+</div>
 }

@@ -1,6 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
-import {AfterViewInit,
+import {
+  AfterViewInit,
   ApplicationRef,
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   computed,
@@ -18,8 +20,8 @@ import {AfterViewInit,
   signal,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy} from '@angular/core';
+  ViewEncapsulation
+} from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
@@ -185,7 +187,7 @@ class QuadTree {
     MapBookingPanelComponent,
     MapDetailsPanelComponent,
     MapLayersControlComponent
-],
+  ],
   templateUrl: './cars-map.component.html',
   styleUrls: ['./cars-map.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -297,6 +299,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private tooltipPopups = new Map<string, MapboxPopup>();
   private tooltipComponents = new Map<string, ComponentRef<EnhancedMapTooltipComponent>>();
   private hoverTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+  private hideTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
   public useClustering = true; // Enable clustering by default - public for template access
   private clusterSourceId = 'cars-cluster-source';
   private clusterLayerId = 'cars-cluster-layer';
@@ -570,7 +573,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     } catch (err) {
       console.error('[CarsMap] Initialization error:', err);
       const errorMessage = err instanceof Error ? err.message : String(err);
-      
+
       if (errorMessage.includes('WebGL')) {
         this.error.set('El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.');
       } else {
@@ -1372,6 +1375,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Handle hover with delay (150ms) - create tooltip on-demand
     markerElement.addEventListener('mouseenter', () => {
+      const hideTimeout = this.hideTimeouts.get(car.carId);
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        this.hideTimeouts.delete(car.carId);
+      }
+
       const timeout = setTimeout(() => {
         this.showTooltipForCar(marker, car);
       }, 150);
@@ -1384,7 +1393,17 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         clearTimeout(timeout);
         this.hoverTimeouts.delete(car.carId);
       }
-      this.hideTooltipForCar(car.carId);
+
+      const existingHideTimeout = this.hideTimeouts.get(car.carId);
+      if (existingHideTimeout) {
+        clearTimeout(existingHideTimeout);
+      }
+
+      // Delay hide so the user can move from marker to popup
+      const hideTimeout = setTimeout(() => {
+        this.hideTooltipForCar(car.carId);
+      }, 250);
+      this.hideTimeouts.set(car.carId, hideTimeout);
     });
 
     // Handle click
@@ -1408,6 +1427,19 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const container = document.createElement('div');
     container.className = 'map-tooltip-container';
 
+    // Keep popup open while hovering it
+    container.addEventListener('mouseenter', () => {
+      const hideTimeout = this.hideTimeouts.get(car.carId);
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        this.hideTimeouts.delete(car.carId);
+      }
+    });
+
+    container.addEventListener('mouseleave', () => {
+      this.hideTooltipForCar(car.carId);
+    });
+
     // Get component from pool or create new one
     const componentRef = this.getTooltipComponentFromPool();
 
@@ -1422,6 +1454,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     });
 
     componentRef.instance.quickBook.subscribe((carId: string) => {
+      this.openBookingPanelForCarId(carId);
       this.quickBook.emit(carId);
     });
 
@@ -1453,6 +1486,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Show tooltip for a car on-demand
    */
   private showTooltipForCar(marker: MapboxMarker, car: CarMapLocation): void {
+    const hideTimeout = this.hideTimeouts.get(car.carId);
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      this.hideTimeouts.delete(car.carId);
+    }
+
     // Check if tooltip already exists
     let popup = this.tooltipPopups.get(car.carId);
 
@@ -1473,6 +1512,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Hide tooltip for a car
    */
   private hideTooltipForCar(carId: string): void {
+    const hideTimeout = this.hideTimeouts.get(carId);
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      this.hideTimeouts.delete(carId);
+    }
+
     const popup = this.tooltipPopups.get(carId);
     if (popup && popup.isOpen()) {
       // Find the marker and toggle popup
@@ -1572,7 +1617,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const popup = new this.mapboxgl.Popup({
       offset: 25,
       closeButton: true,
-      closeOnClick: false,
+      closeOnClick: true,
+      maxWidth: '280px',
     }).setHTML(popupHTML);
 
     this.userLocationMarker.setPopup(popup);
@@ -1643,9 +1689,9 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.deg2rad(lat1)) *
-        Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
     return d;
@@ -1895,7 +1941,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     const lat2 = Math.asin(
       Math.sin(lat1) * Math.cos(distanceMeters / R) +
-        Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
+      Math.cos(lat1) * Math.sin(distanceMeters / R) * Math.cos(bearing),
     );
 
     const lng2 =
@@ -2099,6 +2145,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     // Clear hover timeouts
     this.hoverTimeouts.forEach((timeout) => clearTimeout(timeout));
     this.hoverTimeouts.clear();
+
+    // Clear hide timeouts
+    this.hideTimeouts.forEach((timeout) => clearTimeout(timeout));
+    this.hideTimeouts.clear();
 
     // Detach Angular components
     this.tooltipComponents.forEach((componentRef) => {
@@ -2490,6 +2540,20 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (this.selectedCarId) {
       this.removeHighlightFromCar(this.selectedCarId);
     }
+  }
+
+  onQuickBookFromDetails(carId: string): void {
+    this.openBookingPanelForCarId(carId);
+  }
+
+  private openBookingPanelForCarId(carId: string): void {
+    const car = this.cars.find((c) => c.carId === carId) ?? null;
+    if (!car) {
+      return;
+    }
+
+    this.selectedCarForBooking.set(car);
+    this.bookingPanelOpen.set(true);
   }
 
   /**

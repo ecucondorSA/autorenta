@@ -1,8 +1,12 @@
-import {Component, Input, Output, EventEmitter, inject,
-  ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarMapLocation } from '@core/services/car-locations.service';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter, inject,
+  Input, Output
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CarMapLocation } from '@core/services/car-locations.service';
 import { NavigationService } from '../../../core/services/navigation.service';
 
 @Component({
@@ -16,11 +20,20 @@ import { NavigationService } from '../../../core/services/navigation.service';
 export class MapDetailsPanelComponent {
   @Input() carLocation: CarMapLocation | null = null;
   @Output() closePanel = new EventEmitter<void>();
+  @Output() quickBook = new EventEmitter<string>();
 
   private readonly navigationService = inject(NavigationService);
 
   onClose() {
     this.closePanel.emit();
+  }
+
+  onQuickBook(): void {
+    if (!this.carLocation) {
+      return;
+    }
+
+    this.quickBook.emit(this.carLocation.carId);
   }
 
   /**

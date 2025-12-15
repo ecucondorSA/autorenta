@@ -1,6 +1,5 @@
 <section
-  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen"
-  >
+  class="cars-marketplace bg-surface-base dark:bg-surface-base transition-colors duration-300 min-h-screen">
   <!-- Barra superior fija -->
   <!-- Recompilation trigger 1 -->
   <app-pwa-titlebar />
@@ -8,16 +7,15 @@
   <!-- Desktop Header with View Toggles (hidden on mobile when map view) -->
   <div
     class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
-    [class.hidden]="viewMode() === 'map'"
-    [class.lg:block]="true"
-    >
+    [class.hidden]="viewMode() === 'map'" [class.lg:block]="true">
     <div
-      class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]"
-      >
+      class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 py-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
       <!-- Header Left -->
       <div class="header-left">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">Alquila tu próximo auto</h1>
-        <p class="text-sm text-slate-600 dark:text-slate-500" data-testid="results-count">
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white font-satoshi">Alquila tu
+          próximo auto</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-500" data-testid="results-count"
+          aria-live="polite">
           {{ premiumCars().length }} vehículos disponibles
         </p>
       </div>
@@ -27,57 +25,41 @@
         <!-- Sort Dropdown -->
         <div class="relative">
           <label for="sort-select" class="sr-only">Ordenar por</label>
-          <select
-            id="sort-select"
-            data-testid="sort-select"
-            [value]="sortBy()"
+          <select id="sort-select" data-testid="sort-select" [value]="sortBy()"
             (change)="onSortChange($any($event.target).value)"
-            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            >
+            class="appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 dark:text-slate-500 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
             <option value="rating">Mejor valorados</option>
             <option value="price_asc">Precio: menor a mayor</option>
             <option value="price_desc">Precio: mayor a menor</option>
             <option value="distance">Más cercanos</option>
             <option value="newest">Más recientes</option>
           </select>
-          <app-icon
-            name="chevron-down"
-            [size]="16"
-            cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-            />
+          <app-icon name="chevron-down" [size]="16"
+            cssClass="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
         </div>
 
         <!-- View Toggle (Desktop only - mobile uses floating pill) -->
         <div
-          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700"
-          >
-          <button
-            data-testid="view-map"
-            [class.bg-white]="viewMode() === 'map'"
+          class="hidden lg:flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl items-center border border-slate-200 dark:border-slate-700">
+          <button type="button" data-testid="view-map" [class.bg-white]="viewMode() === 'map'"
             [class.dark:bg-slate-700]="viewMode() === 'map'"
-            [class.shadow-sm]="viewMode() === 'map'"
-            [class.text-slate-900]="viewMode() === 'map'"
+            [class.shadow-sm]="viewMode() === 'map'" [class.text-slate-900]="viewMode() === 'map'"
             [class.dark:text-white]="viewMode() === 'map'"
-            [class.text-slate-500]="viewMode() !== 'map'"
-            (click)="viewMode.set('map')"
+            [class.text-slate-500]="viewMode() !== 'map'" (click)="viewMode.set('map')"
+            [attr.aria-pressed]="viewMode() === 'map'" aria-label="Cambiar a vista mapa"
             class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
-            title="Vista Mapa"
-            >
+            title="Vista Mapa">
             <app-icon name="map" [size]="16" />
             <span>Mapa</span>
           </button>
-          <button
-            data-testid="view-grid"
-            [class.bg-white]="viewMode() !== 'map'"
+          <button type="button" data-testid="view-grid" [class.bg-white]="viewMode() !== 'map'"
             [class.dark:bg-slate-700]="viewMode() !== 'map'"
-            [class.shadow-sm]="viewMode() !== 'map'"
-            [class.text-slate-900]="viewMode() !== 'map'"
+            [class.shadow-sm]="viewMode() !== 'map'" [class.text-slate-900]="viewMode() !== 'map'"
             [class.dark:text-white]="viewMode() !== 'map'"
-            [class.text-slate-500]="viewMode() === 'map'"
-            (click)="viewMode.set('grid')"
+            [class.text-slate-500]="viewMode() === 'map'" (click)="viewMode.set('grid')"
+            [attr.aria-pressed]="viewMode() !== 'map'" aria-label="Cambiar a vista lista"
             class="px-3 py-2 rounded-lg transition-all duration-200 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5 text-sm font-medium"
-            title="Vista Lista"
-            >
+            title="Vista Lista">
             <app-icon name="menu" [size]="16" />
             <span>Lista</span>
           </button>
@@ -87,48 +69,40 @@
   </div>
 
   <!-- 🎯 SPLIT VIEW CONTAINER (Desktop: side-by-side, Mobile: toggle) -->
-  <div
-    class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
-    [class.h-screen]="viewMode() === 'map' && !isDesktop()"
-    >
+  <div class="flex flex-col lg:flex-row lg:h-[calc(100vh-4rem)]"
+    [class.h-screen]="viewMode() === 'map' && !isDesktop()">
     <!-- 📦 LEFT PANEL: Lista de Autos (scrollable independiente) -->
-    <div
-      class="w-full lg:w-1/2 xl:w-[55%] lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
-      [class.hidden]="viewMode() === 'map'"
-      [class.lg:block]="true"
-      >
+    <div class="w-full lg:overflow-y-auto lg:h-full px-4 sm:px-6 py-6"
+      [ngClass]="{ 'lg:w-1/2 xl:w-[55%]': viewMode() === 'map', 'lg:w-full xl:w-full': viewMode() !== 'map' }"
+      [class.hidden]="viewMode() === 'map'" [class.lg:block]="true">
       <!-- 🔎 SEARCH BAR -->
-      <div class="mb-4">
-        <label for="search-cars-input" class="sr-only">Buscar autos por marca, modelo o ciudad</label>
-        <input
-          id="search-cars-input"
-          type="text"
-          data-testid="search-input"
-          [value]="searchQuery()"
-          (input)="onSearchInput($event)"
-          (keyup.enter)="onSearchSubmit()"
+      <div class="relative mb-4">
+        <label for="search-cars-input" class="sr-only">Buscar autos por marca, modelo o
+          ciudad</label>
+        <input id="search-cars-input" type="text" data-testid="search-input" [value]="searchQuery()"
+          (input)="onSearchInput($event)" (keyup.enter)="onSearchSubmit()" aria-autocomplete="list"
+          [attr.aria-expanded]="searchSuggestions().length > 0" aria-controls="search-suggestions"
           placeholder="Buscar por marca, modelo o ciudad..."
-          class="w-full px-4 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-gray-400"
-          />
+          class="w-full px-4 py-3 text-base border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 placeholder:text-gray-400" />
 
         <!-- Sugerencias de búsqueda -->
         @if (searchSuggestions().length > 0) {
-          <div
-            class="absolute z-10 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
-            @for (suggestion of searchSuggestions(); track suggestion) {
-              <button (click)="onSuggestionClick(suggestion)"
-                class="block w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                {{ suggestion }}
-              </button>
-            }
-          </div>
+        <div id="search-suggestions" role="listbox"
+          class="absolute inset-x-0 z-10 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto">
+          @for (suggestion of searchSuggestions(); track suggestion; let idx = $index) {
+          <button type="button" role="option" [id]="'search-suggestion-' + idx"
+            (click)="onSuggestionClick(suggestion)"
+            class="block w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+            {{ suggestion }}
+          </button>
+          }
+        </div>
         }
       </div>
 
       <!-- 🔍 FILTROS -->
       <div
-        class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700"
-        >
+        class="mb-6 p-4 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
         <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-500 mb-4 font-satoshi">
           Filtros de búsqueda
         </h3>
@@ -138,628 +112,599 @@
             <label class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Fechas de alquiler
             </label>
-            <app-date-range-picker
-              [initialFrom]="dateRange().from"
-              [initialTo]="dateRange().to"
-              (rangeChange)="onRangeChange($event)"
-              />
+            <app-date-range-picker [initialFrom]="dateRange().from" [initialTo]="dateRange().to"
+              (rangeChange)="onRangeChange($event)" />
           </div>
 
           <!-- Filtro por distancia -->
           <div>
-            <label for="filter-max-distance" class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
+            <label for="filter-max-distance"
+              class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Distancia máxima (km)
             </label>
-            <input
-              id="filter-max-distance"
-              type="number"
-              data-testid="filter-max-distance"
-              [value]="maxDistance() ?? ''"
-              (input)="
+            <input id="filter-max-distance" type="number" data-testid="filter-max-distance"
+              [value]="maxDistance() ?? ''" (input)="
                 maxDistance.set(
                   $any($event.target).value ? parseFloat($any($event.target).value) : null
                 )
-              "
-              placeholder="Sin límite"
-              min="0"
-              step="1"
-              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-              />
+              " placeholder="Sin límite" min="0" step="1"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
           </div>
 
           <!-- Filtro por precio mínimo -->
           <div>
-            <label for="filter-min-price" class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
+            <label for="filter-min-price"
+              class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Precio mínimo ($/día)
             </label>
-            <input
-              id="filter-min-price"
-              type="number"
-              data-testid="filter-min-price"
-              [value]="minPrice() ?? ''"
-              (input)="
+            <input id="filter-min-price" type="number" data-testid="filter-min-price"
+              [value]="minPrice() ?? ''" (input)="
                 minPrice.set(
                   $any($event.target).value ? parseFloat($any($event.target).value) : null
                 )
-              "
-              placeholder="Sin mínimo"
-              min="0"
-              step="100"
-              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-              />
+              " placeholder="Sin mínimo" min="0" step="100"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
           </div>
 
           <!-- Filtro por precio máximo -->
           <div>
-            <label for="filter-max-price" class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
+            <label for="filter-max-price"
+              class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2">
               Precio máximo ($/día)
             </label>
-            <input
-              id="filter-max-price"
-              type="number"
-              data-testid="filter-max-price"
-              [value]="maxPrice() ?? ''"
-              (input)="
+            <input id="filter-max-price" type="number" data-testid="filter-max-price"
+              [value]="maxPrice() ?? ''" (input)="
                 maxPrice.set(
                   $any($event.target).value ? parseFloat($any($event.target).value) : null
                 )
-              "
-              placeholder="Sin máximo"
-              min="0"
-              step="100"
-              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-              />
+              " placeholder="Sin máximo" min="0" step="100"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
           </div>
 
           <!-- Filtro por rating mínimo -->
           <div>
-            <label for="filter-min-rating" class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2 flex items-center gap-1.5">
+            <label for="filter-min-rating"
+              class="block text-xs font-medium text-slate-600 dark:text-slate-500 mb-2 flex items-center gap-1.5">
               Calificación mínima
               <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
             </label>
-            <input
-              id="filter-min-rating"
-              type="number"
-              data-testid="filter-min-rating"
-              [value]="minRating() ?? ''"
-              (input)="
+            <input id="filter-min-rating" type="number" data-testid="filter-min-rating"
+              [value]="minRating() ?? ''" (input)="
                 minRating.set(
                   $any($event.target).value ? parseFloat($any($event.target).value) : null
                 )
-              "
-              placeholder="Sin mínimo"
-              min="0"
-              max="5"
-              step="0.1"
-              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-              />
+              " placeholder="Sin mínimo" min="0" max="5" step="0.1"
+              class="w-full px-3 py-2 text-sm border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" />
           </div>
         </div>
 
         <!-- Botón limpiar filtros -->
         <div class="mt-4 flex justify-end">
           @if (
-            maxDistance() !== null ||
-            minPrice() !== null ||
-            maxPrice() !== null ||
-            minRating() !== null
-            ) {
-            <button
-              data-testid="clear-filters"
-              (click)="clearFilters()"
-              class="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium"
-              >
-              Limpiar filtros
-            </button>
+          maxDistance() !== null ||
+          minPrice() !== null ||
+          maxPrice() !== null ||
+          minRating() !== null
+          ) {
+          <button type="button" data-testid="clear-filters" (click)="clearFilters()"
+            aria-label="Limpiar filtros"
+            class="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 font-medium">
+            Limpiar filtros
+          </button>
           }
         </div>
       </div>
 
       <!-- SKELETON LOADING -->
       @if (loading() && viewMode() === 'grid') {
-        <div
-          class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-x-4 sm:gap-y-8"
-          >
-          @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
-            <div class="animate-pulse">
-              <!-- Image Skeleton -->
-              <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
-              <!-- Content Skeleton -->
-              <div class="space-y-2">
-                <div class="flex justify-between">
-                  <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
-                  <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
-                </div>
-                <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
-                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
-              </div>
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-x-4 sm:gap-y-8">
+        @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+        <div class="animate-pulse">
+          <!-- Image Skeleton -->
+          <div class="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 mb-3"></div>
+          <!-- Content Skeleton -->
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+              <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-12"></div>
             </div>
-          }
+            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+          </div>
         </div>
+        }
+      </div>
       }
 
       <!-- GRID VIEW - Airbnb Style (Desktop/Tablet) -->
       @if (!loading() && viewMode() === 'grid') {
-        <!-- Desktop/Tablet Grid (Hidden on Mobile) -->
-        <div
-          class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 grid-view"
-          >
-          @for (car of premiumCars(); track car.id) {
-            <a
-              [routerLink]="['/cars', car.id]"
-              [attr.data-car-id]="car.id"
-              [id]="'car-card-desktop-' + car.id"
-              data-testid="car-card"
-              class="airbnb-card group block cursor-pointer transition-transform duration-200"
-              (mouseenter)="onCardMouseEnter(car.id)"
-              (mouseleave)="onCardMouseLeave()"
-              >
-              <!-- Image Container -->
-              <div class="aspect-[16/10] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3">
-                 <img
-                  [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-                  [alt]="car.brand + ' ' + car.model"
-                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  />
-                  <!-- Favorite Heart Button -->
-                  <button
-                    type="button"
-                    (click)="toggleFavorite($event, car.id)"
-                    class="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm transition-all hover:scale-110"
-                    >
-                    <app-icon
-                      [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'"
-                      [size]="20"
-                      [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-slate-600'"
-                      />
-                  </button>
-                  <!-- Badges Desktop -->
-                  <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
-                    @if (isTopRated(car)) {
-                      <span class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md flex items-center gap-1">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                        Superanfitrión
-                      </span>
-                    }
-                    @if (hasInstantBooking(car) && !isTopRated(car)) {
-                      <span class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md flex items-center gap-1">
-                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                         Reserva inmediata
-                      </span>
-                    }
-                  </div>
+      <!-- Desktop/Tablet Grid (Hidden on Mobile) -->
+      <div
+        class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 grid-view">
+        @for (car of premiumCars(); track car.id; let idx = $index) {
+        <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
+          [id]="'car-card-desktop-' + car.id" data-testid="car-card"
+          class="airbnb-card group block cursor-pointer transition-transform duration-200"
+          (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
+          <!-- Image Container -->
+          <div
+            class="aspect-[16/10] relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-700 mb-3">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model" fill
+              [priority]="idx < 2"
+              sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 24vw, (min-width: 640px) 45vw, 85vw"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+            <!-- Favorite Heart Button -->
+            <button type="button" (click)="toggleFavorite($event, car.id)"
+              [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+              class="absolute top-3 left-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm transition-all hover:scale-110">
+              <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="20"
+                [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-slate-600'" />
+            </button>
+            <!-- Badges Desktop -->
+            <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
+              @if (isTopRated(car)) {
+              <span
+                class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md flex items-center gap-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Superanfitrión
+              </span>
+              }
+              @if (hasInstantBooking(car) && !isTopRated(car)) {
+              <span
+                class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke-width="1.75"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                Reserva inmediata
+              </span>
+              }
+            </div>
+          </div>
+          <!-- Content Desktop -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 min-w-0">
+                <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  {{ car.location_city || car.location_state || 'Argentina' }}
+                </p>
+                @if (car.distanceText) {
+                <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0">· {{
+                  car.distanceText }}</span>
+                }
               </div>
-              <!-- Content Desktop -->
-              <div class="space-y-1">
-                <div class="flex items-center justify-between">
-                  <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                    {{ car.location_city || car.location_state || 'Argentina' }}
-                  </p>
-                  @if (car.rating_avg) {
-                    <div class="flex items-center gap-1 flex-shrink-0">
-                      <app-icon name="star-filled" [size]="16" cssClass="text-slate-900 dark:text-white" />
-                      <span class="text-sm font-medium text-slate-900 dark:text-white">{{ car.rating_avg | number: '1.1-1' }}</span>
-                    </div>
-                  }
-                </div>
-                <h3 class="text-sm text-slate-500 dark:text-slate-500 truncate font-bold font-satoshi">
-                  {{ car.brand }} {{ car.model }} {{ car.year }}
+              @if (car.rating_avg) {
+              <div class="flex items-center gap-1 flex-shrink-0">
+                <app-icon name="star-filled" [size]="16"
+                  cssClass="text-slate-900 dark:text-white" />
+                <span class="text-sm font-medium text-slate-900 dark:text-white">{{ car.rating_avg |
+                  number: '1.1-1' }}</span>
+                @if (car.rating_count) {
+                <span class="text-xs text-slate-500 dark:text-slate-500">({{ car.rating_count
+                  }})</span>
+                }
+              </div>
+              }
+            </div>
+            <h3 class="text-sm text-slate-500 dark:text-slate-500 truncate font-bold font-satoshi">
+              {{ car.brand }} {{ car.model }} {{ car.year }}
+            </h3>
+            <p class="text-sm text-slate-500 dark:text-slate-500">
+              {{ car.transmission | titlecase }} · {{ car.seats }} asientos · {{ car.fuel_type |
+              titlecase }}
+            </p>
+            <p class="pt-1">
+              <span class="font-semibold text-slate-900 dark:text-white">${{ car.price_per_day |
+                number: '1.0-0' }}</span>
+              <span class="text-slate-500 dark:text-slate-500"> / día</span>
+            </p>
+          </div>
+        </a>
+        }
+      </div>
+
+      <!-- 📱 MOBILE TINDER-STYLE SWIPE VIEW -->
+      <div
+        class="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 scrollbar-hide items-stretch h-[calc(100vh-14rem)]">
+        @for (car of premiumCars(); track car.id; let idx = $index) {
+        <a [routerLink]="['/cars', car.id]"
+          class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col">
+          <!-- Full Height Image -->
+          <div class="h-[65%] relative">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model" fill
+              [priority]="idx === 0" sizes="85vw" class="w-full h-full object-cover" />
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            <!-- Price Tag on Image (Tinder Style) -->
+            <div class="absolute bottom-4 left-4 text-white">
+              <p class="text-2xl font-bold font-satoshi">${{ car.price_per_day | number: '1.0-0' }}
+              </p>
+              <p class="text-sm font-medium opacity-90">por día</p>
+            </div>
+
+            <!-- Heart Top Right -->
+            <button type="button" (click)="toggleFavorite($event, car.id)"
+              class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md transition-transform active:scale-90"
+              [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+              <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="24"
+                [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-white'" />
+            </button>
+          </div>
+
+          <!-- Bottom Content -->
+          <div class="flex-1 p-5 flex flex-col justify-between bg-white dark:bg-slate-800">
+            <div>
+              <div class="flex justify-between items-start mb-1">
+                <h3
+                  class="text-xl font-bold text-slate-900 dark:text-white font-satoshi leading-tight">
+                  {{ car.brand }} {{ car.model }}
                 </h3>
-                <p class="text-sm text-slate-500 dark:text-slate-500">
-                  {{ car.transmission | titlecase }} · {{ car.seats }} asientos · {{ car.fuel_type | titlecase }}
-                </p>
-                <p class="pt-1">
-                   <span class="font-semibold text-slate-900 dark:text-white">${{ car.price_per_day | number: '1.0-0' }}</span>
-                   <span class="text-slate-500 dark:text-slate-500"> / día</span>
-                </p>
+                @if (car.rating_avg) {
+                <div
+                  class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg">
+                  <app-icon name="star-filled" [size]="14" cssClass="text-amber-500" />
+                  <span class="text-sm font-bold text-slate-900 dark:text-white">
+                    {{ car.rating_avg | number: '1.1-1' }}
+                    @if (car.rating_count) {
+                    <span class="text-xs font-semibold text-slate-600 dark:text-slate-300">({{
+                      car.rating_count }})</span>
+                    }
+                  </span>
+                </div>
+                }
               </div>
-            </a>
-          }
+              <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
+                {{ car.year }} · {{ car.location_city || 'Argentina' }}
+                @if (car.distanceText) {
+                · {{ car.distanceText }}
+                }
+              </p>
+
+              <!-- Features Chips -->
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
+                  {{ car.transmission | titlecase }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
+                  {{ car.seats }} asientos
+                </span>
+              </div>
+            </div>
+
+            <div class="w-full mt-4">
+              <div
+                class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white rounded-xl font-bold transition-colors text-center"
+                [attr.aria-label]="'Ver detalles de ' + car.brand + ' ' + car.model" role="text">
+                Ver detalles
+              </div>
+            </div>
+          </div>
+        </a>
+        }
+
+        <!-- "Load More" Card -->
+        @if (hasMoreCars()) {
+        <div class="relative flex-shrink-0 w-[85vw] snap-center flex items-center justify-center">
+          <button (click)="loadMore()"
+            class="flex flex-col items-center gap-4 p-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <div
+              class="w-16 h-16 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </div>
+            <span class="font-bold text-lg text-slate-900 dark:text-white">Ver más autos</span>
+          </button>
         </div>
-
-        <!-- 📱 MOBILE TINDER-STYLE SWIPE VIEW -->
-        <div class="sm:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 scrollbar-hide items-stretch h-[calc(100vh-14rem)]">
-           @for (car of premiumCars(); track car.id) {
-             <a
-              [routerLink]="['/cars', car.id]"
-              class="relative flex-shrink-0 w-[85vw] snap-center bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 flex flex-col"
-              >
-               <!-- Full Height Image -->
-               <div class="h-[65%] relative">
-                 <img
-                  [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-                  [alt]="car.brand + ' ' + car.model"
-                  class="w-full h-full object-cover"
-                  loading="lazy"
-                  />
-                  <!-- Gradient Overlay -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-                  <!-- Price Tag on Image (Tinder Style) -->
-                  <div class="absolute bottom-4 left-4 text-white">
-                     <p class="text-2xl font-bold font-satoshi">${{ car.price_per_day | number: '1.0-0' }}</p>
-                     <p class="text-sm font-medium opacity-90">por día</p>
-                  </div>
-
-                  <!-- Heart Top Right -->
-                  <button
-                    type="button"
-                    (click)="toggleFavorite($event, car.id)"
-                    class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md transition-transform active:scale-90"
-                    [attr.aria-label]="isFavorite(car.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
-                    >
-                    <app-icon
-                      [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'"
-                      [size]="24"
-                      [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-white'"
-                      />
-                  </button>
-               </div>
-
-               <!-- Bottom Content -->
-               <div class="flex-1 p-5 flex flex-col justify-between bg-white dark:bg-slate-800">
-                  <div>
-                    <div class="flex justify-between items-start mb-1">
-                      <h3 class="text-xl font-bold text-slate-900 dark:text-white font-satoshi leading-tight">
-                        {{ car.brand }} {{ car.model }}
-                      </h3>
-                      @if (car.rating_avg) {
-                        <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg">
-                          <app-icon name="star-filled" [size]="14" cssClass="text-amber-500" />
-                          <span class="text-sm font-bold text-slate-900 dark:text-white">{{ car.rating_avg | number: '1.1-1' }}</span>
-                        </div>
-                      }
-                    </div>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">
-                      {{ car.year }} · {{ car.location_city || 'Argentina' }}
-                    </p>
-
-                    <!-- Features Chips -->
-                    <div class="flex flex-wrap gap-2">
-                       <span class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
-                         {{ car.transmission | titlecase }}
-                       </span>
-                       <span class="px-3 py-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-600 dark:text-slate-400">
-                         {{ car.seats }} asientos
-                       </span>
-                    </div>
-                  </div>
-
-                  <div class="w-full mt-4">
-                    <button 
-                      class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white rounded-xl font-bold transition-colors"
-                      [attr.aria-label]="'Ver detalles de ' + car.brand + ' ' + car.model"
-                      >
-                      Ver detalles
-                    </button>
-                  </div>
-               </div>
-             </a>
-           }
-
-           <!-- "Load More" Card -->
-           @if (hasMoreCars()) {
-             <div class="relative flex-shrink-0 w-[85vw] snap-center flex items-center justify-center">
-                <button
-                  (click)="loadMore()"
-                  class="flex flex-col items-center gap-4 p-8 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                  >
-                  <div class="w-16 h-16 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                  </div>
-                  <span class="font-bold text-lg text-slate-900 dark:text-white">Ver más autos</span>
-                </button>
-             </div>
-           }
-        </div>
+        }
+      </div>
       }
 
       <!-- LOAD MORE BUTTON (Desktop only) -->
       @if (!loading() && viewMode() === 'grid' && hasMoreCars()) {
-         <!-- ... existing load more button logic but wrapped to hide on mobile since it's inside the carousel now ... -->
-         <div class="hidden sm:flex mt-8 mb-12 justify-center pb-20 lg:pb-0">
-            <button
-              (click)="loadMore()"
-              class="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 group"
-            >
-              <span>Ver más autos</span>
-              <svg class="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-          </div>
-      }
-
-        <!-- LIST VIEW -->
-        @if (viewMode() === 'list') {
-          <div class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
-            @for (car of premiumCars(); track car.id) {
-              <a
-                [routerLink]="['/cars', car.id]"
-                [attr.data-car-id]="car.id"
-                [id]="'car-card-' + car.id"
-                data-testid="car-card"
-                class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
-                [class.ring-2]="activeMapCarId() === car.id"
-                [class.ring-cyan-500]="activeMapCarId() === car.id"
-                (mouseenter)="onCardMouseEnter(car.id)"
-                (mouseleave)="onCardMouseLeave()"
-                >
-                <!-- Image -->
-                <div
-                  class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0"
-                  >
-                  <img
-                    [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-                    [alt]="car.brand + ' ' + car.model"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                    />
-                </div>
-                <!-- Content -->
-                <div class="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <div class="flex justify-between items-start mb-2">
-                      <div>
-                        <h3
-                          class="text-xl font-bold text-slate-900 dark:text-white"
-                          data-testid="car-title"
-                          >
-                          {{ car.brand }} {{ car.model }}
-                        </h3>
-                        <p
-                          class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
-                          data-testid="car-location"
-                          >
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke-width="1.75"/>
-                            <circle cx="12" cy="10" r="3" stroke-width="1.75"/>
-                          </svg>
-                          {{ car.location_city || 'Ubicación no disponible' }}
-                        </p>
-                      </div>
-                      <div class="text-right">
-                        @if (car.price_per_day && car.price_per_day > 0) {
-                          <div
-                            class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
-                            data-testid="car-price"
-                            >
-                            ${{ car.price_per_day | number: '1.0-0' }}
-                          </div>
-                          <div class="text-xs text-slate-500">por día</div>
-                        } @else {
-                          <div class="text-lg font-semibold text-primary-600">Consultar precio</div>
-                        }
-                      </div>
-                    </div>
-                    @if (car.description) {
-                      <p
-                        class="text-slate-600 dark:text-slate-500 text-sm line-clamp-2 mb-4"
-                        >
-                        {{ car.description }}
-                      </p>
-                    }
-                    <div class="flex flex-wrap gap-3">
-                      <span
-                        class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
-                        >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="3" stroke-width="1.75"/>
-                          <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke-width="1.75" stroke-linecap="round"/>
-                        </svg>
-                        {{ car.transmission || 'Manual' }}
-                      </span>
-                      <span
-                        class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
-                        >
-                        ⛽ {{ car.fuel_type || 'Nafta' }}
-                      </span>
-                      <span
-                        class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1"
-                        >
-                        👥 {{ car.seats || 5 }} asientos
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            }
-          </div>
-        }
-
-        <!-- Empty State -->
-        @if (premiumCars().length === 0) {
-          <div class="text-center py-20" data-testid="empty-state">
-            <img src="/assets/images/empty-states/empty-search.svg" alt="No se encontraron autos" class="w-64 h-64 mx-auto mb-6">
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 font-satoshi">
-              No encontramos vehículos
-            </h3>
-            <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
-          </div>
-        }
-      </div>
-      <!-- END LEFT PANEL -->
-
-      <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
-      <div
-        class="w-full lg:w-1/2 xl:w-[45%] relative flex-shrink-0"
-        [class.hidden]="viewMode() !== 'map'"
-        [class.lg:block]="true"
-        [class.fixed]="viewMode() === 'map' && !isDesktop()"
-        [class.inset-0]="viewMode() === 'map' && !isDesktop()"
-        [class.z-40]="viewMode() === 'map' && !isDesktop()"
-        [style.height]="isDesktop() ? '100%' : null"
-        data-testid="cars-map"
-        >
-        <app-cars-map
-          [cars]="carMapLocations()"
-          [selectedCarId]="activeMapCarId()"
-          [userLocation]="userLocation()"
-          (carSelected)="onMapCarSelected($event)"
-          (userLocationChange)="onUserLocationChange($event)"
-          class="w-full h-full"
-        ></app-cars-map>
-
-        <!-- Urgent Banner over map -->
-        @if (selectedCarId() && urgentAvailability()?.available) {
-          <div
-            class="absolute bottom-6 left-0 right-0 px-4 z-[400] pointer-events-none"
-            >
-            <div class="max-w-2xl mx-auto pointer-events-auto">
-              <app-urgent-rental-banner
-                [carId]="selectedCarId()!"
-                [regionId]="selectedCar()?.region_id || ''"
-                [expressMode]="expressModeSignal"
-                />
-            </div>
-          </div>
-        }
-
-        <!-- Map Controls Overlay -->
-        <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
-          <button
-            type="button"
-            class="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg shadow-md flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-            (click)="centerOnUserLocation()"
-            title="Mi ubicación"
-            >
-            <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-500" />
-          </button>
-        </div>
-
-      </div>
-      <!-- END RIGHT PANEL -->
-    </div>
-    <!-- END SPLIT VIEW CONTAINER -->
-
-    <!-- 📱 Mobile Car Carousel (Bottom of Map) - Airbnb Style -->
-    @if (viewMode() === 'map') {
-      <div
-        class="fixed bottom-[65px] left-0 right-0 z-[100] lg:hidden"
-        style="top: auto; max-height: 140px;"
-        data-testid="mobile-car-carousel"
-        >
-        <!-- Results Count Badge -->
-        <div class="flex justify-center mb-2">
-          <span class="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200 dark:border-slate-700">
-            {{ premiumCars().length }} autos en esta zona
-          </span>
-        </div>
-        <!-- Carousel Container -->
-        <div
-          class="flex flex-nowrap gap-3 overflow-x-auto snap-x snap-mandatory px-4 pb-3 scrollbar-hide"
-          style="-webkit-overflow-scrolling: touch; height: 96px;"
-          >
-          @for (car of premiumCars(); track car.id) {
-            <a
-              [routerLink]="['/cars', car.id]"
-              [attr.data-car-id]="car.id"
-              class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98]"
-              [class.ring-2]="activeMapCarId() === car.id"
-              [class.ring-cyan-500]="activeMapCarId() === car.id"
-              [class.shadow-cyan-200]="activeMapCarId() === car.id"
-              >
-              <div class="flex h-[88px]">
-                <!-- Car Image -->
-                <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
-                  <img
-                    [src]="car.image_url || '/assets/images/car-placeholder.svg'"
-                    [alt]="car.brand + ' ' + car.model"
-                    class="w-full h-full object-cover"
-                    loading="lazy"
-                    />
-                  <!-- Superhost Badge -->
-                  @if (isTopRated(car)) {
-                    <span
-                      class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded flex items-center justify-center"
-                      >
-                      <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                    </span>
-                  }
-                </div>
-                <!-- Car Info -->
-                <div class="flex-1 p-2.5 min-w-0 flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-start justify-between gap-1">
-                      <h4 class="font-semibold text-[13px] text-slate-900 dark:text-white truncate leading-tight font-satoshi">
-                        {{ car.brand }} {{ car.model }}
-                      </h4>
-                      @if (car.rating_avg) {
-                        <div class="flex items-center gap-0.5 flex-shrink-0">
-                          <app-icon name="star-filled" [size]="11" cssClass="text-slate-900 dark:text-white" />
-                          <span class="text-[11px] font-medium text-slate-900 dark:text-white">
-                            {{ car.rating_avg | number: '1.1-1' }}
-                          </span>
-                        </div>
-                      }
-                    </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-500 truncate mt-0.5">
-                      {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
-                    </p>
-                  </div>
-                  <div class="flex items-center justify-between">
-                    @if (car.price_per_day && car.price_per_day > 0) {
-                      <span class="font-bold text-[15px] text-slate-900 dark:text-white">
-                        ${{ car.price_per_day | number: '1.0-0' }}<span class="text-[11px] font-normal text-slate-500 font-mono">/día</span>
-                      </span>
-                    } @else {
-                      <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
-                    }
-                    <span class="text-cyan-600 dark:text-cyan-400 text-[11px] font-medium">
-                      Ver →
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          }
-        </div>
-      </div>
-    }
-
-    <!-- Sticky CTA Mobile -->
-    @if (selectedCarId() && selectedCarPrice()) {
-      <app-sticky-cta-mobile
-        [pricePerDay]="selectedCarPrice()!"
-        [ctaText]="'Rentar ahora'"
-        [expressMode]="urgentAvailability()?.available || false"
-        (ctaClick)="onReserveClick(selectedCarId()!)"
-        />
-    }
-
-    <!-- Floating Actions Pill (Map/List + Filters) -->
-    @if (!loading()) {
-      <div class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40 flex items-center gap-3 lg:hidden">
-        <!-- Map/List Toggle -->
-        <button
-          (click)="viewMode() === 'map' ? viewMode.set('grid') : viewMode.set('map')"
-          class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10"
-          >
-          @if (viewMode() !== 'map') {
-            <span>Mapa</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-          } @else {
-            <span>Lista</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          }
-        </button>
-        <!-- Filters Button -->
-        <button
-          (click)="toggleFiltersDrawer()"
-          class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10"
-          >
-          <span>Filtros</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      <!-- ... existing load more button logic but wrapped to hide on mobile since it's inside the carousel now ... -->
+      <div class="hidden sm:flex mt-8 mb-12 justify-center pb-20 lg:pb-0">
+        <button (click)="loadMore()"
+          class="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-sm text-slate-900 dark:text-white font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2 group">
+          <span>Ver más autos</span>
+          <svg class="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
       </div>
+      }
+
+      <!-- LIST VIEW -->
+      @if (viewMode() === 'list') {
+      <div class="flex flex-col gap-4 max-w-5xl mx-auto list-view">
+        @for (car of premiumCars(); track car.id) {
+        <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id" [id]="'car-card-' + car.id"
+          data-testid="car-card"
+          class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 dark:border-slate-700 overflow-hidden cursor-pointer flex flex-col md:flex-row"
+          [class.ring-2]="activeMapCarId() === car.id"
+          [class.ring-cyan-500]="activeMapCarId() === car.id"
+          (mouseenter)="onCardMouseEnter(car.id)" (mouseleave)="onCardMouseLeave()">
+          <!-- Image -->
+          <div
+            class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model" fill
+              sizes="(min-width: 1024px) 18rem, (min-width: 768px) 14rem, 100vw"
+              class="w-full h-full object-cover" />
+          </div>
+          <!-- Content -->
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900 dark:text-white"
+                    data-testid="car-title">
+                    {{ car.brand }} {{ car.model }}
+                  </h3>
+                  <p class="text-sm text-slate-500 dark:text-slate-500 flex items-center gap-1 mt-1"
+                    data-testid="car-location">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                        stroke-width="1.75" />
+                      <circle cx="12" cy="10" r="3" stroke-width="1.75" />
+                    </svg>
+                    <span class="truncate">{{ car.location_city || 'Ubicación no disponible'
+                      }}</span>
+                    @if (car.distanceText) {
+                    <span class="text-xs text-slate-500 dark:text-slate-500 flex-shrink-0">· {{
+                      car.distanceText }}</span>
+                    }
+                  </p>
+                </div>
+                <div class="text-right">
+                  @if (car.price_per_day && car.price_per_day > 0) {
+                  <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400"
+                    data-testid="car-price">
+                    ${{ car.price_per_day | number: '1.0-0' }}
+                  </div>
+                  <div class="text-xs text-slate-500">por día</div>
+                  } @else {
+                  <div class="text-lg font-semibold text-primary-600">Consultar precio</div>
+                  }
+
+                  @if (car.rating_avg) {
+                  <div class="mt-1 flex items-center justify-end gap-1">
+                    <app-icon name="star-filled" [size]="14"
+                      cssClass="text-slate-900 dark:text-white" />
+                    <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+                      car.rating_avg | number: '1.1-1' }}</span>
+                    @if (car.rating_count) {
+                    <span class="text-xs text-slate-500 dark:text-slate-500">({{ car.rating_count
+                      }})</span>
+                    }
+                  </div>
+                  }
+                </div>
+              </div>
+              @if (car.description) {
+              <p class="text-slate-600 dark:text-slate-500 text-sm line-clamp-2 mb-4">
+                {{ car.description }}
+              </p>
+              }
+              <div class="flex flex-wrap gap-3">
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3" stroke-width="1.75" />
+                    <path
+                      d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+                      stroke-width="1.75" stroke-linecap="round" />
+                  </svg>
+                  {{ car.transmission || 'Manual' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  ⛽ {{ car.fuel_type || 'Nafta' }}
+                </span>
+                <span
+                  class="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-medium text-slate-700 dark:text-slate-500 flex items-center gap-1">
+                  👥 {{ car.seats || 5 }} asientos
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+        }
+      </div>
+      }
+
+      <!-- Empty State -->
+      @if (premiumCars().length === 0) {
+      <div class="text-center py-20" data-testid="empty-state">
+        <img src="/assets/images/empty-states/empty-search.svg" alt="No se encontraron autos"
+          class="w-64 h-64 mx-auto mb-6">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2 font-satoshi">
+          No encontramos vehículos
+        </h3>
+        <p class="text-slate-500 dark:text-slate-500">Intenta ajustar tu búsqueda o filtros.</p>
+      </div>
+      }
+    </div>
+    <!-- END LEFT PANEL -->
+
+    <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
+    @if (viewMode() === 'map') {
+    <div
+      class="w-full lg:w-1/2 xl:w-[45%] relative flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
+      [class.fixed]="!isDesktop()" [class.inset-0]="!isDesktop()" [class.z-40]="!isDesktop()"
+      [style.height]="isDesktop() ? '100%' : null" data-testid="cars-map">
+      <app-cars-map [cars]="carMapLocations()" [selectedCarId]="activeMapCarId()"
+        [userLocation]="userLocation()" (carSelected)="onMapCarSelected($event)"
+        (userLocationChange)="onUserLocationChange($event)" class="w-full h-full"></app-cars-map>
+
+      <!-- Urgent Banner over map -->
+      @if (selectedCarId() && urgentAvailability()?.available) {
+      <div class="absolute bottom-6 left-0 right-0 px-4 z-[400] pointer-events-none">
+        <div class="max-w-2xl mx-auto pointer-events-auto">
+          <app-urgent-rental-banner [carId]="selectedCarId()!"
+            [regionId]="selectedCar()?.region_id || ''" [expressMode]="expressModeSignal" />
+        </div>
+      </div>
+      }
+
+      <!-- Map Controls Overlay -->
+      <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+        <button type="button"
+          class="w-10 h-10 bg-white dark:bg-slate-800 rounded-lg shadow-md flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          (click)="centerOnUserLocation()" title="Mi ubicación"
+          aria-label="Centrar en mi ubicación">
+          <app-icon name="location" [size]="20" cssClass="text-slate-600 dark:text-slate-500" />
+        </button>
+      </div>
+
+    </div>
+    <!-- END RIGHT PANEL -->
     }
-  </section>
+  </div>
+  <!-- END SPLIT VIEW CONTAINER -->
+
+  <!-- 📱 Mobile Car Carousel (Bottom of Map) - Airbnb Style -->
+  @if (viewMode() === 'map') {
+  <div class="fixed bottom-[65px] left-0 right-0 z-[100] lg:hidden"
+    style="top: auto; max-height: 140px;" data-testid="mobile-car-carousel">
+    <!-- Results Count Badge -->
+    <div class="flex justify-center mb-2">
+      <span
+        class="px-3 py-1.5 bg-white dark:bg-slate-800 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200 dark:border-slate-700">
+        {{ premiumCars().length }} autos en esta zona
+      </span>
+    </div>
+    <!-- Carousel Container -->
+    <div
+      class="flex flex-nowrap gap-3 overflow-x-auto snap-x snap-mandatory px-4 pb-3 scrollbar-hide"
+      style="-webkit-overflow-scrolling: touch; height: 96px;">
+      @for (car of premiumCars(); track car.id) {
+      <a [routerLink]="['/cars', car.id]" [attr.data-car-id]="car.id"
+        class="flex-shrink-0 w-[260px] snap-start bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-200 active:scale-[0.98]"
+        [class.ring-2]="activeMapCarId() === car.id"
+        [class.ring-cyan-500]="activeMapCarId() === car.id"
+        [class.shadow-cyan-200]="activeMapCarId() === car.id">
+        <div class="flex h-[88px]">
+          <!-- Car Image -->
+          <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
+            <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
+              [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model"
+              width="88" height="88" sizes="88px" class="w-full h-full object-cover" />
+            <!-- Superhost Badge -->
+            @if (isTopRated(car)) {
+            <span
+              class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded flex items-center justify-center">
+              <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </span>
+            }
+          </div>
+          <!-- Car Info -->
+          <div class="flex-1 p-2.5 min-w-0 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1">
+                <h4
+                  class="font-semibold text-[13px] text-slate-900 dark:text-white truncate leading-tight font-satoshi">
+                  {{ car.brand }} {{ car.model }}
+                </h4>
+                @if (car.rating_avg) {
+                <div class="flex items-center gap-0.5 flex-shrink-0">
+                  <app-icon name="star-filled" [size]="11"
+                    cssClass="text-slate-900 dark:text-white" />
+                  <span class="text-[11px] font-medium text-slate-900 dark:text-white">
+                    {{ car.rating_avg | number: '1.1-1' }}
+                  </span>
+                  @if (car.rating_count) {
+                  <span class="text-[11px] font-medium text-slate-500 dark:text-slate-500">({{
+                    car.rating_count }})</span>
+                  }
+                </div>
+                }
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-500 truncate mt-0.5">
+                {{ car.location_city || 'Argentina' }} · {{ car.transmission | titlecase }}
+                @if (car.distanceText) {
+                · {{ car.distanceText }}
+                }
+              </p>
+            </div>
+            <div class="flex items-center justify-between">
+              @if (car.price_per_day && car.price_per_day > 0) {
+              <span class="font-bold text-[15px] text-slate-900 dark:text-white">
+                ${{ car.price_per_day | number: '1.0-0' }}<span
+                  class="text-[11px] font-normal text-slate-500 font-mono">/día</span>
+              </span>
+              } @else {
+              <span class="font-semibold text-[13px] text-primary-600">Consultar</span>
+              }
+              <span class="text-cyan-600 dark:text-cyan-400 text-[11px] font-medium">
+                Ver →
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Sticky CTA Mobile -->
+  @if (selectedCarId() && selectedCarPrice()) {
+  <app-sticky-cta-mobile [pricePerDay]="selectedCarPrice()!" [ctaText]="'Rentar ahora'"
+    [expressMode]="urgentAvailability()?.available || false"
+    (ctaClick)="onReserveClick(selectedCarId()!)" />
+  }
+
+  <!-- Floating Actions Pill (Map/List + Filters) -->
+  @if (!loading()) {
+  <div
+    class="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40 flex items-center gap-3 lg:hidden">
+    <!-- Map/List Toggle -->
+    <button type="button"
+      (click)="viewMode() === 'map' ? viewMode.set('grid') : viewMode.set('map')"
+      [attr.aria-pressed]="viewMode() === 'map'"
+      [attr.aria-label]="viewMode() === 'map' ? 'Cambiar a vista lista' : 'Cambiar a vista mapa'"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10">
+      @if (viewMode() !== 'map') {
+      <span>Mapa</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+      </svg>
+      } @else {
+      <span>Lista</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      }
+    </button>
+    <!-- Filters Button -->
+    <button type="button" (click)="toggleFiltersDrawer()" aria-label="Abrir filtros"
+      class="flex items-center gap-2 px-5 py-3 bg-text-primary text-text-inverse rounded-full shadow-2xl font-bold text-sm tracking-wide hover:bg-black transition-all active:scale-95 border border-white/10">
+      <span>Filtros</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+    </button>
+  </div>
+  }
+</section>

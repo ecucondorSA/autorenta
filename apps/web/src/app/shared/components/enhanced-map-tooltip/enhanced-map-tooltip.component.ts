@@ -1,21 +1,21 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
   ChangeDetectionStrategy,
-  computed,
-  signal,
-  OnInit,
+  Component,
+  EventEmitter,
+  Input,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
 
-import { MoneyPipe } from '../../pipes/money.pipe';
 import type { CarMapLocation } from '../../../core/services/car-locations.service';
 import { CarLocationsService } from '../../../core/services/car-locations.service';
 import { NavigationService } from '../../../core/services/navigation.service';
+import { MoneyPipe } from '../../pipes/money.pipe';
 
 /**
  * Enhanced Map Tooltip Component
@@ -196,23 +196,6 @@ import { NavigationService } from '../../../core/services/navigation.service';
               >
               Ver detalles
             </button>
-            <!-- Navigate with Waze -->
-            <button
-              type="button"
-              (click)="navigateWithWaze($event)"
-              class="w-full flex items-center justify-center gap-1.5 bg-[var(--brand-waze-default,#33CCFF)] hover:bg-[var(--brand-waze-hover,#2BB8EA)] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm"
-              title="Navegar con Waze"
-              >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"
-                  />
-                <path
-                  d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
-                  />
-              </svg>
-              <span>Cómo llegar</span>
-            </button>
           </div>
           <!-- P2P Badge -->
           <div class="flex items-center justify-center gap-1 text-xs text-text-secondary pt-1">
@@ -376,9 +359,9 @@ export class EnhancedMapTooltipComponent implements OnInit, OnChanges {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(this.toRad(lat1)) *
-        Math.cos(this.toRad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(this.toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }

@@ -1,174 +1,113 @@
-<div
-  class="cars-map-container"
-  [class.map-variant-photo]="markerVariant === 'photo'"
-  [class.map-variant-price]="markerVariant === 'price'"
-  data-testid="cars-map"
-  >
+<div class="cars-map-container" [class.map-variant-photo]="markerVariant === 'photo'"
+  [class.map-variant-price]="markerVariant === 'price'" data-testid="cars-map">
   @if (loading()) {
-    <div class="cars-map-overlay cars-map-loading-overlay">
-      <div class="cars-map-spinner"></div>
-      <p>Cargando mapa de autos disponibles...</p>
-    </div>
+  <div class="cars-map-overlay cars-map-loading-overlay">
+    <div class="cars-map-spinner"></div>
+    <p>Cargando mapa de autos disponibles...</p>
+  </div>
   }
 
   @if (error() && !loading()) {
-    <div class="cars-map-overlay cars-map-error-overlay">
-      <div class="error-content">
-        <svg class="cars-map-error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-        </svg>
-        <p class="error-message">{{ error() }}</p>
-      </div>
+  <div class="cars-map-overlay cars-map-error-overlay">
+    <div class="error-content">
+      <svg class="cars-map-error-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="error-message">{{ error() }}</p>
     </div>
+  </div>
   }
 
   <div #mapContainer class="cars-map-canvas" id="map-container" data-testid="map-container"></div>
 
   <!-- Map Layers Control -->
   @if (!loading() && !error()) {
-    <app-map-layers-control
-      [layers]="mapLayers()"
-      (layerToggle)="onLayerToggle($event)"
-      />
+  <app-map-layers-control [layers]="mapLayers()" (layerToggle)="onLayerToggle($event)" />
   }
 
   <!-- Map Feature Controls - All map controls in one place -->
   @if (!loading() && !error()) {
-    <div class="cars-map-feature-controls">
-      <!-- Seguir ubicación button -->
-      @if (userLocation) {
-        <button
-          class="cars-map-feature-button"
-          [class.active]="followUserLocation"
-          (click)="toggleFollowLocation()"
-          title="Seguir mi ubicación en tiempo real"
-          type="button"
-          >
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-          </svg>
-          <span class="cars-map-feature-label">{{
-            followUserLocation ? 'Dejar de seguir' : 'Seguir ubicación'
-          }}</span>
-        </button>
-      }
-      <!-- Bloquear zoom button (lock icon) -->
-      <button
-        class="cars-map-feature-button"
-        [class.active]="lockZoomRotation"
-        (click)="toggleLock()"
-        [title]="lockZoomRotation ? 'Desbloquear zoom y rotación' : 'Bloquear zoom y rotación'"
-        type="button"
-        >
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
-          @if (!lockZoomRotation) {
-            <ng-container>
-              <!-- Unlocked icon -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
-                />
-            </ng-container>
-          }
-          @if (lockZoomRotation) {
-            <ng-container>
-              <!-- Locked icon -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-            </ng-container>
-          }
-        </svg>
-        <span class="cars-map-feature-label">{{
-          lockZoomRotation ? 'Desbloquear' : 'Bloquear zoom'
+  <div class="cars-map-feature-controls"
+    [class.cars-map-feature-controls--with-panel]="!!selectedCar()">
+    <!-- Seguir ubicación button -->
+    @if (userLocation) {
+    <button class="cars-map-feature-button" [class.active]="followUserLocation"
+      (click)="toggleFollowLocation()" title="Seguir mi ubicación en tiempo real" type="button">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <span class="cars-map-feature-label">{{
+        followUserLocation ? 'Dejar de seguir' : 'Seguir ubicación'
         }}</span>
-      </button>
-      <!-- Zona de entrega button (only when car selected) -->
-      @if (selectedCar()) {
-        <button
-          class="cars-map-feature-button"
-          [class.active]="showDeliveryIsochrone"
-          (click)="toggleDeliveryZone()"
-          title="Ver zona de entrega del auto"
-          type="button"
-          >
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-              />
-          </svg>
-          <span class="cars-map-feature-label">{{
-            showDeliveryIsochrone ? 'Ocultar zona' : 'Zona de entrega'
-          }}</span>
-        </button>
-      }
-      <!-- Cómo llegar button (only if user location available and car selected) -->
-      @if (userLocation && selectedCar()) {
-        <button
-          class="cars-map-feature-button"
-          [class.active]="showDirectionsRoute"
-          (click)="toggleDirections()"
-          title="Ver cómo llegar a este auto"
-          type="button"
-          >
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-              />
-          </svg>
-          <span class="cars-map-feature-label">{{
-            showDirectionsRoute ? 'Ocultar ruta' : 'Cómo llegar'
-          }}</span>
-        </button>
-      }
-    </div>
+    </button>
+    }
+    <!-- Bloquear zoom button (lock icon) -->
+    <button class="cars-map-feature-button" [class.active]="lockZoomRotation" (click)="toggleLock()"
+      [title]="lockZoomRotation ? 'Desbloquear zoom y rotación' : 'Bloquear zoom y rotación'"
+      type="button">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
+        @if (!lockZoomRotation) {
+        <ng-container>
+          <!-- Unlocked icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+        </ng-container>
+        }
+        @if (lockZoomRotation) {
+        <ng-container>
+          <!-- Locked icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </ng-container>
+        }
+      </svg>
+      <span class="cars-map-feature-label">{{
+        lockZoomRotation ? 'Desbloquear' : 'Bloquear zoom'
+        }}</span>
+    </button>
+    <!-- Zona de entrega button (only when car selected) -->
+    @if (selectedCar()) {
+    <button class="cars-map-feature-button" [class.active]="showDeliveryIsochrone"
+      (click)="toggleDeliveryZone()" title="Ver zona de entrega del auto" type="button">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+      </svg>
+      <span class="cars-map-feature-label">{{
+        showDeliveryIsochrone ? 'Ocultar zona' : 'Zona de entrega'
+        }}</span>
+    </button>
+    }
+    <!-- Cómo llegar button (only if user location available and car selected) -->
+    @if (userLocation && selectedCar()) {
+    <button class="cars-map-feature-button" [class.active]="showDirectionsRoute"
+      (click)="toggleDirections()" title="Ver cómo llegar a este auto" type="button">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="cars-map-feature-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+      </svg>
+      <span class="cars-map-feature-label">{{
+        showDirectionsRoute ? 'Ocultar ruta' : 'Cómo llegar'
+        }}</span>
+    </button>
+    }
+  </div>
   }
 
   <!-- Details Panel -->
   <div
     class="absolute top-0 left-0 h-full w-96 p-4 z-10 transition-transform duration-300 ease-in-out"
-    [class.translate-x-0]="selectedCar()"
-    [class.-translate-x-full]="!selectedCar()"
-    >
-    <app-map-details-panel
-      [carLocation]="selectedCar()"
-      (closePanel)="onDetailsPanelClose()"
-    ></app-map-details-panel>
+    [class.translate-x-0]="selectedCar()" [class.-translate-x-full]="!selectedCar()">
+    <app-map-details-panel [carLocation]="selectedCar()" (closePanel)="onDetailsPanelClose()"
+      (quickBook)="onQuickBookFromDetails($event)"></app-map-details-panel>
   </div>
 
   <!-- Booking Panel -->
-  <app-map-booking-panel
-    [car]="selectedCarForBooking()"
-    [isOpen]="bookingPanelOpen"
-    [userLocation]="userLocation || undefined"
-    (bookingConfirmed)="onBookingConfirmed($event)"
-    (close)="onBookingPanelClose()"
-    />
+  <app-map-booking-panel [car]="selectedCarForBooking()" [isOpen]="bookingPanelOpen"
+    [userLocation]="userLocation || undefined" (bookingConfirmed)="onBookingConfirmed($event)"
+    (close)="onBookingPanelClose()" />
 </div>

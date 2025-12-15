@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -69,6 +69,7 @@ const PAGE_SIZE = 12;
   selector: 'app-cars-list-page',
   imports: [
     CommonModule,
+    NgOptimizedImage,
     RouterLink,
     CarsMapComponent,
     StickyCtaMobileComponent,
@@ -89,6 +90,13 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   // Exponer parseFloat para el template
   readonly parseFloat = parseFloat;
+
+  getCarImageSrcset(imageUrl: string | null | undefined): string | null {
+    if (!imageUrl) return null;
+    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return null;
+
+    return '320w, 480w, 640w, 960w, 1280w';
+  }
 
   private readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -231,7 +239,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.minRating();
     this.maxDistance();
     this.dateRange();
-    
+
     // Resetear a página 1 (allowSignalWrites true es necesario en effects)
     this.page.set(1);
   }, { allowSignalWrites: true });
@@ -416,9 +424,9 @@ export class CarsListPage implements OnInit, OnDestroy {
     const list = !segmentation
       ? cars
       : cars.filter((car) => {
-          const score = segmentation.scores.get(car.id) ?? 0;
-          return score >= segmentation.threshold;
-        });
+        const score = segmentation.scores.get(car.id) ?? 0;
+        return score >= segmentation.threshold;
+      });
 
     const sorted = list.slice();
 
@@ -523,15 +531,15 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly premiumCars = computed<CarWithDistance[]>(() => {
     return this.sortedFilteredCars().slice(0, this.page() * PAGE_SIZE);
   });
-  
+
   // Computed para saber si hay más autos para cargar
   readonly hasMoreCars = computed(() => {
-      return this.premiumCars().length < this.sortedFilteredCars().length;
+    return this.premiumCars().length < this.sortedFilteredCars().length;
   });
 
   // Método para cargar más autos
   loadMore(): void {
-      this.page.update(p => p + 1);
+    this.page.update(p => p + 1);
   }
 
   readonly recommendedCars = computed<CarWithDistance[]>(() => {
@@ -1195,9 +1203,9 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Scroll al auto en la lista (o carrusel si es móvil)
     if (this.isMobile() && this.viewMode() === 'map') {
-        this.scrollToCarInCarousel(carId);
+      this.scrollToCarInCarousel(carId);
     } else {
-        this.scrollToCarCard(carId);
+      this.scrollToCarCard(carId);
     }
   }
 
