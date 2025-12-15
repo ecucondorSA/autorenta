@@ -1,0 +1,176 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/autorenta/autorenta/e2e/playwright.config.ts",
+    "rootDir": "/home/runner/work/autorenta/autorenta/e2e/tests",
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "e2e/reports/html"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "e2e/reports/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/autorenta/autorenta/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/autorenta/autorenta/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run start",
+      "url": "http://localhost:4200",
+      "reuseExistingServer": false,
+      "timeout": 120000,
+      "cwd": "apps/web"
+    }
+  },
+  "suites": [
+    {
+      "title": "smoke.spec.ts",
+      "file": "smoke.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "AutoRenta Smoke Tests",
+          "file": "smoke.spec.ts",
+          "line": 9,
+          "column": 6,
+          "specs": [
+            {
+              "title": "homepage loads successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-47303273985e51db2586",
+              "file": "smoke.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "navigation is visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-60caf9b8ad298c0a5b8f",
+              "file": "smoke.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "can navigate to login page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-34f8f3dc54491224e559",
+              "file": "smoke.spec.ts",
+              "line": 32,
+              "column": 7
+            },
+            {
+              "title": "marketplace page is accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-3a03dcea7e2371baad03",
+              "file": "smoke.spec.ts",
+              "line": 45,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-12-15T02:57:14.137Z",
+    "duration": 94.26599999999996,
+    "expected": 0,
+    "skipped": 4,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

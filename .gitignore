@@ -32,6 +32,8 @@ functions/workers/*/.wrangler
 apps/web/src/assets/models/*.onnx
 test-results/
 e2e/artifacts/
+e2e/reports/
+!e2e/reports/.gitkeep
 
 # Temporary files and archives
 *.log
