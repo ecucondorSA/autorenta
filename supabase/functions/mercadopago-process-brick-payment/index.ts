@@ -21,9 +21,9 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 import { getCorsHeaders } from '../_shared/cors.ts';
 import { getMercadoPagoClient, getPaymentClient } from '../_shared/mercadopago-sdk.ts';
+import { enforceRateLimit, RateLimitError } from '../_shared/rate-limiter.ts';
 
 /**
  * Payment Brick form data structure
@@ -319,7 +319,7 @@ serve(async (req) => {
     await supabase
       .from('wallet_transactions')
       .update({
-        provider_payment_id: String(payment.id),
+        provider_transaction_id: String(payment.id),
         provider_metadata: {
           payment_id: payment.id,
           status: paymentStatus,
@@ -339,8 +339,9 @@ serve(async (req) => {
       const { error: confirmError } = await supabase.rpc(
         'wallet_confirm_deposit_admin',
         {
+          p_user_id: user.id,
           p_transaction_id: transactionId,
-          p_provider_payment_id: String(payment.id),
+          p_provider_transaction_id: String(payment.id),
           p_provider_metadata: {
             payment_id: payment.id,
             status: paymentStatus,

@@ -433,27 +433,30 @@ serve(async (req: Request) => {
             console.log('✅ HMAC validation passed');
             // ==============================
             // IDEMPOTENCIA / DEDUPLICACIÓN (atómica)
-            // Intentamos insertar un registro; si la inserción falla por clave única
-            // (duplicate key), tratamos el webhook como duplicado y devolvemos 200.
-            // Esto evita races entre concurrencias.
+            // Insertamos un log con event_id (x-request-id). Con índice UNIQUE sobre event_id,
+            // cualquier reintento/duplicado se detecta por violación de unicidad.
             // ==============================
             try {
+              const normalizedIp = (clientIP || '').split(',')[0]?.trim() || null;
+              const paymentIdForLog = (webhookPayload.data?.id || dataId || '')?.toString() || null;
+
               const insertPayload = {
                 event_id: xRequestId,
-                mp_id: webhookPayload.data?.id?.toString() || null,
-                type: webhookPayload.type,
+                webhook_type: webhookPayload.type,
+                resource_type: webhookType || webhookPayload.type,
+                resource_id: paymentIdForLog,
+                payment_id: paymentIdForLog,
                 payload: webhookPayload,
-                ip: clientIP || null,
-                received_at: new Date().toISOString(),
+                ip_address: normalizedIp,
                 user_agent: req.headers.get('user-agent') || null,
+                received_at: new Date().toISOString(),
               };
 
-              const { data: insertData, error: insertError } = await supabase
+              const { error: insertError } = await supabase
                 .from('mp_webhook_logs')
                 .insert(insertPayload, { returning: 'minimal' });
 
               if (insertError) {
-                // Si es violación de unicidad -> duplicate -> ignorar
                 const msg = String(insertError.message || '').toLowerCase();
                 if (insertError.code === '23505' || msg.includes('duplicate') || msg.includes('unique')) {
                   console.log('Duplicate webhook detected via insert conflict, ignoring', { event_id: xRequestId });
@@ -1064,6 +1067,23 @@ serve(async (req: Request) => {
         throw updateError;
       }
 
+      // Marcar webhook como procesado (best-effort)
+      try {
+        await supabase
+          .from('mp_webhook_logs')
+          .update({
+            processed: true,
+            processed_at: new Date().toISOString(),
+            booking_id: reference_id,
+            payment_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+            resource_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+            processing_error: null,
+          })
+          .eq('event_id', xRequestId);
+      } catch (e) {
+        console.warn('Warning: failed to mark mp_webhook_logs processed (booking)', e);
+      }
+
       console.log('✅ Booking payment confirmed successfully:', reference_id);
 
       return new Response(
@@ -1142,6 +1162,22 @@ serve(async (req: Request) => {
       throw confirmError;
     }
 
+    // Marcar webhook como procesado (best-effort)
+    try {
+      await supabase
+        .from('mp_webhook_logs')
+        .update({
+          processed: true,
+          processed_at: new Date().toISOString(),
+          payment_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+          resource_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+          processing_error: null,
+        })
+        .eq('event_id', xRequestId);
+    } catch (e) {
+      console.warn('Warning: failed to mark mp_webhook_logs processed (deposit)', e);
+    }
+
     console.log('Deposit confirmed successfully:', confirmResult);
 
     // ========================================
@@ -1197,6 +1233,25 @@ serve(async (req: Request) => {
       }
     );
   } catch (error) {
+    // Best-effort: registrar el error para debugging
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL');
+      const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+      if (supabaseUrl && supabaseServiceKey) {
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+        await supabase
+          .from('mp_webhook_logs')
+          .update({
+            processed: false,
+            processed_at: null,
+            processing_error: error instanceof Error ? error.message : String(error),
+          })
+          .eq('event_id', req.headers.get('x-request-id') || '');
+      }
+    } catch (_) {
+      // ignore
+    }
+
     // ✅ CRITICAL FIX: Retornar 500 para que MercadoPago reintente
     log.error('❌ Critical error processing webhook - will be retried', {
       error: error instanceof Error ? error.message : 'Unknown error',
