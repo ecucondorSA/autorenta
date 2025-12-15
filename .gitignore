@@ -2,6 +2,9 @@
 node_modules
 .pnpm-store
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Builds
 /dist
 /.output
