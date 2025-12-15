@@ -139,19 +139,19 @@ cmd_dev_stop() {
 cmd_test() {
     header "🧪 Running All Tests"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadlessCI
+    npm run test -- --watch=false --browsers=ChromeHeadless
 }
 
 cmd_test_quick() {
     header "🧪 Running Quick Tests (No Coverage)"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
+    npm run test -- --watch=false --browsers=ChromeHeadless --no-sandbox --code-coverage=false
 }
 
 cmd_test_coverage() {
     header "🧪 Running Tests with Coverage"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
+    npm run test -- --watch=false --browsers=ChromeHeadless --no-sandbox --code-coverage=true
     success "Coverage report: apps/web/coverage/index.html"
 }
 
@@ -289,7 +289,7 @@ cmd_ci() {
     (cd "$WEB_DIR" && npm run lint) &
     LINT_PID=$!
 
-    (cd "$WEB_DIR" && npm run test -- --watch=false --browsers=ChromeHeadlessCI) &
+    (cd "$WEB_DIR" && npm run test -- --watch=false --browsers=ChromeHeadless) &
     TEST_PID=$!
 
     wait $LINT_PID
