@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from '@angular/common';
+import { IMAGE_LOADER, type ImageLoaderConfig, isPlatformBrowser } from '@angular/common';
 import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   APP_INITIALIZER,
@@ -61,8 +61,37 @@ function initializeDebugService(debugService: DebugService) {
   };
 }
 
+function autorentaImageLoader(config: ImageLoaderConfig): string {
+  const src = config.src;
+
+  // Local assets (and most relative URLs) should remain unchanged
+  if (!src || src.startsWith('/') || src.startsWith('data:') || src.startsWith('blob:')) {
+    return src;
+  }
+
+  // Only apply transformations to known providers
+  if (!src.includes('unsplash.com') && !src.includes('images.unsplash.com')) {
+    return src;
+  }
+
+  try {
+    const url = new URL(src);
+    const width = config.width ?? 800;
+
+    url.searchParams.set('w', String(width));
+    if (!url.searchParams.has('q')) url.searchParams.set('q', '80');
+    if (!url.searchParams.has('auto')) url.searchParams.set('auto', 'format');
+    if (!url.searchParams.has('fit')) url.searchParams.set('fit', 'crop');
+
+    return url.toString();
+  } catch {
+    return src;
+  }
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: IMAGE_LOADER, useValue: autorentaImageLoader },
     // ✅ Zoneless Change Detection - removes Zone.js (~35KB savings)
     // Works with Angular 20+ and Ionic 8+ (signals-based)
     provideZonelessChangeDetection(),
@@ -129,11 +158,11 @@ export const appConfig: ApplicationConfig = {
     // ✅ Performance Monitoring (solo en desarrollo)
     isDevMode()
       ? {
-          provide: APP_INITIALIZER,
-          useFactory: initializePerformanceMonitoring,
-          deps: [PerformanceMonitoringService],
-          multi: true,
-        }
+        provide: APP_INITIALIZER,
+        useFactory: initializePerformanceMonitoring,
+        deps: [PerformanceMonitoringService],
+        multi: true,
+      }
       : [],
     // ✅ Debug Service initialization (para e2e tests)
     // Siempre inicializar para exponer window.__AR_DEBUG__
