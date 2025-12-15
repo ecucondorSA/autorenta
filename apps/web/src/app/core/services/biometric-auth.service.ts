@@ -3,7 +3,7 @@ import { BiometryType, NativeBiometric } from '@capgo/capacitor-native-biometric
 
 @Injectable({ providedIn: 'root' })
 export class BiometricAuthService {
-  async isAvailable(): Promise<{ available: boolean; type: BiometryType }> {
+  async isAvailable(): Promise<{ available: boolean; type: number }> {
     try {
       const result = await NativeBiometric.isAvailable();
       return {

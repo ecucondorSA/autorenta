@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contrato de Alquiler - AutoRenta</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', 'Helvetica', sans-serif;
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #1a202c;
+      padding: 20mm 15mm;
+      background-color: #ffffff;
+    }
+
+    h1 {
+      font-size: 20pt;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 8mm;
+      color: #2d3748;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+      border-bottom: 3pt solid #4299e1;
+      padding-bottom: 4mm;
+    }
+
+    h2 {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 6mm;
+      margin-bottom: 3mm;
+      color: #2d3748;
+      border-left: 4pt solid #4299e1;
+      padding-left: 3mm;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 4mm;
+      margin-bottom: 2mm;
+      color: #2d3748;
+    }
+
+    p {
+      margin-bottom: 3mm;
+      text-align: justify;
+    }
+
+    .header-section {
+      background-color: #f7fafc;
+      border: 1pt solid #cbd5e0;
+      border-radius: 2mm;
+      padding: 4mm;
+      margin-bottom: 6mm;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2mm;
+    }
+
+    .data-label {
+      font-weight: bold;
+      color: #4a5568;
+    }
+
+    .data-value {
+      color: #1a202c;
+    }
+
+    .clause-box {
+      background-color: #fff5f5;
+      border: 2pt solid #fc8181;
+      border-radius: 2mm;
+      padding: 4mm;
+      margin: 4mm 0;
+    }
+
+    .clause-title {
+      font-weight: bold;
+      font-size: 12pt;
+      color: #c53030;
+      text-transform: uppercase;
+      margin-bottom: 2mm;
+      display: flex;
+      align-items: center;
+    }
+
+    .clause-icon {
+      font-size: 16pt;
+      margin-right: 2mm;
+    }
+
+    .highlight {
+      background-color: #fef3c7;
+      padding: 1mm 2mm;
+      border-radius: 1mm;
+      font-weight: bold;
+    }
+
+    .warning-box {
+      background-color: #fffbeb;
+      border: 2pt solid #f59e0b;
+      border-radius: 2mm;
+      padding: 4mm;
+      margin: 4mm 0;
+    }
+
+    .info-box {
+      background-color: #eff6ff;
+      border: 2pt solid #3b82f6;
+      border-radius: 2mm;
+      padding: 4mm;
+      margin: 4mm 0;
+    }
+
+    ul {
+      margin-left: 8mm;
+      margin-bottom: 3mm;
+    }
+
+    li {
+      margin-bottom: 1.5mm;
+    }
+
+    .signature-section {
+      margin-top: 10mm;
+      border-top: 1pt solid #cbd5e0;
+      padding-top: 6mm;
+    }
+
+    .signature-box {
+      display: inline-block;
+      width: 45%;
+      text-align: center;
+      margin-top: 8mm;
+    }
+
+    .signature-line {
+      border-top: 1pt solid #1a202c;
+      padding-top: 2mm;
+      margin-top: 15mm;
+    }
+
+    .footer {
+      font-size: 9pt;
+      color: #718096;
+      text-align: center;
+      margin-top: 10mm;
+      border-top: 1pt solid #e2e8f0;
+      padding-top: 4mm;
+    }
+
+    .legal-reference {
+      font-size: 9pt;
+      color: #4a5568;
+      font-style: italic;
+      margin-top: 1mm;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Contrato de Alquiler de Vehículo sin Chofer</h1>
+
+  <!-- =========================== HEADER DATA =========================== -->
+  <div class="header-section">
+    <h3>Datos del Contrato</h3>
+    <div class="data-row">
+      <span class="data-label">N° de Booking:</span>
+      <span class="data-value">{{booking_id}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Versión del Contrato:</span>
+      <span class="data-value">v1.0.0</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Fecha de Emisión:</span>
+      <span class="data-value">{{emission_date}}</span>
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h3>Partes del Contrato</h3>
+    <div class="data-row">
+      <span class="data-label">LOCATARIO (Conductor):</span>
+      <span class="data-value">{{renter_name}} - DNI {{renter_dni}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">LOCADOR (Propietario):</span>
+      <span class="data-value">{{owner_name}} - DNI {{owner_dni}}</span>
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h3>Datos del Vehículo</h3>
+    <div class="data-row">
+      <span class="data-label">Vehículo:</span>
+      <span class="data-value">{{car_brand}} {{car_model}} ({{car_year}})</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Patente:</span>
+      <span class="data-value">{{car_plate}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Póliza de Seguro:</span>
+      <span class="data-value">{{insurance_policy_number}} ({{insurance_company}})</span>
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h3>Periodo y Monto</h3>
+    <div class="data-row">
+      <span class="data-label">Fecha de Inicio:</span>
+      <span class="data-value">{{start_date}} {{start_time}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Fecha de Fin:</span>
+      <span class="data-value">{{end_date}} {{end_time}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Monto Total:</span>
+      <span class="data-value highlight">ARS ${{total_ars}}</span>
+    </div>
+  </div>
+
+  <!-- =========================== SECTION 1: OBJETO DEL CONTRATO =========================== -->
+  <h2>1. Objeto del Contrato</h2>
+  <p>
+    El LOCADOR cede temporalmente el uso y goce del vehículo identificado al LOCATARIO, quien se obliga a:
+    (i) restituirlo en el plazo pactado, (ii) mantenerlo en buen estado, (iii) cumplir estrictamente con las
+    normativas de tránsito, y (iv) aceptar las cláusulas de este contrato.
+  </p>
+  <p>
+    Este contrato se celebra a través de la plataforma digital <strong>AutoRenta S.A.S.</strong>,
+    que actúa únicamente como intermediaria tecnológica. AutoRenta <span class="highlight">NO es aseguradora</span>
+    ni realiza operaciones de seguro.
+  </p>
+
+  <!-- =========================== SECTION 2: PROHIBICIONES ABSOLUTAS =========================== -->
+  <h2>2. Prohibiciones Absolutas</h2>
+  <p>Queda estrictamente prohibido durante el período de locación:</p>
+  <ul>
+    <li>Conducir bajo efectos de <strong>alcohol, drogas o estupefacientes</strong> (Art. 1724 CCyC - Culpa Grave)</li>
+    <li>Realizar maniobras temerarias, picadas, competencias o uso deportivo del vehículo</li>
+    <li>Subarrendar, prestar o ceder el vehículo a terceros no autorizados</li>
+    <li>Transportar mascotas sin autorización previa del LOCADOR</li>
+    <li>Fumar dentro del vehículo</li>
+    <li>Circular por caminos no pavimentados o zonas prohibidas</li>
+    <li>Modificar, alterar o reparar el vehículo sin autorización escrita</li>
+    <li>Transportar sustancias ilegales o peligrosas</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <!-- =========================== SECTION 3: CLÁUSULAS PRIORITARIAS =========================== -->
+  <h2>3. Cláusulas Prioritarias (Aceptación Obligatoria)</h2>
+  <p>
+    Las siguientes <strong>4 cláusulas</strong> son de aceptación <strong>OBLIGATORIA</strong> y
+    constituyen condiciones esenciales del contrato. Su incumplimiento genera responsabilidad civil y penal.
+  </p>
+
+  <!-- CLAUSE 1: CULPA GRAVE -->
+  <div class="clause-box">
+    <div class="clause-title">
+      <span class="clause-icon">⚠️</span>
+      3.1. Culpa Grave - Alcohol, Drogas y Maniobras Temerarias (Art. 1724 CCyC)
+    </div>
+    <p>
+      El LOCATARIO reconoce y acepta que conducir bajo efectos de <strong>alcohol, drogas, estupefacientes</strong>
+      o realizar <strong>maniobras temerarias</strong> constituye <strong>CULPA GRAVE</strong> en los términos del
+      Art. 1724 del Código Civil y Comercial.
+    </p>
+    <p><strong>Consecuencias de la Culpa Grave:</strong></p>
+    <ul>
+      <li>❌ <strong>Pérdida total</strong> de toda cobertura de seguros y dispensas contractuales</li>
+      <li>❌ <strong>Responsabilidad civil ilimitada</strong> por daños al vehículo y a terceros</li>
+      <li>❌ <strong>Responsabilidad penal</strong> conforme Art. 84 y 94 del Código Penal</li>
+      <li>❌ <strong>Cargo del 100% de los daños</strong> al vehículo por cuenta del LOCATARIO</li>
+      <li>❌ <strong>Inhabilitación permanente</strong> en la plataforma AutoRenta</li>
+    </ul>
+    <p class="legal-reference">
+      Base legal: Art. 1724 CCyC (Culpa grave), Art. 84 y 94 CP (Homicidio y lesiones culposas agravadas)
+    </p>
+  </div>
+
+  <!-- CLAUSE 2: INDEMNIDAD TOTAL -->
+  <div class="clause-box">
+    <div class="clause-title">
+      <span class="clause-icon">🛡️</span>
+      3.2. Indemnidad Total del Conductor
+    </div>
+    <p>
+      El LOCATARIO se obliga a mantener <strong>indemne</strong> al LOCADOR y a AutoRenta S.A.S. frente a
+      <strong>cualquier reclamo, multa, sanción, condena, pago, gasto legal u honorario</strong> derivado de
+      la conducción, guarda o uso del vehículo durante el período de locación.
+    </p>
+    <p><strong>Alcance de la Indemnidad:</strong></p>
+    <ul>
+      <li>Multas de tránsito y estacionamiento (fotomultas incluidas)</li>
+      <li>Daños a terceros (vehículos, peatones, propiedad pública o privada)</li>
+      <li>Gastos de grúa, corralón, peajes y combustible</li>
+      <li>Repetición de aseguradoras (Art. 118 Ley 17.418)</li>
+      <li>Honorarios de abogados y peritos en caso de litigio</li>
+      <li>Pérdida de uso comercial del vehículo (lucro cesante)</li>
+    </ul>
+    <p>
+      El LOCATARIO autoriza el débito automático de su medio de pago registrado para cubrir estos conceptos.
+      En caso de insuficiencia de fondos, AutoRenta podrá iniciar acciones judiciales de cobro.
+    </p>
+    <p class="legal-reference">
+      Base legal: Art. 1113, 1117 y 1118 CCyC (Responsabilidad por daños), Art. 118 Ley 17.418 (Repetición)
+    </p>
+  </div>
+
+  <!-- CLAUSE 3: RETENCIÓN INDEBIDA -->
+  <div class="clause-box">
+    <div class="clause-title">
+      <span class="clause-icon">🚨</span>
+      3.3. Retención Indebida - Delito Penal (Art. 173 inc. 2º Código Penal)
+    </div>
+    <p>
+      El LOCATARIO se obliga a restituir el vehículo en el <strong>lugar, fecha y hora exactos</strong>
+      estipulados. La <strong>no devolución puntual</strong> configura el delito de
+      <strong>DEFRAUDACIÓN POR RETENCIÓN INDEBIDA</strong> tipificado en el
+      <strong>Art. 173 inc. 2º del Código Penal Argentino</strong>.
+    </p>
+    <p><strong>Escalamiento de Medidas:</strong></p>
+    <ul>
+      <li><strong>0 a 6 horas de demora:</strong> Cargo de demora (doble de la tarifa diaria)</li>
+      <li><strong>6 a 12 horas de demora:</strong> Denuncia policial + triple tarifa diaria + pedido de secuestro</li>
+      <li><strong>Más de 12 horas de demora:</strong> Denuncia penal formal + pedido de desapoderamiento + embargo preventivo</li>
+    </ul>
+    <p>
+      El LOCADOR queda <strong>facultado para radicar denuncia penal</strong> y solicitar el
+      <strong>pedido de secuestro inmediato</strong> del vehículo a las fuerzas de seguridad
+      (Art. 230 CPPN - allanamiento urgente).
+    </p>
+    <div class="warning-box">
+      <strong>⚠️ ADVERTENCIA LEGAL:</strong> La retención indebida es un delito penal con pena de
+      <strong>prisión de 1 mes a 6 años</strong> (Art. 173 inc. 2º CP). Además del proceso penal,
+      el LOCATARIO responderá civilmente por daños y perjuicios (Art. 1716 CCyC).
+    </div>
+    <p class="legal-reference">
+      Base legal: Art. 173 inc. 2º CP (Defraudación por retención indebida), Art. 230 CPPN (Allanamiento),
+      Art. 1716 CCyC (Deber de reparar)
+    </p>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- CLAUSE 4: MORA AUTOMÁTICA -->
+  <div class="clause-box">
+    <div class="clause-title">
+      <span class="clause-icon">⏰</span>
+      3.4. Mora Automática - Sin Necesidad de Interpelación (Art. 886 CCyC)
+    </div>
+    <p>
+      El <strong>simple vencimiento del plazo</strong> pactado produce la <strong>MORA DE PLENO DERECHO</strong>
+      del LOCATARIO, sin necesidad de interpelación judicial o extrajudicial previa
+      (Art. 886 del Código Civil y Comercial).
+    </p>
+    <p><strong>Penalidades por Mora:</strong></p>
+    <ul>
+      <li><strong>Días 1-3 de demora:</strong> Doble tarifa diaria + gastos administrativos</li>
+      <li><strong>Días 4 en adelante:</strong> Triple tarifa diaria + intereses punitorios (Art. 768 CCyC)</li>
+      <li><strong>Daños y perjuicios:</strong> Lucro cesante por indisponibilidad del vehículo (reservas perdidas)</li>
+    </ul>
+    <div class="warning-box">
+      <strong>⚠️ CADUCIDAD DE SEGUROS:</strong> Vencido el plazo de locación,
+      <strong>cesa automáticamente la cobertura de seguros</strong>.
+      El LOCATARIO pasa a ser <strong>responsable único e ilimitado</strong> por cualquier siniestro
+      (robo, hurto, accidente) ocurrido durante el período de mora.
+    </div>
+    <p class="legal-reference">
+      Base legal: Art. 886 CCyC (Mora automática), Art. 768 CCyC (Intereses moratorios)
+    </p>
+  </div>
+
+  <!-- =========================== SECTION 4: DISPENSA CONTRACTUAL (LEY 20.091 - SSN) =========================== -->
+  <h2>4. Dispensa Contractual - Limitación de Responsabilidad (NO Seguro)</h2>
+  <div class="info-box">
+    <p><strong>⚠️ ACLARACIÓN IMPORTANTE - LEY 20.091 (Superintendencia de Seguros de la Nación):</strong></p>
+    <p>
+      <strong>AutoRenta S.A.S. NO es aseguradora</strong> ni productor de seguros ni realiza operaciones de seguro
+      por cuenta propia. La presente cláusula constituye una <strong>DISPENSA CONTRACTUAL</strong> entre LOCADOR
+      y LOCATARIO que <strong>complementa</strong> (no sustituye) la póliza de seguro del vehículo.
+    </p>
+  </div>
+  <p>
+    Esta dispensa <strong>NO constituye un seguro</strong>, NO es una póliza, NO se rige por condiciones
+    técnico-contractuales de la SSN, y <strong>NO cubre responsabilidad civil frente a terceros</strong>.
+  </p>
+  <p>
+    Su único efecto es <strong>regular la relación económica entre LOCATARIO y PROPIETARIO</strong> por daños
+    al vehículo en los términos del presente contrato, limitando el monto máximo a reintegrar según el cuadro
+    de importes publicado en la plataforma al momento de la contratación.
+  </p>
+  <p><strong>Exclusiones de la Dispensa (pérdida total del beneficio):</strong></p>
+  <ul>
+    <li>Culpa grave: alcohol, drogas, maniobras temerarias</li>
+    <li>Uso no autorizado: caminos no pavimentados, zonas prohibidas</li>
+    <li>Abandono del vehículo sin denuncia policial inmediata</li>
+    <li>Retraso en la devolución (mora)</li>
+  </ul>
+  <p class="legal-reference">
+    Base legal: Art. 3, 56, 57 y 61 de la Ley 20.091 (Régimen de entidades de seguros y su control)
+  </p>
+
+  <!-- =========================== SECTION 5: IDENTIFICACIÓN DE PÓLIZA =========================== -->
+  <h2>5. Identificación de Póliza de Seguro (Aseguradora Autorizada SSN)</h2>
+  <div class="header-section">
+    <div class="data-row">
+      <span class="data-label">Aseguradora:</span>
+      <span class="data-value">{{insurance_company}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">CUIT Aseguradora:</span>
+      <span class="data-value">{{insurance_cuit}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">N° de Póliza:</span>
+      <span class="data-value">{{insurance_policy_number}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Vigencia:</span>
+      <span class="data-value">{{insurance_validity}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Cobertura:</span>
+      <span class="data-value">{{insurance_coverage}}</span>
+    </div>
+  </div>
+  <p>
+    El LOCATARIO reconoce que la cobertura asegurativa es <strong>emitida por la aseguradora indicada</strong>,
+    autorizada por la Superintendencia de Seguros de la Nación. AutoRenta S.A.S. <strong>NO asume obligaciones
+    indemnizatorias propias</strong> por siniestros.
+  </p>
+
+  <div class="page-break"></div>
+
+  <!-- =========================== SECTION 6: GARANTÍA Y DEPÓSITO =========================== -->
+  <h2>6. Garantía Ejecutable</h2>
+  <p>
+    El LOCATARIO autoriza la <strong>retención y/o ejecución del depósito</strong> y cargos sobre el medio de pago
+    registrado para cubrir:
+  </p>
+  <ul>
+    <li>Daños al vehículo (franquicia del seguro)</li>
+    <li>Multas de tránsito y estacionamiento</li>
+    <li>Gastos de grúa, corralón, peajes</li>
+    <li>Penalidades por demora o incumplimiento</li>
+    <li>Obligaciones de indemnidad (Art. 3.2)</li>
+  </ul>
+  <p>
+    La ejecución de la garantía es <strong>sin perjuicio de acciones judiciales</strong> para reclamar montos
+    superiores a la garantía constituida.
+  </p>
+
+  <!-- =========================== SECTION 7: OBLIGACIONES DEL LOCATARIO =========================== -->
+  <h2>7. Obligaciones del Locatario</h2>
+  <ul>
+    <li>Restituir el vehículo en fecha, hora y lugar pactados</li>
+    <li>Mantener el vehículo en buen estado de conservación</li>
+    <li>Cumplir estrictamente con normativas de tránsito</li>
+    <li>No conducir bajo efectos de alcohol o drogas (Art. 3.1)</li>
+    <li>Devolver el vehículo con el mismo nivel de combustible</li>
+    <li>Avisar inmediatamente en caso de siniestro o avería</li>
+    <li>Realizar denuncia policial inmediata en caso de robo/hurto</li>
+    <li>No abandonar el vehículo sin custodia adecuada</li>
+    <li>Pagar multas, peajes y gastos de estacionamiento</li>
+    <li>Responder por daños a terceros (Art. 3.2)</li>
+  </ul>
+
+  <!-- =========================== SECTION 8: JURISDICCIÓN Y RESOLUCIÓN DE CONFLICTOS =========================== -->
+  <h2>8. Jurisdicción y Ley Aplicable</h2>
+  <p>
+    Para todos los efectos legales derivados del presente contrato, las partes se someten a la
+    <strong>jurisdicción de los Tribunales Ordinarios de la Ciudad Autónoma de Buenos Aires</strong>,
+    con renuncia expresa a cualquier otro fuero o jurisdicción que pudiera corresponder.
+  </p>
+  <p>
+    El presente contrato se rige por el <strong>Código Civil y Comercial de la Nación</strong> (Ley 26.994),
+    la <strong>Ley de Defensa del Consumidor</strong> (Ley 24.240) y normativas complementarias.
+  </p>
+
+  <!-- =========================== SECTION 9: ACEPTACIÓN DIGITAL (LEY 25.506) =========================== -->
+  <h2>9. Aceptación Digital - Validez Legal (Ley 25.506 de Firma Digital)</h2>
+  <div class="info-box">
+    <p>
+      El presente contrato ha sido aceptado digitalmente mediante <strong>checkbox y timestamp</strong>,
+      en cumplimiento de la <strong>Ley 25.506 de Firma Digital</strong> y normativas complementarias.
+    </p>
+    <p><strong>Datos de Aceptación (Audit Trail):</strong></p>
+    <div class="data-row">
+      <span class="data-label">Fecha y Hora de Aceptación:</span>
+      <span class="data-value">{{renter_accepted_at}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Dirección IP:</span>
+      <span class="data-value">{{renter_ip}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">User-Agent:</span>
+      <span class="data-value" style="font-size: 9pt;">{{renter_user_agent}}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-label">Cláusulas Aceptadas:</span>
+      <span class="data-value">✅ Culpa Grave | ✅ Indemnidad Total | ✅ Retención Indebida | ✅ Mora Automática</span>
+    </div>
+  </div>
+  <p>
+    La <strong>firma digital mediante checkbox</strong> tiene plena validez legal y constituye
+    <strong>prueba suficiente</strong> de la aceptación de todos los términos y condiciones del presente contrato
+    (Art. 3, 5 y 7 de la Ley 25.506).
+  </p>
+  <p class="legal-reference">
+    Base legal: Ley 25.506 de Firma Digital (Art. 3, 5, 7), Ley 26.388 (Delitos informáticos)
+  </p>
+
+  <!-- =========================== FOOTER =========================== -->
+  <div class="footer">
+    <p>
+      <strong>AutoRenta S.A.S.</strong> - Plataforma de Alquiler de Vehículos P2P<br>
+      CUIT: 30-12345678-9 | Domicilio Legal: Av. Corrientes 1234, CABA, Argentina<br>
+      Contrato v1.0.0 - Generado el {{emission_date}}<br>
+      Booking ID: {{booking_id}}
+    </p>
+    <p style="margin-top: 4mm; font-size: 8pt;">
+      Este documento ha sido generado electrónicamente y tiene plena validez legal conforme
+      Ley 25.506 (Firma Digital) y Ley 26.388 (Delitos Informáticos).
+    </p>
+  </div>
+</body>
+</html>

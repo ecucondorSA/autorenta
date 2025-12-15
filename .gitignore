@@ -143,3 +143,7 @@ playwright-report/
 *.log
 *_output*.txt
 apps/web/tools/binance-p2p-mcp/
+
+# Large analysis files
+tripwip_base.zip
+tripwip_base_extracted/

@@ -134,6 +134,144 @@ serve(async (req) => {
     const body: ProcessBookingPaymentRequest = await req.json();
     const { booking_id, card_token, issuer_id, installments = 1 } = body;
 
+    // ========================================
+    // CONTRACT VALIDATION (Phase 7)
+    // ========================================
+    console.log('[CONTRACT_VALIDATION] Starting validation for booking:', booking_id);
+
+    // 1. Get contract record
+    const { data: contract, error: contractError } = await supabase
+      .from('booking_contracts')
+      .select('accepted_by_renter, accepted_at, clauses_accepted')
+      .eq('booking_id', booking_id)
+      .maybeSingle();
+
+    if (contractError) {
+      console.error('[CONTRACT_VALIDATION] Error fetching contract:', contractError);
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_FETCH_ERROR',
+          message: 'Error al verificar el contrato. Intenta nuevamente.',
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (!contract) {
+      console.warn('[CONTRACT_VALIDATION] Contract not found for booking:', booking_id);
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_NOT_FOUND',
+          message: 'Contrato no encontrado para esta reserva. Por favor, vuelve a la página de pago.',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // 2. Validate contract accepted
+    if (!contract.accepted_by_renter) {
+      console.warn('[CONTRACT_VALIDATION] Contract not accepted for booking:', booking_id);
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_NOT_ACCEPTED',
+          message: 'Debes aceptar el contrato antes de proceder con el pago.',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // 3. Validate acceptance within 24 hours (security measure)
+    if (!contract.accepted_at) {
+      console.error('[CONTRACT_VALIDATION] Missing accepted_at timestamp for booking:', booking_id);
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_INVALID_STATE',
+          message: 'Estado del contrato inválido. Por favor, acepta el contrato nuevamente.',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const acceptedAt = new Date(contract.accepted_at);
+    const hoursSinceAcceptance = (Date.now() - acceptedAt.getTime()) / (1000 * 60 * 60);
+
+    if (hoursSinceAcceptance > 24) {
+      console.warn('[CONTRACT_VALIDATION] Contract acceptance expired for booking:', {
+        booking_id,
+        accepted_at: contract.accepted_at,
+        hours_elapsed: hoursSinceAcceptance.toFixed(2),
+      });
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_ACCEPTANCE_EXPIRED',
+          message: 'La aceptación del contrato ha expirado (máximo 24 horas). Por favor, acepta el contrato nuevamente.',
+          expired_at: contract.accepted_at,
+          hours_elapsed: Math.floor(hoursSinceAcceptance),
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // 4. Validate all 4 priority clauses accepted
+    const clauses = contract.clauses_accepted as any;
+
+    if (!clauses) {
+      console.error('[CONTRACT_VALIDATION] Missing clauses_accepted for booking:', booking_id);
+      return new Response(
+        JSON.stringify({
+          error: 'CONTRACT_CLAUSES_MISSING',
+          message: 'Faltan las cláusulas del contrato. Por favor, acepta el contrato nuevamente.',
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const requiredClauses = ['culpaGrave', 'indemnidad', 'retencion', 'mora'];
+    const missingClauses = requiredClauses.filter((clause) => clauses[clause] !== true);
+
+    if (missingClauses.length > 0) {
+      console.warn('[CONTRACT_VALIDATION] Incomplete clause acceptance for booking:', {
+        booking_id,
+        missing_clauses: missingClauses,
+        clauses_state: clauses,
+      });
+      return new Response(
+        JSON.stringify({
+          error: 'INCOMPLETE_CLAUSE_ACCEPTANCE',
+          message: 'Debes aceptar TODAS las cláusulas del contrato para proceder con el pago.',
+          missing_clauses: missingClauses,
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    console.log('[CONTRACT_VALIDATION] ✅ Contract validated successfully', {
+      booking_id,
+      accepted_at: contract.accepted_at,
+      hours_since_acceptance: hoursSinceAcceptance.toFixed(2),
+    });
+
     if (!booking_id || !card_token) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: booking_id, card_token' }),

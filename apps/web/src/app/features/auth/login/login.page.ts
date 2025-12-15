@@ -10,8 +10,8 @@ import { HdriBackgroundComponent } from '../../../shared/components/hdri-backgro
   standalone: true,
   selector: 'app-login-page',
   imports: [
-    // NgOptimizedImage,
-    // RouterLink,
+    NgOptimizedImage,
+    RouterLink,
     ReactiveFormsModule,
     TranslateModule,
     HdriBackgroundComponent
@@ -28,6 +28,7 @@ export class LoginPage implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly showForm = signal(false);
+  readonly isAuthenticated = this.auth.isAuthenticated;
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],

@@ -354,7 +354,162 @@
                 (modeChange)="onPaymentModeChange($event)"
               ></app-payment-mode-toggle>
 
-              <!-- Card Payment Form -->
+              <!-- ============================================ -->
+              <!-- CONTRACT SECTION (NEW) -->
+              <!-- ============================================ -->
+              @if (contractPrepared() && !contractAccepted()) {
+                <section
+                  class="mb-8 rounded-xl border-2 border-warning-border bg-warning-bg p-6 space-y-6"
+                >
+                  <h2
+                    class="text-2xl font-bold text-gray-900 flex items-center gap-2 font-satoshi"
+                  >
+                    <svg
+                      class="w-6 h-6 text-warning-strong"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Contrato de Alquiler - Lectura Obligatoria
+                  </h2>
+
+                  <!-- PDF Viewer -->
+                  <div
+                    class="overflow-hidden rounded-lg border-2 border-gray-300 bg-white"
+                  >
+                    <iframe
+                      [src]="contractPdfUrl()"
+                      class="h-[600px] w-full"
+                      title="Contrato de Alquiler"
+                    ></iframe>
+                  </div>
+
+                  <!-- Download Link -->
+                  <a
+                    [href]="contractPdfUrl()"
+                    download
+                    class="inline-flex items-center gap-2 text-cta-default hover:text-cta-hover underline font-medium"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Descargar PDF del contrato
+                  </a>
+
+                  <!-- Granular Clause Acceptance -->
+                  <div class="space-y-3 bg-white rounded-lg p-4 border border-gray-200">
+                    <h3 class="font-semibold text-gray-900 flex items-center gap-2">
+                      <svg
+                        class="w-5 h-5 text-cta-default"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Acepto las siguientes cláusulas:
+                    </h3>
+
+                    <label class="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <input
+                        type="checkbox"
+                        [checked]="clausesAccepted().culpaGrave"
+                        (change)="toggleClauseCulpaGrave()"
+                        class="mt-1 h-5 w-5 text-cta-default focus:ring-cta-default rounded"
+                      />
+                      <span class="text-sm text-gray-700">
+                        <strong class="text-gray-900">Culpa Grave (Alcohol/Drogas):</strong>
+                        Pérdida total de cobertura por conducir bajo influencia.
+                      </span>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <input
+                        type="checkbox"
+                        [checked]="clausesAccepted().indemnidad"
+                        (change)="toggleClauseIndemnidad()"
+                        class="mt-1 h-5 w-5 text-cta-default focus:ring-cta-default rounded"
+                      />
+                      <span class="text-sm text-gray-700">
+                        <strong class="text-gray-900">Indemnidad Total:</strong>
+                        Responsable de multas, daños a terceros y gastos legales.
+                      </span>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <input
+                        type="checkbox"
+                        [checked]="clausesAccepted().retencion"
+                        (change)="toggleClauseRetencion()"
+                        class="mt-1 h-5 w-5 text-cta-default focus:ring-cta-default rounded"
+                      />
+                      <span class="text-sm text-gray-700">
+                        <strong class="text-gray-900">Retención Indebida (Art. 173 CP):</strong>
+                        No devolver en plazo = denuncia penal y secuestro.
+                      </span>
+                    </label>
+
+                    <label class="flex items-start gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                      <input
+                        type="checkbox"
+                        [checked]="clausesAccepted().mora"
+                        (change)="toggleClauseMora()"
+                        class="mt-1 h-5 w-5 text-cta-default focus:ring-cta-default rounded"
+                      />
+                      <span class="text-sm text-gray-700">
+                        <strong class="text-gray-900">Mora Automática (Art. 886 CCyC):</strong>
+                        Cargos automáticos doble/triple por demora.
+                      </span>
+                    </label>
+                  </div>
+
+                  <!-- Final Acceptance -->
+                  <div
+                    class="rounded-lg border-2 border-cta-default bg-cta-default/10 p-4"
+                  >
+                    <label class="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        [checked]="finalContractAcceptance()"
+                        (change)="toggleFinalAcceptance()"
+                        [disabled]="!allClausesAccepted()"
+                        class="mt-1 h-5 w-5 text-cta-default focus:ring-cta-default rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <span class="font-semibold text-gray-900">
+                        ✅ He leído y acepto TODAS las cláusulas del contrato. Acepto la validez
+                        legal de esta firma digital (Ley 25.506).
+                      </span>
+                    </label>
+                  </div>
+
+                  <button
+                    (click)="acceptContract()"
+                    [disabled]="!finalContractAcceptance()"
+                    class="w-full rounded-lg bg-cta-default px-6 py-3 font-semibold text-cta-text hover:bg-cta-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Aceptar Contrato y Continuar al Pago
+                  </button>
+                </section>
+              }
+
+              <!-- Card Payment Form (only visible after contract accepted) -->
               @if (paymentMode() === 'card') {
                 <div
                   class="bg-surface-raised dark:bg-surface-raised rounded-2xl shadow-sm border border-border-default dark:border-neutral-800/60 p-6"

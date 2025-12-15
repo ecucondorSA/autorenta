@@ -11,9 +11,11 @@ import { PdfGeneratorService } from '../../../core/services/pdf-generator.servic
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
+import { ContractsService, ClausesAccepted } from '../../../core/services/contracts.service';
+import { ContractTemplateService, ContractData } from '../../../core/services/contract-template.service';
 
 // Models
-import { Car } from '../../../core/models';
+import { Car, UserProfile } from '../../../core/models';
 import { FxSnapshot, RiskSnapshot, PaymentAuthorization, PaymentMode } from '../../../core/models/booking-detail-payment.model';
 
 // Components
@@ -54,9 +56,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private mpGateway = inject(MercadoPagoBookingGateway);
   private pdfGenerator = inject(PdfGeneratorService);
   private logger = inject(LoggerService).createChildLogger('BookingDetailPaymentPage');
+  private contractsService = inject(ContractsService);
+  private contractTemplateService = inject(ContractTemplateService);
 
   // State
   readonly car = signal<Car | null>(null);
+  readonly currentUserProfile = signal<UserProfile | null>(null); // Local profile state
   readonly fxSnapshot = signal<DualRateFxSnapshot | null>(null);
   readonly loading = signal(false);
   readonly processingPayment = signal(false);
@@ -75,6 +80,18 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
   readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
   readonly currentUserId = signal<string>('');
+
+  // Contract state
+  readonly contractPrepared = signal(false);
+  readonly contractAccepted = signal(false);
+  readonly contractPdfUrl = signal<string | null>(null);
+  readonly clausesAccepted = signal<ClausesAccepted>({
+    culpaGrave: false,
+    indemnidad: false,
+    retencion: false,
+    mora: false,
+  });
+  readonly finalContractAcceptance = signal(false);
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
@@ -124,6 +141,12 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const rentalArs = this.rentalCostArs();
 
     return guaranteeArs + rentalArs;
+  });
+
+  // Computed - All 4 priority clauses accepted
+  readonly allClausesAccepted = computed(() => {
+    const c = this.clausesAccepted();
+    return c.culpaGrave && c.indemnidad && c.retencion && c.mora;
   });
 
   readonly bookingInput = signal<{
@@ -191,6 +214,27 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
   }
 
+  // Methods to handle clause toggles (avoiding arrow functions in template)
+  toggleClauseCulpaGrave(): void {
+    this.clausesAccepted.update((c) => ({ ...c, culpaGrave: !c.culpaGrave }));
+  }
+
+  toggleClauseIndemnidad(): void {
+    this.clausesAccepted.update((c) => ({ ...c, indemnidad: !c.indemnidad }));
+  }
+
+  toggleClauseRetencion(): void {
+    this.clausesAccepted.update((c) => ({ ...c, retencion: !c.retencion }));
+  }
+
+  toggleClauseMora(): void {
+    this.clausesAccepted.update((c) => ({ ...c, mora: !c.mora }));
+  }
+
+  toggleFinalAcceptance(): void {
+    this.finalContractAcceptance.set(!this.finalContractAcceptance());
+  }
+
   async ngOnInit(): Promise<void> {
     // 1. Auth check
     const session = await this.authService.ensureSession();
@@ -203,6 +247,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // Store user ID for preauthorization
     this.currentUserId.set(session.user.id);
+    
+    // Load full profile
+    await this.loadUserProfile(session.user.id);
 
     // 2. Load params (now async to support bookingId lookup)
     await this.loadParams();
@@ -214,6 +261,22 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // 4. Calculate risk snapshot after FX is loaded
     this.calculateRiskSnapshot();
+  }
+
+  private async loadUserProfile(userId: string): Promise<void> {
+    try {
+      const { data, error } = await this.supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+        
+      if (error) throw error;
+      if (data) this.currentUserProfile.set(data as UserProfile);
+    } catch (err) {
+      this.logger.error('Error loading user profile', { error: err });
+      // Non-blocking, but contract generation might fail later
+    }
   }
 
   ngOnDestroy(): void {
@@ -456,6 +519,13 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.paymentProcessing.set(true);
       this.error.set(null);
 
+      // ✅ NEW: Validate contract accepted BEFORE payment
+      if (!this.contractAccepted()) {
+        this.error.set('Debes aceptar el contrato antes de proceder con el pago.');
+        this.paymentProcessing.set(false);
+        return;
+      }
+
       // Create booking if not exists
       if (!this.bookingId()) {
         await this.createBooking();
@@ -602,6 +672,9 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.bookingCreated.set(true);
 
       await this.upsertPricingAndInsurance(booking.id);
+
+      // ✅ NEW: Prepare contract and generate PDF immediately after booking creation
+      await this.prepareContractAndGeneratePdf(booking.id);
 
       this.logger.info('Booking created with locked FX rate', {
         total: this.totalArs(),
@@ -753,5 +826,144 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   async getCurrentUserId(): Promise<string> {
     const user = await this.authService.getCurrentUser();
     return user?.id || '';
+  }
+
+  /**
+   * Prepare contract and generate PDF after booking creation
+   */
+  private async prepareContractAndGeneratePdf(bookingId: string): Promise<void> {
+    try {
+      this.logger.info('Preparing contract for booking', { bookingId });
+
+      // 1. Prepare contract record in database
+      const contract = await this.contractsService.prepareContract({
+        bookingId,
+        termsVersion: 'v1.0.0',
+      });
+
+      // 2. Load template and merge data
+      const template = await this.contractTemplateService.loadTemplate('v1.0.0', 'es-AR');
+      const car = this.car()!;
+      const user = this.currentUserProfile()!; // Use local profile signal
+      const input = this.bookingInput()!;
+
+      // TODO: Get owner data from booking/car relationship
+      const ownerName = 'Propietario Pendiente'; // Will be filled by backend
+      const ownerDni = '-';
+
+      const contractData: ContractData = {
+        bookingId,
+        emissionDate: new Date().toLocaleDateString('es-AR'),
+        renterName: user?.full_name || 'Usuario',
+        renterDni: user?.gov_id_number || '-', // Use correct field from UserProfile
+        ownerName,
+        ownerDni,
+        carBrand: car.brand || '',
+        carModel: car.model || '',
+        carYear: car.year?.toString() || '',
+        carPlate: car.plate || '', // Use correct field from Car
+        insurancePolicyNumber: car.insurance_policy_number || 'Pendiente',
+        insuranceCompany: car.insurance_company || 'Aseguradora Pendiente',
+        insuranceCuit: '-', // TODO: Add to car model
+        insuranceValidity: 'Vigente', // TODO: Add expiry date
+        insuranceCoverage: 'Todo Riesgo', // TODO: Add coverage type
+        startDate: input.startDate.toLocaleDateString('es-AR'),
+        startTime: input.startDate.toLocaleTimeString('es-AR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        endDate: input.endDate.toLocaleDateString('es-AR'),
+        endTime: input.endDate.toLocaleTimeString('es-AR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        totalArs: this.totalArs().toFixed(2),
+      };
+
+      const mergedHtml = this.contractTemplateService.mergeData(template, contractData);
+
+      // Validate merge
+      const isValid = this.contractTemplateService.validateMerge(mergedHtml);
+      if (!isValid) {
+        this.logger.warn('Contract template has unresolved placeholders');
+      }
+
+      // 3. Call edge function to generate PDF
+      this.logger.info('Generating PDF via edge function...');
+
+      const { data, error } = await this.supabaseClient.functions.invoke(
+        'generate-booking-contract-pdf',
+        {
+          body: {
+            booking_id: bookingId,
+            merged_html: mergedHtml,
+          },
+        }
+      );
+
+      if (error) {
+        throw new Error(`PDF generation failed: ${error.message}`);
+      }
+
+      if (data && data.pdf_url) {
+        this.contractPdfUrl.set(data.pdf_url);
+        this.contractPrepared.set(true);
+        this.logger.info('Contract PDF generated successfully', {
+          pdf_url: data.pdf_url,
+        });
+      } else {
+        throw new Error('PDF generation returned no URL');
+      }
+    } catch (error) {
+      this.logger.error('Error preparing contract', { error });
+      this.error.set('Error al generar el contrato. Intenta nuevamente.');
+      // Don't throw - allow payment flow to continue (contract can be regenerated later)
+    }
+  }
+
+  /**
+   * Accept contract with full metadata for legal compliance (Ley 25.506)
+   */
+  async acceptContract(): Promise<void> {
+    try {
+      this.logger.info('Accepting contract...');
+
+      // Get IP address
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const { ip } = await ipResponse.json();
+
+      // Accept with metadata
+      await this.contractsService.acceptContractWithMetadata({
+        bookingId: this.bookingId()!,
+        clausesAccepted: this.clausesAccepted(),
+        ipAddress: ip,
+        userAgent: navigator.userAgent,
+        deviceFingerprint: this.generateDeviceFingerprint(),
+      });
+
+      this.contractAccepted.set(true);
+      this.logger.info('Contract accepted successfully', { ip });
+    } catch (error) {
+      this.logger.error('Error accepting contract', { error });
+      this.error.set('Error al aceptar el contrato. Intenta nuevamente.');
+    }
+  }
+
+  /**
+   * Generate device fingerprint for audit trail (non-PII)
+   * Creates a simple hash of browser/device characteristics
+   */
+  private generateDeviceFingerprint(): string {
+    const data = {
+      ua: navigator.userAgent,
+      lang: navigator.language,
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      screen: `${screen.width}x${screen.height}`,
+      depth: screen.colorDepth,
+      platform: navigator.platform,
+    };
+
+    // Convert to base64 string and truncate to 32 chars (non-cryptographic, just for correlation)
+    return btoa(JSON.stringify(data)).substring(0, 32);
   }
 }

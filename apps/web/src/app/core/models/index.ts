@@ -336,6 +336,11 @@ export interface Car {
   created_at: string;
   updated_at: string;
   vehicle_type?: string | null;
+
+  // Legal & Insurance (from views)
+  insurance_policy_number?: string | null;
+  insurance_company?: string | null;
+  insurance_expiration?: string | null;
 }
 
 export interface CarPhoto {
