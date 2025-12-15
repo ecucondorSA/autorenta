@@ -162,9 +162,18 @@ importers:
       '@capacitor/core':
         specifier: ^7.4.4
         version: 7.4.4
+      '@capacitor/geolocation':
+        specifier: ^7.1.6
+        version: 7.1.6(@capacitor/core@7.4.4)
       '@capacitor/haptics':
         specifier: ^7.0.3
         version: 7.0.3(@capacitor/core@7.4.4)
+      '@capacitor/local-notifications':
+        specifier: ^7.0.4
+        version: 7.0.4(@capacitor/core@7.4.4)
+      '@capacitor/motion':
+        specifier: ^7.0.2
+        version: 7.0.2(@capacitor/core@7.4.4)
       '@capacitor/preferences':
         specifier: ^7.0.3
         version: 7.0.3(@capacitor/core@7.4.4)
@@ -180,6 +189,9 @@ importers:
       '@capacitor/status-bar':
         specifier: ^7.0.4
         version: 7.0.4(@capacitor/core@7.4.4)
+      '@capgo/capacitor-native-biometric':
+        specifier: ^7.6.0
+        version: 7.6.0(@capacitor/core@7.4.4)
       '@ionic/angular':
         specifier: ^8.7.11
         version: 8.7.11(39626450d094f2479b023332c2564954)
@@ -1336,8 +1348,23 @@ packages:
   '@capacitor/core@7.4.4':
     resolution: {integrity: sha512-xzjxpr+d2zwTpCaN0k+C6wKSZzWFAb9OVEUtmO72ihjr/NEDoLvsGl4WLfjWPcCO2zOy0b2X52tfRWjECFUjtw==}
 
+  '@capacitor/geolocation@7.1.6':
+    resolution: {integrity: sha512-K+SXF8X01sEyCLb1ITqir5Gi3qMNnua7TMdxKmxYBAJATUGoHzJQ0itslkoP4HM6JZac+f8lTpRl1RMWKErRIg==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
   '@capacitor/haptics@7.0.3':
     resolution: {integrity: sha512-6O5W4jtYKPGrulqt3pEeXKH1vWT5deSUoiiN2sVj7F6UgrEOxCmm06XS07Eeum0lDXEmksKARwtA+iQwHPswtA==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
+  '@capacitor/local-notifications@7.0.4':
+    resolution: {integrity: sha512-A6xd64dcgWX75w3yrah83JN/NkiBH6kF0oXCFAt2Vrp5potnyNQgasibRyCmIY5RIn3slkDl3mUPkplXaIk8pw==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
+  '@capacitor/motion@7.0.2':
+    resolution: {integrity: sha512-cn8umRXwxu2Ewu7NLs3gWxv96u+Baa7tfc9v47oJG0Ojh5O6KwDFGRHOrhSBjAKspdcH11GrbXTqfYIxkJwd+Q==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
 
@@ -1363,6 +1390,14 @@ packages:
 
   '@capacitor/status-bar@7.0.4':
     resolution: {integrity: sha512-2BszlCqIlBZxHLjRyQbumKyuuisutkeJH+5eSKAEJKaDVJcfmAzr2v3MXWsRLrAHJFteLzRXkOlce5msSy28tQ==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
+
+  '@capacitor/synapse@1.0.4':
+    resolution: {integrity: sha512-/C1FUo8/OkKuAT4nCIu/34ny9siNHr9qtFezu4kxm6GY1wNFxrCFWjfYx5C1tUhVGz3fxBABegupkpjXvjCHrw==}
+
+  '@capgo/capacitor-native-biometric@7.6.0':
+    resolution: {integrity: sha512-ZQ+Nc+uS2sT8TED/REYlmGV34ASFsBe30YdABBQIRL+A2iVbWtdiL0FbX+1sKKXzrS2DGf+mD657Qwl1jGSDLg==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
 
@@ -10327,7 +10362,20 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@capacitor/geolocation@7.1.6(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+      '@capacitor/synapse': 1.0.4
+
   '@capacitor/haptics@7.0.3(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
+  '@capacitor/local-notifications@7.0.4(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
+  '@capacitor/motion@7.0.2(@capacitor/core@7.4.4)':
     dependencies:
       '@capacitor/core': 7.4.4
 
@@ -10348,6 +10396,12 @@ snapshots:
       '@capacitor/core': 7.4.4
 
   '@capacitor/status-bar@7.0.4(@capacitor/core@7.4.4)':
+    dependencies:
+      '@capacitor/core': 7.4.4
+
+  '@capacitor/synapse@1.0.4': {}
+
+  '@capgo/capacitor-native-biometric@7.6.0(@capacitor/core@7.4.4)':
     dependencies:
       '@capacitor/core': 7.4.4
 
