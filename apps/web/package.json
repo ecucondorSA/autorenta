@@ -91,7 +91,7 @@
     "@sentry/angular": "9.46.0",
     "@sentry/capacitor": "^2.4.1",
     "@supabase/storage-js": "^2.86.2",
-    "@supabase/supabase-js": "^2.86.2",
+    "@supabase/supabase-js": "^2.87.3",
     "@types/flatpickr": "^3.1.4",
     "@types/mapbox-gl": "^3.4.1",
     "@types/mercadopago": "^1.5.11",
