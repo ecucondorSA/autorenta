@@ -836,7 +836,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       this.logger.info('Preparing contract for booking', { bookingId });
 
       // 1. Prepare contract record in database
-      const contract = await this.contractsService.prepareContract({
+      await this.contractsService.prepareContract({
         bookingId,
         termsVersion: 'v1.0.0',
       });

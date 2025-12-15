@@ -248,7 +248,10 @@ export class AdminTrafficInfractionsPage implements OnInit {
 
       if (error) throw error;
 
-      const mapped = (data || []).map((i: Record<string, any>) => ({
+      const mapped = (data || []).map((i: {
+        renter?: { full_name: string };
+        owner?: { full_name: string };
+      } & Partial<TrafficInfraction>) => ({
         ...i,
         renter_name: i.renter?.full_name,
         owner_name: i.owner?.full_name

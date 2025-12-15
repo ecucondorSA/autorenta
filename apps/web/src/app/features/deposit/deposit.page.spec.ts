@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { WalletService } from '../../core/services/wallet.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { NotificationManagerService } from '../../core/services/notification-manager.service';
 import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { WalletService } from '../../core/services/wallet.service';
 import { DepositPage } from './deposit.page';
 
 describe('DepositPage', () => {
@@ -172,26 +172,26 @@ describe('DepositPage', () => {
   describe('usdAmount computed signal', () => {
     it('should calculate USD amount correctly (ARS / rate * 100 cents)', () => {
       component.platformRate.set(1200); // 1 USD = 1200 ARS
-      component.arsAmount.set(12000); // 12000 ARS
+      component.updateArsAmount(12000); // 12000 ARS
       // 12000 / 1200 = 10 USD = 1000 cents
       expect(component.usdAmount()).toBe(1000);
     });
 
     it('should return 0 if rate is null', () => {
       component.platformRate.set(null);
-      component.arsAmount.set(50000);
+      component.updateArsAmount(50000);
       expect(component.usdAmount()).toBe(0);
     });
 
     it('should return 0 if arsAmount is 0', () => {
       component.platformRate.set(1200);
-      component.arsAmount.set(0);
+      component.updateArsAmount(0);
       expect(component.usdAmount()).toBe(0);
     });
 
     it('should round to nearest cent', () => {
       component.platformRate.set(1200);
-      component.arsAmount.set(15000); // 15000 / 1200 = 12.5 USD = 1250 cents
+      component.updateArsAmount(15000); // 15000 / 1200 = 12.5 USD = 1250 cents
       expect(component.usdAmount()).toBe(1250);
     });
   });
@@ -238,7 +238,7 @@ describe('DepositPage', () => {
   describe('onSubmit - MercadoPago Integration', () => {
     beforeEach(() => {
       component.platformRate.set(1200);
-      component.arsAmount.set(10000);
+      component.updateArsAmount(10000);
     });
 
     it('should call createDepositPreference with correct params on success', fakeAsync(() => {
@@ -362,7 +362,7 @@ describe('DepositPage', () => {
     }));
 
     it('should set isProcessing to true during submission', () => {
-      walletService.createDepositPreference.and.returnValue(new Promise(() => {})); // Never resolves
+      walletService.createDepositPreference.and.returnValue(new Promise(() => { })); // Never resolves
       component.onSubmit();
       expect(component.isProcessing()).toBe(true);
     });
@@ -375,7 +375,7 @@ describe('DepositPage', () => {
     });
 
     it('should track deposit_cancelled event', () => {
-      component.arsAmount.set(5000);
+      component.updateArsAmount(5000);
       component.onCancel();
       expect(analyticsService.trackEvent).toHaveBeenCalledWith(
         'deposit_cancelled',

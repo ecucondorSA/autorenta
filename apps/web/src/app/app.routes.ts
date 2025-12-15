@@ -58,7 +58,7 @@ export const routes: Routes = [
       },
       {
         path: 'list',
-        data: { layout: 'full-bleed', animation: 'CarsListPage' },
+        data: { layout: 'full-bleed', animation: 'CarsListPage', hideFooter: true },
         loadComponent: () =>
           import('./features/cars/list/cars-list.page').then((m) => m.CarsListPage),
       },

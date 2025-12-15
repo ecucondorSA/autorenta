@@ -70,10 +70,9 @@
 - **Vertical debugging pattern**: For cross-layer bugs (UI → Service → DB → RLS), create `audit/feature-name` branch, trace full stack, document in `*_AUDIT.md`, fix all layers, merge with `--no-ff`.
 
 ## Production readiness & documentation
-- **Current status**: 67% production-ready (2-3 weeks to launch). See `docs/production-roadmap/README.md` for latest roadmap.
-- **Code analysis**: `docs/analysis/CODE_VS_DOCUMENTATION_ANALYSIS.md` - Real architecture (147 services, 151+ components, split payments 70% complete).
-- **Real metrics**: `docs/analysis/PRODUCTION_READINESS_REAL_STATUS.md` - Detailed progress breakdown by phase.
-- **Archived docs**: Historical documentation (Oct 2025 and earlier) moved to `docs/archived/old/`. Check there for legacy context.
+- **Current status**: Claims system 100% production-ready. Core platform features in development. See `docs/P0_SECURITY_STATUS.md` for claims system status.
+- **Documentation**: Comprehensive docs in `docs/` including security (`P0_SECURITY_*`), architecture, features, and deployment guides.
+- **Archived docs**: Historical documentation moved to `docs/archived/old/`. Check there for legacy context.
 
 ## References for deep dives
 - Architecture overview: `CLAUDE.md` (main), `CLAUDE_ARCHITECTURE.md` (technical), `CLAUDE_STORAGE.md` (buckets/RLS), `CLAUDE_PAYMENTS.md` (MercadoPago/wallet).

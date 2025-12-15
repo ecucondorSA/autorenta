@@ -19,7 +19,7 @@ export interface BookingContract {
   pdf_storage_path?: string;
   pdf_generation_status?: 'pending' | 'generating' | 'ready' | 'failed';
   pdf_error?: string;
-  contract_data?: any; // JSONB snapshot
+  contract_data?: Record<string, unknown>; // JSONB snapshot
   clauses_accepted?: ClausesAccepted;
 }
 

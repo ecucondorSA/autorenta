@@ -1159,7 +1159,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       let userMessage = err instanceof Error ? err.message : 'Error al crear la reserva';
 
       // Handle OVERLAP error specifically
-      if (userMessage.includes('OVERLAP') || (err as Record<string, any>)?.code === 'P0001') {
+      if (userMessage.includes('OVERLAP') || (err as { code?: string })?.code === 'P0001') {
         userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
         
         // Load blocked dates to refresh calendar

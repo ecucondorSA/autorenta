@@ -18,7 +18,6 @@
  * - Country-specific postal code validation
  */
 
-import { CommonModule } from '@angular/common';
 import {Component, Input, OnDestroy, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';

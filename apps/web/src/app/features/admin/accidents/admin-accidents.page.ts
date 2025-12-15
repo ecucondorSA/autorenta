@@ -294,7 +294,10 @@ export class AdminAccidentsPage implements OnInit {
 
       if (error) throw error;
 
-      const mapped = (data || []).map((a: Record<string, any>) => ({
+      const mapped = (data || []).map((a: {
+        reporter?: { full_name: string };
+        booking?: { car?: { brand: string; model: string; year: number } };
+      } & Partial<Accident>) => ({
         ...a,
         reporter_name: a.reporter?.full_name,
         car_info: a.booking?.car ? `${a.booking.car.brand} ${a.booking.car.model} (${a.booking.car.year})` : null
