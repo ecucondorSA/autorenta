@@ -27,41 +27,112 @@ npx playwright install chromium --with-deps
 ### All Tests
 ```bash
 ./tools/run.sh test:e2e
+# or
+npm run test:e2e
+```
+
+### Specific Test Suites
+
+#### Setup Verification (No Server Required)
+```bash
+npm run test:e2e -- e2e/tests/playwright-setup.spec.ts
+```
+
+#### Smoke Tests
+```bash
+npm run test:e2e -- e2e/tests/smoke.spec.ts
+```
+
+#### Booking and Payment Flow
+```bash
+npm run test:e2e -- e2e/tests/booking-payment-flow.spec.ts
 ```
 
 ### With UI Mode (Interactive)
 ```bash
 ./tools/run.sh test:e2e:ui
+# or
+npm run test:e2e:ui
 ```
 
 ### Specific Test File
 ```bash
-npx playwright test e2e/tests/smoke.spec.ts
+npx playwright test e2e/tests/booking-payment-flow.spec.ts
 ```
 
 ### Headed Mode (See Browser)
 ```bash
 npx playwright test --headed
+# or
+npm run test:e2e:headed
 ```
 
 ### Debug Mode
 ```bash
 npx playwright test --debug
+# or
+npm run test:e2e:debug
+```
+
+### Run Tests with Authentication
+```bash
+# Set test credentials
+export TEST_USER_EMAIL="your-test-email@example.com"
+export TEST_USER_PASSWORD="your-test-password"
+
+# Run booking/payment tests
+npm run test:e2e -- e2e/tests/booking-payment-flow.spec.ts
 ```
 
 ## Test Structure
 
 ```
 e2e/
-├── playwright.config.ts    # Playwright configuration
-├── tests/                  # Test specifications
-│   └── smoke.spec.ts      # Basic smoke tests
-├── fixtures/              # Test fixtures and utilities
-│   └── test-fixtures.ts   # Custom Playwright fixtures
-└── reports/               # Test reports (gitignored)
-    ├── html/             # HTML reports
-    └── results.json      # JSON results
+├── playwright.config.ts           # Playwright configuration
+├── tests/                         # Test specifications
+│   ├── playwright-setup.spec.ts  # Playwright setup verification (5 tests)
+│   ├── smoke.spec.ts             # Basic smoke tests (4 tests)
+│   └── booking-payment-flow.spec.ts  # Complete booking & payment flow (8+ tests)
+├── fixtures/                      # Test fixtures and utilities
+│   └── test-fixtures.ts          # Custom Playwright fixtures
+└── reports/                       # Test reports (gitignored)
+    ├── html/                     # HTML reports
+    └── results.json              # JSON results
 ```
+
+## Available Test Suites
+
+### 1. Playwright Setup Tests (`playwright-setup.spec.ts`)
+**Status**: ✅ 5/5 passing | **Server Required**: No
+
+Verifies that Playwright is correctly installed and configured:
+- Page navigation with data URLs
+- Screenshot capture
+- JavaScript execution
+- Element waiting
+- Form interaction
+
+### 2. Smoke Tests (`smoke.spec.ts`)
+**Status**: ⏸️ 4 tests ready | **Server Required**: Yes
+
+Basic application functionality tests:
+- Homepage loads successfully
+- Navigation is visible
+- Can navigate to login page
+- Marketplace page is accessible
+
+### 3. Booking and Payment Flow (`booking-payment-flow.spec.ts`)
+**Status**: 🆕 8 tests | **Server Required**: Yes | **Auth Required**: Yes
+
+Complete end-to-end booking and payment flow:
+- Browse cars in marketplace
+- View car details
+- Login and create booking
+- Payment page displays correctly
+- View booking summary
+- Payment methods available
+- Complete payment with card (skipped - requires full setup)
+- Complete payment with wallet (skipped - requires full setup)
 
 ## Writing Tests
 
@@ -101,6 +172,10 @@ See `.github/workflows/ci.yml` for CI configuration.
 |----------|---------|-------------|
 | `BASE_URL` | `http://localhost:4200` | Base URL for the app |
 | `CI` | `false` | CI environment flag |
+| `TEST_USER_EMAIL` | `test@example.com` | Test user email for authentication |
+| `TEST_USER_PASSWORD` | `testpass123` | Test user password for authentication |
+| `TEST_BOOKING_START` | `2025-12-20` | Start date for test bookings (YYYY-MM-DD) |
+| `TEST_BOOKING_END` | `2025-12-25` | End date for test bookings (YYYY-MM-DD) |
 
 ## Debugging
 
@@ -128,6 +203,50 @@ use: {
 3. **Use page object model** for complex pages
 4. **Keep tests independent** - each test should set up its own state
 5. **Use auto-waiting** - Playwright automatically waits for elements
+6. **Skip integration tests in CI** - Use `.skip()` for tests requiring full external services
+7. **Set environment variables** - Configure test credentials and booking dates via environment variables
+
+## Testing Booking and Payment Flows
+
+The `booking-payment-flow.spec.ts` test suite covers the complete user journey from browsing cars to completing a payment.
+
+### Prerequisites
+
+1. **Dev server running**: `cd apps/web && npm run start`
+2. **Test credentials**: Set `TEST_USER_EMAIL` and `TEST_USER_PASSWORD` environment variables
+3. **Test data**: Database should have available cars for booking
+
+### Test Structure
+
+The booking flow tests are organized into three describe blocks:
+
+1. **Complete Booking and Payment Flow**: Core user journey tests
+2. **Payment Methods**: Payment option validation
+3. **Booking Confirmation**: Post-payment confirmation tests
+
+### Running Booking Tests
+
+```bash
+# With environment variables
+TEST_USER_EMAIL="test@example.com" \
+TEST_USER_PASSWORD="your-password" \
+npm run test:e2e -- e2e/tests/booking-payment-flow.spec.ts
+
+# Run specific test
+npm run test:e2e -- e2e/tests/booking-payment-flow.spec.ts -g "browse cars"
+
+# Run in headed mode to see the flow
+npm run test:e2e:headed -- e2e/tests/booking-payment-flow.spec.ts
+```
+
+### Skipped Tests
+
+Some tests are skipped by default (`.skip()`) because they require:
+- Valid payment credentials
+- Active payment webhook
+- Real booking creation in database
+
+Enable these tests manually when running full integration testing with proper setup.
 
 ## Comparison with Patchright Tests
 
