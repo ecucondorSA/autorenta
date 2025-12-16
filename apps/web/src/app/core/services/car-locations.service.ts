@@ -212,21 +212,36 @@ export class CarLocationsService {
     return enriched;
   }
 
+  // 🚀 PERF: Track subscribers to avoid duplicate channels
+  private realtimeSubscribers = new Set<() => void>();
+
   subscribeToRealtime(onChange: () => void): () => void {
+    // Add callback to subscribers set
+    this.realtimeSubscribers.add(onChange);
+
+    // If channel already exists, just return cleanup (reuse channel)
     if (this.realtimeChannel) {
+      console.log('♻️ [CarLocations] Reusing existing realtime channel');
       return () => {
-        if (this.realtimeChannel) {
+        this.realtimeSubscribers.delete(onChange);
+        // Only remove channel if no more subscribers
+        if (this.realtimeSubscribers.size === 0 && this.realtimeChannel) {
           void this.supabase.removeChannel(this.realtimeChannel);
           this.realtimeChannel = null;
         }
       };
     }
 
+    // Create shared notification function
+    const notifyAllSubscribers = () => {
+      this.realtimeSubscribers.forEach((cb) => cb());
+    };
+
     const channel = this.supabase.channel('public:car_map_feed');
     channel.on(
       'postgres_changes',
       { schema: 'public', table: 'car_locations', event: '*' },
-      (_payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => onChange(),
+      (_payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => notifyAllSubscribers(),
     );
     channel.on(
       'postgres_changes',
@@ -237,7 +252,7 @@ export class CarLocationsService {
         const newStatus = newRecord?.status;
         const oldStatus = oldRecord?.status;
         if (newStatus === 'active' || oldStatus === 'active') {
-          onChange();
+          notifyAllSubscribers();
         }
       },
     );
@@ -246,7 +261,9 @@ export class CarLocationsService {
     this.realtimeChannel = channel;
 
     return () => {
-      if (this.realtimeChannel) {
+      this.realtimeSubscribers.delete(onChange);
+      // Only remove channel if no more subscribers
+      if (this.realtimeSubscribers.size === 0 && this.realtimeChannel) {
         void this.supabase.removeChannel(this.realtimeChannel);
         this.realtimeChannel = null;
       }

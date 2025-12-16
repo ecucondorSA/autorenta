@@ -270,6 +270,9 @@ export class MessagesService implements OnDestroy {
     if (error) throw error;
   }
 
+  // 🚀 PERF: Cache typing channels to prevent leaks
+  private typingChannels = new Map<string, RealtimeChannel>();
+
   // Typing indicator usando presence
   /**
    * Establece el estado de typing para un booking
@@ -294,20 +297,28 @@ export class MessagesService implements OnDestroy {
       // Determinar el nombre del canal según el tipo
       const channelName = type === 'car' ? `presence-car-${contextId}` : `presence-${contextId}`;
 
-      const channel = this.supabase.channel(channelName, {
-        config: {
-          presence: {
-            key: userId,
-          },
-        },
-      });
+      // Reuse existing channel or create new one
+      let channel = this.typingChannels.get(channelName);
 
-      await channel.subscribe();
+      if (!channel) {
+        channel = this.supabase.channel(channelName, {
+          config: {
+            presence: {
+              key: userId,
+            },
+          },
+        });
+        await channel.subscribe();
+        this.typingChannels.set(channelName, channel);
+      }
 
       if (isTyping) {
         await channel.track({ user_id: userId, typing: true });
       } else {
         await channel.untrack();
+        // Clean up channel when user stops typing
+        this.typingChannels.delete(channelName);
+        await this.supabase.removeChannel(channel);
       }
     } catch {
       // Don't throw - typing is not critical
