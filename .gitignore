@@ -2,6 +2,9 @@
 node_modules
 .pnpm-store
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Builds
 /dist
 /.output
@@ -32,6 +35,8 @@ functions/workers/*/.wrangler
 apps/web/src/assets/models/*.onnx
 test-results/
 e2e/artifacts/
+e2e/reports/
+!e2e/reports/.gitkeep
 
 # Patchright/Playwright (workspace-specific)
 apps/web/e2e/reports/
