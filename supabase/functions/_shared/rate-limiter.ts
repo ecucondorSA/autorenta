@@ -35,6 +35,14 @@ export interface RateLimitConfig {
   endpoint?: string;
   windowSeconds?: number;
   identifier?: string; // Optional override (e.g., IP address)
+  /**
+   * P0-2: Fail behavior when rate limiter has errors
+   * - true (default): Return 503 Service Unavailable when rate limiter fails
+   * - false: Allow request through when rate limiter fails (legacy behavior)
+   *
+   * CRITICAL: Use failClosed=true for payment/financial endpoints
+   */
+  failClosed?: boolean;
 }
 
 export interface RateLimitResult {
@@ -96,9 +104,39 @@ export class RateLimitError extends Error {
 // ============================================================================
 
 /**
+ * Service Unavailable Error for fail-closed rate limiter
+ */
+export class RateLimiterUnavailableError extends Error {
+  public readonly statusCode = 503;
+
+  constructor(originalError: Error) {
+    super('Rate limiter service temporarily unavailable');
+    this.name = 'RateLimiterUnavailableError';
+    this.cause = originalError;
+  }
+
+  toResponse(): Response {
+    return new Response(
+      JSON.stringify({
+        error: 'SERVICE_UNAVAILABLE',
+        message: 'Service temporarily unavailable. Please try again later.',
+      }),
+      {
+        status: 503,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': '30',
+        },
+      }
+    );
+  }
+}
+
+/**
  * Enforce rate limit using Supabase RPC function
  *
  * @throws {RateLimitError} if rate limit is exceeded
+ * @throws {RateLimiterUnavailableError} if rate limiter fails and failClosed=true
  */
 export async function enforceRateLimit(
   req: Request,
@@ -108,6 +146,7 @@ export async function enforceRateLimit(
     endpoint = 'global',
     windowSeconds = 60,
     identifier = null,
+    failClosed = true, // P0-2: Default to fail-closed for security
   } = config;
 
   // Get Supabase client from request (assumes JWT in Authorization header)
@@ -122,8 +161,17 @@ export async function enforceRateLimit(
 
   if (error) {
     console.error('[RateLimiter] Error checking rate limit:', error);
-    // Don't block on rate limiter errors (fail open for availability)
-    return;
+
+    // P0-2: Configurable fail behavior
+    if (failClosed) {
+      // CRITICAL ENDPOINTS: Block request when rate limiter is unavailable
+      console.error('[RateLimiter] Failing closed - blocking request');
+      throw new RateLimiterUnavailableError(error);
+    } else {
+      // NON-CRITICAL ENDPOINTS: Allow request through (legacy fail-open behavior)
+      console.warn('[RateLimiter] Failing open - allowing request');
+      return;
+    }
   }
 
   const result = data as unknown as RateLimitResult;
@@ -258,6 +306,10 @@ export function withRateLimit(
       return response;
     } catch (error) {
       if (error instanceof RateLimitError) {
+        return error.toResponse();
+      }
+      // P0-2: Handle fail-closed errors
+      if (error instanceof RateLimiterUnavailableError) {
         return error.toResponse();
       }
       throw error;

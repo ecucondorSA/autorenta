@@ -1,5 +1,11 @@
-import {Component, Input, Output, EventEmitter, signal, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input, Output,
+  signal
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import {
@@ -44,14 +50,14 @@ import { NotificationManagerService } from '../../../core/services/notification-
             "
             class="flex-1 px-4 py-2 rounded-lg transition-colors"
           >
-            🤖 Cloudflare AI (Lento)
+            ⚡ Gemini 2.5 Flash
           </button>
         </div>
         <p class="text-xs text-text-secondary mt-2">
           @if (method() === 'stock-photos') {
             Busca fotos reales de autos similares (más rápido, fotos reales)
           } @else {
-            Genera fotos desde cero con IA FLUX.1 (más lento, generación real)
+            Genera fotos con Gemini 2.5 Flash (mejor calidad)
           }
         </p>
       </div>
@@ -121,7 +127,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
               ></path>
             </svg>
             @if (method() === 'cloudflare-ai') {
-              Generando con IA (esto puede tardar 30-60 segundos)...
+              Generando con IA (esto puede tardar 5-20 segundos)...
             } @else {
               Buscando fotos de stock...
             }

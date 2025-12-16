@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface CloudflareAIRequest {
   brand: string;
@@ -8,14 +9,14 @@ export interface CloudflareAIRequest {
   year?: number;
   color?: string;
   body_type?:
-    | 'sedan'
-    | 'hatchback'
-    | 'suv'
-    | 'crossover'
-    | 'pickup'
-    | 'coupe'
-    | 'wagon'
-    | 'minivan';
+  | 'sedan'
+  | 'hatchback'
+  | 'suv'
+  | 'crossover'
+  | 'pickup'
+  | 'coupe'
+  | 'wagon'
+  | 'minivan';
   trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
   angle?: 'front' | 'side' | 'rear' | '3/4-front' | 'interior';
   style?: 'showroom' | 'street' | 'studio' | 'outdoor' | string;
@@ -35,10 +36,10 @@ export interface CloudflareAIResponse {
 }
 
 /**
- * Servicio para generar imágenes de autos con Cloudflare AI (FLUX.1-schnell)
+ * Servicio para generar imágenes de autos vía Worker (server-side).
  *
- * Este servicio GENERA imágenes desde cero (no usa stock photos)
- * Es mucho más potente que el stock-photos service
+ * Actualmente el worker `functions/workers/ai-car-generator` usa Gemini 2.5 Flash
+ * (modelo configurable por secret/vars). El navegador NO debe exponer API keys.
  */
 @Injectable({
   providedIn: 'root',
@@ -46,9 +47,10 @@ export interface CloudflareAIResponse {
 export class CloudflareAiService {
   private readonly http = inject(HttpClient);
 
-  // URL del worker desplegado en Cloudflare
-  private readonly WORKER_URL =
-    'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev';
+  // URL del worker de generación de imágenes (Gemini)
+  // IMPORTANTE: debe configurarse por env var (NG_APP_CLOUDFLARE_WORKER_URL).
+  // No hacemos fallback a workers.dev porque puede apuntar a un deploy viejo.
+  private readonly WORKER_URL = environment.cloudflareWorkerUrl;
 
   // Estilos "marketplace" realistas (Amateur / Phone Quality)
   private readonly REALISTIC_STYLES = [
@@ -61,10 +63,14 @@ export class CloudflareAiService {
   ];
 
   /**
-   * Genera una imagen de un auto usando FLUX.1-schnell
+   * Genera una imagen de un auto usando el worker (Gemini)
    */
   async generateCarImage(params: CloudflareAIRequest): Promise<Blob> {
     try {
+      if (!this.WORKER_URL) {
+        throw new Error('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (worker Gemini)');
+      }
+
       const response = await firstValueFrom(
         this.http.post<CloudflareAIResponse>(this.WORKER_URL, params),
       );
@@ -91,14 +97,14 @@ export class CloudflareAiService {
     year?: number;
     color?: string;
     body_type?:
-      | 'sedan'
-      | 'hatchback'
-      | 'suv'
-      | 'crossover'
-      | 'pickup'
-      | 'coupe'
-      | 'wagon'
-      | 'minivan';
+    | 'sedan'
+    | 'hatchback'
+    | 'suv'
+    | 'crossover'
+    | 'pickup'
+    | 'coupe'
+    | 'wagon'
+    | 'minivan';
     trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
     angles?: Array<'front' | 'side' | 'rear' | '3/4-front' | 'interior'>;
   }): Promise<Blob[]> {
@@ -114,7 +120,8 @@ export class CloudflareAiService {
         ...params,
         angle,
         style: randomStyle,
-        num_steps: 8, // Max quality for FLUX.1-schnell
+        // Steps are worker/model-specific; worker may ignore this for Gemini.
+        num_steps: 8,
       }),
     );
 
@@ -126,6 +133,7 @@ export class CloudflareAiService {
    */
   async healthCheck(): Promise<boolean> {
     try {
+      if (!this.WORKER_URL) return false;
       const response = await fetch(this.WORKER_URL, {
         method: 'OPTIONS',
       });

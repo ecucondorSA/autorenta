@@ -8,6 +8,22 @@ export interface PhotoPreview {
   preview: string;
 }
 
+export interface GenerateAIPhotosOptions {
+  color?: string;
+  body_type?:
+  | 'sedan'
+  | 'hatchback'
+  | 'suv'
+  | 'crossover'
+  | 'pickup'
+  | 'coupe'
+  | 'wagon'
+  | 'minivan';
+  trim_level?: 'base' | 'lx' | 'ex' | 'sport' | 'touring' | 'limited' | 'type-r';
+  /** Same set id for the 3 photos so context/color stays consistent. */
+  setId?: string;
+}
+
 /**
  * Service for managing car photos
  *
@@ -103,7 +119,12 @@ export class PublishCarPhotoService {
   /**
    * Generate AI photos for a car
    */
-  async generateAIPhotos(brand: string, model: string, year: number): Promise<void> {
+  async generateAIPhotos(
+    brand: string,
+    model: string,
+    year: number,
+    options: GenerateAIPhotosOptions = {},
+  ): Promise<void> {
     if (!brand || !model || !year) {
       alert('Debes seleccionar marca, modelo y año para generar fotos con IA.');
       return;
@@ -121,120 +142,78 @@ export class PublishCarPhotoService {
     this.isGeneratingAIPhotos.set(true);
 
     try {
-      if (!environment.googleAiImageUrl) {
-        alert('Falta configurar NG_APP_GOOGLE_AI_IMAGE_URL (endpoint de Gemini).');
+      // Generación de imágenes se hace vía Worker (server-side) para no exponer keys en el navegador.
+      const workerEnabled = Boolean(environment.cloudflareWorkerUrl);
+      if (!workerEnabled) {
+        alert('Falta configurar NG_APP_CLOUDFLARE_WORKER_URL (worker de Gemini para imágenes).');
+        return;
       }
-
-      // Cloudflare worker es opcional si usamos Google
-      const googleEnabled = Boolean(environment.googleAiImageUrl);
-      const cloudflareEnabled = Boolean(environment.cloudflareWorkerUrl);
 
       const generatedPhotos: PhotoPreview[] = [];
       const errors: string[] = [];
 
-      // Generar 3 imágenes con Gemini: exterior front, interior, exterior rear
-      const googlePrompts = this.buildGeminiPrompts(brand, model, year);
+      const setId =
+        options.setId ||
+        (globalThis.crypto && 'randomUUID' in globalThis.crypto
+          ? (globalThis.crypto as Crypto).randomUUID()
+          : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
-      if (googleEnabled) {
-        for (const [index, prompt] of googlePrompts.entries()) {
-          if (remainingSlots <= 0) break;
+      // Generar hasta 3 imágenes: 3/4 frontal, lateral, interior (estilo marketplace)
+      const angles: Array<'3/4-front' | 'side' | 'interior'> = ['3/4-front', 'side', 'interior'];
+      for (const [index, angle] of angles.entries()) {
+        if (remainingSlots <= 0) break;
 
-          try {
-            const googleRequestBody = {
-              contents: [
-                {
-                  role: 'user',
-                  parts: [{ text: prompt }],
-                },
-              ],
-              generationConfig: {
-                responseModalities: ['IMAGE'],
-                imageConfig: {
-                  aspectRatio: '4:3', // Formato foto de móvil para look natural
-                },
-              },
-            };
+        try {
+          const workerResponse = await fetch(`${environment.cloudflareWorkerUrl}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              brand,
+              model,
+              year,
+              color: options.color,
+              body_type: options.body_type,
+              trim_level: options.trim_level,
+              angle,
+              // Marketplace-style photos (avoid studio/showroom look)
+              style: 'marketplace_latam_border_town',
+              set_id: setId,
+            }),
+          });
 
-            const googleResponse = await fetch(`${environment.googleAiImageUrl}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(googleRequestBody),
-            });
+          const workerResult = await workerResponse.json().catch(() => ({}));
 
-            const googleResult = await googleResponse.json().catch(() => ({}));
-
-            const inlineData = googleResult?.candidates?.[0]?.content?.parts?.[0]?.inlineData;
-            if (!googleResponse.ok || !inlineData?.data) {
-              const message =
-                googleResult?.error?.message || googleResult?.error || googleResponse.statusText;
-              throw new Error(message || 'Respuesta inesperada de Gemini (imagen)');
-            }
-
-            const mimeType = inlineData.mimeType || 'image/png';
-            const fileExtension = mimeType.split('/')[1] || 'png';
-            const googleFile = await this.base64ToFile(
-              inlineData.data,
-              `google-ai-${brand}-${model}-${Date.now()}-${index}.${fileExtension}`,
-              mimeType,
-            );
-            const googlePreview = await this.createPreview(googleFile);
-            generatedPhotos.push({ file: googleFile, preview: googlePreview });
-            remainingSlots--;
-          } catch (error) {
-            console.error('Error generando foto con Google AI:', error);
-            errors.push(
-              `Gemini #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`,
-            );
+          const modelUsed = workerResult?.metadata?.model;
+          if (modelUsed) {
+            console.info('[AI Photos] Worker model:', modelUsed);
           }
-        }
-      }
 
-      // Generar las imágenes restantes (hasta 2) con Cloudflare Worker
-      if (cloudflareEnabled) {
-        const numCloudflarePhotos = Math.min(2, remainingSlots); // Generar hasta 2 fotos más, respetando slots disponibles
-        for (let i = 0; i < numCloudflarePhotos; i++) {
-          try {
-            const workerResponse = await fetch(`${environment.cloudflareWorkerUrl}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                brand,
-                model,
-                year,
-                angle: '3/4-front', // Puedes variar el ángulo o estilo si el worker lo soporta
-                style: 'showroom',
-                num_steps: 8,
-              }),
-            });
-
-            const workerResult = await workerResponse.json().catch(() => ({}));
-
-            if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
-              const message = workerResult?.error || workerResponse.statusText;
-              throw new Error(message || 'Error al generar foto con Cloudflare Worker');
-            }
-
-            const workerFile = await this.base64ToFile(
-              workerResult.image,
-              `cf-worker-ai-${brand}-${model}-${Date.now()}-${i}.png`,
-            );
-            const workerPreview = await this.createPreview(workerFile);
-            generatedPhotos.push({ file: workerFile, preview: workerPreview });
-          } catch (error) {
-            console.error(`Error generando foto ${i + 1} con Cloudflare Worker:`, error);
-            errors.push(`Worker #${i + 1}: ${error instanceof Error ? error.message : 'falló'}`);
+          if (!workerResponse.ok || !workerResult.success || !workerResult.image) {
+            const message = workerResult?.error || workerResponse.statusText;
+            throw new Error(message || 'Error al generar foto con IA');
           }
+
+          const workerFile = await this.base64ToFile(
+            workerResult.image,
+            `ai-${brand}-${model}-${Date.now()}-${index}.png`,
+          );
+          const workerPreview = await this.createPreview(workerFile);
+          generatedPhotos.push({ file: workerFile, preview: workerPreview });
+          remainingSlots--;
+        } catch (error) {
+          console.error(`Error generando foto ${index + 1} con worker:`, error);
+          errors.push(`IA #${index + 1}: ${error instanceof Error ? error.message : 'falló'}`);
         }
       }
 
       if (generatedPhotos.length > 0) {
         this.uploadedPhotos.set([...currentPhotos, ...generatedPhotos]);
         const errorMsg = errors.length ? ` (algunas fallaron: ${errors.join('; ')})` : '';
-        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}.`);
+        alert(`✨ Se generaron ${generatedPhotos.length} foto(s) con IA${errorMsg}. Revisa consola para ver el modelo usado.`);
       } else {
         const msg = errors.length
           ? `No se generaron fotos. Errores: ${errors.join('; ')}`
-          : 'No se pudo generar ninguna foto con IA. Verifica configuración de NG_APP_GOOGLE_AI_IMAGE_URL o NG_APP_CLOUDFLARE_WORKER_URL.';
+          : 'No se pudo generar ninguna foto con IA. Verifica NG_APP_CLOUDFLARE_WORKER_URL.';
         alert(msg);
       }
     } catch (error) {

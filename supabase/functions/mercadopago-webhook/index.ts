@@ -889,161 +889,128 @@ serve(async (req: Request) => {
       const metadata = paymentData.metadata || {};
       const isMarketplaceSplit = metadata.is_marketplace_split === 'true' || metadata.is_marketplace_split === true;
 
-      // Variables para tracking de validación (scope compartido)
-      let validationPassed = true;
-      const validationIssues: Array<{ type: string;[key: string]: any }> = [];
-
       if (isMarketplaceSplit) {
-        console.log('💰 Processing marketplace split payment...');
+        console.log('💰 Processing marketplace split payment with ATOMIC validation...');
 
         // ========================================
-        // VALIDACIÓN DE SPLIT (Paso 4)
+        // P0-3 FIX: ATOMIC SPLIT PAYMENT VALIDATION
+        // All validations and booking update happen in a single transaction
+        // If validation fails, booking is NOT confirmed
         // ========================================
 
-        // 1. Obtener collector_id esperado del dueño del auto
-        const { data: car, error: carError } = await supabase
-          .from('cars')
-          .select('owner_id, profiles!cars_owner_id_fkey(mercadopago_collector_id)')
-          .eq('id', booking.car_id)
-          .single();
-
-        if (carError || !car) {
-          console.error('Error fetching car owner info:', carError);
-        }
-
-        const expectedCollectorId = car?.profiles?.mercadopago_collector_id;
-        const receivedCollectorId = paymentData.collector_id?.toString();
-
-        // 2. Validar que el collector_id coincida
-
-        if (expectedCollectorId && receivedCollectorId !== expectedCollectorId) {
-          console.error('❌ Split payment error: wrong collector', {
-            expected: expectedCollectorId,
-            received: receivedCollectorId,
-            booking_id: reference_id,
-            payment_id: paymentData.id
-          });
-
-          validationPassed = false;
-          validationIssues.push({
-            type: 'split_collector_mismatch',
-            expected: expectedCollectorId,
-            received: receivedCollectorId
-          });
-
-          // Insertar en payment_issues
-          await supabase.from('payment_issues').insert({
-            booking_id: reference_id,
-            payment_id: paymentData.id.toString(),
-            issue_type: 'split_collector_mismatch',
-            details: {
-              expected_collector_id: expectedCollectorId,
-              received_collector_id: receivedCollectorId,
-              payment_data: {
-                amount: paymentData.transaction_amount,
-                currency: paymentData.currency_id,
-                status: paymentData.status
-              }
-            }
-          });
-        }
-
-        // 3. Validar montos del split
-        const totalAmount = paymentData.transaction_amount;
-        const marketplaceFee = paymentData.marketplace_fee || 0;
-        const expectedPlatformFee = parseFloat(metadata.platform_fee_ars || '0');
-        const expectedOwnerAmount = parseFloat(metadata.owner_amount_ars || '0');
-
-        // Validar que los montos sumen correctamente
-        const calculatedTotal = expectedOwnerAmount + expectedPlatformFee;
-        const amountDifference = Math.abs(calculatedTotal - totalAmount);
-
-        if (amountDifference > 0.01) { // Tolerar diferencia de 1 centavo por redondeo
-          console.error('❌ Split amount validation failed', {
-            total: totalAmount,
-            calculated: calculatedTotal,
-            difference: amountDifference,
-            owner: expectedOwnerAmount,
-            platform: expectedPlatformFee
-          });
-
-          validationPassed = false;
-          validationIssues.push({
-            type: 'split_amount_mismatch',
-            total: totalAmount,
-            calculated: calculatedTotal,
-            difference: amountDifference
-          });
-
-          // Insertar en payment_issues
-          await supabase.from('payment_issues').insert({
-            booking_id: reference_id,
-            payment_id: paymentData.id.toString(),
-            issue_type: 'split_amount_mismatch',
-            details: {
-              total_amount: totalAmount,
-              calculated_total: calculatedTotal,
-              difference: amountDifference,
-              owner_amount: expectedOwnerAmount,
-              platform_fee: expectedPlatformFee,
-              marketplace_fee: marketplaceFee
-            }
-          });
-        }
-
-        // 4. Validar que marketplace_fee coincida con expected
-        if (marketplaceFee !== expectedPlatformFee) {
-          console.warn('⚠️ Marketplace fee mismatch (non-critical)', {
-            expected: expectedPlatformFee,
-            received: marketplaceFee
-          });
-        }
-
-        // 5. Log de validación exitosa o fallida
-        if (validationPassed) {
-          console.log('✅ Split validation passed:', {
-            total: totalAmount,
-            owner: expectedOwnerAmount,
-            platform: expectedPlatformFee,
-            collector_id: receivedCollectorId
-          });
-        } else {
-          console.error('❌ Split validation failed:', validationIssues);
-        }
-
-        // Registrar split en BD
-        const { error: splitError } = await supabase.rpc('register_payment_split', {
-          p_booking_id: reference_id,
-          p_mp_payment_id: paymentData.id.toString(),
-          p_total_amount_cents: Math.round(paymentData.transaction_amount * 100),
-          p_currency: paymentData.currency_id
-        });
+        const { data: splitResult, error: splitError } = await supabase.rpc(
+          'validate_and_confirm_split_payment',
+          {
+            p_booking_id: reference_id,
+            p_mp_payment_id: paymentData.id.toString(),
+            p_mp_status: paymentData.status,
+            p_mp_status_detail: paymentData.status_detail || '',
+            p_transaction_amount: paymentData.transaction_amount,
+            p_currency_id: paymentData.currency_id || 'ARS',
+            p_payment_method_id: paymentData.payment_method_id || '',
+            p_date_approved: paymentData.date_approved || new Date().toISOString(),
+            p_collector_id: paymentData.collector_id?.toString() || '',
+            p_marketplace_fee: paymentData.marketplace_fee || 0,
+            p_metadata: metadata,
+          }
+        );
 
         if (splitError) {
-          console.error('Error registering payment split:', splitError);
-          // No fallar el webhook, solo logear
-        } else {
-          console.log('✅ Payment split registered successfully');
+          console.error('Error in atomic split validation:', splitError);
+          throw splitError;
         }
+
+        // Check result of atomic validation
+        if (splitResult.already_processed) {
+          console.log('Booking already processed:', splitResult.message);
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: splitResult.message,
+              booking_id: reference_id,
+            }),
+            {
+              status: 200,
+              headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+            }
+          );
+        }
+
+        if (!splitResult.validation_passed) {
+          // P0-3: Validation failed - booking NOT confirmed
+          console.error('❌ Split payment validation FAILED (atomic):', {
+            booking_id: reference_id,
+            payment_id: paymentData.id,
+            issues: splitResult.validation_issues,
+            status: splitResult.status,
+          });
+
+          // Return success to MP (we received the webhook) but booking is NOT confirmed
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: 'Payment received but validation failed - requires manual review',
+              booking_id: reference_id,
+              payment_id: paymentData.id,
+              validation_passed: false,
+              booking_status: 'payment_validation_failed',
+              requires_manual_review: true,
+            }),
+            {
+              status: 200,
+              headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+            }
+          );
+        }
+
+        console.log('✅ Split payment validated and booking confirmed (atomic):', {
+          booking_id: reference_id,
+          payment_id: paymentData.id,
+        });
+
+        // Marcar webhook como procesado (best-effort)
+        try {
+          await supabase
+            .from('mp_webhook_logs')
+            .update({
+              processed: true,
+              processed_at: new Date().toISOString(),
+              booking_id: reference_id,
+              payment_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+              resource_id: paymentData.id?.toString?.() ?? String(paymentData.id),
+              processing_error: null,
+            })
+            .eq('event_id', xRequestId);
+        } catch (e) {
+          console.warn('Warning: failed to mark mp_webhook_logs processed (split booking)', e);
+        }
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Split payment validated and booking confirmed',
+            booking_id: reference_id,
+            payment_id: paymentData.id,
+            marketplace_split: true,
+            validation_passed: true,
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, ...rateLimitHeaders, 'Content-Type': 'application/json' },
+          }
+        );
       }
 
-      // Actualizar booking a confirmado
+      // ========================================
+      // NON-SPLIT PAYMENTS: Regular booking confirmation
+      // ========================================
       const { error: updateError } = await supabase
         .from('bookings')
         .update({
           status: 'confirmed',
           paid_at: new Date().toISOString(),
           payment_method: 'credit_card',
-          payment_split_completed: isMarketplaceSplit,
-          payment_split_validated_at: isMarketplaceSplit
-            ? new Date().toISOString()
-            : null,
-          owner_payment_amount: isMarketplaceSplit
-            ? parseFloat(metadata.owner_amount_ars || '0')
-            : null,
-          platform_fee: isMarketplaceSplit
-            ? parseFloat(metadata.platform_fee_ars || '0')
-            : null,
+          payment_split_completed: false,
           metadata: {
             ...(booking.metadata || {}),
             mercadopago_payment_id: paymentData.id,
@@ -1052,12 +1019,7 @@ serve(async (req: Request) => {
             mercadopago_amount: paymentData.transaction_amount,
             mercadopago_currency: paymentData.currency_id,
             mercadopago_approved_at: paymentData.date_approved,
-            is_marketplace_split: isMarketplaceSplit,
-            collector_id: metadata.collector_id || null,
-            split_validation_passed: isMarketplaceSplit ? validationPassed : null,
-            split_validation_issues: isMarketplaceSplit && !validationPassed
-              ? validationIssues
-              : null,
+            is_marketplace_split: false,
           },
         })
         .eq('id', reference_id);
@@ -1127,6 +1089,45 @@ serve(async (req: Request) => {
         }
       );
     }
+
+    // ========================================
+    // P1-5: VALIDAR MONTO RECIBIDO
+    // ========================================
+    // Comparar el monto recibido de MercadoPago con el monto esperado
+    // para prevenir ataques man-in-the-middle
+    const expectedAmountCents = transaction.amount; // Monto original en centavos
+    const receivedAmountCents = Math.round(paymentData.transaction_amount * 100);
+    const amountDifferenceCents = Math.abs(expectedAmountCents - receivedAmountCents);
+
+    // Tolerancia de 1 centavo por redondeo
+    if (amountDifferenceCents > 1) {
+      console.error(
+        `[P1-5] Amount mismatch detected! Expected: ${expectedAmountCents}, Received: ${receivedAmountCents}, Diff: ${amountDifferenceCents}`
+      );
+
+      // Log the issue for investigation
+      await supabase.from('payment_issues').insert({
+        booking_id: null,
+        transaction_id: transaction.id,
+        issue_type: 'deposit_amount_mismatch',
+        severity: 'high',
+        description: `Deposit amount mismatch: expected ${expectedAmountCents} cents, received ${receivedAmountCents} cents`,
+        metadata: {
+          expected_amount_cents: expectedAmountCents,
+          received_amount_cents: receivedAmountCents,
+          difference_cents: amountDifferenceCents,
+          payment_id: paymentData.id,
+          user_id: transaction.user_id,
+        },
+        detected_at: new Date().toISOString(),
+      }).catch(e => console.error('Failed to log payment issue:', e));
+
+      throw new Error(
+        `AMOUNT_MISMATCH: Expected ${expectedAmountCents} cents, received ${receivedAmountCents} cents`
+      );
+    }
+
+    console.log(`Amount validation passed: ${receivedAmountCents} cents (diff: ${amountDifferenceCents})`);
 
     // ========================================
     // MEJORA: Usar función admin que no requiere auth

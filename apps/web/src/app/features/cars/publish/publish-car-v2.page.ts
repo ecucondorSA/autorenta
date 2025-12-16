@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, computed, inject, OnInit, signal
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -314,7 +316,7 @@ export class PublishCarV2Page implements OnInit {
       console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
       const categories = await this.pricingService.getVehicleCategories();
       console.log('[PublishCarV2] Loaded categories:', categories.length);
-    const category = categories.find((c) => c.id === categoryId);
+      const category = categories.find((c) => c.id === categoryId);
       if (category) {
         const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
         console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
@@ -925,6 +927,7 @@ export class PublishCarV2Page implements OnInit {
     const brandId = this.publishForm.get('brand_id')?.value;
     const modelId = this.publishForm.get('model_id')?.value;
     const year = this.publishForm.get('year')?.value;
+    const color = this.publishForm.get('color')?.value;
 
     if (!brandId || !modelId || !year) {
       alert('Debes seleccionar marca, modelo y año primero');
@@ -939,7 +942,7 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    await this.photoService.generateAIPhotos(brand.name, model.name, year);
+    await this.photoService.generateAIPhotos(brand.name, model.name, year, { color: color || undefined });
   }
 
   /**
@@ -1185,7 +1188,7 @@ export class PublishCarV2Page implements OnInit {
     this.isSubmitting.set(true);
     try {
       const formData = this.formService.getFormData();
-      
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const carData: any = {
         ...formData,
@@ -1199,7 +1202,7 @@ export class PublishCarV2Page implements OnInit {
       };
 
       await this.performSubmission(carData);
-      
+
       this.notificationManager.success(
         'Borrador guardado',
         'Tu progreso ha sido guardado. Puedes continuar editando más tarde.'
@@ -1212,71 +1215,71 @@ export class PublishCarV2Page implements OnInit {
   }
 
   private async performSubmission(carData: Record<string, unknown>): Promise<void> {
-      let carId: string;
+    let carId: string;
 
-      if (this.editMode() && this.carId) {
-        // Update existing car
-        await this.carsService.updateCar(this.carId, carData);
-        carId = this.carId;
+    if (this.editMode() && this.carId) {
+      // Update existing car
+      await this.carsService.updateCar(this.carId, carData);
+      carId = this.carId;
 
-        if (carData.status === 'active') {
-          this.notificationManager.success(
-            '✅ Auto actualizado exitosamente',
-            'Los cambios se han guardado correctamente.',
-            6000,
-          );
-        }
-      } else {
-        // Create new car
-        const newCar = await this.carsService.createCar(carData);
-        carId = newCar.id;
-
-        if (carData.status === 'active') {
-          this.notificationManager.success(
-            '🎉 ¡Auto publicado exitosamente!',
-            'Tu auto ya está visible en el marketplace.',
-            8000,
-          );
-        }
+      if (carData.status === 'active') {
+        this.notificationManager.success(
+          '✅ Auto actualizado exitosamente',
+          'Los cambios se han guardado correctamente.',
+          6000,
+        );
       }
+    } else {
+      // Create new car
+      const newCar = await this.carsService.createCar(carData);
+      carId = newCar.id;
 
-      // Upload photos (if new or changed)
-      if (this.photoService.getPhotoCount() > 0) {
-        await this.photoService.uploadPhotos(carId);
+      if (carData.status === 'active') {
+        this.notificationManager.success(
+          '🎉 ¡Auto publicado exitosamente!',
+          'Tu auto ya está visible en el marketplace.',
+          8000,
+        );
       }
+    }
 
-      // Check docs only if active
-      if (carData.status === 'active' && !this.editMode()) {
-        setTimeout(() => {
-          this.checkMissingDocuments(carId).catch(() => {});
-        }, 2000);
-      }
+    // Upload photos (if new or changed)
+    if (this.photoService.getPhotoCount() > 0) {
+      await this.photoService.uploadPhotos(carId);
+    }
 
-      await this.router.navigate(['/cars/my-cars']);
+    // Check docs only if active
+    if (carData.status === 'active' && !this.editMode()) {
+      setTimeout(() => {
+        this.checkMissingDocuments(carId).catch(() => { });
+      }, 2000);
+    }
+
+    await this.router.navigate(['/cars/my-cars']);
   }
 
   private handleSubmissionError(error: unknown): void {
-      console.error('❌ Failed to publish car:', error);
+    console.error('❌ Failed to publish car:', error);
 
-      // Log detailed error information
-      if (error instanceof Error) {
-        console.error('Error message:', error.message);
+    // Log detailed error information
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+    }
+
+    // Show user-friendly error message
+    let errorTitle = 'Error al guardar';
+    let errorMessage = 'Por favor intenta nuevamente.';
+
+    if (error instanceof Error) {
+      if (error.message.includes('Marca y modelo son requeridos')) {
+        errorTitle = 'Información incompleta';
+        errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
+      } else if (error.message) {
+        errorMessage = error.message;
       }
+    }
 
-      // Show user-friendly error message
-      let errorTitle = 'Error al guardar';
-      let errorMessage = 'Por favor intenta nuevamente.';
-
-      if (error instanceof Error) {
-        if (error.message.includes('Marca y modelo son requeridos')) {
-          errorTitle = 'Información incompleta';
-          errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-      }
-
-      this.notificationManager.error(errorTitle, errorMessage);
+    this.notificationManager.error(errorTitle, errorMessage);
   }
 
   /**

@@ -1,7 +1,7 @@
 {
   "name": "autorent-ai-car-generator",
   "version": "1.0.0",
-  "description": "Cloudflare AI Worker for generating car images using FLUX.1-schnell",
+  "description": "Cloudflare Worker proxy for generating car images with Gemini 2.5 Flash (server-side)",
   "main": "src/index.ts",
   "scripts": {
     "dev": "wrangler dev",
@@ -13,7 +13,7 @@
     "cloudflare",
     "workers",
     "ai",
-    "flux",
+    "gemini",
     "image-generation"
   ],
   "author": "AutoRent",

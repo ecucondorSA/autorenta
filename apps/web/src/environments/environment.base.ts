@@ -139,7 +139,7 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   docVerifierUrl: resolve('NG_APP_DOC_VERIFIER_URL', defaults.docVerifierUrl),
   cloudflareWorkerUrl: resolve(
     'NG_APP_CLOUDFLARE_WORKER_URL',
-    defaults.cloudflareWorkerUrl ?? 'http://localhost:8787',
+    defaults.cloudflareWorkerUrl ?? '',
   ),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),

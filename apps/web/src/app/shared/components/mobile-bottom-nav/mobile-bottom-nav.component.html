@@ -3,50 +3,36 @@
 Diseñado para Autorent con 7 items de navegación
 -->
 
-<nav
-  class="mobile-bottom-nav"
-  [class.mobile-bottom-nav--hidden]="isHidden()"
-  role="navigation"
-  aria-label="Navegación principal móvil"
-  >
+<nav class="mobile-bottom-nav" [class.mobile-bottom-nav--hidden]="isHidden()" role="navigation"
+  aria-label="Navegación principal móvil">
   <div class="nav-container">
     @for (item of navItems; track trackByRoute($index, item)) {
-      <a
-        [routerLink]="item.isMenuTrigger ? null : item.route"
-        (click)="navigateWithHaptic($event, item)"
-        class="nav-item"
-        [class.nav-item--active]="!item.isMenuTrigger && isActive(item.route)"
-        [attr.aria-label]="item.label"
-        [attr.aria-current]="!item.isMenuTrigger && isActive(item.route) ? 'page' : null"
-        >
-        <!-- Icono SVG Premium del sprite dedicado -->
-        <div class="nav-item__icon-wrapper">
-          <app-nav-icon
-            [name]="item.icon"
-            [size]="24"
-            [active]="!item.isMenuTrigger && isActive(item.route)"
-            class="nav-item__icon"
-            [class.nav-item__icon--active]="!item.isMenuTrigger && isActive(item.route)"
-            />
-          <!-- Badge de notificaciones -->
-          @if (item.badgeSignal && item.badgeSignal() > 0) {
-            <span
-              class="nav-item__badge"
-              [attr.aria-label]="item.badgeSignal() + ' notificaciones'"
-              >
-              {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
-            </span>
-          }
-        </div>
-        <!-- Label -->
-        <span class="nav-item__label" [class.nav-item__label--active]="isActive(item.route)">
-          {{ item.label }}
+    <a [routerLink]="item.isMenuTrigger ? null : item.route"
+      (click)="navigateWithHaptic($event, item)" class="nav-item"
+      [class.nav-item--active]="!item.isMenuTrigger && isActive(item.route)"
+      [attr.aria-label]="item.label"
+      [attr.aria-current]="!item.isMenuTrigger && isActive(item.route) ? 'page' : null">
+      <!-- Icono SVG Premium del sprite dedicado -->
+      <div class="nav-item__icon-wrapper">
+        <app-nav-icon [name]="item.icon" [size]="28"
+          [active]="!item.isMenuTrigger && isActive(item.route)" class="nav-item__icon"
+          [class.nav-item__icon--active]="!item.isMenuTrigger && isActive(item.route)" />
+        <!-- Badge de notificaciones -->
+        @if (item.badgeSignal && item.badgeSignal() > 0) {
+        <span class="nav-item__badge" [attr.aria-label]="item.badgeSignal() + ' notificaciones'">
+          {{ item.badgeSignal() > 99 ? '99+' : item.badgeSignal() }}
         </span>
-        <!-- Indicador activo -->
-        @if (isActive(item.route)) {
-          <div class="nav-item__indicator" aria-hidden="true"></div>
         }
-      </a>
+      </div>
+      <!-- Label -->
+      <span class="nav-item__label" [class.nav-item__label--active]="isActive(item.route)">
+        {{ item.label }}
+      </span>
+      <!-- Indicador activo -->
+      @if (isActive(item.route)) {
+      <div class="nav-item__indicator" aria-hidden="true"></div>
+      }
+    </a>
     }
   </div>
 

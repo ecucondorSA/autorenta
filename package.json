@@ -53,6 +53,7 @@
     "deploy": "./tools/run.sh deploy",
     "deploy:web": "./tools/run.sh deploy:web",
     "deploy:worker": "./tools/run.sh deploy:worker",
+    "deploy:worker:ai-car-generator": "./tools/run.sh deploy:worker:ai-car-generator",
     "_comment_ci": "=== CI/CD ===",
     "ci": "./tools/run.sh ci",
     "lint": "./tools/run.sh lint",

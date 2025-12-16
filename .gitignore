@@ -33,6 +33,15 @@ apps/web/src/assets/models/*.onnx
 test-results/
 e2e/artifacts/
 
+# Patchright/Playwright (workspace-specific)
+apps/web/e2e/reports/
+apps/web/e2e/test-results/
+apps/web/e2e/.browser-profile/
+apps/web/e2e/auth/
+
+# Package manager lockfiles (pnpm workspace uses pnpm-lock.yaml)
+**/package-lock.json
+
 # Temporary files and archives
 *.log
 *.png

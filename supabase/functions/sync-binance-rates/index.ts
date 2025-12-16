@@ -1,8 +1,10 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { fetchWithTimeout, fetchJsonWithTimeout } from '../_shared/fetch-utils.ts';
 
 const BINANCE_API_BASE = 'https://api.binance.com/api/v3';
 const PLATFORM_MARGIN_PERCENT = 10.0; // 10% margin
+const BINANCE_TIMEOUT_MS = 5000; // P0-1: 5s timeout for Binance API
 
 interface BinanceTickerResponse {
   symbol: string;
@@ -16,6 +18,7 @@ interface RateUpdateResult {
   margin_absolute: number;
   success: boolean;
   error?: string;
+  fallback_used?: boolean;
 }
 
 serve(async (req) => {
@@ -36,10 +39,11 @@ serve(async (req) => {
     // Fetch rates from Binance for each pair
     for (const { symbol, pair } of pairs) {
       try {
-        // Fetch spot price from Binance
-        const response = await fetch(
+        // P0-1: Fetch spot price from Binance with timeout
+        const data = await fetchJsonWithTimeout<BinanceTickerResponse>(
           `${BINANCE_API_BASE}/ticker/price?symbol=${symbol}`,
           {
+            timeoutMs: BINANCE_TIMEOUT_MS,
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -47,20 +51,15 @@ serve(async (req) => {
           }
         );
 
-        if (!response.ok) {
-          throw new Error(`Binance API error: ${response.status} ${response.statusText}`);
-        }
-
-        const data: BinanceTickerResponse = await response.json();
         const binanceRate = parseFloat(data.price);
-
         console.log(`Fetched ${pair}: ${binanceRate} from Binance`);
 
-        // Calculate volatility (fetch 24h stats)
+        // Calculate volatility (fetch 24h stats) - with timeout
         let volatility24h = null;
         try {
-          const statsResponse = await fetch(
-            `${BINANCE_API_BASE}/ticker/24hr?symbol=${symbol}`
+          const statsResponse = await fetchWithTimeout(
+            `${BINANCE_API_BASE}/ticker/24hr?symbol=${symbol}`,
+            { timeoutMs: BINANCE_TIMEOUT_MS }
           );
           if (statsResponse.ok) {
             const stats = await statsResponse.json();
@@ -98,13 +97,48 @@ serve(async (req) => {
           `✅ Updated ${pair}: Binance ${binanceRate} → Platform ${updateResult.platform_rate} (+${PLATFORM_MARGIN_PERCENT}%)`
         );
       } catch (pairError) {
-        console.error(`Error updating ${pair}:`, pairError);
+        console.error(`Error fetching ${pair} from Binance:`, pairError);
+
+        // P1-7: Fallback - keep last valid rate when Binance fails
+        // Query the current rate from DB and mark as stale but still valid
+        try {
+          const { data: currentRate } = await supabase
+            .from('exchange_rates')
+            .select('binance_rate, platform_rate, margin_absolute, updated_at')
+            .eq('pair', pair)
+            .single();
+
+          if (currentRate && currentRate.binance_rate > 0) {
+            const rateAge = Date.now() - new Date(currentRate.updated_at).getTime();
+            const rateAgeMinutes = Math.round(rateAge / 60000);
+
+            console.warn(
+              `⚠️ Using fallback rate for ${pair} (${rateAgeMinutes}min old): ${currentRate.binance_rate}`
+            );
+
+            results.push({
+              pair,
+              binance_rate: currentRate.binance_rate,
+              platform_rate: currentRate.platform_rate,
+              margin_absolute: currentRate.margin_absolute,
+              success: true, // Still consider success since we have a valid rate
+              fallback_used: true,
+              error: `Binance failed, using ${rateAgeMinutes}min old rate`,
+            });
+            continue;
+          }
+        } catch (fallbackError) {
+          console.error(`Fallback also failed for ${pair}:`, fallbackError);
+        }
+
+        // Complete failure - no fallback available
         results.push({
           pair,
           binance_rate: 0,
           platform_rate: 0,
           margin_absolute: 0,
           success: false,
+          fallback_used: false,
           error: pairError instanceof Error ? pairError.message : String(pairError),
         });
       }

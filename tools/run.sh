@@ -32,6 +32,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 WEB_DIR="$PROJECT_ROOT/apps/web"
 WORKER_DIR="$PROJECT_ROOT/functions/workers/payments_webhook"
+AI_WORKER_DIR="$PROJECT_ROOT/functions/workers/ai-car-generator"
 E2E_DIR="$WEB_DIR/e2e"
 
 # Configuration
@@ -73,6 +74,7 @@ cmd_dev() {
     # Install dependencies if needed
     [ ! -d "$WEB_DIR/node_modules" ] && cmd_install_web
     [ ! -d "$WORKER_DIR/node_modules" ] && cmd_install_worker
+    [ ! -d "$AI_WORKER_DIR/node_modules" ] && cmd_install_ai_worker
 
     log "Starting servers in background..."
 
@@ -94,9 +96,19 @@ cmd_dev() {
     WORKER_PID=$!
     echo $WORKER_PID > /tmp/autorenta-worker.pid
 
+    # Start AI image worker (Gemini)
+    (
+        cd "$AI_WORKER_DIR"
+        log "Starting AI image worker (Gemini) on http://localhost:8788"
+        npm run dev
+    ) &
+    AI_WORKER_PID=$!
+    echo $AI_WORKER_PID > /tmp/autorenta-ai-worker.pid
+
     success "Development environment started!"
     info "Web:    http://localhost:4200"
     info "Worker: http://localhost:8787/webhooks/payments"
+    info "AI:     http://localhost:8788"
     info "Stop with: Ctrl+C or './tools/run.sh dev:stop'"
 
     # Wait for processes
@@ -115,6 +127,12 @@ cmd_dev_worker() {
     npm run dev
 }
 
+cmd_dev_ai_worker() {
+    header "🧠 Starting AI Image Worker (Gemini) Only"
+    cd "$AI_WORKER_DIR"
+    npm run dev
+}
+
 cmd_dev_stop() {
     header "🛑 Stopping Development Environment"
 
@@ -128,6 +146,12 @@ cmd_dev_stop() {
         WORKER_PID=$(cat /tmp/autorenta-worker.pid)
         kill $WORKER_PID 2>/dev/null && success "Worker stopped"
         rm /tmp/autorenta-worker.pid
+    fi
+
+    if [ -f /tmp/autorenta-ai-worker.pid ]; then
+        AI_WORKER_PID=$(cat /tmp/autorenta-ai-worker.pid)
+        kill $AI_WORKER_PID 2>/dev/null && success "AI worker stopped"
+        rm /tmp/autorenta-ai-worker.pid
     fi
 
     success "All servers stopped"
@@ -418,9 +442,12 @@ cmd_install() {
     WEB_PID=$!
     cmd_install_worker &
     WORKER_PID=$!
+    cmd_install_ai_worker &
+    AI_WORKER_PID=$!
 
     wait $WEB_PID
     wait $WORKER_PID
+    wait $AI_WORKER_PID
 
     success "All dependencies installed"
 }
@@ -437,6 +464,13 @@ cmd_install_worker() {
     cd "$WORKER_DIR"
     npm install
     success "Worker dependencies installed"
+}
+
+cmd_install_ai_worker() {
+    log "Installing AI worker dependencies..."
+    cd "$AI_WORKER_DIR"
+    npm install
+    success "AI worker dependencies installed"
 }
 
 cmd_clean() {
@@ -520,11 +554,18 @@ cmd_status() {
     else
         warn "Worker not running"
     fi
+
+    if [ -f /tmp/autorenta-ai-worker.pid ] && ps -p $(cat /tmp/autorenta-ai-worker.pid) > /dev/null 2>&1; then
+        success "AI worker running (PID: $(cat /tmp/autorenta-ai-worker.pid))"
+    else
+        warn "AI worker not running"
+    fi
     echo ""
 
     echo -e "${YELLOW}Dependencies:${NC}"
     [ -d "$WEB_DIR/node_modules" ] && success "Web dependencies installed" || warn "Web dependencies missing"
     [ -d "$WORKER_DIR/node_modules" ] && success "Worker dependencies installed" || warn "Worker dependencies missing"
+    [ -d "$AI_WORKER_DIR/node_modules" ] && success "AI worker dependencies installed" || warn "AI worker dependencies missing"
 }
 
 cmd_help() {
@@ -542,6 +583,7 @@ ${YELLOW}Development:${NC}
   ${CYAN}dev${NC}              Start full dev environment (web + worker)
   ${CYAN}dev:web${NC}          Start web app only
   ${CYAN}dev:worker${NC}       Start worker only
+    ${CYAN}dev:ai-worker${NC}    Start AI image worker only
   ${CYAN}dev:stop${NC}         Stop all dev servers
 
 ${YELLOW}Testing:${NC}
@@ -614,6 +656,7 @@ case "$COMMAND" in
     dev) cmd_dev "$@" ;;
     dev:web) cmd_dev_web "$@" ;;
     dev:worker) cmd_dev_worker "$@" ;;
+    dev:ai-worker) cmd_dev_ai_worker "$@" ;;
     dev:stop) cmd_dev_stop "$@" ;;
 
     # Testing

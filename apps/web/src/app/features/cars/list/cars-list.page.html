@@ -281,9 +281,9 @@
               <app-icon [name]="isFavorite(car.id) ? 'heart-filled' : 'heart'" [size]="20"
                 [cssClass]="isFavorite(car.id) ? 'text-rose-500' : 'text-slate-600'" />
             </button>
-            <!-- Badges Desktop -->
+            <!-- Badges Desktop (optimized: uses pre-computed carBadges Map) -->
             <div class="absolute top-3 right-3 flex flex-col gap-1.5 items-end">
-              @if (isTopRated(car)) {
+              @if (carBadges().get(car.id)?.topRated) {
               <span
                 class="px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold rounded-full shadow-md flex items-center gap-1">
                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
@@ -293,7 +293,7 @@
                 Superanfitrión
               </span>
               }
-              @if (hasInstantBooking(car) && !isTopRated(car)) {
+              @if (carBadges().get(car.id)?.instantBooking && !carBadges().get(car.id)?.topRated) {
               <span
                 class="px-2 py-1 bg-cyan-500 text-white text-[10px] font-semibold rounded-full shadow-md flex items-center gap-1">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -582,9 +582,8 @@
     <!-- 🗺️ RIGHT PANEL: Mapa (Desktop: fixed height, Mobile: fullscreen) -->
     @if (viewMode() === 'map') {
     <div
-      class="w-full lg:w-1/2 xl:w-[45%] relative flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
-      [class.fixed]="!isDesktop()" [class.inset-0]="!isDesktop()" [class.z-40]="!isDesktop()"
-      [style.height]="isDesktop() ? '100%' : null" data-testid="cars-map">
+      class="w-full lg:w-1/2 xl:w-[45%] fixed inset-0 z-40 lg:relative lg:inset-auto lg:z-auto lg:h-full flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
+      data-testid="cars-map">
       @if (loading() && premiumCars().length === 0) {
       <div
         class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70">
@@ -676,8 +675,8 @@
             <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
               [alt]="car.brand + ' ' + car.model" width="88" height="88"
               class="w-full h-full object-cover" />
-            <!-- Superhost Badge -->
-            @if (isTopRated(car)) {
+            <!-- Superhost Badge (optimized: uses pre-computed carBadges Map) -->
+            @if (carBadges().get(car.id)?.topRated) {
             <span
               class="absolute top-1 left-1 px-1.5 py-0.5 bg-amber-500 text-white text-[9px] font-bold rounded flex items-center justify-center">
               <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">

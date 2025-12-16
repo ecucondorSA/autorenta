@@ -46,6 +46,13 @@ export class WalletService {
 
   readonly pendingDepositsCount = signal(0);
 
+  // 🚀 PERF: Request deduplication to prevent multiple parallel fetches
+  // Before: 8 components calling fetchBalance() = 8 API requests
+  // After: 8 components calling fetchBalance() = 1 API request (shared promise)
+  private pendingFetchBalance: Promise<WalletBalance> | null = null;
+  private lastFetchTimestamp = 0;
+  private readonly STALE_TIME_MS = 5000; // 5 seconds cache
+
   constructor() {
     this.supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -59,7 +66,44 @@ export class WalletService {
   // ASYNC METHODS - Primary API (Signal-based)
   // ============================================================================
 
-  async fetchBalance(): Promise<WalletBalance> {
+  /**
+   * 🚀 PERF: Fetch balance with request deduplication and SWR-like caching
+   *
+   * - If a request is already in-flight, returns the same promise (deduplication)
+   * - If data is fresh (< 5s old), returns cached data immediately
+   * - Multiple consumers calling this simultaneously get the same result
+   *
+   * @param forceRefresh - Skip cache and force a new API call
+   */
+  async fetchBalance(forceRefresh = false): Promise<WalletBalance> {
+    // 🚀 PERF: Return cached data if still fresh (SWR pattern)
+    const now = Date.now();
+    const cachedBalance = this.balance();
+    if (!forceRefresh && cachedBalance && (now - this.lastFetchTimestamp) < this.STALE_TIME_MS) {
+      return cachedBalance;
+    }
+
+    // 🚀 PERF: Return pending request if one is already in-flight (deduplication)
+    if (this.pendingFetchBalance) {
+      return this.pendingFetchBalance;
+    }
+
+    // Start new fetch
+    this.pendingFetchBalance = this.doFetchBalance();
+
+    try {
+      const result = await this.pendingFetchBalance;
+      this.lastFetchTimestamp = Date.now();
+      return result;
+    } finally {
+      this.pendingFetchBalance = null;
+    }
+  }
+
+  /**
+   * Internal method that performs the actual API call
+   */
+  private async doFetchBalance(): Promise<WalletBalance> {
     this.loading.set(true);
     this.error.set(null);
 

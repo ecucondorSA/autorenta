@@ -103,7 +103,7 @@
   justify-content: center;
   gap: 4px;
 
-  padding: 8px 6px;
+  padding: 10px 6px;
 
   text-decoration: none;
   cursor: pointer;
@@ -113,7 +113,7 @@
   position: relative;
 
   /* Tap target mínimo iOS */
-  min-height: 56px;
+  min-height: 60px;
 
   /* Prevenir selección de texto */
   user-select: none;
@@ -146,8 +146,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -155,8 +155,8 @@
    ───────────────────────────────────────────────────────────── */
 
 .nav-item__icon {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   color: var(--text-primary); /* High contrast for WCAG AA compliance */
   opacity: 0.7; /* Slightly higher opacity for better visibility */
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -198,7 +198,7 @@
    ───────────────────────────────────────────────────────────── */
 
 .nav-item__label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600; /* Bolder for better legibility at small size */
   line-height: 1.2;
   letter-spacing: 0.02em;
@@ -237,7 +237,7 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: 32px;
+  width: 36px;
   height: 4px;
 
   background: var(--cta-default); /* Reemplazado gradiente con color sólido */
@@ -349,12 +349,12 @@
 
 @media (max-width: 360px) {
   .nav-item__icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
   .nav-item__label {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .nav-item {

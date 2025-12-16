@@ -84,6 +84,52 @@ export class AuthService implements OnDestroy {
     };
   }
 
+  // ============================================================================
+  // 🚀 PERF: Cached User Methods
+  // These methods use the cached session instead of making API calls.
+  // Services should use these instead of supabase.auth.getUser() directly.
+  // ============================================================================
+
+  /**
+   * 🚀 PERF: Get cached user ID without API call
+   * Returns null if not authenticated or session not yet loaded.
+   * Use this instead of: (await supabase.auth.getUser()).data.user?.id
+   *
+   * @example
+   * // Before (makes API call each time):
+   * const userId = (await this.supabase.auth.getUser()).data.user?.id;
+   *
+   * // After (uses cached session):
+   * const userId = await this.authService.getCachedUserId();
+   */
+  async getCachedUserId(): Promise<string | null> {
+    const session = await this.ensureSession();
+    return session?.user?.id ?? null;
+  }
+
+  /**
+   * 🚀 PERF: Synchronous cached user ID (returns null if session not loaded yet)
+   * Use for non-critical checks where you don't want to wait for session load.
+   */
+  getCachedUserIdSync(): string | null {
+    return this.state().session?.user?.id ?? null;
+  }
+
+  /**
+   * 🚀 PERF: Get full user object from cached session
+   * Returns the Supabase User object without making an API call.
+   */
+  async getCachedUser(): Promise<{ id: string; email?: string; phone?: string } | null> {
+    const session = await this.ensureSession();
+    if (!session?.user) return null;
+
+    return {
+      id: session.user.id,
+      email: session.user.email,
+      phone: session.user.phone,
+    };
+  }
+
   private async loadSession(): Promise<void> {
     console.log('[AuthService DEBUG] loadSession: starting...');
     const {

@@ -50,10 +50,16 @@ export class RealtimeConnectionService {
   /**
    * Subscribe to a Supabase Realtime channel with automatic reconnection
    *
+   * 🚀 PERF: Now supports channel reuse (deduplication)
+   * - If a channel with the same name already exists and is active, returns it
+   * - Prevents multiple WebSocket connections for the same data stream
+   * - Use forceNew=true to explicitly create a new channel
+   *
    * @param channelName Unique channel identifier
    * @param config Postgres changes configuration
    * @param handler Callback for new data
    * @param onStatusChange Optional callback for connection status changes
+   * @param forceNew Force creation of a new channel even if one exists
    * @returns RealtimeChannel instance
    */
   subscribeWithRetry<T extends DatabaseRecord>(
@@ -61,9 +67,24 @@ export class RealtimeConnectionService {
     config: ChannelConfig,
     handler: (payload: RealtimePostgresChangesPayload<T>) => void,
     onStatusChange?: (status: ConnectionStatus) => void,
+    forceNew = false,
   ): RealtimeChannel {
-    // Remove existing channel if any
-    this.unsubscribe(channelName);
+    // 🚀 PERF: Reuse existing channel if active (deduplication)
+    // This prevents multiple components from creating duplicate WebSocket connections
+    const existingChannel = this.activeChannels.get(channelName);
+    if (!forceNew && existingChannel) {
+      console.log(`♻️ [Realtime] Reusing existing channel: ${channelName}`);
+      // Notify status change callback with current status
+      if (this.connectionStatus() === 'connected') {
+        onStatusChange?.('connected');
+      }
+      return existingChannel;
+    }
+
+    // Remove existing channel if forcing new
+    if (forceNew) {
+      this.unsubscribe(channelName);
+    }
 
     // Initialize retry counter
     this.retryCounters.set(channelName, 0);

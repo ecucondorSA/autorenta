@@ -1,6 +1,8 @@
 
-import {Component, EventEmitter, Input, OnInit, Output, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component, EventEmitter, Input, OnInit, Output, inject, signal
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PricingService } from '@core/services/pricing.service';
 import { PublishCarPhotoService } from '@features/cars/publish/services/publish-car-photo.service';
@@ -18,13 +20,13 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
         class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         (click)="requestClose.emit()">
       </div>
-    
+
       <!-- Modal Card -->
-      <div class="relative w-full max-w-lg bg-white dark:bg-[#161821] rounded-3xl shadow-2xl overflow-hidden transform transition-all border border-slate-100 dark:border-neutral-800">
-    
+      <div class="relative w-full max-w-lg bg-surface-raised dark:bg-anthracite rounded-3xl shadow-2xl overflow-hidden transform transition-all border border-border-default/80 dark:border-neutral-800/60">
+
         <!-- Header de Autorentar -->
-        <div class="relative px-8 pt-8 pb-4 bg-slate-900 text-white">
-    
+        <div class="relative px-8 pt-8 pb-4 bg-surface-base text-text-primary border-b border-border-default/80">
+
           <button
             (click)="requestClose.emit()"
             class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white rounded-full hover:bg-slate-700 transition-colors">
@@ -32,25 +34,25 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-    
+
           <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 rounded-xl bg-[#00D95F]/10 flex items-center justify-center text-[#00D95F]">
+            <div class="w-10 h-10 rounded-xl bg-cta-default/15 flex items-center justify-center text-cta-default">
               <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
             </div>
-            <h2 class="text-2xl font-bold text-[#00D95F]">Estudio IA</h2>
+            <h2 class="text-2xl font-bold text-cta-default">Estudio IA</h2>
           </div>
-          <p class="text-gray-400 text-sm">
-            Describe tu auto y deja que Google Imagen genere fotos profesionales para tu publicación.
+          <p class="text-sm text-text-secondary">
+            Describí tu auto y generá fotos profesionales para tu publicación.
           </p>
         </div>
-    
+
         <!-- Formulario -->
         <!-- Formulario y Contenido Dinámico -->
         <div class="p-8 pt-2 space-y-6">
           <form [formGroup]="form" (ngSubmit)="generate()">
-    
+
             <!-- VISTA 1: RESUMEN INTELIGENTE (Si ya tenemos datos) -->
             @if (hasInitialData && !isEditing()) {
               <div class="animate-fadeIn">
@@ -62,7 +64,7 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
                         {{ form.get('brand')?.value }} {{ form.get('model')?.value }}
                       </h3>
                       <div class="flex items-center gap-2 mt-2">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-semibold bg-cta-default/15 text-text-primary dark:bg-cta-default/10">
                           {{ form.get('year')?.value }}
                         </span>
                         <button type="button" (click)="isEditing.set(true)" class="text-sm font-semibold text-emerald-600 hover:text-emerald-500 hover:underline">
@@ -80,7 +82,7 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
                 </div>
               </div>
             }
-    
+
             <!-- VISTA 2: FORMULARIO COMPLETO (Modo edición o sin datos) -->
             @if (isEditing() || !hasInitialData) {
               <div class="space-y-4 animate-fadeIn">
@@ -132,14 +134,14 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
                 </div>
               </div>
             }
-    
+
             <!-- Botón de Generación -->
             <div class="mt-8">
               <button
                 type="submit"
                 [disabled]="form.invalid || photoService.isGeneratingAIPhotos()"
                 class="w-full relative group overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.02] active:scale-[0.98]">
-    
+
                 <span class="relative z-10 flex items-center justify-center gap-2">
                   @if (photoService.isGeneratingAIPhotos()) {
                     <span class="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></span>
@@ -151,13 +153,13 @@ import { FipeAutocompleteComponent } from '@shared/components/fipe-autocomplete/
                   }
                   {{ photoService.isGeneratingAIPhotos() ? 'Creando magia...' : 'Generar Fotos' }}
                 </span>
-    
+
                 <!-- Shine Effect -->
                 <div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
               </button>
               <p class="text-center text-xs text-slate-400 mt-3">Powered by Google Imagen</p>
             </div>
-    
+
           </form>
         </div>
       </div>
@@ -260,7 +262,7 @@ export class GoogleAiPhotoGeneratorComponent implements OnInit {
 
     const { brand, model, year, color } = this.form.value;
 
-    await this.photoService.generateAIPhotos(brand!, model!, +year!);
+    await this.photoService.generateAIPhotos(brand!, model!, +year!, { color: color || undefined });
 
     // Cerrar modal si fue exitoso (el servicio maneja errores/alertas)
     if (!this.photoService.isGeneratingAIPhotos()) {

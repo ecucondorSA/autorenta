@@ -12,16 +12,47 @@
 import { MercadoPagoConfig, Preference, Payment, Customer, Refund, MoneyRequest } from 'mercadopago';
 
 /**
- * Inicializa el cliente de MercadoPago con el access token
+ * P1-3: Timeout configuration for different operation types
+ *
+ * - WEBHOOK_TIMEOUT: 3s for webhook handlers (high frequency, strict limits)
+ * - DEFAULT_TIMEOUT: 8s for manual operations (deposits, refunds)
+ *
+ * Rationale: Edge Function max is 25s. Webhooks need headroom for DB operations.
  */
-export function createMercadoPagoClient(accessToken: string): MercadoPagoConfig {
+export const MP_TIMEOUT = {
+  WEBHOOK: 3000,   // 3s for webhooks
+  DEFAULT: 8000,   // 8s for manual operations
+} as const;
+
+export interface MercadoPagoClientOptions {
+  /** Timeout in ms. Use MP_TIMEOUT constants. Default: MP_TIMEOUT.DEFAULT (8000ms) */
+  timeoutMs?: number;
+  /** Custom idempotency key. Default: crypto.randomUUID() */
+  idempotencyKey?: string;
+}
+
+/**
+ * Inicializa el cliente de MercadoPago con el access token
+ *
+ * @param accessToken - MercadoPago access token
+ * @param options - Configuration options (timeout, idempotencyKey)
+ */
+export function createMercadoPagoClient(
+  accessToken: string,
+  options: MercadoPagoClientOptions = {}
+): MercadoPagoConfig {
+  const {
+    timeoutMs = MP_TIMEOUT.DEFAULT,
+    idempotencyKey = crypto.randomUUID(),
+  } = options;
+
   const cleanToken = accessToken.trim().replace(/[\r\n\t\s]/g, '');
 
   return new MercadoPagoConfig({
     accessToken: cleanToken,
     options: {
-      timeout: 5000,
-      idempotencyKey: crypto.randomUUID(),
+      timeout: timeoutMs,
+      idempotencyKey,
     },
   });
 }
