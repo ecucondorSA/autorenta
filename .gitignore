@@ -144,6 +144,30 @@ playwright-report/
 *_output*.txt
 apps/web/tools/binance-p2p-mcp/
 
+# Local MercadoPago MCP tooling (configs/daemons)
+apps/web/tools/mercadopago-mcp/
+
+# MercadoPago P2P automation: ignore local runtime artifacts and secrets
+apps/web/tools/mercadopago-mcp/**/node_modules/
+apps/web/tools/mercadopago-mcp/**/venv/
+apps/web/tools/mercadopago-mcp/**/__pycache__/
+apps/web/tools/mercadopago-mcp/**/.env*
+apps/web/tools/mercadopago-mcp/**/p2p_config*.json
+apps/web/tools/mercadopago-mcp/**/p2p_daemon*.py
+apps/web/tools/mercadopago-mcp/**/*.log
+apps/web/tools/mercadopago-mcp/**/screenshots/
+apps/web/tools/mercadopago-mcp/**/reports/
+
+# P2P automation (includes Produbanco browser automation): ignore local runtime state
+apps/web/tools/p2p-automation/**/node_modules/
+apps/web/tools/p2p-automation/**/venv/
+apps/web/tools/p2p-automation/**/__pycache__/
+apps/web/tools/p2p-automation/**/.env*
+apps/web/tools/p2p-automation/**/*.log
+apps/web/tools/p2p-automation/**/data/
+apps/web/tools/p2p-automation/**/tmp/
+apps/web/tools/p2p-automation/**/screenshots/
+
 # Large analysis files
 tripwip_base.zip
 tripwip_base_extracted/
