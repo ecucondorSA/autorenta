@@ -32,6 +32,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 WEB_DIR="$PROJECT_ROOT/apps/web"
 WORKER_DIR="$PROJECT_ROOT/functions/workers/payments_webhook"
+E2E_DIR="$WEB_DIR/e2e"
 
 # Configuration
 BASH_TIMEOUT=900000  # 15 minutes for long-running commands
@@ -157,14 +158,87 @@ cmd_test_coverage() {
 
 cmd_test_e2e() {
     header "🎭 Running E2E Tests"
-    cd "$PROJECT_ROOT"
-    npx playwright test -c e2e/playwright.config.ts "$@"
+
+    # Ensure the web app is running for E2E (Patchright targets BASE_URL which defaults to localhost:4200)
+    # If it's not reachable, start it automatically and clean up afterwards.
+    local STARTED_WEB_FOR_E2E=0
+    local WEB_E2E_PID_FILE="/tmp/autorenta-e2e-web.pid"
+
+    if command -v curl >/dev/null 2>&1; then
+        local BASE_URL="${BASE_URL:-http://localhost:4200}"
+        if ! curl -sS -o /dev/null --max-time 2 "$BASE_URL/"; then
+            warn "Web server not reachable at $BASE_URL - starting dev server for E2E"
+            (
+                cd "$WEB_DIR"
+                # start script already redirects output to app_start.log
+                npm run start
+            ) &
+            echo $! > "$WEB_E2E_PID_FILE"
+            STARTED_WEB_FOR_E2E=1
+
+            # Wait up to ~60s for server to respond
+            for i in {1..60}; do
+                if curl -sS -o /dev/null --max-time 2 "$BASE_URL/"; then
+                    break
+                fi
+                sleep 1
+            done
+
+            if ! curl -sS -o /dev/null --max-time 2 "$BASE_URL/"; then
+                if [ -f "$WEB_E2E_PID_FILE" ]; then
+                    kill "$(cat "$WEB_E2E_PID_FILE")" 2>/dev/null || true
+                    rm -f "$WEB_E2E_PID_FILE"
+                fi
+                error "Web server did not become ready at $BASE_URL"
+            fi
+        fi
+    else
+        warn "curl not available; assuming web server is already running"
+    fi
+
+    # Patchright E2E suite lives under apps/web/e2e
+    if [ ! -d "$E2E_DIR" ]; then
+        error "E2E directory not found: $E2E_DIR"
+    fi
+
+    if [ ! -d "$E2E_DIR/node_modules" ]; then
+        log "Installing E2E dependencies..."
+        cd "$E2E_DIR"
+        npm install
+    fi
+
+    # Install Patchright Chromium on first run (idempotent)
+    if [ ! -d "$HOME/.cache/ms-playwright" ] && [ ! -d "$HOME/.cache/patchright" ]; then
+        log "Installing Patchright Chromium..."
+        cd "$E2E_DIR"
+        npm run setup
+    fi
+
+    cd "$E2E_DIR"
+
+    # If a test filter is provided, run only the marketplace suite so we can
+    # target subsets like "cars-list/" without failing early in the login suite.
+    local E2E_EXIT_CODE=0
+    if [ -n "${E2E_FILTER:-}" ]; then
+        npm run test:marketplace || E2E_EXIT_CODE=$?
+    else
+        npm run test || E2E_EXIT_CODE=$?
+    fi
+
+    # Cleanup auto-started web server
+    if [ "$STARTED_WEB_FOR_E2E" -eq 1 ] && [ -f "$WEB_E2E_PID_FILE" ]; then
+        kill "$(cat "$WEB_E2E_PID_FILE")" 2>/dev/null || true
+        rm -f "$WEB_E2E_PID_FILE"
+        success "Stopped web dev server started for E2E"
+    fi
+
+    return "$E2E_EXIT_CODE"
 }
 
 cmd_test_e2e_ui() {
     header "🎭 Running E2E Tests (UI Mode)"
-    cd "$PROJECT_ROOT"
-    npx playwright test -c e2e/playwright.config.ts --ui
+    warn "UI mode is not supported for Patchright TSX suites."
+    info "Run headed mode instead: cd apps/web/e2e && HEADLESS=false npm run test"
 }
 
 ###############################################################################

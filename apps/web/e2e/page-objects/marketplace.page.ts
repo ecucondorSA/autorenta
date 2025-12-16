@@ -4,10 +4,10 @@
  * Encapsulates interactions with the cars marketplace/listing page.
  */
 
-import type { Page, BrowserContext, Locator } from 'patchright';
-import { BasePage } from './base.page';
+import type { BrowserContext, Locator, Page } from 'patchright';
 import { NetworkLogger } from '../utils/network-logger';
-import { waitForApiResponse, waitForElementCount } from '../utils/waits';
+import { waitForApiResponse, waitForElement, waitForElementCount } from '../utils/waits';
+import { BasePage } from './base.page';
 
 export interface CarCardData {
   id: string | null;
@@ -57,7 +57,7 @@ export class MarketplacePage extends BasePage {
    * Navigate to marketplace/cars list
    */
   async goto(): Promise<void> {
-    await this.navigate('/cars');
+    await this.navigate('/cars/list');
   }
 
   /**
@@ -71,14 +71,14 @@ export class MarketplacePage extends BasePage {
    * Navigate with debug mode
    */
   async gotoWithDebug(): Promise<void> {
-    await this.navigateWithDebug('/cars');
+    await this.navigateWithDebug('/cars/list');
   }
 
   /**
    * Check if on marketplace page
    */
   isOnMarketplace(): boolean {
-    return this.urlContains('/cars') || this.getUrl().endsWith('/');
+    return this.urlContains('/cars/list') || this.getUrl().endsWith('/');
   }
 
   // ==================== CAR CARDS ====================

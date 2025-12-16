@@ -521,27 +521,34 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       // Wait for map to load
       this.map.on('load', () => {
-        this.loading.set(false);
-        this.updateMapTheme(); // Apply theme on load
-        this.updateMarkersBasedOnCount();
-        this.setupViewportChangeListener();
-        this.addUserLocationMarker();
-        if (this.showSearchRadius) {
-          this.addSearchRadiusLayer();
-        }
-        this.setupFollowLocation();
-        this.setupLockControls();
+        try {
+          this.loading.set(false);
+          this.updateMapTheme(); // Apply theme on load
+          this.updateMarkersBasedOnCount();
+          this.setupViewportChangeListener();
+          this.addUserLocationMarker();
+          if (this.showSearchRadius) {
+            this.addSearchRadiusLayer();
+          }
+          this.setupFollowLocation();
+          this.setupLockControls();
 
-        // Emit initial bounds
-        this.emitBounds();
-
-        // Listen for move end to emit bounds
-        this.map.on('moveend', () => {
+          // Emit initial bounds
           this.emitBounds();
-        });
 
-        // Pre-warm component pool during idle time for better performance
-        this.preWarmComponentPoolDuringIdle();
+          // Listen for move end to emit bounds
+          this.map.on('moveend', () => {
+            this.emitBounds();
+          });
+
+          // Pre-warm component pool during idle time for better performance
+          this.preWarmComponentPoolDuringIdle();
+        } catch (err) {
+          console.error('[CarsMap] Error during post-load setup:', err);
+          const message = err instanceof Error ? err.message : String(err);
+          this.error.set(message || 'Error al inicializar el mapa');
+          this.loading.set(false);
+        }
       });
 
       // Handle map errors

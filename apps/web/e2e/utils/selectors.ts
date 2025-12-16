@@ -44,11 +44,12 @@ export const Selectors = {
     carCardAlt: 'app-car-card',
     searchInput: '[data-testid="search-input"]',
     sortSelect: '[data-testid="sort-select"]',
-    mapView: '[data-testid="cars-map"]',
+    mapView: 'div[data-testid="cars-map"]:not(.cars-map-container)',
     gridViewButton: '[data-testid="view-grid"]',
     mapViewButton: '[data-testid="view-map"]',
     resultsCount: '[data-testid="results-count"]',
     emptyState: '[data-testid="empty-state"]',
+    loadError: '[data-testid="load-error"]',
     filters: {
       container: '[data-testid="filters-container"]',
       maxDistance: '[data-testid="filter-max-distance"]',

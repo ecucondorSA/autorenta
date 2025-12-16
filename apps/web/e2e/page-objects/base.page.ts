@@ -5,18 +5,18 @@
  * Provides common methods for navigation, interactions, and assertions.
  */
 
-import type { Page, BrowserContext, Locator } from 'patchright';
+import type { BrowserContext, Locator, Page } from 'patchright';
 import { config } from '../patchright.config';
-import { Selectors } from '../utils/selectors';
 import { NetworkLogger } from '../utils/network-logger';
+import { Selectors } from '../utils/selectors';
 import {
+  sleep,
   waitForAngularReady,
   waitForElement,
   waitForHidden,
   waitForNavigation,
   waitForNetworkIdle,
   waitForText,
-  sleep,
 } from '../utils/waits';
 
 export abstract class BasePage {
@@ -37,25 +37,47 @@ export abstract class BasePage {
    * Navigate to a path within the app
    */
   async navigate(path: string): Promise<void> {
-    const url = `${config.baseUrl}${path}`;
-    await this.page.goto(url, {
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+
+    // Many local/static servers used in E2E (e.g. http-server) don't provide SPA fallbacks,
+    // so deep-linking directly to /cars/list would 404.
+    // Load the root document first, then perform client-side navigation.
+    await this.page.goto(`${config.baseUrl}/`, {
       waitUntil: 'domcontentloaded',
       timeout: config.timeout,
     });
     await this.waitForReady();
+
+    if (normalizedPath !== '/') {
+      await this.page.evaluate((targetPath) => {
+        window.history.pushState({}, '', targetPath);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, normalizedPath);
+      await this.waitForReady();
+    }
   }
 
   /**
    * Navigate with debug mode enabled
    */
   async navigateWithDebug(path: string): Promise<void> {
-    const separator = path.includes('?') ? '&' : '?';
-    const url = `${config.baseUrl}${path}${separator}debug=1`;
-    await this.page.goto(url, {
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const separator = normalizedPath.includes('?') ? '&' : '?';
+    const targetPath = `${normalizedPath}${separator}debug=1`;
+
+    await this.page.goto(`${config.baseUrl}/`, {
       waitUntil: 'domcontentloaded',
       timeout: config.timeout,
     });
     await this.waitForReady();
+
+    if (targetPath !== '/') {
+      await this.page.evaluate((p) => {
+        window.history.pushState({}, '', p);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }, targetPath);
+      await this.waitForReady();
+    }
   }
 
   /**

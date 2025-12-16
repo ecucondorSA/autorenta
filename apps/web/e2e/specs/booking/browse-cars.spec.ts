@@ -5,11 +5,12 @@
  */
 
 import {
-  runTests,
   printReport,
+  runTests,
   saveReport,
   type TestContext,
 } from '../../fixtures/test-fixtures';
+import { Selectors } from '../../utils/selectors';
 
 // ==================== TEST DEFINITIONS ====================
 
@@ -37,6 +38,63 @@ async function testMarketplaceLoads(ctx: TestContext): Promise<void> {
     const errors = marketplacePage.getErrors();
     console.log(`Warning: ${errors.length} page errors detected`);
   }
+}
+
+/**
+ * Test: /cars/list shows results count and renders content
+ */
+async function testCarsListSmoke(ctx: TestContext): Promise<void> {
+  const { marketplacePage, page } = ctx;
+
+  await marketplacePage.goto();
+
+  // Results badge should render early
+  await page.waitForSelector(Selectors.marketplace.resultsCount, {
+    timeout: 15000,
+  });
+
+  // Then either cards or empty state
+  await marketplacePage.waitForCarsLoaded();
+  await marketplacePage.assertCarsDisplayed();
+}
+
+/**
+ * Test: Map toggle renders map container
+ */
+async function testCarsListMapToggle(ctx: TestContext): Promise<void> {
+  const { marketplacePage, page } = ctx;
+
+  await marketplacePage.goto();
+  await marketplacePage.waitForCarsLoaded();
+
+  // Switch to map view (should show the map container)
+  await marketplacePage.switchToMapView();
+  await page.waitForSelector(Selectors.marketplace.mapView, { timeout: 15000 });
+}
+
+/**
+ * Test: When Supabase fails, error banner appears and empty state is not shown
+ */
+async function testCarsListErrorStateOnSupabaseFailure(ctx: TestContext): Promise<void> {
+  const { marketplacePage, page } = ctx;
+
+  // Use SPA navigation to avoid deep-link 404s on some local servers.
+  // Also enable a deterministic dev-only failure hook.
+  await marketplacePage.navigate('/cars/list?e2eFailCars=1');
+
+  // Ensure we're on the cars list page shell.
+  await page.waitForSelector(Selectors.marketplace.resultsCount, { timeout: 15000 });
+
+  await page.waitForSelector(Selectors.marketplace.loadError, { timeout: 30000 });
+
+  const emptyVisible = await page
+    .locator(Selectors.marketplace.emptyState)
+    .isVisible()
+    .catch(() => false);
+  if (emptyVisible) {
+    throw new Error('Empty state should not be visible when loadError is shown');
+  }
+
 }
 
 /**
@@ -239,6 +297,9 @@ async function testApiCalls(ctx: TestContext): Promise<void> {
 
 const tests = [
   { name: 'marketplace-loads', fn: testMarketplaceLoads },
+  { name: 'cars-list/smoke', fn: testCarsListSmoke },
+  { name: 'cars-list/map-toggle', fn: testCarsListMapToggle },
+  { name: 'cars-list/error-banner', fn: testCarsListErrorStateOnSupabaseFailure },
   { name: 'car-card-content', fn: testCarCardContent },
   { name: 'car-card-navigation', fn: testCarCardNavigation },
   { name: 'home-page-cars', fn: testHomePageCars },
@@ -253,7 +314,16 @@ async function main(): Promise<void> {
   console.log(`Base URL: ${process.env.BASE_URL || 'http://localhost:4200'}`);
   console.log(`Headless: ${process.env.HEADLESS !== 'false'}`);
 
-  const results = await runTests(tests, {
+  const filter = process.env.E2E_FILTER?.trim();
+  const selectedTests = filter
+    ? tests.filter((t) => t.name.includes(filter))
+    : tests;
+
+  if (filter) {
+    console.log(`[E2E] Filter enabled: ${filter} (${selectedTests.length}/${tests.length} tests)`);
+  }
+
+  const results = await runTests(selectedTests, {
     suite: 'marketplace',
     screenshotOnFailure: true,
     saveLogsOnFailure: true,

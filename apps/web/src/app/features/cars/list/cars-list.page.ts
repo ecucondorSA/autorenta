@@ -6,6 +6,7 @@ import {
   effect,
   ElementRef,
   inject,
+  isDevMode,
   OnDestroy,
   OnInit,
   PLATFORM_ID,
@@ -122,6 +123,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly city = signal<string | null>(null);
   readonly dateRange = signal<DateRange>({ from: null, to: null });
   readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
   readonly cars = signal<Car[]>([]);
   readonly page = signal(1); // Client-side pagination
 
@@ -178,7 +180,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly isDesktop = this.breakpoint.isDesktop;
 
   // View Mode (grid, list, map)
-  readonly viewMode = signal<'grid' | 'list' | 'map'>('grid');
+  readonly viewMode = signal<'grid' | 'list' | 'map'>('map');
 
   // Filtros y ordenamiento
   readonly sortBy = signal<'distance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'>('rating');
@@ -769,7 +771,15 @@ export class CarsListPage implements OnInit, OnDestroy {
 
   async loadCars(): Promise<void> {
     this.loading.set(true);
+    this.loadError.set(null);
     try {
+      if (this.isBrowser && isDevMode()) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('e2eFailCars') === '1') {
+          throw new Error('E2E forced car load failure');
+        }
+      }
+
       const dateRange = this.dateRange();
 
       // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
@@ -803,6 +813,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.setupRealtimeSubscription();
       }
     } catch (err) {
+      this.loadError.set(this.getCarsLoadErrorMessage(err));
       this.logger.error(
         'Error loading cars',
         'CarsListPage',
@@ -827,6 +838,20 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.stopCarouselAutoScroll();
       }
     }
+  }
+
+  private getCarsLoadErrorMessage(err: unknown): string {
+    const raw = getErrorMessage(err);
+
+    if (/network|failed to fetch|fetch|timeout|timed out|connection|offline/i.test(raw)) {
+      return 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+    }
+
+    if (/unauthorized|forbidden|401|403|invalid token|expired/i.test(raw)) {
+      return 'Tu sesión expiró o no tienes permisos. Inicia sesión nuevamente e intenta otra vez.';
+    }
+
+    return 'No pudimos cargar los vehículos. Intenta nuevamente.';
   }
 
   /**

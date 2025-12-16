@@ -198,8 +198,25 @@
         </div>
       </div>
 
+      <!-- Error State -->
+      @if (loadError()) {
+      <div class="mb-6" role="alert" aria-live="polite" data-testid="load-error">
+        <div
+          class="p-4 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
+            <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+          </div>
+          <button type="button" (click)="loadCars()"
+            class="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white text-sm font-semibold whitespace-nowrap">
+            Reintentar
+          </button>
+        </div>
+      </div>
+      }
+
       <!-- SKELETON LOADING -->
-      @if (loading() && viewMode() === 'grid') {
+      @if (loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop()))) {
       <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-x-4 sm:gap-y-8">
         @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
         <div class="animate-pulse">
@@ -219,8 +236,28 @@
       </div>
       }
 
-      <!-- GRID VIEW - Airbnb Style (Desktop/Tablet) -->
-      @if (!loading() && viewMode() === 'grid') {
+      <!-- SKELETON LOADING (List view) -->
+      @if (loading() && viewMode() === 'list') {
+      <div class="flex flex-col gap-4 max-w-5xl mx-auto" data-testid="list-skeleton">
+        @for (_ of [1, 2, 3]; track _) {
+        <div
+          class="animate-pulse bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col md:flex-row">
+          <div
+            class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] bg-slate-200 dark:bg-slate-700 flex-shrink-0">
+          </div>
+          <div class="p-5 flex-1 space-y-3">
+            <div class="h-5 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+          </div>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- GRID VIEW - Airbnb Style (Desktop/Tablet)
+         Desktop split-view: when viewMode() === 'map', keep the grid visible in the left panel. -->
+      @if (!loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop()))) {
       <!-- Desktop/Tablet Grid (Hidden on Mobile) -->
       <div
         class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6 grid-view">
@@ -413,7 +450,8 @@
       }
 
       <!-- LOAD MORE BUTTON (Desktop only) -->
-      @if (!loading() && viewMode() === 'grid' && hasMoreCars()) {
+      @if (!loading() && (viewMode() === 'grid' || (viewMode() === 'map' && isDesktop())) &&
+      hasMoreCars()) {
       <!-- ... existing load more button logic but wrapped to hide on mobile since it's inside the carousel now ... -->
       <div class="hidden sm:flex mt-8 mb-12 justify-center pb-20 lg:pb-0">
         <button (click)="loadMore()"
@@ -528,7 +566,7 @@
       }
 
       <!-- Empty State -->
-      @if (premiumCars().length === 0) {
+      @if (!loading() && !loadError() && premiumCars().length === 0) {
       <div class="text-center py-20" data-testid="empty-state">
         <img src="/assets/images/empty-states/empty-search.svg" alt="No se encontraron autos"
           class="w-64 h-64 mx-auto mb-6">
@@ -547,6 +585,40 @@
       class="w-full lg:w-1/2 xl:w-[45%] relative flex-shrink-0 overflow-hidden lg:border-l lg:border-slate-200 dark:lg:border-slate-800"
       [class.fixed]="!isDesktop()" [class.inset-0]="!isDesktop()" [class.z-40]="!isDesktop()"
       [style.height]="isDesktop() ? '100%' : null" data-testid="cars-map">
+      @if (loading() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70">
+        <div class="text-sm font-semibold text-slate-900 dark:text-white">Cargando vehículos…</div>
+      </div>
+      }
+
+      @if (!loading() && loadError() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6">
+        <div
+          class="max-w-md w-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+          <p class="text-sm font-semibold text-slate-900 dark:text-white">Error al cargar</p>
+          <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">{{ loadError() }}</p>
+          <button type="button" (click)="loadCars()"
+            class="mt-4 w-full px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white text-sm font-semibold">
+            Reintentar
+          </button>
+        </div>
+      </div>
+      }
+
+      @if (!loading() && !loadError() && premiumCars().length === 0) {
+      <div
+        class="absolute inset-0 z-[401] flex items-center justify-center bg-white/80 dark:bg-slate-900/70 p-6">
+        <div class="max-w-md w-full text-center">
+          <p class="text-sm font-semibold text-slate-900 dark:text-white">No encontramos vehículos
+          </p>
+          <p class="text-sm text-slate-600 dark:text-slate-500 mt-1">Intenta ajustar tu búsqueda o
+            filtros.</p>
+        </div>
+      </div>
+      }
+
       <app-cars-map [cars]="carMapLocations()" [selectedCarId]="activeMapCarId()"
         [userLocation]="userLocation()" (carSelected)="onMapCarSelected($event)"
         (userLocationChange)="onUserLocationChange($event)" class="w-full h-full"></app-cars-map>

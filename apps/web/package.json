@@ -10,7 +10,7 @@
     "start": "node tools/start-with-env.mjs > app_start.log 2>&1",
     "start:no-hmr": "ng serve --configuration development-no-hmr",
     "clean-restart": "./scripts/clean-restart.sh",
-    "prebuild": "node scripts/generate-env.js",
+    "prebuild": "node scripts/patch-stencil-empty-glob.js && node scripts/generate-env.js",
     "build": "npx ng build",
     "postinstall": "node scripts/patch-stencil-empty-glob.js",
     "postbuild": "node scripts/create-cloudflare-config.js",
