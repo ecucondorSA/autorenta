@@ -481,7 +481,7 @@
             class="w-full sm:w-48 md:w-56 lg:w-72 aspect-video md:aspect-[4/3] relative bg-slate-100 dark:bg-slate-700 flex-shrink-0">
             <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
               [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model" fill
-              sizes="(min-width: 1024px) 18rem, (min-width: 768px) 14rem, 100vw"
+              sizes="(min-width: 1024px) 25vw, (min-width: 768px) 35vw, (min-width: 640px) 45vw, 100vw"
               class="w-full h-full object-cover" />
           </div>
           <!-- Content -->
@@ -674,8 +674,8 @@
           <!-- Car Image -->
           <div class="w-[88px] h-full flex-shrink-0 bg-slate-100 dark:bg-slate-700 relative">
             <img [ngSrc]="car.image_url || '/assets/images/car-placeholder.svg'"
-              [ngSrcset]="getCarImageSrcset(car.image_url)" [alt]="car.brand + ' ' + car.model"
-              width="88" height="88" sizes="88px" class="w-full h-full object-cover" />
+              [alt]="car.brand + ' ' + car.model" width="88" height="88"
+              class="w-full h-full object-cover" />
             <!-- Superhost Badge -->
             @if (isTopRated(car)) {
             <span
