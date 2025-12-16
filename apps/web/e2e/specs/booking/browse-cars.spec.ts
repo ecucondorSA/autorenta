@@ -65,7 +65,9 @@ async function testCarsListMapToggle(ctx: TestContext): Promise<void> {
   const { marketplacePage, page } = ctx;
 
   await marketplacePage.goto();
-  await marketplacePage.waitForCarsLoaded();
+  await page.waitForSelector(Selectors.marketplace.resultsCount, {
+    timeout: 15000,
+  });
 
   // Switch to map view (should show the map container)
   await marketplacePage.switchToMapView();

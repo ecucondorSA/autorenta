@@ -316,6 +316,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   // Component pools for memory management
   private markerComponentPool: ComponentRef<MapMarkerComponent>[] = [];
   private tooltipComponentPool: ComponentRef<EnhancedMapTooltipComponent>[] = [];
+  private hasWarmedMarkerPool = false;
   private maxPoolSize = 100; // Maximum components to keep in pool
 
   // User location tracking
@@ -914,27 +915,42 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   /**
    * Pre-warm component pool during idle time using requestIdleCallback
-   * Creates 50 components progressively to avoid blocking main thread
+   * Creates a small number of components progressively to avoid blocking main thread.
+   * NOTE: Pre-warming is only helpful for medium/large marker counts; for small datasets it can
+   * cause unnecessary main-thread work and make the page appear unresponsive.
    */
   private preWarmComponentPoolDuringIdle(): void {
+    if (this.hasWarmedMarkerPool) {
+      return;
+    }
+
+    // Skip for small datasets; on-demand creation is fast enough.
+    if (this.cars.length < 25) {
+      return;
+    }
+
     // Only pre-warm if pool is small
     if (this.markerComponentPool.length > 50) {
       return;
     }
 
-    const targetPoolSize = 100;
-    const componentsPerBatch = 5; // Create 5 at a time
+    this.hasWarmedMarkerPool = true;
 
-    const createBatch = () => {
+    const targetPoolSize = Math.min(60, Math.max(20, this.cars.length * 2));
+    const maxPerTick = 2; // Keep batches tiny to avoid long tasks
+
+    const createBatch = (deadline?: IdleDeadline) => {
       if (this.markerComponentPool.length >= targetPoolSize) {
         return; // Done warming
       }
 
-      // Create a batch during idle time
-      for (
-        let i = 0;
-        i < componentsPerBatch && this.markerComponentPool.length < targetPoolSize;
-        i++
+      let created = 0;
+
+      // Create a tiny batch during idle time
+      while (
+        created < maxPerTick &&
+        this.markerComponentPool.length < targetPoolSize &&
+        (!deadline || deadline.timeRemaining() > 8)
       ) {
         const newComponentRef = createComponent(MapMarkerComponent, {
           environmentInjector: this.injector,
@@ -949,26 +965,28 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         }
 
         this.markerComponentPool.push(newComponentRef);
+
+        created++;
       }
 
       // Schedule next batch if needed
       if (this.markerComponentPool.length < targetPoolSize) {
         if ('requestIdleCallback' in window) {
           // Modern browsers with requestIdleCallback
-          requestIdleCallback(() => createBatch(), { timeout: 2000 });
+          requestIdleCallback((d) => createBatch(d), { timeout: 2000 });
         } else {
           // Fallback for older browsers
-          setTimeout(() => createBatch(), 100);
+          setTimeout(() => createBatch(undefined), 150);
         }
       }
     };
 
     // Start warming with requestIdleCallback if available
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => createBatch(), { timeout: 1000 });
+      requestIdleCallback((d) => createBatch(d), { timeout: 1000 });
     } else {
       // Fallback for older browsers
-      setTimeout(() => createBatch(), 500);
+      setTimeout(() => createBatch(undefined), 500);
     }
   }
 
