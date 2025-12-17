@@ -349,12 +349,12 @@ export class LoggerService {
         .then((module) => {
           this.sentryModule = module;
           return module;
-        }) as unknown) as Promise<SentryModule>
+        })
         .catch((err) => {
           console.error('Failed to load Sentry:', err);
           this.sentryLoadPromise = null;
           return null;
-        });
+        }) as unknown) as Promise<SentryModule>;
     }
 
     return this.sentryLoadPromise;
