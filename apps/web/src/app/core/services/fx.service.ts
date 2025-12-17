@@ -5,7 +5,7 @@ import {
   FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
-} from '../models/booking-detail-payment['model']';
+} from '../models/booking-detail-payment.model';
 import { ExchangeRateService } from './exchange-rate.service';
 import { SupabaseClientService } from './supabase-client.service';
 

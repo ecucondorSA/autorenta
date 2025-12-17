@@ -12,7 +12,7 @@ import type {
   WalletTransactionFilters,
   WalletInitiateDepositResponse,
   ExpiringCredit,
-} from '../models/wallet['model']';
+} from '../models/wallet.model';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
