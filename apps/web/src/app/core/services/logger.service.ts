@@ -345,11 +345,11 @@ export class LoggerService {
 
     // Reuse existing load promise to avoid duplicate imports
     if (!this.sentryLoadPromise) {
-      this.sentryLoadPromise = import('@sentry/angular')
+      this.sentryLoadPromise = (import('@sentry/angular')
         .then((module) => {
           this.sentryModule = module;
           return module;
-        })
+        }) as unknown) as Promise<SentryModule>
         .catch((err) => {
           console.error('Failed to load Sentry:', err);
           this.sentryLoadPromise = null;

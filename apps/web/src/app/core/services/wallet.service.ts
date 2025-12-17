@@ -376,7 +376,7 @@ export class WalletService {
             const balance = await this.fetchBalance();
             onBalanceChange(balance);
           } catch (error) {
-            this.logger.warn('Failed to refresh wallet balance after transaction', error);
+            this.logger.warn('Failed to refresh wallet balance after transaction', error instanceof Error ? error.message : String(error));
           }
         },
       )
