@@ -163,15 +163,15 @@ export class FxService {
    * Mapea FxSnapshotDb (de DB) a FxSnapshot (para componentes)
    */
   private mapFxSnapshotFromDb(db: Record<string, unknown>): FxSnapshot {
-    const timestamp = new Date(String(db.timestamp || db['created_at']));
+    const timestamp = new Date(String(db['timestamp'] || db['created_at']));
     const expiresAt = new Date(timestamp);
     expiresAt.setDate(expiresAt.getDate() + 7);
 
     return {
-      rate: Number(db.rate),
+      rate: Number(db['rate']),
       timestamp,
-      fromCurrency: db.from_currency as CurrencyCode,
-      toCurrency: db.to_currency as CurrencyCode,
+      fromCurrency: db['from_currency'] as CurrencyCode,
+      toCurrency: db['to_currency'] as CurrencyCode,
       expiresAt,
       isExpired: new Date() > expiresAt,
       variationThreshold: 0.1,

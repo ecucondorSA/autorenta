@@ -429,11 +429,11 @@ export class InsuranceService {
     const updateData: Record<string, unknown> = { status, updated_at: new Date().toISOString() };
 
     if (notes) {
-      updateData.resolution_notes = notes;
+      updateData['resolution_notes'] = notes;
     }
 
     if (status === 'closed') {
-      updateData.closed_at = new Date().toISOString();
+      updateData['closed_at'] = new Date().toISOString();
     }
 
     const { error } = await this.supabase

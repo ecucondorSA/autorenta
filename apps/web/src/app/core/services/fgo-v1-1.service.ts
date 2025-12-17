@@ -376,15 +376,15 @@ export class FgoV1_1Service {
         if (!data) return null;
 
         return {
-          countryCode: data.country_code as string,
-          bucket: data.bucket as string,
-          pemCents: data.pem_cents as number,
-          pem: centsToUsd(data.pem_cents as number),
-          eventCount: data.event_count as number,
-          avgEventCents: data.avg_event_cents as number,
-          avgEvent: centsToUsd(data.avg_event_cents as number),
-          totalPaid: centsToUsd(data.total_paid_cents as number),
-          totalRecovered: centsToUsd(data.total_recovered_cents as number),
+          countryCode: data['country_code'] as string,
+          bucket: data['bucket'] as string,
+          pemCents: data['pem_cents'] as number,
+          pem: centsToUsd(data['pem_cents'] as number),
+          eventCount: data['event_count'] as number,
+          avgEventCents: data['avg_event_cents'] as number,
+          avgEvent: centsToUsd(data['avg_event_cents'] as number),
+          totalPaid: centsToUsd(data['total_paid_cents'] as number),
+          totalRecovered: centsToUsd(data['total_recovered_cents'] as number),
         } as PemCalculation;
       }),
       catchError((_error) => {
