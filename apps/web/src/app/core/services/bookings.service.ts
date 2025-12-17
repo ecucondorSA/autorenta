@@ -121,8 +121,29 @@ export class BookingsService {
       throw new Error(errorMessage);
     }
 
+    // ✅ DEBUG: Log the RPC response to understand what's returned
+    this.logger.info(
+      `request_booking RPC response: ${JSON.stringify({
+        data,
+        dataType: typeof data,
+        dataKeys: data ? Object.keys(data) : [],
+        hasId: data?.id !== undefined,
+        id: data?.id,
+        bookingId: data?.booking_id,
+      })}`,
+      'BookingsService',
+    );
+
     const bookingId = this.utilsService.extractBookingId(data);
     if (!bookingId) {
+      this.logger.error(
+        `Failed to extract booking ID from RPC response: ${JSON.stringify({
+          data,
+          dataType: typeof data,
+          dataKeys: data ? Object.keys(data) : [],
+        })}`,
+        'BookingsService',
+      );
       throw new Error('request_booking did not return a booking id');
     }
 
