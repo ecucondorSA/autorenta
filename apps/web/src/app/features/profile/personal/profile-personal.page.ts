@@ -1,5 +1,6 @@
 import {Component, inject, OnInit, signal, computed, effect,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -321,6 +322,7 @@ export class ProfilePersonalPage implements OnInit {
   private readonly profileStore = inject(ProfileStore);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly profile = this.profileStore.profile;
   readonly loading = this.profileStore.loading;
@@ -383,7 +385,11 @@ export class ProfilePersonalPage implements OnInit {
 
   private setupAutoSave(): void {
     this.personalForm.valueChanges
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         this.validateAndSave();
       });

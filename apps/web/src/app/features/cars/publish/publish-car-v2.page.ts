@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, computed, inject, OnInit, signal
+  Component, computed, inject, OnInit, signal, DestroyRef
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -74,6 +75,7 @@ export class PublishCarV2Page implements OnInit {
   private readonly documentsService = inject(VehicleDocumentsService);
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
   private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly destroyRef = inject(DestroyRef);
 
   // Component state
   readonly isSubmitting = signal(false);
@@ -272,7 +274,9 @@ export class PublishCarV2Page implements OnInit {
     this.publishForm = this.formService.initForm();
 
     // ✅ NEW: Listen to category_id changes to update selectedCategoryName
-    this.publishForm.get('category_id')?.valueChanges.subscribe(async (categoryId) => {
+    this.publishForm.get('category_id')?.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(async (categoryId) => {
       if (categoryId) {
         await this.updateCategoryName(categoryId);
       } else {

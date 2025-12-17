@@ -1,4 +1,5 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { UserProfile } from '../models';
 import { AuthService } from '../services/auth.service';
 import type { UpdateProfileData } from '../services/profile.service';
@@ -35,6 +36,7 @@ export class ProfileStore {
   private readonly profileService = inject(ProfileService);
   private readonly walletService = inject(WalletService);
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // ==================== CORE STATE ====================
 
@@ -175,11 +177,13 @@ export class ProfileStore {
 
       // Load wallet balance if profile loaded successfully
       if (profile) {
-        void this.walletService.getBalance().subscribe({
-          error: () => {
-            // Ignore wallet errors - non-blocking
-          },
-        });
+        this.walletService.getBalance()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            error: () => {
+              // Ignore wallet errors - non-blocking
+            },
+          });
       }
 
       return profile;

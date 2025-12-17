@@ -1,5 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -428,6 +429,7 @@ export class InsuranceSelectorComponent implements OnInit {
   @Output() depositCalculated = new EventEmitter<number>();
 
   private readonly insuranceService: InsuranceService = inject(InsuranceService);
+  private readonly destroyRef = inject(DestroyRef);
 
   availableAddons: InsuranceAddon[] = [];
   selectedAddons = new Map<string, InsuranceAddon>();
@@ -463,7 +465,9 @@ export class InsuranceSelectorComponent implements OnInit {
       this.loading = true;
 
       // Cargar add-ons disponibles
-      this.insuranceService.getAvailableAddons().subscribe((addons: InsuranceAddon[]) => {
+      this.insuranceService.getAvailableAddons().pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe((addons: InsuranceAddon[]) => {
         this.availableAddons = addons;
       });
 

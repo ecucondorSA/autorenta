@@ -1,6 +1,7 @@
 
 import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PayoutService } from '../../../core/services/payout.service';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -63,6 +64,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class PayoutStatsComponent implements OnInit {
   private readonly payoutService = inject(PayoutService);
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly stats = signal<{
     totalPayouts: number;
@@ -86,7 +88,9 @@ export class PayoutStatsComponent implements OnInit {
       const user = await this.authService.getCurrentUser();
       if (!user) return;
 
-      this.payoutService.getPayoutStats(user.id).subscribe({
+      this.payoutService.getPayoutStats(user.id).pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
         next: (stats) => {
           this.stats.set(stats);
         },

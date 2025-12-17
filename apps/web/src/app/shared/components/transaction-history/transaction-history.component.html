@@ -162,7 +162,7 @@
                   </div>
                 </div>
                 <!-- Description -->
-                @if (transaction.metadata?.['description']) {
+                @if (transaction.metadata['description']) {
                   <div
                     class="mt-2 text-sm text-text-secondary dark:text-text-secondary/70"
                     >
@@ -216,7 +216,7 @@
                           transaction.source_system
                         }}</span>
                       </div>
-                      @if (transaction.metadata?.['provider']) {
+                      @if (transaction.metadata['provider']) {
                         <div class="flex justify-between">
                           <span class="text-text-secondary dark:text-text-secondary/70">Proveedor:</span>
                           <span class="text-text-primary dark:text-pearl-white">{{

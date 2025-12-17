@@ -1,5 +1,6 @@
 import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { InsuranceService } from '../../../core/services/insurance.service';
@@ -32,6 +33,7 @@ export class MyClaimsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly insuranceService = inject(InsuranceService);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly claims = signal<InsuranceClaim[]>([]);
   readonly loading = signal(true);
@@ -81,7 +83,9 @@ export class MyClaimsPage implements OnInit {
   async loadClaims() {
     this.loading.set(true);
     try {
-      this.insuranceService.getMyClaims().subscribe({
+      this.insuranceService.getMyClaims().pipe(
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
         next: (claims) => {
           this.claims.set(claims);
           this.loading.set(false);

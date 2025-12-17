@@ -250,9 +250,8 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       try {
         await this.brickController.unmount();
         this.brickController = null;
-        console.log('✅ Payment Brick unmounted');
       } catch (err) {
-        console.warn('⚠️ Error unmounting brick:', err);
+        // Silently catch unmount errors - component is being destroyed anyway
       }
     }
   }
@@ -272,16 +271,12 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
     const currentAttempt = this.initAttempt() + 1;
     this.initAttempt.set(currentAttempt);
 
-    console.log(`🔄 Payment Brick init attempt ${currentAttempt}/${this.maxInitAttempts}`);
-
     try {
       // 1. Get and validate public key
       const publicKey = this.getPublicKey();
       if (!publicKey) {
         throw new Error('MercadoPago public key no configurada. Verifica NG_APP_MERCADOPAGO_PUBLIC_KEY.');
       }
-
-      console.log('🔑 MercadoPago public key:', `${publicKey.slice(0, 20)}...`);
 
       // 2. Verify container element exists
       const container = this.brickContainerRef?.nativeElement;
@@ -295,20 +290,17 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         throw new Error('MercadoPago SDK instance is null');
       }
 
-      this.mp = mpInstance as unknown as MercadoPagoSDK;
-
-      // 4. Validate bricks method exists (confirms V2 SDK loaded)
-      if (typeof this.mp.bricks !== 'function') {
+      // Validate mpInstance is the expected SDK type
+      if (typeof (mpInstance as MercadoPagoSDK).bricks !== 'function') {
         throw new Error('MercadoPago bricks() method not available. SDK may not be V2.');
       }
 
-      console.log('✅ MercadoPago SDK V2 loaded successfully');
+      this.mp = mpInstance as MercadoPagoSDK;
 
-      // 5. Calculate amount (minimum 1 ARS for MercadoPago)
+      // 4. Calculate amount (minimum 1 ARS for MercadoPago)
       const amount = Math.max(1, Math.ceil(this.amountArs));
-      console.log(`💰 Initializing Payment Brick with amount: ${amount} ARS`);
 
-      // 6. Create Payment Brick
+      // 5. Create Payment Brick
       const bricksBuilder = this.mp.bricks();
 
       this.brickController = await bricksBuilder.create('cardPayment', 'paymentBrick_container', {
@@ -325,18 +317,15 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         },
         callbacks: {
           onReady: () => {
-            console.log('✅ Payment Brick ready');
             this.ngZone.run(() => {
               this.isInitializing.set(false);
               this.errorMessage.set(null);
             });
           },
           onSubmit: async (cardFormData: CardPaymentFormData) => {
-            console.log('📤 Payment Brick submitted');
             await this.handleBrickSubmit(cardFormData);
           },
           onError: (error: BrickError) => {
-            console.error('❌ Payment Brick error:', error);
             this.ngZone.run(() => {
               this.handleBrickError(error);
             });
@@ -344,15 +333,10 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         },
       });
 
-      console.log('✅ Payment Brick created successfully');
-
     } catch (error) {
-      console.error(`❌ Payment Brick init error (attempt ${currentAttempt}):`, error);
-
       // Retry with exponential backoff if under max attempts
       if (currentAttempt < this.maxInitAttempts) {
         const delay = this.getRetryDelay(currentAttempt);
-        console.log(`⏳ Retrying in ${delay}ms...`);
 
         this.ngZone.runOutsideAngular(() => {
           setTimeout(() => {
@@ -410,19 +394,12 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
    */
   private async handleBrickSubmit(cardFormData: CardPaymentFormData): Promise<void> {
     try {
-      console.log('📦 Card Payment Brick raw data:', JSON.stringify(cardFormData, null, 2));
-
       // Card Payment Brick returns token directly at root level
       const token = cardFormData?.token;
 
       if (!token || typeof token !== 'string' || token.length === 0) {
-        console.error('❌ Token not found or invalid in response:', cardFormData);
         throw new Error('No se generó el token de la tarjeta. Verifica los datos e intenta nuevamente.');
       }
-
-      console.log('✅ Card token received:', token.slice(0, 10) + '...');
-      console.log('📋 Payment method:', cardFormData.payment_method_id);
-      console.log('🔢 Installments:', cardFormData.installments);
 
       // Emit token to parent component
       this.ngZone.run(() => {
@@ -433,7 +410,6 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       });
 
     } catch (error) {
-      console.error('❌ Error processing card form:', error);
       this.ngZone.run(() => {
         const errorMsg = error instanceof Error ? error.message : 'Error al procesar la tarjeta';
         this.errorMessage.set(errorMsg);

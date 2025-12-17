@@ -9,7 +9,9 @@ import {
   inject,
   effect,
   ChangeDetectionStrategy,
+  DestroyRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import {
   RiskSnapshot,
@@ -399,6 +401,7 @@ export class CreditSecurityPanelComponent implements OnInit {
   @Output() needsTopUp = new EventEmitter<number>(); // Emit amount needed
 
   private walletService = inject(WalletService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Signals
   protected lockStatus = signal<'checking' | 'sufficient' | 'insufficient' | 'locked' | 'error'>(
@@ -454,7 +457,9 @@ export class CreditSecurityPanelComponent implements OnInit {
     this.isCheckingBalance.set(true);
     this.errorMessage.set(null);
 
-    this.walletService.getBalance().subscribe({
+    this.walletService.getBalance().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (balance) => {
         this.currentProtectedCredit.set(balance.protected_credit_balance || 0);
         this.updateLockStatus();
@@ -504,6 +509,7 @@ export class CreditSecurityPanelComponent implements OnInit {
         this.riskSnapshot.creditSecurityUsd,
         `Crédito de Seguridad para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
       )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           if (!result || !result.transaction_id) {
@@ -551,6 +557,7 @@ export class CreditSecurityPanelComponent implements OnInit {
         description: 'Carga de Crédito de Seguridad',
         allowWithdrawal: false, // ← CLAVE: NO retirable
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           if (result.success && result.payment_url) {

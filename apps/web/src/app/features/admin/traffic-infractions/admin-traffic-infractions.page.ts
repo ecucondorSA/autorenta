@@ -141,7 +141,7 @@ export interface TrafficInfraction {
                   </td>
                   <td class="px-4 py-4 max-w-xs">
                     <p class="text-sm text-text-secondary truncate">{{ infraction.description }}</p>
-                    @if (infraction.evidence_urls?.length) {
+                    @if (infraction.evidence_urls.length) {
                       <p class="text-xs text-cta-default mt-1">
                         {{ infraction.evidence_urls.length }} evidencia(s)
                       </p>

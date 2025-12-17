@@ -33,11 +33,11 @@ export interface TrackingSessionSnapshot {
       </div>
     
       @if (session) {
-        <p class="text-sm text-text-secondary">Inicio: {{ session?.started_at || '—' }}</p>
-        <p class="text-sm text-text-secondary">Fin: {{ session?.ended_at || '—' }}</p>
-        @if (session?.points_count !== undefined) {
+        <p class="text-sm text-text-secondary">Inicio: {{ session.started_at || '—' }}</p>
+        <p class="text-sm text-text-secondary">Fin: {{ session.ended_at || '—' }}</p>
+        @if (session.points_count !== undefined) {
           <p class="text-sm text-text-secondary">
-            Puntos capturados: {{ session?.points_count }}
+            Puntos capturados: {{ session.points_count }}
           </p>
         }
         <div class="text-xs text-text-secondary/80">

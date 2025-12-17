@@ -43,8 +43,6 @@ serve(async (req: Request) => {
   }
 
   try {
-    console.log('=== MercadoPago Retry Failed Deposits Job Started ===');
-
     // Configuración
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -98,21 +96,29 @@ serve(async (req: Request) => {
       );
     }
 
-    console.log(`Found ${pendingDeposits.length} pending deposits to retry`);
-
     // Procesar cada depósito
     const results: RetryResult[] = [];
 
     for (const deposit of pendingDeposits) {
-      console.log(`Processing deposit ${deposit.id}...`);
-
       // Intentar obtener payment_id de metadata
-      const metadata = deposit.provider_metadata as any;
-      let paymentId = metadata?.payment_id || metadata?.id;
+      const metadata = deposit.provider_metadata;
+
+      // Validate metadata structure
+      if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) {
+        results.push({
+          transaction_id: deposit.id,
+          payment_id: null,
+          status: 'no_payment_id',
+          message: 'Invalid or missing metadata',
+        });
+        continue;
+      }
+
+      const metadataRecord = metadata as Record<string, unknown>;
+      let paymentId = metadataRecord.payment_id || metadataRecord.id;
 
       // Si no hay payment_id en metadata, buscar por external_reference en MP
-      if (!paymentId) {
-        console.log(`No payment_id found for transaction ${deposit.id}, skipping for now`);
+      if (!paymentId || typeof paymentId !== 'string') {
         results.push({
           transaction_id: deposit.id,
           payment_id: null,
@@ -124,11 +130,9 @@ serve(async (req: Request) => {
 
       // Consultar MercadoPago API
       try {
-        console.log(`Fetching payment ${paymentId} from MercadoPago...`);
         const paymentData = await paymentClient.get({ id: paymentId });
 
         if (!paymentData || !paymentData.id) {
-          console.error(`Invalid payment data for ${paymentId}`);
           results.push({
             transaction_id: deposit.id,
             payment_id: paymentId,
@@ -138,12 +142,9 @@ serve(async (req: Request) => {
           continue;
         }
 
-        console.log(`Payment ${paymentId} status: ${paymentData.status}`);
-
         // Verificar estado del pago
         if (paymentData.status === 'approved') {
           // Pago aprobado - confirmar depósito
-          console.log(`Payment approved, confirming deposit ${deposit.id}...`);
 
           const { data: confirmResult, error: confirmError } = await supabase.rpc(
             'wallet_confirm_deposit_admin',

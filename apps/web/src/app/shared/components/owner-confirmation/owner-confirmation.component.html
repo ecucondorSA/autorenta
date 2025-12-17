@@ -103,8 +103,8 @@
               Máximo: $250 USD (monto de la garantía)
             </p>
             @if (
-              form.controls.damage_amount?.touched &&
-              form.controls.damage_amount?.hasError('required')
+              form.controls.damage_amount.touched &&
+              form.controls.damage_amount.hasError('required')
               ) {
               <p
                 class="mt-1 text-xs text-error-text"
@@ -113,7 +113,7 @@
               </p>
             }
             @if (
-              form.controls.damage_amount?.touched && form.controls.damage_amount?.hasError('max')
+              form.controls.damage_amount.touched && form.controls.damage_amount.hasError('max')
               ) {
               <p
                 class="mt-1 text-xs text-error-text"
@@ -144,8 +144,8 @@
               Mínimo 10 caracteres. Sé específico con los daños encontrados.
             </p>
             @if (
-              form.controls.damage_description?.touched &&
-              form.controls.damage_description?.hasError('required')
+              form.controls.damage_description.touched &&
+              form.controls.damage_description.hasError('required')
               ) {
               <p
                 class="mt-1 text-xs text-error-text"
@@ -154,8 +154,8 @@
               </p>
             }
             @if (
-              form.controls.damage_description?.touched &&
-              form.controls.damage_description?.hasError('minlength')
+              form.controls.damage_description.touched &&
+              form.controls.damage_description.hasError('minlength')
               ) {
               <p
                 class="mt-1 text-xs text-error-text"

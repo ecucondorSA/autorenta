@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MercadopagoCardFormComponent } from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import {
@@ -30,6 +31,7 @@ export class CardHoldPanelComponent {
 
   private readonly paymentAuthorizationService = inject(PaymentAuthorizationService);
   private readonly authService = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly userEmail = this.authService.userEmail;
 
@@ -71,6 +73,7 @@ export class CardHoldPanelComponent {
         description: `Preautorización para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
         bookingId: this.bookingId,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
           this.isLoading.set(false);
@@ -117,6 +120,7 @@ export class CardHoldPanelComponent {
     if (currentAuth) {
       this.paymentAuthorizationService
         .cancelAuthorization(currentAuth.authorizedPaymentId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.currentAuthSignal.set(null);
           this.authorizationStatus.set('idle');

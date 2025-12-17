@@ -1,5 +1,6 @@
 import {Component, OnInit, signal, computed, inject,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { RouterLink } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -16,6 +17,7 @@ import type { DashboardStats } from '../../../core/models/dashboard.model';
 })
 export class StatsPage implements OnInit {
   private readonly dashboardService = inject(DashboardService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -54,7 +56,9 @@ export class StatsPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getDashboardStats(false).subscribe({
+    this.dashboardService.getDashboardStats(false).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (stats) => {
         this.stats.set(stats);
         this.loading.set(false);

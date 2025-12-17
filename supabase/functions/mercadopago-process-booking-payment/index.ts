@@ -228,10 +228,14 @@ serve(async (req) => {
     }
 
     // 4. Validate all 4 priority clauses accepted
-    const clauses = contract.clauses_accepted as any;
+    const clauses = contract.clauses_accepted;
 
-    if (!clauses) {
-      console.error('[CONTRACT_VALIDATION] Missing clauses_accepted for booking:', booking_id);
+    if (
+      !clauses ||
+      typeof clauses !== 'object' ||
+      Array.isArray(clauses)
+    ) {
+      console.error('[CONTRACT_VALIDATION] Invalid clauses_accepted format for booking:', booking_id);
       return new Response(
         JSON.stringify({
           error: 'CONTRACT_CLAUSES_MISSING',
@@ -245,7 +249,9 @@ serve(async (req) => {
     }
 
     const requiredClauses = ['culpaGrave', 'indemnidad', 'retencion', 'mora'];
-    const missingClauses = requiredClauses.filter((clause) => clauses[clause] !== true);
+    const missingClauses = requiredClauses.filter(
+      (clause) => (clauses as Record<string, unknown>)[clause] !== true
+    );
 
     if (missingClauses.length > 0) {
       console.warn('[CONTRACT_VALIDATION] Incomplete clause acceptance for booking:', {

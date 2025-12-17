@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import type { Car } from '../../../core/models';
 import type { DashboardStats } from '../../../core/models/dashboard.model';
@@ -24,6 +25,7 @@ export class EarningsPage implements OnInit {
   private readonly carsService = inject(CarsService);
   private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly supabaseService = inject(SupabaseClientService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -118,7 +120,9 @@ export class EarningsPage implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.dashboardService.getDashboardStats(false).subscribe({
+    this.dashboardService.getDashboardStats(false).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: (stats) => {
         this.stats.set(stats);
         this.updateCharts();

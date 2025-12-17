@@ -71,9 +71,6 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    console.log('MP_ACCESS_TOKEN configured:', !!cleanToken);
-    console.log('SUPABASE_URL configured:', !!SUPABASE_URL);
-
     if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       throw new Error('Missing required environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
@@ -136,7 +133,24 @@ serve(async (req) => {
       );
     }
 
-    const request = withdrawalRequest as unknown as WithdrawalRequest;
+    // Validate withdrawal request structure
+    if (
+      !withdrawalRequest ||
+      typeof withdrawalRequest !== 'object' ||
+      !('id' in withdrawalRequest) ||
+      !('bank_account_id' in withdrawalRequest) ||
+      !('net_amount' in withdrawalRequest)
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid withdrawal request data' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const request = withdrawalRequest as WithdrawalRequest;
 
     // Obtener datos de la cuenta bancaria
     const { data: bankAccount, error: baError } = await supabase
@@ -161,7 +175,23 @@ serve(async (req) => {
       );
     }
 
-    const account = bankAccount as unknown as BankAccount;
+    // Validate bank account structure
+    if (
+      !bankAccount ||
+      typeof bankAccount !== 'object' ||
+      !('account_type' in bankAccount) ||
+      !('account_number' in bankAccount)
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid bank account data' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const account = bankAccount as BankAccount;
 
     // Actualizar estado a "processing"
     await supabase
@@ -175,11 +205,6 @@ serve(async (req) => {
     // ========================================
     // LLAMADA A MERCADOPAGO MONEY OUT API
     // ========================================
-
-    console.log('Processing Money Out transfer...');
-    console.log('Amount:', request.net_amount);
-    console.log('Account:', account.account_number);
-    console.log('Account type:', account.account_type);
 
     // Preparar datos para MercadoPago Money Out
     // Docs: https://www.mercadopago.com.ar/developers/es/reference/money_out/_money-requests/post
@@ -217,8 +242,6 @@ serve(async (req) => {
       notification_url: `${SUPABASE_URL}/functions/v1/mercadopago-money-out-webhook`,
     };
 
-    console.log('MercadoPago Money Out payload:', JSON.stringify(moneyOutPayload, null, 2));
-
     // Realizar llamada a MercadoPago Money Out API
     const mpResponse = await fetch('https://api.mercadopago.com/v1/money_requests', {
       method: 'POST',
@@ -231,12 +254,9 @@ serve(async (req) => {
 
     const mpData = await mpResponse.json();
 
-    console.log('MercadoPago Money Out response:', JSON.stringify(mpData, null, 2));
-
     // VALIDACIÓN CRÍTICA: Rechazar transacciones simuladas/test
     if (mpData.test === true || mpData.simulated === true) {
       const errorMessage = 'Transfer rejected: This is a simulated/test transaction, not a real transfer';
-      console.error('CRITICAL: Test transaction detected:', errorMessage);
 
       // Marcar retiro como fallido
       await supabase.rpc('wallet_fail_withdrawal', {

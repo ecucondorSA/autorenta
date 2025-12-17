@@ -1,4 +1,5 @@
-import { inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable, Signal, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
@@ -39,6 +40,7 @@ export interface SortState {
 export class UrlStateManager {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly filtersSignal = signal<Record<string, string>>({});
   private readonly sortSignal = signal<SortState | null>(null);
@@ -54,7 +56,7 @@ export class UrlStateManager {
    * Initialize state from URL query parameters
    */
   private initializeFromUrl(): void {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       // Parse filters
       const filters: Record<string, string> = {};
       Object.keys(params).forEach((key) => {

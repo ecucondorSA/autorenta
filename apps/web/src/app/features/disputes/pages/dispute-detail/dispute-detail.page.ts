@@ -1,5 +1,6 @@
 import {Component, OnInit, inject, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -107,6 +108,7 @@ import { EvidenceUploaderComponent } from '../../components/evidence-uploader/ev
 export class DisputeDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private disputesService = inject(DisputesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   disputeId = signal<string>('');
   dispute = signal<Dispute | undefined>(undefined);
@@ -114,15 +116,17 @@ export class DisputeDetailPage implements OnInit {
   updating = signal(false);
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.disputeId.set(id);
-        this.loadDispute(id);
-      } else {
-        this.loading.set(false);
-      }
-    });
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const id = params.get('id');
+        if (id) {
+          this.disputeId.set(id);
+          this.loadDispute(id);
+        } else {
+          this.loading.set(false);
+        }
+      });
   }
 
   async loadDispute(id: string) {
