@@ -1009,7 +1009,7 @@ export class AdminService {
       // Calculate already refunded amount
       const refundedAmount = refundRequests
         .filter((r) => r['status'] !== 'rejected' && r['status'] !== 'failed')
-        .reduce((sum, r) => sum + ((r.refund_amount as number) ?? 0), 0);
+        .reduce((sum, r) => sum + ((r['refund_amount'] as number) ?? 0), 0);
 
       const canRefund =
         typedItem['payment_status'] === 'paid' ||

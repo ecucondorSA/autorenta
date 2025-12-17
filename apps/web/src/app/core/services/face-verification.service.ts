@@ -335,7 +335,7 @@ export class FaceVerificationService {
 
     // Mark as verified if score is good (>= 70%)
     if (result.face_match_score >= 70) {
-      updates.selfie_verified_at = new Date().toISOString();
+      updates['selfie_verified_at'] = new Date().toISOString();
     }
 
     const { error } = await this.supabase
