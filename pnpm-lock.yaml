@@ -401,7 +401,7 @@ importers:
         specifier: ^1.40.0
         version: 1.57.0
       zod:
-        specifier: ^3.25.76
+        specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
       '@types/node':
@@ -438,7 +438,7 @@ importers:
         specifier: ^1.22.0
         version: 1.23.0(zod@4.2.0)
       '@supabase/supabase-js':
-        specifier: ^2.87.3
+        specifier: ^2.39.0
         version: 2.87.3
       glob:
         specifier: ^10.3.0

@@ -36,10 +36,11 @@
       [disabled]="disabled || loading"
       [ngClass]="buttonClasses"
       class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 min-h-[44px]"
+      [attr.aria-label]="ctaText"
       >
       @if (!loading) {
         <!-- Icon -->
-        @if (!disabled) {
+        @if (!showCalendarIcon) {
           <svg
             class="h-5 w-5"
             fill="none"
@@ -54,7 +55,7 @@
               />
           </svg>
         }
-        @if (disabled) {
+        @if (showCalendarIcon) {
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"

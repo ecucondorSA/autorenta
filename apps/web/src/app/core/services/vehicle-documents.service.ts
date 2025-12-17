@@ -338,7 +338,11 @@ export class VehicleDocumentsService {
           }
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[VehicleDocuments] Realtime subscription active');
+        }
+      });
 
     return () => {
       this.supabase.removeChannel(channel);

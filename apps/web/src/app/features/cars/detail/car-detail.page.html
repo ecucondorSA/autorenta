@@ -67,13 +67,14 @@
         <div
           class="md:col-span-2 md:row-span-2 h-full bg-surface-secondary relative group cursor-pointer"
           >
-          @if (car()?.photos?.[0]?.url) {
-            <img
-              [src]="car()?.photos?.[0]?.url"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [alt]="displayTitle() + ' - Vista principal'"
-              />
-          }
+          <img
+            [src]="heroPhotoUrls()[0]"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            [alt]="displayTitle() + ' - Vista principal'"
+            loading="eager"
+            decoding="async"
+            (error)="onImgError($event)"
+            />
           <!-- Botón Ver Fotos (Visible en móvil sobre la imagen) -->
           <button
             class="md:hidden absolute bottom-4 right-4 bg-black/70 backdrop-blur-md text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md flex items-center gap-2 border border-white/20"
@@ -84,44 +85,48 @@
         </div>
         <!-- Fotos Secundarias (Hidden on mobile) -->
         <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
-          @if (car()?.photos?.[1]?.url) {
-            <img
-              [src]="car()?.photos?.[1]?.url"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [alt]="displayTitle() + ' - Vista 2'"
-              />
-          }
+          <img
+            [src]="heroPhotoUrls()[1]"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            [alt]="displayTitle() + ' - Vista 2'"
+            loading="lazy"
+            decoding="async"
+            (error)="onImgError($event)"
+            />
         </div>
         <div
           class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-tr-2xl"
           >
-          @if (car()?.photos?.[2]?.url) {
-            <img
-              [src]="car()?.photos?.[2]?.url"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [alt]="displayTitle() + ' - Vista 3'"
-              />
-          }
+          <img
+            [src]="heroPhotoUrls()[2]"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            [alt]="displayTitle() + ' - Vista 3'"
+            loading="lazy"
+            decoding="async"
+            (error)="onImgError($event)"
+            />
         </div>
         <div class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer">
-          @if (car()?.photos?.[3]?.url) {
-            <img
-              [src]="car()?.photos?.[3]?.url"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [alt]="displayTitle() + ' - Vista 4'"
-              />
-          }
+          <img
+            [src]="heroPhotoUrls()[3]"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            [alt]="displayTitle() + ' - Vista 4'"
+            loading="lazy"
+            decoding="async"
+            (error)="onImgError($event)"
+            />
         </div>
         <div
           class="hidden md:block h-full bg-surface-secondary relative group cursor-pointer rounded-br-2xl"
           >
-          @if (car()?.photos?.[4]?.url) {
-            <img
-              [src]="car()?.photos?.[4]?.url"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              [alt]="displayTitle() + ' - Vista 5'"
-              />
-          }
+          <img
+            [src]="heroPhotoUrls()[4]"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            [alt]="displayTitle() + ' - Vista 5'"
+            loading="lazy"
+            decoding="async"
+            (error)="onImgError($event)"
+            />
           <!-- Botón "Ver todas" (Desktop) -->
           <button
             class="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:scale-105 transition-transform flex items-center gap-2"
@@ -151,9 +156,12 @@
             <!-- Avatar -->
             <div class="relative">
               <img
-                [src]="car()?.owner?.avatar_url"
+                [src]="car()?.owner?.avatar_url || '/assets/avatar-placeholder.png'"
                 class="w-14 h-14 rounded-full object-cover border border-border-default shadow-sm"
                 [alt]="car()?.owner?.full_name"
+                loading="lazy"
+                decoding="async"
+                (error)="onImgError($event, '/assets/avatar-placeholder.png')"
                 />
               @if (car()?.owner?.is_email_verified) {
                 <div
@@ -274,6 +282,7 @@
               <!-- Date Picker Wrapper -->
               <div class="rounded-xl border border-text-secondary/30 overflow-hidden mb-4">
                 <app-date-range-picker
+                  #bookingDatePicker
                   [label]="expressMode() ? 'Duración de alquiler' : 'Llegada - Salida'"
                   (rangeChange)="onRangeChange($event)"
                   [initialFrom]="dateRange().from"
@@ -290,9 +299,10 @@
                 <button
                   id="book-now"
                   (click)="onBookClick()"
-                  [disabled]="!canBook() || bookingInProgress()"
+                  [disabled]="bookingInProgress()"
                   class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 mb-4"
-                  [ngClass]="{ 'opacity-50 cursor-not-allowed': !canBook() || bookingInProgress() }"
+                  [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() }"
+                  [attr.aria-label]="canBook() ? 'Reservar Ahora' : 'Seleccionar Fechas'"
                   >
                   @if (!bookingInProgress()) {
                     <span>
@@ -423,7 +433,8 @@
             [totalPrice]="totalPrice()"
             [daysCount]="daysCount()"
             [ctaText]="canBook() ? 'Solicitar Reserva' : 'Seleccionar Fechas'"
-            [disabled]="!canBook() || bookingInProgress()"
+            [showCalendarIcon]="!canBook()"
+            [disabled]="bookingInProgress()"
             [loading]="bookingInProgress()"
             [expressMode]="expressMode()"
             (ctaClick)="onBookClick()"

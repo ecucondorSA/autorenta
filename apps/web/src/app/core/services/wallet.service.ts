@@ -380,7 +380,11 @@ export class WalletService {
           }
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[Wallet] Realtime subscription active');
+        }
+      });
   }
 
   async unsubscribeFromWalletChanges(): Promise<void> {

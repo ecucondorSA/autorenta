@@ -52,7 +52,7 @@ export class PwaInstallService {
 
       // Mostrar prompt personalizado después de 30 segundos
       setTimeout(() => {
-        if (!this.isInstalled() && this.canInstall()) {
+        if (!this.isInstalled() && this.canInstall() && !this.wasRecentlyDismissed()) {
           this.showInstallPrompt.set(true);
         }
       }, 30000);

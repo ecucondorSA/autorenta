@@ -955,7 +955,11 @@ export class CarsListPage implements OnInit, OnDestroy {
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'cars' }, () => {
         this.handleRealtimeDelete();
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[CarsList] Realtime subscription active');
+        }
+      });
   }
 
   // Handle new car insertion - show toast only (user can manually refresh)

@@ -14,6 +14,8 @@ export class StickyCtaMobileComponent {
   @Input() totalPrice: number | null = null;
   @Input() daysCount = 0;
   @Input() ctaText = 'Reservar Ahora';
+  /** When true, show the calendar icon (select dates) instead of the check icon (book) */
+  @Input() showCalendarIcon = false;
   @Input() disabled = false;
   @Input() loading = false;
   @Input() expressMode = false;

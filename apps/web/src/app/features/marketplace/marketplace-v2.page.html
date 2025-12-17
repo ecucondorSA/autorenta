@@ -38,11 +38,15 @@
 
     <!-- Center: Navigation Links -->
     <nav class="hidden md:flex items-center gap-8">
-      <a (click)="scrollToHowItWorks()"
-        class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow">Cómo
-      funciona</a>
-      <a routerLink="/cars"
-      class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow">Explorar</a>
+      <button
+        type="button"
+        (click)="scrollToHowItWorks()"
+        class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow"
+      >Cómo funciona</button>
+      <a
+        routerLink="/cars"
+        class="text-white hover:text-[#00D95F] font-bold text-base transition-colors cursor-pointer nav-text-shadow"
+      >Explorar</a>
     </nav>
 
     <!-- Right: Actions -->

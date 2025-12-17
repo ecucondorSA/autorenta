@@ -184,7 +184,11 @@ export class UnreadMessagesService {
           this.handleMessageUpdate(payload.new as MessageRow);
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[UnreadMessages] Realtime subscription active');
+        }
+      });
   }
 
   /**

@@ -257,7 +257,11 @@ export class CarLocationsService {
       },
     );
 
-    void channel.subscribe();
+    void channel.subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        console.debug('[CarLocations] Realtime subscription active');
+      }
+    });
     this.realtimeChannel = channel;
 
     return () => {

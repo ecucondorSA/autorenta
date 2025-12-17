@@ -897,7 +897,11 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         { event: 'DELETE', schema: 'public', table: 'cars' },
         () => void this.loadCars(),
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[Marketplace] Car deletion subscription active');
+        }
+      });
   }
 
   /**

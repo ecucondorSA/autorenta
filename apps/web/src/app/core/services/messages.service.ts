@@ -374,7 +374,11 @@ export class MessagesService implements OnDestroy {
           // Silently ignore typing errors
         }
       })
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug('[Messages] Typing subscription active');
+        }
+      });
 
     return channel;
   }

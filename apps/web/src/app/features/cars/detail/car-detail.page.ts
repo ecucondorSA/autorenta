@@ -100,6 +100,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // ✅ NEW: ViewChild references for scroll behavior
   @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
   @ViewChild('mainHeader', { read: ElementRef }) mainHeaderRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('bookingDatePicker', { read: DateRangePickerComponent })
+  bookingDatePicker?: DateRangePickerComponent;
   private readonly route = inject(ActivatedRoute);
   public readonly router = inject(Router);
   private readonly carsService = inject(CarsService);
@@ -165,6 +167,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly blockedRanges = signal<Array<{ from: string; to: string }>>([]); // ✅ NEW: Rangos bloqueados para date picker
   readonly imageLoaded = signal(false);
   readonly specsCollapsed = signal(false);
+
+  private readonly defaultCarPlaceholderUrl = '/assets/placeholder-car.webp';
 
   // ✅ FIX: Precio dinámico para mostrar en lugar del estático
   readonly dynamicPrice = signal<number | null>(null);
@@ -384,6 +388,55 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
 
   readonly currentPhoto = computed(() => this.allPhotos()[this.currentPhotoIndex()]);
   readonly hasMultiplePhotos = computed(() => this.allPhotos().length > 1);
+
+  readonly heroPhotoUrls = computed<string[]>(() => {
+    const photos = this.allPhotos();
+    // Always return 5 URLs (with fallback) to avoid broken hero grid
+    return Array.from({ length: 5 }, (_, idx) => {
+      const photo = photos[idx];
+      return this.resolveCarPhotoUrl(photo) ?? this.defaultCarPlaceholderUrl;
+    });
+  });
+
+  private resolveCarPhotoUrl(photo: CarPhoto | undefined): string | null {
+    if (!photo) return null;
+
+    // Prefer an explicit absolute URL
+    const rawUrl = (photo.url ?? '').trim();
+    if (rawUrl) {
+      try {
+        // Validate & normalize (also helps if there are spaces)
+        const url = new URL(rawUrl);
+        return url.toString();
+      } catch {
+        // Fall back to stored_path
+      }
+    }
+
+    // Fall back to storage public URL
+    const rawPath = (photo.stored_path ?? '').trim();
+    if (!rawPath) return null;
+
+    // Defensive: strip bucket prefix if it was accidentally included
+    const normalizedPath = rawPath.replace(/^car-images\//, '').replace(/^\/+/, '');
+    const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath);
+    return data?.publicUrl ?? null;
+  }
+
+  onImgError(event: Event, fallbackUrl: string = this.defaultCarPlaceholderUrl): void {
+    const el = event.target as HTMLImageElement | null;
+    if (!el) return;
+    if (el.src === fallbackUrl) return;
+    el.src = fallbackUrl;
+  }
+
+  private openDatePicker(): void {
+    try {
+      this.bookingDatePicker?.handleDateInputClick();
+    } catch {
+      // no-op
+    }
+  }
 
   readonly daysCount = computed(() => {
     const { from, to } = this.dateRange();
@@ -985,6 +1038,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     const { from, to } = this.dateRange();
     if (!car || !from || !to) {
       this.bookingError.set('Por favor seleccioná las fechas de alquiler');
+
+      // UX: If the user clicked the CTA without dates, open the date picker.
+      this.openDatePicker();
       return;
     }
 
