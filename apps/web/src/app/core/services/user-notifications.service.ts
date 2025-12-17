@@ -45,6 +45,7 @@ export class NotificationsService implements OnDestroy {
   // Referencia al channel de Realtime para poder hacer cleanup
   private realtimeChannel: RealtimeChannel | null = null;
   private isSubscribed = false;
+  private reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // Efecto reactivo: suscribirse cuando el usuario se autentica
@@ -64,6 +65,10 @@ export class NotificationsService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.reconnectTimeoutId !== null) {
+      clearTimeout(this.reconnectTimeoutId);
+      this.reconnectTimeoutId = null;
+    }
     this.unsubscribe();
   }
 
@@ -178,7 +183,10 @@ export class NotificationsService implements OnDestroy {
             console.error('[NotificationsService] ❌ Realtime channel error');
 
             // Intentar reconectar después de 5 segundos
-            setTimeout(() => {
+            if (this.reconnectTimeoutId !== null) {
+              clearTimeout(this.reconnectTimeoutId);
+            }
+            this.reconnectTimeoutId = setTimeout(() => {
               console.log('[NotificationsService] Attempting to reconnect...');
               void this.subscribeToRealtime();
             }, 5000);
@@ -188,7 +196,10 @@ export class NotificationsService implements OnDestroy {
             console.warn('[NotificationsService] ⚠️ Realtime subscription timed out');
 
             // Intentar reconectar después de 5 segundos
-            setTimeout(() => {
+            if (this.reconnectTimeoutId !== null) {
+              clearTimeout(this.reconnectTimeoutId);
+            }
+            this.reconnectTimeoutId = setTimeout(() => {
               console.log('[NotificationsService] Attempting to reconnect after timeout...');
               void this.subscribeToRealtime();
             }, 5000);
@@ -204,7 +215,10 @@ export class NotificationsService implements OnDestroy {
       this.isSubscribed = false;
 
       // Intentar reconectar después de 5 segundos
-      setTimeout(() => {
+      if (this.reconnectTimeoutId !== null) {
+        clearTimeout(this.reconnectTimeoutId);
+      }
+      this.reconnectTimeoutId = setTimeout(() => {
         console.log('[NotificationsService] Attempting to reconnect after error...');
         void this.subscribeToRealtime();
       }, 5000);

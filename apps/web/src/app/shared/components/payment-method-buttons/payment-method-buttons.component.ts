@@ -2,6 +2,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   Input,
   OnInit,
@@ -10,6 +11,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { WalletService } from '../../../core/services/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
@@ -49,6 +51,7 @@ export type PaymentMethod = 'credit_card' | 'wallet';
 })
 export class PaymentMethodButtonsComponent implements OnInit {
   private readonly walletService = inject(WalletService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Input() rentalAmount: number = 0;
   @Input() depositAmount: number = 0;
@@ -79,15 +82,18 @@ export class PaymentMethodButtonsComponent implements OnInit {
 
   ngOnInit(): void {
     // Load wallet balance on init
-    this.walletService.getBalance().subscribe({
-      next: () => {
-        this.loadingBalance.set(false);
-      },
-      error: (error) => {
-        console.error('[PaymentMethodButtons] Error loading balance:', error);
-        this.loadingBalance.set(false);
-      },
-    });
+    this.walletService
+      .getBalance()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.loadingBalance.set(false);
+        },
+        error: (error) => {
+          console.error('[PaymentMethodButtons] Error loading balance:', error);
+          this.loadingBalance.set(false);
+        },
+      });
   }
 
   selectMethod(method: PaymentMethod): void {

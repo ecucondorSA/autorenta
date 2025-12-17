@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, OnDestroy } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -30,7 +30,7 @@ export type DatabaseRecord = { [key: string]: any };
 @Injectable({
   providedIn: 'root',
 })
-export class RealtimeConnectionService {
+export class RealtimeConnectionService implements OnDestroy {
   private readonly supabase = injectSupabase();
 
   // Global connection status
@@ -46,6 +46,10 @@ export class RealtimeConnectionService {
 
   // Retry counters per channel
   private readonly retryCounters = new Map<string, number>();
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
+  }
 
   /**
    * Subscribe to a Supabase Realtime channel with automatic reconnection

@@ -6,7 +6,9 @@ import {Component,
   computed,
   OnInit,
   inject,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy,
+  DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -39,6 +41,7 @@ export class PickupLocationSelectorComponent implements OnInit {
 
   private readonly fb = inject(FormBuilder);
   private readonly distanceCalculator = inject(DistanceCalculatorService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly form = this.fb.nonNullable.group({
     pickupOption: ['car_location'], // 'car_location' | 'delivery'
@@ -60,27 +63,29 @@ export class PickupLocationSelectorComponent implements OnInit {
     });
 
     // Subscribe to form changes
-    this.form.controls.pickupOption.valueChanges.subscribe((option) => {
-      if (option === 'car_location') {
-        // Reset to car location
-        this.selectedPickupLocation.set({
-          latitude: this.carLocation.lat,
-          longitude: this.carLocation.lng,
-          address: this.carLocation.address,
-        });
-        this.deliveryFeeCents.set(0);
-        this.distanceKm.set(0);
-        this.emitSelection();
-      } else if (option === 'delivery' && this.userHomeLocation) {
-        // Set to user home location
-        this.selectedPickupLocation.set({
-          latitude: this.userHomeLocation.lat,
-          longitude: this.userHomeLocation.lng,
-          address: this.userHomeLocation.address,
-        });
-        this.calculateDeliveryFee();
-      }
-    });
+    this.form.controls.pickupOption.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((option) => {
+        if (option === 'car_location') {
+          // Reset to car location
+          this.selectedPickupLocation.set({
+            latitude: this.carLocation.lat,
+            longitude: this.carLocation.lng,
+            address: this.carLocation.address,
+          });
+          this.deliveryFeeCents.set(0);
+          this.distanceKm.set(0);
+          this.emitSelection();
+        } else if (option === 'delivery' && this.userHomeLocation) {
+          // Set to user home location
+          this.selectedPickupLocation.set({
+            latitude: this.userHomeLocation.lat,
+            longitude: this.userHomeLocation.lng,
+            address: this.userHomeLocation.address,
+          });
+          this.calculateDeliveryFee();
+        }
+      });
   }
 
   onMapLocationChange(coords: LocationCoordinates): void {

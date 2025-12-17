@@ -57,6 +57,11 @@ export class MessagesService implements OnDestroy {
       window.removeEventListener('offline', this.handleOffline);
     }
     this.unsubscribe();
+    // Clean up all typing channels
+    this.typingChannels.forEach((channel) => {
+      this.supabase.removeChannel(channel);
+    });
+    this.typingChannels.clear();
   }
 
   private realtimeChannel?: RealtimeChannel;

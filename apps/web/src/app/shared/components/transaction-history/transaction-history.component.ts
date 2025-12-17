@@ -1,5 +1,6 @@
 import {Component, OnInit, inject, signal, computed,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, DestroyRef} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,6 +52,7 @@ interface WalletHistoryEntry {
 export class TransactionHistoryComponent implements OnInit {
   private readonly walletService = inject(WalletService);
   private readonly bookingsService = inject(BookingsService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly transactions = this.walletService.transactions;
   readonly isLoading = this.walletService.loading;
@@ -101,9 +103,12 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   loadTransactions(): void {
-    this.walletService.getTransactions().subscribe({
-      error: (err) => console.error('Error loading transactions:', err),
-    });
+    this.walletService
+      .getTransactions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: (err) => console.error('Error loading transactions:', err),
+      });
   }
 
   onFilterTypeChange(type: string): void {

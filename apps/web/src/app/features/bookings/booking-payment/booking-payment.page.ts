@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   OnInit,
   computed,
   effect,
   inject,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { from } from 'rxjs';
@@ -72,6 +74,7 @@ export class BookingPaymentPage implements OnInit {
   private readonly mercadoPagoScriptService = inject(MercadoPagoScriptService);
   private readonly toastService = inject(ToastService);
   private readonly bonusMalusService = inject(BonusMalusService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // State
   readonly loading = signal(true);
@@ -248,7 +251,10 @@ export class BookingPaymentPage implements OnInit {
     this.loading.set(true);
 
     from(this.bookingService.getBookingById(bookingId))
-      .pipe(finalize(() => this.loading.set(false)))
+      .pipe(
+        finalize(() => this.loading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (booking) => {
           if (!booking) {
@@ -282,11 +288,14 @@ export class BookingPaymentPage implements OnInit {
   }
 
   private loadWalletBalance(): void {
-    this.walletService.getBalance().subscribe({
-      error: (error) => {
-        console.error('[BookingPayment] Error loading wallet balance:', error);
-      },
-    });
+    this.walletService
+      .getBalance()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: (error) => {
+          console.error('[BookingPayment] Error loading wallet balance:', error);
+        },
+      });
   }
 
   private async loadBonusMalusAdjustment(): Promise<void> {
@@ -360,7 +369,10 @@ export class BookingPaymentPage implements OnInit {
     const depositUsd = (bookingData.deposit_amount_cents || 0) / 100;
     this.walletService
       .lockRentalAndDeposit(bookingData.id, bookingData.total_amount || 0, depositUsd)
-      .pipe(finalize(() => this.processing.set(false)))
+      .pipe(
+        finalize(() => this.processing.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: () => {
           this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
@@ -388,7 +400,10 @@ export class BookingPaymentPage implements OnInit {
         installments: 1,
       }),
     )
-      .pipe(finalize(() => this.processing.set(false)))
+      .pipe(
+        finalize(() => this.processing.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe({
         next: (result) => {
           if (result.status === 'approved') {
