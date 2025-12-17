@@ -104,7 +104,7 @@
                           />
                       </svg>
                       {{
-                      profile()?.is_email_verified && profile()?.is_phone_verified
+                      profile()?.email_verified && profile()?.phone_verified
                       ? 'Verificado'
                       : 'Sin verificar'
                       }}

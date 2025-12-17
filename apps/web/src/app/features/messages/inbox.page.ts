@@ -409,7 +409,7 @@ export class InboxPage implements OnInit, OnDestroy {
       // Mark car conversation as read
       this.unreadMessagesService.markConversationAsRead(conv.carId, 'car');
     } else if (conv.bookingId) {
-      params.bookingId = conv.bookingId;
+      params['bookingId'] = conv.bookingId;
 
       // Mark booking conversation as read
       this.unreadMessagesService.markConversationAsRead(conv.bookingId, 'booking');
