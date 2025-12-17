@@ -75,11 +75,17 @@ export class BookingsService {
       p_car_id: carId,
       p_start: start,
       p_end: end,
-    // ✅ DYNAMIC PRICING: Pass optional parameters
-    p_use_dynamic_pricing: options?.useDynamicPricing || false,
-    p_price_lock_token: options?.priceLockToken || null,
-    p_dynamic_price_snapshot: options?.dynamicPriceSnapshot || null,
-  });
+      // ✅ FIX: Add missing location parameters (defaults to null/false for basic booking)
+      p_pickup_lat: null,
+      p_pickup_lng: null,
+      p_dropoff_lat: null,
+      p_dropoff_lng: null,
+      p_delivery_required: false,
+      // ✅ DYNAMIC PRICING: Pass optional parameters
+      p_use_dynamic_pricing: options?.useDynamicPricing || false,
+      p_price_lock_token: options?.priceLockToken || null,
+      p_dynamic_price_snapshot: options?.dynamicPriceSnapshot || null,
+    });
 
     if (error) {
       const errorMessage = error.message || error.details || 'Error al crear la reserva';
