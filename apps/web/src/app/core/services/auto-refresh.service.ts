@@ -4,6 +4,7 @@ import { from, interval, of, Subscription, type Observable } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { BookingsService } from './bookings.service';
 import { WalletService } from './wallet.service';
+import { LoggerService } from './logger.service';
 
 /**
  * P1-022 FIX: Auto-Refresh Service
@@ -24,6 +25,7 @@ import { WalletService } from './wallet.service';
 export class AutoRefreshService {
   private readonly bookingsService = inject(BookingsService);
   private readonly walletService = inject(WalletService);
+  private readonly logger = inject(LoggerService);
   private readonly destroyRef = inject(DestroyRef);
 
   private walletSubscription?: Subscription;
@@ -45,7 +47,7 @@ export class AutoRefreshService {
         switchMap(() => this.refreshWalletSafe()),
         takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
-          console.error('[AutoRefresh] Wallet refresh error:', err);
+          this.logger.error('Wallet refresh error', err);
           return of(null);
         })
       )
@@ -65,7 +67,7 @@ export class AutoRefreshService {
         switchMap(() => this.refreshBookingsSafe()),
         takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
-          console.error('[AutoRefresh] Bookings refresh error:', err);
+          this.logger.error('Bookings refresh error', err);
           return of(null);
         })
       )
@@ -108,7 +110,7 @@ export class AutoRefreshService {
     return from(this.walletService.fetchBalance()).pipe(
       map(() => null),
       catchError((error) => {
-        console.error('[AutoRefresh] Failed to refresh wallet:', error);
+        this.logger.error('Failed to refresh wallet', error);
         return of(null);
       }),
       finalize(() => {
@@ -129,7 +131,7 @@ export class AutoRefreshService {
     return from(this.bookingsService.getMyBookings()).pipe(
       map(() => null),
       catchError((error) => {
-        console.error('[AutoRefresh] Failed to refresh bookings:', error);
+        this.logger.error('Failed to refresh bookings', error);
         return of(null);
       }),
       finalize(() => {
@@ -148,7 +150,7 @@ export class AutoRefreshService {
       this.isRefreshingWallet = true;
       await this.walletService.fetchBalance(true);
     } catch (error) {
-      console.error('[AutoRefresh] Failed to refresh wallet:', error);
+      this.logger.error('Failed to refresh wallet', error);
     } finally {
       this.isRefreshingWallet = false;
     }
@@ -164,7 +166,7 @@ export class AutoRefreshService {
       this.isRefreshingBookings = true;
       await this.bookingsService.getMyBookings();
     } catch (error) {
-      console.error('[AutoRefresh] Failed to refresh bookings:', error);
+      this.logger.error('Failed to refresh bookings', error);
     } finally {
       this.isRefreshingBookings = false;
     }

@@ -56,9 +56,15 @@ export class WalletService {
   constructor() {
     this.supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.['user']) {
-        this.fetchBalance().catch(() => {});
-        this.fetchTransactions().catch(() => {});
+        this.fetchBalance().catch((err) => {
+          this.logger.warn('Failed to fetch wallet balance on init', err);
+        });
+        this.fetchTransactions().catch((err) => {
+          this.logger.warn('Failed to fetch wallet transactions on init', err);
+        });
       }
+    }).catch((err) => {
+      this.logger.warn('Failed to get session on wallet service init', err);
     });
   }
 

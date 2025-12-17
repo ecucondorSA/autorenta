@@ -1,13 +1,13 @@
-import { Injectable, inject, DestroyRef } from '@angular/core';
-import { Observable, from, throwError, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { DestroyRef, Injectable, inject } from '@angular/core';
 import { takeUntilDestroyed as takeUntilDestroyedInterop } from '@angular/core/rxjs-interop';
-import { PaymentsService } from './payments.service';
-import { PaymentAuthorizationService } from './payment-authorization.service';
-import { SplitPaymentService } from './split-payment.service';
+import { Observable, from, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { BookingsService } from './bookings.service';
-import { WalletService } from './wallet.service';
 import { LoggerService } from './logger.service';
+import { PaymentAuthorizationService } from './payment-authorization.service';
+import { PaymentsService } from './payments.service';
+import { SplitPaymentService } from './split-payment.service';
+import { WalletService } from './wallet.service';
 
 /**
  * Payment method for a booking
@@ -127,7 +127,7 @@ export class PaymentOrchestrationService {
    * Process wallet payment
    */
   private processWalletPayment(params: BookingPaymentParams): Observable<PaymentResult> {
-    return from(this.bookingsService.getBookingById(params['bookingId'])).pipe(
+    return from(this.bookingsService.getBookingById(params.bookingId)).pipe(
       switchMap((booking) => {
         if (!booking) {
           return throwError(() => new Error('Booking not found'));
@@ -135,15 +135,15 @@ export class PaymentOrchestrationService {
 
         // Lock funds in wallet
         return this.walletService.lockFunds(
-          params['bookingId'],
+          params.bookingId,
           params.totalAmount,
-          `Payment for booking ${params['bookingId']}`,
+          `Payment for booking ${params.bookingId}`,
         );
       }),
       switchMap(() => {
         // Update booking status
         return from(
-          this.bookingsService.updateBooking(params['bookingId'], {
+          this.bookingsService.updateBooking(params.bookingId, {
             status: 'confirmed',
             payment_method: 'wallet',
           }),
@@ -151,21 +151,21 @@ export class PaymentOrchestrationService {
       }),
       switchMap(() => {
         // Create payment intent
-        return from(this.paymentsService.createIntent(params['bookingId']));
+        return from(this.paymentsService.createIntent(params.bookingId));
       }),
       map((intent) => ({
         success: true,
-        bookingId: params['bookingId'],
-        paymentIntentId: intent['id'],
+        bookingId: params.bookingId,
+        paymentIntentId: intent.id,
         message: 'Payment processed successfully with wallet',
       })),
       catchError((error) => {
-        this.logger['error']('Wallet payment failed', error);
+        this.logger.error('Wallet payment failed', error);
         return of({
           success: false,
-          bookingId: params['bookingId'],
+          bookingId: params.bookingId,
           message: 'Failed to process wallet payment',
-          error: error['message'] || 'Unknown error',
+          error: error.message || 'Unknown error',
         });
       }),
     );
@@ -175,11 +175,11 @@ export class PaymentOrchestrationService {
    * Process credit card payment
    */
   private processCreditCardPayment(params: BookingPaymentParams): Observable<PaymentResult> {
-    return from(this.paymentsService.createIntent(params['bookingId'])).pipe(
+    return from(this.paymentsService.createIntent(params.bookingId)).pipe(
       switchMap((intent) => {
         // Update booking to pending_payment
         return from(
-          this.bookingsService.updateBooking(params['bookingId'], {
+          this.bookingsService.updateBooking(params.bookingId, {
             status: 'pending_payment',
             payment_method: 'credit_card',
           }),
@@ -187,18 +187,18 @@ export class PaymentOrchestrationService {
       }),
       map((intent) => ({
         success: true,
-        bookingId: params['bookingId'],
-        paymentIntentId: intent['id'],
+        bookingId: params.bookingId,
+        paymentIntentId: intent.id,
         mercadoPagoInitPoint: 'https://mercadopago.com/checkout', // Replace with actual URL
         message: 'Redirecting to payment provider',
       })),
       catchError((error) => {
-        this.logger['error']('Credit card payment failed', error);
+        this.logger.error('Credit card payment failed', error);
         return of({
           success: false,
-          bookingId: params['bookingId'],
+          bookingId: params.bookingId,
           message: 'Failed to initiate credit card payment',
-          error: error['message'] || 'Unknown error',
+          error: error.message || 'Unknown error',
         });
       }),
     );
@@ -214,19 +214,19 @@ export class PaymentOrchestrationService {
 
     return this.walletService
       .lockFunds(
-        params['bookingId'],
+        params.bookingId,
         params.walletAmount,
-        `Partial payment for booking ${params['bookingId']}`,
+        `Partial payment for booking ${params.bookingId}`,
       )
       .pipe(
         switchMap(() => {
           // Create payment intent for remaining amount
-          return from(this.paymentsService.createIntent(params['bookingId']));
+          return from(this.paymentsService.createIntent(params.bookingId));
         }),
         switchMap((intent) => {
           // Update booking
           return from(
-            this.bookingsService.updateBooking(params['bookingId'], {
+            this.bookingsService.updateBooking(params.bookingId, {
               status: 'pending_payment',
               payment_method: 'partial_wallet',
               wallet_amount_cents: Math.round(params.walletAmount! * 100),
@@ -235,26 +235,27 @@ export class PaymentOrchestrationService {
         }),
         map((intent) => ({
           success: true,
-          bookingId: params['bookingId'],
-          paymentIntentId: intent['id'],
+          bookingId: params.bookingId,
+          paymentIntentId: intent.id,
           mercadoPagoInitPoint: 'https://mercadopago.com/checkout', // Replace with actual URL
           message: 'Wallet funds locked, redirecting to payment provider for remaining amount',
         })),
         catchError((error) => {
-          this.logger['error']('Partial wallet payment failed', error);
+          this.logger.error('Partial wallet payment failed', error);
           // Try to unlock funds if locking succeeded
           this.walletService
-            .unlockFunds(params['bookingId'], 'Payment failed - reverting lock')
+            .unlockFunds(params.bookingId, 'Payment failed - reverting lock')
             .pipe(takeUntilDestroyedInterop(this.destroyRef))
             .subscribe({
-              error: (err) => this.logger['error']('Failed to unlock wallet funds after payment error', err)
+              next: () => this.logger.info('Wallet funds unlocked after payment failure'),
+              error: (err) => this.logger.error('Failed to unlock wallet funds after payment error', err)
             });
 
           return of({
             success: false,
-            bookingId: params['bookingId'],
+            bookingId: params.bookingId,
             message: 'Failed to process partial wallet payment',
-            error: error['message'] || 'Unknown error',
+            error: error.message || 'Unknown error',
           });
         }),
       );
@@ -309,13 +310,14 @@ export class PaymentOrchestrationService {
           .unlockFunds(booking_id, 'Payment failed - releasing funds')
           .pipe(takeUntilDestroyedInterop(this.destroyRef))
           .subscribe({
-            error: (err) => this.logger['error']('Failed to unlock funds after payment rejection', err)
+            next: () => this.logger.info('Funds released after payment failure'),
+            error: (err) => this.logger.error('Failed to unlock funds after payment rejection', err)
           });
       }
 
       this.logger.info('Webhook processed successfully', JSON.stringify({ booking_id, status }));
     } catch (error) {
-      this.logger['error']('Webhook processing failed', String(error));
+      this.logger.error('Webhook processing failed', String(error));
       throw error;
     }
   }
@@ -341,7 +343,7 @@ export class PaymentOrchestrationService {
   processRefund(params: RefundParams): Observable<RefundResult> {
     this.logger.info('Processing refund', JSON.stringify({ params }));
 
-    return from(this.bookingsService.getBookingById(params['bookingId'])).pipe(
+    return from(this.bookingsService.getBookingById(params.bookingId)).pipe(
       switchMap((booking) => {
         if (!booking) {
           return throwError(() => new Error('Booking not found'));
@@ -353,7 +355,7 @@ export class PaymentOrchestrationService {
         // Unlock funds from wallet
         if (booking.payment_method === 'wallet' || booking.payment_method === 'partial_wallet') {
           return this.walletService
-            .unlockFunds(params['bookingId'], `Refund for cancelled booking`)
+            .unlockFunds(params.bookingId, `Refund for cancelled booking`)
             .pipe(
               map(() => ({
                 success: true,
@@ -371,12 +373,12 @@ export class PaymentOrchestrationService {
         });
       }),
       catchError((error) => {
-        this.logger['error']('Refund processing failed', error);
+        this.logger.error('Refund processing failed', error);
         return of({
           success: false,
           amount: 0,
           message: 'Failed to process refund',
-          error: error['message'] || 'Unknown error',
+          error: error.message || 'Unknown error',
         });
       }),
     );
@@ -387,12 +389,12 @@ export class PaymentOrchestrationService {
    */
   private calculateRefundAmount(booking: unknown, params: RefundParams): number {
     if (params.refundType === 'full') {
-      return params['amount'];
+      return params.amount;
     }
 
     // Implement cancellation policy logic here
     // For now, return 50% for partial refunds
-    return params['amount'] * 0.5;
+    return params.amount * 0.5;
   }
 
   /**
