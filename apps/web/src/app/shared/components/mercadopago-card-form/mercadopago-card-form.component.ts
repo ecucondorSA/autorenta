@@ -362,10 +362,10 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
    */
   private getPublicKey(): string {
     // 1. Try runtime env (window.__env from env.js)
-    const globalEnv = (globalThis as Record<string, unknown>).__env as
+    const globalEnv = (globalThis as Record<string, unknown>)['__env'] as
       | Record<string, string | undefined>
       | undefined;
-    const runtimeKey = globalEnv?.NG_APP_MERCADOPAGO_PUBLIC_KEY?.trim();
+    const runtimeKey = globalEnv?.['NG_APP_MERCADOPAGO_PUBLIC_KEY']?.trim();
 
     if (runtimeKey && runtimeKey.length > 0) {
       return runtimeKey;
@@ -374,7 +374,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
     // 2. Try build-time environment
     const envRecord = environment as Record<string, unknown>;
     const buildKey = String(
-      envRecord.mercadopagoPublicKey ?? envRecord.mercadoPagoPublicKey ?? '',
+      envRecord['mercadopagoPublicKey'] ?? envRecord['mercadoPagoPublicKey'] ?? '',
     ).trim();
 
     return buildKey;

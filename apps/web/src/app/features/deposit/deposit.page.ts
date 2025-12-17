@@ -409,7 +409,7 @@ export class DepositPage implements OnInit {
           source: 'custom',
           severity: 'high',
           title: 'wallet_deposit_init_failed',
-          message: resolvedPayload.message || 'Deposit init failed',
+          message: resolvedPayload[message] || 'Deposit init failed',
           metadata: resolvedPayload,
         },
       });

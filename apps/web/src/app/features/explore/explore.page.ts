@@ -74,7 +74,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
   // State signals
   readonly selectedCarId = signal<string | null>(null);
   readonly isDrawerOpen = signal(false);
-  readonly isMobileView;
+  readonly isMobileView: () => boolean;
   readonly currentFilters = signal<FilterState | null>(null);
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly viewMode = signal<'map' | 'grid' | 'list'>('list'); // Mobile-first: lista por defecto

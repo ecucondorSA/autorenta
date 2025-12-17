@@ -137,7 +137,7 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   getTransactionType(transaction: WalletHistoryEntry): TransactionType {
-    const type = transaction.transaction_type || transaction.metadata?.type || 'deposit';
+    const type = transaction.transaction_type || transaction.metadata?.['type'] || 'deposit';
     return type as TransactionType;
   }
 

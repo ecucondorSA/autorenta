@@ -1099,18 +1099,18 @@ export class PublishCarV2Page implements OnInit {
       const formData = this.formService.getFormData();
 
       console.log('📝 Form data before processing:', {
-        brand_id: formData.brand_id,
-        model_id: formData.model_id,
+        brand_id: formData['brand_id'],
+        model_id: formData['model_id'],
         year: formData['year'],
         price_per_day: formData['price_per_day'],
-        pricing_strategy: formData.pricing_strategy,
+        pricing_strategy: formData['pricing_strategy'],
       });
 
       // ✅ NUEVO: Establecer valores por defecto para campos opcionales
       // ✅ CRITICAL: price_per_day siempre debe ser > 0 para pasar validación
-      const pricePerDay = formData.price_per_day
+      const pricePerDay = formData['price_per_day']
         ? Number(formData['price_per_day'])
-        : formData.pricing_strategy === 'dynamic'
+        : formData['pricing_strategy'] === 'dynamic'
           ? 50
           : 100; // Default: 50 si dinámico, 100 si custom
 
@@ -1119,13 +1119,13 @@ export class PublishCarV2Page implements OnInit {
       const carData: Record<string, unknown> = {
         ...formData,
         // Campos opcionales con valores por defecto
-        color: formData.color || 'No especificado',
-        mileage: formData.mileage || 0,
+        color: formData['color'] || 'No especificado',
+        mileage: formData['mileage'] || 0,
         transmission: (formData['transmission'] || 'manual') as string,
-        fuel: (formData.fuel || 'nafta') as string,
+        fuel: (formData['fuel'] || 'nafta') as string,
         price_per_day: pricePerDay, // ✅ Siempre un número válido > 0
-        value_usd: formData.value_usd || 10000, // Valor por defecto si no se especifica
-        category_id: formData.category_id || null, // Se puede auto-categorizar después
+        value_usd: formData['value_usd'] || 10000, // Valor por defecto si no se especifica
+        category_id: formData['category_id'] || null, // Se puede auto-categorizar después
         min_rental_days: formData['min_rental_days'] || 1,
         max_rental_days: formData['max_rental_days'] || null,
         deposit_required: formData['deposit_required'] ?? true,
@@ -1134,7 +1134,7 @@ export class PublishCarV2Page implements OnInit {
         auto_approval: formData['auto_approval'] ?? true,
         // Location opcional
         location_street: formData['location_street'] || '',
-        location_street_number: formData.location_street_number || '',
+        location_street_number: formData['location_street_number'] || '',
         location_city: formData['location_city'] || '',
         location_state: formData['location_state'] || '',
         location_country: formData['location_country'] || '', // ✅ CHANGED: Removed hardcoded 'AR' default
@@ -1146,7 +1146,7 @@ export class PublishCarV2Page implements OnInit {
         // Geocode address si está disponible
         const address = {
           street: carData['location_street'] as string,
-          streetNumber: carData.location_street_number as string,
+          streetNumber: carData['location_street_number'] as string,
           city: carData['location_city'] as string,
           state: carData['location_state'] as string,
           country: carData['location_country'] as string,
@@ -1200,9 +1200,9 @@ export class PublishCarV2Page implements OnInit {
         // Defaults for draft to avoid DB constraints if any
         price_per_day: formData['price_per_day'] || 0,
         year: formData['year'] || new Date().getFullYear(),
-        mileage: formData.mileage || 0,
+        mileage: formData['mileage'] || 0,
         transmission: formData['transmission'] || 'manual',
-        fuel: formData.fuel || 'nafta',
+        fuel: formData['fuel'] || 'nafta',
       };
 
       await this.performSubmission(carData);

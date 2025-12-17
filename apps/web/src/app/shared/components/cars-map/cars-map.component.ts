@@ -538,7 +538,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.emitBounds();
 
           // Listen for move end to emit bounds
-          this.map.on('moveend', () => {
+          this.map!.on('moveend', () => {
             this.emitBounds();
           });
 
@@ -741,7 +741,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
       const properties = (features[0].properties || {}) as Record<string, unknown>;
       const clusterId =
-        typeof properties.cluster_id === 'number' ? (properties.cluster_id as number) : undefined;
+        typeof properties['cluster_id'] === 'number' ? (properties['cluster_id'] as number) : undefined;
 
       if (clusterId === undefined) {
         return;

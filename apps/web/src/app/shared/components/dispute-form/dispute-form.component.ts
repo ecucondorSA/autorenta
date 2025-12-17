@@ -94,7 +94,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
             }
             @if (createdDisputeId()) {
               <div class_selector="mt-4">
-                <app-evidence-uploader [disputeId]="createdDisputeId()"></app-evidence-uploader>
+                <app-evidence-uploader [disputeId]="createdDisputeId()!"></app-evidence-uploader>
               </div>
             }
             <!-- Error Message -->

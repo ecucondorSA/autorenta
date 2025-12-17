@@ -160,8 +160,10 @@
       <div class="p-4 border-t border-border-default dark:border-border-muted bg-surface-raised z-10 space-y-4 text-center">
         <p class="text-text-secondary mb-3">
           Esta disputa ha sido revisada. Se ha determinado que debes pagar
-          @if (dispute()!.resolution_amount) {
+          @if (dispute()!.resolution_amount && dispute()!.resolution_currency) {
             <strong class="text-error-strong font-mono">{{ dispute()!.resolution_amount | currency:dispute()!.resolution_currency:'symbol':'1.2-2' }}</strong>
+          } @else if (dispute()!.resolution_amount) {
+            <strong class="text-error-strong font-mono">{{ dispute()!.resolution_amount | currency:'USD':'symbol':'1.2-2' }}</strong>
           } @else {
             "un monto"
           }
