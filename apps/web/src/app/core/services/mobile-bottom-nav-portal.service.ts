@@ -4,8 +4,11 @@ import {
   Injectable,
   createComponent,
   ComponentRef,
+  inject,
+  DestroyRef,
 } from '@angular/core';
 import { Subject, Observable, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MobileBottomNavComponent } from '../../shared/components/mobile-bottom-nav/mobile-bottom-nav.component';
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +16,7 @@ export class MobileBottomNavPortalService {
   private componentRef?: ComponentRef<MobileBottomNavComponent>;
   private readonly isBrowser = typeof document !== 'undefined';
   private menuOpenSubscription?: Subscription;
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly menuOpenSubject = new Subject<void>();
   readonly menuOpen$: Observable<void> = this.menuOpenSubject.asObservable();
@@ -32,9 +36,11 @@ export class MobileBottomNavPortalService {
     });
 
     // Subscribe to the component's menuOpen event
-    this.menuOpenSubscription = this.componentRef.instance.menuOpen.subscribe(() => {
-      this.menuOpenSubject.next();
-    });
+    this.menuOpenSubscription = this.componentRef.instance.menuOpen
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.menuOpenSubject.next();
+      });
 
     this.appRef.attachView(this.componentRef.hostView);
     const element = this.componentRef.location.nativeElement as HTMLElement;

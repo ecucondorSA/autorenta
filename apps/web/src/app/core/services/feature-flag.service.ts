@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
-import { computed, inject, Injectable, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { computed, inject, Injectable, PLATFORM_ID, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import {
   CreateFeatureFlagDto,
@@ -18,10 +19,11 @@ import { SupabaseClientService } from './supabase-client.service';
 @Injectable({
   providedIn: 'root',
 })
-export class FeatureFlagService implements OnDestroy {
+export class FeatureFlagService {
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService).createChildLogger('FeatureFlagService');
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Local cache of feature flags
   private readonly flagsSignal = signal<Map<string, FeatureFlag>>(new Map());
@@ -46,6 +48,13 @@ export class FeatureFlagService implements OnDestroy {
 
   constructor() {
     this.initialize();
+
+    // Cleanup realtime subscription on destroy
+    this.destroyRef.onDestroy(() => {
+      if (this.realtimeChannel) {
+        this.supabase.removeChannel(this.realtimeChannel);
+      }
+    });
   }
 
   /**
@@ -133,7 +142,11 @@ export class FeatureFlagService implements OnDestroy {
           });
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          this.logger.debug('Feature flags realtime subscription active');
+        }
+      });
   }
 
   /**
@@ -460,12 +473,4 @@ export class FeatureFlagService implements OnDestroy {
     return data || [];
   }
 
-  /**
-   * Cleanup on service destruction
-   */
-  ngOnDestroy(): void {
-    if (this.realtimeChannel) {
-      this.supabase.removeChannel(this.realtimeChannel);
-    }
-  }
 }

@@ -153,7 +153,11 @@ export class LocationTrackingService {
           callback((data as TrackingSession[]) || []);
         },
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.debug(`[LocationTracking] Subscribed to tracking for booking ${bookingId}`);
+        }
+      });
 
     // Return cleanup function
     return () => {

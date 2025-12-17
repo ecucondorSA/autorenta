@@ -1,5 +1,5 @@
-import { Injectable, inject, OnDestroy } from '@angular/core';
-import { interval, Subject, Subscription, switchMap, takeUntil } from 'rxjs';
+import { Injectable, inject, DestroyRef } from '@angular/core';
+import { interval, Subject, switchMap, takeUntilDestroyed, catchError, of } from 'rxjs';
 import { BookingsService } from './bookings.service';
 import { WalletService } from './wallet.service';
 
@@ -19,35 +19,33 @@ import { WalletService } from './wallet.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AutoRefreshService implements OnDestroy {
+export class AutoRefreshService {
   private readonly bookingsService = inject(BookingsService);
   private readonly walletService = inject(WalletService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly destroy$ = new Subject<void>();
-  private walletSubscription?: Subscription;
-  private bookingsSubscription?: Subscription;
+  private walletSubscription?: ReturnType<typeof interval>;
+  private bookingsSubscription?: ReturnType<typeof interval>;
 
   private isRefreshingWallet = false;
   private isRefreshingBookings = false;
-
-  ngOnDestroy(): void {
-    this.stopAll();
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 
   /**
    * Start auto-refreshing wallet balance every 30 seconds
    */
   startWalletRefresh(): void {
-    if (this.walletSubscription && !this.walletSubscription.closed) {
+    if (this.walletSubscription) {
       return; // Already running
     }
 
-    this.walletSubscription = interval(30000) // 30 seconds
+    this.walletSubscription = interval(30000)
       .pipe(
-        takeUntil(this.destroy$),
-        switchMap(() => this.refreshWallet()),
+        switchMap(() => this.refreshWalletSafe()),
+        takeUntilDestroyed(this.destroyRef),
+        catchError((err) => {
+          console.error('[AutoRefresh] Wallet refresh error:', err);
+          return of(null);
+        })
       )
       .subscribe();
   }
@@ -56,14 +54,18 @@ export class AutoRefreshService implements OnDestroy {
    * Start auto-refreshing booking status every 1 minute
    */
   startBookingsRefresh(): void {
-    if (this.bookingsSubscription && !this.bookingsSubscription.closed) {
+    if (this.bookingsSubscription) {
       return; // Already running
     }
 
-    this.bookingsSubscription = interval(60000) // 1 minute
+    this.bookingsSubscription = interval(60000)
       .pipe(
-        takeUntil(this.destroy$),
-        switchMap(() => this.refreshBookings()),
+        switchMap(() => this.refreshBookingsSafe()),
+        takeUntilDestroyed(this.destroyRef),
+        catchError((err) => {
+          console.error('[AutoRefresh] Bookings refresh error:', err);
+          return of(null);
+        })
       )
       .subscribe();
   }
@@ -72,7 +74,6 @@ export class AutoRefreshService implements OnDestroy {
    * Stop wallet refresh
    */
   stopWalletRefresh(): void {
-    this.walletSubscription?.unsubscribe();
     this.walletSubscription = undefined;
   }
 
@@ -80,7 +81,6 @@ export class AutoRefreshService implements OnDestroy {
    * Stop bookings refresh
    */
   stopBookingsRefresh(): void {
-    this.bookingsSubscription?.unsubscribe();
     this.bookingsSubscription = undefined;
   }
 
@@ -90,6 +90,66 @@ export class AutoRefreshService implements OnDestroy {
   stopAll(): void {
     this.stopWalletRefresh();
     this.stopBookingsRefresh();
+  }
+
+  /**
+   * Safely refresh wallet (returns Observable)
+   */
+  private refreshWalletSafe(): Subject<null> {
+    const result = new Subject<null>();
+
+    if (this.isRefreshingWallet) {
+      result.next(null);
+      result.complete();
+      return result;
+    }
+
+    this.isRefreshingWallet = true;
+    this.walletService.getBalance()
+      .then(() => {
+        result.next(null);
+        result.complete();
+      })
+      .catch((error) => {
+        console.error('[AutoRefresh] Failed to refresh wallet:', error);
+        result.next(null);
+        result.complete();
+      })
+      .finally(() => {
+        this.isRefreshingWallet = false;
+      });
+
+    return result;
+  }
+
+  /**
+   * Safely refresh bookings (returns Observable)
+   */
+  private refreshBookingsSafe(): Subject<null> {
+    const result = new Subject<null>();
+
+    if (this.isRefreshingBookings) {
+      result.next(null);
+      result.complete();
+      return result;
+    }
+
+    this.isRefreshingBookings = true;
+    this.bookingsService.getMyBookings()
+      .then(() => {
+        result.next(null);
+        result.complete();
+      })
+      .catch((error) => {
+        console.error('[AutoRefresh] Failed to refresh bookings:', error);
+        result.next(null);
+        result.complete();
+      })
+      .finally(() => {
+        this.isRefreshingBookings = false;
+      });
+
+    return result;
   }
 
   /**

@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, DestroyRef } from '@angular/core';
 import { fromEvent, merge, map, startWith } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * P1-024 FIX: Offline Manager Service
@@ -27,6 +28,7 @@ export interface QueuedMutation {
 export class OfflineManagerService {
   private readonly isOnlineSignal = signal(true);
   private readonly mutationQueue = signal<QueuedMutation[]>([]);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly isOnline = this.isOnlineSignal.asReadonly();
   readonly queuedMutations = this.mutationQueue.asReadonly();
@@ -46,7 +48,10 @@ export class OfflineManagerService {
     const offline$ = fromEvent(window, 'offline').pipe(map(() => false));
 
     merge(online$, offline$)
-      .pipe(startWith(navigator.onLine))
+      .pipe(
+        startWith(navigator.onLine),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((isOnline) => {
         this.isOnlineSignal.set(isOnline);
 

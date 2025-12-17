@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, DestroyRef } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntilDestroyed } from 'rxjs/operators';
+import { takeUntilDestroyed as takeUntilDestroyedInterop } from '@angular/core/rxjs-interop';
 import { PaymentsService } from './payments.service';
 import { PaymentAuthorizationService } from './payment-authorization.service';
 import { SplitPaymentService } from './split-payment.service';
@@ -99,6 +100,7 @@ export class PaymentOrchestrationService {
   private readonly bookingsService = inject(BookingsService);
   private readonly walletService = inject(WalletService);
   private readonly logger = inject(LoggerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * Process a booking payment (high-level orchestration)
@@ -243,7 +245,10 @@ export class PaymentOrchestrationService {
           // Try to unlock funds if locking succeeded
           this.walletService
             .unlockFunds(params.bookingId, 'Payment failed - reverting lock')
-            .subscribe();
+            .pipe(takeUntilDestroyedInterop(this.destroyRef))
+            .subscribe({
+              error: (err) => this.logger.error('Failed to unlock wallet funds after payment error', err)
+            });
 
           return of({
             success: false,
@@ -300,7 +305,12 @@ export class PaymentOrchestrationService {
         });
 
         // Unlock wallet funds if they were locked
-        this.walletService.unlockFunds(booking_id, 'Payment failed - releasing funds').subscribe();
+        this.walletService
+          .unlockFunds(booking_id, 'Payment failed - releasing funds')
+          .pipe(takeUntilDestroyedInterop(this.destroyRef))
+          .subscribe({
+            error: (err) => this.logger.error('Failed to unlock funds after payment rejection', err)
+          });
       }
 
       this.logger.info('Webhook processed successfully', JSON.stringify({ booking_id, status }));
