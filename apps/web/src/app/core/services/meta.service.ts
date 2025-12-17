@@ -1,8 +1,9 @@
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID, DestroyRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface MetaConfig {
   title?: string;
@@ -30,6 +31,7 @@ export class MetaService {
   private readonly title = inject(Title);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly defaultConfig: MetaConfig = {
     title: 'AutoRenta - Alquiler de Autos entre Personas',
@@ -45,7 +47,10 @@ export class MetaService {
   constructor() {
     // Update canonical URL on navigation
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((event) => {
         if (event instanceof NavigationEnd) {
           this.updateCanonicalUrl(event.urlAfterRedirects);

@@ -1,6 +1,7 @@
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID, DestroyRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import localeEsAr from '@angular/common/locales/es-AR';
 import localePtBr from '@angular/common/locales/pt';
 import localeEn from '@angular/common/locales/en';
@@ -22,6 +23,7 @@ import localeEn from '@angular/common/locales/en';
 export class LocaleManagerService {
   private readonly translateService = inject(TranslateService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private currentLocale: string = 'es-AR';
 
@@ -41,9 +43,11 @@ export class LocaleManagerService {
       this.setLanguage(savedLang);
 
       // Escuchar cambios de idioma
-      this.translateService.onLangChange.subscribe((event) => {
-        this.currentLocale = this.getLocaleFromLang(event.lang);
-      });
+      this.translateService.onLangChange
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((event) => {
+          this.currentLocale = this.getLocaleFromLang(event.lang);
+        });
     } else {
       // Durante SSR usar idioma default
       this.translateService.use('es');

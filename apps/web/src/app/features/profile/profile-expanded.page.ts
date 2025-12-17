@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProfileStore } from '../../core/stores/profile.store';
 import { DocumentUploadModalComponent } from '../../shared/components/document-upload-modal/document-upload-modal.component';
 import { BonusMalusCardComponent } from '../../shared/components/bonus-malus-card/bonus-malus-card.component';
@@ -31,13 +32,14 @@ import { KycStatus } from '../../core/models';
   styleUrls: ['./profile-expanded.page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileExpandedPage {
+export class ProfileExpandedPage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly metaService = inject(MetaService);
   private readonly verificationStateService = inject(VerificationStateService);
   private readonly verificationService = inject(VerificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   readonly profileStore = inject(ProfileStore);
   private readonly reviewsService = inject(ReviewsService);
 
@@ -131,15 +133,6 @@ export class ProfileExpandedPage {
     // Load user documents for verification status
     void this.verificationService.loadDocuments();
 
-    // Handle document upload query param
-    this.route.queryParams.subscribe((params) => {
-      const docType = params['doc'];
-      if (docType) {
-        this.documentType.set(docType);
-        this.showDocumentModal.set(true);
-      }
-    });
-
     // Load user stats when profile is available
     effect(() => {
       const profile = this.profile();
@@ -147,6 +140,19 @@ export class ProfileExpandedPage {
         void this.reviewsService.loadUserStats(profile.id);
       }
     });
+  }
+
+  ngOnInit(): void {
+    // Handle document upload query param
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const docType = params['doc'];
+        if (docType) {
+          this.documentType.set(docType);
+          this.showDocumentModal.set(true);
+        }
+      });
   }
 
   /**

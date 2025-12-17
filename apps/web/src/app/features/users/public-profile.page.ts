@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, inject, signal,
+import {Component, computed, inject, signal, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { from, of } from 'rxjs';
@@ -23,12 +23,13 @@ import { getCarImageUrl } from '../../shared/utils/car-placeholder.util';
   imports: [CommonModule, RouterModule, TranslateModule, ReviewRadarChartComponent],
   templateUrl: './public-profile.page.html',
 })
-export class PublicProfilePage {
+export class PublicProfilePage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
   private readonly carsService = inject(CarsService);
   private readonly reviewsService = inject(ReviewsService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly userId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
   readonly userId = toSignal(this.userId$, { initialValue: null });
@@ -135,8 +136,12 @@ export class PublicProfilePage {
     return Math.round(total / cars.length);
   });
 
-  constructor() {
-    this.data$.subscribe(() => this.loading.set(false));
+  constructor() {}
+
+  ngOnInit(): void {
+    this.data$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loading.set(false));
   }
 
   setActiveTab(tab: 'cars' | 'reviews-owner' | 'reviews-renter'): void {

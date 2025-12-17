@@ -1,7 +1,8 @@
 
-import {Component, EventEmitter, inject, Output, signal,
+import {Component, EventEmitter, inject, Output, signal, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProfileService } from '../../../core/services/profile.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/age-calculator';
@@ -138,10 +139,11 @@ import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/
     `,
   ],
 })
-export class BirthDateModalComponent {
+export class BirthDateModalComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly profileService = inject(ProfileService);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Output() completed = new EventEmitter<string>(); // Emits date_of_birth on success
   @Output() cancelled = new EventEmitter<void>();
@@ -159,11 +161,15 @@ export class BirthDateModalComponent {
   readonly showError = signal(false);
   readonly canSubmit = signal(false);
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     // Watch form value changes
-    this.form.get('date_of_birth')?.valueChanges.subscribe((value) => {
-      this.updateValidation(value);
-    });
+    this.form.get('date_of_birth')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        this.updateValidation(value);
+      });
   }
 
   private updateValidation(birthDate: string): void {

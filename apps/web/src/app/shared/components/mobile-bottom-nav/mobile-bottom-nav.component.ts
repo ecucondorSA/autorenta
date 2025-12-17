@@ -3,17 +3,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnDestroy,
   OnInit,
   Output,
   EventEmitter,
   signal,
   PLATFORM_ID,
   NgZone,
+  DestroyRef,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
-import { Subject, takeUntil, filter, fromEvent, throttleTime } from 'rxjs';
+import { filter, fromEvent, throttleTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
 import { NavIconComponent } from '../nav-icon/nav-icon.component';
 
@@ -35,12 +36,12 @@ interface NavItem {
   changeDetection: ChangeDetectionStrategy.OnPush, // ✅ Performance boost
   host: { class: 'block md:hidden' },
 })
-export class MobileBottomNavComponent implements OnInit, OnDestroy {
+export class MobileBottomNavComponent implements OnInit {
   private readonly unreadMessagesService = inject(UnreadMessagesService);
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
-  private readonly destroy$ = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
 
   @Output() menuOpen = new EventEmitter<void>();
 
@@ -86,25 +87,27 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
     // Detectar ruta actual con cleanup automático
-    this.router.events.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.currentRoute.set(this.router.url);
-    });
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.currentRoute.set(this.router.url);
+      });
 
     // Reset nav visibility on route change
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.isHidden.set(false);
         this.lastScrollY = 0;
       });
-  }
 
-  ngOnInit(): void {
     this.setupScrollListener();
   }
 
@@ -118,7 +121,7 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
     // Run outside Angular zone for performance
     this.ngZone.runOutsideAngular(() => {
       fromEvent(window, 'scroll', { passive: true })
-        .pipe(throttleTime(100), takeUntil(this.destroy$))
+        .pipe(throttleTime(100), takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.handleScroll();
         });
@@ -153,11 +156,6 @@ export class MobileBottomNavComponent implements OnInit, OnDestroy {
     }
 
     this.lastScrollY = currentScrollY;
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   isActive(route: string): boolean {

@@ -1,7 +1,8 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, DestroyRef } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
@@ -54,6 +55,7 @@ export interface AutorentarCreditBreakageResult {
 export class AutorentarCreditService {
   private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
   private readonly logger = inject(LoggerService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly creditInfo = signal<AutorentarCreditInfo | null>(null);
   readonly loading = signal(false);
@@ -69,7 +71,9 @@ export class AutorentarCreditService {
 
   constructor() {
     // Auto-load credit info on service init
-    this.getCreditInfo().pipe(take(1)).subscribe();
+    this.getCreditInfo()
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   /**

@@ -1,10 +1,11 @@
-import {Component, signal, inject, PLATFORM_ID,
+import {Component, signal, inject, PLATFORM_ID, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PwaService } from '../../../core/services/pwa.service';
 
 @Component({
@@ -26,9 +27,10 @@ import { PwaService } from '../../../core/services/pwa.service';
     ]),
   ],
 })
-export class PwaInstallPromptComponent {
+export class PwaInstallPromptComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly destroyRef = inject(DestroyRef);
   readonly visible = signal(false);
   readonly installing = signal(false);
   private readonly router = inject(Router);
@@ -40,13 +42,6 @@ export class PwaInstallPromptComponent {
   private securityInfoExpandedFlag = signal<boolean>(false);
 
   constructor() {
-    // Track current route for contextual messages
-    this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => {
-        this.currentRoute.set(event.url || '');
-      });
-
     // Set initial route
     this.currentRoute.set(this.router.url || '');
 
@@ -56,6 +51,18 @@ export class PwaInstallPromptComponent {
         this.visible.set(true);
       }
     }, 30000);
+  }
+
+  ngOnInit(): void {
+    // Track current route for contextual messages
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((event) => {
+        this.currentRoute.set(event.url || '');
+      });
   }
 
   /**

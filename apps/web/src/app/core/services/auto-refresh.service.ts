@@ -1,5 +1,7 @@
 import { Injectable, inject, DestroyRef } from '@angular/core';
-import { interval, Subject, switchMap, takeUntilDestroyed, catchError, of } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { from, interval, of, Subscription, type Observable } from 'rxjs';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { BookingsService } from './bookings.service';
 import { WalletService } from './wallet.service';
 
@@ -24,8 +26,8 @@ export class AutoRefreshService {
   private readonly walletService = inject(WalletService);
   private readonly destroyRef = inject(DestroyRef);
 
-  private walletSubscription?: ReturnType<typeof interval>;
-  private bookingsSubscription?: ReturnType<typeof interval>;
+  private walletSubscription?: Subscription;
+  private bookingsSubscription?: Subscription;
 
   private isRefreshingWallet = false;
   private isRefreshingBookings = false;
@@ -74,6 +76,7 @@ export class AutoRefreshService {
    * Stop wallet refresh
    */
   stopWalletRefresh(): void {
+    this.walletSubscription?.unsubscribe();
     this.walletSubscription = undefined;
   }
 
@@ -81,6 +84,7 @@ export class AutoRefreshService {
    * Stop bookings refresh
    */
   stopBookingsRefresh(): void {
+    this.bookingsSubscription?.unsubscribe();
     this.bookingsSubscription = undefined;
   }
 
@@ -95,61 +99,43 @@ export class AutoRefreshService {
   /**
    * Safely refresh wallet (returns Observable)
    */
-  private refreshWalletSafe(): Subject<null> {
-    const result = new Subject<null>();
-
+  private refreshWalletSafe(): Observable<null> {
     if (this.isRefreshingWallet) {
-      result.next(null);
-      result.complete();
-      return result;
+      return of(null);
     }
 
     this.isRefreshingWallet = true;
-    this.walletService.getBalance()
-      .then(() => {
-        result.next(null);
-        result.complete();
-      })
-      .catch((error) => {
+    return from(this.walletService.fetchBalance()).pipe(
+      map(() => null),
+      catchError((error) => {
         console.error('[AutoRefresh] Failed to refresh wallet:', error);
-        result.next(null);
-        result.complete();
-      })
-      .finally(() => {
+        return of(null);
+      }),
+      finalize(() => {
         this.isRefreshingWallet = false;
-      });
-
-    return result;
+      }),
+    );
   }
 
   /**
    * Safely refresh bookings (returns Observable)
    */
-  private refreshBookingsSafe(): Subject<null> {
-    const result = new Subject<null>();
-
+  private refreshBookingsSafe(): Observable<null> {
     if (this.isRefreshingBookings) {
-      result.next(null);
-      result.complete();
-      return result;
+      return of(null);
     }
 
     this.isRefreshingBookings = true;
-    this.bookingsService.getMyBookings()
-      .then(() => {
-        result.next(null);
-        result.complete();
-      })
-      .catch((error) => {
+    return from(this.bookingsService.getMyBookings()).pipe(
+      map(() => null),
+      catchError((error) => {
         console.error('[AutoRefresh] Failed to refresh bookings:', error);
-        result.next(null);
-        result.complete();
-      })
-      .finally(() => {
+        return of(null);
+      }),
+      finalize(() => {
         this.isRefreshingBookings = false;
-      });
-
-    return result;
+      }),
+    );
   }
 
   /**
@@ -160,7 +146,7 @@ export class AutoRefreshService {
 
     try {
       this.isRefreshingWallet = true;
-      await this.walletService.getBalance();
+      await this.walletService.fetchBalance(true);
     } catch (error) {
       console.error('[AutoRefresh] Failed to refresh wallet:', error);
     } finally {

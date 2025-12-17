@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {Component, computed, EventEmitter, inject, OnInit, Output, signal,
+import {Component, computed, EventEmitter, inject, OnInit, Output, signal, DestroyRef,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { AddBankAccountParams, BankAccountType } from '../../../core/models/wallet.model';
 import { ProfileService } from '../../../core/services/profile.service';
 
@@ -23,6 +24,7 @@ import { ProfileService } from '../../../core/services/profile.service';
 })
 export class BankAccountFormComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Output() submitAccount = new EventEmitter<AddBankAccountParams>();
   @Output() cancelled = new EventEmitter<void>();
@@ -70,15 +72,16 @@ export class BankAccountFormComponent implements OnInit {
       account_number: ['', [Validators.required, Validators.minLength(6)]],
       bank_name: [''],
     });
-
-    // Actualizar validaciones cuando cambia el tipo
-    this.form.get('account_type')?.valueChanges.subscribe((type: BankAccountType) => {
-      this.selectedType.set(type);
-      this.updateAccountNumberValidators(type);
-    });
   }
 
   async ngOnInit(): Promise<void> {
+    // Actualizar validaciones cuando cambia el tipo
+    this.form.get('account_type')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((type: BankAccountType) => {
+        this.selectedType.set(type);
+        this.updateAccountNumberValidators(type);
+      });
     try {
       const profile = await this.profileService.getCurrentProfile();
 

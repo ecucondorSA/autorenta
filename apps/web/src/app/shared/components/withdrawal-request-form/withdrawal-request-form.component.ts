@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, signal, computed, effect,
+import {Component, EventEmitter, Input, Output, signal, computed, effect, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -11,6 +11,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/wallet.model';
 
 /**
@@ -26,7 +27,7 @@ import type { BankAccount, RequestWithdrawalParams } from '../../../core/models/
   templateUrl: './withdrawal-request-form.component.html',
   styleUrl: './withdrawal-request-form.component.css',
 })
-export class WithdrawalRequestFormComponent {
+export class WithdrawalRequestFormComponent implements OnInit {
   @Input({ required: true }) availableBalance = 0;
   @Input() withdrawableBalance = 0;
   @Input() nonWithdrawableBalance = 0;
@@ -70,7 +71,7 @@ export class WithdrawalRequestFormComponent {
     return this.accounts.find((acc) => acc.id === id) || null;
   });
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder, private readonly destroyRef: DestroyRef) {
     this.form = this.fb.group({
       bank_account_id: ['', Validators.required],
       amount: [
@@ -83,23 +84,27 @@ export class WithdrawalRequestFormComponent {
       ],
       user_notes: [''],
     });
+  }
 
+  ngOnInit(): void {
     // Sync form values with signals
-    effect(() => {
-      const amountControl = this.form.get('amount');
-      if (amountControl) {
-        amountControl.valueChanges.subscribe((value: number) => {
+    const amountControl = this.form.get('amount');
+    if (amountControl) {
+      amountControl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((value: number) => {
           this.amount.set(value || 0);
         });
-      }
+    }
 
-      const accountControl = this.form.get('bank_account_id');
-      if (accountControl) {
-        accountControl.valueChanges.subscribe((value: string) => {
+    const accountControl = this.form.get('bank_account_id');
+    if (accountControl) {
+      accountControl.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((value: string) => {
           this.selectedAccountId.set(value || null);
         });
-      }
-    });
+    }
   }
 
   /**

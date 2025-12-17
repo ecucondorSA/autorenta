@@ -20,15 +20,16 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { filter } from 'rxjs';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { TranslateModule } from '@ngx-translate/core';
+import { filter } from 'rxjs';
 import { GuidedTourService } from './core/guided-tour';
 import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
-import { DebugService } from './core/services/debug.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
+import { DebugService } from './core/services/debug.service';
+import { HapticFeedbackService } from './core/services/haptic-feedback.service';
 import { LocaleManagerService } from './core/services/locale-manager.service';
 import { MapboxPreloaderService } from './core/services/mapbox-preloader.service';
 import { MobileBottomNavPortalService } from './core/services/mobile-bottom-nav-portal.service';
@@ -41,20 +42,18 @@ import { LanguageSelectorComponent } from './shared/components/language-selector
 import { NotificationsComponent } from './shared/components/notifications/notifications.component';
 import { PendingReviewsBannerComponent } from './shared/components/pending-reviews-banner/pending-reviews-banner.component';
 import { PwaInstallBannerComponent } from './shared/components/pwa-install-banner/pwa-install-banner.component';
-import { PwaInstallPromptComponent } from './shared/components/pwa-install-prompt/pwa-install-prompt.component';
 import { PwaTitlebarComponent } from './shared/components/pwa-titlebar/pwa-titlebar.component';
 import { PwaUpdatePromptComponent } from './shared/components/pwa-update-prompt/pwa-update-prompt.component';
 import { ShareButtonComponent } from './shared/components/share-button/share-button.component';
-import { HapticFeedbackService } from './core/services/haptic-feedback.service';
 
+import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel.component';
+import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
+import { IconComponent } from './shared/components/icon/icon.component';
+import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawer/mobile-menu-drawer.component';
+import { SplashScreenComponent } from './shared/components/splash-screen/splash-screen.component';
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
-import { IconComponent } from './shared/components/icon/icon.component';
-import { SplashScreenComponent } from './shared/components/splash-screen/splash-screen.component';
-import { MobileMenuDrawerComponent } from './shared/components/mobile-menu-drawer/mobile-menu-drawer.component';
-import { HeaderIconComponent } from './shared/components/header-icon/header-icon.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
-import { DebugPanelComponent } from './shared/components/debug-panel/debug-panel.component';
 
 import { routeAnimations } from './core/animations/route-animations'; // Importar animaciones
 
@@ -69,7 +68,6 @@ import { routeAnimations } from './core/animations/route-animations'; // Importa
     TranslateModule,
     PendingReviewsBannerComponent,
     VerificationPromptBannerComponent,
-    PwaInstallPromptComponent,
     PwaInstallBannerComponent,
     PwaUpdatePromptComponent,
     PwaTitlebarComponent,
@@ -85,7 +83,7 @@ import { routeAnimations } from './core/animations/route-animations'; // Importa
     HeaderIconComponent,
     ClickOutsideDirective,
     DebugPanelComponent
-],
+  ],
   templateUrl: './app.component.html',
   styles: [
     `

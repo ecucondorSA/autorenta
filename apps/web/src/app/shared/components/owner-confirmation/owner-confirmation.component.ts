@@ -1,8 +1,9 @@
-import {Component, Input, Output, EventEmitter, signal, inject,
+import {Component, Input, Output, EventEmitter, signal, inject, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
@@ -35,9 +36,10 @@ import { AuthService } from '../../../core/services/auth.service';
     `,
   ],
 })
-export class OwnerConfirmationComponent {
+export class OwnerConfirmationComponent implements OnInit {
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly auth = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
 
   /**
    * ID del booking a confirmar
@@ -88,26 +90,30 @@ export class OwnerConfirmationComponent {
    */
   readonly loading = this.confirmationService.loading;
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
     // Cuando se marca "tiene daños", hacer campos de daño requeridos
-    this.form.controls.has_damages.valueChanges.subscribe((hasDamages) => {
-      if (hasDamages) {
-        this.form.controls.damage_amount?.setValidators([
-          Validators.required,
-          Validators.min(1),
-          Validators.max(250),
-        ]);
-        this.form.controls.damage_description?.setValidators([
-          Validators.required,
-          Validators.minLength(10),
-        ]);
-      } else {
-        this.form.controls.damage_amount?.clearValidators();
-        this.form.controls.damage_description?.clearValidators();
-      }
-      this.form.controls.damage_amount?.updateValueAndValidity();
-      this.form.controls.damage_description?.updateValueAndValidity();
-    });
+    this.form.controls.has_damages.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((hasDamages) => {
+        if (hasDamages) {
+          this.form.controls.damage_amount?.setValidators([
+            Validators.required,
+            Validators.min(1),
+            Validators.max(250),
+          ]);
+          this.form.controls.damage_description?.setValidators([
+            Validators.required,
+            Validators.minLength(10),
+          ]);
+        } else {
+          this.form.controls.damage_amount?.clearValidators();
+          this.form.controls.damage_description?.clearValidators();
+        }
+        this.form.controls.damage_amount?.updateValueAndValidity();
+        this.form.controls.damage_description?.updateValueAndValidity();
+      });
   }
 
   /**

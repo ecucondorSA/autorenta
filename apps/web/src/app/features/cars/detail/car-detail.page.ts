@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -9,12 +10,11 @@ import {
   OnInit,
   signal,
   ViewChild,
-  AfterViewInit,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { combineLatest, from, of, Subject, fromEvent } from 'rxjs';
+import { combineLatest, from, fromEvent, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
 
 // Services
@@ -36,20 +36,20 @@ import { calculateCreditSecurityUsd } from '../../../core/models/booking-detail-
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 // Components
+import { RiskCalculation, RiskCalculatorService } from '../../../core/services/risk-calculator.service';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
 import {
   DateRange,
   DateRangePickerComponent,
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
 import { PickupLocationSelection } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
+import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import {
   BookingLocationData,
 } from '../../bookings/components/booking-location-form/booking-location-form.component';
-import { IconComponent } from '../../../shared/components/icon/icon.component';
-import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
-import { RiskCalculatorService, RiskCalculation } from '../../../core/services/risk-calculator.service';
 
 // Temporary interfaces until components are created
 export interface Photo {
@@ -80,22 +80,22 @@ interface CarDetailState {
   error: string | null;
 }
 
-  @Component({
-    standalone: true,
-    selector: 'app-car-detail-page',
-    imports: [
-      CommonModule,
-      DateRangePickerComponent,
-      CarReviewsSectionComponent,
-      TranslateModule,
-      StickyCtaMobileComponent,
-      IconComponent,
-      RiskCalculatorViewerComponent,
-    ],
-    templateUrl: './car-detail.page.html',
-    styleUrls: ['./car-detail.page.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-  })
+@Component({
+  standalone: true,
+  selector: 'app-car-detail-page',
+  imports: [
+    CommonModule,
+    DateRangePickerComponent,
+    CarReviewsSectionComponent,
+    TranslateModule,
+    StickyCtaMobileComponent,
+    IconComponent,
+    RiskCalculatorViewerComponent,
+  ],
+  templateUrl: './car-detail.page.html',
+  styleUrls: ['./car-detail.page.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
 export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // ✅ NEW: ViewChild references for scroll behavior
   @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
@@ -241,14 +241,14 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           if (err?.code === 'PGRST116') {
             errorMessage = 'Auto no encontrado';
           } else if (err?.code === 'PGRST200') { // Ignore missing relationship error
-             console.warn('Review relationship missing (PGRST200), returning empty reviews');
-             return of({
-               car: null, // This will trigger the overall error state if car is also null
-               reviews: [],
-               stats: null,
-               loading: false,
-               error: null // Allow loading to complete if it was just reviews failing
-             });
+            console.warn('Review relationship missing (PGRST200), returning empty reviews');
+            return of({
+              car: null, // This will trigger the overall error state if car is also null
+              reviews: [],
+              stats: null,
+              loading: false,
+              error: null // Allow loading to complete if it was just reviews failing
+            });
           } else if (err?.message?.includes('permission') || err?.code === '42501') {
             errorMessage = 'No tienes permiso para ver este auto';
           } else if (err?.message?.includes('network') || err?.message?.includes('fetch')) {
@@ -1217,10 +1217,10 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       // Handle OVERLAP error specifically
       if (userMessage.includes('OVERLAP') || (err as { code?: string })?.code === 'P0001') {
         userMessage = 'El auto ya está reservado para estas fechas. Por favor seleccioná otras.';
-        
+
         // Load blocked dates to refresh calendar
         void this.loadBlockedDates(car.id);
-        
+
         // Show waitlist option
         this.canWaitlist.set(true);
       }

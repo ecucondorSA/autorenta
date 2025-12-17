@@ -1,6 +1,6 @@
 import { Injectable, inject, DestroyRef } from '@angular/core';
 import { Observable, from, throwError, of } from 'rxjs';
-import { catchError, map, switchMap, takeUntilDestroyed } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed as takeUntilDestroyedInterop } from '@angular/core/rxjs-interop';
 import { PaymentsService } from './payments.service';
 import { PaymentAuthorizationService } from './payment-authorization.service';
