@@ -538,9 +538,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.emitBounds();
 
           // Listen for move end to emit bounds
-          this.map!.on('moveend', () => {
-            this.emitBounds();
-          });
+          if (this.map) {
+            this.map.on('moveend', () => {
+              this.emitBounds();
+            });
+          }
 
           // Pre-warm component pool during idle time for better performance
           this.preWarmComponentPoolDuringIdle();

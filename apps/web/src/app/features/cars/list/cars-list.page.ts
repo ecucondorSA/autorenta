@@ -566,7 +566,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         ...car,
         distance,
         distanceText,
-        image_url: this.extractPhotoGallery(car)[0] || null,
+        image_url: this.extractPhotoGallery(car)[0] || undefined,
       });
     }
 

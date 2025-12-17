@@ -70,7 +70,9 @@
             <div class="space-y-1 text-xs text-text-secondary">
               <div class="flex justify-between">
                 <span>ID de Reserva:</span>
-                <span class="font-mono">{{ booking()!.id.slice(0, 8) }}</span>
+                @if (booking()?.id) {
+                  <span class="font-mono">{{ booking()!.id!.slice(0, 8) }}</span>
+                }
               </div>
               @if (car()) {
                 <div class="flex justify-between">

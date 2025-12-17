@@ -124,6 +124,6 @@ export class ReviewCardComponent {
       rejected: 'bg-error-bg-hover text-error-strong dark:bg-error-bg0/20 dark:text-error-300',
     };
 
-    return classes[status] || classes[pending];
+    return classes[status] || classes['pending'];
   }
 }

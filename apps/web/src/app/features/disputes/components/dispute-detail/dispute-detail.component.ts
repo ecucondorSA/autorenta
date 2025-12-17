@@ -69,7 +69,7 @@ export class DisputeDetailComponent implements OnInit {
     this.loading.set(true);
     try {
       const disputeData = await this.disputesService.getDisputeById(this.disputeId());
-      this.dispute.set(disputeData ?? null);
+      this.dispute.set(disputeData || null);
 
       const evidenceData = await this.disputesService.listEvidence(this.disputeId());
       this.evidence.set(evidenceData);

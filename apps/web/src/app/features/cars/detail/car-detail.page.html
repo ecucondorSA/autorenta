@@ -130,7 +130,7 @@
             class="w-14 h-14 rounded-full object-cover border border-border-default shadow-sm"
             [alt]="car()?.owner?.full_name" loading="lazy" decoding="async"
             (error)="onImgError($event, '/assets/avatar-placeholder.png')" />
-          @if (car()?.owner?.is_email_verified) {
+          @if (car()?.owner?.email_verified) {
           <div
             class="absolute bottom-0 right-0 p-1 bg-success-default rounded-full border-2 border-surface-base text-white">
             <app-icon name="check" [size]="10" />

@@ -327,10 +327,10 @@ export class PaymentOrchestrationService {
 
     const candidate = payload as Record<string, unknown>;
     const isBookingIdValid =
-      !('booking_id' in candidate) || typeof candidate.booking_id === 'string';
+      !('booking_id' in candidate) || typeof candidate['booking_id'] === 'string';
     const isStatusValid = !('status' in candidate) || typeof candidate['status'] === 'string';
     const isPaymentIdValid =
-      !('payment_id' in candidate) || typeof candidate.payment_id === 'string';
+      !('payment_id' in candidate) || typeof candidate['payment_id'] === 'string';
 
     return isBookingIdValid && isStatusValid && isPaymentIdValid;
   }

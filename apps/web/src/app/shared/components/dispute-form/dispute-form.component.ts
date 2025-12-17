@@ -94,7 +94,7 @@ import { EvidenceUploaderComponent } from '../../../features/disputes/components
             }
             @if (createdDisputeId()) {
               <div class_selector="mt-4">
-                <app-evidence-uploader [disputeId]="createdDisputeId()!"></app-evidence-uploader>
+                <app-evidence-uploader [disputeId]="disputeIdNonNull"></app-evidence-uploader>
               </div>
             }
             <!-- Error Message -->
@@ -168,6 +168,10 @@ export class DisputeFormComponent {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly createdDisputeId = signal<string | null>(null); // Para almacenar el ID de la disputa creada
+
+  get disputeIdNonNull(): string {
+    return this.createdDisputeId() ?? '';
+  }
 
   selectedKind: DisputeKind | '' = '';
   description = '';

@@ -184,7 +184,7 @@
                   @if (selectedDispute()?.resolution_amount) {
                     <p class="text-sm">
                       <strong>Monto de Resolución:</strong>
-                      {{ selectedDispute()!.resolution_amount | currency:selectedDispute()!.resolution_currency:'symbol':'1.2-2' }}
+                      {{ (selectedDispute()!.resolution_amount ?? 0) | currency:(selectedDispute()!.resolution_currency ?? 'USD'):'symbol':'1.2-2' }}
                     </p>
                   }
                 </div>

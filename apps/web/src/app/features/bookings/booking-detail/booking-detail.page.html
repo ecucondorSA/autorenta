@@ -1016,7 +1016,11 @@
                               </div>
                               <div class="flex justify-between items-center text-sm">
                                 <span class="font-medium text-text-primary">Costo adicional estimado:</span>
-                                <span class="font-bold text-success-strong font-mono">{{ request.estimated_cost_amount | currency:request.estimated_cost_currency:'symbol':'1.2-2' }}</span>
+                                @if (request.estimated_cost_amount && request.estimated_cost_currency) {
+                                  <span class="font-bold text-success-strong font-mono">{{ request.estimated_cost_amount | currency:request.estimated_cost_currency:'symbol':'1.2-2' }}</span>
+                                } @else if (request.estimated_cost_amount) {
+                                  <span class="font-bold text-success-strong font-mono">{{ request.estimated_cost_amount | currency:'USD':'symbol':'1.2-2' }}</span>
+                                }
                               </div>
                               @if (request.renter_message) {
                                 <div class="pt-2 border-t border-border-default text-sm text-text-secondary">

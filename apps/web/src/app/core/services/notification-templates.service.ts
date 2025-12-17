@@ -77,7 +77,7 @@ export class NotificationTemplatesService {
       case 'booking_confirmed':
         return {
           title: 'Reserva Confirmada',
-          body: `Tu reserva para ${sanitizedVars['carName']} ha sido confirmada. Fecha: ${sanitizedVars.startDate}`,
+          body: `Tu reserva para ${sanitizedVars['carName']} ha sido confirmada. Fecha: ${sanitizedVars['startDate']}`,
           action_url: `/bookings/${sanitizedVars['bookingId']}`,
           icon: 'checkmark-circle',
         };
@@ -109,24 +109,24 @@ export class NotificationTemplatesService {
       case 'new_review':
         return {
           title: 'Nueva Reseña',
-          body: `${sanitizedVars.reviewerName} te dejó una reseña de ${sanitizedVars.rating} estrellas en ${sanitizedVars['carName']}`,
-          action_url: sanitizedVars.reviewUrl,
+          body: `${sanitizedVars['reviewerName']} te dejó una reseña de ${sanitizedVars['rating']} estrellas en ${sanitizedVars['carName']}`,
+          action_url: sanitizedVars['reviewUrl'],
           icon: 'star',
         };
 
       case 'review_response':
         return {
           title: 'Respuesta a tu Reseña',
-          body: `${sanitizedVars.ownerName} respondió a tu reseña.`,
-          action_url: sanitizedVars.reviewUrl,
+          body: `${sanitizedVars['ownerName']} respondió a tu reseña.`,
+          action_url: sanitizedVars['reviewUrl'],
           icon: 'chatbubble',
         };
 
       case 'message_received':
         return {
           title: 'Nuevo Mensaje',
-          body: `${sanitizedVars.senderName} te envió un mensaje.`,
-          action_url: `/messages/${sanitizedVars.conversationId}`,
+          body: `${sanitizedVars['senderName']} te envió un mensaje.`,
+          action_url: `/messages/${sanitizedVars['conversationId']}`,
           icon: 'mail',
         };
 
