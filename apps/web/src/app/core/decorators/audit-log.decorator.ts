@@ -109,14 +109,14 @@ export function AuditLog(action: string, resourceType: string, options: AuditLog
         } else {
           details = {};
           if (options.includeParams) {
-            details.params = args;
+            details['params'] = args;
           }
           if (options.includeResult && !error) {
-            details.result = result;
+            details['result'] = result;
           }
           if (error) {
-            details.error = {
-              message: error instanceof Error ? error.message : String(error),
+            details['error'] = {
+              message: error instanceof Error ? error['message'] : String(error),
               name: error instanceof Error ? error.name : 'UnknownError',
             };
           }

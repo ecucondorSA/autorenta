@@ -173,7 +173,7 @@ export class DisputeFormComponent {
   description = '';
 
   canSubmit(): boolean {
-    return !!this.selectedKind && !!this.description.trim();
+    return !!this.selectedKind && !!this['description'].trim();
   }
 
   onBackdropClick(event: MouseEvent): void {
@@ -191,25 +191,25 @@ export class DisputeFormComponent {
     if (!this.canSubmit() || this.loading()) return;
 
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       // Usar el método RPC que tiene lógica completa del backend
       const result = await this.disputesService.openDisputeRpc({
-        bookingId: this.bookingId(),
+        bookingId: this['bookingId'](),
         kind: this.selectedKind as DisputeKind,
-        description: this.description.trim(),
+        description: this['description'].trim(),
       });
 
       if (!result.success) {
-        throw new Error(result.error || 'Error al crear la disputa');
+        throw new Error(result['error'] || 'Error al crear la disputa');
       }
 
       this.createdDisputeId.set(result.disputeId || null);
       this.toastService.success('Disputa creada exitosamente. Ahora puedes añadir evidencias.', '');
       this.disputeCreated.emit();
     } catch (err) {
-      this.error.set(err instanceof Error ? err.message : 'Error al crear la disputa');
+      this['error'].set(err instanceof Error ? err['message'] : 'Error al crear la disputa');
     } finally {
       this.loading.set(false);
     }
@@ -217,8 +217,8 @@ export class DisputeFormComponent {
 
   private resetForm(): void {
     this.selectedKind = '';
-    this.description = '';
-    this.error.set(null);
+    this['description'] = '';
+    this['error'].set(null);
     this.createdDisputeId.set(null); // Resetear también el ID de disputa
   }
 }

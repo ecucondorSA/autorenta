@@ -285,8 +285,8 @@ export class PublishCarV2Page implements OnInit {
     });
 
     // Check if editing
-    this.carId = this.route.snapshot.paramMap.get('id');
-    if (this.carId) {
+    this['carId'] = this.route.snapshot.paramMap.get('id');
+    if (this['carId']) {
       this.editMode.set(true);
     }
 
@@ -297,15 +297,15 @@ export class PublishCarV2Page implements OnInit {
     await this.loadFIPEBrands();
 
     // Load car data if editing
-    if (this.carId) {
-      const loaded = await this.formService.loadCarForEditing(this.carId);
+    if (this['carId']) {
+      const loaded = await this.formService.loadCarForEditing(this['carId']);
       if (!loaded) {
         alert('No se pudo cargar el auto');
         await this.router.navigate(['/cars/my-cars']);
         return;
       }
-      await this.photoService.loadExistingPhotos(this.carId);
-      await this.loadPricingOverrides(this.carId);
+      await this.photoService.loadExistingPhotos(this['carId']);
+      await this.loadPricingOverrides(this['carId']);
     } else {
       // Auto-fill from last car
       await this.formService.autoFillFromLastCar();
@@ -320,7 +320,7 @@ export class PublishCarV2Page implements OnInit {
       console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
       const categories = await this.pricingService.getVehicleCategories();
       console.log('[PublishCarV2] Loaded categories:', categories.length);
-      const category = categories.find((c) => c.id === categoryId);
+      const category = categories.find((c) => c['id'] === categoryId);
       if (category) {
         const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
         console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
@@ -582,7 +582,7 @@ export class PublishCarV2Page implements OnInit {
         }
       } else {
         // ✅ NEW: Enhanced error handling with error codes and suggestions
-        const errorMsg = result?.error || 'No se pudo obtener el valor del vehículo';
+        const errorMsg = result?.['error'] || 'No se pudo obtener el valor del vehículo';
         const errorCode = result?.errorCode || 'UNKNOWN';
         const suggestions = result?.suggestions || [];
 
@@ -722,11 +722,11 @@ export class PublishCarV2Page implements OnInit {
         categoryName,
         `(${valueUsd} USD)`,
         'category_id:',
-        category.id,
+        category['id'],
       );
       const categoryControl = this.publishForm.get('category_id');
       if (categoryControl) {
-        categoryControl.setValue(category.id, { emitEvent: true });
+        categoryControl.setValue(category['id'], { emitEvent: true });
         categoryControl.markAsTouched();
         categoryControl.updateValueAndValidity();
         console.log(
@@ -889,7 +889,7 @@ export class PublishCarV2Page implements OnInit {
     // Fallback to traditional brand_id (UUID)
     const brandId = this.publishForm?.get('brand_id')?.value;
     if (!brandId) return '';
-    const brand = this.brands().find((b) => b.id === brandId);
+    const brand = this.brands().find((b) => b['id'] === brandId);
     return brand?.name || '';
   }
 
@@ -913,7 +913,7 @@ export class PublishCarV2Page implements OnInit {
     // Fallback to traditional model_id (UUID)
     const modelId = this.publishForm?.get('model_id')?.value;
     if (!modelId) return '';
-    const model = this.models().find((m) => m.id === modelId);
+    const model = this.models().find((m) => m['id'] === modelId);
     return model?.name || '';
   }
 
@@ -938,8 +938,8 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    const brand = this.brands().find((b) => b.id === brandId);
-    const model = this.models().find((m) => m.id === modelId);
+    const brand = this.brands().find((b) => b['id'] === brandId);
+    const model = this.models().find((m) => m['id'] === modelId);
 
     if (!brand || !model) {
       alert('No se pudo obtener información del vehículo');
@@ -978,9 +978,9 @@ export class PublishCarV2Page implements OnInit {
         this.publishForm.patchValue({
           location_street: streetWithNumber,
           location_street_number: address.streetNumber,
-          location_city: address.city,
+          location_city: address['city'],
           location_state: address.state,
-          location_country: address.country,
+          location_country: address['country'],
         });
         this.notificationManager.success(
           'Ubicación actualizada',
@@ -1032,7 +1032,7 @@ export class PublishCarV2Page implements OnInit {
     }
 
     if (!this.photoService.hasMinimumPhotos()) {
-      this.notificationManager.error(
+      this.notificationManager['error'](
         'Fotos requeridas',
         'Debes subir al menos 3 fotos para publicar tu auto.',
       );
@@ -1041,7 +1041,7 @@ export class PublishCarV2Page implements OnInit {
 
     const description = this.publishForm.get('description')?.value as string | undefined;
     if (!description || description.trim().length < 40) {
-      this.notificationManager.error(
+      this.notificationManager['error'](
         'Descripción incompleta',
         'Agrega una descripción clara (mínimo 40 caracteres) para que los viajeros conozcan tu auto.',
       );
@@ -1052,7 +1052,7 @@ export class PublishCarV2Page implements OnInit {
       !this.publishForm.get('availability_start_date')?.value ||
       !this.publishForm.get('availability_end_date')?.value
     ) {
-      this.notificationManager.error(
+      this.notificationManager['error'](
         'Disponibilidad faltante',
         'Indicá desde cuándo y hasta cuándo está disponible el auto.',
       );
@@ -1060,7 +1060,7 @@ export class PublishCarV2Page implements OnInit {
     }
 
     if (!this.isAvailabilityRangeValid()) {
-      this.notificationManager.error(
+      this.notificationManager['error'](
         'Fechas inválidas',
         'La fecha de fin debe ser posterior o igual a la fecha de inicio.',
       );
@@ -1069,7 +1069,7 @@ export class PublishCarV2Page implements OnInit {
 
     // ✅ CRITICAL: Validar ubicación antes de publicar
     if (!this.hasValidLocation()) {
-      this.notificationManager.error(
+      this.notificationManager['error'](
         'Ubicación requerida',
         'Debes seleccionar una ubicación en el mapa o usar tu ubicación actual para que tu auto aparezca en las búsquedas.',
       );
@@ -1101,15 +1101,15 @@ export class PublishCarV2Page implements OnInit {
       console.log('📝 Form data before processing:', {
         brand_id: formData.brand_id,
         model_id: formData.model_id,
-        year: formData.year,
-        price_per_day: formData.price_per_day,
+        year: formData['year'],
+        price_per_day: formData['price_per_day'],
         pricing_strategy: formData.pricing_strategy,
       });
 
       // ✅ NUEVO: Establecer valores por defecto para campos opcionales
       // ✅ CRITICAL: price_per_day siempre debe ser > 0 para pasar validación
       const pricePerDay = formData.price_per_day
-        ? Number(formData.price_per_day)
+        ? Number(formData['price_per_day'])
         : formData.pricing_strategy === 'dynamic'
           ? 50
           : 100; // Default: 50 si dinámico, 100 si custom
@@ -1121,35 +1121,35 @@ export class PublishCarV2Page implements OnInit {
         // Campos opcionales con valores por defecto
         color: formData.color || 'No especificado',
         mileage: formData.mileage || 0,
-        transmission: (formData.transmission || 'manual') as string,
+        transmission: (formData['transmission'] || 'manual') as string,
         fuel: (formData.fuel || 'nafta') as string,
         price_per_day: pricePerDay, // ✅ Siempre un número válido > 0
         value_usd: formData.value_usd || 10000, // Valor por defecto si no se especifica
         category_id: formData.category_id || null, // Se puede auto-categorizar después
-        min_rental_days: formData.min_rental_days || 1,
-        max_rental_days: formData.max_rental_days || null,
-        deposit_required: formData.deposit_required ?? true,
-        deposit_amount: formData.deposit_amount || 200,
-        insurance_included: formData.insurance_included ?? false,
-        auto_approval: formData.auto_approval ?? true,
+        min_rental_days: formData['min_rental_days'] || 1,
+        max_rental_days: formData['max_rental_days'] || null,
+        deposit_required: formData['deposit_required'] ?? true,
+        deposit_amount: formData['deposit_amount'] || 200,
+        insurance_included: formData['insurance_included'] ?? false,
+        auto_approval: formData['auto_approval'] ?? true,
         // Location opcional
-        location_street: formData.location_street || '',
+        location_street: formData['location_street'] || '',
         location_street_number: formData.location_street_number || '',
-        location_city: formData.location_city || '',
-        location_state: formData.location_state || '',
-        location_country: formData.location_country || '', // ✅ CHANGED: Removed hardcoded 'AR' default
+        location_city: formData['location_city'] || '',
+        location_state: formData['location_state'] || '',
+        location_country: formData['location_country'] || '', // ✅ CHANGED: Removed hardcoded 'AR' default
       };
 
       // Get coordinates (manual or from address)
       let coordinates = this.locationService.getCoordinates();
-      if (!coordinates && carData.location_street && carData.location_city) {
+      if (!coordinates && carData['location_street'] && carData['location_city']) {
         // Geocode address si está disponible
         const address = {
-          street: carData.location_street as string,
+          street: carData['location_street'] as string,
           streetNumber: carData.location_street_number as string,
-          city: carData.location_city as string,
-          state: carData.location_state as string,
-          country: carData.location_country as string,
+          city: carData['location_city'] as string,
+          state: carData['location_state'] as string,
+          country: carData['location_country'] as string,
         };
         coordinates = await this.locationService.geocodeAddress(address);
       }
@@ -1158,21 +1158,21 @@ export class PublishCarV2Page implements OnInit {
       // ✅ CRITICAL: Solo incluir location_lat/location_lng si tienen valores válidos
       // Esto evita errores de schema cache si las columnas no están disponibles
       if (coordinates?.latitude && coordinates?.longitude) {
-        carData.location_lat = coordinates.latitude;
-        carData.location_lng = coordinates.longitude;
+        carData['location_lat'] = coordinates.latitude;
+        carData['location_lng'] = coordinates.longitude;
       } else {
         // No incluir las propiedades si no hay coordenadas
         // El backend puede manejar autos sin coordenadas
-        delete carData.location_lat;
-        delete carData.location_lng;
+        delete carData['location_lat'];
+        delete carData['location_lng'];
       }
 
-      carData.status = 'active' as const; // Car is active inmediatamente y aparecerá en el mapa
+      carData['status'] = 'active' as const; // Car is active inmediatamente y aparecerá en el mapa
 
       console.log('🚗 Final car data to submit:', {
         ...carData,
         // Redact sensitive data
-        owner_id: carData.owner_id ? '***' : undefined,
+        owner_id: carData['owner_id'] ? '***' : undefined,
       });
 
       await this.performSubmission(carData);
@@ -1198,10 +1198,10 @@ export class PublishCarV2Page implements OnInit {
         ...formData,
         status: 'draft', // ✅ Explicitly set as draft
         // Defaults for draft to avoid DB constraints if any
-        price_per_day: formData.price_per_day || 0,
-        year: formData.year || new Date().getFullYear(),
+        price_per_day: formData['price_per_day'] || 0,
+        year: formData['year'] || new Date().getFullYear(),
         mileage: formData.mileage || 0,
-        transmission: formData.transmission || 'manual',
+        transmission: formData['transmission'] || 'manual',
         fuel: formData.fuel || 'nafta',
       };
 
@@ -1221,12 +1221,12 @@ export class PublishCarV2Page implements OnInit {
   private async performSubmission(carData: Record<string, unknown>): Promise<void> {
     let carId: string;
 
-    if (this.editMode() && this.carId) {
+    if (this.editMode() && this['carId']) {
       // Update existing car
-      await this.carsService.updateCar(this.carId, carData);
-      carId = this.carId;
+      await this.carsService.updateCar(this['carId'], carData);
+      carId = this['carId'];
 
-      if (carData.status === 'active') {
+      if (carData['status'] === 'active') {
         this.notificationManager.success(
           '✅ Auto actualizado exitosamente',
           'Los cambios se han guardado correctamente.',
@@ -1236,9 +1236,9 @@ export class PublishCarV2Page implements OnInit {
     } else {
       // Create new car
       const newCar = await this.carsService.createCar(carData);
-      carId = newCar.id;
+      carId = newCar['id'];
 
-      if (carData.status === 'active') {
+      if (carData['status'] === 'active') {
         this.notificationManager.success(
           '🎉 ¡Auto publicado exitosamente!',
           'Tu auto ya está visible en el marketplace.',
@@ -1253,7 +1253,7 @@ export class PublishCarV2Page implements OnInit {
     }
 
     // Check docs only if active
-    if (carData.status === 'active' && !this.editMode()) {
+    if (carData['status'] === 'active' && !this.editMode()) {
       setTimeout(() => {
         this.checkMissingDocuments(carId).catch(() => { });
       }, 2000);
@@ -1267,7 +1267,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Log detailed error information
     if (error instanceof Error) {
-      console.error('Error message:', error.message);
+      console.error('Error message:', error['message']);
     }
 
     // Show user-friendly error message
@@ -1275,15 +1275,15 @@ export class PublishCarV2Page implements OnInit {
     let errorMessage = 'Por favor intenta nuevamente.';
 
     if (error instanceof Error) {
-      if (error.message.includes('Marca y modelo son requeridos')) {
+      if (error['message'].includes('Marca y modelo son requeridos')) {
         errorTitle = 'Información incompleta';
         errorMessage = 'Por favor completa la marca y el modelo del vehículo.';
-      } else if (error.message) {
-        errorMessage = error.message;
+      } else if (error['message']) {
+        errorMessage = error['message'];
       }
     }
 
-    this.notificationManager.error(errorTitle, errorMessage);
+    this.notificationManager['error'](errorTitle, errorMessage);
   }
 
   /**
@@ -1304,7 +1304,7 @@ export class PublishCarV2Page implements OnInit {
         const car = await this.carsService.getCarById(carId);
         if (!car) return;
 
-        const carName = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'tu auto';
+        const carName = car['title'] || `${car['brand'] || ''} ${car['model'] || ''}`.trim() || 'tu auto';
         const documentsUrl = `/cars/${carId}/documents`;
 
         // Notificar sobre cada documento faltante

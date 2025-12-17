@@ -78,7 +78,7 @@ export class FaceVerificationService {
    */
   async checkFaceVerificationStatus(): Promise<FaceVerificationStatus> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const {
@@ -93,7 +93,7 @@ export class FaceVerificationService {
       const { data, error } = await this.supabase
         .from('user_identity_levels')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user['id'])
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -109,12 +109,12 @@ export class FaceVerificationService {
         requiresLevel2: (data?.current_level ?? 1) < 2,
       };
 
-      this.status.set(statusData);
+      this['status'].set(statusData);
       return statusData;
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'No pudimos verificar el estado de la selfie';
-      this.error.set(message);
+        err instanceof Error ? err['message'] : 'No pudimos verificar el estado de la selfie';
+      this['error'].set(message);
       throw err;
     } finally {
       this.loading.set(false);
@@ -128,7 +128,7 @@ export class FaceVerificationService {
    */
   async uploadSelfieVideo(videoFile: File): Promise<string> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       // Validate video file
@@ -146,7 +146,7 @@ export class FaceVerificationService {
       const { data: levelData } = await this.supabase
         .from('user_identity_levels')
         .select('current_level')
-        .eq('user_id', user.id)
+        .eq('user_id', user['id'])
         .single();
 
       if (!levelData || levelData.current_level < 2) {
@@ -159,7 +159,7 @@ export class FaceVerificationService {
       const timestamp = Date.now();
       const extension = videoFile.name.split('.').pop() || 'mp4';
       const fileName = `selfie_video_${timestamp}.${extension}`;
-      const filePath = `${user.id}/${fileName}`;
+      const filePath = `${user['id']}/${fileName}`;
 
       // Upload to identity-documents bucket (or documents bucket if identity-documents doesn't exist)
       const bucketName = 'identity-documents'; // Fallback to 'documents' if needed
@@ -171,7 +171,7 @@ export class FaceVerificationService {
 
       if (error) {
         // Fallback to documents bucket
-        if (error.message.includes('not found')) {
+        if (error['message'].includes('not found')) {
           const { error: fallbackError } = await this.supabase.storage
             .from('documents')
             .upload(filePath, videoFile, {
@@ -201,8 +201,8 @@ export class FaceVerificationService {
 
       return publicUrl;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'No pudimos subir el video';
-      this.error.set(message);
+      const message = err instanceof Error ? err['message'] : 'No pudimos subir el video';
+      this['error'].set(message);
       throw err;
     } finally {
       this.loading.set(false);
@@ -217,7 +217,7 @@ export class FaceVerificationService {
    */
   async verifyFace(videoUrl: string, documentUrl: string): Promise<FaceVerificationResult> {
     this.processing.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const {
@@ -237,23 +237,23 @@ export class FaceVerificationService {
         body: JSON.stringify({
           video_url: videoUrl,
           document_url: documentUrl,
-          user_id: user.id,
+          user_id: user['id'],
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Error al verificar la identidad facial');
+        throw new Error(errorData['error'] || 'Error al verificar la identidad facial');
       }
 
       const result: FaceVerificationResult = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Verificación facial fallida');
+        throw new Error(result['error'] || 'Verificación facial fallida');
       }
 
       // Update user_identity_levels with results
-      await this.updateIdentityLevelWithResults(user.id, videoUrl, result);
+      await this.updateIdentityLevelWithResults(user['id'], videoUrl, result);
 
       // Refresh status
       await this.checkFaceVerificationStatus();
@@ -261,8 +261,8 @@ export class FaceVerificationService {
       return result;
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : 'No pudimos verificar tu identidad facial';
-      this.error.set(message);
+        err instanceof Error ? err['message'] : 'No pudimos verificar tu identidad facial';
+      this['error'].set(message);
       throw err;
     } finally {
       this.processing.set(false);
@@ -344,7 +344,7 @@ export class FaceVerificationService {
       .eq('user_id', userId);
 
     if (error) {
-      console.error('Failed to update identity level with face results:', error);
+      console['error']('Failed to update identity level with face results:', error);
       throw new Error('No pudimos guardar los resultados de verificación facial');
     }
   }
@@ -354,7 +354,7 @@ export class FaceVerificationService {
    */
   async deleteSelfieVideo(): Promise<void> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const {
@@ -369,7 +369,7 @@ export class FaceVerificationService {
       const { data: levelData } = await this.supabase
         .from('user_identity_levels')
         .select('selfie_url')
-        .eq('user_id', user.id)
+        .eq('user_id', user['id'])
         .single();
 
       if (!levelData?.selfie_url) {
@@ -402,13 +402,13 @@ export class FaceVerificationService {
           liveness_score: null,
           updated_at: new Date().toISOString(),
         })
-        .eq('user_id', user.id);
+        .eq('user_id', user['id']);
 
       // Refresh status
       await this.checkFaceVerificationStatus();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'No pudimos eliminar el video';
-      this.error.set(message);
+      const message = err instanceof Error ? err['message'] : 'No pudimos eliminar el video';
+      this['error'].set(message);
       throw err;
     } finally {
       this.loading.set(false);
@@ -419,6 +419,6 @@ export class FaceVerificationService {
    * Clear error state
    */
   clearError(): void {
-    this.error.set(null);
+    this['error'].set(null);
   }
 }

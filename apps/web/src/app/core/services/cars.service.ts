@@ -22,7 +22,7 @@ export class CarsService {
   };
 
   async createCar(input: Partial<Car>): Promise<Car> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) {
       throw new Error('Usuario no autenticado');
     }
@@ -41,7 +41,7 @@ export class CarsService {
     if (!hasModelId && !hasModelText) {
       throw new Error('Modelo es requerido (model_id o model_text_backup)');
     }
-    if (!input.price_per_day || input.price_per_day <= 0) {
+    if (!input['price_per_day'] || input['price_per_day'] <= 0) {
       throw new Error('Precio por día debe ser mayor a 0');
     }
 
@@ -50,7 +50,7 @@ export class CarsService {
 
     // ✅ CRITICAL: Las coordenadas son OBLIGATORIAS para que el auto aparezca en búsquedas
     // Si no hay coordenadas, el auto será invisible en el mapa y en búsquedas espaciales
-    if (!carInput.location_lat || !carInput.location_lng) {
+    if (!carInput['location_lat'] || !carInput['location_lng']) {
       throw new Error(
         'Ubicación del vehículo requerida. Por favor selecciona una ubicación en el mapa o usa tu ubicación actual.',
       );
@@ -62,17 +62,17 @@ export class CarsService {
     // La base de datos requiere city/province/country (NOT NULL)
     // pero el formulario envía location_city/location_state/location_country
     const city =
-      (input as Record<string, unknown>).city ||
-      (input as Record<string, unknown>).location_city ||
+      (input as Record<string, unknown>)['city'] ||
+      (input as Record<string, unknown>)['location_city'] ||
       '';
     const province =
-      (input as Record<string, unknown>).province ||
-      (input as Record<string, unknown>).location_state ||
-      (input as Record<string, unknown>).location_province ||
+      (input as Record<string, unknown>)['province'] ||
+      (input as Record<string, unknown>)['location_state'] ||
+      (input as Record<string, unknown>)['location_province'] ||
       '';
     const country =
-      (input as Record<string, unknown>).country ||
-      (input as Record<string, unknown>).location_country ||
+      (input as Record<string, unknown>)['country'] ||
+      (input as Record<string, unknown>)['location_country'] ||
       'AR';
 
     // Prepare clean data for insert
@@ -83,7 +83,7 @@ export class CarsService {
       province: province || 'Buenos Aires', // Default si está vacío
       country: country || 'AR',
       owner_id: userId,
-      status: input.status || 'active', // Default to active if not specified
+      status: input['status'] || 'active', // Default to active if not specified
       created_at: new Date().toISOString(),
     };
 
@@ -104,7 +104,7 @@ export class CarsService {
       throw error;
     }
 
-    console.log('✅ Car created successfully:', data.id);
+    console.log('✅ Car created successfully:', data['id']);
 
     return {
       ...data,
@@ -113,7 +113,7 @@ export class CarsService {
   }
 
   async uploadPhoto(file: File, carId: string, position = 0): Promise<CarPhoto> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
     const optimizedFile = await optimizeImage(file, {
@@ -200,8 +200,8 @@ export class CarsService {
       .eq('status', 'active')
       .order('created_at', { ascending: false });
 
-    if (filters.city) {
-      query = query.ilike('location_city', `%${filters.city}%`);
+    if (filters['city']) {
+      query = query.ilike('location_city', `%${filters['city']}%`);
     }
 
     // ✅ FIX P0.3: Filtrar por coordenadas (bounding box)
@@ -274,7 +274,7 @@ export class CarsService {
   }
 
   async listMyCars(): Promise<Car[]> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
     // 1. Get my orgs IDs (to include fleet cars)
@@ -326,7 +326,7 @@ export class CarsService {
   }
 
   async deleteCar(carId: string): Promise<void> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
     const { error } = await this.supabase
       .from('cars')
@@ -340,7 +340,7 @@ export class CarsService {
    * ✅ NUEVO: Actualizar solo el status del auto
    */
   async updateCarStatus(carId: string, status: string): Promise<void> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
     const { error } = await this.supabase
@@ -353,7 +353,7 @@ export class CarsService {
   }
 
   async updateCar(carId: string, input: Partial<Car>): Promise<Car> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
     // ✅ CRITICAL: Mapear campos de ubicación legacy (city, province, country)
@@ -363,16 +363,16 @@ export class CarsService {
     const updateData: Record<string, unknown> = { ...input };
 
     // Mapear location_city a city si existe
-    if (inputRecord.location_city && !inputRecord.city) {
-      updateData.city = inputRecord.location_city;
+    if (inputRecord['location_city'] && !inputRecord['city']) {
+      updateData['city'] = inputRecord['location_city'];
     }
     // Mapear location_state/location_province a province si existe
-    if ((inputRecord.location_state || inputRecord.location_province) && !inputRecord.province) {
-      updateData.province = inputRecord.location_state || inputRecord.location_province;
+    if ((inputRecord['location_state'] || inputRecord['location_province']) && !inputRecord['province']) {
+      updateData['province'] = inputRecord['location_state'] || inputRecord['location_province'];
     }
     // Mapear location_country a country si existe
-    if (inputRecord.location_country && !inputRecord.country) {
-      updateData.country = inputRecord.location_country;
+    if (inputRecord['location_country'] && !inputRecord['country']) {
+      updateData['country'] = inputRecord['location_country'];
     }
 
     const { data, error } = await this.supabase
@@ -442,7 +442,7 @@ export class CarsService {
   }
 
   async getUserLastCar(): Promise<Car | null> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) return null;
 
     const { data, error } = await this.supabase

@@ -13,7 +13,7 @@ import {
   ReportClaimRequest,
   CreateInspectionRequest,
   INSURER_DISPLAY_NAMES,
-} from '../models/insurance.model';
+} from '../models/insurance['model']';
 import { injectSupabase } from './supabase-client.service';
 
 /**
@@ -330,7 +330,7 @@ export class InsuranceService {
    * Path: {user_id}/claim-evidence/{booking_id}/{uuid}.{ext}
    */
   async uploadClaimEvidence(file: File, bookingId: string): Promise<string> {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getUser()).data['user']?.['id'];
     if (!userId) throw new Error('Usuario no autenticado');
 
     // Validar tipo de archivo
@@ -375,7 +375,7 @@ export class InsuranceService {
     const { data, error } = await this.supabase.rpc('report_insurance_claim', {
       p_booking_id: request.booking_id,
       p_claim_type: request.claim_type,
-      p_description: request.description,
+      p_description: request['description'],
       p_incident_date: request.incident_date,
       p_location: request.location,
       p_photos: request.photos || [],
@@ -456,7 +456,7 @@ export class InsuranceService {
       .from('vehicle_inspections')
       .insert({
         ...request,
-        inspector_id: (await this.supabase.auth.getUser()).data.user?.id,
+        inspector_id: (await this.supabase.auth.getUser()).data['user']?.['id'],
         completed: !!request.signature_data,
         signed_at: request.signature_data ? new Date().toISOString() : null,
       })
@@ -464,7 +464,7 @@ export class InsuranceService {
       .single();
 
     if (error) throw error;
-    return (data as VehicleInspection).id;
+    return (data as VehicleInspection)['id'];
   }
 
   /**

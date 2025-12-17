@@ -25,10 +25,10 @@ import {
   mapBookingRiskSnapshot,
   mapBookingInspection,
   centsToUsd,
-} from '../models/fgo-v1-1.model';
+} from '../models/fgo-v1-1['model']';
 
 // Models v1.0 (base)
-import { FgoMovementView } from '../models/fgo.model';
+import { FgoMovementView } from '../models/fgo['model']';
 import { SupabaseClientService } from './supabase-client.service';
 
 /**
@@ -70,7 +70,7 @@ export class FgoV1_1Service {
         .single(),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
         return response.data ? mapFgoParameters(response.data as FgoParametersDb) : null;
@@ -89,7 +89,7 @@ export class FgoV1_1Service {
       this.supabaseClient.from('fgo_parameters').select('*').order('country_code').order('bucket'),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return [];
         }
         return (response.data || []).map((p) => mapFgoParameters(p as FgoParametersDb));
@@ -119,7 +119,7 @@ export class FgoV1_1Service {
         .eq('bucket', params.bucket),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return false;
         }
         return true;
@@ -139,11 +139,11 @@ export class FgoV1_1Service {
    */
   createRiskSnapshot(params: CreateRiskSnapshotParams): Observable<BookingRiskSnapshot | null> {
     const snapshotData: Omit<BookingRiskSnapshotDb, 'created_at'> = {
-      booking_id: params.bookingId,
+      booking_id: params['bookingId'],
       country_code: params.countryCode,
       bucket: params.bucket,
       fx_snapshot: params.fxSnapshot,
-      currency: params.currency,
+      currency: params['currency'],
       estimated_hold_amount: params.estimatedHoldAmount,
       estimated_deposit: params.estimatedDeposit,
       franchise_usd: params.franchiseUsd,
@@ -156,7 +156,7 @@ export class FgoV1_1Service {
       this.supabaseClient.from(this.riskSnapshotTable).insert(snapshotData).select().single(),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
         return response.data
@@ -181,7 +181,7 @@ export class FgoV1_1Service {
         .maybeSingle(),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
         return response.data
@@ -203,7 +203,7 @@ export class FgoV1_1Service {
    */
   createInspection(params: CreateInspectionParams): Observable<BookingInspection | null> {
     const inspectionData: Omit<BookingInspectionDb, 'id' | 'created_at' | 'signed_at'> = {
-      booking_id: params.bookingId,
+      booking_id: params['bookingId'],
       stage: params.stage,
       inspector_id: params.inspectorId,
       photos: params.photos,
@@ -217,7 +217,7 @@ export class FgoV1_1Service {
       this.supabaseClient.from('booking_inspections').insert(inspectionData).select().single(),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
@@ -239,7 +239,7 @@ export class FgoV1_1Service {
         .eq('id', inspectionId),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return false;
         }
         return true;
@@ -262,7 +262,7 @@ export class FgoV1_1Service {
         .order('created_at', { ascending: true }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return [];
         }
         return (response.data || []).map((i) => mapBookingInspection(i as BookingInspectionDb));
@@ -289,7 +289,7 @@ export class FgoV1_1Service {
         .single(),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
         return response.data ? mapBookingInspection(response.data as BookingInspectionDb) : null;
@@ -310,7 +310,7 @@ export class FgoV1_1Service {
   getStatusV1_1(): Observable<FgoStatusV1_1 | null> {
     return from(this.supabaseClient.from('v_fgo_status_v1_1').select('*').single()).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -331,7 +331,7 @@ export class FgoV1_1Service {
           coverageRatio: data.coverage_ratio,
           lossRatio: data.loss_ratio,
           targetBalance: data.target_balance_cents ? centsToUsd(data.target_balance_cents) : null,
-          status: data.status,
+          status: data['status'],
 
           // 🆕 v1.1 fields
           pemCents: data.pem_cents,
@@ -342,7 +342,7 @@ export class FgoV1_1Service {
           avgRecoveryRate: data.avg_recovery_rate,
 
           lastCalculatedAt: new Date(data.last_calculated_at),
-          updatedAt: new Date(data.updated_at),
+          updatedAt: new Date(data['updated_at']),
         } as FgoStatusV1_1;
       }),
       catchError((_error) => {
@@ -367,7 +367,7 @@ export class FgoV1_1Service {
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -404,7 +404,7 @@ export class FgoV1_1Service {
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -420,7 +420,7 @@ export class FgoV1_1Service {
           targetBalance: centsToUsd(data.target_balance_cents),
           rc: data.rc,
           eventCount: data.event_count,
-          status: data.status,
+          status: data['status'],
           calculatedAt: new Date(data.calculated_at),
         } as RcCalculationV1_1;
       }),
@@ -441,7 +441,7 @@ export class FgoV1_1Service {
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -475,12 +475,12 @@ export class FgoV1_1Service {
   assessEligibility(params: AssessEligibilityParams): Observable<EligibilityResult | null> {
     return from(
       this.supabaseClient.rpc('fgo_assess_eligibility', {
-        p_booking_id: params.bookingId,
+        p_booking_id: params['bookingId'],
         p_claim_amount_cents: params.claimAmountCents,
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -517,14 +517,14 @@ export class FgoV1_1Service {
   executeWaterfall(params: ExecuteWaterfallParams): Observable<WaterfallResult | null> {
     return from(
       this.supabaseClient.rpc('fgo_execute_waterfall', {
-        p_booking_id: params.bookingId,
+        p_booking_id: params['bookingId'],
         p_total_claim_cents: params.totalClaimCents,
-        p_description: params.description,
+        p_description: params['description'],
         p_evidence_url: params.evidenceUrl || null,
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return null;
         }
 
@@ -533,7 +533,7 @@ export class FgoV1_1Service {
 
         return {
           ok: data.ok,
-          error: data.error,
+          error: data['error'],
           bookingId: data.booking_id,
           totalClaimCents: data.total_claim_cents,
           breakdown: {
@@ -571,10 +571,10 @@ export class FgoV1_1Service {
     const { data: profile } = await this.supabaseClient
       .from('profiles')
       .select('is_admin')
-      .eq('id', user.id)
+      .eq('id', user['id'])
       .single();
 
-    return profile?.is_admin === true;
+    return profile?.['is_admin'] === true;
   }
 
   /**
@@ -584,7 +584,7 @@ export class FgoV1_1Service {
     const {
       data: { user },
     } = await this.supabaseClient.auth.getUser();
-    return user?.id || null;
+    return user?.['id'] || null;
   }
 
   getMovements(limit: number, offset: number): Observable<FgoMovementView[]> {
@@ -596,7 +596,7 @@ export class FgoV1_1Service {
         .range(offset, offset + limit - 1),
     ).pipe(
       map((response) => {
-        if (response.error) {
+        if (response['error']) {
           return [];
         }
         return response.data as FgoMovementView[];
@@ -610,13 +610,13 @@ export class FgoV1_1Service {
   recalculateMetrics(): Observable<{ ok: boolean; error?: string }> {
     return from(this.supabaseClient.rpc('recalculate_fgo_metrics')).pipe(
       map((response) => {
-        if (response.error) {
-          return { ok: false, error: response.error.message };
+        if (response['error']) {
+          return { ok: false, error: response['error']['message'] };
         }
         return { ok: true };
       }),
       catchError((_error) => {
-        return of({ ok: false, error: _error.message });
+        return of({ ok: false, error: _error['message'] });
       }),
     );
   }
@@ -638,13 +638,13 @@ export class FgoV1_1Service {
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
-          return { ok: false, error: response.error.message };
+        if (response['error']) {
+          return { ok: false, error: response['error']['message'] };
         }
         return { ok: true, ref: response.data };
       }),
       catchError((_error) => {
-        return of({ ok: false, error: _error.message });
+        return of({ ok: false, error: _error['message'] });
       }),
     );
   }
@@ -656,19 +656,19 @@ export class FgoV1_1Service {
   }): Observable<{ ok: boolean; ref?: string; error?: string }> {
     return from(
       this.supabaseClient.rpc('pay_fgo_siniestro', {
-        p_booking_id: params.bookingId,
+        p_booking_id: params['bookingId'],
         p_amount_cents: params.amountCents,
-        p_description: params.description,
+        p_description: params['description'],
       }),
     ).pipe(
       map((response) => {
-        if (response.error) {
-          return { ok: false, error: response.error.message };
+        if (response['error']) {
+          return { ok: false, error: response['error']['message'] };
         }
         return { ok: true, ref: response.data };
       }),
       catchError((_error) => {
-        return of({ ok: false, error: _error.message });
+        return of({ ok: false, error: _error['message'] });
       }),
     );
   }

@@ -46,7 +46,7 @@ export class IncidentDetectorService {
       await LocalNotifications.requestPermissions();
 
       // Start accelerometer monitoring
-      await Motion.addListener('accel', (event) => {
+      await Motion.addListener('accel', (event: any) => {
         this.handleAccelerationEvent(event);
       });
 
@@ -139,7 +139,7 @@ export class IncidentDetectorService {
       .single();
 
     if (error) {
-      console.error('Error saving incident report:', error);
+      console['error']('Error saving incident report:', error);
       return;
     }
 
@@ -150,14 +150,14 @@ export class IncidentDetectorService {
         body: `Se detectó un impacto de ${gForce.toFixed(1)}G. ¿Ocurrió un accidente?`,
         id: Date.now(),
         extra: {
-          incident_id: incident.id,
+          incident_id: incident['id'],
           booking_id: this.currentBookingId
         }
       }]
     });
 
     // Send push to owner
-    await this.notifyOwner(incident.id);
+    await this.notifyOwner(incident['id']);
 
     console.warn('🚨 INCIDENT DETECTED:', {
       gForce,
@@ -185,7 +185,7 @@ export class IncidentDetectorService {
     } | null;
 
     const ownerFcmToken =
-      (booking as unknown as BookingJoin)?.car?.owner?.fcm_token ?? null;
+      (booking as unknown as BookingJoin)?.['car']?.owner?.fcm_token ?? null;
 
     if (ownerFcmToken) {
       // Send FCM notification via edge function

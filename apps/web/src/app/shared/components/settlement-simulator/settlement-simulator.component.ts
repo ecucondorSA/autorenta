@@ -2,7 +2,7 @@
 import {Component, Input, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { EligibilityResult, WaterfallBreakdown } from '../../../core/models/fgo-v1-1.model';
+import { EligibilityResult, WaterfallBreakdown } from '../../../core/models/fgo-v1-1['model']';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { SettlementService } from '../../../core/services/settlement.service';
 
@@ -33,18 +33,18 @@ export class SettlementSimulatorComponent {
 
   async simulate(): Promise<void> {
     this.simulating.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const result = await this.settlementService.simulateWaterfall(
-        this.bookingId,
+        this['bookingId'],
         this.claimAmountUsd,
       );
       this.simulationResult.set(result);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Error al simular';
-      this.error.set(errorMsg);
-      this.toastService.error('Error', errorMsg);
+      const errorMsg = err instanceof Error ? err['message'] : 'Error al simular';
+      this['error'].set(errorMsg);
+      this.toastService['error']('Error', errorMsg);
     } finally {
       this.simulating.set(false);
     }

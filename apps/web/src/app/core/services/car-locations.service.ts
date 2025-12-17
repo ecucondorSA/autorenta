@@ -127,7 +127,7 @@ export class CarLocationsService {
         try {
           // Check if available today
           const availableToday = await this.availabilityService.checkAvailability(
-            location.carId,
+            location['carId'],
             today.toISOString().split('T')[0],
             tomorrow.toISOString().split('T')[0],
           );
@@ -137,14 +137,14 @@ export class CarLocationsService {
           const dayAfterTomorrow = new Date(tomorrow);
           dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
           const availableTomorrow = await this.availabilityService.checkAvailability(
-            location.carId,
+            location['carId'],
             tomorrowDate.toISOString().split('T')[0],
             dayAfterTomorrow.toISOString().split('T')[0],
           );
 
           // Check if available for requested date range (stored for potential future use)
           if (options?.dateRange) {
-            await this.availabilityService.checkAvailability(location.carId, checkFrom, checkTo);
+            await this.availabilityService.checkAvailability(location['carId'], checkFrom, checkTo);
           }
 
           if (availableToday) {
@@ -158,7 +158,7 @@ export class CarLocationsService {
 
           // Check if available in next 7 days
           const nextAvailable = await this.availabilityService.getNextAvailableDate(
-            location.carId,
+            location['carId'],
             today.toISOString().split('T')[0],
           );
 
@@ -170,7 +170,7 @@ export class CarLocationsService {
 
             if (daysUntilAvailable <= 7) {
               // Get current booking end date
-              const blockedDates = await this.availabilityService.getBlockedDates(location.carId);
+              const blockedDates = await this.availabilityService.getBlockedDates(location['carId']);
               const currentBlock = blockedDates.find(
                 (block) => new Date(block.to) >= today && new Date(block.from) <= today,
               );
@@ -193,7 +193,7 @@ export class CarLocationsService {
             availableTomorrow: false,
           };
         } catch (error) {
-          console.error(`Error checking availability for car ${location.carId}:`, error);
+          console.error(`Error checking availability for car ${location['carId']}:`, error);
           return {
             ...location,
             availabilityStatus: 'unavailable' as const,
@@ -249,8 +249,8 @@ export class CarLocationsService {
       (payload: RealtimePostgresChangesPayload<Record<string, unknown>>) => {
         const newRecord = payload.new as Record<string, unknown> | undefined;
         const oldRecord = payload.old as Record<string, unknown> | undefined;
-        const newStatus = newRecord?.status;
-        const oldStatus = oldRecord?.status;
+        const newStatus = newRecord?.['status'];
+        const oldStatus = oldRecord?.['status'];
         if (newStatus === 'active' || oldStatus === 'active') {
           notifyAllSubscribers();
         }
@@ -467,8 +467,8 @@ export class CarLocationsService {
           const stats = (data || []) as Array<{ car_id: string; reviews_count: number | null }>;
           stats.forEach((stat) => {
             const reviewsCount = stat.reviews_count ?? 0;
-            result.set(stat.car_id, reviewsCount);
-            this.reviewsCache.set(stat.car_id, {
+            result.set(stat['car_id'], reviewsCount);
+            this.reviewsCache.set(stat['car_id'], {
               reviewsCount,
               expiresAt: now + this.reviewsCacheTtlMs,
             });
@@ -502,15 +502,15 @@ export class CarLocationsService {
     }
 
     const record = entry as Record<string, unknown>;
-    const car = (record.car ?? record) as Record<string, unknown>;
-    const meta = (record.meta ?? {}) as Record<string, unknown>;
-    const carId = String(record.car_id ?? car.id ?? meta.car_id ?? '');
+    const car = (record['car'] ?? record) as Record<string, unknown>;
+    const meta = (record['meta'] ?? {}) as Record<string, unknown>;
+    const carId = String(record['car_id'] ?? car['id'] ?? meta['car_id'] ?? '');
     if (!carId) {
       return null;
     }
 
-    const latRaw = record.lat ?? record.location_lat ?? car.location_lat;
-    const lngRaw = record.lng ?? record.location_lng ?? car.location_lng;
+    const latRaw = record['lat'] ?? record['location_lat'] ?? car['location_lat'];
+    const lngRaw = record['lng'] ?? record['location_lng'] ?? car['location_lng'];
     const lat = typeof latRaw === 'string' ? Number.parseFloat(latRaw) : (latRaw as number);
     const lng = typeof lngRaw === 'string' ? Number.parseFloat(lngRaw) : (lngRaw as number);
     if (
@@ -522,45 +522,45 @@ export class CarLocationsService {
       return null;
     }
 
-    const status = car.status ?? record.status;
+    const status = car['status'] ?? record['status'];
     if (status && status !== 'active') {
       return null;
     }
 
-    const title = String(car.title ?? record.title ?? 'Auto disponible');
-    const pricePerDayRaw = car.price_per_day ?? record.price_per_day ?? 0;
+    const title = String(car['title'] ?? record['title'] ?? 'Auto disponible');
+    const pricePerDayRaw = car['price_per_day'] ?? record['price_per_day'] ?? 0;
     const pricePerDay =
       typeof pricePerDayRaw === 'string'
         ? Number.parseFloat(pricePerDayRaw)
         : Number(pricePerDayRaw ?? 0);
     const currency = String(
-      car.currency ?? record.currency ?? environment.defaultCurrency ?? 'USD',
+      car['currency'] ?? record['currency'] ?? environment.defaultCurrency ?? 'USD',
     ).toUpperCase();
 
-    const cityRaw = car.location_city ?? record.city ?? record.location_city ?? null;
+    const cityRaw = car['location_city'] ?? record['city'] ?? record['location_city'] ?? null;
     const city = typeof cityRaw === 'string' ? cityRaw : null;
 
-    const stateRaw = car.location_state ?? record.state ?? record.location_state ?? null;
+    const stateRaw = car['location_state'] ?? record['state'] ?? record['location_state'] ?? null;
     const state = typeof stateRaw === 'string' ? stateRaw : null;
 
-    const countryRaw = car.location_country ?? record.country ?? record.location_country ?? null;
+    const countryRaw = car['location_country'] ?? record['country'] ?? record['location_country'] ?? null;
     const country = typeof countryRaw === 'string' ? countryRaw : null;
 
     const formattedAddressRaw =
-      car.location_formatted_address ?? record.location_formatted_address ?? null;
+      car['location_formatted_address'] ?? record['location_formatted_address'] ?? null;
     const formattedAddress = typeof formattedAddressRaw === 'string' ? formattedAddressRaw : null;
 
-    const updatedAt = String(record.updated_at ?? car.updated_at ?? new Date().toISOString());
+    const updatedAt = String(record['updated_at'] ?? car['updated_at'] ?? new Date().toISOString());
 
     // Get photo URL with fallback logic
     // La vista v_cars_with_main_photo ahora incluye photo_gallery como JSONB array
-    const photoUrlRaw = car.main_photo_url ?? record.main_photo_url ?? record.photo_url ?? null;
+    const photoUrlRaw = car['main_photo_url'] ?? record['main_photo_url'] ?? record['photo_url'] ?? null;
     let photoUrl =
       typeof photoUrlRaw === 'string' && photoUrlRaw.trim() ? photoUrlRaw.trim() : null;
 
     // Get photo_gallery from view (comes as JSONB, Supabase converts to array automatically)
     const photoGalleryRaw =
-      car.photo_gallery ?? record.photo_gallery ?? record.photoGallery ?? null;
+      car['photo_gallery'] ?? record['photo_gallery'] ?? record['photoGallery'] ?? null;
     let photoGallery: string[] | null = null;
 
     if (photoGalleryRaw) {
@@ -592,20 +592,20 @@ export class CarLocationsService {
     // If still no photo, photoUrl remains null (will use initials fallback in UI)
 
     const descriptionRaw =
-      car.description ??
-      record.description ??
-      (typeof meta.description === 'string' ? meta.description : '');
+      car['description'] ??
+      record['description'] ??
+      (typeof meta['description'] === 'string' ? meta['description'] : '');
     const description = this.buildSummary(typeof descriptionRaw === 'string' ? descriptionRaw : '');
 
     // Extract instant booking and rental terms
-    const autoApprovalRaw = car.auto_approval ?? record.auto_approval ?? meta.auto_approval ?? null;
+    const autoApprovalRaw = car['auto_approval'] ?? record['auto_approval'] ?? meta['auto_approval'] ?? null;
     const instantBooking =
       typeof autoApprovalRaw === 'boolean'
         ? autoApprovalRaw
         : autoApprovalRaw === 'true' || autoApprovalRaw === true;
 
     const minRentalDaysRaw =
-      car.min_rental_days ?? record.min_rental_days ?? meta.min_rental_days ?? null;
+      car['min_rental_days'] ?? record['min_rental_days'] ?? meta['min_rental_days'] ?? null;
     const minRentalDays =
       typeof minRentalDaysRaw === 'number'
         ? minRentalDaysRaw
@@ -614,7 +614,7 @@ export class CarLocationsService {
           : undefined;
 
     const maxRentalDaysRaw =
-      car.max_rental_days ?? record.max_rental_days ?? meta.max_rental_days ?? null;
+      car['max_rental_days'] ?? record['max_rental_days'] ?? meta['max_rental_days'] ?? null;
     const maxRentalDays =
       typeof maxRentalDaysRaw === 'number'
         ? maxRentalDaysRaw
@@ -623,14 +623,14 @@ export class CarLocationsService {
           : undefined;
 
     const depositRequiredRaw =
-      car.deposit_required ?? record.deposit_required ?? meta.deposit_required ?? null;
+      car['deposit_required'] ?? record['deposit_required'] ?? meta['deposit_required'] ?? null;
     const depositRequired =
       typeof depositRequiredRaw === 'boolean'
         ? depositRequiredRaw
         : depositRequiredRaw === 'true' || depositRequiredRaw === true;
 
     const depositAmountRaw =
-      car.deposit_amount ?? record.deposit_amount ?? meta.deposit_amount ?? null;
+      car['deposit_amount'] ?? record['deposit_amount'] ?? meta['deposit_amount'] ?? null;
     const depositAmount =
       typeof depositAmountRaw === 'number'
         ? depositAmountRaw
@@ -639,14 +639,14 @@ export class CarLocationsService {
           : undefined;
 
     const insuranceIncludedRaw =
-      car.insurance_included ?? record.insurance_included ?? meta.insurance_included ?? null;
+      car['insurance_included'] ?? record['insurance_included'] ?? meta['insurance_included'] ?? null;
     const insuranceIncluded =
       typeof insuranceIncludedRaw === 'boolean'
         ? insuranceIncludedRaw
         : insuranceIncludedRaw === 'true' || insuranceIncludedRaw === true;
 
     const usesDynamicPricingRaw =
-      car.uses_dynamic_pricing ?? record.uses_dynamic_pricing ?? meta.uses_dynamic_pricing ?? null;
+      car['uses_dynamic_pricing'] ?? record['uses_dynamic_pricing'] ?? meta['uses_dynamic_pricing'] ?? null;
     const usesDynamicPricing =
       typeof usesDynamicPricingRaw === 'boolean'
         ? usesDynamicPricingRaw

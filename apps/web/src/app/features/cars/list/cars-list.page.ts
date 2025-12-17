@@ -87,9 +87,9 @@ export class CarsListPage implements OnInit, OnDestroy {
   // Exponer parseFloat para el template
   readonly parseFloat = parseFloat;
 
-  getCarImageSrcset(imageUrl: string | null | undefined): string | null {
-    if (!imageUrl) return null;
-    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return null;
+  getCarImageSrcset(imageUrl: string | null | undefined): string {
+    if (!imageUrl) return '';
+    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return '';
 
     return '320w, 480w, 640w, 960w, 1280w';
   }
@@ -126,27 +126,27 @@ export class CarsListPage implements OnInit, OnDestroy {
     this.cars().map((car) => {
       const gallery = this.extractPhotoGallery(car);
       return {
-        carId: car.id,
+        carId: car['id'],
         title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
-        pricePerDay: car.price_per_day,
-        currency: car.currency || 'ARS',
-        lat: car.location_lat || 0,
-        lng: car.location_lng || 0,
-        updatedAt: car.updated_at || new Date().toISOString(),
-        city: car.location_city,
-        state: car.location_state,
-        country: car.location_country,
-        locationLabel: car.location_city || 'Sin ubicación',
+        pricePerDay: car['price_per_day'],
+        currency: car['currency'] || 'ARS',
+        lat: car['location_lat'] || 0,
+        lng: car['location_lng'] || 0,
+        updatedAt: car['updated_at'] || new Date().toISOString(),
+        city: car['location_city'],
+        state: car['location_state'],
+        country: car['location_country'],
+        locationLabel: car['location_city'] || 'Sin ubicación',
         photoUrl: gallery[0] ?? null,
         photoGallery: gallery,
-        description: car.description,
+        description: car['description'],
       };
     }),
   );
   readonly userLocation = signal<{ lat: number; lng: number } | null>(null);
   readonly hasFilters = computed(
     () =>
-      !!this.city() ||
+      !!this['city']() ||
       !!this.dateRange().from ||
       !!this.searchQuery() ||
       this.maxDistance() !== null ||
@@ -308,12 +308,12 @@ export class CarsListPage implements OnInit, OnDestroy {
       let distance: number | undefined;
       let distanceText: string | undefined;
 
-      if (userLoc && car.location_lat && car.location_lng) {
+      if (userLoc && car['location_lat'] && car['location_lng']) {
         distance = this.distanceCalculator.calculateDistance(
           userLoc.lat,
           userLoc.lng,
-          car.location_lat,
-          car.location_lng,
+          car['location_lat'],
+          car['location_lng'],
         );
 
         // Format distance text
@@ -332,10 +332,10 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
 
       // Filter by price range
-      if (minP !== null && car.price_per_day < minP) {
+      if (minP !== null && car['price_per_day'] < minP) {
         continue;
       }
-      if (maxP !== null && car.price_per_day > maxP) {
+      if (maxP !== null && car['price_per_day'] > maxP) {
         continue;
       }
 
@@ -349,10 +349,10 @@ export class CarsListPage implements OnInit, OnDestroy {
 
       // Filter by search query
       if (query) {
-        const brand = (car.brand_text_backup || car.brand || '').toLowerCase();
-        const model = (car.model_text_backup || car.model || '').toLowerCase();
-        const city = (car.location_city || '').toLowerCase();
-        const title = (car.title || '').toLowerCase();
+        const brand = (car.brand_text_backup || car['brand'] || '').toLowerCase();
+        const model = (car.model_text_backup || car['model'] || '').toLowerCase();
+        const city = (car['location_city'] || '').toLowerCase();
+        const title = (car['title'] || '').toLowerCase();
 
         if (!brand.includes(query) && !model.includes(query) &&
             !city.includes(query) && !title.includes(query)) {
@@ -364,7 +364,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         ...car,
         distance,
         distanceText,
-        image_url: this.extractPhotoGallery(car)[0] || null,
+        image_url: this.extractPhotoGallery(car)[0] || undefined,
       });
     }
 
@@ -376,7 +376,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     // STEP 2: Calculate premium segmentation (inline)
     // ============================================
     const prices = filteredCars
-      .map((car) => car.price_per_day)
+      .map((car) => car['price_per_day'])
       .filter((price) => typeof price === 'number' && !Number.isNaN(price));
 
     let premiumCars = filteredCars;
@@ -389,11 +389,11 @@ export class CarsListPage implements OnInit, OnDestroy {
       // Calculate scores inline
       const carScores = new Map<string, number>();
       for (const car of filteredCars) {
-        const priceNormalized = (car.price_per_day - minPrice) / priceRange;
+        const priceNormalized = (car['price_per_day'] - minPrice) / priceRange;
         const ratingNormalized = Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
         const score = priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
                       ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
-        carScores.set(car.id, score);
+        carScores.set(car['id'], score);
       }
 
       // Calculate threshold
@@ -403,7 +403,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
       // Filter by premium threshold
       premiumCars = filteredCars.filter((car) => {
-        const score = carScores.get(car.id) ?? 0;
+        const score = carScores.get(car['id']) ?? 0;
         return score >= threshold;
       });
     }
@@ -416,8 +416,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     switch (currentSortBy) {
       case 'price_asc':
         sorted.sort((a, b) => {
-          if (a.price_per_day !== b.price_per_day) {
-            return a.price_per_day - b.price_per_day;
+          if (a['price_per_day'] !== b['price_per_day']) {
+            return a['price_per_day'] - b['price_per_day'];
           }
           const ratingA = a.owner?.rating_avg ?? 0;
           const ratingB = b.owner?.rating_avg ?? 0;
@@ -432,8 +432,8 @@ export class CarsListPage implements OnInit, OnDestroy {
 
       case 'price_desc':
         sorted.sort((a, b) => {
-          if (b.price_per_day !== a.price_per_day) {
-            return b.price_per_day - a.price_per_day;
+          if (b['price_per_day'] !== a['price_per_day']) {
+            return b['price_per_day'] - a['price_per_day'];
           }
           const ratingA = a.owner?.rating_avg ?? 0;
           const ratingB = b.owner?.rating_avg ?? 0;
@@ -453,19 +453,19 @@ export class CarsListPage implements OnInit, OnDestroy {
           if (distanceA !== distanceB) {
             return distanceA - distanceB;
           }
-          if (a.price_per_day !== b.price_per_day) {
-            return a.price_per_day - b.price_per_day;
+          if (a['price_per_day'] !== b['price_per_day']) {
+            return a['price_per_day'] - b['price_per_day'];
           }
-          const dateA = new Date(a.created_at || 0).getTime();
-          const dateB = new Date(b.created_at || 0).getTime();
+          const dateA = new Date(a['created_at'] || 0).getTime();
+          const dateB = new Date(b['created_at'] || 0).getTime();
           return dateB - dateA;
         });
         break;
 
       case 'newest':
         sorted.sort((a, b) => {
-          const dateA = new Date(a.created_at || 0).getTime();
-          const dateB = new Date(b.created_at || 0).getTime();
+          const dateA = new Date(a['created_at'] || 0).getTime();
+          const dateB = new Date(b['created_at'] || 0).getTime();
           if (dateB !== dateA) {
             return dateB - dateA;
           }
@@ -474,7 +474,7 @@ export class CarsListPage implements OnInit, OnDestroy {
           if (ratingB !== ratingA) {
             return ratingB - ratingA;
           }
-          return a.price_per_day - b.price_per_day;
+          return a['price_per_day'] - b['price_per_day'];
         });
         break;
 
@@ -491,7 +491,7 @@ export class CarsListPage implements OnInit, OnDestroy {
           if (ratingB !== ratingA) {
             return ratingB - ratingA;
           }
-          return a.price_per_day - b.price_per_day;
+          return a['price_per_day'] - b['price_per_day'];
         });
         break;
     }
@@ -521,12 +521,12 @@ export class CarsListPage implements OnInit, OnDestroy {
       let distance: number | undefined;
       let distanceText: string | undefined;
 
-      if (userLoc && car.location_lat && car.location_lng) {
+      if (userLoc && car['location_lat'] && car['location_lng']) {
         distance = this.distanceCalculator.calculateDistance(
           userLoc.lat,
           userLoc.lng,
-          car.location_lat,
-          car.location_lng,
+          car['location_lat'],
+          car['location_lng'],
         );
 
         if (distance < 1) {
@@ -542,8 +542,8 @@ export class CarsListPage implements OnInit, OnDestroy {
         }
       }
 
-      if (minP !== null && car.price_per_day < minP) continue;
-      if (maxP !== null && car.price_per_day > maxP) continue;
+      if (minP !== null && car['price_per_day'] < minP) continue;
+      if (maxP !== null && car['price_per_day'] > maxP) continue;
 
       if (minR !== null) {
         const rating = car.owner?.rating_avg ?? 0;
@@ -551,10 +551,10 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
 
       if (query) {
-        const brand = (car.brand_text_backup || car.brand || '').toLowerCase();
-        const model = (car.model_text_backup || car.model || '').toLowerCase();
-        const city = (car.location_city || '').toLowerCase();
-        const title = (car.title || '').toLowerCase();
+        const brand = (car.brand_text_backup || car['brand'] || '').toLowerCase();
+        const model = (car.model_text_backup || car['model'] || '').toLowerCase();
+        const city = (car['location_city'] || '').toLowerCase();
+        const title = (car['title'] || '').toLowerCase();
 
         if (!brand.includes(query) && !model.includes(query) &&
             !city.includes(query) && !title.includes(query)) {
@@ -591,7 +591,7 @@ export class CarsListPage implements OnInit, OnDestroy {
     for (const car of this.premiumCars()) {
       const ratingAvg = car.rating_avg || 0;
       const ratingCount = car.rating_count || 0;
-      badges.set(car.id, {
+      badges.set(car['id'], {
         topRated: ratingAvg >= 4.5 && ratingCount >= 5,
         popular: ratingCount >= 10,
         instantBooking: ratingAvg >= 4.0 && ratingCount >= 3,
@@ -613,13 +613,13 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Filtrar solo autos activos con al menos una reseña (o rating_avg > 0)
     const eligibleCars = cars.filter(
-      (car) => car.status === 'active' && (car.rating_avg > 0 || car.rating_count > 0),
+      (car) => car['status'] === 'active' && (car.rating_avg > 0 || car.rating_count > 0),
     );
 
     if (!eligibleCars.length) {
       // Si no hay autos con reseñas, mostrar todos los activos
       return cars
-        .filter((car) => car.status === 'active')
+        .filter((car) => car['status'] === 'active')
         .sort((a, b) => {
           // Primero por distancia (si hay ubicación del usuario)
           const distanceA = a.distance ?? Number.POSITIVE_INFINITY;
@@ -630,12 +630,12 @@ export class CarsListPage implements OnInit, OnDestroy {
           }
 
           // Luego por precio (más barato primero)
-          if (a.price_per_day !== b.price_per_day) {
-            return a.price_per_day - b.price_per_day;
+          if (a['price_per_day'] !== b['price_per_day']) {
+            return a['price_per_day'] - b['price_per_day'];
           }
 
           // Finalmente por nombre
-          return (a.title || '').localeCompare(b.title || '');
+          return (a['title'] || '').localeCompare(b['title'] || '');
         })
         .slice(0, 15);
     }
@@ -668,12 +668,12 @@ export class CarsListPage implements OnInit, OnDestroy {
         }
 
         // Cuarto: Precio (más barato primero)
-        if (a.price_per_day !== b.price_per_day) {
-          return a.price_per_day - b.price_per_day;
+        if (a['price_per_day'] !== b['price_per_day']) {
+          return a['price_per_day'] - b['price_per_day'];
         }
 
         // Finalmente: Nombre alfabético
-        return (a.title || '').localeCompare(b.title || '');
+        return (a['title'] || '').localeCompare(b['title'] || '');
       })
       .slice(0, 15);
   });
@@ -694,8 +694,8 @@ export class CarsListPage implements OnInit, OnDestroy {
     const cars = this.cars();
     const uniqueCities = new Set<string>();
     cars.forEach(car => {
-      if (car.location_city) {
-        uniqueCities.add(car.location_city);
+      if (car['location_city']) {
+        uniqueCities.add(car['location_city']);
       }
     });
     this.carCities = Array.from(uniqueCities);
@@ -707,14 +707,14 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Sugerencias de marcas
     this.allBrandsAndModels
-      .filter((item) => item.brand && item.brand.toLowerCase().includes(lowerQuery))
-      .map((item) => item.brand)
+      .filter((item) => item['brand'] && item['brand'].toLowerCase().includes(lowerQuery))
+      .map((item) => item['brand'])
       .forEach((brand) => suggestions.add(brand));
 
     // Sugerencias de modelos
     this.allBrandsAndModels
-      .filter((item) => item.model && item.model.toLowerCase().includes(lowerQuery))
-      .map((item) => item.model)
+      .filter((item) => item['model'] && item['model'].toLowerCase().includes(lowerQuery))
+      .map((item) => item['model'])
       .forEach((model) => suggestions.add(model));
 
     // Sugerencias de ciudades
@@ -778,7 +778,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Update SEO meta tags
     this.metaService.updateCarsListMeta({
-      city: this.city() || undefined,
+      city: this['city']() || undefined,
     });
 
     // Initialize user location for distance-based pricing
@@ -846,14 +846,14 @@ export class CarsListPage implements OnInit, OnDestroy {
       // ✅ SPRINT 2 INTEGRATION: Usar getAvailableCars si hay fechas seleccionadas
       if (dateRange.from && dateRange.to) {
         const items = await this.carsService.getAvailableCars(dateRange.from, dateRange.to, {
-          city: this.city() ?? undefined,
+          city: this['city']() ?? undefined,
           limit: 100,
         });
         this.cars.set(items);
       } else {
         // Si no hay fechas, usar método tradicional
         const items = await this.carsService.listActiveCars({
-          city: this.city() ?? undefined,
+          city: this['city']() ?? undefined,
           from: dateRange.from ?? undefined,
           to: dateRange.to ?? undefined,
         });
@@ -875,14 +875,14 @@ export class CarsListPage implements OnInit, OnDestroy {
       }
     } catch (err) {
       this.loadError.set(this.getCarsLoadErrorMessage(err));
-      this.logger.error(
+      this.logger['error'](
         'Error loading cars',
         'CarsListPage',
         err instanceof Error ? err : new Error(getErrorMessage(err)),
       );
       // Mostrar mensaje al usuario en caso de error crítico
       if (err instanceof Error) {
-        console.error('Error al cargar autos:', err.message);
+        console['error']('Error al cargar autos:', err['message']);
       }
     } finally {
       this.loading.set(false);
@@ -928,7 +928,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         this.pullToRefresh.completeRefresh();
       }
     } catch (_error) {
-      this.logger.error(
+      this.logger['error'](
         'Error al refrescar autos',
         'CarsListPage',
         _error instanceof Error ? _error : new Error(getErrorMessage(_error)),
@@ -1127,7 +1127,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   onCityChange(value: string): void {
-    this.city.set(value || null);
+    this['city'].set(value || null);
     void this.loadCars();
   }
 
@@ -1265,7 +1265,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   readonly selectedCar = computed(() => {
     const carId = this.selectedCarId();
     if (!carId) return null;
-    return this.cars().find((c) => c.id === carId) || null;
+    return this.cars().find((c) => c['id'] === carId) || null;
   });
 
   /**
@@ -1273,14 +1273,14 @@ export class CarsListPage implements OnInit, OnDestroy {
    */
   readonly selectedCarPrice = computed(() => {
     const car = this.selectedCar();
-    return car?.price_per_day ?? null;
+    return car?.['price_per_day'] ?? null;
   });
 
   /**
    * Check urgent availability for a car
    */
   private async checkUrgentAvailability(carId: string): Promise<void> {
-    const car = this.cars().find((c) => c.id === carId);
+    const car = this.cars().find((c) => c['id'] === carId);
     if (!car || !car.region_id) return;
 
     try {
@@ -1368,7 +1368,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   }
 
   trackByCarId(_index: number, car: CarWithDistance): string {
-    return car.id;
+    return car['id'];
   }
 
   /**
@@ -1376,7 +1376,7 @@ export class CarsListPage implements OnInit, OnDestroy {
    * Returns unique identifier for each car in the list
    */
   trackByCar(_index: number, car: CarWithDistance): string {
-    return car.id;
+    return car['id'];
   }
 
   /**
@@ -1426,20 +1426,20 @@ export class CarsListPage implements OnInit, OnDestroy {
     instantBook?: boolean;
   } {
     // Extraer brand y model del title si no están disponibles
-    const titleParts = car.title.split(' ');
+    const titleParts = car['title'].split(' ');
     const brand = titleParts[0] || '';
     const model = titleParts.slice(1).join(' ') || '';
 
     return {
-      id: car.id,
-      title: car.title,
+      id: car['id'],
+      title: car['title'],
       brand,
       model,
-      images: car.photos?.map((photo) => photo.url) || [],
-      pricePerDay: car.price_per_day,
+      images: car.photos?.map((photo) => photo['url']) || [],
+      pricePerDay: car['price_per_day'],
       rating: car.rating_avg || 0,
       ratingCount: car.rating_count || 0,
-      location: `${car.location_city}, ${car.location_state}`,
+      location: `${car['location_city']}, ${car['location_state']}`,
       distanceKm: car.distance,
       instantBook: false, // FIXME: Add instant_booking field to Car model and database
     };
@@ -1559,7 +1559,7 @@ export class CarsListPage implements OnInit, OnDestroy {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.['url'] ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 

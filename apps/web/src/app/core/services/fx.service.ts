@@ -5,7 +5,7 @@ import {
   FxSnapshot,
   isFxExpired,
   isFxVariationExceeded,
-} from '../models/booking-detail-payment.model';
+} from '../models/booking-detail-payment['model']';
 import { ExchangeRateService } from './exchange-rate.service';
 import { SupabaseClientService } from './supabase-client.service';
 
@@ -51,7 +51,7 @@ export class FxService {
         .single(),
     ).pipe(
       map((response) => {
-        if (response.error || !response.data) {
+        if (response['error'] || !response.data) {
           return null;
         }
 
@@ -163,7 +163,7 @@ export class FxService {
    * Mapea FxSnapshotDb (de DB) a FxSnapshot (para componentes)
    */
   private mapFxSnapshotFromDb(db: Record<string, unknown>): FxSnapshot {
-    const timestamp = new Date(String(db.timestamp || db.created_at));
+    const timestamp = new Date(String(db.timestamp || db['created_at']));
     const expiresAt = new Date(timestamp);
     expiresAt.setDate(expiresAt.getDate() + 7);
 

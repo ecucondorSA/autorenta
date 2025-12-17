@@ -109,6 +109,7 @@
     "@supabase/supabase-js": "^2.87.3",
     "@toon-format/toon": "^1.4.0",
     "@types/node-fetch": "^2.6.13",
+    "@types/three": "^0.182.0",
     "dotenv": "^17.2.3",
     "fast-check": "^4.4.0",
     "gltf-pipeline": "^4.3.0",

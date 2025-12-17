@@ -40,14 +40,14 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     this.currentTourId = tourId;
 
     const stepOptions =
-      options.stepOptions && typeof options.stepOptions === 'object' ? options.stepOptions : {};
+      options['stepOptions'] && typeof options['stepOptions'] === 'object' ? options['stepOptions'] : {};
 
     const defaultOptions = {
       useModalOverlay:
-        typeof options.useModalOverlay === 'boolean' ? options.useModalOverlay : true,
+        typeof options['useModalOverlay'] === 'boolean' ? options['useModalOverlay'] : true,
       defaultStepOptions: {
         cancelIcon: { enabled: true },
-        canClickTarget: typeof options.canClickTarget === 'boolean' ? options.canClickTarget : true,
+        canClickTarget: typeof options['canClickTarget'] === 'boolean' ? options['canClickTarget'] : true,
         scrollTo: {
           behavior: 'smooth',
           block: 'center',
@@ -62,7 +62,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
 
     // Setup event listeners
     this.tour.on('show', (event) => {
-      const stepId = event.step?.id;
+      const stepId = event.step?.['id'];
       if (stepId) {
         const callbacks = this.stepCallbacks.get(stepId);
         callbacks?.onShow?.();
@@ -70,7 +70,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     });
 
     this.tour.on('hide', (event) => {
-      const stepId = event.step?.id;
+      const stepId = event.step?.['id'];
       if (stepId) {
         const callbacks = this.stepCallbacks.get(stepId);
         callbacks?.onHide?.();
@@ -80,7 +80,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     this.tour.on('complete', () => {
       const currentStep = this.tour?.getCurrentStep();
       if (currentStep) {
-        const callbacks = this.stepCallbacks.get(currentStep.id);
+        const callbacks = this.stepCallbacks.get(currentStep['id']);
         callbacks?.onComplete?.();
       }
     });
@@ -88,7 +88,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     this.tour.on('cancel', () => {
       const currentStep = this.tour?.getCurrentStep();
       if (currentStep) {
-        const callbacks = this.stepCallbacks.get(currentStep.id);
+        const callbacks = this.stepCallbacks.get(currentStep['id']);
         callbacks?.onCancel?.();
       }
     });
@@ -100,12 +100,12 @@ export class ShepherdAdapterService implements TourRendererAdapter {
     }
 
     if (callbacks) {
-      this.stepCallbacks.set(stepDef.id, callbacks);
+      this.stepCallbacks.set(stepDef['id'], callbacks);
     }
 
     const shepherdStep: StepOptions = {
-      id: stepDef.id,
-      title: stepDef.content.title,
+      id: stepDef['id'],
+      title: stepDef.content['title'],
       text: stepDef.content.html || this.formatText(stepDef.content.text),
     };
 
@@ -170,7 +170,7 @@ export class ShepherdAdapterService implements TourRendererAdapter {
   }
 
   getCurrentStepId(): string | undefined {
-    return this.tour?.getCurrentStep()?.id;
+    return this.tour?.getCurrentStep()?.['id'];
   }
 
   destroy(): void {

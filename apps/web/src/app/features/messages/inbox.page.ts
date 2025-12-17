@@ -75,7 +75,7 @@ import { UnreadMessagesService } from '../../core/services/unread-messages.servi
           </div>
         } @else {
           <div class="conversation-list">
-            @for (conv of conversations(); track conv.id) {
+            @for (conv of conversations(); track conv['id']) {
               <button
                 (click)="openConversation(conv)"
                 class="conversation-item"
@@ -247,7 +247,7 @@ export class InboxPage implements OnInit, OnDestroy {
     }
 
     await this.loadConversations();
-    this.subscribeToConversations(session.user.id);
+    this.subscribeToConversations(session['user']['id']);
   }
 
   ngOnDestroy(): void {
@@ -306,7 +306,7 @@ export class InboxPage implements OnInit, OnDestroy {
    * Optimizado: actualiza solo los campos necesarios sin refetch completo
    */
   private handleMessageChange(message: Message, userId: string): void {
-    const conversationId = message.car_id || message.booking_id;
+    const conversationId = message['car_id'] || message.booking_id;
     if (!conversationId) return;
 
     const otherUserId = message.sender_id === userId ? message.recipient_id : message.sender_id;
@@ -314,7 +314,7 @@ export class InboxPage implements OnInit, OnDestroy {
 
     // Actualizar solo los campos necesarios sin hacer refetch
     this.conversations.update((convs) => {
-      const index = convs.findIndex((c) => c.id === conversationKey);
+      const index = convs.findIndex((c) => c['id'] === conversationKey);
 
       if (index >= 0) {
         // Actualizar conversación existente
@@ -325,7 +325,7 @@ export class InboxPage implements OnInit, OnDestroy {
         updated[index] = {
           ...existingConv,
           lastMessage: message.body,
-          lastMessageAt: new Date(message.created_at),
+          lastMessageAt: new Date(message['created_at']),
           // Increment unread count if message is from other user and not read
           unreadCount:
             message.sender_id !== userId ? existingConv.unreadCount + 1 : existingConv.unreadCount,
@@ -354,17 +354,17 @@ export class InboxPage implements OnInit, OnDestroy {
       const updatedConversation = await this.messagesService.listConversations(userId, {
         limit: 1,
         offset: 0,
-        carId: message.car_id || undefined,
+        carId: message['car_id'] || undefined,
         bookingId: message.booking_id || undefined,
       });
 
-      const conv = updatedConversation.conversations.find((c) => c.id === conversationKey);
+      const conv = updatedConversation.conversations.find((c) => c['id'] === conversationKey);
       if (!conv) return;
 
       // Add new conversation to the list
       this.conversations.update((convs) => {
         // Check if it was already added (race condition)
-        if (convs.some((c) => c.id === conversationKey)) return convs;
+        if (convs.some((c) => c['id'] === conversationKey)) return convs;
         return [conv, ...convs].sort(
           (a, b) => b.lastMessageAt.getTime() - a.lastMessageAt.getTime(),
         );
@@ -377,7 +377,7 @@ export class InboxPage implements OnInit, OnDestroy {
   private async loadConversations(): Promise<void> {
     try {
       this.loading.set(true);
-      const userId = this.authService.session$()?.user.id;
+      const userId = this.authService.session$()?.['user']['id'];
       if (!userId) return;
 
       // Usar MessagesService que ahora usa MessagesRepository
@@ -390,7 +390,7 @@ export class InboxPage implements OnInit, OnDestroy {
       this.conversations.set(result.conversations);
     } catch (err) {
       console.error('Error loading conversations:', err);
-      this.error.set('Error inesperado');
+      this['error'].set('Error inesperado');
     } finally {
       this.loading.set(false);
     }
@@ -402,17 +402,17 @@ export class InboxPage implements OnInit, OnDestroy {
       userName: conv.otherUserName,
     };
 
-    if (conv.carId) {
-      params.carId = conv.carId;
-      params.carName = `${conv.carBrand} ${conv.carModel}`;
+    if (conv['carId']) {
+      params['carId'] = conv['carId'];
+      params['carName'] = `${conv.carBrand} ${conv.carModel}`;
 
       // Mark car conversation as read
-      this.unreadMessagesService.markConversationAsRead(conv.carId, 'car');
-    } else if (conv.bookingId) {
-      params['bookingId'] = conv.bookingId;
+      this.unreadMessagesService.markConversationAsRead(conv['carId'], 'car');
+    } else if (conv['bookingId']) {
+      params['bookingId'] = conv['bookingId'];
 
       // Mark booking conversation as read
-      this.unreadMessagesService.markConversationAsRead(conv.bookingId, 'booking');
+      this.unreadMessagesService.markConversationAsRead(conv['bookingId'], 'booking');
     }
 
     this.router.navigate(['/messages/chat'], { queryParams: params });
@@ -490,7 +490,7 @@ export class InboxPage implements OnInit, OnDestroy {
       }
 
       // Subir a Supabase Storage
-      const userId = session.user.id;
+      const userId = session['user']['id'];
       const timestamp = Date.now();
 
       const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
@@ -515,7 +515,7 @@ export class InboxPage implements OnInit, OnDestroy {
 
       if (error) {
         console.error('❌ Error de Supabase Storage:', error);
-        throw new Error(error.message || 'Error al subir archivo');
+        throw new Error(error['message'] || 'Error al subir archivo');
       }
 
       console.log(`✅ Archivo subido exitosamente:`, data);
@@ -536,9 +536,9 @@ export class InboxPage implements OnInit, OnDestroy {
       input.value = '';
     } catch (error) {
       console.error('Error subiendo archivo:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      const errorMessage = error instanceof Error ? error['message'] : 'Error desconocido';
 
-      this.notifications.error('Error al subir archivo', errorMessage, 5000);
+      this.notifications['error']('Error al subir archivo', errorMessage, 5000);
     } finally {
       this.loading.set(false);
     }

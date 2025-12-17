@@ -175,17 +175,17 @@ export class AdminService {
       if (!user) return false;
 
       const { data, error } = await this.supabase.rpc('is_admin', {
-        check_user_id: user.id,
+        check_user_id: user['id'],
       });
 
       if (error) {
-        this.logger.error('Error checking admin status', 'AdminService', error);
+        this.logger['error']('Error checking admin status', 'AdminService', error);
         return false;
       }
 
       return data === true;
     } catch (error) {
-      this.logger.error('Error checking admin status', 'AdminService', error as Error);
+      this.logger['error']('Error checking admin status', 'AdminService', error as Error);
       return false;
     }
   }
@@ -198,7 +198,7 @@ export class AdminService {
       const roles = await this.getAdminRoles();
       return roles.includes(role);
     } catch (error) {
-      this.logger.error(`Error checking role ${role}`, 'AdminService', error as Error);
+      this.logger['error'](`Error checking role ${role}`, 'AdminService', error as Error);
       return false;
     }
   }
@@ -213,7 +213,7 @@ export class AdminService {
       // Check if any of user's roles has this permission
       return roles.some((role) => PERMISSIONS_MATRIX[role]?.includes(permission));
     } catch (error) {
-      this.logger.error(`Error checking permission ${permission}`, 'AdminService', error as Error);
+      this.logger['error'](`Error checking permission ${permission}`, 'AdminService', error as Error);
       return false;
     }
   }
@@ -229,26 +229,26 @@ export class AdminService {
       if (!user) return [];
 
       // Use cache if available for same user
-      if (this.rolesCache && this.rolesCacheUserId === user.id) {
+      if (this.rolesCache && this.rolesCacheUserId === user['id']) {
         return this.rolesCache;
       }
 
       const { data, error } = await this.supabase.rpc('get_admin_roles', {
-        check_user_id: user.id,
+        check_user_id: user['id'],
       });
 
       if (error) {
-        this.logger.error('Error fetching admin roles', 'AdminService', error);
+        this.logger['error']('Error fetching admin roles', 'AdminService', error);
         return [];
       }
 
       // Update cache
       this.rolesCache = (data as AdminRole[]) ?? [];
-      this.rolesCacheUserId = user.id;
+      this.rolesCacheUserId = user['id'];
 
       return this.rolesCache;
     } catch (error) {
-      this.logger.error('Error fetching admin roles', 'AdminService', error as Error);
+      this.logger['error']('Error fetching admin roles', 'AdminService', error as Error);
       return [];
     }
   }
@@ -302,13 +302,13 @@ export class AdminService {
       });
 
       if (error) {
-        this.logger.error('Error logging admin action', 'AdminService', error);
+        this.logger['error']('Error logging admin action', 'AdminService', error);
         return null;
       }
 
       return data as string;
     } catch (error) {
-      this.logger.error('Error logging admin action', 'AdminService', error as Error);
+      this.logger['error']('Error logging admin action', 'AdminService', error as Error);
       return null;
     }
   }
@@ -354,7 +354,7 @@ export class AdminService {
       if (error) throw error;
       return (data ?? []) as AdminAuditLog[];
     } catch (error) {
-      this.logger.error('Error fetching audit log', 'AdminService', error as Error);
+      this.logger['error']('Error fetching audit log', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -382,7 +382,7 @@ export class AdminService {
       const adminUser: AdminUserInsert = {
         user_id: userId,
         role,
-        granted_by: user.id,
+        granted_by: user['id'],
         notes: notes ?? null,
       };
 
@@ -398,13 +398,13 @@ export class AdminService {
       await this.logAction({
         action: 'grant_admin_role',
         resourceType: 'admin_user',
-        resourceId: data.id,
+        resourceId: data['id'],
         details: { userId, role, notes },
       });
 
       return data as AdminUser;
     } catch (error) {
-      this.logger.error('Error granting admin role', 'AdminService', error as Error);
+      this.logger['error']('Error granting admin role', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -427,7 +427,7 @@ export class AdminService {
 
       const update: AdminUserUpdate = {
         revoked_at: new Date().toISOString(),
-        revoked_by: user.id,
+        revoked_by: user['id'],
         notes: reason ?? null,
       };
 
@@ -447,7 +447,7 @@ export class AdminService {
         details: { reason },
       });
     } catch (error) {
-      this.logger.error('Error revoking admin role', 'AdminService', error as Error);
+      this.logger['error']('Error revoking admin role', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -483,7 +483,7 @@ export class AdminService {
       if (error) throw error;
       return (data ?? []) as AdminUserWithProfile[];
     } catch (error) {
-      this.logger.error('Error listing admin users', 'AdminService', error as Error);
+      this.logger['error']('Error listing admin users', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -657,7 +657,7 @@ export class AdminService {
       .update({
         status: 'rejected',
         rejection_reason: rejectionReason,
-        approved_by: user.id,
+        approved_by: user['id'],
         approved_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -709,8 +709,8 @@ export class AdminService {
       const { user, ...rest } = typedItem;
       return {
         ...rest,
-        user_name: user?.full_name ?? undefined,
-        user_email: user?.email?.[0]?.email ?? undefined,
+        user_name: user?.['full_name'] ?? undefined,
+        user_email: user?.['email']?.[0]?.['email'] ?? undefined,
         bank_account: typedItem.bank_account,
       } as WithdrawalRequest;
     });
@@ -876,12 +876,12 @@ export class AdminService {
     try {
       const { error } = await this.supabase.functions.invoke('send-verification-approved-email', {
         body: {
-          user_id: response.user_id,
+          user_id: response['user_id'],
           user_email: response.user_email,
           user_name: response.user_name,
-          approved_level: response.approved_level,
-          previous_level: response.previous_level,
-          notes: response.notes,
+          approved_level: response['approved_level'],
+          previous_level: response['previous_level'],
+          notes: response['notes'],
         },
       });
 
@@ -905,10 +905,10 @@ export class AdminService {
     try {
       const { error } = await this.supabase.functions.invoke('send-verification-rejected-email', {
         body: {
-          user_id: response.user_id,
+          user_id: response['user_id'],
           user_email: response.user_email,
           user_name: response.user_name,
-          rejected_level: response.rejected_level,
+          rejected_level: response['rejected_level'],
           reason: reason,
         },
       });
@@ -958,16 +958,16 @@ export class AdminService {
 
     // Flatten nested data
     const typedData = data as unknown as Record<string, unknown>;
-    const user = typedData.user as Record<string, unknown>;
-    const booking = typedData.booking as Record<string, unknown>;
-    const car = booking?.car as Record<string, unknown>;
+    const user = typedData['user'] as Record<string, unknown>;
+    const booking = typedData['booking'] as Record<string, unknown>;
+    const car = booking?.['car'] as Record<string, unknown>;
 
     return {
       ...typedData,
-      user_name: user?.full_name,
-      user_email: ((user?.email as Array<{ email: string }>) ?? [])[0]?.email,
-      booking_total: booking?.total_amount ?? (booking?.total_cents as number) / 100,
-      car_title: car?.title,
+      user_name: user?.['full_name'],
+      user_email: ((user?.['email'] as Array<{ email: string }>) ?? [])[0]?.['email'],
+      booking_total: booking?.['total_amount'] ?? (booking?.['total_cents'] as number) / 100,
+      car_title: car?.['title'],
     } as RefundRequest;
   }
 
@@ -1003,18 +1003,18 @@ export class AdminService {
     return ((data ?? []) as unknown[]).map((item) => {
       const typedItem = item as Record<string, unknown>;
       const totalAmount =
-        (typedItem.total_amount as number) ?? (typedItem.total_cents as number) / 100;
-      const refundRequests = (typedItem.refund_requests as Array<Record<string, unknown>>) ?? [];
+        (typedItem['total_amount'] as number) ?? (typedItem['total_cents'] as number) / 100;
+      const refundRequests = (typedItem['refund_requests'] as Array<Record<string, unknown>>) ?? [];
 
       // Calculate already refunded amount
       const refundedAmount = refundRequests
-        .filter((r) => r.status !== 'rejected' && r.status !== 'failed')
+        .filter((r) => r['status'] !== 'rejected' && r['status'] !== 'failed')
         .reduce((sum, r) => sum + ((r.refund_amount as number) ?? 0), 0);
 
       const canRefund =
-        typedItem.payment_status === 'paid' ||
-        typedItem.payment_status === 'approved' ||
-        typedItem.status === 'confirmed';
+        typedItem['payment_status'] === 'paid' ||
+        typedItem['payment_status'] === 'approved' ||
+        typedItem['status'] === 'confirmed';
 
       return {
         ...typedItem,
@@ -1048,7 +1048,7 @@ export class AdminService {
       .update({
         status: 'rejected',
         rejection_reason: rejectionReason,
-        rejected_by: user.id,
+        rejected_by: user['id'],
         rejected_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -1100,20 +1100,20 @@ export class AdminService {
 
       return {
         users: (data?.users ?? []).map((u: Record<string, unknown>) => ({
-          userId: u.user_id as string,
-          fullName: u.full_name as string,
-          email: u.email as string,
-          balanceCents: u.balance_cents as number,
-          debtStartDate: u.debt_start_date as string,
-          daysSinceDebt: u.days_since_debt as number,
-          isSuspended: u.is_suspended as boolean,
-          suspendedAt: u.suspended_at as string | null,
-          suspensionReason: u.suspension_reason as string | null,
+          userId: u['user_id'] as string,
+          fullName: u['full_name'] as string,
+          email: u['email'] as string,
+          balanceCents: u['balance_cents'] as number,
+          debtStartDate: u['debt_start_date'] as string,
+          daysSinceDebt: u['days_since_debt'] as number,
+          isSuspended: u['is_suspended'] as boolean,
+          suspendedAt: u['suspended_at'] as string | null,
+          suspensionReason: u['suspension_reason'] as string | null,
         })),
         total: data?.total ?? 0,
       };
     } catch (error) {
-      this.logger.error('Error fetching users with debt', 'AdminService', error as Error);
+      this.logger['error']('Error fetching users with debt', 'AdminService', error as Error);
       throw error;
     }
   }
@@ -1150,7 +1150,7 @@ export class AdminService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error al suspender cuenta',
+        error: error instanceof Error ? error['message'] : 'Error al suspender cuenta',
       };
     }
   }
@@ -1182,7 +1182,7 @@ export class AdminService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error al reactivar cuenta',
+        error: error instanceof Error ? error['message'] : 'Error al reactivar cuenta',
       };
     }
   }
@@ -1205,7 +1205,7 @@ export class AdminService {
       return {
         canOperate: data?.can_operate ?? true,
         reason: data?.reason,
-        suspendedAt: data?.suspended_at,
+        suspendedAt: data?.['suspended_at'],
       };
     } catch {
       return { canOperate: true }; // Default to allowing operation on error

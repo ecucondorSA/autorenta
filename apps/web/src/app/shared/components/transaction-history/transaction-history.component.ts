@@ -56,7 +56,7 @@ export class TransactionHistoryComponent implements OnInit {
 
   readonly transactions = this.walletService.transactions;
   readonly isLoading = this.walletService.loading;
-  readonly error = this.walletService.error;
+  readonly error = this.walletService['error'];
 
   readonly expandedTransactionId = signal<string | null>(null);
   readonly filterType = signal<TransactionType>('all');
@@ -125,7 +125,7 @@ export class TransactionHistoryComponent implements OnInit {
     } else {
       this.expandedTransactionId.set(transactionId);
       // Load deposit status for deposit-related transactions
-      const transaction = this.filteredTransactions().find((t) => t.id === transactionId);
+      const transaction = this.filteredTransactions().find((t) => t['id'] === transactionId);
       if (transaction && transaction.booking_id && this.isDepositRelatedTransaction(transaction)) {
         void this.loadBookingDepositStatus(transaction.booking_id);
       }
@@ -142,7 +142,7 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   getTransactionStatus(transaction: WalletHistoryEntry): TransactionStatus {
-    return (transaction.status || 'pending') as TransactionStatus;
+    return (transaction['status'] || 'pending') as TransactionStatus;
   }
 
   formatCurrency(amountCents: number, currency = 'USD'): string {
@@ -264,7 +264,7 @@ export class TransactionHistoryComponent implements OnInit {
   }
 
   trackByTransactionId(_index: number, transaction: WalletHistoryEntry): string {
-    return transaction.id;
+    return transaction['id'];
   }
 
   /**

@@ -38,7 +38,7 @@ import {
   FilterState,
   MapFiltersComponent,
 } from '../../shared/components/map-filters/map-filters.component';
-import { SORT_OPTIONS, SortOption } from '../../core/models/marketplace.model';
+import { SORT_OPTIONS, SortOption } from '../../core/models/marketplace['model']';
 import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze-live-map.component';
 
 @Component({
@@ -86,28 +86,28 @@ export class ExplorePage implements OnInit, AfterViewInit {
   // Computed
   readonly selectedCar = computed<CarMapLocation | undefined>(() => {
     const id = this.selectedCarId();
-    return id ? this.carMapLocations().find((c) => c.carId === id) : undefined;
+    return id ? this.carMapLocations().find((c) => c['carId'] === id) : undefined;
   });
 
   readonly carMapLocations = computed(() => {
     return this.filteredCars.map((car) => {
       const gallery = this.extractPhotoGallery(car);
       return {
-        carId: car.id,
+        carId: car['id'],
         title: `${car.brand_text_backup || ''} ${car.model_text_backup || ''}`.trim(),
-        pricePerDay: car.price_per_day,
-        currency: car.currency || 'ARS',
+        pricePerDay: car['price_per_day'],
+        currency: car['currency'] || 'ARS',
         regionId: car.region_id,
-        lat: car.location_lat || 0,
-        lng: car.location_lng || 0,
-        updatedAt: car.updated_at || new Date().toISOString(),
-        city: car.location_city,
-        state: car.location_state,
-        country: car.location_country,
-        locationLabel: car.location_city || 'Sin ubicación',
+        lat: car['location_lat'] || 0,
+        lng: car['location_lng'] || 0,
+        updatedAt: car['updated_at'] || new Date().toISOString(),
+        city: car['location_city'],
+        state: car['location_state'],
+        country: car['location_country'],
+        locationLabel: car['location_city'] || 'Sin ubicación',
         photoUrl: gallery[0] ?? null,
         photoGallery: gallery,
-        description: car.description,
+        description: car['description'],
       };
     });
   });
@@ -164,7 +164,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
         });
       }
     } catch (error) {
-      console.error('Error getting location:', error);
+      console['error']('Error getting location:', error);
       const toast = await this.toastController.create({
         message: 'No pudimos obtener tu ubicación. Por favor verifica los permisos.',
         duration: 3000,
@@ -243,7 +243,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     // Navigate to booking checkout with car ID and payment method
     this.router.navigate(['/bookings/checkout'], {
       queryParams: {
-        carId: data.carId,
+        carId: data['carId'],
         paymentMethod: data.paymentMethod,
       },
     });
@@ -338,7 +338,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       return [];
     }
     return rawPhotos
-      .map((photo) => (typeof photo === 'string' ? photo : (photo?.url ?? null)))
+      .map((photo) => (typeof photo === 'string' ? photo : (photo?.['url'] ?? null)))
       .filter((url): url is string => typeof url === 'string' && url.length > 0);
   }
 
@@ -358,9 +358,9 @@ export class ExplorePage implements OnInit, AfterViewInit {
     // Texto libre
     if (query) {
       result = result.filter((car) => {
-        const city = car.location_city?.toLowerCase() || '';
-        const brand = car.brand?.toLowerCase() || car.brand_text_backup?.toLowerCase() || '';
-        const model = car.model?.toLowerCase() || car.model_text_backup?.toLowerCase() || '';
+        const city = car['location_city']?.toLowerCase() || '';
+        const brand = car['brand']?.toLowerCase() || car.brand_text_backup?.toLowerCase() || '';
+        const model = car['model']?.toLowerCase() || car.model_text_backup?.toLowerCase() || '';
         return brand.includes(query) || model.includes(query) || city.includes(query);
       });
     }
@@ -368,7 +368,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
     // Rango de precio
     if (filters.priceRange) {
       result = result.filter((car) => {
-        const price = car.price_per_day || 0;
+        const price = car['price_per_day'] || 0;
         return price >= filters.priceRange!.min && price <= filters.priceRange!.max;
       });
     }
@@ -381,9 +381,9 @@ export class ExplorePage implements OnInit, AfterViewInit {
     }
 
     // Transmisión
-    if (filters.transmission && filters.transmission.length > 0) {
+    if (filters['transmission'] && filters['transmission'].length > 0) {
       result = result.filter((car) =>
-        filters.transmission!.includes((car.transmission as string | undefined) ?? ''),
+        filters['transmission']!.includes((car['transmission'] as string | undefined) ?? ''),
       );
     }
 
@@ -402,7 +402,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
       const availabilityResults = await Promise.all(
         result.map(async (car) => {
           try {
-            const available = await this.availabilityService.checkAvailability(car.id, from, to);
+            const available = await this.availabilityService.checkAvailability(car['id'], from, to);
             return available ? car : null;
           } catch {
             return null;
@@ -415,8 +415,8 @@ export class ExplorePage implements OnInit, AfterViewInit {
     // Ordenamiento
     const sortOrder = this.sortOrder();
     result.sort((a, b) => {
-      const priceA = a.price_per_day || 0;
-      const priceB = b.price_per_day || 0;
+      const priceA = a['price_per_day'] || 0;
+      const priceB = b['price_per_day'] || 0;
       const ratingA = a.rating_avg || 0;
       const ratingB = b.rating_avg || 0;
       switch (sortOrder) {

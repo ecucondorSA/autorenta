@@ -113,7 +113,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
   /**
    * Error actual si existe
    */
-  readonly error = this.walletService.error;
+  readonly error = this.walletService['error'];
 
   /**
    * Depósitos pendientes
@@ -299,7 +299,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
 
       // 4. Mostrar mensaje al usuario si se confirmó algún depósito
       if (pollResult.confirmed > 0) {
-        alert(`✅ ${pollResult.message}\n\nTu balance se ha actualizado.`);
+        alert(`✅ ${pollResult['message']}\n\nTu balance se ha actualizado.`);
       } else if (this.pendingDeposits() > 0) {
         alert(
           '⏳ Tus depósitos aún están pendientes de aprobación en MercadoPago.\n\nPueden tardar algunos minutos. Te notificaremos cuando se acrediten.',
@@ -382,7 +382,7 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Usa la moneda del balance actual o USD por defecto
    */
   formatCurrency(amount: number): string {
-    const currency = this.balance()?.currency || 'USD';
+    const currency = this.balance()?.['currency'] || 'USD';
 
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
@@ -414,8 +414,8 @@ export class WalletBalanceCardComponent implements OnInit, OnDestroy {
    * Muestra un toast de confirmación cuando un depósito es confirmado vía realtime
    */
   private showDepositConfirmedToast(transaction: Record<string, unknown>): void {
-    const amount = typeof transaction.amount === 'number' ? transaction.amount : 0;
-    const currency = (transaction.currency as string) || 'USD';
+    const amount = typeof transaction['amount'] === 'number' ? transaction['amount'] : 0;
+    const currency = (transaction['currency'] as string) || 'USD';
 
     // Format amount
     const formattedAmount = new Intl.NumberFormat('es-AR', {

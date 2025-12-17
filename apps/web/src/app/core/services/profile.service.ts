@@ -59,21 +59,21 @@ export class ProfileService {
     const { data, error } = await this.supabase
       .from('profiles')
       .select('*')
-      .eq('id', user.id)
+      .eq('id', user['id'])
       .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
-        return this.createProfile(user.id, user.email ?? '');
+        return this.createProfile(user['id'], user['email'] ?? '');
       }
 
       if (error.code === '42501') {
         throw new Error(
-          `RLS Policy violation: Usuario ${user.id} no tiene acceso a su propio perfil. Error: ${error.message}`,
+          `RLS Policy violation: Usuario ${user['id']} no tiene acceso a su propio perfil. Error: ${error['message']}`,
         );
       }
 
-      throw new Error(`Error cargando perfil (${error.code}): ${error.message}`);
+      throw new Error(`Error cargando perfil (${error.code}): ${error['message']}`);
     }
 
     return data as UserProfile;
@@ -105,16 +105,16 @@ export class ProfileService {
 
     const payload: Record<string, unknown> = { ...updates };
 
-    if (updates.tos_accepted_at === true) {
-      payload.tos_accepted_at = new Date().toISOString();
+    if (updates['tos_accepted_at'] === true) {
+      payload['tos_accepted_at'] = new Date().toISOString();
     } else {
-      delete payload.tos_accepted_at;
+      delete payload['tos_accepted_at'];
     }
 
     const { data, error } = await this.supabase
       .from('profiles')
       .update(payload)
-      .eq('id', user.id)
+      .eq('id', user['id'])
       .select()
       .single();
 
@@ -145,7 +145,7 @@ export class ProfileService {
 
     const extension = file.name.split('.').pop() ?? 'jpg';
     const filename = `${uuidv4()}.${extension}`;
-    const filePath = `${user.id}/${filename}`;
+    const filePath = `${user['id']}/${filename}`;
 
     const { error: uploadError } = await this.supabase.storage
       .from('avatars')
@@ -200,13 +200,13 @@ export class ProfileService {
 
     if (error) {
       throw new Error(
-        `Error creando perfil (${error.code}): ${error.message}. Details: ${error.details}. Hint: ${error.hint}`,
+        `Error creando perfil (${error.code}): ${error['message']}. Details: ${error.details}. Hint: ${error.hint}`,
       );
     }
 
     console.log('✅ Perfil creado:', {
-      id: data?.id,
-      full_name: data?.full_name,
+      id: data?.['id'],
+      full_name: data?.['full_name'],
     });
 
     return data as UserProfile;
@@ -214,12 +214,12 @@ export class ProfileService {
 
   async canPublishCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.role === 'owner' || profile?.role === 'both';
+    return profile?.['role'] === 'owner' || profile?.['role'] === 'both';
   }
 
   async canBookCars(): Promise<boolean> {
     const profile = await this.getCurrentProfile();
-    return profile?.role === 'renter' || profile?.role === 'both';
+    return profile?.['role'] === 'renter' || profile?.['role'] === 'both';
   }
 
   async getMe(): Promise<UserProfile> {
@@ -264,7 +264,7 @@ export class ProfileService {
 
     const extension = file.name.split('.').pop() ?? 'jpg';
     const filename = `${uuidv4()}-${kind}.${extension}`;
-    const filePath = `${user.id}/${filename}`;
+    const filePath = `${user['id']}/${filename}`;
 
     const { error: uploadError } = await this.supabase.storage
       .from('documents')
@@ -280,7 +280,7 @@ export class ProfileService {
     const { data, error: insertError } = await this.supabase
       .from('user_documents')
       .insert({
-        user_id: user.id,
+        user_id: user['id'],
         kind,
         storage_path: filePath,
         status: 'pending',
@@ -296,7 +296,7 @@ export class ProfileService {
     try {
       await this.supabase.functions.invoke('verify-user-docs', {
         body: {
-          document_id: data.id,
+          document_id: data['id'],
           kind,
           trigger: 'document-upload',
         },
@@ -320,7 +320,7 @@ export class ProfileService {
     const { data, error } = await this.supabase
       .from('user_documents')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', user['id'])
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -385,7 +385,7 @@ export class ProfileService {
 
   async hasAcceptedTOS(): Promise<boolean> {
     const profile = await this.getMe();
-    return profile.tos_accepted_at !== null;
+    return profile['tos_accepted_at'] !== null;
   }
 
   async completeOnboarding(): Promise<void> {
@@ -400,10 +400,10 @@ export class ProfileService {
     const { error } = await this.supabase
       .from('profiles')
       .update({ onboarding: 'complete' })
-      .eq('id', user.id);
+      .eq('id', user['id']);
 
     if (error) {
-      console.error('Error completing onboarding:', error);
+      console['error']('Error completing onboarding:', error);
       throw error;
     }
   }
@@ -420,7 +420,7 @@ export class ProfileService {
     const { error } = await this.supabase
       .from('profiles')
       .update({ tos_accepted_at: new Date().toISOString() })
-      .eq('id', user.id);
+      .eq('id', user['id']);
 
     if (error) {
       throw error;
@@ -439,7 +439,7 @@ export class ProfileService {
     const { data, error } = await this.supabase
       .from('profile_audit_log')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', user['id'])
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -460,7 +460,7 @@ export class ProfileService {
     }
 
     await this.supabase.functions.invoke('export-user-data', {
-      body: { user_id: user.id },
+      body: { user_id: user['id'] },
     });
   }
 
@@ -474,7 +474,7 @@ export class ProfileService {
     }
 
     const { error } = await this.supabase.from('account_deletion_requests').insert({
-      user_id: user.id,
+      user_id: user['id'],
       reason: reason ?? 'User requested deletion',
       status: 'pending',
     });
@@ -500,12 +500,12 @@ export class ProfileService {
       });
 
       if (error) {
-        console.warn('Could not record strike (table might not exist):', error.message);
+        console.warn('Could not record strike (table might not exist):', error['message']);
       } else {
         console.log(`Strike added to user ${userId}: ${reason}`);
       }
     } catch (err) {
-      console.error('Error adding strike:', err);
+      console['error']('Error adding strike:', err);
     }
   }
 }

@@ -77,31 +77,31 @@ export class NotificationTemplatesService {
       case 'booking_confirmed':
         return {
           title: 'Reserva Confirmada',
-          body: `Tu reserva para ${sanitizedVars.carName} ha sido confirmada. Fecha: ${sanitizedVars.startDate}`,
-          action_url: `/bookings/${sanitizedVars.bookingId}`,
+          body: `Tu reserva para ${sanitizedVars['carName']} ha sido confirmada. Fecha: ${sanitizedVars.startDate}`,
+          action_url: `/bookings/${sanitizedVars['bookingId']}`,
           icon: 'checkmark-circle',
         };
 
       case 'booking_cancelled':
         return {
           title: 'Reserva Cancelada',
-          body: `Tu reserva para ${sanitizedVars.carName} ha sido cancelada.`,
-          action_url: `/bookings/${sanitizedVars.bookingId}`,
+          body: `Tu reserva para ${sanitizedVars['carName']} ha sido cancelada.`,
+          action_url: `/bookings/${sanitizedVars['bookingId']}`,
           icon: 'close-circle',
         };
 
       case 'payment_received':
         return {
           title: 'Pago Recibido',
-          body: `Hemos recibido tu pago de $${sanitizedVars.amount} para ${sanitizedVars.carName}`,
-          action_url: `/bookings/${sanitizedVars.bookingId}/payment`,
+          body: `Hemos recibido tu pago de $${sanitizedVars['amount']} para ${sanitizedVars['carName']}`,
+          action_url: `/bookings/${sanitizedVars['bookingId']}/payment`,
           icon: 'cash',
         };
 
       case 'payout_processed':
         return {
           title: 'Pago Procesado',
-          body: `Tu pago de $${sanitizedVars.amount} ha sido procesado exitosamente.`,
+          body: `Tu pago de $${sanitizedVars['amount']} ha sido procesado exitosamente.`,
           action_url: `/payouts`,
           icon: 'cash',
         };
@@ -109,7 +109,7 @@ export class NotificationTemplatesService {
       case 'new_review':
         return {
           title: 'Nueva Reseña',
-          body: `${sanitizedVars.reviewerName} te dejó una reseña de ${sanitizedVars.rating} estrellas en ${sanitizedVars.carName}`,
+          body: `${sanitizedVars.reviewerName} te dejó una reseña de ${sanitizedVars.rating} estrellas en ${sanitizedVars['carName']}`,
           action_url: sanitizedVars.reviewUrl,
           icon: 'star',
         };
@@ -133,23 +133,23 @@ export class NotificationTemplatesService {
       case 'car_approved':
         return {
           title: 'Auto Aprobado',
-          body: `Tu auto ${sanitizedVars.carName} ha sido aprobado y está disponible para rentar.`,
-          action_url: `/cars/${sanitizedVars.carId}`,
+          body: `Tu auto ${sanitizedVars['carName']} ha sido aprobado y está disponible para rentar.`,
+          action_url: `/cars/${sanitizedVars['carId']}`,
           icon: 'checkmark-circle',
         };
 
       case 'car_rejected':
         return {
           title: 'Auto Rechazado',
-          body: `Tu auto ${sanitizedVars.carName} no fue aprobado. Revisa los comentarios del equipo.`,
-          action_url: `/cars/${sanitizedVars.carId}/edit`,
+          body: `Tu auto ${sanitizedVars['carName']} no fue aprobado. Revisa los comentarios del equipo.`,
+          action_url: `/cars/${sanitizedVars['carId']}/edit`,
           icon: 'close-circle',
         };
 
       case 'verification_approved':
         return {
           title: 'Verificación Aprobada',
-          body: `Tu verificación de ${sanitizedVars.verificationType} ha sido aprobada.`,
+          body: `Tu verificación de ${sanitizedVars['verificationType']} ha sido aprobada.`,
           action_url: `/profile/verification`,
           icon: 'shield-checkmark',
         };
@@ -157,7 +157,7 @@ export class NotificationTemplatesService {
       case 'verification_rejected':
         return {
           title: 'Verificación Rechazada',
-          body: `Tu verificación de ${sanitizedVars.verificationType} fue rechazada. Por favor intenta de nuevo.`,
+          body: `Tu verificación de ${sanitizedVars['verificationType']} fue rechazada. Por favor intenta de nuevo.`,
           action_url: `/profile/verification`,
           icon: 'shield',
         };
@@ -165,7 +165,7 @@ export class NotificationTemplatesService {
       case 'wallet_deposit_confirmed':
         return {
           title: 'Depósito Confirmado',
-          body: `Tu depósito de $${sanitizedVars.amount} ha sido confirmado.`,
+          body: `Tu depósito de $${sanitizedVars['amount']} ha sido confirmado.`,
           action_url: `/wallet`,
           icon: 'wallet',
         };
@@ -173,7 +173,7 @@ export class NotificationTemplatesService {
       case 'wallet_withdrawal_completed':
         return {
           title: 'Retiro Completado',
-          body: `Tu retiro de $${sanitizedVars.amount} ha sido procesado.`,
+          body: `Tu retiro de $${sanitizedVars['amount']} ha sido procesado.`,
           action_url: `/wallet`,
           icon: 'cash',
         };

@@ -29,7 +29,7 @@ export interface User {
 }
 
 export function isUser(obj: unknown): obj is User {
-  return isObject(obj) && isString(obj.id) && isString(obj.email) && isString(obj.created_at);
+  return isObject(obj) && isString(obj['id']) && isString(obj['email']) && isString(obj['created_at']);
 }
 
 export interface Profile {
@@ -45,11 +45,11 @@ export interface Profile {
 export function isProfile(obj: unknown): obj is Profile {
   return (
     isObject(obj) &&
-    isString(obj.id) &&
-    isString(obj.email) &&
-    ['locador', 'locatario', 'ambos', 'admin'].includes(obj.role as string) &&
-    isBoolean(obj.is_admin) &&
-    isString(obj.created_at)
+    isString(obj['id']) &&
+    isString(obj['email']) &&
+    ['locador', 'locatario', 'ambos', 'admin'].includes(obj['role'] as string) &&
+    isBoolean(obj['is_admin']) &&
+    isString(obj['created_at'])
   );
 }
 
@@ -79,14 +79,14 @@ export interface Car {
 export function isCar(obj: unknown): obj is Car {
   return (
     isObject(obj) &&
-    isString(obj.id) &&
-    isString(obj.owner_id) &&
-    isString(obj.brand) &&
-    isString(obj.model) &&
-    isNumber(obj.year) &&
-    isString(obj.license_plate) &&
-    ['draft', 'pending', 'active', 'suspended'].includes(obj.status as string) &&
-    isString(obj.created_at)
+    isString(obj['id']) &&
+    isString(obj['owner_id']) &&
+    isString(obj['brand']) &&
+    isString(obj['model']) &&
+    isNumber(obj['year']) &&
+    isString(obj['license_plate']) &&
+    ['draft', 'pending', 'active', 'suspended'].includes(obj['status'] as string) &&
+    isString(obj['created_at'])
   );
 }
 
@@ -104,16 +104,16 @@ export interface Booking {
 export function isBooking(obj: unknown): obj is Booking {
   return (
     isObject(obj) &&
-    isString(obj.id) &&
-    isString(obj.car_id) &&
-    isString(obj.renter_id) &&
+    isString(obj['id']) &&
+    isString(obj['car_id']) &&
+    isString(obj['renter_id']) &&
     ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'].includes(
-      obj.status as string,
+      obj['status'] as string,
     ) &&
-    isString(obj.start_date) &&
-    isString(obj.end_date) &&
-    isNumber(obj.total_price) &&
-    isString(obj.created_at)
+    isString(obj['start_date']) &&
+    isString(obj['end_date']) &&
+    isNumber(obj['total_price']) &&
+    isString(obj['created_at'])
   );
 }
 
@@ -129,7 +129,7 @@ export function getErrorMessage(error: unknown): string {
     return error;
   }
   if (error && typeof error === 'object' && 'message' in error) {
-    return String(error.message);
+    return String((error as Record<string, unknown>)['message']);
   }
   return String(error);
 }

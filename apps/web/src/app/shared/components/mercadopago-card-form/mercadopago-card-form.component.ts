@@ -349,7 +349,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         // Max attempts reached - show error to user
         this.ngZone.run(() => {
           this.isInitializing.set(false);
-          const errorMsg = error instanceof Error ? error.message : String(error);
+          const errorMsg = error instanceof Error ? error['message'] : String(error);
           this.errorMessage.set(`No pudimos cargar el formulario de pago: ${errorMsg}`);
           this.cardError.emit('Error al inicializar Mercado Pago');
         });
@@ -411,7 +411,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
 
     } catch (error) {
       this.ngZone.run(() => {
-        const errorMsg = error instanceof Error ? error.message : 'Error al procesar la tarjeta';
+        const errorMsg = error instanceof Error ? error['message'] : 'Error al procesar la tarjeta';
         this.errorMessage.set(errorMsg);
         this.cardError.emit(errorMsg);
       });
@@ -424,8 +424,8 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   private handleBrickError(error: BrickError): void {
     let message = 'No pudimos procesar tu tarjeta. Intenta nuevamente.';
 
-    if (error?.message) {
-      message = error.message;
+    if (error?.['message']) {
+      message = error['message'];
     } else if (error?.cause) {
       message = error.cause;
     }

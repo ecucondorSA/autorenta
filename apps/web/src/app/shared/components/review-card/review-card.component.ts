@@ -83,13 +83,13 @@ export class ReviewCardComponent {
   }
 
   onFlagReview(): void {
-    if (this.review?.id) {
+    if (this.review?.['id']) {
       this.showFlagModal.set(true);
     }
   }
 
   onFlagged(): void {
-    this.flagReview.emit(this.review.id);
+    this.flagReview.emit(this.review['id']);
     this.showFlagModal.set(false);
   }
 

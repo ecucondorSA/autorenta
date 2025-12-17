@@ -44,7 +44,7 @@
       [initialFrom]="startDate() ? startDate()!.toISOString().split('T')[0] : null"
       [initialTo]="endDate() ? endDate()!.toISOString().split('T')[0] : null"
       [dailyPrice]="car?.price_per_day"
-      [carId]="car?.id"
+      [carId]="car?.id ?? null"
       [blockedRanges]="blockedRanges()"
       (rangeChange)="onDateRangeChange($event)"
     />
@@ -69,7 +69,7 @@
       Lugar de recogida
     </h3>
     <app-booking-location-form
-      [initialLocation]="pickupLocation()"
+      [initialLocation]="pickupLocation() ?? undefined"
       [label]="'¿Dónde quieres recoger el auto?'"
       [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
       [suggestions]="handoverPoints()"
@@ -97,7 +97,7 @@
         Lugar de devolución
       </h3>
       <app-booking-location-form
-        [initialLocation]="dropoffLocation()"
+        [initialLocation]="dropoffLocation() ?? undefined"
         [label]="'¿Dónde quieres devolver el auto?'"
         [placeholder]="'Ej: Aeropuerto, hotel, dirección...'"
         [suggestions]="handoverPoints()"

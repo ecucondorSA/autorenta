@@ -546,8 +546,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           this.preWarmComponentPoolDuringIdle();
         } catch (err) {
           console.error('[CarsMap] Error during post-load setup:', err);
-          const message = err instanceof Error ? err.message : String(err);
-          this.error.set(message || 'Error al inicializar el mapa');
+          const message = err instanceof Error ? err['message'] : String(err);
+          this['error'].set(message || 'Error al inicializar el mapa');
           this.loading.set(false);
         }
       });
@@ -557,21 +557,21 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         console.error('[CarsMap] Map error:', event);
 
         const errorStatus =
-          (event.error && 'status' in event.error ? event.error.status : undefined) ?? event.status;
+          (event['error'] && 'status' in event['error'] ? event['error']['status'] : undefined) ?? event['status'];
         const errorMessage =
-          (event.error && event.error.message) || ('message' in event ? event.message : '');
+          (event['error'] && event['error']['message']) || ('message' in event ? event['message'] : '');
 
         if (
           errorStatus === 401 ||
           (typeof errorMessage === 'string' && errorMessage.includes('401'))
         ) {
-          this.error.set(
+          this['error'].set(
             'Token de Mapbox inválido o expirado. Por favor, verifica tu NG_APP_MAPBOX_ACCESS_TOKEN en .env.local',
           );
-        } else if (event.error?.message) {
-          this.error.set(`Error al cargar el mapa: ${event.error.message}`);
+        } else if (event['error']?.['message']) {
+          this['error'].set(`Error al cargar el mapa: ${event['error']['message']}`);
         } else {
-          this.error.set(
+          this['error'].set(
             'Error al cargar el mapa. Por favor, verifica tu conexión e intenta nuevamente.',
           );
         }
@@ -580,12 +580,12 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       });
     } catch (err) {
       console.error('[CarsMap] Initialization error:', err);
-      const errorMessage = err instanceof Error ? err.message : String(err);
+      const errorMessage = err instanceof Error ? err['message'] : String(err);
 
       if (errorMessage.includes('WebGL')) {
-        this.error.set('El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.');
+        this['error'].set('El mapa requiere aceleración de hardware (WebGL). Por favor, actívala en tu navegador.');
       } else {
-        this.error.set(errorMessage || 'Error al inicializar el mapa');
+        this['error'].set(errorMessage || 'Error al inicializar el mapa');
       }
       this.loading.set(false);
     }
@@ -610,10 +610,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         coordinates: [parseFloat(car.lng.toFixed(6)), parseFloat(car.lat.toFixed(6))],
       },
       properties: {
-        carId: car.carId,
-        title: car.title,
+        carId: car['carId'],
+        title: car['title'],
         pricePerDay: car.pricePerDay,
-        currency: car.currency || 'ARS',
+        currency: car['currency'] || 'ARS',
         photoUrl: car.photoUrl,
         availabilityStatus: car.availabilityStatus || 'available',
       },
@@ -765,10 +765,10 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.map.on('click', 'cars-unclustered', (event: MapLayerMouseEvent) => {
       const carFeature = event.features?.[0] as MapboxGeoJSONFeature | undefined;
       const properties = (carFeature?.properties || {}) as Record<string, unknown>;
-      const carId = typeof properties.carId === 'string' ? (properties.carId as string) : undefined;
+      const carId = typeof properties['carId'] === 'string' ? (properties['carId'] as string) : undefined;
       if (carId) {
         this.carSelected.emit(carId);
-        const car = this.cars.find((c) => c.carId === carId);
+        const car = this.cars.find((c) => c['carId'] === carId);
         if (car) {
           this.selectedCar.set(car);
         }
@@ -898,6 +898,8 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (!this.map) return;
 
     const bounds = this.map.getBounds();
+    if (!bounds) return;
+
     this.boundsChange.emit({
       north: bounds.getNorth(),
       south: bounds.getSouth(),
@@ -1156,13 +1158,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     const carsToRender = visibleCars.slice(0, this.maxVisibleMarkers);
 
     // Update visible car IDs
-    this.visibleCarIds = new Set(carsToRender.map((car) => car.carId));
+    this.visibleCarIds = new Set(carsToRender.map((car) => car['carId']));
 
     // Render markers for visible cars
     carsToRender.forEach((car) => {
       const markerData = this.createCarMarker(car);
       if (markerData) {
-        this.carMarkers.set(car.carId, markerData);
+        this.carMarkers.set(car['carId'], markerData);
       }
     });
 
@@ -1179,13 +1181,13 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     if (!this.map) return;
 
     const newVisibleCars = this.getVisibleCarsInViewport();
-    const newVisibleCarIds = new Set(newVisibleCars.map((car) => car.carId));
+    const newVisibleCarIds = new Set(newVisibleCars.map((car) => car['carId']));
 
     // Find cars that are no longer visible (need to be removed)
     const carsToRemove = Array.from(this.visibleCarIds).filter((id) => !newVisibleCarIds.has(id));
 
     // Find cars that are newly visible (need to be added)
-    const carsToAdd = newVisibleCars.filter((car) => !this.visibleCarIds.has(car.carId));
+    const carsToAdd = newVisibleCars.filter((car) => !this.visibleCarIds.has(car['carId']));
 
     // Remove markers for cars that are no longer visible
     carsToRemove.forEach((carId) => {
@@ -1205,14 +1207,14 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     carsToAddLimited.forEach((car) => {
       const markerData = this.createCarMarker(car);
       if (markerData) {
-        this.carMarkers.set(car.carId, markerData);
+        this.carMarkers.set(car['carId'], markerData);
       }
     });
 
     // Update visible car IDs
     this.visibleCarIds = new Set([
       ...Array.from(this.visibleCarIds).filter((id) => !carsToRemove.includes(id)),
-      ...carsToAddLimited.map((car) => car.carId),
+      ...carsToAddLimited.map((car) => car['carId']),
     ]);
 
     // Update selected car highlight if needed
@@ -1305,7 +1307,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     groupedCars.forEach((car) => {
       const markerData = this.createCarMarker(car);
       if (markerData) {
-        this.carMarkers.set(car.carId, markerData);
+        this.carMarkers.set(car['carId'], markerData);
       }
     });
 
@@ -1384,7 +1386,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Set inputs
     componentRef.setInput('car', car);
-    componentRef.setInput('isSelected', this.selectedCarId === car.carId);
+    componentRef.setInput('isSelected', this.selectedCarId === car['carId']);
 
     // Show the element (it might have been hidden in pool)
     const markerElement = componentRef.location.nativeElement as HTMLElement;
@@ -1400,40 +1402,40 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Handle hover with delay (150ms) - create tooltip on-demand
     markerElement.addEventListener('mouseenter', () => {
-      const hideTimeout = this.hideTimeouts.get(car.carId);
+      const hideTimeout = this.hideTimeouts.get(car['carId']);
       if (hideTimeout) {
         clearTimeout(hideTimeout);
-        this.hideTimeouts.delete(car.carId);
+        this.hideTimeouts.delete(car['carId']);
       }
 
       const timeout = setTimeout(() => {
         this.showTooltipForCar(marker, car);
       }, 150);
-      this.hoverTimeouts.set(car.carId, timeout);
+      this.hoverTimeouts.set(car['carId'], timeout);
     });
 
     markerElement.addEventListener('mouseleave', () => {
-      const timeout = this.hoverTimeouts.get(car.carId);
+      const timeout = this.hoverTimeouts.get(car['carId']);
       if (timeout) {
         clearTimeout(timeout);
-        this.hoverTimeouts.delete(car.carId);
+        this.hoverTimeouts.delete(car['carId']);
       }
 
-      const existingHideTimeout = this.hideTimeouts.get(car.carId);
+      const existingHideTimeout = this.hideTimeouts.get(car['carId']);
       if (existingHideTimeout) {
         clearTimeout(existingHideTimeout);
       }
 
       // Delay hide so the user can move from marker to popup
       const hideTimeout = setTimeout(() => {
-        this.hideTooltipForCar(car.carId);
+        this.hideTooltipForCar(car['carId']);
       }, 250);
-      this.hideTimeouts.set(car.carId, hideTimeout);
+      this.hideTimeouts.set(car['carId'], hideTimeout);
     });
 
     // Handle click
     markerElement.addEventListener('click', () => {
-      this.carSelected.emit(car.carId);
+      this.carSelected.emit(car['carId']);
       this.selectedCar.set(car);
     });
 
@@ -1454,15 +1456,15 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Keep popup open while hovering it
     container.addEventListener('mouseenter', () => {
-      const hideTimeout = this.hideTimeouts.get(car.carId);
+      const hideTimeout = this.hideTimeouts.get(car['carId']);
       if (hideTimeout) {
         clearTimeout(hideTimeout);
-        this.hideTimeouts.delete(car.carId);
+        this.hideTimeouts.delete(car['carId']);
       }
     });
 
     container.addEventListener('mouseleave', () => {
-      this.hideTooltipForCar(car.carId);
+      this.hideTooltipForCar(car['carId']);
     });
 
     // Get component from pool or create new one
@@ -1470,7 +1472,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
     // Set inputs
     componentRef.setInput('car', car);
-    componentRef.setInput('selected', this.selectedCarId === car.carId);
+    componentRef.setInput('selected', this.selectedCarId === car['carId']);
     componentRef.setInput('userLocation', this.userLocation || undefined);
 
     // Subscribe to output events
@@ -1491,7 +1493,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     container.appendChild(element);
 
     // Store component reference
-    this.tooltipComponents.set(car.carId, componentRef);
+    this.tooltipComponents.set(car['carId'], componentRef);
 
     // Create popup with larger maxWidth for enhanced tooltip
     const popup = new this.mapboxgl.Popup({
@@ -1502,7 +1504,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }).setDOMContent(container);
 
     // Store popup reference
-    this.tooltipPopups.set(car.carId, popup);
+    this.tooltipPopups.set(car['carId'], popup);
 
     return popup;
   }
@@ -1511,19 +1513,19 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Show tooltip for a car on-demand
    */
   private showTooltipForCar(marker: MapboxMarker, car: CarMapLocation): void {
-    const hideTimeout = this.hideTimeouts.get(car.carId);
+    const hideTimeout = this.hideTimeouts.get(car['carId']);
     if (hideTimeout) {
       clearTimeout(hideTimeout);
-      this.hideTimeouts.delete(car.carId);
+      this.hideTimeouts.delete(car['carId']);
     }
 
     // Check if tooltip already exists
-    let popup = this.tooltipPopups.get(car.carId);
+    let popup = this.tooltipPopups.get(car['carId']);
 
     if (!popup) {
       // Create tooltip on-demand
       popup = this.createTooltipPopup(car);
-      this.tooltipPopups.set(car.carId, popup);
+      this.tooltipPopups.set(car['carId'], popup);
       marker.setPopup(popup);
     }
 
@@ -2131,7 +2133,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     markerData.componentRef.instance.isSelected = true;
 
     // Fly to selected car
-    const car = this.cars.find((c) => c.carId === carId);
+    const car = this.cars.find((c) => c['carId'] === carId);
     if (car && this.map) {
       this.map.flyTo({
         center: [car.lng, car.lat],
@@ -2524,7 +2526,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Public method to fly to car location with smooth animation
    */
   flyToCarLocation(carId: string): void {
-    const car = this.cars.find((c) => c.carId === carId);
+    const car = this.cars.find((c) => c['carId'] === carId);
     if (car && this.map && car.lat && car.lng) {
       this.map.flyTo({
         center: [car.lng, car.lat],
@@ -2572,7 +2574,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   private openBookingPanelForCarId(carId: string): void {
-    const car = this.cars.find((c) => c.carId === carId) ?? null;
+    const car = this.cars.find((c) => c['carId'] === carId) ?? null;
     if (!car) {
       return;
     }
@@ -2585,7 +2587,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
    * Handle booking confirmed
    */
   onBookingConfirmed(bookingData: BookingFormData): void {
-    const carId = this.selectedCarForBooking()?.carId;
+    const carId = this.selectedCarForBooking()?.['carId'];
     if (carId) {
       this.bookingConfirmed.emit({ carId, bookingData });
     }
@@ -2614,7 +2616,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       // Highlight current
       if (currentId) {
         this.highlightSelectedCar(currentId);
-        const car = this.cars.find((c) => c.carId === currentId);
+        const car = this.cars.find((c) => c['carId'] === currentId);
         if (car) {
           this.selectedCar.set(car);
         }

@@ -12,7 +12,7 @@ import type {
   WalletTransactionFilters,
   WalletInitiateDepositResponse,
   ExpiringCredit,
-} from '../models/wallet.model';
+} from '../models/wallet['model']';
 import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
@@ -55,7 +55,7 @@ export class WalletService {
 
   constructor() {
     this.supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
+      if (session?.['user']) {
         this.fetchBalance().catch(() => {});
         this.fetchTransactions().catch(() => {});
       }
@@ -105,13 +105,13 @@ export class WalletService {
    */
   private async doFetchBalance(): Promise<WalletBalance> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const {
         data: { session },
       } = await this.supabase.auth.getSession();
-      if (!session?.user) throw new Error('Usuario no autenticado');
+      if (!session?.['user']) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase.rpc('wallet_get_balance');
       if (error) throw error;
@@ -130,13 +130,13 @@ export class WalletService {
 
   async fetchTransactions(_filters?: WalletTransactionFilters): Promise<WalletTransaction[]> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
 
     try {
       const {
         data: { session },
       } = await this.supabase.auth.getSession();
-      if (!session?.user) throw new Error('Usuario no autenticado');
+      if (!session?.['user']) throw new Error('Usuario no autenticado');
 
       const { data, error } = await this.supabase
         .from('v_wallet_history')
@@ -185,26 +185,26 @@ export class WalletService {
 
   initiateDeposit(params: InitiateDepositParams): Observable<WalletInitiateDepositResponse> {
     this.loading.set(true);
-    this.error.set(null);
+    this['error'].set(null);
     return from(
       this.supabase.rpc('wallet_initiate_deposit', {
-        p_amount: params.amount,
+        p_amount: params['amount'],
         p_provider: params.provider ?? 'mercadopago',
-        p_description: params.description ?? 'Depósito a wallet',
+        p_description: params['description'] ?? 'Depósito a wallet',
         p_allow_withdrawal: params.allowWithdrawal ?? false,
       }),
     ).pipe(
       switchMap(async (response: PostgrestSingleResponse<WalletInitiateDepositResponse[]>) => {
-        if (response.error) throw response.error;
+        if (response['error']) throw response['error'];
         if (!response.data) throw new Error('No se pudo iniciar el depósito');
         const result = response.data[0];
-        if (!result.success) throw new Error(result.message);
+        if (!result.success) throw new Error(result['message']);
 
         if (params.provider === 'mercadopago') {
           const preference = await this.createMercadoPagoPreference(
             result.transaction_id,
-            params.amount,
-            params.description ?? 'Depósito a wallet',
+            params['amount'],
+            params['description'] ?? 'Depósito a wallet',
           );
           if (preference?.init_point) {
             result.payment_url = preference.init_point;
@@ -260,7 +260,7 @@ export class WalletService {
       return { success: true, transactionId: result.transaction_id };
     } catch (err) {
       this.handleError(err, 'Error al depositar fondos');
-      return { success: false, error: err instanceof Error ? err.message : 'Error desconocido' };
+      return { success: false, error: err instanceof Error ? err['message'] : 'Error desconocido' };
     }
   }
 
@@ -280,8 +280,8 @@ export class WalletService {
       },
     });
 
-    if (response.error)
-      throw new Error(response.error.message ?? 'No se pudo crear la preferencia de pago');
+    if (response['error'])
+      throw new Error(response['error']['message'] ?? 'No se pudo crear la preferencia de pago');
 
     return {
       init_point: response.data?.init_point,
@@ -306,7 +306,7 @@ export class WalletService {
       }),
     ).pipe(
       tap((response) => {
-        if (response.error) throw response.error;
+        if (response['error']) throw response['error'];
         this.fetchBalance().catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
@@ -321,7 +321,7 @@ export class WalletService {
       }),
     ).pipe(
       tap((response) => {
-        if (response.error) throw response.error;
+        if (response['error']) throw response['error'];
         this.fetchBalance().catch(() => {});
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
@@ -341,7 +341,7 @@ export class WalletService {
       }),
     ).pipe(
       tap((response) => {
-        if (response.error) throw response.error;
+        if (response['error']) throw response['error'];
         this.fetchBalance().catch(() => {});
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
@@ -357,18 +357,18 @@ export class WalletService {
     onBalanceChange: (balance: WalletBalance) => void,
   ): Promise<RealtimeChannel> {
     const { data } = await this.supabase.auth.getSession();
-    const user = data.session?.user;
+    const user = data.session?.['user'];
     if (!user) throw new Error('No autenticado');
 
     return this.supabase
-      .channel(`wallet:${user.id}`)
+      .channel(`wallet:${user['id']}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'wallet_ledger',
-          filter: `user_id=eq.${user.id}`,
+          filter: `user_id=eq.${user['id']}`,
         },
         async (payload) => {
           onTransaction(payload.new as WalletTransaction);
@@ -389,8 +389,8 @@ export class WalletService {
 
   async unsubscribeFromWalletChanges(): Promise<void> {
     const { data } = await this.supabase.auth.getSession();
-    if (!data.session?.user) return;
-    await this.supabase.removeChannel(this.supabase.channel(`wallet:${data.session.user.id}`));
+    if (!data.session?.['user']) return;
+    await this.supabase.removeChannel(this.supabase.channel(`wallet:${data.session['user']['id']}`));
   }
 
   // ============================================================================
@@ -432,7 +432,7 @@ export class WalletService {
       if (error) throw error;
       this.pendingDepositsCount.set(data?.length ?? 0);
     } catch (err: unknown) {
-      this.logger.error('Error al obtener depósitos pendientes', String(err));
+      this.logger['error']('Error al obtener depósitos pendientes', String(err));
     }
   }
 
@@ -476,13 +476,13 @@ export class WalletService {
       const { count: completedBookings } = await this.supabase
         .from('bookings')
         .select('*', { count: 'exact', head: true })
-        .eq('renter_id', user.id)
+        .eq('renter_id', user['id'])
         .eq('status', 'completed');
 
       const { count: totalClaims } = await this.supabase
         .from('booking_claims')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user.id)
+        .eq('user_id', user['id'])
         .in('status', ['approved', 'resolved']);
 
       const eligible = (completedBookings ?? 0) >= 10 && (totalClaims ?? 0) === 0;
@@ -547,14 +547,14 @@ export class WalletService {
       this.expiringCredits.set(credits);
       return credits;
     } catch (err) {
-      this.logger.error('Error al obtener créditos por vencer', String(err));
+      this.logger['error']('Error al obtener créditos por vencer', String(err));
       return [];
     }
   }
 
   private handleError(err: unknown, defaultMessage: string): void {
-    const errorMessage = err instanceof Error ? err.message : defaultMessage;
-    this.error.set({ message: errorMessage });
-    this.logger.error(defaultMessage, String(err));
+    const errorMessage = err instanceof Error ? err['message'] : defaultMessage;
+    this['error'].set({ message: errorMessage });
+    this.logger['error'](defaultMessage, String(err));
   }
 }

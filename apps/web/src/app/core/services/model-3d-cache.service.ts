@@ -68,7 +68,7 @@ export class Model3DCacheService {
 
     // Clone the model so each component gets its own instance
     // This allows multiple components to use the same cached model
-    return cached.model.clone();
+    return cached['model'].clone();
   }
 
   /**
@@ -76,7 +76,7 @@ export class Model3DCacheService {
    * WARNING: Do not modify this directly - use getCachedModel() for safe clones
    */
   getOriginalModel(src: string): ThreeGroup | null {
-    return this.cache.get(src)?.model ?? null;
+    return this.cache.get(src)?.['model'] ?? null;
   }
 
   /**
@@ -125,7 +125,7 @@ export class Model3DCacheService {
     const cached = this.cache.get(src);
     if (cached) {
       // Dispose of geometries and materials to free GPU memory
-      this.disposeModel(cached.model);
+      this.disposeModel(cached['model']);
       this.cache.delete(src);
       this._cachedModels.set(Array.from(this.cache.keys()));
       console.log(`[Model3DCache] Model cleared: ${src}`);
@@ -137,7 +137,7 @@ export class Model3DCacheService {
    */
   clearCache(): void {
     for (const cached of this.cache.values()) {
-      this.disposeModel(cached.model);
+      this.disposeModel(cached['model']);
     }
     this.cache.clear();
     this._cachedModels.set([]);
@@ -179,12 +179,12 @@ export class Model3DCacheService {
    * Dispose of a model's resources (free GPU memory)
    */
   private disposeModel(model: ThreeGroup): void {
-    model.traverse((child) => {
+    model.traverse((child: any) => {
       const mesh = child as import('three').Mesh;
       if (mesh.isMesh) {
         mesh.geometry?.dispose();
         if (Array.isArray(mesh.material)) {
-          mesh.material.forEach((m) => m.dispose());
+          mesh.material.forEach((m: any) => m.dispose());
         } else {
           mesh.material?.dispose();
         }
@@ -199,7 +199,7 @@ export class Model3DCacheService {
     let totalVertices = 0;
 
     for (const cached of this.cache.values()) {
-      cached.model.traverse((child) => {
+      cached['model'].traverse((child: any) => {
         const mesh = child as import('three').Mesh;
         if (mesh.isMesh && mesh.geometry) {
           const posAttr = mesh.geometry.getAttribute('position');

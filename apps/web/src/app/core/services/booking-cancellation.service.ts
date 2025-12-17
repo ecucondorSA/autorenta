@@ -45,7 +45,7 @@ export class BookingCancellationService {
       if (!statusValidation.allowed) {
         return {
           success: false,
-          error: statusValidation.error,
+          error: statusValidation['error'],
         };
       }
 
@@ -54,7 +54,7 @@ export class BookingCancellationService {
       if (!timingValidation.allowed) {
         return {
           success: false,
-          error: timingValidation.error,
+          error: timingValidation['error'],
         };
       }
 
@@ -65,7 +65,7 @@ export class BookingCancellationService {
           status: 'cancelled',
           updated_at: new Date().toISOString(),
         })
-        .eq('id', booking.id);
+        .eq('id', booking['id']);
 
       if (error) {
         return {
@@ -77,11 +77,11 @@ export class BookingCancellationService {
       // 4. ✅ P0-021 FIX: Process automatic refund if booking was paid
       // Always process refund for confirmed or in_progress bookings
       // If refund fails, log error but don't block cancellation
-      if (booking.status === 'confirmed' || booking.status === 'in_progress') {
+      if (booking['status'] === 'confirmed' || booking['status'] === 'in_progress') {
         try {
           await this.processRefund(booking, force, refundDestination);
         } catch (refundError) {
-          this.logger.error(
+          this.logger['error'](
             'Refund failed during cancellation - booking still cancelled',
             'BookingCancellationService',
             refundError instanceof Error ? refundError : new Error(getErrorMessage(refundError)),
@@ -96,7 +96,7 @@ export class BookingCancellationService {
 
       return { success: true };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Error inesperado al cancelar';
+      const errorMessage = error instanceof Error ? error['message'] : 'Error inesperado al cancelar';
       return {
         success: false,
         error: errorMessage,
@@ -123,7 +123,7 @@ export class BookingCancellationService {
         cancellation_reason: reason ?? 'Cancelled by user',
         wallet_status: booking.wallet_status === 'locked' ? 'refunded' : booking.wallet_status,
       })
-      .eq('id', booking.id);
+      .eq('id', booking['id']);
 
     if (error) throw error;
   }
@@ -151,7 +151,7 @@ export class BookingCancellationService {
         this.logger.info(
           'No refund amount calculated, skipping refund process',
           'BookingCancellationService',
-          { bookingId: booking.id },
+          { bookingId: booking['id'] },
         );
         return;
       }
@@ -159,24 +159,24 @@ export class BookingCancellationService {
       // 2. Procesar reembolso según el destino
       if (refundDestination === 'wallet') {
         // Reembolsar a la wallet del usuario
-        if (!booking.user_id) {
+        if (!booking['user_id']) {
           throw new Error('Booking has no user_id for wallet refund');
         }
         await this.walletService.depositFunds(
-          booking.user_id,
+          booking['user_id'],
           Math.round(refundAmount * 100), // Convertir a centavos
-          `Reembolso por cancelación de reserva ${booking.id.substring(0, 8)}`,
-          booking.id, // referenceId
+          `Reembolso por cancelación de reserva ${booking['id'].substring(0, 8)}`,
+          booking['id'], // referenceId
         );
         this.logger.info(
-          `Refunded ${refundAmount} ${booking.currency} to user wallet`,
+          `Refunded ${refundAmount} ${booking['currency']} to user wallet`,
           'BookingCancellationService',
-          { bookingId: booking.id },
+          { bookingId: booking['id'] },
         );
       } else {
         // Reembolsar a la tarjeta (MercadoPago)
         const metadata = booking.metadata;
-        const mercadopagoPaymentId = metadata?.mercadopago_payment_id;
+        const mercadopagoPaymentId = metadata?.['mercadopago_payment_id'];
 
         if (typeof mercadopagoPaymentId !== 'string') {
           this.logger.warn('No MercadoPago payment ID found for card refund');
@@ -202,7 +202,7 @@ export class BookingCancellationService {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              booking_id: booking.id,
+              booking_id: booking['id'],
               refund_type: refundType,
               amount: refundAmount, // Pasar el monto específico
               mercadopago_payment_id: mercadopagoPaymentId,
@@ -213,19 +213,19 @@ export class BookingCancellationService {
 
         if (!refundResponse.ok) {
           const errorData = await refundResponse.json().catch(() => ({}));
-          this.logger.error(
+          this.logger['error'](
             'Error processing refund via MercadoPago API',
             'BookingCancellationService',
             new Error(JSON.stringify(errorData)),
           );
-          throw new Error(errorData.message || 'Error en reembolso con MercadoPago');
+          throw new Error(errorData['message'] || 'Error en reembolso con MercadoPago');
         } else {
           const refundData = await refundResponse.json();
           this.logger.info('MercadoPago refund processed successfully', refundData);
         }
       }
     } catch (refundError) {
-      this.logger.error(
+      this.logger['error'](
         'Error during refund process',
         'BookingCancellationService',
         refundError instanceof Error ? refundError : new Error(getErrorMessage(refundError)),
@@ -248,7 +248,7 @@ export class BookingCancellationService {
     const startDate = new Date(booking.start_at);
     const now = new Date();
     const hoursUntilStart = (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
-    const totalAmount = parseFloat(booking.total_amount?.toString() || '0');
+    const totalAmount = parseFloat(booking['total_amount']?.toString() || '0');
 
     // Less than 24h: 25% penalty
     if (hoursUntilStart < 24) {
@@ -282,7 +282,7 @@ export class BookingCancellationService {
           updated_at: new Date().toISOString(),
           cancellation_reason: 'no_show',
         })
-        .eq('id', booking.id);
+        .eq('id', booking['id']);
 
       if (error) {
         return { success: false, error: 'Error al procesar No Show' };
@@ -290,18 +290,18 @@ export class BookingCancellationService {
 
       // 2. Procesar reembolso parcial (60% refund, 40% multa)
       // Si está pagada, reembolsar solo el 60%
-      if (booking.status === 'confirmed' && booking.total_amount) {
-        const totalAmount = parseFloat(booking.total_amount.toString());
+      if (booking['status'] === 'confirmed' && booking['total_amount']) {
+        const totalAmount = parseFloat(booking['total_amount'].toString());
         const penaltyAmount = totalAmount * 0.4; // Multa del 40%
         const refundAmount = totalAmount - penaltyAmount;
 
         // Llamar a función de reembolso parcial
         // Nota: Usamos refundType 'partial' y pasamos el monto a devolver
         const metadata = booking.metadata;
-        const paymentId = metadata?.mercadopago_payment_id;
+        const paymentId = metadata?.['mercadopago_payment_id'];
 
         if (paymentId) {
-          await this.callRefundApi(booking.id, paymentId as string, refundAmount);
+          await this.callRefundApi(booking['id'], paymentId as string, refundAmount);
         }
       }
 
@@ -312,7 +312,7 @@ export class BookingCancellationService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Error en proceso de No Show',
+        error: error instanceof Error ? error['message'] : 'Error en proceso de No Show',
       };
     }
   }
