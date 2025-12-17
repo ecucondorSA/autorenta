@@ -84,18 +84,22 @@ Deno.serve(async (req) => {
       .single();
 
     if (statsError) {
-      console.error('Error fetching payout stats:', statsError);
       // No es crítico, continuar
     }
 
-    const payoutStats = stats as unknown as PayoutStats;
-
-    console.log('📊 Payout Stats (last 7 days):', {
-      total: payoutStats?.total_payouts || 0,
-      completed: payoutStats?.completed_payouts || 0,
-      pending: payoutStats?.pending_payouts || 0,
-      failed: payoutStats?.failed_payouts || 0,
-    });
+    // Validate stats structure if available
+    let payoutStats: PayoutStats | null = null;
+    if (stats && typeof stats === 'object' && !Array.isArray(stats)) {
+      const statsRecord = stats as Record<string, unknown>;
+      if (
+        typeof statsRecord.total_payouts === 'number' &&
+        typeof statsRecord.completed_payouts === 'number' &&
+        typeof statsRecord.pending_payouts === 'number' &&
+        typeof statsRecord.failed_payouts === 'number'
+      ) {
+        payoutStats = stats as PayoutStats;
+      }
+    }
 
     // 3. Analizar payouts críticos
     const criticalCount = criticalPayouts?.length || 0;

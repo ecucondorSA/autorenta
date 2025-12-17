@@ -61,43 +61,43 @@
         <div class="rounded-lg border border-border-default bg-surface-base p-4">
           <h4 class="mb-3 font-semibold font-satoshi">Desglose Estimado</h4>
           <div class="space-y-2 text-sm">
-            @if (result.estimatedBreakdown.holdCaptured > 0) {
+            @if ((result.estimatedBreakdown?.holdCaptured ?? 0) > 0) {
               <div class="flex justify-between">
                 <span>Hold Capturado:</span>
                 <span class="font-medium"
-                  >${{ formatCurrency(result.estimatedBreakdown.holdCaptured / 100) }}</span
+                  >${{ formatCurrency((result.estimatedBreakdown?.holdCaptured ?? 0) / 100) }}</span
                 >
               </div>
             }
-            @if (result.estimatedBreakdown.walletDebited > 0) {
+            @if ((result.estimatedBreakdown?.walletDebited ?? 0) > 0) {
               <div class="flex justify-between">
                 <span>Wallet Debitado:</span>
                 <span class="font-medium"
-                  >${{ formatCurrency(result.estimatedBreakdown.walletDebited / 100) }}</span
+                  >${{ formatCurrency((result.estimatedBreakdown?.walletDebited ?? 0) / 100) }}</span
                 >
               </div>
             }
-            @if (result.estimatedBreakdown.extraCharged > 0) {
+            @if ((result.estimatedBreakdown?.extraCharged ?? 0) > 0) {
               <div class="flex justify-between">
                 <span>Adicional:</span>
                 <span class="font-medium"
-                  >${{ formatCurrency(result.estimatedBreakdown.extraCharged / 100) }}</span
+                  >${{ formatCurrency((result.estimatedBreakdown?.extraCharged ?? 0) / 100) }}</span
                 >
               </div>
             }
-            @if (result.estimatedBreakdown.fgoPaid > 0) {
+            @if ((result.estimatedBreakdown?.fgoPaid ?? 0) > 0) {
               <div class="flex justify-between">
                 <span>FGO Pagado:</span>
                 <span class="font-medium"
-                  >${{ formatCurrency(result.estimatedBreakdown.fgoPaid / 100) }}</span
+                  >${{ formatCurrency((result.estimatedBreakdown?.fgoPaid ?? 0) / 100) }}</span
                 >
               </div>
             }
-            @if (result.estimatedBreakdown.remainingUncovered > 0) {
+            @if ((result.estimatedBreakdown?.remainingUncovered ?? 0) > 0) {
               <div class="flex justify-between border-t pt-2 font-semibold text-error-text">
                 <span>Sin Cubrir:</span>
                 <span
-                  >${{ formatCurrency(result.estimatedBreakdown.remainingUncovered / 100) }}</span
+                  >${{ formatCurrency((result.estimatedBreakdown?.remainingUncovered ?? 0) / 100) }}</span
                 >
               </div>
             }

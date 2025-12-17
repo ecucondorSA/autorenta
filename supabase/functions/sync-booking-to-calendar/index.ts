@@ -73,7 +73,23 @@ serve(async (req) => {
       });
     }
 
-    const car = booking.cars as unknown as Car;
+    // Validate car data
+    if (!booking.cars || typeof booking.cars !== 'object' || Array.isArray(booking.cars)) {
+      return new Response(JSON.stringify({ error: 'Invalid car data' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const carRecord = booking.cars as Record<string, unknown>;
+    if (!carRecord.id || !carRecord.user_id) {
+      return new Response(JSON.stringify({ error: 'Car missing required fields' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const car = booking.cars as Car;
 
     // ========================================================================
     // Get Calendar Token for Car Owner (Locador)
