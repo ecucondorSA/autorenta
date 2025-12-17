@@ -179,12 +179,12 @@ export class Model3DCacheService {
    * Dispose of a model's resources (free GPU memory)
    */
   private disposeModel(model: ThreeGroup): void {
-    model.traverse((child: any) => {
+    model.traverse((child: import('three').Object3D) => {
       const mesh = child as import('three').Mesh;
       if (mesh.isMesh) {
         mesh.geometry?.dispose();
         if (Array.isArray(mesh.material)) {
-          mesh.material.forEach((m: any) => m.dispose());
+          mesh.material.forEach((m: import('three').Material) => m.dispose());
         } else {
           mesh.material?.dispose();
         }
@@ -199,7 +199,7 @@ export class Model3DCacheService {
     let totalVertices = 0;
 
     for (const cached of this.cache.values()) {
-      cached['model'].traverse((child: any) => {
+      cached['model'].traverse((child: import('three').Object3D) => {
         const mesh = child as import('three').Mesh;
         if (mesh.isMesh && mesh.geometry) {
           const posAttr = mesh.geometry.getAttribute('position');

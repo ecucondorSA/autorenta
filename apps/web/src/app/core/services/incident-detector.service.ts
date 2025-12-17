@@ -46,7 +46,7 @@ export class IncidentDetectorService {
       await LocalNotifications.requestPermissions();
 
       // Start accelerometer monitoring
-      await Motion.addListener('accel', (event: any) => {
+      await Motion.addListener('accel', (event: AccelListenerEvent) => {
         this.handleAccelerationEvent(event);
       });
 

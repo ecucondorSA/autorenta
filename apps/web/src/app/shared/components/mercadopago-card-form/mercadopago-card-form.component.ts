@@ -250,7 +250,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       try {
         await this.brickController.unmount();
         this.brickController = null;
-      } catch (err) {
+      } catch {
         // Silently catch unmount errors - component is being destroyed anyway
       }
     }

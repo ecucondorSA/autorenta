@@ -138,7 +138,7 @@ export class MercadoPagoScriptService {
           });
       };
 
-      script.onerror = (error: unknown) => {
+      script.onerror = (_error: unknown) => {
         clearTimeout(timeout);
         reject(new Error('Failed to load Mercado Pago script.'));
       };

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, signal, computed, effect, DestroyRef, OnInit,
+import {Component, EventEmitter, Input, Output, signal, computed, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
