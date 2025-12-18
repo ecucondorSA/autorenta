@@ -116,7 +116,8 @@
     </div>
   }
 
-  <!-- Category ratings -->
+  <!-- Category ratings (hidden in compact mode) -->
+  @if (!compact) {
   <div
     class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 p-4 bg-surface-base dark:bg-surface-base rounded-lg"
     >
@@ -258,6 +259,7 @@
       </div>
     }
   </div>
+  }
 
   <!-- Flag button -->
   @if (canFlag) {

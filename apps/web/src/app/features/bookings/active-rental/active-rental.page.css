@@ -1,0 +1,36 @@
+/* Active Rental Page Styles */
+
+.active-rental-page {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+/* Smooth transitions for panels */
+section {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Card hover effects */
+.bg-surface-raised {
+  @apply transition-shadow duration-200;
+}
+
+.bg-surface-raised:hover {
+  @apply shadow-md;
+}
+
+/* Emergency button pulse animation */
+button.bg-red-500 {
+  animation: pulse-emergency 2s infinite;
+}
+
+@keyframes pulse-emergency {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}

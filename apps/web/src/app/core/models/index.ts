@@ -53,6 +53,9 @@ export * from './dynamic-pricing.model';
 // Export Marketplace models
 export * from './marketplace.model';
 
+// Export Gemini AI models
+export * from './gemini.model';
+
 // Export ProfileService types
 export type { UpdateProfileData } from '../services/profile.service';
 
@@ -327,6 +330,16 @@ export interface Car {
   second_driver_cost?: number | null;
   max_anticipation_days?: number | null;
 
+  // Restrictions (behavior & geographic)
+  allow_smoking?: boolean;
+  allow_pets?: boolean;
+  allow_rideshare?: boolean;
+  allowed_provinces?: string[];
+  max_distance_km?: number | null;
+
+  // Insurance deductible (franquicia)
+  insurance_deductible_usd?: number | null;
+
   mileage: number;
   cancel_policy: CancelPolicy;
   photos?: CarPhoto[];
@@ -514,16 +527,20 @@ export interface Booking {
   car_year?: number;
   car_city?: string;
   car_province?: string;
+  car_image?: string;
   main_photo_url?: string;
   payment_status?: PaymentStatus;
   payment_provider?: PaymentProvider;
 
-  // Owner bookings view fields
+  // Bookings view fields (populated from joins)
   renter_name?: string;
   renter_avatar?: string;
+  owner_name?: string;
+  owner_avatar?: string;
 
   // ✅ INSURANCE SYSTEM: Campos de seguro P2P
   insurance_coverage_id?: string | null;
+  insurance_policy_number?: string | null; // Número de póliza de seguro
   insurance_premium_total?: number | null; // Total prima de seguro en centavos
   security_deposit_amount?: number | null; // Monto de depósito/franquicia en centavos
   deposit_held?: boolean | null; // Si el depósito está retenido

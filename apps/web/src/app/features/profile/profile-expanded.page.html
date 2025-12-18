@@ -529,6 +529,24 @@
         <!-- Renter Level Progress -->
         <app-renter-level-progress></app-renter-level-progress>
       </div>
+
+      <!-- AI Dashboard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <!-- AI Reputation Analysis -->
+        <app-ai-reputation-card></app-ai-reputation-card>
+        <!-- AI Car Recommendation -->
+        <app-ai-car-recommendation></app-ai-car-recommendation>
+      </div>
+
+      <!-- Booking History -->
+      <div class="mb-4">
+        <app-booking-history-list [limit]="5" [showViewMore]="true"></app-booking-history-list>
+      </div>
+
+      <!-- Referral Banner -->
+      <div class="mb-4">
+        <app-referral-banner></app-referral-banner>
+      </div>
     </div>
   }
 </div>

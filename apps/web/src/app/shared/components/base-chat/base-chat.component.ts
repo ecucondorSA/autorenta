@@ -3,7 +3,9 @@ import {Component, OnDestroy, OnInit, effect, inject, input, output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import type { AiBookingContext, ChatSuggestion } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';
+import { GeminiService } from '../../../core/services/gemini.service';
 import { Message, MessagesService } from '../../../core/services/messages.service';
 import { NotificationSoundService } from '../../../core/services/notification-sound.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -293,10 +295,58 @@ export interface ChatContext {
           }
         </div>
     
+        <!-- AI Suggestions Bar -->
+        @if (bookingContextForAI() && showSuggestions()) {
+          <div class="border-t border-border-muted bg-surface-elevated px-3 py-2 dark:bg-surface-secondary">
+            @if (loadingSuggestions()) {
+              <div class="flex items-center gap-2 text-text-secondary">
+                <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <span class="text-xs">Generando sugerencias...</span>
+              </div>
+            } @else if (aiSuggestions().length > 0) {
+              <div class="flex flex-wrap gap-2">
+                @for (suggestion of aiSuggestions(); track suggestion.id) {
+                  <button
+                    type="button"
+                    class="rounded-full border border-cta-default/30 bg-cta-default/10 px-3 py-1.5 text-xs text-cta-default transition-colors hover:bg-cta-default/20"
+                    (click)="useSuggestion(suggestion)"
+                  >
+                    {{ suggestion.text }}
+                  </button>
+                }
+              </div>
+            } @else {
+              <p class="text-xs text-text-muted">No hay sugerencias disponibles</p>
+            }
+          </div>
+        }
+
         <!-- Input estilo WhatsApp -->
         <div
           class="whatsapp-input flex items-center gap-2 bg-surface-elevated px-3 py-2 dark:bg-surface-secondary"
           >
+          <!-- AI Sparkles button (only if booking context available) -->
+          @if (bookingContextForAI()) {
+            <button
+              type="button"
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-colors"
+              [class.text-cta-default]="showSuggestions()"
+              [class.bg-cta-default/10]="showSuggestions()"
+              [class.text-text-secondary]="!showSuggestions()"
+              [class.hover:bg-surface-hover]="!showSuggestions()"
+              [disabled]="loadingSuggestions()"
+              (click)="toggleSuggestions()"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </button>
+          }
+
           <!-- Emoji button -->
           <button
             type="button"
@@ -370,6 +420,8 @@ export interface ChatContext {
 export class BaseChatComponent implements OnInit, OnDestroy {
   // Inputs
   readonly context = input.required<ChatContext>();
+  /** Contexto de booking para sugerencias IA (opcional) */
+  readonly bookingContextForAI = input<AiBookingContext | null>(null);
 
   // Outputs para analytics y eventos
   readonly messageSent = output<{ messageId: string; context: ChatContext }>();
@@ -381,6 +433,7 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   protected readonly authService = inject(AuthService);
   protected readonly notificationSound = inject(NotificationSoundService);
   protected readonly toastService = inject(ToastService);
+  protected readonly geminiService = inject(GeminiService);
 
   // State
   readonly messages = signal<Message[]>([]);
@@ -391,6 +444,11 @@ export class BaseChatComponent implements OnInit, OnDestroy {
   readonly blocked = signal(false);
   readonly notification = signal<string | null>(null);
   readonly recipientTyping = signal(false);
+
+  // AI Suggestions State
+  readonly aiSuggestions = signal<ChatSuggestion[]>([]);
+  readonly loadingSuggestions = signal(false);
+  readonly showSuggestions = signal(false);
 
   // Computed
   readonly currentUserId = signal<string | null>(null);
@@ -757,5 +815,63 @@ export class BaseChatComponent implements OnInit, OnDestroy {
    */
   protected onMenuClick(): void {
     this.menuClicked.emit();
+  }
+
+  // ============================================
+  // AI SUGGESTIONS
+  // ============================================
+
+  /**
+   * Toggle para mostrar/ocultar sugerencias
+   */
+  toggleSuggestions(): void {
+    const newState = !this.showSuggestions();
+    this.showSuggestions.set(newState);
+
+    if (newState && this.aiSuggestions().length === 0) {
+      this.loadAiSuggestions();
+    }
+  }
+
+  /**
+   * Carga sugerencias de respuesta usando IA
+   */
+  async loadAiSuggestions(): Promise<void> {
+    const aiContext = this.bookingContextForAI();
+    if (!aiContext) {
+      return;
+    }
+
+    this.loadingSuggestions.set(true);
+    this.aiSuggestions.set([]);
+
+    try {
+      // Convertir mensajes al formato esperado
+      const history = this.messages().slice(-10).map(m => ({
+        role: m.sender_id === this.currentUserId() ? 'user' as const : 'recipient' as const,
+        text: m.body,
+      }));
+
+      const suggestions = await this.geminiService.generateChatSuggestions({
+        conversationHistory: history,
+        userRole: aiContext.userRole,
+        bookingContext: aiContext,
+      });
+
+      this.aiSuggestions.set(suggestions);
+    } catch {
+      this.toastService.error('Error', 'No pudimos generar sugerencias');
+    } finally {
+      this.loadingSuggestions.set(false);
+    }
+  }
+
+  /**
+   * Usa una sugerencia de IA
+   */
+  useSuggestion(suggestion: ChatSuggestion): void {
+    this.newMessage.set(suggestion.text);
+    this.showSuggestions.set(false);
+    this.aiSuggestions.set([]);
   }
 }

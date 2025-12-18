@@ -46,8 +46,8 @@ export class AutoRefreshService {
       .pipe(
         switchMap(() => this.refreshWalletSafe()),
         takeUntilDestroyed(this.destroyRef),
-        catchError((err) => {
-          this.logger.error('Wallet refresh error', err);
+        catchError((err: unknown) => {
+          this.logger.error('Wallet refresh error', err instanceof Error ? err.message : String(err));
           return of(null);
         })
       )
@@ -66,8 +66,8 @@ export class AutoRefreshService {
       .pipe(
         switchMap(() => this.refreshBookingsSafe()),
         takeUntilDestroyed(this.destroyRef),
-        catchError((err) => {
-          this.logger.error('Bookings refresh error', err);
+        catchError((err: unknown) => {
+          this.logger.error('Bookings refresh error', err instanceof Error ? err.message : String(err));
           return of(null);
         })
       )
@@ -109,8 +109,8 @@ export class AutoRefreshService {
     this.isRefreshingWallet = true;
     return from(this.walletService.fetchBalance()).pipe(
       map(() => null),
-      catchError((error) => {
-        this.logger.error('Failed to refresh wallet', error);
+      catchError((error: unknown) => {
+        this.logger.error('Failed to refresh wallet', error instanceof Error ? error.message : String(error));
         return of(null);
       }),
       finalize(() => {
@@ -130,8 +130,8 @@ export class AutoRefreshService {
     this.isRefreshingBookings = true;
     return from(this.bookingsService.getMyBookings()).pipe(
       map(() => null),
-      catchError((error) => {
-        this.logger.error('Failed to refresh bookings', error);
+      catchError((error: unknown) => {
+        this.logger.error('Failed to refresh bookings', error instanceof Error ? error.message : String(error));
         return of(null);
       }),
       finalize(() => {
@@ -150,7 +150,7 @@ export class AutoRefreshService {
       this.isRefreshingWallet = true;
       await this.walletService.fetchBalance(true);
     } catch (error) {
-      this.logger.error('Failed to refresh wallet', error);
+      this.logger.error('Failed to refresh wallet', error instanceof Error ? error.message : String(error));
     } finally {
       this.isRefreshingWallet = false;
     }
@@ -166,7 +166,7 @@ export class AutoRefreshService {
       this.isRefreshingBookings = true;
       await this.bookingsService.getMyBookings();
     } catch (error) {
-      this.logger.error('Failed to refresh bookings', error);
+      this.logger.error('Failed to refresh bookings', error instanceof Error ? error.message : String(error));
     } finally {
       this.isRefreshingBookings = false;
     }

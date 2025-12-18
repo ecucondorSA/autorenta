@@ -58,11 +58,11 @@
     </div>
   }
 
-  <!-- Reviews list -->
+  <!-- Reviews list (compact mode for car detail page) -->
   @if (!loading() && reviewsCount() > 0) {
-    <div class="reviews-list stack-md">
+    <div class="reviews-list space-y-4">
       @for (review of reviews(); track review.id) {
-        <app-review-card [review]="review" [showCarTitle]="false" />
+        <app-review-card [review]="review" [showCarTitle]="false" [compact]="true" />
       }
     </div>
   } @else if (!loading() && reviewsCount() === 0) {

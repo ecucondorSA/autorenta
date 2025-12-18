@@ -1,0 +1,68 @@
+<!-- Trip Timer Component -->
+<div class="bg-surface-raised rounded-2xl p-5 shadow-lg border border-border-default">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-text-primary font-satoshi">Tiempo de Viaje</h3>
+    @if (isOverdue()) {
+      <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+        Vencido
+      </span>
+    } @else if (isUrgent()) {
+      <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium animate-pulse">
+        Poco tiempo
+      </span>
+    } @else {
+      <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+        En curso
+      </span>
+    }
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="relative h-3 bg-surface-hover rounded-full overflow-hidden mb-4">
+    <div
+      class="absolute inset-y-0 left-0 rounded-full transition-all duration-1000"
+      [class.bg-primary-500]="!isUrgent() && !isOverdue()"
+      [class.bg-amber-500]="isUrgent()"
+      [class.bg-red-500]="isOverdue()"
+      [style.width.%]="progress()"
+    ></div>
+  </div>
+
+  <!-- Time Remaining -->
+  <div class="text-center">
+    @if (isOverdue()) {
+      <p class="text-red-600 font-semibold text-lg mb-1">El tiempo de alquiler ha terminado</p>
+      <p class="text-text-secondary text-sm">Por favor devuelve el vehiculo lo antes posible</p>
+    } @else {
+      <p class="text-text-secondary text-sm mb-2">Tiempo restante para devolucion</p>
+      <div class="flex justify-center gap-3">
+        @if (timeRemaining().days > 0) {
+          <div class="text-center">
+            <span class="text-3xl font-bold text-text-primary font-satoshi">{{ timeRemaining().days }}</span>
+            <p class="text-xs text-text-secondary uppercase">dias</p>
+          </div>
+          <span class="text-2xl text-text-secondary self-start mt-1">:</span>
+        }
+        <div class="text-center">
+          <span class="text-3xl font-bold text-text-primary font-satoshi">{{ padZero(timeRemaining().hours) }}</span>
+          <p class="text-xs text-text-secondary uppercase">horas</p>
+        </div>
+        <span class="text-2xl text-text-secondary self-start mt-1">:</span>
+        <div class="text-center">
+          <span class="text-3xl font-bold text-text-primary font-satoshi">{{ padZero(timeRemaining().minutes) }}</span>
+          <p class="text-xs text-text-secondary uppercase">min</p>
+        </div>
+        <span class="text-2xl text-text-secondary self-start mt-1">:</span>
+        <div class="text-center">
+          <span class="text-3xl font-bold font-satoshi"
+                [class.text-text-primary]="!isUrgent()"
+                [class.text-amber-600]="isUrgent()">
+            {{ padZero(timeRemaining().seconds) }}
+          </span>
+          <p class="text-xs text-text-secondary uppercase">seg</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

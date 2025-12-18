@@ -1,0 +1,181 @@
+<!-- Active Rental Page -->
+<div class="active-rental-page min-h-screen bg-surface-base">
+  <!-- Header -->
+  <header class="sticky top-0 z-10 bg-surface-raised border-b border-border-default">
+    <div class="flex items-center gap-4 px-4 py-3">
+      <button
+        (click)="goBack()"
+        class="p-2 -ml-2 rounded-full hover:bg-surface-hover transition-colors"
+        aria-label="Volver"
+      >
+        <svg class="w-6 h-6 text-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="flex-1">
+        <h1 class="text-lg font-semibold text-text-primary font-satoshi">Viaje en Curso</h1>
+        <p class="text-sm text-text-secondary">{{ carTitle() }}</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="flex items-center justify-center min-h-[60vh]">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="p-6 text-center">
+      <div class="text-6xl mb-4">😕</div>
+      <h2 class="text-xl font-semibold text-text-primary mb-2">{{ error() }}</h2>
+      <button
+        (click)="goBack()"
+        class="mt-4 px-6 py-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors"
+      >
+        Volver
+      </button>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!loading() && !error() && booking()) {
+    <main class="pb-24">
+      <!-- Car Hero -->
+      <section class="relative h-48 bg-gradient-to-b from-primary-900 to-primary-700 overflow-hidden">
+        <img
+          [src]="carImageUrl()"
+          [alt]="carTitle()"
+          class="absolute inset-0 w-full h-full object-cover opacity-30"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-4">
+          <h2 class="text-2xl font-bold text-white font-satoshi">{{ carTitle() }}</h2>
+          <p class="text-white/80 text-sm">Alquiler activo</p>
+        </div>
+      </section>
+
+      <!-- Trip Timer -->
+      <section class="px-4 -mt-6 relative z-10">
+        <app-trip-timer
+          [startDate]="startDate()"
+          [endDate]="endDate()"
+        />
+      </section>
+
+      <!-- Digital Key (Mock) -->
+      <section class="px-4 mt-6">
+        <app-digital-key />
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="px-4 mt-6">
+        <h3 class="text-lg font-semibold text-text-primary mb-4 font-satoshi">Acciones Rápidas</h3>
+        <app-quick-actions
+          [ownerPhone]="ownerPhone()"
+          [hasLocation]="!!carLocation()"
+          (action)="onQuickAction($event)"
+        />
+      </section>
+
+      <!-- Emergency Section -->
+      <section class="px-4 mt-8">
+        <button
+          (click)="toggleEmergencyPanel()"
+          class="w-full py-4 px-6 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-3 transition-colors shadow-lg"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Emergencia SOS
+        </button>
+      </section>
+
+      <!-- Emergency Panel (Expandable) -->
+      @if (showEmergencyPanel()) {
+        <section class="px-4 mt-4">
+          <app-emergency-panel
+            [ownerName]="ownerName()"
+            [ownerPhone]="ownerPhone()"
+            [insuranceInfo]="insuranceInfo()"
+            (close)="showEmergencyPanel.set(false)"
+          />
+        </section>
+      }
+
+      <!-- Booking Info Card -->
+      <section class="px-4 mt-8">
+        <div class="bg-surface-raised rounded-2xl p-4 border border-border-default">
+          <h3 class="text-sm font-semibold text-text-secondary uppercase tracking-wide mb-3">
+            Información del Alquiler
+          </h3>
+          <dl class="space-y-3">
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Fecha de inicio</dt>
+              <dd class="text-text-primary font-medium">{{ startDate() | date:'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Fecha de devolución</dt>
+              <dd class="text-text-primary font-medium">{{ endDate() | date:'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+            <div class="flex justify-between">
+              <dt class="text-text-secondary">Propietario</dt>
+              <dd class="text-text-primary font-medium">{{ ownerName() }}</dd>
+            </div>
+            @if (booking()?.car_city) {
+              <div class="flex justify-between">
+                <dt class="text-text-secondary">Ubicación</dt>
+                <dd class="text-text-primary font-medium text-right max-w-[60%]">{{ booking()?.car_city }}{{ booking()?.car_province ? ', ' + booking()?.car_province : '' }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
+      </section>
+
+      <!-- AI Assistant Panels -->
+      <section class="px-4 mt-8">
+        <div class="rounded-2xl border border-border-default bg-surface-raised shadow-sm overflow-hidden">
+          <!-- Header -->
+          <div class="flex items-center gap-2 border-b border-border-default bg-gradient-to-r from-indigo-500/10 to-purple-500/10 p-4">
+            <svg class="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            <h3 class="text-sm font-semibold text-text-primary">Asistente IA</h3>
+          </div>
+
+          <!-- AI Panels -->
+          <app-ai-legal-panel
+            [booking]="booking()"
+            [isExpanded]="expandedAiPanel() === 'legal'"
+            (toggle)="toggleAiPanel('legal')"
+          />
+
+          <app-ai-trip-panel
+            [booking]="booking()"
+            [isExpanded]="expandedAiPanel() === 'trip'"
+            (toggle)="toggleAiPanel('trip')"
+          />
+
+          <app-ai-checklist-panel
+            [booking]="booking()"
+            inspectionType="check_out"
+            [isExpanded]="expandedAiPanel() === 'checklist'"
+            (toggle)="toggleAiPanel('checklist')"
+          />
+        </div>
+      </section>
+
+      <!-- Back to Booking Detail Link -->
+      <section class="px-4 mt-6 text-center">
+        <a
+          [routerLink]="['/bookings', booking()?.id]"
+          class="text-primary-500 hover:text-primary-600 font-medium"
+        >
+          Ver detalles completos de la reserva →
+        </a>
+      </section>
+    </main>
+  }
+</div>

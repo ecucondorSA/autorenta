@@ -224,18 +224,95 @@ export class PerformanceMonitoringService {
 
       // CLS (Cumulative Layout Shift)
       try {
+        // CLS should be calculated using session windows (web-vitals algorithm),
+        // not by summing shifts across the whole page lifetime.
         let clsScore = 0;
+        let sessionValue = 0;
+        let sessionStartTime = 0;
+        let lastEntryTime = 0;
+
+        let warnedPoorCls = false;
+        let lastLoggedCls = 0;
+        let lastSentCls = 0;
+        let sendTimer: ReturnType<typeof setTimeout> | null = null;
+
+        const scheduleClsSend = () => {
+          if (!environment.sentryDsn) return;
+
+          if (sendTimer) clearTimeout(sendTimer);
+          sendTimer = setTimeout(() => {
+            // Send latest value occasionally (not every entry)
+            void this.sendToSentry('cls', clsScore);
+            lastSentCls = clsScore;
+          }, 2000);
+        };
+
+        const finalizeCls = () => {
+          if (sendTimer) {
+            clearTimeout(sendTimer);
+            sendTimer = null;
+          }
+
+          // Final snapshot
+          console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+          void this.sendToSentry('cls', clsScore);
+
+          if (clsScore > 0.1 && !warnedPoorCls) {
+            warnedPoorCls = true;
+            console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
+            void this.sendWarningToSentry(`Poor CLS: ${clsScore.toFixed(4)}`, {
+              metric: 'cls',
+            });
+          }
+        };
+
+        // Flush CLS when the page is being hidden/unloaded.
+        const onVisibilityChange = () => {
+          if (document.visibilityState === 'hidden') {
+            finalizeCls();
+          }
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange, { once: false });
+        window.addEventListener('pagehide', finalizeCls, { once: true });
+
         const clsObserver = new PerformanceObserver((list) => {
           list.getEntries().forEach((entry) => {
             const clsEntry = entry as LayoutShiftEntry;
             if (!clsEntry.hadRecentInput) {
-              clsScore += clsEntry.value;
-              console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+              const entryTime = clsEntry.startTime;
 
-              // Send to Sentry as measurement (lazy-loaded)
-              void this.sendToSentry('cls', clsScore);
+              // New session window if:
+              // - gap since last entry >= 1s, or
+              // - session length >= 5s
+              const startsNewSession =
+                sessionValue === 0 ||
+                entryTime - lastEntryTime >= 1000 ||
+                entryTime - sessionStartTime >= 5000;
 
-              if (clsScore > 0.1) {
+              if (startsNewSession) {
+                sessionValue = clsEntry.value;
+                sessionStartTime = entryTime;
+              } else {
+                sessionValue += clsEntry.value;
+              }
+
+              lastEntryTime = entryTime;
+              clsScore = Math.max(clsScore, sessionValue);
+
+              // Throttle console noise: log only when CLS meaningfully changes.
+              if (clsScore - lastLoggedCls >= 0.01) {
+                lastLoggedCls = clsScore;
+                console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+              }
+
+              // Throttle Sentry updates.
+              if (clsScore - lastSentCls >= 0.05) {
+                scheduleClsSend();
+              }
+
+              // Warn once when crossing threshold.
+              if (clsScore > 0.1 && !warnedPoorCls) {
+                warnedPoorCls = true;
                 console.warn(`⚠️ CLS is above target (0.1): ${clsScore.toFixed(4)}`);
                 void this.sendWarningToSentry(`Poor CLS: ${clsScore.toFixed(4)}`, {
                   metric: 'cls',
@@ -264,17 +341,17 @@ export class PerformanceMonitoringService {
       platform: navigator.platform,
       memory: performanceMemory
         ? {
-            used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
-            total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
-            limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
-          }
+          used: (performanceMemory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+          total: (performanceMemory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
+          limit: (performanceMemory.jsHeapSizeLimit / 1048576).toFixed(2) + ' MB',
+        }
         : 'Not available',
       connection: networkConnection
         ? {
-            effectiveType: networkConnection.effectiveType,
-            downlink: `${networkConnection.downlink} Mbps`,
-            rtt: `${networkConnection.rtt} ms`,
-          }
+          effectiveType: networkConnection.effectiveType,
+          downlink: `${networkConnection.downlink} Mbps`,
+          rtt: `${networkConnection.rtt} ms`,
+        }
         : 'Not available',
       screen: {
         width: window.screen.width,

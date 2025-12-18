@@ -1,21 +1,21 @@
 import { Injectable, inject } from '@angular/core';
 import { Booking, BookingExtensionRequest } from '../models';
 import { getErrorMessage } from '../utils/type-guards';
-import { injectSupabase } from './supabase-client.service';
-import { PwaService } from './pwa.service';
-import { InsuranceService } from './insurance.service';
-import { LoggerService } from './logger.service';
-import { BookingWalletService } from './booking-wallet.service';
-import { WalletService } from './wallet.service';
 import { BookingApprovalService } from './booking-approval.service';
-import { BookingCompletionService } from './booking-completion.service';
-import { BookingValidationService } from './booking-validation.service';
 import { BookingCancellationService } from './booking-cancellation.service';
+import { BookingCompletionService } from './booking-completion.service';
 import { BookingUtilsService } from './booking-utils.service';
-import { TikTokEventsService } from './tiktok-events.service';
+import { BookingValidationService } from './booking-validation.service';
+import { BookingWalletService } from './booking-wallet.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
+import { InsuranceService } from './insurance.service';
+import { LoggerService } from './logger.service';
 import { ProfileService } from './profile.service';
+import { PwaService } from './pwa.service';
+import { injectSupabase } from './supabase-client.service';
+import { TikTokEventsService } from './tiktok-events.service';
+import { WalletService } from './wallet.service';
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 
@@ -92,16 +92,16 @@ export class BookingsService {
 
       this.logger.error(
         'request_booking RPC failed: ' +
-          JSON.stringify({
-            error,
-            carId,
-            start,
-            end,
-            message: errorMessage,
-            code: error.code,
-            details: error.details,
-            hint: error.hint,
-          }),
+        JSON.stringify({
+          error,
+          carId,
+          start,
+          end,
+          message: errorMessage,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        }),
       );
 
       // Fallback para entornos desactualizados o cambios de esquema
@@ -218,17 +218,17 @@ export class BookingsService {
 
       this.logger.error(
         'requestBookingWithLocation RPC failed: ' +
-          JSON.stringify({
-            error,
-            carId,
-            start,
-            end,
-            locationData,
-            message: errorMessage,
-            code: error.code,
-            details: error.details,
-            hint: error.hint,
-          }),
+        JSON.stringify({
+          error,
+          carId,
+          start,
+          end,
+          locationData,
+          message: errorMessage,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        }),
       );
 
       throw new Error(errorMessage);
@@ -751,7 +751,7 @@ export class BookingsService {
     // ✅ NEW: Use requestBookingWithLocation if location data is provided
     const requestBookingCallback = locationData
       ? (carId: string, startDate: string, endDate: string) =>
-          this.requestBookingWithLocation(carId, startDate, endDate, locationData)
+        this.requestBookingWithLocation(carId, startDate, endDate, locationData)
       : this.requestBooking.bind(this);
 
     return this.validationService.createBookingWithValidation(
@@ -800,7 +800,7 @@ export class BookingsService {
 
       const currentUser = (await this.supabase.auth.getUser()).data.user;
       if (!currentUser || currentUser.id !== booking.renter_id) {
-          return { success: false, error: 'Solo el arrendatario puede solicitar una extensión.' };
+        return { success: false, error: 'Solo el arrendatario puede solicitar una extensión.' };
       }
 
       // Calcular costo adicional ESTIMADO (puede variar al momento de la aprobación)
@@ -860,12 +860,12 @@ export class BookingsService {
         .single();
 
       if (existingRequest.error || !existingRequest.data) {
-          throw new Error('Solicitud de extensión no encontrada.');
+        throw new Error('Solicitud de extensión no encontrada.');
       }
 
       const request = existingRequest.data as BookingExtensionRequest;
       if (request.request_status !== 'pending') {
-          throw new Error('La solicitud ya no está pendiente.');
+        throw new Error('La solicitud ya no está pendiente.');
       }
 
       const booking = await this.getBookingById(request.booking_id);
@@ -873,26 +873,26 @@ export class BookingsService {
 
       const currentUser = (await this.supabase.auth.getUser()).data.user;
       if (!currentUser || currentUser.id !== booking.owner_id) {
-          throw new Error('Solo el propietario puede aprobar una extensión.');
+        throw new Error('Solo el propietario puede aprobar una extensión.');
       }
 
       // 1. Cobrar el costo adicional al renter (assuming this logic is correct from original)
       // This part needs to be carefully handled. The `additionalCost` in the request is estimated.
       // Re-calculate the cost or trust the estimated one. For now, we trust the estimated one.
       if (!request.estimated_cost_amount || !request.estimated_cost_currency) {
-          throw new Error('Faltan datos de costo estimado en la solicitud.');
+        throw new Error('Faltan datos de costo estimado en la solicitud.');
       }
 
       // Assuming a new endpoint or helper is needed to process additional payment.
       // For simplicity, let's assume `processRentalPayment` can handle additional charges.
       const chargeResult = await this.bookingWalletService.processRentalPayment(
-          booking,
-          Math.round(request.estimated_cost_amount * 100), // Convert to cents
-          `Extensión de reserva #${booking.id} (${new Date(request.new_end_at).toLocaleDateString()})`,
+        booking,
+        Math.round(request.estimated_cost_amount * 100), // Convert to cents
+        `Extensión de reserva #${booking.id} (${new Date(request.new_end_at).toLocaleDateString()})`,
       );
 
       if (!chargeResult.ok) {
-          throw new Error(`Fallo al cobrar extensión: ${chargeResult.error}`);
+        throw new Error(`Fallo al cobrar extensión: ${chargeResult.error}`);
       }
 
       // 2. Actualizar la solicitud de extensión
@@ -940,12 +940,12 @@ export class BookingsService {
         .single();
 
       if (existingRequest.error || !existingRequest.data) {
-          throw new Error('Solicitud de extensión no encontrada.');
+        throw new Error('Solicitud de extensión no encontrada.');
       }
 
       const request = existingRequest.data as BookingExtensionRequest;
       if (request.request_status !== 'pending') {
-          throw new Error('La solicitud ya no está pendiente.');
+        throw new Error('La solicitud ya no está pendiente.');
       }
 
       const booking = await this.getBookingById(request.booking_id);
@@ -953,17 +953,17 @@ export class BookingsService {
 
       const currentUser = (await this.supabase.auth.getUser()).data.user;
       if (!currentUser || currentUser.id !== booking.owner_id) {
-            throw new Error('Solo el propietario puede rechazar una extensión.');
+        throw new Error('Solo el propietario puede rechazar una extensión.');
       }
 
       const { error: updateRequestError } = await this.supabase
-          .from('booking_extension_requests')
-          .update({
-            request_status: 'rejected',
-            responded_at: new Date().toISOString(),
-            owner_response: reason,
-          })
-          .eq('id', requestId);
+        .from('booking_extension_requests')
+        .update({
+          request_status: 'rejected',
+          responded_at: new Date().toISOString(),
+          owner_response: reason,
+        })
+        .eq('id', requestId);
 
       if (updateRequestError) throw updateRequestError;
 
@@ -1211,18 +1211,18 @@ export class BookingsService {
    * Obtiene las solicitudes de extensión pendientes para una reserva.
    */
   async getPendingExtensionRequests(bookingId: string): Promise<BookingExtensionRequest[]> {
-      const { data, error } = await this.supabase
-          .from('booking_extension_requests')
-          .select('*')
-          .eq('booking_id', bookingId)
-          .eq('request_status', 'pending')
-          .order('requested_at', { ascending: false });
+    const { data, error } = await this.supabase
+      .from('booking_extension_requests')
+      .select('*')
+      .eq('booking_id', bookingId)
+      .eq('request_status', 'pending')
+      .order('requested_at', { ascending: false });
 
-      if (error) {
-          console.error('Error fetching pending extension requests:', error);
-          throw error;
-      }
-      return (data || []) as BookingExtensionRequest[];
+    if (error) {
+      console.error('Error fetching pending extension requests:', error);
+      throw error;
+    }
+    return (data || []) as BookingExtensionRequest[];
   }
 
   /**
@@ -1332,12 +1332,28 @@ export class BookingsService {
     try {
       const { data: car, error: carError } = await this.supabase
         .from('cars')
-        .select('id, brand, model, year, license_plate, images')
+        .select(
+          'id, title, brand, model, year, car_photos(id, url, stored_path, position, sort_order, created_at)',
+        )
         .eq('id', booking.car_id)
         .single();
 
       if (!carError && car) {
-        (booking as Booking).car = car as Partial<import('../models').Car>;
+        const rawPhotos = (car as unknown as { car_photos?: unknown }).car_photos;
+        const photos = Array.isArray(rawPhotos) ? (rawPhotos as Array<Record<string, unknown>>) : [];
+        const images = photos
+          .map((p) => {
+            const url = p['url'];
+            return typeof url === 'string' ? url : null;
+          })
+          .filter((url): url is string => Boolean(url));
+
+        (booking as Booking).car = {
+          ...(car as Partial<import('../models').Car>),
+          car_photos: photos as unknown as import('../models').CarPhoto[],
+          photos: photos as unknown as import('../models').CarPhoto[],
+          images,
+        } as Partial<import('../models').Car>;
       } else if (carError) {
         this.logger.error(
           'Car query error',
@@ -1741,9 +1757,9 @@ export class BookingsService {
     // 5. ❌ THROW ERROR - BLOCK booking creation
     throw new Error(
       `CRITICAL: Cannot create booking without insurance coverage. ` +
-        `Insurance activation failed after 3 attempts. ` +
-        `Error: ${errorMessage}. ` +
-        `Booking has been auto-cancelled for legal compliance.`,
+      `Insurance activation failed after 3 attempts. ` +
+      `Error: ${errorMessage}. ` +
+      `Booking has been auto-cancelled for legal compliance.`,
     );
   }
 

@@ -18,6 +18,8 @@ export class ReviewCardComponent {
   @Input() review!: Review;
   @Input() showCarTitle: boolean = false;
   @Input() currentUserId?: string;
+  /** When true, shows a compact card without detailed category ratings */
+  @Input() compact: boolean = false;
 
   @Output() flagReview = new EventEmitter<string>();
 

@@ -1,0 +1,15 @@
+name = "gemini-text-assistant"
+main = "src/index.ts"
+compatibility_date = "2024-12-20"
+account_id = "5b448192fe4b369642b68ad8f53a7603"
+
+[dev]
+port = 8799
+
+# Variables de entorno
+[vars]
+ENVIRONMENT = "production"
+GEMINI_TEXT_MODEL = "gemini-2.0-flash"
+
+# Secrets (configurar via wrangler secret put):
+# - GEMINI_API_KEY (required)

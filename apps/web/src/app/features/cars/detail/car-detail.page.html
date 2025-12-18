@@ -14,11 +14,11 @@
     <div class="flex items-center flex-wrap gap-2 md:gap-4 text-xs md:text-sm">
       <div class="flex items-center gap-1 font-semibold">
         <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
-        <span class="text-text-primary">{{ car()?.rating_avg || 'Nuevo' }}</span>
+        <span class="text-text-primary">{{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }}</span>
         <span class="text-text-secondary font-normal mx-1">·</span>
         <a href="#reviews"
           class="text-text-primary underline font-medium hover:text-text-secondary">{{
-          car()?.rating_count || 0 }} reseñas</a>
+          carStats()?.reviews_count || car()?.rating_count || 0 }} reseñas</a>
       </div>
       <div class="hidden sm:block w-1 h-1 bg-text-secondary rounded-full"></div>
       <div
@@ -117,7 +117,11 @@
       <div class="flex justify-between items-center pb-6 border-b border-border-default">
         <div>
           <h2 class="text-xl font-semibold text-text-primary mb-1 font-satoshi">
-            {{ displayTitle() }} de {{ car()?.owner?.full_name?.split(' ')?.[0] }}
+            @if (ownerFirstName()) {
+              {{ displayTitle() }} de {{ ownerFirstName() }}
+            } @else {
+              {{ displayTitle() }}
+            }
           </h2>
           <div class="text-text-secondary text-sm">
             {{ car()?.year }} · {{ car()?.seats }} plazas · {{ car()?.doors }} puertas ·
@@ -155,7 +159,11 @@
           <div>
             <p class="font-semibold text-text-primary">Check-in autónomo o presencial</p>
             <p class="text-text-secondary text-sm">
-              Coordina fácilmente la entrega con {{ car()?.owner?.full_name?.split(' ')?.[0] }}.
+              @if (ownerFirstName()) {
+                Coordina fácilmente la entrega con {{ ownerFirstName() }}.
+              } @else {
+                Coordina fácilmente la entrega con el propietario.
+              }
             </p>
           </div>
         </div>
@@ -189,11 +197,13 @@
             <app-icon name="settings" [size]="24" cssClass="text-text-secondary" />
             <span>{{ car()?.transmission | titlecase }}</span>
           </div>
+          @if (car()?.fuel_type) {
           <div
             class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
             <app-icon name="lightning" [size]="24" cssClass="text-text-secondary" />
             <span>{{ car()?.fuel_type | titlecase }}</span>
           </div>
+          }
           <div
             class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-raised transition-colors">
             <app-icon name="users" [size]="24" cssClass="text-text-secondary" />
@@ -206,18 +216,192 @@
           </div>
         </div>
       </div>
+
+      <!-- RENTAL CONDITIONS SECTION -->
+      <section class="rental-conditions py-8 border-t border-border-default mt-8">
+        <h3 class="text-xl font-semibold text-text-primary mb-6 font-satoshi">Condiciones del alquiler</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Kilometraje -->
+          <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+            <app-icon name="speedometer" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="block font-semibold text-text-primary">Kilometraje</span>
+              @if (car()?.mileage_limit === 0 || car()?.mileage_limit === null || car()?.mileage_limit === undefined) {
+                <span class="text-text-secondary text-sm">Ilimitado</span>
+              } @else {
+                <span class="text-text-secondary text-sm">{{ car()?.mileage_limit }} km/día</span>
+                @if (car()?.extra_km_price) {
+                  <span class="block text-xs text-text-muted">+${{ car()?.extra_km_price }} USD por km excedido</span>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- Depósito de garantía -->
+          <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+            <app-icon name="shield" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="block font-semibold text-text-primary">Depósito de garantía</span>
+              <span class="text-text-secondary text-sm">USD ${{ car()?.security_deposit_usd || 250 }}</span>
+              <span class="block text-xs text-text-muted">Reembolsable al finalizar sin daños</span>
+            </div>
+          </div>
+
+          <!-- Política de combustible -->
+          <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+            <app-icon name="lightning" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="block font-semibold text-text-primary">Combustible</span>
+              <span class="text-text-secondary text-sm">{{ getFuelPolicyLabel(car()?.fuel_policy) }}</span>
+            </div>
+          </div>
+
+          <!-- Política de cancelación -->
+          <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+            <app-icon name="calendar" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+            <div>
+              <span class="block font-semibold text-text-primary">Cancelación</span>
+              <span class="text-text-secondary text-sm">{{ getCancelPolicyLabel(car()?.cancel_policy) }}</span>
+            </div>
+          </div>
+
+          <!-- Conductor adicional (condicional) -->
+          @if (car()?.allow_second_driver !== false) {
+            <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+              <app-icon name="users" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="block font-semibold text-text-primary">Conductor adicional</span>
+                @if (car()?.allow_second_driver === true) {
+                  <span class="text-text-secondary text-sm">
+                    {{ car()?.second_driver_cost ? '+$' + car()?.second_driver_cost + ' USD' : 'Incluido sin costo' }}
+                  </span>
+                } @else {
+                  <span class="text-text-secondary text-sm">Consultar con propietario</span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Duración del alquiler (condicional) -->
+          @if (car()?.min_rental_days || car()?.max_rental_days) {
+            <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+              <app-icon name="clock" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="block font-semibold text-text-primary">Duración</span>
+                <span class="text-text-secondary text-sm">
+                  @if (car()?.min_rental_days && car()?.max_rental_days) {
+                    {{ car()?.min_rental_days }} a {{ car()?.max_rental_days }} días
+                  } @else if (car()?.min_rental_days) {
+                    Mínimo {{ car()?.min_rental_days }} días
+                  } @else if (car()?.max_rental_days) {
+                    Máximo {{ car()?.max_rental_days }} días
+                  }
+                </span>
+              </div>
+            </div>
+          }
+
+          <!-- Restricciones (Fase 2 - condicional) -->
+          @if (car()?.allow_smoking !== undefined || car()?.allow_pets !== undefined || car()?.allow_rideshare !== undefined) {
+            <div class="condition-card flex items-start gap-3 p-4 bg-surface-raised dark:bg-surface-secondary rounded-xl border border-border-default">
+              <app-icon name="info" [size]="24" cssClass="text-cta-default flex-shrink-0 mt-0.5" />
+              <div>
+                <span class="block font-semibold text-text-primary">Restricciones</span>
+                <div class="text-text-secondary text-sm space-y-1">
+                  @if (car()?.allow_smoking === false) {
+                    <span class="block">No fumar</span>
+                  }
+                  @if (car()?.allow_pets === false) {
+                    <span class="block">No mascotas</span>
+                  }
+                  @if (car()?.allow_rideshare === false) {
+                    <span class="block">No uso en apps (Uber/Cabify)</span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Términos específicos del propietario (expandible) -->
+        @if (car()?.terms_and_conditions) {
+          <div class="mt-6 p-4 bg-surface-base dark:bg-surface-base rounded-xl border border-border-default">
+            <button
+              (click)="showTerms.set(!showTerms())"
+              class="w-full flex items-center justify-between text-left font-semibold text-text-primary hover:text-cta-default transition-colors"
+            >
+              <span class="flex items-center gap-2">
+                <app-icon name="document" [size]="20" cssClass="text-cta-default" />
+                Términos específicos del propietario
+              </span>
+              <span class="text-sm">{{ showTerms() ? '▲' : '▼' }}</span>
+            </button>
+            @if (showTerms()) {
+              <p class="mt-3 text-sm text-text-secondary whitespace-pre-line animate-fadeIn">
+                {{ car()?.terms_and_conditions }}
+              </p>
+            }
+          </div>
+        }
+      </section>
+
       <!-- REVIEWS -->
-      <div id="reviews" class="py-8 border-t border-border-default mt-8">
+      <div id="reviews" class="py-8 border-t border-border-default">
         <h2
           class="text-2xl font-semibold text-text-primary mb-6 flex items-center gap-2 font-satoshi">
           <app-icon name="star-filled" [size]="24" cssClass="text-cta-default" />
-          {{ car()?.rating_avg || 'Nuevo' }} · {{ car()?.rating_count || 0 }} reseñas
+          {{ carStats()?.rating_avg || car()?.rating_avg || 'Nuevo' }} · {{ carStats()?.reviews_count || car()?.rating_count || 0 }} reseñas
         </h2>
         <!-- Nuevo componente de reviews -->
         @if (car()?.id) {
         <app-car-reviews-section [carId]="car()!.id" />
         }
       </div>
+
+      <!-- ============================================ -->
+      <!-- AI ASSISTANT PANELS -->
+      <!-- ============================================ -->
+      @if (car()) {
+      <div class="mt-8">
+        <div class="rounded-xl border border-border-muted bg-surface-raised shadow-sm overflow-hidden">
+          <!-- Header -->
+          <div class="flex items-center gap-3 border-b border-border-muted bg-gradient-to-r from-indigo-500/10 to-cta-default/10 px-4 py-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/20">
+              <svg class="h-4 w-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">Asistente IA</h3>
+              <p class="text-xs text-text-secondary">Herramientas inteligentes para planificar tu alquiler</p>
+            </div>
+          </div>
+
+          <!-- Panels -->
+          <app-ai-legal-panel
+            [car]="car()"
+            [isExpanded]="expandedAiPanel() === 'legal'"
+            (toggle)="toggleAiPanel('legal')"
+          />
+
+          <app-ai-trip-panel
+            [car]="car()"
+            [suggestedDays]="daysCount() || 3"
+            [isExpanded]="expandedAiPanel() === 'trip'"
+            (toggle)="toggleAiPanel('trip')"
+          />
+
+          <app-ai-checklist-panel
+            [car]="car()"
+            inspectionType="check_in"
+            [isExpanded]="expandedAiPanel() === 'checklist'"
+            (toggle)="toggleAiPanel('checklist')"
+          />
+        </div>
+      </div>
+      }
     </div>
     <!-- RIGHT COLUMN: Booking Widget -->
     <aside class="relative hidden lg:block">
@@ -236,10 +420,10 @@
           <div class="flex items-center gap-1 text-sm">
             <app-icon name="star-filled" [size]="16" cssClass="text-text-primary" />
             <span class="font-semibold text-text-primary">{{
-              car()?.rating_avg || 'Nuevo'
+              carStats()?.rating_avg || car()?.rating_avg || 'Nuevo'
               }}</span>
             <span class="text-text-secondary">·</span>
-            <span class="text-text-secondary underline">{{ car()?.rating_count || 0 }}
+            <span class="text-text-secondary underline">{{ carStats()?.reviews_count || car()?.rating_count || 0 }}
               reseñas</span>
           </div>
         </div>

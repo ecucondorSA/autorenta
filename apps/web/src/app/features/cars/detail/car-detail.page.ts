@@ -37,6 +37,9 @@ import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 // Components
 import { RiskCalculation, RiskCalculatorService } from '../../../core/services/risk-calculator.service';
+import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
+import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
+import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
 import {
   DateRange,
@@ -91,6 +94,9 @@ interface CarDetailState {
     StickyCtaMobileComponent,
     IconComponent,
     RiskCalculatorViewerComponent,
+    AiLegalPanelComponent,
+    AiTripPanelComponent,
+    AiChecklistPanelComponent,
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],
@@ -180,6 +186,13 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // Risk calculation for guarantee display
   readonly riskCalculation = signal<RiskCalculation | null>(null);
   readonly showRiskCalculator = signal(false);
+
+  // AI Panels
+  readonly expandedAiPanel = signal<'legal' | 'trip' | 'checklist' | null>(null);
+
+  toggleAiPanel(panel: 'legal' | 'trip' | 'checklist'): void {
+    this.expandedAiPanel.update(current => current === panel ? null : panel);
+  }
 
   private readonly carId$ = this.route.paramMap.pipe(map((params) => params.get('id')));
 
@@ -301,6 +314,27 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     return fallback || 'Próximamente';
   });
 
+  /**
+   * Returns owner's first name only if it's valid (not corrupted data like 'del', 'de', etc.)
+   */
+  readonly ownerFirstName = computed(() => {
+    const car = this.car();
+    const fullName = car?.owner?.full_name?.trim();
+    if (!fullName || fullName.length < 3) return null;
+
+    const firstName = fullName.split(' ')[0];
+    // Reject common Spanish prepositions/articles that indicate corrupted data
+    const invalidNames = ['de', 'del', 'la', 'el', 'los', 'las', 'un', 'una'];
+    if (!firstName || firstName.length < 2 || invalidNames.includes(firstName.toLowerCase())) {
+      return null;
+    }
+
+    return firstName;
+  });
+
+  /** Signal para toggle de términos expandibles */
+  readonly showTerms = signal(false);
+
   // Breadcrumbs navigation
   readonly breadcrumbItems = computed<BreadcrumbItem[]>(() => {
     return [
@@ -421,6 +455,31 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
     const normalizedPath = rawPath.replace(/^car-images\//, '').replace(/^\/+/, '');
     const { data } = this.supabase.storage.from('car-images').getPublicUrl(normalizedPath);
     return data?.publicUrl ?? null;
+  }
+
+  /**
+   * Helper: Obtiene la etiqueta legible para la política de combustible
+   */
+  getFuelPolicyLabel(policy: string | null | undefined): string {
+    const labels: Record<string, string> = {
+      'full_to_full': 'Lleno a lleno',
+      'same_to_same': 'Igual a igual',
+      'prepaid': 'Prepago',
+      'free_tank': 'Tanque incluido',
+    };
+    return labels[policy || ''] || 'Lleno a lleno';
+  }
+
+  /**
+   * Helper: Obtiene la etiqueta legible para la política de cancelación
+   */
+  getCancelPolicyLabel(policy: string | undefined): string {
+    const labels: Record<string, string> = {
+      'flexible': 'Flexible - Reembolso total hasta 24h antes',
+      'moderate': 'Moderada - Reembolso 50% hasta 48h antes',
+      'strict': 'Estricta - Sin reembolso',
+    };
+    return labels[policy || 'moderate'] || 'Moderada';
   }
 
   onImgError(event: Event, fallbackUrl: string = this.defaultCarPlaceholderUrl): void {

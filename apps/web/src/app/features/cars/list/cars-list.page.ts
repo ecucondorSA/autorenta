@@ -87,11 +87,30 @@ export class CarsListPage implements OnInit, OnDestroy {
   // Exponer parseFloat para el template
   readonly parseFloat = parseFloat;
 
-  getCarImageSrcset(imageUrl: string | null | undefined): string {
-    if (!imageUrl) return '';
-    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return '';
+  getCarImageSrcset(imageUrl: string | null | undefined): string | null {
+    if (!imageUrl) return null;
+    if (!imageUrl.includes('unsplash.com') && !imageUrl.includes('images.unsplash.com')) return null;
 
-    return '320w, 480w, 640w, 960w, 1280w';
+    const widths = [320, 480, 640, 960, 1280];
+    const parts: string[] = [];
+
+    for (const w of widths) {
+      const url = this.withQueryParam(imageUrl, 'w', String(w));
+      if (!url) return null;
+      parts.push(`${url} ${w}w`);
+    }
+
+    return parts.join(', ');
+  }
+
+  private withQueryParam(rawUrl: string, key: string, value: string): string | null {
+    try {
+      const url = new URL(rawUrl);
+      url.searchParams.set(key, value);
+      return url.toString();
+    } catch {
+      return null;
+    }
   }
 
   private readonly router = inject(Router);
@@ -355,7 +374,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         const title = (car['title'] || '').toLowerCase();
 
         if (!brand.includes(query) && !model.includes(query) &&
-            !city.includes(query) && !title.includes(query)) {
+          !city.includes(query) && !title.includes(query)) {
           continue;
         }
       }
@@ -392,7 +411,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         const priceNormalized = (car['price_per_day'] - minPrice) / priceRange;
         const ratingNormalized = Math.min((car.owner?.rating_avg ?? 0) / 5, 1);
         const score = priceNormalized * PREMIUM_SCORE_PRICE_WEIGHT +
-                      ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
+          ratingNormalized * PREMIUM_SCORE_RATING_WEIGHT;
         carScores.set(car['id'], score);
       }
 
@@ -557,7 +576,7 @@ export class CarsListPage implements OnInit, OnDestroy {
         const title = (car['title'] || '').toLowerCase();
 
         if (!brand.includes(query) && !model.includes(query) &&
-            !city.includes(query) && !title.includes(query)) {
+          !city.includes(query) && !title.includes(query)) {
           continue;
         }
       }

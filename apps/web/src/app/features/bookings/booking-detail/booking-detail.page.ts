@@ -52,6 +52,9 @@ import {
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW
+import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
+import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
+import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -98,6 +101,9 @@ import { ReviewManagementComponent } from './review-management.component';
     ReportTrafficFineComponent, // NEW
     ReportOwnerNoShowComponent, // NEW
     ReportRenterNoShowComponent, // NEW
+    AiLegalPanelComponent,
+    AiTripPanelComponent,
+    AiChecklistPanelComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -380,6 +386,42 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     if (!booking) return false;
     // Can request refund for completed or cancelled bookings
     return booking.status === 'completed' || booking.status === 'cancelled';
+  });
+
+  // ============================================
+  // AI ASSISTANT PANELS
+  // ============================================
+  readonly expandedAiPanel = signal<'legal' | 'trip' | 'checklist' | null>(null);
+
+  /** Toggle AI panel accordion */
+  toggleAiPanel(panel: 'legal' | 'trip' | 'checklist'): void {
+    this.expandedAiPanel.update(current => current === panel ? null : panel);
+  }
+
+  /** Show trip planner only for confirmed/in_progress bookings */
+  readonly showTripPlanner = computed(() => {
+    const booking = this.booking();
+    return booking?.status === 'confirmed' || booking?.status === 'in_progress';
+  });
+
+  /** Show checklist panel for check-in/check-out eligibility */
+  readonly showChecklistPanel = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    // Show checklist during confirmed, in_progress, or pending_review
+    return (
+      booking.status === 'confirmed' ||
+      booking.status === 'in_progress' ||
+      booking.status === 'pending_review'
+    );
+  });
+
+  /** Determine checklist inspection type based on booking state */
+  readonly checklistInspectionType = computed<'check_in' | 'check_out'>(() => {
+    const booking = this.booking();
+    // If already has check-in done, show check-out
+    if (this.hasCheckIn()) return 'check_out';
+    return 'check_in';
   });
 
   onDisputeCreated(): void {

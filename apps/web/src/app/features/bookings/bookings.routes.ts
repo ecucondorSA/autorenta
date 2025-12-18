@@ -83,6 +83,12 @@ export const BOOKINGS_ROUTES: Routes = [
       import('./owner-damage-report/owner-damage-report.page').then((m) => m.OwnerDamageReportPage),
   },
   {
+    path: ':id/active',
+    canMatch: [AuthGuard],
+    loadComponent: () =>
+      import('./active-rental/active-rental.page').then((m) => m.ActiveRentalPage),
+  },
+  {
     path: ':id/contract',
     canMatch: [AuthGuard],
     loadComponent: () =>

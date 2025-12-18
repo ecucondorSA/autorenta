@@ -214,6 +214,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
 
   private brickController: BrickController | null = null;
   private mp: MercadoPagoSDK | null = null;
+  private isDestroyed = false;
   private mpScriptService = inject(MercadoPagoScriptService);
   private ngZone = inject(NgZone);
 
@@ -229,6 +230,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.isDestroyed = true;
     this.unmountBrick();
   }
 
@@ -268,6 +270,11 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
    * Initialize MercadoPago Payment Brick with exponential backoff retry
    */
   private async initializePaymentBrick(): Promise<void> {
+    // Guard: Don't initialize if component was destroyed
+    if (this.isDestroyed) {
+      return;
+    }
+
     const currentAttempt = this.initAttempt() + 1;
     this.initAttempt.set(currentAttempt);
 
@@ -317,15 +324,18 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         },
         callbacks: {
           onReady: () => {
+            if (this.isDestroyed) return;
             this.ngZone.run(() => {
               this.isInitializing.set(false);
               this.errorMessage.set(null);
             });
           },
           onSubmit: async (cardFormData: CardPaymentFormData) => {
+            if (this.isDestroyed) return;
             await this.handleBrickSubmit(cardFormData);
           },
           onError: (error: BrickError) => {
+            if (this.isDestroyed) return;
             this.ngZone.run(() => {
               this.handleBrickError(error);
             });
@@ -334,24 +344,34 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
       });
 
     } catch (error) {
+      // Don't continue if component was destroyed
+      if (this.isDestroyed) {
+        return;
+      }
+
       // Retry with exponential backoff if under max attempts
       if (currentAttempt < this.maxInitAttempts) {
         const delay = this.getRetryDelay(currentAttempt);
 
         this.ngZone.runOutsideAngular(() => {
           setTimeout(() => {
-            this.ngZone.run(() => {
-              this.initializePaymentBrick();
-            });
+            // Check again before retrying
+            if (!this.isDestroyed) {
+              this.ngZone.run(() => {
+                this.initializePaymentBrick();
+              });
+            }
           }, delay);
         });
       } else {
         // Max attempts reached - show error to user
         this.ngZone.run(() => {
-          this.isInitializing.set(false);
-          const errorMsg = error instanceof Error ? error['message'] : String(error);
-          this.errorMessage.set(`No pudimos cargar el formulario de pago: ${errorMsg}`);
-          this.cardError.emit('Error al inicializar Mercado Pago');
+          if (!this.isDestroyed) {
+            this.isInitializing.set(false);
+            const errorMsg = error instanceof Error ? error['message'] : String(error);
+            this.errorMessage.set(`No pudimos cargar el formulario de pago: ${errorMsg}`);
+            this.cardError.emit('Error al inicializar Mercado Pago');
+          }
         });
       }
     }

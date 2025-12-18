@@ -511,6 +511,40 @@
                                 ></app-booking-insurance-summary>
                               }
                             </div>
+                            <!-- Active Trip Card (for renters with in_progress booking) -->
+                            @if (isRenter() && booking()?.status === 'in_progress') {
+                              <div
+                                class="card-premium rounded-2xl p-4 sm:p-6 shadow-soft border-2 border-primary-500/40 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30"
+                                >
+                                <div class="flex items-center gap-4">
+                                  <div class="flex-shrink-0">
+                                    <div class="w-14 h-14 rounded-full bg-primary-500 flex items-center justify-center animate-pulse">
+                                      <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                  <div class="flex-1">
+                                    <h3 class="text-lg font-bold text-text-primary dark:text-text-inverse mb-1 font-satoshi">
+                                      Viaje en Curso
+                                    </h3>
+                                    <p class="text-sm text-text-secondary dark:text-text-secondary mb-3">
+                                      Accedé al panel de tu viaje activo con timer, acciones rápidas y emergencias.
+                                    </p>
+                                    <a
+                                      [routerLink]="['/bookings', booking()?.id, 'active']"
+                                      class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg"
+                                      >
+                                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                      </svg>
+                                      <span>Ver viaje activo</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            }
                             <!-- Check-in/Check-out Actions Card (for renters) -->
                             @if (isRenter() && (canPerformCheckIn() || canPerformCheckOut())) {
                               <div
@@ -1481,10 +1515,58 @@
                       [bookingId]="booking()!.id"
                       [recipientId]="carOwnerId()!"
                       [recipientName]="carOwnerName()"
+                      [booking]="booking()"
                     ></app-booking-chat>
                     } @placeholder {
                     <div class="h-96 bg-surface-base animate-pulse rounded-xl border border-border-default"></div>
                   }
+                </div>
+              }
+
+              <!-- ============================================ -->
+              <!-- AI ASSISTANT PANELS -->
+              <!-- ============================================ -->
+              @if (booking()) {
+                <div class="mt-6">
+                  <div class="rounded-xl border border-border-muted bg-surface-raised shadow-sm overflow-hidden">
+                    <!-- Header -->
+                    <div class="flex items-center gap-3 border-b border-border-muted bg-gradient-to-r from-indigo-500/10 to-cta-default/10 px-4 py-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/20">
+                        <svg class="h-4 w-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 class="text-sm font-semibold text-text-primary">Asistente IA</h3>
+                        <p class="text-xs text-text-secondary">Herramientas inteligentes para tu reserva</p>
+                      </div>
+                    </div>
+
+                    <!-- Panels -->
+                    <app-ai-legal-panel
+                      [booking]="booking()!"
+                      [isExpanded]="expandedAiPanel() === 'legal'"
+                      (toggle)="toggleAiPanel('legal')"
+                    />
+
+                    @if (showTripPlanner()) {
+                      <app-ai-trip-panel
+                        [booking]="booking()!"
+                        [isExpanded]="expandedAiPanel() === 'trip'"
+                        (toggle)="toggleAiPanel('trip')"
+                      />
+                    }
+
+                    @if (showChecklistPanel()) {
+                      <app-ai-checklist-panel
+                        [booking]="booking()!"
+                        [inspectionType]="checklistInspectionType()"
+                        [isExpanded]="expandedAiPanel() === 'checklist'"
+                        (toggle)="toggleAiPanel('checklist')"
+                      />
+                    }
+                  </div>
                 </div>
               }
               <!-- ✅ Show payment reminder for pending payment -->

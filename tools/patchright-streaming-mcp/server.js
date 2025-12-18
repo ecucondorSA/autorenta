@@ -19,7 +19,6 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { chromium } from 'patchright';
-import fs from 'fs';
 
 // ========== Helper ==========
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -141,6 +140,12 @@ const CONFIG = {
   eventBufferSize: 100,
   compactOutput: true,
   maxEventSummary: 5,
+
+  // Timeouts (ms)
+  navigationTimeoutMs: Number(process.env.NAVIGATION_TIMEOUT_MS || 60000),
+  selectorTimeoutMs: Number(process.env.SELECTOR_TIMEOUT_MS || 10000),
+  screenshotTimeoutMs: Number(process.env.SCREENSHOT_TIMEOUT_MS || 30000),
+  postActionDelayMs: Number(process.env.POST_ACTION_DELAY_MS || 100),
 };
 
 // Force DISPLAY for GUI apps if missing (assumes local user session)
@@ -276,12 +281,24 @@ class PatchrightStreamingMCP {
     // Browser state
     this.context = null;  // Persistent context (browser + context combined)
     this.page = null;
+    this.ensureBrowserInFlight = null;
+
+    // Serialize page operations (avoids overlapping click/fill/navigate)
+    this.pageOpInFlight = Promise.resolve();
 
     // Event streaming (NO CDP - just page events)
     this.eventBuffer = [];
     this.lastEventId = 0;
 
     this.setupHandlers();
+  }
+
+  async withPageLock(fn) {
+    const run = async () => await fn();
+    const p = this.pageOpInFlight.then(run, run);
+    // Keep the chain alive even if p rejects
+    this.pageOpInFlight = p.then(() => undefined, () => undefined);
+    return p;
   }
 
   // ========== Event Buffer Management ==========
@@ -320,41 +337,87 @@ class PatchrightStreamingMCP {
   // ========== Browser Lifecycle ==========
 
   async ensureBrowser() {
-    if (this.context && this.page) {
-      // Check if page is still valid
+    if (this.ensureBrowserInFlight) return this.ensureBrowserInFlight;
+
+    this.ensureBrowserInFlight = (async () => {
+      // If we have a page reference, ensure it's still open
+      if (this.page) {
+        try {
+          if (typeof this.page.isClosed === 'function' && this.page.isClosed()) {
+            this.page = null;
+          }
+        } catch {
+          this.page = null;
+        }
+      }
+
+      // If we have a context reference, try to reuse it (keeps cookies/session)
+      if (this.context) {
+        try {
+          const pages = this.context.pages();
+          if (!this.page) {
+            this.page = pages.length > 0 ? pages[0] : await this.context.newPage();
+            this.page.on('close', () => {
+              this.page = null;
+              this.pushEvent(EventType.ERROR, { message: 'page_closed' });
+            });
+            await this.setupPageListeners();
+          }
+
+          // Validate page is usable
+          await this.page.title();
+          return { context: this.context, page: this.page };
+        } catch {
+          // Stale/closed context. Close it to release the profile lock.
+          await this.closeBrowser();
+        }
+      }
+
+      console.error('[MCP] Launching PATCHRIGHT browser with persistent profile...');
+      console.error(`[MCP] Profile: ${CONFIG.profilePath}`);
+
+      const launch = async () => {
+        this.context = await chromium.launchPersistentContext(CONFIG.profilePath, {
+          headless: CONFIG.headless,
+          executablePath: CONFIG.executablePath,
+          viewport: null, // Natural viewport
+          // NO custom userAgent or headers (patchright recommendation)
+        });
+
+        this.context.on('close', () => {
+          this.context = null;
+          this.page = null;
+          this.pushEvent(EventType.ERROR, { message: 'browser_context_closed' });
+        });
+
+        const pages = this.context.pages();
+        this.page = pages.length > 0 ? pages[0] : await this.context.newPage();
+
+        this.page.on('close', () => {
+          this.page = null;
+          this.pushEvent(EventType.ERROR, { message: 'page_closed' });
+        });
+
+        await this.setupPageListeners();
+      };
+
       try {
-        await this.page.title();
-        return { context: this.context, page: this.page };
+        await launch();
       } catch {
-        // Page closed, need to reopen
-        this.page = null;
+        // One retry after cleanup (handles transient profile/context issues)
+        await this.closeBrowser();
+        await launch();
       }
+
+      this.pushEvent(EventType.PAGE_LOAD, { status: 'patchright_ready', profile: CONFIG.profilePath });
+      return { context: this.context, page: this.page };
+    })();
+
+    try {
+      return await this.ensureBrowserInFlight;
+    } finally {
+      this.ensureBrowserInFlight = null;
     }
-
-    console.error('[MCP] Launching PATCHRIGHT browser with persistent profile...');
-    console.error(`[MCP] Profile: ${CONFIG.profilePath}`);
-
-    // Patchright with persistent context (maintains session!)
-    this.context = await chromium.launchPersistentContext(
-      CONFIG.profilePath,
-      {
-        headless: CONFIG.headless,
-        executablePath: CONFIG.executablePath,
-        viewport: null,  // Natural viewport
-        // NO custom userAgent or headers (patchright recommendation)
-      }
-    );
-
-    // Get existing page or create new one
-    const pages = this.context.pages();
-    this.page = pages.length > 0 ? pages[0] : await this.context.newPage();
-
-    // Setup event listeners (NO CDP!)
-    await this.setupPageListeners();
-
-    this.pushEvent(EventType.PAGE_LOAD, { status: 'patchright_ready', profile: CONFIG.profilePath });
-
-    return { context: this.context, page: this.page };
   }
 
   async setupPageListeners() {
@@ -415,13 +478,16 @@ class PatchrightStreamingMCP {
     console.error('[MCP] Page listeners attached (no CDP - stealth mode)');
   }
 
-  async closeBrowser() {
+  async closeBrowser(options = {}) {
+    const { clearEvents = true } = options;
     if (this.context) {
       await this.context.close().catch(() => { });
       this.context = null;
       this.page = null;
     }
-    this.clearEvents();
+    if (clearEvents) {
+      this.clearEvents();
+    }
   }
 
   // ========== MCP Handlers ==========
@@ -534,7 +600,19 @@ class PatchrightStreamingMCP {
           description: 'Get streaming status and browser state',
           inputSchema: {
             type: 'object',
-            properties: {}
+            properties: {
+              launch: { type: 'boolean', description: 'If true, launches browser if closed (default: false)' }
+            }
+          }
+        },
+        {
+          name: 'stream_reset',
+          description: 'Close and relaunch persistent browser context (keeps profile on disk)',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              keepEvents: { type: 'boolean', description: 'If true, keeps the current event buffer (default: false)' }
+            }
           }
         },
         {
@@ -807,58 +885,119 @@ class PatchrightStreamingMCP {
 
         switch (name) {
           case 'stream_status': {
+            if (args?.launch) {
+              const { page } = await this.ensureBrowser();
+              result = {
+                browserOpen: Boolean(this.context),
+                pageOpen: Boolean(page) && (typeof page.isClosed !== 'function' || !page.isClosed()),
+                pageUrl: page.url(),
+                title: await page.title().catch(() => ''),
+                eventsInBuffer: this.eventBuffer.length,
+                lastEventId: this.lastEventId,
+                profilePath: CONFIG.profilePath,
+                headless: CONFIG.headless,
+                engine: 'patchright (CDP bypass)',
+              };
+            } else {
+              let pageUrl = null;
+              let title = '';
+              let pageOpen = false;
+
+              try {
+                if (this.page && (typeof this.page.isClosed !== 'function' || !this.page.isClosed())) {
+                  pageOpen = true;
+                  pageUrl = this.page.url();
+                  title = await this.page.title().catch(() => '');
+                }
+              } catch {
+                // ignore
+              }
+
+              result = {
+                browserOpen: Boolean(this.context),
+                pageOpen,
+                pageUrl,
+                title,
+                eventsInBuffer: this.eventBuffer.length,
+                lastEventId: this.lastEventId,
+                profilePath: CONFIG.profilePath,
+                headless: CONFIG.headless,
+                engine: 'patchright (CDP bypass)',
+              };
+            }
+            break;
+          }
+
+          case 'stream_reset': {
+            await this.closeBrowser({ clearEvents: args?.keepEvents !== true });
+            const { page } = await this.ensureBrowser();
             result = {
-              browserOpen: !!this.context,
-              pageUrl: this.page?.url() || null,
-              eventsInBuffer: this.eventBuffer.length,
-              lastEventId: this.lastEventId,
-              profile: CONFIG.profilePath,
+              reset: true,
+              keepEvents: args?.keepEvents === true,
+              browserOpen: true,
+              pageOpen: true,
+              pageUrl: page.url(),
+              title: await page.title().catch(() => ''),
+              profilePath: CONFIG.profilePath,
+              headless: CONFIG.headless,
               engine: 'patchright (CDP bypass)',
             };
             break;
           }
 
           case 'stream_navigate': {
-            const { page } = await this.ensureBrowser();
-            const eventsBefore = this.lastEventId;
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const eventsBefore = this.lastEventId;
 
-            await page.goto(args.url, { waitUntil: 'domcontentloaded' });
+              await page.goto(args.url, {
+                waitUntil: 'domcontentloaded',
+                timeout: CONFIG.navigationTimeoutMs,
+              });
 
-            result = {
-              url: page.url(),
-              title: await page.title(),
-              eventsTriggered: this.lastEventId - eventsBefore,
-              recentEvents: this.getEventsSince(eventsBefore).slice(-5),
-            };
+              return {
+                url: page.url(),
+                title: await page.title().catch(() => ''),
+                eventsTriggered: this.lastEventId - eventsBefore,
+                recentEvents: this.getEventsSince(eventsBefore).slice(-5),
+              };
+            });
             break;
           }
 
           case 'stream_click': {
-            const { page } = await this.ensureBrowser();
-            const eventsBefore = this.lastEventId;
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const eventsBefore = this.lastEventId;
 
-            await page.click(args.selector);
-            await page.waitForTimeout(100);
+              await page.click(args.selector, { timeout: CONFIG.selectorTimeoutMs });
+              await page.waitForTimeout(CONFIG.postActionDelayMs);
 
-            result = {
-              clicked: args.selector,
-              eventsTriggered: this.lastEventId - eventsBefore,
-              recentEvents: this.getEventsSince(eventsBefore).slice(-5),
-            };
+              return {
+                clicked: args.selector,
+                eventsTriggered: this.lastEventId - eventsBefore,
+                recentEvents: this.getEventsSince(eventsBefore).slice(-5),
+              };
+            });
             break;
           }
 
           case 'stream_type': {
-            const { page } = await this.ensureBrowser();
-            const eventsBefore = this.lastEventId;
+            const shouldRedact = typeof args?.selector === 'string' && /password|\[type\s*=\s*"?password"?\]/i.test(args.selector);
 
-            await page.fill(args.selector, args.text);
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const eventsBefore = this.lastEventId;
 
-            result = {
-              typed: args.text,
-              selector: args.selector,
-              eventsTriggered: this.lastEventId - eventsBefore,
-            };
+              await page.fill(args.selector, args.text, { timeout: CONFIG.selectorTimeoutMs });
+
+              return {
+                typed: shouldRedact ? '[REDACTED]' : args.text,
+                selector: args.selector,
+                redacted: shouldRedact,
+                eventsTriggered: this.lastEventId - eventsBefore,
+              };
+            });
             break;
           }
 
@@ -879,74 +1018,116 @@ class PatchrightStreamingMCP {
           }
 
           case 'stream_snapshot': {
-            const { page } = await this.ensureBrowser();
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
 
-            const snapshot = await page.accessibility.snapshot();
+              let snapshot;
+              if (page.accessibility && typeof page.accessibility.snapshot === 'function') {
+                snapshot = await page.accessibility.snapshot();
+              } else {
+                const title = await page.title().catch(() => '');
+                const keyElements = await page.evaluate(() => {
+                  const MAX = 30;
+                  const items = [];
 
-            result = {
-              url: page.url(),
-              title: await page.title(),
-              snapshot: snapshot,
-              recentEvents: this.eventBuffer.slice(-10),
-              lastEventId: this.lastEventId,
-            };
+                  const getName = (el) => {
+                    const ariaLabel = el.getAttribute('aria-label');
+                    const placeholder = el.getAttribute('placeholder');
+                    const nameAttr = el.getAttribute('name');
+                    const text = (el.textContent || '').trim();
+                    return (text || placeholder || nameAttr || ariaLabel || '').trim();
+                  };
+
+                  const push = (role, el) => {
+                    if (items.length >= MAX) return;
+                    const name = getName(el);
+                    if (!name) return;
+                    items.push({ role, name });
+                  };
+
+                  document.querySelectorAll('h1,h2,h3,[role="heading"]').forEach(el => push('heading', el));
+                  document.querySelectorAll('button,[role="button"]').forEach(el => push('button', el));
+                  document.querySelectorAll('a[href],[role="link"]').forEach(el => push('link', el));
+                  document.querySelectorAll('input,textarea,[role="textbox"]').forEach(el => push('textbox', el));
+
+                  return items.slice(0, MAX);
+                });
+
+                snapshot = {
+                  role: 'document',
+                  name: title,
+                  children: keyElements.map((e) => ({ role: e.role, name: e.name, children: [] })),
+                };
+              }
+
+              return {
+                url: page.url(),
+                title: await page.title().catch(() => ''),
+                snapshot,
+                recentEvents: this.eventBuffer.slice(-10),
+                lastEventId: this.lastEventId,
+              };
+            });
             break;
           }
 
           case 'stream_screenshot': {
-            const { page } = await this.ensureBrowser();
-            const fs = await import('fs');
-            const path = await import('path');
-            const os = await import('os');
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const fsMod = await import('fs');
+              const pathMod = await import('path');
+              const osMod = await import('os');
 
-            const timestamp = Date.now();
-            const shouldCompress = args?.compress !== false;
+              const timestamp = Date.now();
+              const shouldCompress = args?.compress !== false;
 
-            const buffer = await page.screenshot({
-              fullPage: args?.fullPage || false,
-              type: shouldCompress ? 'jpeg' : 'png',
-              quality: shouldCompress ? 50 : undefined,
+              const buffer = await page.screenshot({
+                fullPage: args?.fullPage || false,
+                type: shouldCompress ? 'jpeg' : 'png',
+                quality: shouldCompress ? 50 : undefined,
+                timeout: CONFIG.screenshotTimeoutMs,
+              });
+
+              const ext = shouldCompress ? 'jpg' : 'png';
+              const filepath = pathMod.join(osMod.tmpdir(), `screenshot-${timestamp}.${ext}`);
+              fsMod.writeFileSync(filepath, buffer);
+
+              return {
+                path: filepath,
+                mime: shouldCompress ? 'image/jpeg' : 'image/png',
+                bytes: buffer.length,
+                sizeKB: Math.round(buffer.length / 1024),
+                compressed: shouldCompress,
+              };
             });
-
-            const ext = shouldCompress ? 'jpg' : 'png';
-            const filepath = path.join(os.tmpdir(), `screenshot-${timestamp}.${ext}`);
-            fs.writeFileSync(filepath, buffer);
-
-            const sizeKB = Math.round(buffer.length / 1024);
-            const elapsed = Date.now() - startTime;
-
-            return {
-              content: [{
-                type: 'text',
-                text: `📸 Screenshot saved (${sizeKB}KB)\n📁 Path: ${filepath}\n⏱️ ${elapsed}ms`
-              }]
-            };
+            break;
           }
 
           case 'stream_evaluate': {
-            const { page } = await this.ensureBrowser();
-            const evalResult = await page.evaluate(args.script);
-
-            result = {
-              result: evalResult,
-            };
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const evalResult = await page.evaluate(args.script);
+              return { result: evalResult };
+            });
             break;
           }
 
           case 'stream_wait_for': {
-            const { page } = await this.ensureBrowser();
-            const eventsBefore = this.lastEventId;
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              const eventsBefore = this.lastEventId;
 
-            await page.waitForSelector(args.selector, {
-              timeout: args.timeout || 10000
+              await page.waitForSelector(args.selector, {
+                timeout: args.timeout || CONFIG.selectorTimeoutMs,
+              });
+
+              return {
+                found: true,
+                selector: args.selector,
+                eventsTriggered: this.lastEventId - eventsBefore,
+                recentEvents: this.getEventsSince(eventsBefore).slice(-3),
+              };
             });
-
-            result = {
-              found: true,
-              selector: args.selector,
-              eventsTriggered: this.lastEventId - eventsBefore,
-              recentEvents: this.getEventsSince(eventsBefore).slice(-3),
-            };
             break;
           }
 
@@ -1068,9 +1249,12 @@ class PatchrightStreamingMCP {
           }
 
           case 'stream_fill': {
-            const { page } = await this.ensureBrowser();
-            await page.fill(args.selector, args.text);
-            result = { filled: args.selector, text: args.text };
+            const shouldRedact = typeof args?.selector === 'string' && /password|\[type\s*=\s*"?password"?\]/i.test(args.selector);
+            result = await this.withPageLock(async () => {
+              const { page } = await this.ensureBrowser();
+              await page.fill(args.selector, args.text, { timeout: CONFIG.selectorTimeoutMs });
+              return { filled: args.selector, text: shouldRedact ? '[REDACTED]' : args.text, redacted: shouldRedact };
+            });
             break;
           }
 
@@ -1377,6 +1561,21 @@ class PatchrightStreamingMCP {
 
         const elapsed = Date.now() - startTime;
         const formatType = name.replace('stream_', '');
+
+        if (formatType === 'screenshot') {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: formatCompact(result, formatType) + `\n⏱️ ${elapsed}ms`,
+              },
+              {
+                type: 'text',
+                text: JSON.stringify({ tool: name, ...result }),
+              },
+            ],
+          };
+        }
 
         return {
           content: [{

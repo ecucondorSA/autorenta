@@ -1,0 +1,103 @@
+<!-- Digital Key Component (Mock UI) -->
+<div class="relative bg-surface-raised rounded-2xl p-5 border border-border-default overflow-hidden">
+  <!-- Coming Soon Overlay -->
+  @if (!isAvailable()) {
+    <div class="absolute inset-0 bg-surface-base/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mb-3">
+        <svg class="w-8 h-8 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-text-primary font-satoshi mb-1">Llave Digital</h3>
+      <p class="text-sm text-text-secondary text-center px-4">
+        Desbloquea tu auto desde el celular
+      </p>
+      <span class="mt-3 px-4 py-1.5 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">
+        Proximamente
+      </span>
+    </div>
+  }
+
+  <!-- Key UI (shown when available or as background) -->
+  <div class="flex flex-col items-center">
+    <h3 class="text-lg font-semibold text-text-primary font-satoshi mb-4">Llave Digital</h3>
+
+    <!-- Key Visual -->
+    <div class="relative w-32 h-32 mb-4">
+      <!-- Outer ring -->
+      <div
+        class="absolute inset-0 rounded-full border-4 transition-colors duration-500"
+        [class.border-red-400]="isLocked"
+        [class.border-green-400]="isUnlocked"
+        [class.border-amber-400]="isTransitioning"
+        [class.animate-pulse]="isTransitioning"
+      ></div>
+
+      <!-- Inner circle -->
+      <div
+        class="absolute inset-3 rounded-full flex items-center justify-center transition-colors duration-500"
+        [class.bg-red-100]="isLocked"
+        [class.bg-green-100]="isUnlocked"
+        [class.bg-amber-100]="isTransitioning"
+      >
+        <!-- Lock icon -->
+        @if (isLocked || keyState() === 'locking') {
+          <svg class="w-12 h-12 transition-colors duration-500"
+               [class.text-red-600]="isLocked"
+               [class.text-amber-600]="keyState() === 'locking'"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        }
+
+        <!-- Unlock icon -->
+        @if (isUnlocked || keyState() === 'unlocking') {
+          <svg class="w-12 h-12 transition-colors duration-500"
+               [class.text-green-600]="isUnlocked"
+               [class.text-amber-600]="keyState() === 'unlocking'"
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+          </svg>
+        }
+      </div>
+    </div>
+
+    <!-- Status text -->
+    <p class="text-sm font-medium mb-4 transition-colors duration-300"
+       [class.text-red-600]="isLocked"
+       [class.text-green-600]="isUnlocked"
+       [class.text-amber-600]="isTransitioning">
+      @switch (keyState()) {
+        @case ('locked') { Vehiculo bloqueado }
+        @case ('unlocking') { Desbloqueando... }
+        @case ('unlocked') { Vehiculo desbloqueado }
+        @case ('locking') { Bloqueando... }
+      }
+    </p>
+
+    <!-- Action button -->
+    <button
+      (click)="toggleLock()"
+      [disabled]="!isAvailable() || isTransitioning"
+      class="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      [class.bg-green-500]="isLocked"
+      [class.hover:bg-green-600]="isLocked && isAvailable()"
+      [class.bg-red-500]="isUnlocked"
+      [class.hover:bg-red-600]="isUnlocked && isAvailable()"
+      [class.bg-amber-500]="isTransitioning"
+      [class.text-white]="true"
+    >
+      @if (isTransitioning) {
+        <span class="flex items-center justify-center gap-2">
+          <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          {{ buttonLabel }}
+        </span>
+      } @else {
+        {{ buttonLabel }}
+      }
+    </button>
+  </div>
+</div>

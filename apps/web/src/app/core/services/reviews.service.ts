@@ -107,7 +107,7 @@ export class ReviewsService {
 
       // ✅ NUEVO: Notificar al dueño del auto sobre la nueva reseña (si es renter_to_owner)
       if (params.review_type === 'renter_to_owner') {
-        this.notifyOwnerOfNewReview(reviewId, params).catch((_error) => {
+        this.notifyOwnerOfNewReview(reviewId, params).catch((_error: unknown) => {
           // Silently fail - notification is optional enhancement
         });
       }
@@ -129,30 +129,19 @@ export class ReviewsService {
    */
   async getReviewsForUser(userId: string, asOwner: boolean = true): Promise<Review[]> {
     try {
-      const reviewType: ReviewType = asOwner ? 'renter_to_owner' : 'owner_to_renter';
+      // Use v_car_reviews view which has review_type computed column
+      const isCarReview = asOwner; // renter_to_owner = is_car_review
 
       const { data, error } = await this.supabase
-        .from('reviews')
-        .select(
-          `
-          *,
-          reviewer:profiles!reviews_reviewer_id_fkey(id, full_name, avatar_url),
-          car:cars(id, title)
-        `,
-        )
+        .from('v_car_reviews')
+        .select('*')
         .eq('reviewee_id', userId)
-        .eq('review_type', reviewType)
-        .eq('is_visible', true)
+        .eq('is_car_review', isCarReview)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return (data || []).map((review) => ({
-        ...review,
-        reviewer_name: review.reviewer?.full_name,
-        reviewer_avatar: review.reviewer?.avatar_url,
-        car_title: review.car?.title,
-      })) as Review[];
+      return (data || []) as Review[];
     } catch {
       return [];
     }
@@ -160,6 +149,7 @@ export class ReviewsService {
 
   /**
    * Load reviews for a specific car (updates signals)
+   * Uses v_car_reviews view which has car_id via booking JOIN
    */
   async loadReviewsForCar(carId: string): Promise<void> {
     this.loadingSignal.set(true);
@@ -167,24 +157,17 @@ export class ReviewsService {
 
     try {
       const { data, error } = await this.supabase
-        .from('reviews')
-        .select(
-          `
-          *,
-          reviewer:profiles!reviews_reviewer_id_fkey(id, full_name, avatar_url)
-        `,
-        )
+        .from('v_car_reviews')
+        .select('*')
         .eq('car_id', carId)
-        .eq('is_visible', true)
-        .eq('review_type', 'renter_to_owner')
+        .eq('is_car_review', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       const reviews = (data || []).map((review) => ({
         ...review,
-        reviewer_name: review.reviewer?.full_name,
-        reviewer_avatar: review.reviewer?.avatar_url,
+        // View already includes reviewer_name and reviewer_avatar
       })) as Review[];
 
       this.reviewsSignal.set(reviews);
@@ -337,8 +320,9 @@ export class ReviewsService {
     try {
       const reviewType: ReviewType = asOwner ? 'renter_to_owner' : 'owner_to_renter';
 
+      // Use the view which has the computed review_type column
       const { data: reviews, error } = await this.supabase
-        .from('reviews')
+        .from('v_car_reviews')
         .select('*')
         .eq('reviewee_id', userId)
         .eq('review_type', reviewType)
@@ -388,7 +372,7 @@ export class ReviewsService {
             r.rating_location +
             r.rating_checkin +
             r.rating_value) /
-            6,
+          6,
         );
         distribution[avg as keyof typeof distribution]++;
       });
@@ -508,55 +492,49 @@ export class ReviewsService {
 
   /**
    * Obtiene las reviews recibidas por un usuario como owner (para perfil público)
+   * Uses v_car_reviews view which includes reviewer info and computes review_type
    */
   async getReviewsForOwner(ownerId: string): Promise<Review[]> {
     const { data, error } = await this.supabase
-      .from('reviews')
-      .select(
-        `
-        *,
-        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
-      `,
-      )
+      .from('v_car_reviews')
+      .select('*')
       .eq('reviewee_id', ownerId)
-      .eq('reviewee_role', 'owner')
+      .eq('is_car_review', true)
       .order('created_at', { ascending: false });
 
     if (error) {
       return [];
     }
 
-    return (data || []).map((review: ReviewWithReviewer) => ({
+    // View already includes reviewer_name and reviewer_avatar
+    return (data || []).map((review) => ({
       ...review,
-      reviewer_name: review.reviewer?.full_name || 'Usuario',
-      reviewer_avatar: review.reviewer?.avatar_url || null,
+      reviewer_name: review.reviewer_name || 'Usuario',
+      reviewer_avatar: review.reviewer_avatar || null,
     })) as Review[];
   }
 
   /**
    * Obtiene las reviews recibidas por un usuario como renter (para perfil público)
+   * Uses v_car_reviews view which includes reviewer info
    */
   async getReviewsForRenter(renterId: string): Promise<Review[]> {
     const { data, error } = await this.supabase
-      .from('reviews')
-      .select(
-        `
-        *,
-        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
-      `,
-      )
+      .from('v_car_reviews')
+      .select('*')
       .eq('reviewee_id', renterId)
-      .eq('reviewee_role', 'renter')
+      .eq('is_renter_review', true)
       .order('created_at', { ascending: false });
 
     if (error) {
       return [];
     }
 
-    return (data || []).map((review: ReviewWithReviewer) => ({
+    // View already includes reviewer_name and reviewer_avatar
+    return (data || []).map((review) => ({
       ...review,
-      reviewer_name: review.reviewer?.full_name || 'Usuario',
-      reviewer_avatar: review.reviewer?.avatar_url || null,
+      reviewer_name: review.reviewer_name || 'Usuario',
+      reviewer_avatar: review.reviewer_avatar || null,
     })) as Review[];
   }
 

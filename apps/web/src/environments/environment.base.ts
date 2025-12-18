@@ -42,6 +42,7 @@ interface EnvDefaults {
   distanceConfig?: DistanceConfig;
   docVerifierUrl?: string;
   cloudflareWorkerUrl?: string;
+  geminiTextWorkerUrl?: string;
   googleAiImageUrl?: string;
   sentryDsn?: string;
   sentryEnvironment?: string;
@@ -140,6 +141,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   cloudflareWorkerUrl: resolve(
     'NG_APP_CLOUDFLARE_WORKER_URL',
     defaults.cloudflareWorkerUrl ?? '',
+  ),
+  geminiTextWorkerUrl: resolve(
+    'NG_APP_GEMINI_TEXT_WORKER_URL',
+    defaults.geminiTextWorkerUrl ?? '',
   ),
   googleAiImageUrl: resolve('NG_APP_GOOGLE_AI_IMAGE_URL', defaults.googleAiImageUrl),
   sentryDsn: resolve('NG_APP_SENTRY_DSN', defaults.sentryDsn),

@@ -202,6 +202,7 @@ export class BookingValidationService {
    * Check if there are pending bookings that overlap with the requested dates
    * ✅ FIX 2025-11-06: Corregida lógica de overlap (lt/gt en lugar de lte/gte)
    * ✅ FIX 2025-11-06: Incluir 'pending_payment' en estados a verificar
+   * ✅ FIX 2025-12-17: Filter out expired bookings (expires_at < now)
    */
   private async checkPendingBookings(
     carId: string,
@@ -209,13 +210,15 @@ export class BookingValidationService {
     endDate: string,
   ): Promise<boolean> {
     try {
+      const now = new Date().toISOString();
       const { data: pendingBookings } = await this.supabase
         .from('bookings')
-        .select('id, status')
+        .select('id, status, expires_at')
         .eq('car_id', carId)
         .in('status', ['pending', 'pending_payment'])
         .lt('start_at', endDate) // ✅ FIX: start_at < endDate (overlap correcto)
-        .gt('end_at', startDate); // ✅ FIX: end_at > startDate (overlap correcto)
+        .gt('end_at', startDate) // ✅ FIX: end_at > startDate (overlap correcto)
+        .or(`expires_at.is.null,expires_at.gt.${now}`); // ✅ FIX: Only active (non-expired) bookings
 
       return pendingBookings ? pendingBookings.length > 0 : false;
     } catch {
