@@ -56,6 +56,7 @@ const CONFIG = {
   ],
 
   // Paths
+  webSrcPath: 'apps/web/src',
   webAppPath: 'apps/web/src/app',
   migrationsPath: 'supabase/migrations',
   snapshotsPath: 'supabase/snapshots',
@@ -147,13 +148,17 @@ function findOrphanComponents(): OrphanComponent[] {
 
   // Obtener todos los archivos de componentes
   const componentFiles = globSync(`${CONFIG.webAppPath}/**/*.component.ts`);
-  const htmlFiles = globSync(`${CONFIG.webAppPath}/**/*.html`);
-  const tsFiles = globSync(`${CONFIG.webAppPath}/**/*.ts`);
+  // Nota: incluir index.html y bootstrap files (main.ts) para evitar falsos positivos
+  const htmlFiles = globSync(`${CONFIG.webSrcPath}/**/*.html`);
+  const tsFiles = globSync(`${CONFIG.webSrcPath}/**/*.ts`);
+  const routesFiles = globSync(`${CONFIG.webSrcPath}/**/*.routes.ts`);
 
   // Leer contenido de todos los HTML para buscar selectores
   const allHtmlContent = htmlFiles.map(f => readFileContent(f)).join('\n');
   // Leer contenido de todos los TS para buscar imports
   const allTsContent = tsFiles.map(f => readFileContent(f)).join('\n');
+  // Leer contenido de routes para detectar loadComponent/import() usage
+  const allRoutesContent = routesFiles.map(f => readFileContent(f)).join('\n');
 
   for (const file of componentFiles) {
     try {
@@ -175,6 +180,9 @@ function findOrphanComponents(): OrphanComponent[] {
 
       // Buscar en imports de otros componentes (excluyendo su propio archivo)
       const importPattern = new RegExp(`import\\s*{[^}]*${componentName}[^}]*}`);
+      // Buscar uso por Router (lazy routes con loadComponent) sin imports estáticos
+      const routeUsagePattern = new RegExp(`\\b${componentName}\\b`);
+      const routeUsage = routeUsagePattern.test(allRoutesContent);
 
       // Contar usos en archivos TS (excluyendo el propio)
       let importCount = 0;
@@ -187,7 +195,7 @@ function findOrphanComponents(): OrphanComponent[] {
       }
 
       // Si no se usa en templates ni se importa en otros archivos, es huérfano
-      if (!templateUsage && importCount === 0) {
+      if (!templateUsage && importCount === 0 && !routeUsage) {
         // Excluir páginas (se cargan por router)
         if (!file.includes('.page.ts')) {
           orphans.push({
@@ -217,7 +225,7 @@ function findUnusedRpcFunctions(): UnusedRpc[] {
   const sqlFiles = [...migrationFiles, ...snapshotFiles];
 
   // Obtener archivos TS del frontend
-  const tsFiles = globSync(`${CONFIG.webAppPath}/**/*.ts`);
+  const tsFiles = globSync(`${CONFIG.webSrcPath}/**/*.ts`);
   const allTsContent = tsFiles.map(f => readFileContent(f)).join('\n');
 
   const definedFunctions = new Map<string, string>();
@@ -271,7 +279,7 @@ function findTablesWithoutQueries(): OrphanTable[] {
   const sqlFiles = [...migrationFiles, ...snapshotFiles];
 
   // Obtener archivos TS del frontend
-  const tsFiles = globSync(`${CONFIG.webAppPath}/**/*.ts`);
+  const tsFiles = globSync(`${CONFIG.webSrcPath}/**/*.ts`);
   const allTsContent = tsFiles.map(f => readFileContent(f)).join('\n');
 
   const tables = new Set<string>();

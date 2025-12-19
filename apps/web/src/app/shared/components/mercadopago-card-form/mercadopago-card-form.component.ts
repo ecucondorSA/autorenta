@@ -106,6 +106,18 @@ interface BrickError {
   message: string;
 }
 
+export interface MercadoPagoCardTokenGeneratedEvent {
+  cardToken: string;
+  last4: string;
+  payer?: {
+    email?: string;
+    identification?: {
+      type: string;
+      number: string;
+    };
+  };
+}
+
 @Component({
   selector: 'app-mercadopago-card-form',
   standalone: true,
@@ -198,7 +210,7 @@ interface BrickError {
 })
 export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
   @Input() amountArs = 0;
-  @Output() cardTokenGenerated = new EventEmitter<{ cardToken: string; last4: string }>();
+  @Output() cardTokenGenerated = new EventEmitter<MercadoPagoCardTokenGeneratedEvent>();
   @Output() cardError = new EventEmitter<string>();
 
   // SECURITY: Use @ViewChild for DOM references instead of getElementById
@@ -416,6 +428,7 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
     try {
       // Card Payment Brick returns token directly at root level
       const token = cardFormData?.token;
+      const payer = cardFormData?.payer;
 
       if (!token || typeof token !== 'string' || token.length === 0) {
         throw new Error('No se generó el token de la tarjeta. Verifica los datos e intenta nuevamente.');
@@ -426,6 +439,12 @@ export class MercadopagoCardFormComponent implements AfterViewInit, OnDestroy {
         this.cardTokenGenerated.emit({
           cardToken: token,
           last4: 'XXXX', // Card Payment Brick doesn't expose last4 directly
+          payer: payer
+            ? {
+              email: payer.email,
+              identification: payer.identification,
+            }
+            : undefined,
         });
       });
 

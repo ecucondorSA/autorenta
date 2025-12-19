@@ -1,0 +1,192 @@
+<div class="rentarfast-page">
+  <!-- Header -->
+  <header class="rentarfast-header">
+    <button class="back-button" (click)="goBack()" aria-label="Volver">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+    </button>
+    <div class="header-title">
+      <div class="header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" x2="12" y1="19" y2="22"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>Rentarfast</h1>
+        <span class="header-subtitle">
+          Asistente de voz
+          @if (agentService.isConnected()) {
+            <span class="connection-dot connection-dot--online"></span>
+          } @else {
+            <span class="connection-dot connection-dot--offline"></span>
+          }
+        </span>
+      </div>
+    </div>
+    <button class="clear-button" (click)="clearChat()" aria-label="Limpiar chat">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Messages Area -->
+  <div class="messages-container" #messagesContainer>
+    @if (messages().length === 0 && !isListening()) {
+      <div class="welcome-message">
+        <h2>Hola, soy Rentarfast</h2>
+        <p>Tu asistente de voz de Autorentar</p>
+
+        <!-- Big Voice Button -->
+        <button
+          class="voice-button-large"
+          [class.voice-button-large--listening]="isListening()"
+          [class.voice-button-large--disabled]="!voiceSupported()"
+          (click)="toggleVoice()"
+          [disabled]="!voiceSupported() || isLoading()"
+          aria-label="Activar reconocimiento de voz">
+          <div class="voice-button-large__pulse"></div>
+          <div class="voice-button-large__icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" y2="22"/>
+            </svg>
+          </div>
+        </button>
+
+        @if (voiceSupported()) {
+          <p class="voice-hint">Toca el microfono y habla</p>
+        } @else {
+          <p class="voice-hint voice-hint--error">Tu navegador no soporta reconocimiento de voz</p>
+        }
+
+        <div class="capabilities-list">
+          <div class="capability-item">
+            <span class="capability-icon">🚗</span>
+            <span>Buscar autos disponibles</span>
+          </div>
+          <div class="capability-item">
+            <span class="capability-icon">💰</span>
+            <span>Calcular precios</span>
+          </div>
+          <div class="capability-item">
+            <span class="capability-icon">📊</span>
+            <span>Ver estadisticas</span>
+          </div>
+          <div class="capability-item">
+            <span class="capability-icon">❓</span>
+            <span>Responder preguntas</span>
+          </div>
+        </div>
+      </div>
+    } @else if (isListening() && messages().length === 0) {
+      <!-- Listening State -->
+      <div class="listening-state">
+        <div class="listening-animation">
+          <div class="listening-circle"></div>
+          <div class="listening-circle"></div>
+          <div class="listening-circle"></div>
+        </div>
+        <h2>Escuchando...</h2>
+        <p class="listening-text">{{ inputText() || 'Di algo...' }}</p>
+        <button class="stop-button" (click)="stopListening()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="6" width="12" height="12" rx="2"/>
+          </svg>
+          Detener
+        </button>
+      </div>
+    } @else {
+      <!-- Chat Messages -->
+      @for (message of messages(); track trackByMessageId($index, message)) {
+        <div class="message" [class.message--user]="message.role === 'user'" [class.message--agent]="message.role === 'agent'">
+          @if (message.role === 'agent') {
+            <div class="message-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              </svg>
+            </div>
+          }
+          <div class="message-content">
+            <p>{{ message.content }}</p>
+            @if (message.toolsUsed && message.toolsUsed.length > 0) {
+              <div class="tools-used">
+                @for (tool of message.toolsUsed; track tool) {
+                  <span class="tool-badge">{{ tool }}</span>
+                }
+              </div>
+            }
+            <span class="message-time">
+              {{ message.timestamp | date:'HH:mm' }}
+            </span>
+          </div>
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="message message--agent message--loading">
+          <div class="message-avatar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            </svg>
+          </div>
+          <div class="message-content">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <div class="input-container">
+      <!-- Voice Button (small) -->
+      @if (voiceSupported()) {
+        <button
+          class="voice-button-small"
+          [class.voice-button-small--listening]="isListening()"
+          (click)="toggleVoice()"
+          [disabled]="isLoading()"
+          aria-label="Activar voz">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" x2="12" y1="19" y2="22"/>
+          </svg>
+        </button>
+      }
+
+      <input
+        #messageInput
+        type="text"
+        class="message-input"
+        placeholder="Escribe o usa el microfono..."
+        [value]="inputText()"
+        (input)="inputText.set($any($event.target).value)"
+        (keydown)="onKeyDown($event)"
+        [disabled]="isLoading() || isListening()"
+      />
+      <button
+        class="send-button"
+        (click)="sendMessage()"
+        [disabled]="!inputText().trim() || isLoading()"
+        aria-label="Enviar mensaje">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

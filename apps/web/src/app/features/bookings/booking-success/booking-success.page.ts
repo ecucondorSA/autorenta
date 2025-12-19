@@ -178,7 +178,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
     console.log('🔄 Retrying payment for booking:', booking.id);
 
     // Navegar al wizard de checkout con el booking ID
-    this.router.navigate(['/bookings', 'checkout', booking.id], {
+    this.router.navigate(['/bookings', booking.id, 'checkout'], {
       queryParams: { retry: 'true' },
     });
   }

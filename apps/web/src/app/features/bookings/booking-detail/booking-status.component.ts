@@ -44,11 +44,29 @@ export class BookingStatusComponent {
     return this.bookingsService.isExpired(this.booking);
   });
 
+  /** Check if this is a P2P wallet booking */
+  isWalletBooking = computed(() => {
+    return this.booking?.payment_mode === 'wallet';
+  });
+
+  /** Check if booking is pending owner approval (P2P flow) */
+  isPendingApproval = computed(() => {
+    return this.booking?.status === 'pending' && this.isWalletBooking();
+  });
+
   statusClass = computed(() => {
     const status = this.booking?.status;
+
+    // P2P wallet: pending approval (amber, not error)
+    if (this.isPendingApproval()) {
+      return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+    }
+
+    // Traditional: expired payment
     if (status === 'pending' && this.isExpired()) {
       return 'bg-error-bg-hover text-error-strong';
     }
+
     switch (status) {
       case 'pending':
       case 'pending_payment':
@@ -73,9 +91,17 @@ export class BookingStatusComponent {
 
   statusLabel = computed(() => {
     const status = this.booking?.status;
-    if (status === 'pending' && this.isExpired()) {
+
+    // P2P wallet: waiting for owner approval
+    if (this.isPendingApproval()) {
+      return 'Esperando aprobación';
+    }
+
+    // Traditional: expired payment (only for non-wallet bookings)
+    if (status === 'pending' && this.isExpired() && !this.isWalletBooking()) {
       return 'Pago vencido';
     }
+
     switch (status) {
       case 'pending':
       case 'pending_payment':
@@ -102,7 +128,13 @@ export class BookingStatusComponent {
   });
 
   statusIcon = computed(() => {
-    if (this.isExpired()) {
+    // P2P wallet: clock icon for pending approval
+    if (this.isPendingApproval()) {
+      return '⏳';
+    }
+
+    // Traditional: expired
+    if (this.isExpired() && !this.isWalletBooking()) {
       return '⛔';
     }
 

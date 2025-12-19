@@ -92,6 +92,36 @@
             </div>
             <h2 class="text-xl font-bold text-text-primary mb-0.5 font-satoshi">{{ profile()?.full_name }}</h2>
             <p class="text-xs text-text-secondary dark:text-text-secondary mb-1">{{ userEmail() }}</p>
+            @if (profile()?.id || profile()?.gov_id_number || profile()?.driver_license_number) {
+              <div class="w-full max-w-xs text-[11px] text-text-secondary/80 text-left">
+                @if (profile()?.id) {
+                  <div class="flex items-start justify-between gap-2">
+                    <span class="text-[10px] uppercase tracking-wide text-text-muted">ID de cliente</span>
+                    <span class="font-mono text-[10px] text-text-secondary break-all text-right">
+                      {{ profile()?.id }}
+                    </span>
+                  </div>
+                }
+                @if (profile()?.gov_id_number) {
+                  <div class="flex items-start justify-between gap-2">
+                    <span class="text-[10px] uppercase tracking-wide text-text-muted">{{
+                      govIdLabel()
+                    }}</span>
+                    <span class="font-mono text-[10px] text-text-secondary break-all text-right">
+                      {{ profile()?.gov_id_number }}
+                    </span>
+                  </div>
+                }
+                @if (profile()?.driver_license_number) {
+                  <div class="flex items-start justify-between gap-2">
+                    <span class="text-[10px] uppercase tracking-wide text-text-muted">Licencia</span>
+                    <span class="font-mono text-[10px] text-text-secondary break-all text-right">
+                      {{ profile()?.driver_license_number }}
+                    </span>
+                  </div>
+                }
+              </div>
+            }
             <!-- Member Since -->
             @if (memberSince()) {
               <p

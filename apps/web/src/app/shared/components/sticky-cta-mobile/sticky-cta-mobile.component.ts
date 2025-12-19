@@ -22,19 +22,32 @@ export class StickyCtaMobileComponent {
   @Input() showPrice = true;
   /** Optional guarantee/deposit amount in ARS */
   @Input() guaranteeAmount: number | null = null;
+  /** Show terms checkbox when user can book */
+  @Input() showTermsCheckbox = false;
+  /** Current state of terms acceptance */
+  @Input() termsAccepted = false;
   @Output() readonly ctaClick = new EventEmitter<void>();
+  @Output() readonly termsAcceptedChange = new EventEmitter<boolean>();
 
   onCtaClick(): void {
-    if (!this.disabled && !this.loading) {
+    if (!this.disabled && !this.loading && (!this.showTermsCheckbox || this.termsAccepted)) {
       this.ctaClick.emit();
     }
   }
 
+  onTermsChange(checked: boolean): void {
+    this.termsAcceptedChange.emit(checked);
+  }
+
+  get isButtonDisabled(): boolean {
+    return this.disabled || this.loading || (this.showTermsCheckbox && !this.termsAccepted);
+  }
+
   get buttonClasses(): Record<string, boolean> {
-    const isInteractive = !this.disabled && !this.loading;
+    const isInteractive = !this.isButtonDisabled;
     return {
-      'opacity-50': this.disabled || this.loading,
-      'cursor-not-allowed': this.disabled || this.loading,
+      'opacity-50': this.isButtonDisabled,
+      'cursor-not-allowed': this.isButtonDisabled,
       'bg-gradient-to-r': true,
       'from-cta-default': true,
       'to-cta-default/80': !this.expressMode,

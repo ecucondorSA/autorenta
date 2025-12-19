@@ -29,12 +29,10 @@ import { BookingContractComponent } from '../../../shared/components/booking-con
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { DisputeFormComponent } from '../../../shared/components/dispute-form/dispute-form.component';
 import { DisputesListComponent } from '../../../shared/components/disputes-list/disputes-list.component';
-import { DistanceRiskTierBadgeComponent } from '../../../shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component';
 import { OwnerConfirmationComponent } from '../../../shared/components/owner-confirmation/owner-confirmation.component';
 import { RefundRequestComponent } from '../../../shared/components/refund-request/refund-request.component';
 import { RefundStatusComponent } from '../../../shared/components/refund-status/refund-status.component';
 import { RenterConfirmationComponent } from '../../../shared/components/renter-confirmation/renter-confirmation.component';
-import { ShareButtonComponent } from '../../../shared/components/share-button/share-button.component';
 import { BookingOpsTimelineComponent } from '../../../shared/components/booking-ops-timeline/booking-ops-timeline.component';
 import { BookingTrackingComponent } from '../../../shared/components/booking-tracking/booking-tracking.component';
 import { BookingPricingBreakdownComponent } from '../../../shared/components/booking-pricing-breakdown/booking-pricing-breakdown.component';
@@ -55,6 +53,7 @@ import { ReportRenterNoShowComponent } from '../../../shared/components/report-r
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
+import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
 
@@ -89,8 +88,6 @@ import { ReviewManagementComponent } from './review-management.component';
     RefundRequestComponent,
     BookingContractComponent,
     RefundStatusComponent,
-    ShareButtonComponent,
-    DistanceRiskTierBadgeComponent,
     BookingConfirmationTimelineComponent,
     BookingOpsTimelineComponent,
     BookingTrackingComponent,
@@ -104,6 +101,7 @@ import { ReviewManagementComponent } from './review-management.component';
     AiLegalPanelComponent,
     AiTripPanelComponent,
     AiChecklistPanelComponent,
+    ErrorStateComponent,
   ],
   templateUrl: './booking-detail.page.html',
   styleUrl: './booking-detail.page.css',
@@ -134,12 +132,17 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     {
       key: 'pending',
       label: 'Solicitud enviada',
-      description: 'Estamos esperando la aprobación del anfitrión.',
+      description: 'Solicitud creada correctamente.',
     },
     {
       key: 'pending_payment',
-      label: 'Pago pendiente',
-      description: 'Confirma el pago para bloquear las fechas.',
+      label: 'Garantía bloqueada',
+      description: 'Fondos reservados en tu wallet.',
+    },
+    {
+      key: 'awaiting_approval',
+      label: 'Esperando aprobación',
+      description: 'El propietario está revisando tu solicitud.',
     },
     {
       key: 'confirmed',
@@ -163,23 +166,38 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     },
   ] as const;
 
+  /**
+   * Determines the current step index in the booking flow.
+   * For P2P (wallet) bookings: pending status means steps 1-2 are done, waiting at step 3.
+   * For traditional bookings: pending status means at step 1, waiting for payment.
+   */
   readonly currentBookingStageIndex = computed(() => {
     const booking = this.booking();
     if (!booking) return 0;
-    
-    // Direct mapping for main steps
-    const idx = this.bookingFlowSteps.findIndex((step) => step.key === booking.status);
-    if (idx >= 0) return idx;
 
-    // Mapping for sub-states or alternative states
-    if (booking.status === 'disputed') {
-      return 4; // Map to 'pending_review' step
+    // P2P wallet flow: pending + wallet = already paid, waiting for owner approval
+    if (booking.status === 'pending' && booking.payment_mode === 'wallet') {
+      return 2; // Step 3: "Esperando aprobación" (0-indexed = 2)
     }
+
+    // Traditional flow or other statuses
+    const statusMap: Record<string, number> = {
+      'pending': 0,           // Step 1: Solicitud enviada
+      'pending_payment': 1,   // Step 2: Garantía bloqueada
+      'confirmed': 3,         // Step 4: Reserva confirmada
+      'in_progress': 4,       // Step 5: Check-in y uso
+      'pending_review': 5,    // Step 6: Revisión final
+      'completed': 6,         // Step 7: Cierre
+      'disputed': 5,          // Map to pending_review
+    };
+
+    const idx = statusMap[booking.status];
+    if (idx !== undefined) return idx;
 
     if (booking.status === 'cancelled' || booking.status === 'expired') {
-      return 0; // Cancelled bookings don't follow the happy path stepper
+      return 0; // Cancelled bookings show at start
     }
-    
+
     // Default fallback
     return this.bookingFlowSteps.length - 1;
   });
@@ -251,6 +269,26 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     const date = payment.paid_at || payment.wallet_charged_at || null;
 
     return { status, method, date };
+  });
+
+  /**
+   * P2P wallet booking pending owner approval
+   * When true: show "waiting for approval" UI instead of "pay now" UI
+   */
+  readonly isPendingOwnerApproval = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    return booking.status === 'pending' && booking.payment_mode === 'wallet';
+  });
+
+  /**
+   * Traditional flow: booking needs payment
+   * When true: show "Garantizar Reserva" button
+   */
+  readonly needsPayment = computed(() => {
+    const booking = this.booking();
+    if (!booking) return false;
+    return booking.status === 'pending' && booking.payment_mode !== 'wallet';
   });
 
   private countdownInterval: number | null = null;

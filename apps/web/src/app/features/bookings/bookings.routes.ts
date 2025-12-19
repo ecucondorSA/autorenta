@@ -28,7 +28,15 @@ export const BOOKINGS_ROUTES: Routes = [
     path: 'detail-payment',
     loadComponent: () =>
       import('./booking-detail-payment/booking-detail-payment.page').then(
-        (m) => m.BookingDetailPaymentPage,
+        (m) => m.BookingRequestPage,
+      ),
+    canMatch: [AuthGuard],
+  },
+  {
+    path: ':bookingId/detail-payment',
+    loadComponent: () =>
+      import('./booking-detail-payment/booking-detail-payment.page').then(
+        (m) => m.BookingRequestPage,
       ),
     canMatch: [AuthGuard],
   },

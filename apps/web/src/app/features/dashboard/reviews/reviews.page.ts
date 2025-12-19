@@ -4,13 +4,14 @@ import {Component, inject, OnInit, signal,
 import { RouterLink } from '@angular/router';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { PendingReviewsListComponent } from '../../../shared/components/pending-reviews-list/pending-reviews-list.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 
 @Component({
   selector: 'app-reviews-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ReviewCardComponent],
+  imports: [RouterLink, ReviewCardComponent, PendingReviewsListComponent],
   templateUrl: './reviews.page.html',
   styleUrls: ['./reviews.page.css'],
 })

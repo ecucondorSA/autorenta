@@ -252,8 +252,8 @@
           <div class="flex items-start gap-3">
             <app-icon name="calendar" [size]="20" cssClass="text-cta-default mt-0.5" />
             <div>
-              <p class="font-medium text-text-primary text-sm">Cancelación gratuita por 24hs</p>
-              <p class="text-xs text-text-secondary">Período de gracia para cancelar sin costo.</p>
+              <p class="font-medium text-text-primary text-sm">Arrepentimiento sin costo</p>
+              <p class="text-xs text-text-secondary">Cancelá gratis en las primeras 24hs después de reservar.</p>
             </div>
           </div>
           <div class="flex items-start gap-3">
@@ -298,12 +298,60 @@
     <!-- RIGHT COLUMN: Terms & Booking -->
     <!-- ═══════════════════════════════════════════════ -->
     <div class="dashboard-right">
-      <!-- Terms Section -->
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <!-- GARANTÍA DEL ALQUILER - Información clara sobre depósito -->
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <div class="rounded-2xl border-2 border-cta-default/30 bg-gradient-to-b from-cta-default/5 to-surface-raised overflow-hidden mb-4">
+        <div class="p-4 border-b border-cta-default/20 bg-cta-default/10">
+          <h3 class="font-bold text-text-primary flex items-center gap-2">
+            <app-icon name="shield" [size]="20" cssClass="text-cta-default" />
+            Garantía del Alquiler
+          </h3>
+          <p class="text-xs text-text-secondary mt-1">Se retiene al inicio y se libera al devolver el auto sin daños</p>
+        </div>
+
+        <div class="p-4">
+          <!-- Monto de garantía -->
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-border-default">
+            <span class="text-sm text-text-secondary">Monto de garantía</span>
+            <span class="text-lg font-bold text-text-primary">USD ${{ car()?.security_deposit_usd || 250 }}</span>
+          </div>
+
+          <!-- Opciones de pago de garantía -->
+          <p class="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Formas de pago aceptadas</p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default">
+              <div class="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                <app-icon name="credit-card" [size]="16" cssClass="text-blue-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-text-primary">Tarjeta de crédito</p>
+                <p class="text-xs text-text-secondary">Retención temporal (no se debita)</p>
+              </div>
+              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
+            </div>
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-base border border-border-default">
+              <div class="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                <app-icon name="wallet" [size]="16" cssClass="text-emerald-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-text-primary">Saldo en Wallet</p>
+                <p class="text-xs text-text-secondary">Se bloquea y libera automáticamente</p>
+              </div>
+              <app-icon name="check-circle" [size]="18" cssClass="text-cta-default" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <!-- CONDICIONES DEL PROPIETARIO - Lo que define el dueño del auto -->
+      <!-- ══════════════════════════════════════════════════════════════════ -->
       <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4">
         <div class="flex items-center justify-between p-4 border-b border-border-default">
           <h3 class="font-semibold text-text-primary flex items-center gap-2">
-            <app-icon name="document" [size]="18" />
-            Términos
+            <app-icon name="user" [size]="18" />
+            Condiciones del Propietario
           </h3>
           <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-cta-default/10 text-cta-default hover:bg-cta-default/20 transition-all duration-200" (click)="toggleAiPanel('legal')">
             <app-icon name="sparkles" [size]="14" />
@@ -312,81 +360,85 @@
         </div>
 
         <div class="p-4 space-y-3">
-          <!-- Seguro -->
-          <div class="flex items-start gap-3">
-            <app-icon name="shield" [size]="18" cssClass="w-5 h-5 mt-0.5 text-cta-default flex-shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-text-primary">Seguro con Franquicia</p>
-              <p class="text-xs text-text-secondary">USD ${{ car()?.security_deposit_usd || 250 }} máximo</p>
-            </div>
-          </div>
-
-          <!-- Límite geográfico -->
-          <div class="flex items-start gap-3">
-            <app-icon name="map-pin" [size]="18" cssClass="w-5 h-5 mt-0.5 text-cta-default flex-shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-text-primary">
-                @if (car()?.allowed_provinces?.length) {
-                  Provincias permitidas
-                } @else {
-                  Sin límite geográfico
-                }
-              </p>
-              @if (car()?.allowed_provinces?.length) {
-                <p class="text-xs text-text-secondary">{{ car()?.allowed_provinces?.join(', ') }}</p>
-              }
-            </div>
-          </div>
-
-          <!-- Kilometraje -->
-          <div class="flex items-start gap-3">
-            <app-icon name="speedometer" [size]="18" cssClass="w-5 h-5 mt-0.5 text-cta-default flex-shrink-0" />
-            <div>
-              <p class="text-sm font-medium text-text-primary">
-                @if (!car()?.mileage_limit || car()?.mileage_limit === 0) {
-                  Kilometraje Ilimitado
-                } @else {
-                  {{ car()?.mileage_limit }} km/día
-                }
-              </p>
-              @if (car()?.extra_km_price && car()?.mileage_limit) {
-                <p class="text-xs text-text-secondary">+${{ car()?.extra_km_price }} USD por km extra</p>
-              }
-            </div>
-          </div>
-
           <!-- Combustible -->
           <div class="flex items-start gap-3">
-            <app-icon name="lightning" [size]="18" cssClass="w-5 h-5 mt-0.5 text-cta-default flex-shrink-0" />
+            <app-icon name="lightning" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
             <div>
               <p class="text-sm font-medium text-text-primary">Combustible</p>
               <p class="text-xs text-text-secondary">{{ getFuelPolicyLabel(car()?.fuel_policy) }}</p>
             </div>
           </div>
 
+          <!-- Límite geográfico -->
+          @if (car()?.allowed_provinces?.length) {
+            <div class="flex items-start gap-3">
+              <app-icon name="map-pin" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
+              <div>
+                <p class="text-sm font-medium text-text-primary">Zonas permitidas</p>
+                <p class="text-xs text-text-secondary">{{ car()?.allowed_provinces?.join(', ') }}</p>
+              </div>
+            </div>
+          }
+
+          <!-- Kilometraje (solo si hay límite) -->
+          @if (car()?.mileage_limit) {
+            <div class="flex items-start gap-3">
+              <app-icon name="speedometer" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
+              <div>
+                <p class="text-sm font-medium text-text-primary">Límite de kilometraje</p>
+                <p class="text-xs text-text-secondary">
+                  {{ car()?.mileage_limit }} km/día
+                  @if (car()?.extra_km_price) {
+                    · +${{ car()?.extra_km_price }} USD por km extra
+                  }
+                </p>
+              </div>
+            </div>
+          }
+
           <!-- Cancelación -->
           <div class="flex items-start gap-3">
-            <app-icon name="calendar" [size]="18" cssClass="w-5 h-5 mt-0.5 text-cta-default flex-shrink-0" />
+            <app-icon name="calendar" [size]="18" cssClass="w-5 h-5 mt-0.5 text-text-secondary flex-shrink-0" />
             <div>
-              <p class="text-sm font-medium text-text-primary">Cancelación</p>
+              <p class="text-sm font-medium text-text-primary">Política de cancelación</p>
               <p class="text-xs text-text-secondary">{{ getCancelPolicyLabel(car()?.cancel_policy) }}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Documentation Required -->
-        <div class="mt-4 p-4 border-t border-border-default">
-          <h4 class="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Documentación a Presentar</h4>
-          <div class="flex items-center gap-2 py-2">
-            <app-icon name="check-circle" [size]="18" cssClass="w-5 h-5 text-emerald-500" />
-            <span class="text-sm text-text-primary">DNI / Pasaporte</span>
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <!-- REQUISITOS - Documentación necesaria -->
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden mb-4">
+        <div class="p-4 border-b border-border-default">
+          <h3 class="font-semibold text-text-primary flex items-center gap-2">
+            <app-icon name="document" [size]="18" />
+            Requisitos para Alquilar
+          </h3>
+        </div>
+        <div class="p-4 space-y-2">
+          <div class="flex items-center gap-3 py-2">
+            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
+            <span class="text-sm text-text-primary">DNI o Pasaporte vigente</span>
           </div>
-          <div class="flex items-center gap-2 py-2">
-            <app-icon name="check-circle" [size]="18" cssClass="w-5 h-5 text-emerald-500" />
+          <div class="flex items-center gap-3 py-2">
+            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
             <span class="text-sm text-text-primary">Licencia de conducir vigente</span>
+          </div>
+          <div class="flex items-center gap-3 py-2">
+            <app-icon name="check-circle" [size]="18" cssClass="text-cta-default flex-shrink-0" />
+            <span class="text-sm text-text-primary">Ser mayor de 18 años</span>
           </div>
         </div>
       </div>
+
+      <!-- Availability Mini Calendar -->
+      @if (car()?.id) {
+        <div class="mb-4">
+          <app-availability-mini-calendar [carId]="car()!.id" />
+        </div>
+      }
 
       <!-- Booking Widget (hidden on mobile - sticky CTA handles it) -->
       <div class="hidden lg:block rounded-2xl border border-border-default bg-surface-raised p-4 shadow-lg">
@@ -422,24 +474,43 @@
           />
         </div>
 
+        <!-- Terms & Conditions Checkbox -->
+        @if (authService.isAuthenticated() && canBook()) {
+          <label class="flex items-start gap-3 mb-4 cursor-pointer group">
+            <input
+              type="checkbox"
+              [checked]="termsAccepted()"
+              (change)="termsAccepted.set($any($event.target).checked)"
+              class="mt-1 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-2 cursor-pointer"
+            />
+            <span class="text-sm text-text-secondary leading-relaxed">
+              Acepto los
+              <a href="/terminos" target="_blank" class="text-cta-default hover:underline font-medium">Términos y Condiciones</a>
+              y la
+              <a href="/politica-seguros" target="_blank" class="text-cta-default hover:underline font-medium">Póliza de Seguro</a>
+              de AutoRenta.
+            </span>
+          </label>
+        }
+
         <!-- Reserve Button -->
         @if (authService.isAuthenticated()) {
           <button
             id="book-now"
             (click)="onBookClick()"
-            [disabled]="bookingInProgress()"
+            [disabled]="bookingInProgress() || (canBook() && !termsAccepted())"
             class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
-            [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() }"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() || (canBook() && !termsAccepted()) }"
           >
             @if (!bookingInProgress()) {
-              <span>{{ canBook() ? 'Confirmar y Pagar' : 'Ver Disponibilidad' }}</span>
+              <span>{{ canBook() ? 'Solicitar Reserva' : 'Ver Disponibilidad' }}</span>
             } @else {
               <span class="flex items-center gap-2">
                 <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Procesando...
+                Enviando solicitud...
               </span>
             }
           </button>
@@ -447,7 +518,7 @@
 
         @if (canBook()) {
           <p class="text-center text-xs text-text-secondary mt-3">
-            No se te cobrará nada todavía
+            No se te cobrará nada todavía. Solo se pre-autoriza la garantía hasta que el anfitrión apruebe.
           </p>
         }
 
@@ -529,6 +600,9 @@
     [disabled]="bookingInProgress()"
     [loading]="bookingInProgress()"
     [expressMode]="expressMode()"
+    [showTermsCheckbox]="!!canBook()"
+    [termsAccepted]="termsAccepted()"
+    (termsAcceptedChange)="termsAccepted.set($event)"
     (ctaClick)="onBookClick()"
   />
 }

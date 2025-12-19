@@ -192,9 +192,10 @@ export class MyBookingsPage implements OnInit {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'Pendiente de pago';
+        // P2P flow: wallet bookings are awaiting owner approval, not payment
+        return this.isWalletBooking(booking) ? 'Esperando aprobación' : 'Pendiente de pago';
       case 'confirmed':
-        return 'Pagada';
+        return 'Aprobada';
       case 'in_progress':
         return 'En uso';
       case 'completed':
@@ -208,19 +209,31 @@ export class MyBookingsPage implements OnInit {
     }
   }
 
+  /**
+   * Check if booking uses wallet payment mode (P2P flow)
+   */
+  isWalletBooking(booking: Booking): boolean {
+    return booking.payment_mode === 'wallet';
+  }
+
   statusHint(booking: Booking): string | null {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'Completá el checkout para confirmar tu reserva.';
+        // P2P flow: wallet bookings are awaiting owner approval
+        return this.isWalletBooking(booking)
+          ? 'El propietario está revisando tu solicitud. Te notificaremos cuando responda.'
+          : 'Completá el checkout para confirmar tu reserva.';
       case 'confirmed':
-        return 'Todo listo. Coordiná el retiro con el anfitrión.';
+        return 'Tu reserva fue aprobada. Coordiná el check-in con el propietario.';
       case 'completed':
         return 'Gracias por viajar con nosotros.';
       case 'cancelled':
         return 'Se canceló esta reserva. Podés generar una nueva cuando quieras.';
       case 'expired':
-        return 'La fecha de alquiler ya pasó sin completar el pago.';
+        return this.isWalletBooking(booking)
+          ? 'La solicitud expiró sin respuesta del propietario.'
+          : 'La fecha de alquiler ya pasó sin completar el pago.';
       default:
         return null;
     }
@@ -304,9 +317,10 @@ export class MyBookingsPage implements OnInit {
     const effectiveStatus = this.getEffectiveStatus(booking);
     switch (effectiveStatus) {
       case 'pending':
-        return 'Pendiente';
+        // P2P flow: wallet bookings show "En revisión" instead of "Pendiente"
+        return this.isWalletBooking(booking) ? 'En revisión' : 'Pendiente';
       case 'confirmed':
-        return 'Pagada';
+        return 'Aprobada';
       case 'in_progress':
         return 'En uso';
       case 'completed':
@@ -378,9 +392,23 @@ export class MyBookingsPage implements OnInit {
     }
   }
 
-  /** Check if booking can still be paid (pending AND start date not passed) */
+  /**
+   * Check if booking can still be paid (pending AND start date not passed)
+   * For P2P (wallet) bookings, funds are already locked so no payment action needed
+   */
   canCompletePay(booking: Booking): boolean {
+    // Wallet bookings have already locked funds - no payment action needed
+    if (this.isWalletBooking(booking)) {
+      return false;
+    }
     return booking.status === 'pending' && !this.isStartDatePassed(booking);
+  }
+
+  /**
+   * Check if booking is pending owner approval (P2P flow)
+   */
+  isPendingApproval(booking: Booking): boolean {
+    return booking.status === 'pending' && this.isWalletBooking(booking) && !this.isStartDatePassed(booking);
   }
 
   // Actions

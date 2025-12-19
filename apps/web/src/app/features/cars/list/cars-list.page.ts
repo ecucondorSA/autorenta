@@ -57,6 +57,7 @@ export interface CarWithDistance extends Car {
 const SORT_STORAGE_KEY = 'autorenta:list-sort';
 const ANALYTICS_EVENT = 'autorenta:analytics';
 const ECONOMY_RADIUS_KM = 50;
+const LOCATION_OVERRIDE_KEY = 'autorenta:location_override';
 const PREMIUM_SCORE_PRICE_WEIGHT = 0.7;
 const PREMIUM_SCORE_RATING_WEIGHT = 0.3;
 const PAGE_SIZE = 12;
@@ -129,6 +130,7 @@ export class CarsListPage implements OnInit, OnDestroy {
   private readonly breakpoint = inject(BreakpointService);
   private readonly economyRadiusKm = ECONOMY_RADIUS_KM;
   private sortInitialized = false;
+  private locationOverrideApplied = false;
   private analyticsLastKey: string | null = null;
   private realtimeChannel?: RealtimeChannel;
   private carouselAutoScrollInterval?: ReturnType<typeof setInterval>;
@@ -785,6 +787,9 @@ export class CarsListPage implements OnInit, OnDestroy {
         }
       }
 
+      // Apply query param overrides (sort, distance, location) if present
+      this.applyQueryOverrides();
+
       // 📱 Default to grid view (Tinder-style) on mobile for better engagement
       // Previously defaulted to map, but the new swipe UI is superior
       // if (this.isMobile()) {
@@ -814,6 +819,12 @@ export class CarsListPage implements OnInit, OnDestroy {
    */
   private async initializeUserLocation(): Promise<void> {
     try {
+      if (this.userLocation()) {
+        return;
+      }
+      if (this.locationOverrideApplied) {
+        return;
+      }
       const locationData = await this.locationService.getUserLocation();
       if (locationData) {
         this.userLocation.set({
@@ -832,6 +843,63 @@ export class CarsListPage implements OnInit, OnDestroy {
     // Open drawer when user location is set and there are cars
     if (this.cars().length > 0 && !this.drawerOpen()) {
       this.drawerOpen.set(true);
+    }
+  }
+
+  private applyQueryOverrides(): void {
+    if (!this.isBrowser) return;
+    const params = new URLSearchParams(window.location.search);
+
+    const sortParam = params.get('sort');
+    if (sortParam && this.isValidSort(sortParam)) {
+      this.sortBy.set(sortParam);
+      localStorage.setItem(SORT_STORAGE_KEY, sortParam);
+    }
+
+    const maxDistanceParam = params.get('maxDistance');
+    if (maxDistanceParam) {
+      const parsed = Number.parseFloat(maxDistanceParam);
+      if (Number.isFinite(parsed) && parsed > 0) {
+        this.maxDistance.set(parsed);
+      }
+    }
+
+    const cityParam = params.get('city');
+    if (cityParam) {
+      this['city'].set(cityParam);
+    }
+
+    const latParam = params.get('lat');
+    const lngParam = params.get('lng');
+    if (latParam && lngParam) {
+      const lat = Number.parseFloat(latParam);
+      const lng = Number.parseFloat(lngParam);
+      if (this.locationService.validateCoordinates(lat, lng)) {
+        this.userLocation.set({ lat, lng });
+        this.locationOverrideApplied = true;
+        return;
+      }
+    }
+
+    this.loadLocationOverrideFromStorage();
+  }
+
+  private loadLocationOverrideFromStorage(): void {
+    if (!this.isBrowser) return;
+    const raw = sessionStorage.getItem(LOCATION_OVERRIDE_KEY);
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw) as { lat?: number; lng?: number };
+      if (
+        typeof parsed?.lat === 'number' &&
+        typeof parsed?.lng === 'number' &&
+        this.locationService.validateCoordinates(parsed.lat, parsed.lng)
+      ) {
+        this.userLocation.set({ lat: parsed.lat, lng: parsed.lng });
+        this.locationOverrideApplied = true;
+      }
+    } catch {
+      // Ignore parse errors
     }
   }
 
@@ -1252,7 +1320,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Si es el mismo auto (doble click), navegar al detalle
     if (previousCarId === carId) {
-      this.router.navigate(['/cars/detail', carId]);
+      this.router.navigate(['/cars', carId]);
       return;
     }
 
@@ -1333,7 +1401,7 @@ export class CarsListPage implements OnInit, OnDestroy {
 
     // Si es el mismo auto, navegar al detalle
     if (previousCarId === carId) {
-      this.router.navigate(['/cars/detail', carId]);
+      this.router.navigate(['/cars', carId]);
       return;
     }
 

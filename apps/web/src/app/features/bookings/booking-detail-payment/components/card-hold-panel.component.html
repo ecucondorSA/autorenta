@@ -230,28 +230,19 @@
             <p class="text-xs text-error-strong mt-1">
               {{
               errorMessage() ||
-              'No se pudo autorizar la tarjeta. Intenta nuevamente o usa otra modalidad de pago.'
+              'No se pudo autorizar la tarjeta. Intenta nuevamente o probá con otra tarjeta.'
               }}
             </p>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            (click)="onRetry()"
-            [disabled]="isLoading()"
-            class="px-4 py-2 border border-border-muted dark:border-neutral-700 text-sm font-medium rounded-md text-text-primary dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-surface-base dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-cta-default/60 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
-            >
-            Reintentar
-          </button>
-          <button
-            type="button"
-            (click)="onFallbackToWallet()"
-            class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-text-inverse bg-gray-600 hover:bg-gray-700 dark:bg-neutral-500 dark:hover:bg-neutral-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-neutral-400 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
-            >
-            Usar Wallet
-          </button>
-        </div>
+        <button
+          type="button"
+          (click)="onRetry()"
+          [disabled]="isLoading()"
+          class="w-full px-4 py-2 border border-border-muted dark:border-neutral-700 text-sm font-medium rounded-md text-text-primary dark:text-text-secondary bg-surface-raised dark:bg-surface-secondary/60 hover:bg-surface-base dark:hover:bg-slate-deep/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-cta-default/60 focus:ring-offset-ivory-soft dark:focus:ring-offset-graphite-dark transition-colors"
+        >
+          Reintentar
+        </button>
       </div>
     }
   }

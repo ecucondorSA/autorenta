@@ -13,13 +13,10 @@ export { InputComponent } from './input.component';
 // Layout Components
 export { CardComponent } from './card.component';
 export { ModalComponent } from './modal.component';
-export { BottomSheetComponent } from './bottom-sheet.component';
 
 // Action Components
-export { FABComponent } from './fab.component';
-export { ChipComponent } from './chip.component';
+// Note: ChipComponent was removed - use existing shared components
 export { BadgeComponent } from './badge.component';
 
 // Feedback Components
-export { ToastComponent } from './toast.component';
-export { SkeletonComponent } from './skeleton.component';
+// Note: SkeletonComponent was removed - use existing shared/components skeleton

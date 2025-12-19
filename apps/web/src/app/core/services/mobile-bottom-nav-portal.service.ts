@@ -16,10 +16,14 @@ export class MobileBottomNavPortalService {
   private componentRef?: ComponentRef<MobileBottomNavComponent>;
   private readonly isBrowser = typeof document !== 'undefined';
   private menuOpenSubscription?: Subscription;
+  private rentarfastOpenSubscription?: Subscription;
   private readonly destroyRef = inject(DestroyRef);
 
   private readonly menuOpenSubject = new Subject<void>();
   readonly menuOpen$: Observable<void> = this.menuOpenSubject.asObservable();
+
+  private readonly rentarfastOpenSubject = new Subject<void>();
+  readonly rentarfastOpen$: Observable<void> = this.rentarfastOpenSubject.asObservable();
 
   constructor(
     private readonly appRef: ApplicationRef,
@@ -42,6 +46,13 @@ export class MobileBottomNavPortalService {
         this.menuOpenSubject.next();
       });
 
+    // Subscribe to the component's rentarfastOpen event
+    this.rentarfastOpenSubscription = this.componentRef.instance.rentarfastOpen
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.rentarfastOpenSubject.next();
+      });
+
     this.appRef.attachView(this.componentRef.hostView);
     const element = this.componentRef.location.nativeElement as HTMLElement;
     element.classList.add('mobile-bottom-nav-portal');
@@ -55,6 +66,9 @@ export class MobileBottomNavPortalService {
 
     this.menuOpenSubscription?.unsubscribe();
     this.menuOpenSubscription = undefined;
+
+    this.rentarfastOpenSubscription?.unsubscribe();
+    this.rentarfastOpenSubscription = undefined;
 
     const element = this.componentRef.location.nativeElement as HTMLElement;
     element.remove();

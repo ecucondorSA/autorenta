@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
@@ -50,6 +50,11 @@ export class OwnerBookingsPage implements OnInit {
   readonly carLeads = signal<CarLead[]>([]);
   readonly leadsLoading = signal(false);
   readonly marketplaceStatus = signal<MarketplaceStatus | null>(null);
+
+  /** Count of bookings pending owner approval */
+  readonly pendingApprovalCount = computed(() =>
+    this.bookings().filter((b) => b.status === 'pending').length
+  );
 
   private currentUserId: string | null = null;
 
@@ -386,6 +391,10 @@ export class OwnerBookingsPage implements OnInit {
         userName: lead.participantName ?? 'Usuario',
       },
     });
+  }
+
+  goToPendingApprovals(): void {
+    void this.router.navigate(['/bookings/pending-approval']);
   }
 
   private async loadMarketplaceStatus(userId: string): Promise<void> {

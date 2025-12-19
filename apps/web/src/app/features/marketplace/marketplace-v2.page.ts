@@ -25,10 +25,22 @@ import { GeocodingResult, GeocodingService } from '../../core/services/geocoding
 import { LocationService } from '../../core/services/location.service';
 import { injectSupabase } from '../../core/services/supabase-client.service';
 import { UrgentRentalService } from '../../core/services/urgent-rental.service';
-import { FabAction } from '../../shared/components/floating-action-fab/floating-action-fab.component';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 
-import { QuickFilter } from '../../shared/components/utility-bar/utility-bar.component';
+// QuickFilter interface defined locally (component was removed)
+interface QuickFilter {
+  id: string;
+  label: string;
+  icon?: string;
+}
+
+// FabAction interface defined locally (component was removed)
+interface FabAction {
+  id: string;
+  label: string;
+  icon: string;
+  color?: 'primary' | 'secondary';
+}
 
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { BookingsService } from '../../core/services/bookings.service';

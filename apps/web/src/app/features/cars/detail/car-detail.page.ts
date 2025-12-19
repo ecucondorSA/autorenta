@@ -49,7 +49,7 @@ import {
 } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { type PaymentMethod } from '../../../shared/components/payment-method-buttons/payment-method-buttons.component';
-import { PickupLocationSelection } from '../../../shared/components/pickup-location-selector/pickup-location-selector.component';
+import { AvailabilityMiniCalendarComponent } from '../../../shared/components/availability-mini-calendar/availability-mini-calendar.component';
 import { RiskCalculatorViewerComponent } from '../../../shared/components/risk-calculator-viewer/risk-calculator-viewer.component';
 import { StickyCtaMobileComponent } from '../../../shared/components/sticky-cta-mobile/sticky-cta-mobile.component';
 import {
@@ -102,6 +102,7 @@ interface CarDetailState {
     AiChecklistPanelComponent,
     AiReputationCardComponent,
     CarInquiryChatComponent,
+    AvailabilityMiniCalendarComponent,
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],
@@ -157,15 +158,12 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly distanceTier = signal<'local' | 'regional' | 'long_distance' | null>(null);
   readonly bookingInProgress = signal(false);
   readonly bookingError = signal<string | null>(null);
+  readonly termsAccepted = signal(false); // ✅ Checkbox de aceptación de términos
   readonly validatingAvailability = signal(false); // ✅ NEW: Loading state for re-validation
   readonly selectedPaymentMethod = signal<BookingPaymentMethod>('credit_card');
 
   // ✅ NEW: Booking location form state
   readonly pendingBookingData = signal<{ from: string; to: string } | null>(null);
-
-  // ✅ NEW: Pickup location selector state
-  readonly pickupLocationSelection = signal<PickupLocationSelection | null>(null);
-  readonly userHomeLocation = signal<{ lat: number; lng: number; address?: string } | null>(null);
 
   // ✅ NEW: Date suggestions and waitlist
   readonly suggestedDateRanges = signal<
@@ -480,9 +478,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
    */
   getCancelPolicyLabel(policy: string | undefined): string {
     const labels: Record<string, string> = {
-      'flexible': 'Flexible - Reembolso total hasta 24h antes',
-      'moderate': 'Moderada - Reembolso 50% hasta 48h antes',
-      'strict': 'Estricta - Sin reembolso',
+      'flexible': 'Flexible - 100% reembolso hasta 24h antes del inicio',
+      'moderate': 'Moderada - 50% reembolso hasta 48h antes del inicio',
+      'strict': 'Estricta - Sin reembolso en los 7 días previos',
     };
     return labels[policy || 'moderate'] || 'Moderada';
   }
@@ -814,16 +812,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           this.deliveryFeeCents.set(deliveryFee);
         }
       }
-
-      // ✅ NEW: Load home location for pickup-location-selector
-      const homeLocation = await this.locationService.getHomeLocation();
-      if (homeLocation) {
-        this.userHomeLocation.set({
-          lat: homeLocation.lat,
-          lng: homeLocation.lng,
-          address: homeLocation.address,
-        });
-      }
     } catch {
       // Silently fail - distance is optional
     }
@@ -1082,9 +1070,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       const booking = await this.bookingsService.requestBooking(car.id, startDate, endDate);
 
       if (booking?.id) {
-        // Navigate to new payment page with booking ID
-        await this.router.navigate(['/bookings', booking.id, 'payment'], {
-          queryParams: { paymentMethod },
+        // Navigate to booking request (pre-auth + message)
+        await this.router.navigate(['/bookings', booking.id, 'detail-payment'], {
+          queryParams: paymentMethod ? { paymentMethod } : {},
         });
       } else {
         // Fallback to old flow if booking creation fails
@@ -1267,8 +1255,8 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       // Close form and navigate
       this.pendingBookingData.set(null);
 
-      // After creating a booking, take the user to the payment flow (wallet/card hub)
-      this.router.navigate(['/bookings', result.booking.id, 'payment']);
+      // After creating a booking, take the user to the booking request step (pre-auth + message)
+      this.router.navigate(['/bookings', result.booking.id, 'detail-payment']);
     } catch (err: unknown) {
       // Track: Booking failed (exception)
       this.analytics.trackEvent('booking_failed', {
@@ -1350,25 +1338,6 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   onLocationFormCancelled(): void {
     this.pendingBookingData.set(null);
     this.bookingError.set(null);
-  }
-
-  /**
-   * ✅ NEW: Handle pickup location selection from pickup-location-selector component
-   * Updates delivery fee and distance based on selection
-   */
-  onPickupLocationSelected(selection: PickupLocationSelection): void {
-    this.pickupLocationSelection.set(selection);
-    this.deliveryFeeCents.set(selection.deliveryFeeCents);
-    this.distanceKm.set(selection.distanceKm);
-
-    // Log the selection for debugging
-    console.log('📍 Pickup location selected:', {
-      pickupLat: selection.pickupLocation?.lat,
-      pickupLng: selection.pickupLocation?.lng,
-      deliveryRequired: selection.deliveryRequired,
-      deliveryFee: selection.deliveryFeeCents,
-      distance: selection.distanceKm,
-    });
   }
 
   private updateMetaTags(car: Car, stats: CarStats | null): void {

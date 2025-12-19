@@ -17,6 +17,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/explore/explore.page').then((m) => m.ExplorePage),
   },
   {
+    path: 'rentarfast',
+    data: { layout: 'full-bleed', hideFooter: true, hideNav: true },
+    loadComponent: () =>
+      import('./features/rentarfast/rentarfast.page').then((m) => m.RentarfastPage),
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },

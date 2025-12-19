@@ -54,6 +54,7 @@ export class PaymentAuthorizationService {
     fxRate: number;
     cardToken: string;
     payerEmail: string;
+    payerIdentification?: { type: string; number: string };
     description?: string;
     bookingId?: string;
   }): Observable<AuthorizePaymentResult> {
@@ -86,6 +87,8 @@ export class PaymentAuthorizationService {
                   amount_usd: params.amountUsd,
                   card_token: params.cardToken,
                   payer_email: params.payerEmail,
+                  payer_identification_type: params.payerIdentification?.type || null,
+                  payer_identification_number: params.payerIdentification?.number || null,
                   description: params.description,
                   external_reference: `preauth_${params.bookingId || Date.now()}`,
                 },

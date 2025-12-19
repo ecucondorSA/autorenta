@@ -2,6 +2,27 @@
 <div
   class="fixed bottom-0 left-0 right-0 z-fixed lg:hidden bg-surface-raised border-t border-border-default shadow-lg backdrop-blur-lg"
   style="padding-bottom: env(safe-area-inset-bottom)">
+
+  <!-- Terms Checkbox (shown when can book) -->
+  @if (showTermsCheckbox) {
+    <div class="px-4 pt-3 pb-1 border-b border-border-default/50">
+      <label class="flex items-start gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          [checked]="termsAccepted"
+          (change)="onTermsChange($any($event.target).checked)"
+          class="mt-0.5 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-1 cursor-pointer"
+        />
+        <span class="text-xs text-text-secondary leading-tight">
+          Acepto los
+          <a href="/terminos" target="_blank" class="text-cta-default font-medium">Términos</a>
+          y la
+          <a href="/politica-seguros" target="_blank" class="text-cta-default font-medium">Póliza de Seguro</a>
+        </span>
+      </label>
+    </div>
+  }
+
   <div class="px-4 py-3 flex items-center justify-between gap-3">
     <!-- Price Section -->
     @if (showPrice) {
@@ -38,7 +59,7 @@
     }
 
     <!-- CTA Button -->
-    <button (click)="onCtaClick()" [disabled]="disabled || loading" [ngClass]="buttonClasses"
+    <button (click)="onCtaClick()" [disabled]="isButtonDisabled" [ngClass]="buttonClasses"
       class="flex-1 py-3 px-4 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 min-h-[44px]"
       [attr.aria-label]="ctaText">
       @if (!loading) {

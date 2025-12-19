@@ -1,7 +1,10 @@
 import { Component, Input, Output, EventEmitter, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { MercadopagoCardFormComponent } from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
+import {
+  MercadopagoCardFormComponent,
+  MercadoPagoCardTokenGeneratedEvent,
+} from '../../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import {
   RiskSnapshot,
   FxSnapshot,
@@ -27,7 +30,6 @@ export class CardHoldPanelComponent {
   @Input() currentAuthorization: PaymentAuthorization | null = null;
 
   @Output() authorizationChange = new EventEmitter<PaymentAuthorization | null>();
-  @Output() fallbackToWallet = new EventEmitter<void>();
 
   private readonly paymentAuthorizationService = inject(PaymentAuthorizationService);
   private readonly authService = inject(AuthService);
@@ -47,11 +49,15 @@ export class CardHoldPanelComponent {
     }
   }
 
-  onCardTokenGenerated(event: { cardToken: string; last4: string }): void {
-    this.onAuthorize(event.cardToken, event.last4);
+  onCardTokenGenerated(event: MercadoPagoCardTokenGeneratedEvent): void {
+    this.onAuthorize(event.cardToken, event.last4, event.payer?.identification);
   }
 
-  onAuthorize(cardToken: string, cardLast4: string): void {
+  onAuthorize(
+    cardToken: string,
+    cardLast4: string,
+    payerIdentification?: { type: string; number: string },
+  ): void {
     const email = this.userEmail();
     if (!this.userId || !email) {
       this.errorMessage.set('Error: Usuario no identificado');
@@ -70,6 +76,7 @@ export class CardHoldPanelComponent {
         fxRate: this.fxSnapshot.rate,
         cardToken,
         payerEmail: email,
+        payerIdentification,
         description: `Preautorización para reserva${this.bookingId ? ` ${this.bookingId}` : ''}`,
         bookingId: this.bookingId,
       })
@@ -127,10 +134,6 @@ export class CardHoldPanelComponent {
           this.authorizationChange.emit(null);
         });
     }
-  }
-
-  onFallbackToWallet(): void {
-    this.fallbackToWallet.emit();
   }
 
   private mapAuthStatus(auth: PaymentAuthorization): 'idle' | 'authorized' | 'expired' | 'failed' {

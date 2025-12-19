@@ -1,28 +1,32 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {Component, OnDestroy, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 
 // Services
 import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '../../../core/services/bookings.service';
 import { FxService } from '../../../core/services/fx.service';
-import { PdfGeneratorService } from '../../../core/services/pdf-generator.service';
 import { SupabaseClientService } from '../../../core/services/supabase-client.service';
 import { LoggerService } from '../../../core/services/logger.service';
-import { MercadoPagoBookingGateway } from '../checkout/support/mercadopago-booking.gateway';
-import { ContractsService, ClausesAccepted } from '../../../core/services/contracts.service';
-import { ContractTemplateService, ContractData } from '../../../core/services/contract-template.service';
+import { MessagesService } from '../../../core/services/messages.service';
+import { WalletService } from '../../../core/services/wallet.service';
+import { PaymentAuthorizationService } from '../../../core/services/payment-authorization.service';
 
 // Models
-import { Car, UserProfile } from '../../../core/models';
-import { FxSnapshot, RiskSnapshot, PaymentAuthorization, PaymentMode } from '../../../core/models/booking-detail-payment.model';
+import { Car } from '../../../core/models';
+import {
+  FxSnapshot,
+  RiskSnapshot,
+  PaymentAuthorization,
+  PaymentMode,
+} from '../../../core/models/booking-detail-payment.model';
 
 // Components
-import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
-import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
-import { PaymentMethodComparisonComponent } from '../../../shared/components/payment-method-comparison/payment-method-comparison.component';
+import { RiskPolicyTableComponent } from './components/risk-policy-table.component';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
@@ -36,16 +40,15 @@ interface DualRateFxSnapshot extends FxSnapshot {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
-    MercadopagoCardFormComponent,
     CardHoldPanelComponent,
-    PaymentModeToggleComponent,
-    PaymentMethodComparisonComponent,
+    RiskPolicyTableComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],
 })
-export class BookingDetailPaymentPage implements OnInit, OnDestroy {
+export class BookingRequestPage implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private pollInterval?: ReturnType<typeof setInterval>;
 
@@ -54,49 +57,75 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private fxService = inject(FxService);
   readonly authService = inject(AuthService);
+  private bookingsService = inject(BookingsService);
+  private messagesService = inject(MessagesService);
+  private walletService = inject(WalletService);
+  private paymentAuthorizationService = inject(PaymentAuthorizationService);
   private supabaseClient = inject(SupabaseClientService).getClient();
-  private mpGateway = inject(MercadoPagoBookingGateway);
-  private pdfGenerator = inject(PdfGeneratorService);
-  private logger = inject(LoggerService).createChildLogger('BookingDetailPaymentPage');
-  private contractsService = inject(ContractsService);
-  private contractTemplateService = inject(ContractTemplateService);
+  private logger = inject(LoggerService).createChildLogger('BookingRequestPage');
 
   // State
   readonly car = signal<Car | null>(null);
-  readonly currentUserProfile = signal<UserProfile | null>(null); // Local profile state
   readonly fxSnapshot = signal<DualRateFxSnapshot | null>(null);
   readonly loading = signal(false);
-  readonly processingPayment = signal(false);
+  readonly processingPayment = signal(false); // Submitting request
   readonly error = signal<string | null>(null);
 
   // Payment flow state
   readonly bookingCreated = signal(false);
   readonly bookingId = signal<string | null>(null);
-  readonly paymentProcessing = signal(false);
   readonly fxRateLocked = signal(false); // FX rate is locked after booking creation
-
-  // Payment mode toggle: 'card' = tarjeta (preautorización), 'wallet' = saldo AutoRenta
-  readonly paymentMode = signal<PaymentMode>('card');
 
   // Preauthorization state
   readonly riskSnapshot = signal<RiskSnapshot | null>(null);
   readonly currentAuthorization = signal<PaymentAuthorization | null>(null);
   readonly currentUserId = signal<string>('');
 
-  // Contract state
-  readonly contractPrepared = signal(false);
-  readonly contractAccepted = signal(false);
-  readonly contractPdfUrl = signal<string | null>(null);
-  readonly clausesAccepted = signal<ClausesAccepted>({
-    culpaGrave: false,
-    indemnidad: false,
-    retencion: false,
-    mora: false,
-  });
-  readonly finalContractAcceptance = signal(false);
+  // Guarantee mode
+  readonly paymentMode = signal<PaymentMode>('card');
+  readonly walletLockId = signal<string | null>(null);
+  readonly lockingWallet = signal(false);
+
+  // P2P Message to host
+  messageToHost = '';
+  readonly termsAccepted = signal(false);
 
   // Constants
   readonly PRE_AUTH_AMOUNT_USD = 600;
+
+  // Wallet state (units, as returned by wallet_get_balance)
+  readonly walletBalance = this.walletService.balance;
+  readonly walletBalanceLoading = this.walletService.loading;
+
+  readonly walletAvailableBalance = computed(() => this.walletBalance()?.available_balance ?? 0);
+  readonly walletCurrency = computed(() => this.walletBalance()?.currency ?? 'USD');
+  readonly walletRequiredArs = computed(() => this.riskSnapshot()?.holdEstimatedArs ?? 0);
+
+  // Convert wallet balance to ARS if wallet is in USD
+  readonly walletAvailableBalanceArs = computed(() => {
+    const balance = this.walletAvailableBalance();
+    const currency = this.walletCurrency();
+    const fx = this.fxSnapshot();
+
+    // If wallet is already in ARS, return as is
+    if (currency === 'ARS') return balance;
+
+    // Convert USD to ARS using platform rate
+    if (fx?.platformRate && currency === 'USD') {
+      return balance * fx.platformRate;
+    }
+
+    return balance;
+  });
+
+  readonly walletHasSufficientFunds = computed(() => {
+    const requiredArs = this.walletRequiredArs();
+    if (!requiredArs) return false;
+
+    // Compare in the same currency (ARS)
+    const availableArs = this.walletAvailableBalanceArs();
+    return availableArs >= requiredArs;
+  });
 
   // Computed - Rental days
   readonly rentalDays = computed(() => {
@@ -143,12 +172,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const rentalArs = this.rentalCostArs();
 
     return guaranteeArs + rentalArs;
-  });
-
-  // Computed - All 4 priority clauses accepted
-  readonly allClausesAccepted = computed(() => {
-    const c = this.clausesAccepted();
-    return c.culpaGrave && c.indemnidad && c.retencion && c.mora;
   });
 
   readonly bookingInput = signal<{
@@ -216,27 +239,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
   }
 
-  // Methods to handle clause toggles (avoiding arrow functions in template)
-  toggleClauseCulpaGrave(): void {
-    this.clausesAccepted.update((c) => ({ ...c, culpaGrave: !c.culpaGrave }));
-  }
-
-  toggleClauseIndemnidad(): void {
-    this.clausesAccepted.update((c) => ({ ...c, indemnidad: !c.indemnidad }));
-  }
-
-  toggleClauseRetencion(): void {
-    this.clausesAccepted.update((c) => ({ ...c, retencion: !c.retencion }));
-  }
-
-  toggleClauseMora(): void {
-    this.clausesAccepted.update((c) => ({ ...c, mora: !c.mora }));
-  }
-
-  toggleFinalAcceptance(): void {
-    this.finalContractAcceptance.set(!this.finalContractAcceptance());
-  }
-
   async ngOnInit(): Promise<void> {
     // 1. Auth check
     const session = await this.authService.ensureSession();
@@ -249,9 +251,11 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
 
     // Store user ID for preauthorization
     this.currentUserId.set(session.user.id);
-    
-    // Load full profile
-    await this.loadUserProfile(session.user.id);
+
+    // Preload wallet balance for wallet option
+    this.walletService.fetchBalance().catch(() => {
+      // Non-blocking
+    });
 
     // 2. Load params (now async to support bookingId lookup)
     await this.loadParams();
@@ -265,22 +269,6 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     this.calculateRiskSnapshot();
   }
 
-  private async loadUserProfile(userId: string): Promise<void> {
-    try {
-      const { data, error } = await this.supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-        
-      if (error) throw error;
-      if (data) this.currentUserProfile.set(data as UserProfile);
-    } catch (err) {
-      this.logger.error('Error loading user profile', { error: err });
-      // Non-blocking, but contract generation might fail later
-    }
-  }
-
   ngOnDestroy(): void {
     this.stopPolling();
     this.destroy$.next();
@@ -292,7 +280,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     const carId = queryParams.get('carId');
     const startDate = queryParams.get('startDate');
     const endDate = queryParams.get('endDate');
-    const bookingIdParam = queryParams.get('bookingId');
+    const bookingIdParam = queryParams.get('bookingId') || this.route.snapshot.paramMap.get('bookingId');
 
     // Mode 1: Direct booking params (carId + dates)
     if (carId && startDate && endDate) {
@@ -309,7 +297,7 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
       try {
         const { data: booking, error } = await this.supabaseClient
           .from('bookings')
-          .select('id, car_id, start_date, end_date')
+          .select('id, car_id, start_at, end_at, payment_mode, wallet_lock_id, authorized_payment_id')
           .eq('id', bookingIdParam)
           .single();
 
@@ -320,12 +308,35 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         }
 
         this.bookingId.set(booking.id);
-        this.bookingCreated.set(true);
         this.bookingInput.set({
           carId: booking.car_id,
-          startDate: new Date(booking.start_date),
-          endDate: new Date(booking.end_date),
+          startDate: new Date(booking.start_at),
+          endDate: new Date(booking.end_at),
         });
+
+        // Hydrate existing payment state so refresh doesn't break UX
+        if (booking.payment_mode === 'wallet') {
+          this.paymentMode.set('wallet');
+        } else if (booking.payment_mode === 'card') {
+          this.paymentMode.set('card');
+        }
+
+        if (booking.wallet_lock_id) {
+          this.walletLockId.set(booking.wallet_lock_id);
+        }
+
+        if (booking.authorized_payment_id) {
+          try {
+            const auth = await firstValueFrom(
+              this.paymentAuthorizationService.getAuthorizationStatus(booking.authorized_payment_id),
+            );
+            if (auth) {
+              this.currentAuthorization.set(auth);
+            }
+          } catch (_err) {
+            // Silent: user can re-authorize
+          }
+        }
         return;
       } catch (err) {
         this.logger.error('Error loading booking params', { error: err });
@@ -410,350 +421,173 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
     }
   }
 
-  async downloadPdf(): Promise<void> {
-    const input = this.bookingInput();
-    const car = this.car();
-
-    if (!input || !car) {
-      this.logger.error('Cannot generate PDF: missing booking or car data');
-      return;
-    }
-
-    try {
-      // Generate filename based on car and date
-      const carName = `${car.brand}-${car.model}`.replace(/\s+/g, '-');
-      const date = new Date().toISOString().split('T')[0];
-      const filename = `reserva-${carName}-${date}.pdf`;
-
-      // Generate PDF from the content element
-      await this.pdfGenerator.generateFromElement('#pdf-content', {
-        filename,
-        format: 'a4',
-        orientation: 'portrait',
-        scale: 2, // High quality
-        quality: 0.95,
-      });
-
-      this.logger.info('PDF generated successfully', { filename });
-    } catch (error) {
-      this.logger.error('Error generating PDF', { error });
-      this.error.set('No se pudo generar el PDF. Por favor, intente nuevamente.');
-    }
-  }
-
-  async payWithMercadoPago(): Promise<void> {
-    const input = this.bookingInput();
-    const fx = this.fxSnapshot();
-    if (!input) return;
-
-    if (!fx) {
-      this.error.set('No hay cotización disponible. Por favor, recarga la página.');
-      return;
-    }
-
-    this.processingPayment.set(true);
-    try {
-      // Lock the FX rate - stop polling to prevent price changes during redirect
-      this.stopPolling();
-      this.fxRateLocked.set(true);
-
-      // Store locked FX rate in booking metadata for audit trail
-      const lockedFxSnapshot = {
-        binanceRate: fx.binanceRate,
-        platformRate: fx.platformRate,
-        lockedAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 min validity
-      };
-
-      const { data: booking, error: bookingError } = await this.supabaseClient
-        .from('bookings')
-        .insert({
-          car_id: input.carId,
-          renter_id: (await this.authService.getCurrentUser())?.id,
-          start_at: input.startDate.toISOString(),
-          end_at: input.endDate.toISOString(),
-          status: 'pending',
-          total_cents: this.PRE_AUTH_AMOUNT_USD * 100, // Store in cents USD
-          total_amount: this.PRE_AUTH_AMOUNT_USD, // Store decimal amount
-          currency: 'USD',
-          payment_mode: 'card',
-          price_locked_until: lockedFxSnapshot.expiresAt,
-          metadata: {
-            fx_locked: lockedFxSnapshot,
-            total_ars_at_lock: this.totalArs(),
-            rental_cost_ars_at_lock: this.rentalCostArs(),
-            guarantee_ars_at_lock: this.PRE_AUTH_AMOUNT_USD * fx.platformRate,
-          },
-        })
-        .select()
-        .single();
-
-      if (bookingError) throw bookingError;
-
-      await this.upsertPricingAndInsurance(booking.id);
-
-      // Get MP Preference
-      const preference = await this.mpGateway.createPreference(booking.id);
-
-      // Redirect to MP (SECURITY: Validate HTTPS to prevent open redirect attacks)
-      if (preference.initPoint) {
-        if (!preference.initPoint.startsWith('https://')) {
-          this.logger.error('Invalid payment URL - not HTTPS', { url: preference.initPoint });
-          throw new Error('URL de pago inválida');
-        }
-        window.location.href = preference.initPoint;
-      } else {
-        throw new Error('No se recibió link de pago');
-      }
-    } catch (err) {
-      console.error('Payment error:', err);
-      this.error.set(err instanceof Error ? err.message : 'Error al iniciar el pago');
-    } finally {
-      this.processingPayment.set(false);
-    }
-  }
-
-  /**
-   * Handle card token generated by MercadoPago CardForm
-   */
-  async onCardTokenGenerated(event: { cardToken: string; last4: string }): Promise<void> {
-    try {
-      this.paymentProcessing.set(true);
-      this.error.set(null);
-
-      // ✅ NEW: Validate contract accepted BEFORE payment
-      if (!this.contractAccepted()) {
-        this.error.set('Debes aceptar el contrato antes de proceder con el pago.');
-        this.paymentProcessing.set(false);
-        return;
-      }
-
-      // Create booking if not exists
-      if (!this.bookingId()) {
-        await this.createBooking();
-      }
-
-      const bId = this.bookingId();
-      if (!bId) {
-        throw new Error('No se pudo crear la reserva');
-      }
-
-      // Call Supabase Edge Function to process payment
-      const { data: paymentResult, error: paymentError } =
-        await this.supabaseClient.functions.invoke('mercadopago-process-booking-payment', {
-          body: {
-            booking_id: bId,
-            card_token: event.cardToken,
-            installments: 1,
-          },
-        });
-
-      if (paymentError) {
-        throw new Error(paymentError.message || 'Error al procesar el pago');
-      }
-
-      if (!paymentResult?.success) {
-        throw new Error(
-          paymentResult?.details?.message ||
-            paymentResult?.error ||
-            'El pago fue rechazado. Por favor, verifica los datos de tu tarjeta.',
-        );
-      }
-
-      this.logger.info('Payment processed successfully', {
-        status: paymentResult.status,
-      });
-
-      // Refresh pricing/insurance after payment (in case backend recalculated)
-      if (bId) {
-        await this.upsertPricingAndInsurance(bId);
-      }
-
-      // If payment is approved, auto-approve the booking
-      if (paymentResult.status === 'approved') {
-        this.logger.info('Payment approved, auto-approving booking');
-
-        // Note: In production, this would be handled by the backend
-        // but for now we can update the booking status directly
-        const { error: approvalError } = await this.supabaseClient
-          .from('bookings')
-          .update({
-            status: 'approved',
-            approved_at: new Date().toISOString(),
-          })
-          .eq('id', bId);
-
-        if (approvalError) {
-          this.logger.warn('Could not auto-approve booking');
-          // No fallar el flujo, el webhook lo hará
-        } else {
-          this.logger.info('Booking auto-approved successfully');
-        }
-      }
-
-      // Success! Redirect to confirmation page
-      this.router.navigate(['/bookings', bId, 'success'], {
-        queryParams: {
-          payment_id: paymentResult.payment_id,
-          status: paymentResult.status,
-        },
-      });
-    } catch (err) {
-      this.logger.error('Error processing payment', { error: err });
-      this.error.set(err instanceof Error ? err.message : 'Error al procesar el pago');
-    } finally {
-      this.paymentProcessing.set(false);
-    }
-  }
-
-  /**
-   * Handle card form errors
-   */
-  onCardError(errorMessage: string): void {
-    this.logger.error('Card form error', { errorMessage });
-    this.error.set(errorMessage);
-    this.paymentProcessing.set(false);
-  }
-
-  /**
-   * Create a pending booking in the database
-   * IMPORTANT: This also locks the FX rate to prevent price changes during payment
-   */
-  private async createBooking(): Promise<void> {
-    const input = this.bookingInput();
-    const user = await this.authService.getCurrentUser();
-    const fx = this.fxSnapshot();
-
-    if (!input || !user?.id) {
-      throw new Error('Faltan datos para crear la reserva');
-    }
-
-    if (!fx) {
-      throw new Error('No hay cotización disponible. Por favor, recarga la página.');
-    }
-
-    try {
-      // Lock the FX rate - stop polling to prevent price changes during payment
-      this.stopPolling();
-      this.fxRateLocked.set(true);
-
-      // Store locked FX rate in booking metadata for audit trail
-      const lockedFxSnapshot = {
-        binanceRate: fx.binanceRate,
-        platformRate: fx.platformRate,
-        lockedAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 min validity
-      };
-
-      const { data: booking, error: bookingError } = await this.supabaseClient
-        .from('bookings')
-        .insert({
-          car_id: input.carId,
-          renter_id: user.id,
-          start_at: input.startDate.toISOString(),
-          end_at: input.endDate.toISOString(),
-          status: 'pending',
-          total_cents: Math.round(this.totalArs() * 100), // Store total in cents ARS
-          total_amount: this.totalArs(), // Store decimal amount
-          currency: 'ARS',
-          payment_mode: 'card',
-          price_locked_until: lockedFxSnapshot.expiresAt,
-          metadata: {
-            fx_locked: lockedFxSnapshot,
-            total_ars_at_lock: this.totalArs(),
-            rental_cost_ars_at_lock: this.rentalCostArs(),
-            guarantee_ars_at_lock: this.PRE_AUTH_AMOUNT_USD * fx.platformRate,
-          },
-        })
-        .select()
-        .single();
-
-      if (bookingError) throw bookingError;
-
-      this.bookingId.set(booking.id);
-      this.bookingCreated.set(true);
-
-      await this.upsertPricingAndInsurance(booking.id);
-
-      // ✅ NEW: Prepare contract and generate PDF immediately after booking creation
-      await this.prepareContractAndGeneratePdf(booking.id);
-
-      this.logger.info('Booking created with locked FX rate', {
-        total: this.totalArs(),
-        currency: 'ARS',
-        binanceRate: fx.binanceRate.toFixed(2),
-        platformRate: fx.platformRate.toFixed(2),
-        lockedUntil: lockedFxSnapshot.expiresAt,
-      });
-    } catch (err) {
-      // If booking creation fails, unlock FX rate and resume polling
-      this.fxRateLocked.set(false);
-      this.loadFxSnapshot(); // Resume polling
-      this.logger.error('Error creating booking', { error: err });
-      throw err;
-    }
-  }
-
-  private async upsertPricingAndInsurance(bookingId: string): Promise<void> {
-    const car = this.car();
-    const fx = this.fxSnapshot();
-    const nights = this.rentalDays();
-    if (!car || !fx || nights === 0) return;
-
-    const nightlyRateArs =
-      car.currency === 'USD' ? car.price_per_day * fx.binanceRate : car.price_per_day;
-    const base = nightlyRateArs * nights;
-
-    const pricingPayload = {
-      booking_id: bookingId,
-      nightly_rate_cents: Math.round(nightlyRateArs * 100),
-      days_count: nights,
-      fees_cents: 0,
-      discounts_cents: 0,
-      insurance_cents: 0,
-      subtotal_cents: Math.round(base * 100),
-      total_cents: Math.round(base * 100),
-      breakdown: {
-        nightly_rate: nightlyRateArs,
-        nights,
-        fees: 0,
-        discounts: 0,
-        insurance: 0,
-      },
-    };
-
-    const insurancePayload = {
-      booking_id: bookingId,
-      insurance_coverage_id: null,
-      insurance_premium_total: 0,
-      guarantee_type: 'hold',
-      guarantee_amount_cents: Math.round(this.PRE_AUTH_AMOUNT_USD * fx.platformRate * 100),
-      coverage_upgrade: null,
-    };
-
-    await this.supabaseClient.from('bookings_pricing').upsert(pricingPayload, {
-      onConflict: 'booking_id',
-    });
-
-    await this.supabaseClient.from('bookings_insurance').upsert(insurancePayload, {
-      onConflict: 'booking_id',
-    });
-  }
-
-  /**
-   * Toggle payment mode between card (preauthorization) and wallet
-   */
   setPaymentMode(mode: PaymentMode): void {
     this.paymentMode.set(mode);
     this.error.set(null);
-    this.logger.info('Payment mode changed', { mode });
   }
 
-  /**
-   * Handle mode change from PaymentModeToggleComponent
-   */
-  onPaymentModeChange(mode: PaymentMode): void {
-    this.setPaymentMode(mode);
+  private async ensureWalletLock(bookingId: string): Promise<string> {
+    const existingLockId = this.walletLockId();
+    if (existingLockId) return existingLockId;
+
+    const requiredArs = this.walletRequiredArs();
+    const fx = this.fxSnapshot();
+    const walletCurrency = this.walletCurrency();
+
+    // Convert ARS to USD if wallet is in USD (which it is by default)
+    let amountCents: number;
+    if (walletCurrency === 'USD' && fx?.platformRate) {
+      // Wallet is in USD, convert ARS requirement to USD cents
+      const requiredUsd = requiredArs / fx.platformRate;
+      amountCents = Math.round(requiredUsd * 100);
+    } else {
+      // Wallet is in ARS, use ARS cents directly
+      amountCents = Math.round(requiredArs * 100);
+    }
+
+    if (!requiredArs || amountCents <= 0) {
+      throw new Error('No se pudo calcular el monto de la garantía.');
+    }
+
+    this.lockingWallet.set(true);
+
+    try {
+      // Prefer the new function with expiration if available
+      const { data: lockWithExpiration, error: lockWithExpirationError } = await this.supabaseClient.rpc(
+        'wallet_lock_funds_with_expiration',
+        {
+          p_booking_id: bookingId,
+          p_amount_cents: amountCents,
+          p_lock_type: 'security_deposit_lock',
+          p_expires_in_days: 90,
+        },
+      );
+
+      if (!lockWithExpirationError && lockWithExpiration) {
+        this.walletLockId.set(lockWithExpiration as string);
+        await this.walletService.fetchBalance(true).catch(() => {});
+        return lockWithExpiration as string;
+      }
+
+      // Fallback: legacy function
+      const { data: lockId, error: lockError } = await this.supabaseClient.rpc('wallet_lock_funds', {
+        p_booking_id: bookingId,
+        p_amount_cents: amountCents,
+      });
+
+      if (lockError || !lockId) {
+        throw lockError || new Error('No se pudo bloquear la garantía en wallet.');
+      }
+
+      this.walletLockId.set(lockId as string);
+      await this.walletService.fetchBalance(true).catch(() => {});
+      return lockId as string;
+    } finally {
+      this.lockingWallet.set(false);
+    }
+  }
+
+  async submitRequest(): Promise<void> {
+    const input = this.bookingInput();
+    const car = this.car();
+    const authorization = this.currentAuthorization();
+    const mode = this.paymentMode();
+
+    if (!input || !car) {
+      this.error.set('Faltan datos para enviar la solicitud. Volvé a seleccionar fechas.');
+      return;
+    }
+
+    if (!this.termsAccepted()) {
+      this.error.set('Debes aceptar los Términos y Condiciones para continuar.');
+      return;
+    }
+
+    if (mode === 'card') {
+      if (!authorization || authorization.status !== 'authorized') {
+        this.error.set('Debes completar la pre-autorización de la garantía antes de enviar la solicitud.');
+        return;
+      }
+    } else {
+      const required = this.walletRequiredArs();
+      if (!required) {
+        this.error.set('No se pudo calcular el monto de la garantía para wallet.');
+        return;
+      }
+    }
+
+    this.processingPayment.set(true);
+    this.error.set(null);
+
+    try {
+      let bookingId = this.bookingId();
+
+      if (!bookingId) {
+        const booking = await this.bookingsService.requestBooking(
+          input.carId,
+          input.startDate.toISOString(),
+          input.endDate.toISOString(),
+        );
+        bookingId = booking.id;
+        this.bookingId.set(bookingId);
+      }
+
+      if (mode === 'card') {
+        const { error: updateError } = await this.supabaseClient
+          .from('bookings')
+          .update({
+            status: 'pending', // Awaiting owner approval
+            payment_mode: 'card',
+            guarantee_type: 'hold',
+            guarantee_amount_cents: Math.round((authorization?.amountArs ?? 0) * 100),
+            authorized_payment_id: authorization?.authorizedPaymentId ?? null,
+            wallet_lock_id: null,
+          })
+          .eq('id', bookingId);
+
+        if (updateError) {
+          throw updateError;
+        }
+      } else {
+        const walletLockId = await this.ensureWalletLock(bookingId);
+        const amountCents = Math.round(this.walletRequiredArs() * 100);
+
+        const { error: updateError } = await this.supabaseClient
+          .from('bookings')
+          .update({
+            status: 'pending', // Awaiting owner approval
+            payment_mode: 'wallet',
+            guarantee_type: 'security_credit',
+            guarantee_amount_cents: amountCents,
+            wallet_lock_id: walletLockId,
+            authorized_payment_id: null,
+          })
+          .eq('id', bookingId);
+
+        if (updateError) {
+          throw updateError;
+        }
+      }
+
+      const message = this.messageToHost.trim();
+      if (message) {
+        await this.messagesService.sendMessage({
+          recipientId: car.owner_id,
+          body: message,
+          bookingId,
+          carId: car.id,
+        });
+      }
+
+      await this.router.navigate(['/bookings', 'success', bookingId], {
+        queryParams: { flow: 'request' },
+      });
+    } catch (err) {
+      this.logger.error('Error submitting booking request', { error: err });
+      this.error.set(err instanceof Error ? err.message : 'Error al enviar la solicitud');
+    } finally {
+      this.processingPayment.set(false);
+    }
   }
 
   /**
@@ -811,161 +645,5 @@ export class BookingDetailPaymentPage implements OnInit, OnDestroy {
         amountArs: authorization.amountArs,
       });
     }
-  }
-
-  /**
-   * Handle fallback to wallet from CardHoldPanel
-   */
-  onFallbackToWallet(): void {
-    this.logger.info('User requested fallback to wallet');
-    // TODO: Navigate to wallet flow or show wallet payment option
-    this.error.set('Wallet payment not yet implemented. Please try card payment.');
-  }
-
-  /**
-   * Get current user ID for preauthorization
-   */
-  async getCurrentUserId(): Promise<string> {
-    const user = await this.authService.getCurrentUser();
-    return user?.id || '';
-  }
-
-  /**
-   * Prepare contract and generate PDF after booking creation
-   */
-  private async prepareContractAndGeneratePdf(bookingId: string): Promise<void> {
-    try {
-      this.logger.info('Preparing contract for booking', { bookingId });
-
-      // 1. Prepare contract record in database
-      await this.contractsService.prepareContract({
-        bookingId,
-        termsVersion: 'v1.0.0',
-      });
-
-      // 2. Load template and merge data
-      const template = await this.contractTemplateService.loadTemplate('v1.0.0', 'es-AR');
-      const car = this.car()!;
-      const user = this.currentUserProfile()!; // Use local profile signal
-      const input = this.bookingInput()!;
-
-      // TODO: Get owner data from booking/car relationship
-      const ownerName = 'Propietario Pendiente'; // Will be filled by backend
-      const ownerDni = '-';
-
-      const contractData: ContractData = {
-        bookingId,
-        emissionDate: new Date().toLocaleDateString('es-AR'),
-        renterName: user?.full_name || 'Usuario',
-        renterDni: user?.gov_id_number || '-', // Use correct field from UserProfile
-        ownerName,
-        ownerDni,
-        carBrand: car.brand || '',
-        carModel: car.model || '',
-        carYear: car.year?.toString() || '',
-        carPlate: car.plate || '', // Use correct field from Car
-        insurancePolicyNumber: car.insurance_policy_number || 'Pendiente',
-        insuranceCompany: car.insurance_company || 'Aseguradora Pendiente',
-        insuranceCuit: '-', // TODO: Add to car model
-        insuranceValidity: 'Vigente', // TODO: Add expiry date
-        insuranceCoverage: 'Todo Riesgo', // TODO: Add coverage type
-        startDate: input.startDate.toLocaleDateString('es-AR'),
-        startTime: input.startDate.toLocaleTimeString('es-AR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        endDate: input.endDate.toLocaleDateString('es-AR'),
-        endTime: input.endDate.toLocaleTimeString('es-AR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        totalArs: this.totalArs().toFixed(2),
-      };
-
-      const mergedHtml = this.contractTemplateService.mergeData(template, contractData);
-
-      // Validate merge
-      const isValid = this.contractTemplateService.validateMerge(mergedHtml);
-      if (!isValid) {
-        this.logger.warn('Contract template has unresolved placeholders');
-      }
-
-      // 3. Call edge function to generate PDF
-      this.logger.info('Generating PDF via edge function...');
-
-      const { data, error } = await this.supabaseClient.functions.invoke(
-        'generate-booking-contract-pdf',
-        {
-          body: {
-            booking_id: bookingId,
-            merged_html: mergedHtml,
-          },
-        }
-      );
-
-      if (error) {
-        throw new Error(`PDF generation failed: ${error.message}`);
-      }
-
-      if (data && data.pdf_url) {
-        this.contractPdfUrl.set(data.pdf_url);
-        this.contractPrepared.set(true);
-        this.logger.info('Contract PDF generated successfully', {
-          pdf_url: data.pdf_url,
-        });
-      } else {
-        throw new Error('PDF generation returned no URL');
-      }
-    } catch (error) {
-      this.logger.error('Error preparing contract', { error });
-      this.error.set('Error al generar el contrato. Intenta nuevamente.');
-      // Don't throw - allow payment flow to continue (contract can be regenerated later)
-    }
-  }
-
-  /**
-   * Accept contract with full metadata for legal compliance (Ley 25.506)
-   */
-  async acceptContract(): Promise<void> {
-    try {
-      this.logger.info('Accepting contract...');
-
-      // Get IP address
-      const ipResponse = await fetch('https://api.ipify.org?format=json');
-      const { ip } = await ipResponse.json();
-
-      // Accept with metadata
-      await this.contractsService.acceptContractWithMetadata({
-        bookingId: this.bookingId()!,
-        clausesAccepted: this.clausesAccepted(),
-        ipAddress: ip,
-        userAgent: navigator.userAgent,
-        deviceFingerprint: this.generateDeviceFingerprint(),
-      });
-
-      this.contractAccepted.set(true);
-      this.logger.info('Contract accepted successfully', { ip });
-    } catch (error) {
-      this.logger.error('Error accepting contract', { error });
-      this.error.set('Error al aceptar el contrato. Intenta nuevamente.');
-    }
-  }
-
-  /**
-   * Generate device fingerprint for audit trail (non-PII)
-   * Creates a simple hash of browser/device characteristics
-   */
-  private generateDeviceFingerprint(): string {
-    const data = {
-      ua: navigator.userAgent,
-      lang: navigator.language,
-      tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      screen: `${screen.width}x${screen.height}`,
-      depth: screen.colorDepth,
-      platform: navigator.platform,
-    };
-
-    // Convert to base64 string and truncate to 32 chars (non-cryptographic, just for correlation)
-    return btoa(JSON.stringify(data)).substring(0, 32);
   }
 }

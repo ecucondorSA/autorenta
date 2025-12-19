@@ -13,6 +13,8 @@ interface CreatePreauthRequest {
   amount_usd: number;
   card_token: string;
   payer_email: string;
+  payer_identification_type?: string | null;
+  payer_identification_number?: string | null;
   description?: string;
   external_reference?: string;
 }
@@ -64,6 +66,8 @@ serve(async (req) => {
       amount_usd,
       card_token,
       payer_email,
+      payer_identification_type,
+      payer_identification_number,
       description = 'Preautorización de garantía - AutoRenta',
       external_reference,
     } = body;
@@ -132,6 +136,13 @@ serve(async (req) => {
       // NO especificar payment_method_id, dejar que MP lo detecte del token
       payer: {
         email: payer_email,
+        identification:
+          payer_identification_type && payer_identification_number
+            ? {
+              type: payer_identification_type,
+              number: payer_identification_number,
+            }
+            : undefined,
       },
       external_reference: external_reference || intent.external_reference,
       capture: false, // ⚠️ CRITICAL: false = preautorización (no cobra aún)
@@ -140,6 +151,19 @@ serve(async (req) => {
         booking_id: booking_id || null,
         amount_usd: amount_usd,
         type: 'preauth',
+      },
+      // Help MP risk engine classify the transaction
+      additional_info: {
+        items: [
+          {
+            id: booking_id || intent_id,
+            title: 'Garantía de reserva - AutoRenta',
+            description: description,
+            category_id: 'travel',
+            quantity: 1,
+            unit_price: Number(finalAmountArs.toFixed(2)),
+          },
+        ],
       },
     };
 

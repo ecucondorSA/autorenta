@@ -55,8 +55,12 @@ type NavigatorWithOptionalConnection = Navigator & {
   providedIn: 'root',
 })
 export class PerformanceMonitoringService {
-  private fpsCounter = 0;
-  private lastFrameTime = performance.now();
+  private fpsFrameCount = 0;
+  private fpsSampleStart = 0;
+  private fpsBaselineSamples = 0;
+  private fpsMaxObserved = 0;
+  private fpsBaseline: number | null = null;
+  private lowFpsStreak = 0;
 
   /** Cached Sentry module (lazy-loaded) */
   private sentryModule: SentryModule | null = null;
@@ -146,19 +150,53 @@ export class PerformanceMonitoringService {
    * Monitorea FPS en tiempo real
    */
   private monitorFPS(): void {
+    const sampleWindowMs = 1000;
+    const minBaselineSamples = 3;
+    const minThresholdFps = 24; // 80% of 30fps displays
+    const warnAfterConsecutive = 2;
+
+    this.fpsFrameCount = 0;
+    this.fpsSampleStart = performance.now();
+
     const measureFPS = (currentTime: number) => {
-      const delta = currentTime - this.lastFrameTime;
-      const fps = Math.round(1000 / delta);
+      if (document.visibilityState !== 'visible') {
+        // Reset sampling while hidden to avoid skewed readings.
+        this.fpsFrameCount = 0;
+        this.fpsSampleStart = currentTime;
+        requestAnimationFrame(measureFPS);
+        return;
+      }
 
-      this.lastFrameTime = currentTime;
-      this.fpsCounter++;
+      this.fpsFrameCount++;
+      const elapsed = currentTime - this.fpsSampleStart;
 
-      // Log cada 60 frames (aprox 1 segundo a 60fps)
-      if (this.fpsCounter >= 60) {
-        if (fps < 50) {
-          console.warn(`⚠️ Low FPS detected: ${fps}fps`);
+      if (elapsed >= sampleWindowMs) {
+        const fps = Math.round((this.fpsFrameCount * 1000) / elapsed);
+        this.fpsFrameCount = 0;
+        this.fpsSampleStart = currentTime;
+
+        if (Number.isFinite(fps)) {
+          if (this.fpsBaseline === null) {
+            this.fpsMaxObserved = Math.max(this.fpsMaxObserved, fps);
+            this.fpsBaselineSamples++;
+            if (this.fpsBaselineSamples >= minBaselineSamples) {
+              this.fpsBaseline = this.fpsMaxObserved;
+            }
+          }
+
+          const baseline = this.fpsBaseline ?? this.fpsMaxObserved || 60;
+          const threshold = Math.max(minThresholdFps, Math.round(baseline * 0.8));
+
+          if (fps < threshold) {
+            this.lowFpsStreak++;
+            if (this.lowFpsStreak >= warnAfterConsecutive) {
+              console.warn(`⚠️ Low FPS detected: ${fps}fps`);
+              this.lowFpsStreak = 0;
+            }
+          } else {
+            this.lowFpsStreak = 0;
+          }
         }
-        this.fpsCounter = 0;
       }
 
       requestAnimationFrame(measureFPS);

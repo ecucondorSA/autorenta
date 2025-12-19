@@ -54,6 +54,7 @@ import { SplashScreenComponent } from './shared/components/splash-screen/splash-
 import { VerificationBadgeComponent } from './shared/components/verification-badge/verification-badge.component';
 import { VerificationPromptBannerComponent } from './shared/components/verification-prompt-banner/verification-prompt-banner.component';
 import { ClickOutsideDirective } from './shared/directives/click-outside.directive';
+import { OfflineBannerComponent } from './shared/components/offline-banner/offline-banner.component';
 
 import { routeAnimations } from './core/animations/route-animations'; // Importar animaciones
 
@@ -82,7 +83,8 @@ import { routeAnimations } from './core/animations/route-animations'; // Importa
     MobileMenuDrawerComponent,
     HeaderIconComponent,
     ClickOutsideDirective,
-    DebugPanelComponent
+    DebugPanelComponent,
+    OfflineBannerComponent
   ],
   templateUrl: './app.component.html',
   styles: [

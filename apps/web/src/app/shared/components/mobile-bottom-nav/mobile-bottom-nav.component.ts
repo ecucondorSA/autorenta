@@ -44,6 +44,7 @@ export class MobileBottomNavComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   @Output() menuOpen = new EventEmitter<void>();
+  @Output() rentarfastOpen = new EventEmitter<void>();
 
   readonly currentRoute = signal<string>('');
   readonly isHidden = signal(false);
@@ -56,32 +57,26 @@ export class MobileBottomNavComponent implements OnInit {
     {
       id: 'rent',
       label: 'Alquilar',
-      icon: 'nav-car', // Premium icon
+      icon: 'nav-car',
       route: '/cars',
     },
     {
       id: 'publish',
       label: 'Publicar',
-      icon: 'nav-plus', // Premium icon
+      icon: 'nav-plus',
       route: '/cars/publish',
     },
-    {
-      id: 'messages',
-      label: 'Mensajes',
-      icon: 'nav-message', // Premium icon
-      route: '/messages',
-      badgeSignal: () => this.unreadMessagesService.totalUnreadCount(),
-    },
+    // FAB Rentarfast va aquí (espacio central)
     {
       id: 'bookings',
       label: 'Reservas',
-      icon: 'nav-calendar', // Premium icon
+      icon: 'nav-calendar',
       route: '/bookings',
     },
     {
       id: 'menu',
       label: 'Menu',
-      icon: 'nav-menu', // Premium icon (grid style)
+      icon: 'nav-menu',
       route: '',
       isMenuTrigger: true,
     },
@@ -216,5 +211,25 @@ export class MobileBottomNavComponent implements OnInit {
    */
   trackByRoute(index: number, item: NavItem): string {
     return item.route;
+  }
+
+  /**
+   * Navega a la pagina de Rentarfast (asistente de voz)
+   */
+  async openRentarfast(event: Event): Promise<void> {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Haptic feedback
+    try {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(15);
+      }
+    } catch {
+      // Silently fail
+    }
+
+    // Navegar a la pagina de Rentarfast
+    await this.router.navigate(['/rentarfast']);
   }
 }

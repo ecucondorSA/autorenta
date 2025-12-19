@@ -15,6 +15,35 @@
     </div>
   </div>
 
+  <!-- URGENT: Pending Approvals Banner -->
+  @if (pendingApprovalCount() > 0) {
+    <div class="bg-gradient-to-r from-orange-500 to-amber-500 border-b-4 border-orange-600">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-3 text-white">
+            <span class="text-2xl animate-bounce">⚡</span>
+            <div>
+              <p class="font-bold text-lg">
+                ¡{{ pendingApprovalCount() }} {{ pendingApprovalCount() === 1 ? 'reserva requiere' : 'reservas requieren' }} tu aprobación!
+              </p>
+              <p class="text-sm text-orange-100">
+                Los conductores están esperando tu confirmación
+              </p>
+            </div>
+          </div>
+          <button
+            (click)="goToPendingApprovals()"
+            class="flex items-center gap-2 px-6 py-3 bg-white text-orange-600 font-bold rounded-lg shadow-lg hover:bg-orange-50 hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+          >
+            <span>✅</span>
+            <span>Aprobar Ahora</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     @if (loading()) {

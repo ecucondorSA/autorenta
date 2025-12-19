@@ -376,7 +376,7 @@ export class BookingPaymentPage implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.success('Pago procesado', 'Tu pago ha sido procesado exitosamente');
-          this.router.navigate(['/bookings', bookingData.id, 'success']);
+          this.router.navigate(['/bookings', 'success', bookingData.id]);
         },
         error: (error) => {
           console.error('[BookingPayment] Wallet payment error:', error);
@@ -408,7 +408,7 @@ export class BookingPaymentPage implements OnInit {
         next: (result) => {
           if (result.status === 'approved') {
             this.toastService.success('Pago aprobado', 'Tu pago ha sido procesado exitosamente');
-            this.router.navigate(['/bookings', bookingData.id, 'success']);
+            this.router.navigate(['/bookings', 'success', bookingData.id]);
           } else if (result.status === 'in_process') {
             this.toastService.info('Pago en proceso', 'Tu pago está siendo verificado');
             this.router.navigate(['/bookings', bookingData.id, 'pending']);

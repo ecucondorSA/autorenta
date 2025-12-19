@@ -126,6 +126,16 @@ export class ProfileExpandedPage implements OnInit {
   // Avatar and user info
   readonly avatarUrl = computed(() => this.profile()?.avatar_url);
   readonly userEmail = computed(() => this.authService.session$()?.user?.email ?? this.profile()?.id);
+  readonly govIdLabel = computed(() => {
+    const type = this.profile()?.gov_id_type?.toLowerCase();
+    if (!type) return 'Documento';
+    const labels: Record<string, string> = {
+      dni: 'DNI',
+      cuit: 'CUIT',
+      passport: 'Pasaporte',
+    };
+    return labels[type] ?? type.toUpperCase();
+  });
 
   // UI state - delegated to ProfileStore
   readonly uploadingAvatar = this.profileStore.uploadingAvatar;

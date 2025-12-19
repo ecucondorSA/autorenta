@@ -138,7 +138,7 @@ export class BookingPendingPage implements OnInit, OnDestroy {
   private handlePaymentApproved(bookingId: string): void {
     this.destroy$.next(); // Stop polling
     this.toastService.success('Pago aprobado', '¡Tu pago ha sido procesado exitosamente!');
-    this.router.navigate(['/bookings', bookingId, 'success']);
+    this.router.navigate(['/bookings', 'success', bookingId]);
   }
 
   private handlePaymentRejected(bookingId: string): void {
