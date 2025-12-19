@@ -184,7 +184,7 @@ export class PerformanceMonitoringService {
             }
           }
 
-          const baseline = this.fpsBaseline ?? this.fpsMaxObserved || 60;
+          const baseline = this.fpsBaseline ?? (this.fpsMaxObserved || 60);
           const threshold = Math.max(minThresholdFps, Math.round(baseline * 0.8));
 
           if (fps < threshold) {
