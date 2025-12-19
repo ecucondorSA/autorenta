@@ -1,3 +1,78 @@
 :host {
   display: block;
 }
+
+/* 3-Column Dashboard Layout */
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Desktop: 3 columns */
+@media (min-width: 1280px) {
+  .dashboard-grid {
+    grid-template-columns: 320px 1fr 380px;
+  }
+
+  .dashboard-left,
+  .dashboard-right {
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .dashboard-center {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .dashboard-right {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Mobile: single column */
+@media (max-width: 767px) {
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Chat Section */
+.chat-section {
+  min-height: 500px;
+  max-height: 700px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Smooth animations */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

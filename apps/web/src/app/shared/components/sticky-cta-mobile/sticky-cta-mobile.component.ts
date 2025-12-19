@@ -20,6 +20,8 @@ export class StickyCtaMobileComponent {
   @Input() loading = false;
   @Input() expressMode = false;
   @Input() showPrice = true;
+  /** Optional guarantee/deposit amount in ARS */
+  @Input() guaranteeAmount: number | null = null;
   @Output() readonly ctaClick = new EventEmitter<void>();
 
   onCtaClick(): void {

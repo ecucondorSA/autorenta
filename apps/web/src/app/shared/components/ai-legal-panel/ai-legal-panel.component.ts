@@ -32,157 +32,275 @@ import { GeminiService } from '../../../core/services/gemini.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   template: `
-    <div class="ai-panel border-b border-border-muted last:border-b-0">
-      <!-- Header (clickable to expand) -->
-      <button
-        type="button"
-        class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-surface-base/50"
-        (click)="toggle.emit()"
-      >
-        <div class="flex items-center gap-3">
-          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-cta-default/10">
-            <svg
-              class="h-4 w-4 text-cta-default"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
-              />
-            </svg>
-          </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">Asistente Legal</h3>
-            <p class="text-xs text-text-secondary">Consultas sobre terminos del alquiler</p>
-          </div>
-        </div>
-        <svg
-          class="h-5 w-5 text-text-muted transition-transform"
-          [class.rotate-180]="isExpanded()"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
+    <div class="relative group/panel">
+      <!-- Animated gradient border when expanded -->
+      @if (isExpanded()) {
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-2xl opacity-75 blur-sm transition-opacity duration-500 animate-gradient-xy"></div>
+      }
 
-      <!-- Content (expandable) -->
+      <!-- Main card -->
       <div
-        class="overflow-hidden transition-all duration-300"
-        [class.max-h-0]="!isExpanded()"
-        [class.max-h-[600px]]="isExpanded()"
+        class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300"
+        [class.shadow-2xl]="isExpanded()"
       >
-        <div class="space-y-4 px-4 pb-4">
-          <!-- Quick questions -->
-          <div class="flex flex-wrap gap-2">
-            @for (q of quickQuestions; track q) {
-              <button
-                type="button"
-                class="rounded-full border border-border-muted bg-surface-base px-3 py-1.5 text-xs transition-colors hover:border-cta-default/40 hover:bg-cta-default/5"
-                (click)="askQuestion(q)"
-              >
-                {{ q }}
-              </button>
-            }
-          </div>
-
-          <!-- Custom question input -->
-          <div class="flex gap-2">
-            <input
-              type="text"
-              [(ngModel)]="customQuestion"
-              placeholder="Escribe tu pregunta..."
-              class="flex-1 rounded-lg border border-border-muted bg-surface-base px-3 py-2 text-sm focus:border-cta-default focus:outline-none"
-              (keydown.enter)="askQuestion(customQuestion)"
-            />
-            <button
-              type="button"
-              class="rounded-lg bg-cta-default px-4 py-2 text-sm font-medium text-cta-text disabled:cursor-not-allowed disabled:opacity-50"
-              [disabled]="loading() || !customQuestion.trim()"
-              (click)="askQuestion(customQuestion)"
-            >
-              Preguntar
-            </button>
-          </div>
-
-          <!-- Loading -->
-          @if (loading()) {
-            <div class="flex items-center gap-2 text-text-secondary">
-              <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                />
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-              <span class="text-sm">Consultando...</span>
-            </div>
-          }
-
-          <!-- Answer -->
-          @if (answer()) {
-            <div class="space-y-3 rounded-lg bg-surface-base p-4">
-              <p class="text-sm text-text-primary">{{ answer()!.answer }}</p>
-
-              @if (answer()!.sources.length > 0) {
-                <div class="flex flex-wrap gap-1">
-                  @for (source of answer()!.sources; track source) {
-                    <span class="rounded bg-cta-default/10 px-2 py-0.5 text-xs text-cta-default">
-                      {{ source }}
-                    </span>
-                  }
-                </div>
+        <!-- Header -->
+        <button
+          type="button"
+          class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+          (click)="toggle.emit()"
+        >
+          <div class="flex items-center gap-3">
+            <!-- Icon with glow -->
+            <div class="relative">
+              @if (isExpanded()) {
+                <div class="absolute inset-0 bg-indigo-500/30 rounded-xl blur-md animate-pulse"></div>
               }
+              <div
+                class="relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300"
+                [class.bg-gradient-to-br]="isExpanded()"
+                [class.from-blue-500]="isExpanded()"
+                [class.to-indigo-600]="isExpanded()"
+                [class.bg-indigo-500/10]="!isExpanded()"
+                [class.shadow-lg]="isExpanded()"
+              >
+                <svg
+                  class="h-5 w-5 transition-colors"
+                  [class.text-white]="isExpanded()"
+                  [class.text-indigo-500]="!isExpanded()"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                Asistente Legal
+                <span class="text-[10px] bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  AI
+                </span>
+              </h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Consultas sobre terminos del alquiler</p>
+            </div>
+          </div>
+          <svg
+            class="h-5 w-5 text-gray-400 transition-transform duration-300"
+            [class.rotate-180]="isExpanded()"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
 
-              <p class="text-xs italic text-text-muted">{{ answer()!.disclaimer }}</p>
+        <!-- Content (expandable) -->
+        <div
+          class="overflow-hidden transition-all duration-300"
+          [class.max-h-0]="!isExpanded()"
+          [class.max-h-[600px]]="isExpanded()"
+          [class.overflow-y-auto]="isExpanded()"
+        >
+          <!-- Top gradient line -->
+          <div class="h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
 
-              @if (answer()!.relatedQuestions?.length) {
-                <div class="border-t border-border-muted pt-2">
-                  <p class="mb-2 text-xs text-text-muted">Preguntas relacionadas:</p>
-                  <div class="flex flex-wrap gap-1">
-                    @for (rq of answer()!.relatedQuestions; track rq) {
-                      <button
-                        type="button"
-                        class="text-xs text-cta-default hover:underline"
-                        (click)="askQuestion(rq)"
-                      >
-                        {{ rq }}
-                      </button>
-                    }
+          <div class="p-5 space-y-4">
+            <!-- Quick questions - Chat style bubbles -->
+            <div>
+              <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Preguntas frecuentes
+              </p>
+              <div class="flex flex-wrap gap-2">
+                @for (q of quickQuestions; track q) {
+                  <button
+                    type="button"
+                    class="group/q relative overflow-hidden rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 transition-all duration-200 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-700 dark:hover:text-indigo-400 hover:shadow-md"
+                    (click)="askQuestion(q)"
+                  >
+                    {{ q }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <!-- Chat-style input -->
+            <div class="relative">
+              <div class="flex gap-2">
+                <div class="relative flex-1">
+                  <input
+                    type="text"
+                    [(ngModel)]="customQuestion"
+                    placeholder="Escribe tu consulta legal..."
+                    class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 pr-12 text-sm text-gray-900 dark:text-white placeholder-gray-400 transition-all duration-200 focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
+                    (keydown.enter)="askQuestion(customQuestion)"
+                  />
+                  <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                   </div>
                 </div>
-              }
+                <button
+                  type="button"
+                  class="relative overflow-hidden group/btn bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold px-5 py-3 rounded-xl text-sm transition-all duration-300 shadow-lg hover:shadow-indigo-500/25 disabled:shadow-none disabled:cursor-not-allowed flex items-center gap-2"
+                  [disabled]="loading() || !customQuestion.trim()"
+                  (click)="askQuestion(customQuestion)"
+                >
+                  @if (loading()) {
+                    <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  } @else {
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  }
+                  <span>Consultar</span>
+                  <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700"></div>
+                </button>
+              </div>
             </div>
-          }
 
-          <!-- Error -->
-          @if (error()) {
-            <div class="rounded-lg bg-error-bg p-3 text-sm text-error-strong">
-              {{ error() }}
-            </div>
-          }
+            <!-- Loading State - Chat bubble style -->
+            @if (loading()) {
+              <div class="flex gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                  </svg>
+                </div>
+                <div class="flex-1 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-2xl rounded-tl-none p-4">
+                  <div class="flex items-center gap-2">
+                    <div class="flex gap-1">
+                      <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                      <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                      <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+                    </div>
+                    <span class="text-sm text-gray-600 dark:text-gray-300">Analizando tu consulta...</span>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Answer - Chat bubble style -->
+            @if (answer()) {
+              <div class="flex gap-3">
+                <div class="relative">
+                  <div class="absolute inset-0 bg-indigo-500/30 rounded-full blur-md animate-pulse"></div>
+                  <div class="relative w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="flex-1 space-y-3">
+                  <!-- Main answer bubble -->
+                  <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-2xl rounded-tl-none p-4 border border-indigo-100 dark:border-indigo-800/30">
+                    <p class="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">{{ answer()!.answer }}</p>
+
+                    @if (answer()!.sources.length > 0) {
+                      <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-indigo-200/50 dark:border-indigo-700/30">
+                        <span class="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-wider mr-1">Fuentes:</span>
+                        @for (source of answer()!.sources; track source) {
+                          <span class="inline-flex items-center gap-1 rounded-full bg-white dark:bg-gray-800 border border-indigo-200 dark:border-indigo-700 px-2 py-0.5 text-[10px] font-medium text-indigo-700 dark:text-indigo-400">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            {{ source }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Disclaimer -->
+                  <div class="flex items-start gap-2 px-1">
+                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-[11px] italic text-gray-400 dark:text-gray-500">{{ answer()!.disclaimer }}</p>
+                  </div>
+
+                  <!-- Related questions -->
+                  @if (answer()!.relatedQuestions?.length) {
+                    <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3">
+                      <p class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Preguntas relacionadas
+                      </p>
+                      <div class="flex flex-wrap gap-1.5">
+                        @for (rq of answer()!.relatedQuestions; track rq) {
+                          <button
+                            type="button"
+                            class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline bg-white dark:bg-gray-900 px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors"
+                            (click)="askQuestion(rq)"
+                          >
+                            {{ rq }}
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Error State -->
+            @if (error()) {
+              <div class="flex gap-3">
+                <div class="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="flex-1 bg-red-50 dark:bg-red-900/20 rounded-2xl rounded-tl-none p-4 border border-red-200 dark:border-red-800/30">
+                  <p class="text-sm text-red-700 dark:text-red-400 font-medium">{{ error() }}</p>
+                  <button
+                    type="button"
+                    class="mt-2 text-xs text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium flex items-center gap-1 hover:underline"
+                    (click)="error.set(null)"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Intentar de nuevo
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>
   `,
+  styles: [`
+    :host { display: block; }
+
+    @keyframes gradient-xy {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .animate-gradient-xy {
+      animation: gradient-xy 3s ease infinite;
+      background-size: 200% 200%;
+    }
+  `],
 })
 export class AiLegalPanelComponent {
   private readonly gemini = inject(GeminiService);

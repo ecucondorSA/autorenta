@@ -36,6 +36,7 @@ import { UrgentRentalBannerComponent } from '../../../shared/components/urgent-r
 // import { FiltersDrawerComponent } from '../../../shared/components/marketplace/filters-drawer/filters-drawer.component';
 // import { BreadcrumbsComponent, BreadcrumbItem } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
 import { getErrorMessage } from '../../../core/utils/type-guards';
+import { AiCarRecommendationComponent } from '../../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 // Temporary BreadcrumbItem interface
@@ -74,6 +75,7 @@ const PAGE_SIZE = 12;
     TranslateModule,
     IconComponent,
     DateRangePickerComponent,
+    AiCarRecommendationComponent,
   ],
   templateUrl: './cars-list.page.html',
   styleUrls: ['./cars-list.page.css'],

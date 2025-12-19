@@ -31,6 +31,8 @@ const envVars = {
     process.env.MERCADOPAGO_PUBLIC_KEY ||
     '',
   NG_APP_CLOUDFLARE_WORKER_URL: process.env.NG_APP_CLOUDFLARE_WORKER_URL || 'https://autorent-ai-car-generator.marques-eduardo95466020.workers.dev',
+  // Gemini Text Worker
+  NG_APP_GEMINI_TEXT_WORKER_URL: process.env.NG_APP_GEMINI_TEXT_WORKER_URL || '',
   // TikTok
   NG_APP_TIKTOK_CLIENT_ID: process.env.NG_APP_TIKTOK_CLIENT_ID || '',
   // Google Calendar

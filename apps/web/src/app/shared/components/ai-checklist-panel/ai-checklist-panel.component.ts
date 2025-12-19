@@ -34,17 +34,80 @@ import { GeminiService } from '../../../core/services/gemini.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   template: `
-    <div class="ai-panel border-b border-border-muted last:border-b-0">
-      <!-- Header -->
-      <button
-        type="button"
-        class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-surface-base/50"
-        (click)="toggle.emit()"
+    <div class="relative group/panel">
+      <!-- Animated gradient border when expanded -->
+      @if (isExpanded()) {
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 rounded-2xl opacity-75 blur-sm transition-opacity duration-500 animate-gradient-xy"></div>
+      }
+
+      <!-- Main card -->
+      <div
+        class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden transition-all duration-300"
+        [class.shadow-2xl]="isExpanded()"
       >
-        <div class="flex items-center gap-3">
-          <div class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/10">
+        <!-- Header -->
+        <button
+          type="button"
+          class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+          (click)="toggle.emit()"
+        >
+          <div class="flex items-center gap-3">
+            <!-- Icon with glow -->
+            <div class="relative">
+              @if (isExpanded()) {
+                <div class="absolute inset-0 bg-teal-500/30 rounded-xl blur-md animate-pulse"></div>
+              }
+              <div
+                class="relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300"
+                [class.bg-gradient-to-br]="isExpanded()"
+                [class.from-cyan-500]="isExpanded()"
+                [class.to-teal-500]="isExpanded()"
+                [class.bg-teal-500/10]="!isExpanded()"
+                [class.shadow-lg]="isExpanded()"
+              >
+                <svg
+                  class="h-5 w-5 transition-colors"
+                  [class.text-white]="isExpanded()"
+                  [class.text-teal-500]="!isExpanded()"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                Checklist de {{ inspectionType() === 'check_in' ? 'Recepcion' : 'Devolucion' }}
+                <span class="text-[10px] bg-gradient-to-r from-cyan-500 to-teal-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  AI
+                </span>
+              </h3>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Inspeccion personalizada para {{ vehicleName() }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- Mini progress when collapsed -->
+            @if (!isExpanded() && checklist()) {
+              <div class="flex items-center gap-1.5 mr-2">
+                <div class="w-16 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    class="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-500"
+                    [style.width.%]="totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0"
+                  ></div>
+                </div>
+                <span class="text-[10px] font-medium text-gray-500">{{ completedCount() }}/{{ totalCount() }}</span>
+              </div>
+            }
             <svg
-              class="h-4 w-4 text-orange-500"
+              class="h-5 w-5 text-gray-400 transition-transform duration-300"
+              [class.rotate-180]="isExpanded()"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -53,172 +116,271 @@ import { GeminiService } from '../../../core/services/gemini.service';
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                d="M19 9l-7 7-7-7"
               />
             </svg>
           </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">
-              Checklist de {{ inspectionType() === 'check_in' ? 'Recepcion' : 'Devolucion' }}
-            </h3>
-            <p class="text-xs text-text-secondary">Inspeccion personalizada del vehiculo</p>
-          </div>
-        </div>
-        <svg
-          class="h-5 w-5 text-text-muted transition-transform"
-          [class.rotate-180]="isExpanded()"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+        </button>
+
+        <!-- Content -->
+        <div
+          class="overflow-hidden transition-all duration-300"
+          [class.max-h-0]="!isExpanded()"
+          [class.max-h-[800px]]="isExpanded()"
+          [class.overflow-y-auto]="isExpanded()"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
+          <!-- Top gradient line -->
+          <div class="h-1 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500"></div>
 
-      <!-- Content -->
-      <div
-        class="overflow-hidden transition-all duration-300"
-        [class.max-h-0]="!isExpanded()"
-        [class.max-h-[800px]]="isExpanded()"
-        [class.overflow-y-auto]="isExpanded()"
-      >
-        <div class="space-y-4 px-4 pb-4">
-          <!-- Loading -->
-          @if (loading()) {
-            <div class="flex flex-col items-center justify-center py-8">
-              <svg class="h-8 w-8 animate-spin text-orange-500" fill="none" viewBox="0 0 24 24">
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                />
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-              <p class="mt-2 text-sm text-text-secondary">
-                Generando checklist para {{ vehicleName() }}...
-              </p>
-            </div>
-          }
-
-          <!-- Checklist -->
-          @if (checklist()) {
-            <div class="space-y-4">
-              <!-- Progress -->
-              <div class="flex items-center justify-between rounded-lg bg-orange-500/10 p-3">
-                <span class="text-sm text-orange-700">
-                  {{ completedCount() }}/{{ totalCount() }} items verificados
-                </span>
-                <button
-                  type="button"
-                  class="text-xs text-orange-600 hover:underline"
-                  (click)="regenerate()"
-                >
-                  Regenerar
-                </button>
+          <div class="space-y-4 p-5">
+            <!-- Loading -->
+            @if (loading()) {
+              <div class="flex flex-col items-center justify-center py-10">
+                <div class="relative">
+                  <div class="w-12 h-12 border-3 border-teal-200 border-t-teal-500 rounded-full animate-spin"></div>
+                  <div class="absolute inset-0 w-12 h-12 border-3 border-transparent border-b-cyan-500 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                </div>
+                <p class="mt-4 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Generando checklist personalizado...
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Analizando {{ vehicleName() }}
+                </p>
               </div>
+            }
 
-              <!-- Categories -->
-              @for (category of checklist()!.categories; track category.name) {
-                <div class="rounded-lg border border-border-muted">
-                  <div class="flex items-center gap-2 border-b border-border-muted bg-surface-base p-3">
-                    <span class="text-sm font-semibold text-text-primary">{{ category.name }}</span>
-                    <span class="text-xs text-text-muted">
-                      ({{ getCategoryCompletedCount(category.name) }}/{{ category.items.length }})
-                    </span>
+            <!-- Checklist -->
+            @if (checklist()) {
+              <div class="space-y-4">
+                <!-- Progress Card -->
+                <div class="relative overflow-hidden bg-gradient-to-br from-cyan-50 to-teal-50 dark:from-cyan-900/20 dark:to-teal-900/20 rounded-xl p-4 border border-teal-200/50 dark:border-teal-700/30">
+                  <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-sm font-bold text-gray-900 dark:text-white">
+                          {{ completedCount() }} de {{ totalCount() }}
+                        </span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 ml-1">verificados</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="text-xs text-teal-600 hover:text-teal-700 dark:text-teal-400 font-medium flex items-center gap-1 hover:underline"
+                      (click)="regenerate()"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Regenerar
+                    </button>
                   </div>
-                  <div class="divide-y divide-border-muted">
-                    @for (item of category.items; track item.id) {
-                      <label
-                        class="flex cursor-pointer items-start gap-3 p-3 transition-colors hover:bg-surface-base/50"
-                      >
-                        <input
-                          type="checkbox"
-                          [checked]="checkedItems()[item.id]"
-                          (change)="toggleItem(item.id)"
-                          class="mt-0.5 h-4 w-4 rounded border-border-muted text-orange-500 focus:ring-orange-500"
-                        />
-                        <div class="flex-1">
-                          <div class="flex items-center gap-2">
-                            <span
-                              class="text-sm"
-                              [class.text-text-primary]="!checkedItems()[item.id]"
-                              [class.text-text-muted]="checkedItems()[item.id]"
-                              [class.line-through]="checkedItems()[item.id]"
+                  <!-- Animated progress bar -->
+                  <div class="h-3 bg-white/50 dark:bg-gray-800/50 rounded-full overflow-hidden">
+                    <div
+                      class="h-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 rounded-full transition-all duration-700 ease-out relative overflow-hidden"
+                      [style.width.%]="totalCount() > 0 ? (completedCount() / totalCount()) * 100 : 0"
+                    >
+                      <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 animate-shimmer"></div>
+                    </div>
+                  </div>
+                  @if (completedCount() === totalCount() && totalCount() > 0) {
+                    <div class="mt-2 flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+                      </svg>
+                      <span class="text-xs font-bold">Inspeccion completa!</span>
+                    </div>
+                  }
+                </div>
+
+                <!-- Categories -->
+                @for (category of checklist()!.categories; track category.name; let i = $index) {
+                  <div class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+                    <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <div class="flex items-center gap-2">
+                        <div
+                          class="w-6 h-6 rounded-lg flex items-center justify-center text-white text-xs font-bold"
+                          [class.bg-gradient-to-br]="true"
+                          [class.from-cyan-500]="i % 3 === 0"
+                          [class.to-teal-500]="i % 3 === 0"
+                          [class.from-teal-500]="i % 3 === 1"
+                          [class.to-emerald-500]="i % 3 === 1"
+                          [class.from-emerald-500]="i % 3 === 2"
+                          [class.to-cyan-500]="i % 3 === 2"
+                        >
+                          {{ i + 1 }}
+                        </div>
+                        <span class="text-sm font-bold text-gray-900 dark:text-white">{{ category.name }}</span>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <div class="w-12 h-1.5 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                          <div
+                            class="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full transition-all duration-500"
+                            [style.width.%]="category.items.length > 0 ? (getCategoryCompletedCount(category.name) / category.items.length) * 100 : 0"
+                          ></div>
+                        </div>
+                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                          {{ getCategoryCompletedCount(category.name) }}/{{ category.items.length }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                      @for (item of category.items; track item.id) {
+                        <label
+                          class="flex cursor-pointer items-start gap-3 p-4 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/30"
+                          [class.bg-emerald-50/50]="checkedItems()[item.id]"
+                          [class.dark:bg-emerald-900/10]="checkedItems()[item.id]"
+                        >
+                          <div class="relative mt-0.5">
+                            <input
+                              type="checkbox"
+                              [checked]="checkedItems()[item.id]"
+                              (change)="toggleItem(item.id)"
+                              class="peer sr-only"
+                            />
+                            <div
+                              class="w-5 h-5 border-2 rounded-md transition-all duration-200 flex items-center justify-center"
+                              [class.border-gray-300]="!checkedItems()[item.id]"
+                              [class.dark:border-gray-600]="!checkedItems()[item.id]"
+                              [class.border-emerald-500]="checkedItems()[item.id]"
+                              [class.bg-emerald-500]="checkedItems()[item.id]"
                             >
-                              {{ item.label }}
-                            </span>
-                            @if (item.critical) {
+                              @if (checkedItems()[item.id]) {
+                                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                </svg>
+                              }
+                            </div>
+                          </div>
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
                               <span
-                                class="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                                class="text-sm transition-all duration-200"
+                                [class.text-gray-900]="!checkedItems()[item.id]"
+                                [class.dark:text-white]="!checkedItems()[item.id]"
+                                [class.text-gray-400]="checkedItems()[item.id]"
+                                [class.dark:text-gray-500]="checkedItems()[item.id]"
+                                [class.line-through]="checkedItems()[item.id]"
                               >
-                                CRITICO
+                                {{ item.label }}
                               </span>
-                            }
-                            @if (item.modelSpecific) {
-                              <span
-                                class="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                              >
-                                MODELO
-                              </span>
+                              @if (item.critical) {
+                                <span class="inline-flex items-center gap-1 rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-[10px] font-bold text-red-700 dark:text-red-400 uppercase">
+                                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2L2 22h20L12 2zm0 4l7.53 14H4.47L12 6zm-1 6v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+                                  </svg>
+                                  Critico
+                                </span>
+                              }
+                              @if (item.modelSpecific) {
+                                <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase">
+                                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                  </svg>
+                                  Modelo
+                                </span>
+                              }
+                            </div>
+                            @if (item.description) {
+                              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ item.description }}</p>
                             }
                           </div>
-                          @if (item.description) {
-                            <p class="mt-0.5 text-xs text-text-muted">{{ item.description }}</p>
-                          }
-                        </div>
-                      </label>
-                    }
+                        </label>
+                      }
+                    </div>
                   </div>
-                </div>
-              }
+                }
 
-              <!-- Tips -->
-              @if (checklist()!.tips.length > 0) {
-                <div class="rounded-lg bg-amber-50 p-3 dark:bg-amber-900/20">
-                  <h4 class="mb-2 text-xs font-semibold text-amber-700 dark:text-amber-400">
-                    Tips para {{ vehicleName() }}
-                  </h4>
-                  <ul class="space-y-1 text-xs text-amber-800 dark:text-amber-300">
-                    @for (tip of checklist()!.tips; track tip) {
-                      <li>{{ tip }}</li>
-                    }
-                  </ul>
-                </div>
-              }
-            </div>
-          }
-
-          <!-- Error -->
-          @if (error()) {
-            <div class="space-y-3">
-              <div class="rounded-lg bg-error-bg p-3 text-sm text-error-strong">
-                {{ error() }}
+                <!-- Tips -->
+                @if (checklist()!.tips.length > 0) {
+                  <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 p-4 border border-amber-200/50 dark:border-amber-700/30">
+                    <div class="absolute top-2 right-2 w-8 h-8 opacity-20">
+                      <svg fill="currentColor" class="text-amber-500" viewBox="0 0 24 24">
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                      </svg>
+                    </div>
+                    <div class="flex items-center gap-2 mb-3">
+                      <div class="w-7 h-7 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                      </div>
+                      <h4 class="text-sm font-bold text-amber-800 dark:text-amber-300">
+                        Tips para {{ vehicleName() }}
+                      </h4>
+                    </div>
+                    <ul class="space-y-2">
+                      @for (tip of checklist()!.tips; track tip) {
+                        <li class="flex items-start gap-2 text-xs text-amber-800 dark:text-amber-300">
+                          <svg class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+                          </svg>
+                          {{ tip }}
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                }
               </div>
-              <button
-                type="button"
-                class="w-full rounded-lg bg-orange-500 py-2 text-sm font-medium text-white hover:bg-orange-600"
-                (click)="generateChecklist()"
-              >
-                Reintentar
-              </button>
-            </div>
-          }
+            }
+
+            <!-- Error -->
+            @if (error()) {
+              <div class="space-y-4">
+                <div class="flex flex-col items-center py-6">
+                  <div class="w-14 h-14 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-3 ring-4 ring-red-100 dark:ring-red-900/30">
+                    <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <p class="text-sm font-medium text-red-600 dark:text-red-400 text-center mb-4">
+                    {{ error() }}
+                  </p>
+                  <button
+                    type="button"
+                    class="relative overflow-hidden bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all duration-300 shadow-lg hover:shadow-teal-500/25 flex items-center gap-2"
+                    (click)="generateChecklist()"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reintentar
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>
   `,
+  styles: [`
+    :host { display: block; }
+
+    @keyframes gradient-xy {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .animate-gradient-xy {
+      animation: gradient-xy 3s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    .animate-shimmer {
+      animation: shimmer 2s ease-in-out infinite;
+    }
+  `],
 })
 export class AiChecklistPanelComponent {
   private readonly gemini = inject(GeminiService);

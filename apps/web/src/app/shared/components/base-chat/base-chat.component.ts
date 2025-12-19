@@ -31,314 +31,242 @@ export interface ChatContext {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
   template: `
-    <!-- WhatsApp-style Chat Container -->
+    <!-- Professional Chat Container -->
     <div
-      class="whatsapp-chat-container flex h-[600px] flex-col overflow-hidden rounded-lg border border-border-default bg-surface-raised shadow-lg dark:border-border-muted dark:bg-surface-raised"
-      >
-      <!-- Header estilo WhatsApp -->
-      <div
-        class="whatsapp-header flex items-center gap-3 bg-cta-default px-4 py-3 text-text-primary dark:bg-surface-secondary"
-        >
-        <!-- Avatar -->
-        <div
-          class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-surface-raised/20"
+      class="chat-container flex h-[550px] flex-col overflow-hidden rounded-2xl border border-border-default bg-surface-raised shadow-sm"
+    >
+      <!-- Professional Header -->
+      <div class="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-3">
+        <!-- Avatar with Initials -->
+        <div class="relative flex-shrink-0">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg"
           >
-          <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-              />
-          </svg>
+            {{ getInitials() }}
+          </div>
+          <!-- Online indicator -->
+          <div class="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-raised bg-emerald-500"></div>
         </div>
-    
-        <!-- Info contacto -->
-        <div class="flex-1">
-          <h3 class="text-sm font-semibold">{{ context().recipientName }}</h3>
-          <p class="text-xs opacity-80">
-            {{ loading() ? 'cargando...' : context().headerSubtitle || getDefaultSubtitle() }}
-          </p>
+
+        <!-- Contact Info -->
+        <div class="flex-1 min-w-0">
+          <h3 class="text-base font-semibold text-text-primary truncate">{{ context().recipientName }}</h3>
+          <div class="flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">En línea</span>
+          </div>
         </div>
-    
-        <!-- Bloquear / Desbloquear -->
-        <button
-          type="button"
-          class="flex items-center gap-1 rounded-full bg-surface-raised/20 px-3 py-1 text-[11px] font-medium text-text-primary transition hover:bg-surface-raised/40 dark:bg-surface-base/40 dark:hover:bg-surface-base/60"
-          (click)="toggleBlockUser()"
+
+        <!-- Action buttons -->
+        <div class="flex items-center gap-1">
+          <!-- Block/Unblock button -->
+          <button
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover transition-colors"
+            [class.text-error-strong]="blocked()"
+            (click)="toggleBlockUser()"
+            [title]="blocked() ? 'Desbloquear' : 'Bloquear'"
           >
-          <svg
-            class="h-4 w-4"
-            [attr.fill]="blocked() ? 'currentColor' : 'none'"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M18.364 5.636a9 9 0 11-12.728 12.728 9 9 0 0112.728-12.728z"
-              />
-            @if (blocked()) {
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6.343 6.343l11.314 11.314"
-                />
-            }
-          </svg>
-          {{ blocked() ? 'Desbloquear' : 'Bloquear' }}
-        </button>
-    
-        <!-- Icono menú -->
-        <button
-          class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-raised/10"
-          type="button"
-          (click)="onMenuClick()"
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+            </svg>
+          </button>
+          <!-- Menu button -->
+          <button
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-hover transition-colors"
+            (click)="onMenuClick()"
           >
-          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-              />
-          </svg>
-        </button>
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+            </svg>
+          </button>
+        </div>
       </div>
-    
-      <!-- Banner de usuario bloqueado -->
+
+      <!-- Blocked user banner -->
       @if (blocked()) {
-        <div
-          class="bg-error-bg text-error-strong dark:bg-error-900/40 dark:text-error-200 px-4 py-2 text-sm text-center"
-          >
-          Has bloqueado a {{ context().recipientName }}. Desbloquéalo para volver a chatear.
+        <div class="bg-error-bg/50 border-b border-error-border px-4 py-2.5 text-sm text-center text-error-strong">
+          <span class="font-medium">Usuario bloqueado</span> · Desbloquéalo para volver a chatear
         </div>
       }
-    
-      <!-- Notificación flotante -->
-      @if (notification()) {
-        <div
-          class="absolute left-1/2 top-16 z-10 mx-auto w-[90%] max-w-md -translate-x-1/2 transform animate-slide-down rounded-lg bg-cta-hover px-4 py-2 text-center text-sm text-text-primary shadow-lg"
-          >
-          {{ notification() }}
-        </div>
-      }
-    
-      <!-- Fondo estilo WhatsApp -->
-      <div
-        class="whatsapp-bg relative flex-1 overflow-y-auto bg-surface-base dark:bg-surface-secondary"
-        >
-        <!-- Loading -->
+
+      <!-- Chat Messages Area -->
+      <div class="relative flex-1 overflow-y-auto bg-surface-base">
+        <!-- Loading state -->
         @if (loading()) {
           <div class="flex h-full items-center justify-center">
             <div class="text-center">
-              <div
-                class="mb-2 inline-block h-8 w-8 animate-spin rounded-full border-4 border-border-muted border-t-cta-default"
-              ></div>
-              <p
-                class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                >
-                Cargando mensajes...
-              </p>
+              <div class="mb-3 inline-block h-10 w-10 animate-spin rounded-full border-4 border-border-muted border-t-indigo-500"></div>
+              <p class="text-sm text-text-secondary">Cargando mensajes...</p>
             </div>
           </div>
         }
-    
-        <!-- Error -->
+
+        <!-- Error state -->
         @if (error()) {
-          <div
-            class="mx-4 mt-4 rounded-lg bg-error-bg-hover p-3 text-sm text-error-strong dark:bg-error-900/30 dark:text-error-200"
-            >
-            ⚠️ {{ error() }}
+          <div class="mx-4 mt-4 flex items-center gap-2 rounded-xl bg-error-bg/50 border border-error-border/50 p-4 text-sm text-error-strong">
+            <svg class="h-5 w-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span>{{ error() }}</span>
           </div>
         }
-    
+
         <!-- Empty state -->
         @if (!loading() && messages().length === 0) {
-          <div
-            class="flex h-full flex-col items-center justify-center px-4 text-center"
-            >
-            <div
-              class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-raised/70 dark:bg-surface-base/70"
-              >
-              <svg
-                class="h-10 w-10 text-cta-default dark:text-text-secondary"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                  />
+          <div class="flex h-full flex-col items-center justify-center px-6 text-center">
+            <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-900/20">
+              <svg class="h-10 w-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
-            <p class="mb-2 text-base font-medium text-text-primary dark:text-text-secondary">
-              {{ getEmptyStateTitle() }}
-            </p>
-            <p class="text-sm text-text-secondary dark:text-text-secondary dark:text-text-secondary">
-              {{ getEmptyStateSubtitle() }}
-            </p>
+            <h4 class="mb-1 text-base font-semibold text-text-primary">{{ getEmptyStateTitle() }}</h4>
+            <p class="text-sm text-text-secondary max-w-xs">{{ getEmptyStateSubtitle() }}</p>
           </div>
         }
-    
-        <!-- Messages -->
+
+        <!-- Messages list -->
         @if (!loading() && messages().length > 0) {
-          <div class="space-y-2 px-4 py-4">
-            @for (message of messages(); track message) {
-              <div
-                [class.justify-end]="isOwnMessage(message)"
-                [class.justify-start]="!isOwnMessage(message)"
-                class="flex"
-                >
-                <!-- Mensaje recibido (izquierda) -->
+          <div class="px-4 py-4 space-y-3">
+            <!-- Date separator (first message) -->
+            <div class="flex items-center justify-center mb-2">
+              <span class="px-3 py-1 text-xs text-text-secondary bg-surface-raised rounded-full border border-border-default shadow-sm">
+                {{ getConversationDateLabel() }}
+              </span>
+            </div>
+
+            @for (message of messages(); track message.id) {
+              <div [class]="isOwnMessage(message) ? 'flex justify-end' : 'flex justify-start'">
+                <!-- Received message (left) -->
                 @if (!isOwnMessage(message)) {
-                  <div
-                    class="message-received relative max-w-[75%] rounded-lg rounded-tl-none bg-surface-raised px-3 py-2 shadow-sm dark:bg-surface-secondary"
-                    >
-                    <p class="break-words text-sm text-text-primary dark:text-text-primary">
-                      {{ message.body }}
-                    </p>
-                    <div class="mt-1 flex items-center justify-end gap-1">
-                      <span
-                        class="text-[10px] text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                        >{{ formatTime(message.created_at) }}</span
-                        >
-                      </div>
-                      <!-- Tail izquierdo -->
-                      <div
-                        class="absolute -left-2 top-0 h-0 w-0 border-r-8 border-t-8 border-r-transparent"
-                        [style.borderTopColor]="'var(--surface-raised)'"
-                      ></div>
+                  <div class="flex items-end gap-2 max-w-[80%]">
+                    <!-- Small avatar -->
+                    <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-[10px] font-bold mb-1">
+                      {{ getInitials() }}
                     </div>
-                  }
-                  <!-- Mensaje enviado (derecha) -->
-                  @if (isOwnMessage(message)) {
-                    <div
-                      class="message-sent relative max-w-[75%] rounded-lg rounded-tr-none bg-cta-default px-3 py-2 shadow-sm dark:bg-cta-hover"
-                      >
-                      <p class="break-words text-sm text-text-primary dark:text-text-primary">
-                        {{ message.body }}
-                      </p>
-                      <div class="mt-1 flex items-center justify-end gap-1">
-                        <span class="text-[10px] text-text-secondary dark:text-text-secondary">{{
-                          formatTime(message.created_at)
-                        }}</span>
-                        <!-- Check marks - Single check (sent) -->
-                        @if (getMessageStatus(message) === 'sent') {
-                          <svg
-                            class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                            fill="currentColor"
-                            viewBox="0 0 16 15"
-                            >
-                            <path
-                              d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z"
-                              />
-                          </svg>
-                        }
-                        <!-- Double check (delivered) -->
-                        @if (getMessageStatus(message) === 'delivered') {
-                          <svg
-                            class="h-4 w-4 text-text-secondary dark:text-text-secondary dark:text-text-secondary"
-                            fill="currentColor"
-                            viewBox="0 0 16 15"
-                            >
-                            <path
-                              d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-                              />
-                          </svg>
-                        }
-                        <!-- Double check blue (read) -->
-                        @if (getMessageStatus(message) === 'read') {
-                          <svg
-                            class="h-4 w-4 text-cta-default"
-                            fill="currentColor"
-                            viewBox="0 0 16 15"
-                            >
-                            <path
-                              d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"
-                              />
-                          </svg>
-                        }
+                    <div class="relative">
+                      <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-2.5 shadow-sm">
+                        <p class="text-sm text-text-primary leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
+                        <div class="mt-1 flex items-center justify-end">
+                          <span class="text-[10px] text-text-muted">{{ formatTime(message.created_at) }}</span>
+                        </div>
                       </div>
-                      <!-- Tail derecho -->
-                      <div
-                        class="absolute -right-2 top-0 h-0 w-0 border-l-8 border-t-8 border-l-transparent"
-                        [style.borderTopColor]="'var(--cta-default)'"
-                      ></div>
                     </div>
-                  }
-                </div>
-              }
-              <!-- Typing indicator -->
-              @if (recipientTyping()) {
-                <div class="flex justify-start px-4 py-2">
-                  <div
-                    class="rounded-lg rounded-tl-none bg-surface-raised px-4 py-3 shadow-sm dark:bg-surface-secondary"
-                    >
+                  </div>
+                }
+
+                <!-- Sent message (right) -->
+                @if (isOwnMessage(message)) {
+                  <div class="max-w-[80%]">
+                    <div class="relative">
+                      <div class="rounded-2xl rounded-br-md bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-2.5 shadow-sm">
+                        <p class="text-sm text-white leading-relaxed whitespace-pre-wrap break-words">{{ message.body }}</p>
+                        <div class="mt-1 flex items-center justify-end gap-1">
+                          <span class="text-[10px] text-white/70">{{ formatTime(message.created_at) }}</span>
+                          <!-- Status indicators -->
+                          @if (getMessageStatus(message) === 'sent') {
+                            <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
+                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512z" />
+                            </svg>
+                          }
+                          @if (getMessageStatus(message) === 'delivered') {
+                            <svg class="h-3.5 w-3.5 text-white/70" fill="currentColor" viewBox="0 0 16 15">
+                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" />
+                            </svg>
+                          }
+                          @if (getMessageStatus(message) === 'read') {
+                            <svg class="h-3.5 w-3.5 text-cyan-300" fill="currentColor" viewBox="0 0 16 15">
+                              <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" />
+                            </svg>
+                          }
+                        </div>
+                      </div>
+                      <!-- "Tú" label -->
+                      <span class="absolute -bottom-4 right-2 text-[10px] text-text-muted font-medium">Tú</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Typing indicator -->
+            @if (recipientTyping()) {
+              <div class="flex justify-start">
+                <div class="flex items-end gap-2">
+                  <div class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-[10px] font-bold">
+                    {{ getInitials() }}
+                  </div>
+                  <div class="rounded-2xl rounded-bl-md bg-white dark:bg-surface-secondary border border-border-default px-4 py-3 shadow-sm">
                     <div class="flex items-center gap-1">
-                      <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                        style="animation-delay: 0ms"
-                      ></div>
-                      <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                        style="animation-delay: 150ms"
-                      ></div>
-                      <div
-                        class="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                        style="animation-delay: 300ms"
-                      ></div>
+                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 0ms"></div>
+                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 150ms"></div>
+                      <div class="h-2 w-2 animate-bounce rounded-full bg-indigo-400" style="animation-delay: 300ms"></div>
                     </div>
                   </div>
                 </div>
-              }
-            </div>
-          }
-        </div>
-    
-        <!-- AI Suggestions Bar -->
-        @if (bookingContextForAI() && showSuggestions()) {
-          <div class="border-t border-border-muted bg-surface-elevated px-3 py-2 dark:bg-surface-secondary">
-            @if (loadingSuggestions()) {
-              <div class="flex items-center gap-2 text-text-secondary">
-                <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                <span class="text-xs">Generando sugerencias...</span>
               </div>
-            } @else if (aiSuggestions().length > 0) {
-              <div class="flex flex-wrap gap-2">
-                @for (suggestion of aiSuggestions(); track suggestion.id) {
-                  <button
-                    type="button"
-                    class="rounded-full border border-cta-default/30 bg-cta-default/10 px-3 py-1.5 text-xs text-cta-default transition-colors hover:bg-cta-default/20"
-                    (click)="useSuggestion(suggestion)"
-                  >
-                    {{ suggestion.text }}
-                  </button>
-                }
-              </div>
-            } @else {
-              <p class="text-xs text-text-muted">No hay sugerencias disponibles</p>
             }
           </div>
         }
 
-        <!-- Input estilo WhatsApp -->
-        <div
-          class="whatsapp-input flex items-center gap-2 bg-surface-elevated px-3 py-2 dark:bg-surface-secondary"
-          >
-          <!-- AI Sparkles button (only if booking context available) -->
+        <!-- Floating notification -->
+        @if (notification()) {
+          <div class="absolute left-1/2 top-4 z-10 -translate-x-1/2 transform animate-slide-down">
+            <div class="rounded-full bg-indigo-500 px-4 py-2 text-sm text-white shadow-lg">
+              {{ notification() }}
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- AI Suggestions Bar -->
+      @if (bookingContextForAI() && showSuggestions()) {
+        <div class="border-t border-border-default bg-indigo-50/50 dark:bg-indigo-900/10 px-4 py-2.5">
+          @if (loadingSuggestions()) {
+            <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+              <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              <span class="text-xs font-medium">Generando sugerencias...</span>
+            </div>
+          } @else if (aiSuggestions().length > 0) {
+            <div class="flex flex-wrap gap-2">
+              @for (suggestion of aiSuggestions(); track suggestion.id) {
+                <button
+                  type="button"
+                  class="rounded-full bg-white dark:bg-surface-raised border border-indigo-200 dark:border-indigo-700 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 transition-all hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:border-indigo-300 shadow-sm"
+                  (click)="useSuggestion(suggestion)"
+                >
+                  {{ suggestion.text }}
+                </button>
+              }
+            </div>
+          } @else {
+            <p class="text-xs text-text-muted">No hay sugerencias disponibles</p>
+          }
+        </div>
+      }
+
+      <!-- Input Area -->
+      <div class="border-t border-border-default bg-surface-raised px-4 py-3">
+        <form (ngSubmit)="sendMessage()" class="flex items-center gap-3">
+          <!-- AI Sparkles button -->
           @if (bookingContextForAI()) {
             <button
               type="button"
-              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-colors"
-              [class.text-cta-default]="showSuggestions()"
-              [class.bg-cta-default/10]="showSuggestions()"
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full transition-all"
+              [class.bg-indigo-100]="showSuggestions()"
+              [class.text-indigo-600]="showSuggestions()"
+              [class.dark:bg-indigo-900/30]="showSuggestions()"
               [class.text-text-secondary]="!showSuggestions()"
               [class.hover:bg-surface-hover]="!showSuggestions()"
               [disabled]="loadingSuggestions()"
               (click)="toggleSuggestions()"
+              title="Sugerencias IA"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -347,75 +275,41 @@ export interface ChatContext {
             </button>
           }
 
-          <!-- Emoji button -->
-          <button
-            type="button"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
-            >
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"
-                />
-            </svg>
-          </button>
-    
-          <!-- Input -->
-          <form (ngSubmit)="sendMessage()" class="flex flex-1 items-center gap-2">
+          <!-- Text input -->
+          <div class="flex-1 relative">
             <input
               type="text"
               [ngModel]="draftMessage"
               (ngModelChange)="onMessageDraftChange($event)"
               name="message"
               [disabled]="sending() || blocked()"
-              [placeholder]="blocked() ? 'Has bloqueado a este usuario' : 'Escribe un mensaje'"
-              class="flex-1 rounded-full bg-surface-raised px-4 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none dark:bg-surface-raised dark:text-text-primary dark:placeholder-text-muted"
-              />
-    
-            <!-- Send button -->
-            <button
-              type="submit"
-              [disabled]="!draftMessage.trim() || sending() || blocked()"
-              class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-cta-default text-cta-text transition-all hover:bg-cta-hover disabled:opacity-50 dark:bg-cta-hover dark:hover:bg-cta-default"
-              >
-              @if (!sending()) {
-                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                </svg>
-              }
-              @if (sending()) {
-                <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              }
-            </button>
-          </form>
-    
-          <!-- Mic button -->
+              [placeholder]="blocked() ? 'Usuario bloqueado' : 'Escribe un mensaje...'"
+              class="w-full rounded-full bg-surface-base border border-border-default px-4 py-2.5 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+            />
+          </div>
+
+          <!-- Send button -->
           <button
-            type="button"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-text-secondary dark:text-text-secondary hover:bg-surface-hover dark:text-text-muted dark:hover:bg-gray-700"
-            >
-            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"
-                />
-            </svg>
+            type="submit"
+            [disabled]="!draftMessage.trim() || sending() || blocked()"
+            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm transition-all hover:shadow-md hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-sm"
+          >
+            @if (!sending()) {
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            }
+            @if (sending()) {
+              <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            }
           </button>
-        </div>
+        </form>
       </div>
-    `,
+    </div>
+  `,
 })
 export class BaseChatComponent implements OnInit, OnDestroy {
   // Inputs
@@ -808,6 +702,44 @@ export class BaseChatComponent implements OnInit, OnDestroy {
     return ctx.type === 'booking'
       ? 'Envía un mensaje para empezar la conversación'
       : 'Pregunta sobre disponibilidad, precios o lo que necesites';
+  }
+
+  /**
+   * Obtiene las iniciales del nombre del destinatario
+   */
+  getInitials(): string {
+    const name = this.context().recipientName || '';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 0 || !parts[0]) return '?';
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  /**
+   * Obtiene la etiqueta de fecha para el separador de conversación
+   */
+  getConversationDateLabel(): string {
+    const msgs = this.messages();
+    if (msgs.length === 0) return 'Hoy';
+
+    const firstMsgDate = new Date(msgs[0].created_at);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const msgDay = new Date(firstMsgDate.getFullYear(), firstMsgDate.getMonth(), firstMsgDate.getDate());
+
+    const diffDays = Math.floor((today.getTime() - msgDay.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return `Hoy ${firstMsgDate.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`;
+    } else if (diffDays === 1) {
+      return 'Ayer';
+    } else if (diffDays < 7) {
+      return firstMsgDate.toLocaleDateString('es-AR', { weekday: 'long' });
+    } else {
+      return firstMsgDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
   }
 
   /**

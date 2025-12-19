@@ -22,6 +22,7 @@ import { FxSnapshot, RiskSnapshot, PaymentAuthorization, PaymentMode } from '../
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';
 import { CardHoldPanelComponent } from './components/card-hold-panel.component';
 import { PaymentModeToggleComponent } from './components/payment-mode-toggle.component';
+import { PaymentMethodComparisonComponent } from '../../../shared/components/payment-method-comparison/payment-method-comparison.component';
 
 // Extended FxSnapshot with dual rates
 interface DualRateFxSnapshot extends FxSnapshot {
@@ -39,6 +40,7 @@ interface DualRateFxSnapshot extends FxSnapshot {
     MercadopagoCardFormComponent,
     CardHoldPanelComponent,
     PaymentModeToggleComponent,
+    PaymentMethodComparisonComponent,
   ],
   templateUrl: './booking-detail-payment.page.html',
   styleUrls: ['./booking-detail-payment.page.css'],

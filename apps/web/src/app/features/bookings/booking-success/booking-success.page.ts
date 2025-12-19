@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { PaymentsService } from '../../../core/services/payments.service';
 import { Booking } from '../../../core/models';
+import { ReferralBannerComponent } from '../../../shared/components/referral-banner/referral-banner.component';
 
 type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
 
@@ -13,7 +14,7 @@ type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
   selector: 'app-booking-success',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonicModule, RouterModule],
+  imports: [CommonModule, IonicModule, RouterModule, ReferralBannerComponent],
   templateUrl: './booking-success.page.html',
   styleUrls: ['./booking-success.page.scss'],
 })

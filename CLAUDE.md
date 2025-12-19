@@ -10,6 +10,29 @@
 
 ---
 
+## Reglas de Desarrollo
+
+### Diseño UI
+- **NO WIZARDS:** Prohibidos los step-by-step wizards
+- **NO MODALS:** Prohibidos los modales/dialogs
+- **NO COMPONENTES HUÉRFANOS:** Todo componente DEBE estar integrado (rutas, módulos, o templates)
+
+### Código
+- **Signals > BehaviorSubject:** Usar signals para estado reactivo
+- **OnPush obligatorio:** Todos los componentes con ChangeDetectionStrategy.OnPush
+- **LoggerService:** Usar LoggerService, NO console.log en producción
+- **Standalone only:** No usar NgModules, solo standalone components
+
+### Seguridad
+- **RLS obligatorio:** Toda tabla nueva requiere políticas RLS
+- **No secrets en código:** Usar environment variables o Supabase secrets
+
+### Git
+- **Commits:** `feat|fix|chore|refactor: descripción concisa`
+- **Branch:** `feature/nombre`, `fix/nombre`, `chore/nombre`
+
+---
+
 ## Deployment
 
 ### Android

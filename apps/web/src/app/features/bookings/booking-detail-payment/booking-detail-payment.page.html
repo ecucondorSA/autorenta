@@ -354,6 +354,11 @@
                 (modeChange)="onPaymentModeChange($event)"
               ></app-payment-mode-toggle>
 
+              <!-- Payment Method Comparison Info -->
+              <app-payment-method-comparison
+                [carValueUsd]="car()?.value_usd || 0"
+              />
+
               <!-- ============================================ -->
               <!-- CONTRACT SECTION (NEW) -->
               <!-- ============================================ -->

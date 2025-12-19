@@ -9,19 +9,29 @@
       <!-- Has dates selected - show total -->
       @if (totalPrice !== null && daysCount > 0) {
       <div class="flex flex-col">
-        <p class="text-xs text-text-secondary dark:text-text-secondary">Total</p>
-        <p class="text-lg font-bold text-text-primary">{{ totalPrice | money }}</p>
-        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">
-          {{ daysCount }} {{ daysCount === 1 ? 'día' : 'días' }}
-        </p>
+        <p class="text-xs text-text-secondary">Total</p>
+        <p class="text-lg font-bold text-text-primary tracking-tight">{{ totalPrice | money }}</p>
+        <div class="flex items-center gap-1.5 text-[10px] text-text-secondary -mt-0.5">
+          <span>{{ daysCount }} {{ daysCount === 1 ? 'día' : 'días' }}</span>
+          @if (guaranteeAmount) {
+            <span class="text-text-secondary/60">·</span>
+            <span class="text-cta-default">+ {{ guaranteeAmount | money }} garantía</span>
+          }
+        </div>
       </div>
       }
       <!-- No dates selected - show per day -->
       @if ((totalPrice === null || daysCount === 0) && pricePerDay !== null) {
       <div class="flex flex-col">
-        <p class="text-xs text-text-secondary dark:text-text-secondary">Desde</p>
-        <p class="text-lg font-bold text-text-primary">{{ pricePerDay | money }}</p>
-        <p class="text-[10px] text-text-secondary dark:text-text-secondary -mt-0.5">por día</p>
+        <p class="text-xs text-text-secondary">Desde</p>
+        <p class="text-lg font-bold text-text-primary tracking-tight">{{ pricePerDay | money }}</p>
+        <div class="flex items-center gap-1.5 text-[10px] text-text-secondary -mt-0.5">
+          <span>por día</span>
+          @if (guaranteeAmount) {
+            <span class="text-text-secondary/60">·</span>
+            <span class="text-cta-default">+ {{ guaranteeAmount | money }} garantía</span>
+          }
+        </div>
       </div>
       }
     </div>

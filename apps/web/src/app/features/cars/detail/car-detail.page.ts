@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { combineLatest, from, fromEvent, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
@@ -39,7 +39,9 @@ import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 import { RiskCalculation, RiskCalculatorService } from '../../../core/services/risk-calculator.service';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
+import { AiReputationCardComponent } from '../../../shared/components/ai-reputation-card/ai-reputation-card.component';
 import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
+import { CarInquiryChatComponent } from '../../../shared/components/car-inquiry-chat/car-inquiry-chat.component';
 import { CarReviewsSectionComponent } from '../../../shared/components/car-reviews-section/car-reviews-section.component';
 import {
   DateRange,
@@ -88,6 +90,7 @@ interface CarDetailState {
   selector: 'app-car-detail-page',
   imports: [
     CommonModule,
+    RouterLink,
     DateRangePickerComponent,
     CarReviewsSectionComponent,
     TranslateModule,
@@ -97,6 +100,8 @@ interface CarDetailState {
     AiLegalPanelComponent,
     AiTripPanelComponent,
     AiChecklistPanelComponent,
+    AiReputationCardComponent,
+    CarInquiryChatComponent,
   ],
   templateUrl: './car-detail.page.html',
   styleUrls: ['./car-detail.page.css'],
