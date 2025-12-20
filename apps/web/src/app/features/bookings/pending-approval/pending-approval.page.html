@@ -74,6 +74,14 @@
             <!-- Actions -->
             <div class="booking-actions">
               <button
+                class="btn-analyze"
+                (click)="openAnalysisPanel(booking)"
+                [disabled]="processingBookingId() !== null"
+                >
+                <app-icon name="user-check" [size]="18" />
+                Analizar Perfil
+              </button>
+              <button
                 class="btn-approve"
                 (click)="onApprove(booking.booking_id)"
                 [disabled]="processingBookingId() !== null"
@@ -94,9 +102,6 @@
                 [disabled]="processingBookingId() !== null"
                 >
                 ❌ Rechazar
-              </button>
-              <button class="btn-view" (click)="navigateToBooking(booking.booking_id)">
-                👁️ Ver Detalles
               </button>
             </div>
           </div>
@@ -121,6 +126,34 @@
       </div>
     }
   </div>
+
+  <!-- Panel de Análisis del Renter -->
+  @if (showAnalysisPanel() && selectedAnalysisBooking()) {
+    <div class="analysis-overlay" (click)="closeAnalysisPanel()">
+      <div class="analysis-drawer" (click)="$event.stopPropagation()">
+        <div class="drawer-header">
+          <div class="drawer-info">
+            <h2>Analisis del Locatario</h2>
+            <p class="drawer-subtitle">
+              Solicitud para: {{ selectedAnalysisBooking()!.car_name }}
+            </p>
+          </div>
+          <button class="close-btn" (click)="closeAnalysisPanel()">
+            <app-icon name="x" [size]="24" />
+          </button>
+        </div>
+        <div class="drawer-content">
+          <app-renter-analysis-panel
+            #analysisPanel
+            [renterId]="selectedAnalysisBooking()!.renter_id"
+            [bookingId]="selectedAnalysisBooking()!.booking_id"
+            (approve)="onAnalysisApprove()"
+            (reject)="onAnalysisReject()"
+          />
+        </div>
+      </div>
+    </div>
+  }
 
   <!-- Reject Modal -->
   @if (showRejectModal()) {

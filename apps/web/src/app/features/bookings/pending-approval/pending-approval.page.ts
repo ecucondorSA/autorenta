@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnDestroy, OnInit, computed, inject, signal,
+import {Component, OnDestroy, OnInit, computed, inject, signal, ViewChild,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -8,6 +8,8 @@ import { BookingsService } from '../../../core/services/bookings.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
 import { RenterProfileBadgeComponent } from '../../../shared/components/renter-profile-badge/renter-profile-badge.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { RenterAnalysisPanelComponent } from '../../../shared/components/renter-analysis-panel/renter-analysis-panel.component';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 interface PendingApproval {
   booking_id: string;
@@ -29,7 +31,7 @@ interface PendingApproval {
   selector: 'app-pending-approval',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, RenterProfileBadgeComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule, RenterProfileBadgeComponent, SkeletonLoaderComponent, RenterAnalysisPanelComponent, IconComponent],
   templateUrl: './pending-approval.page.html',
   styleUrl: './pending-approval.page.scss',
 })
@@ -45,6 +47,10 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
   readonly showRejectModal = signal(false);
   readonly selectedBookingId = signal<string | null>(null);
   readonly rejectionReason = signal('');
+  readonly showAnalysisPanel = signal(false);
+  readonly selectedAnalysisBooking = signal<PendingApproval | null>(null);
+
+  @ViewChild('analysisPanel') analysisPanel?: RenterAnalysisPanelComponent;
 
   readonly hasBookings = computed(() => this.pendingBookings().length > 0);
 
@@ -175,5 +181,62 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
 
   navigateToBooking(bookingId: string) {
     this.router.navigate(['/bookings/owner', bookingId]);
+  }
+
+  // Análisis del renter
+  openAnalysisPanel(booking: PendingApproval): void {
+    this.selectedAnalysisBooking.set(booking);
+    this.showAnalysisPanel.set(true);
+    // Prevenir scroll del body
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeAnalysisPanel(): void {
+    this.showAnalysisPanel.set(false);
+    this.selectedAnalysisBooking.set(null);
+    document.body.style.overflow = '';
+    // Reset el estado del componente si existe
+    this.analysisPanel?.resetApproving();
+  }
+
+  async onAnalysisApprove(): Promise<void> {
+    const booking = this.selectedAnalysisBooking();
+    if (!booking) return;
+
+    const confirmed = confirm(
+      '¿Estás seguro de aprobar esta reserva? El pago se procesará y la reserva quedará confirmada.',
+    );
+    if (!confirmed) {
+      this.analysisPanel?.resetApproving();
+      return;
+    }
+
+    this.processingBookingId.set(booking.booking_id);
+
+    try {
+      const result = await this.bookingsService.approveBooking(booking.booking_id);
+
+      if (result.success) {
+        this.toastService.success('Éxito', '✅ Reserva aprobada exitosamente');
+        this.closeAnalysisPanel();
+        await this.loadPendingApprovals();
+      } else {
+        this.toastService.error('Error', `Error: ${result.error}`);
+        this.analysisPanel?.resetApproving();
+      }
+    } catch {
+      this.toastService.error('Error', 'Error al aprobar reserva');
+      this.analysisPanel?.resetApproving();
+    } finally {
+      this.processingBookingId.set(null);
+    }
+  }
+
+  onAnalysisReject(): void {
+    const booking = this.selectedAnalysisBooking();
+    if (!booking) return;
+
+    this.closeAnalysisPanel();
+    this.onRejectClick(booking.booking_id);
   }
 }
