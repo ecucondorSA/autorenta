@@ -333,7 +333,7 @@ export class BookingRequestPage implements OnInit, OnDestroy {
             if (auth) {
               this.currentAuthorization.set(auth);
             }
-          } catch (_err) {
+          } catch {
             // Silent: user can re-authorize
           }
         }

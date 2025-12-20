@@ -285,16 +285,39 @@ export class NotificationsService implements OnDestroy {
   // Map database notification types to UI types
   private mapNotificationType(dbType: string): 'info' | 'success' | 'warning' | 'error' {
     switch (dbType) {
+      // Success types
       case 'new_booking_for_owner':
       case 'payment_successful':
       case 'payout_successful':
+      case 'booking_ended_review':
+      case 'welcome':
+      case 'verification_approved':
+      case 'car_views_milestone':
         return 'success';
+
+      // Warning types
       case 'booking_cancelled_for_owner':
       case 'booking_cancelled_for_renter':
       case 'inspection_reminder':
+      case 'document_expiry_license':
+      case 'owner_inactive_reminder':
+      case 'verification_rejected':
+      case 'pending_requests_reminder':
         return 'warning';
+
+      // Info types
       case 'new_chat_message':
       case 'generic_announcement':
+      case 'booking_reminder_24h':
+      case 'booking_reminder_2h':
+      case 'optimization_tip':
+      case 'monthly_report':
+      case 'mp_onboarding_required':
+      case 'nearby_cars':
+      case 'car_recommendation':
+      case 'renter_tip':
+      case 'price_drop_alert':
+      case 'favorite_car_available':
       default:
         return 'info';
     }

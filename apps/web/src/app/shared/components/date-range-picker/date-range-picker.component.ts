@@ -125,6 +125,7 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
     if (!this.dateRangeInput) return;
 
     const blockedDates = this.blockedDatesArray;
+    const blockedSet = new Set(blockedDates);
 
     try {
       this.fpInstance = flatpickr(this.dateRangeInput.nativeElement, {
@@ -137,6 +138,20 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
         position: 'auto',
         clickOpens: true,
         allowInput: false,
+        onReady: (_selectedDates, _dateStr, instance) => {
+          this.ensureCalendarLegend(instance);
+        },
+        onOpen: (_selectedDates, _dateStr, instance) => {
+          this.ensureCalendarLegend(instance);
+        },
+        onDayCreate: (_dObj, _dStr, _instance, dayElem) => {
+          const dateObj = (dayElem as { dateObj?: Date }).dateObj;
+          if (!dateObj) return;
+          const dateKey = dateObj.toISOString().split('T')[0];
+          if (blockedSet.has(dateKey)) {
+            dayElem.classList.add('calendar-day-reserved');
+          }
+        },
         onChange: (selectedDates, _dateStr) => {
           if (selectedDates.length === 2) {
             const from = selectedDates[0].toISOString().split('T')[0];
@@ -155,6 +170,35 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
         console.warn('⚠️ Error initializing flatpickr:', error);
       }
     }
+  }
+
+  private ensureCalendarLegend(instance: flatpickr.Instance): void {
+    const container = instance?.calendarContainer;
+    if (!container || container.querySelector('.calendar-legend')) {
+      return;
+    }
+
+    const legend = document.createElement('div');
+    legend.className = 'calendar-legend';
+
+    const available = document.createElement('div');
+    available.className = 'calendar-legend-item';
+    const availableDot = document.createElement('span');
+    availableDot.className = 'calendar-legend-dot';
+    const availableLabel = document.createElement('span');
+    availableLabel.textContent = 'Disponible';
+    available.append(availableDot, availableLabel);
+
+    const reserved = document.createElement('div');
+    reserved.className = 'calendar-legend-item';
+    const reservedDot = document.createElement('span');
+    reservedDot.className = 'calendar-legend-dot is-reserved';
+    const reservedLabel = document.createElement('span');
+    reservedLabel.textContent = 'Reservado';
+    reserved.append(reservedDot, reservedLabel);
+
+    legend.append(available, reserved);
+    container.appendChild(legend);
   }
 
   async applyPreset(preset: DatePreset): Promise<void> {

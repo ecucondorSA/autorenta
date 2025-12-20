@@ -19,15 +19,6 @@ export interface CreateReviewResult {
   published_immediately?: boolean;
 }
 
-/** Raw review data from database with reviewer join */
-interface ReviewWithReviewer {
-  reviewer?: {
-    full_name?: string | null;
-    avatar_url?: string | null;
-  } | null;
-  [key: string]: unknown;
-}
-
 @Injectable({
   providedIn: 'root',
 })

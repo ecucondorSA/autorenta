@@ -22,7 +22,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
  * <app-ai-legal-panel
  *   [booking]="booking()"
  *   [isExpanded]="expandedPanel() === 'legal'"
- *   (toggle)="togglePanel('legal')"
+ *   (togglePanel)="togglePanel('legal')"
  * />
  * ```
  */
@@ -47,7 +47,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
         <button
           type="button"
           class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
-          (click)="toggle.emit()"
+          (click)="togglePanel.emit()"
         >
           <div class="flex items-center gap-3">
             <!-- Icon with glow -->
@@ -144,6 +144,8 @@ import { GeminiService } from '../../../core/services/gemini.service';
                 <div class="relative flex-1">
                   <input
                     type="text"
+                    id="legalQuestionInput"
+                    name="legalQuestionInput"
                     [(ngModel)]="customQuestion"
                     placeholder="Escribe tu consulta legal..."
                     class="w-full rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 pr-12 text-sm text-gray-900 dark:text-white placeholder-gray-400 transition-all duration-200 focus:border-indigo-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-indigo-500/10"
@@ -315,7 +317,7 @@ export class AiLegalPanelComponent {
   readonly isExpanded = input<boolean>(false);
 
   /** Evento de toggle */
-  readonly toggle = output<void>();
+  readonly togglePanel = output<void>();
 
   // State
   readonly answer = signal<LegalAnswer | null>(null);

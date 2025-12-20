@@ -1,8 +1,7 @@
-import { Injectable, inject, signal, PLATFORM_ID, NgZone, DestroyRef } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID, NgZone } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, Subject, BehaviorSubject } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, catchError, map, of, tap, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 
 export interface UserLocation {
@@ -98,7 +97,6 @@ export class RentarfastAgentService {
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
-  private readonly destroyRef = inject(DestroyRef);
 
   private readonly API_URL = 'https://autorenta-agent-1029437966017.us-central1.run.app';
 

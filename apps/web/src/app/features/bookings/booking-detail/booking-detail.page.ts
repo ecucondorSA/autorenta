@@ -456,7 +456,6 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   /** Determine checklist inspection type based on booking state */
   readonly checklistInspectionType = computed<'check_in' | 'check_out'>(() => {
-    const booking = this.booking();
     // If already has check-in done, show check-out
     if (this.hasCheckIn()) return 'check_out';
     return 'check_in';

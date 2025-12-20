@@ -24,7 +24,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
  *   [booking]="booking()"
  *   [inspectionType]="'check_in'"
  *   [isExpanded]="expandedPanel() === 'checklist'"
- *   (toggle)="togglePanel('checklist')"
+ *   (togglePanel)="togglePanel('checklist')"
  * />
  * ```
  */
@@ -49,7 +49,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
         <button
           type="button"
           class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
-          (click)="toggle.emit()"
+          (click)="togglePanel.emit()"
         >
           <div class="flex items-center gap-3">
             <!-- Icon with glow -->
@@ -232,6 +232,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
                     <div class="divide-y divide-gray-100 dark:divide-gray-800">
                       @for (item of category.items; track item.id) {
                         <label
+                          [for]="'checklist-item-' + item.id"
                           class="flex cursor-pointer items-start gap-3 p-4 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/30"
                           [class.bg-emerald-50/50]="checkedItems()[item.id]"
                           [class.dark:bg-emerald-900/10]="checkedItems()[item.id]"
@@ -239,6 +240,8 @@ import { GeminiService } from '../../../core/services/gemini.service';
                           <div class="relative mt-0.5">
                             <input
                               type="checkbox"
+                              [id]="'checklist-item-' + item.id"
+                              [name]="'checklist-item-' + item.id"
                               [checked]="checkedItems()[item.id]"
                               (change)="toggleItem(item.id)"
                               class="peer sr-only"
@@ -393,7 +396,7 @@ export class AiChecklistPanelComponent {
 
   readonly inspectionType = input<'check_in' | 'check_out'>('check_in');
   readonly isExpanded = input<boolean>(false);
-  readonly toggle = output<void>();
+  readonly togglePanel = output<void>();
 
   // State
   readonly checklist = signal<VehicleChecklist | null>(null);

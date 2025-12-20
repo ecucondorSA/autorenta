@@ -14,7 +14,6 @@ import {
   endOfMonth,
   format,
   getDay,
-  isSameDay,
   isToday,
   startOfMonth,
   subMonths,
@@ -40,7 +39,7 @@ interface CalendarDay {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="rounded-xl border border-border-default bg-surface-raised overflow-hidden">
+    <div class="availability-mini-calendar rounded-xl border border-border-default bg-surface-raised overflow-hidden min-w-[280px] w-full max-w-full">
       <!-- Header -->
       <div class="flex items-center justify-between p-3 border-b border-border-default bg-surface-base">
         <button
@@ -73,7 +72,10 @@ interface CalendarDay {
       <!-- Calendar Grid -->
       <div class="p-2">
         <!-- Weekday Headers -->
-        <div class="grid grid-cols-7 gap-0.5 mb-1">
+        <div
+          class="mini-calendar-weekdays mb-1"
+          style="display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important;"
+        >
           @for (day of weekDays; track day) {
             <div class="text-center text-[10px] font-medium text-text-muted py-1">
               {{ day }}
@@ -87,10 +89,14 @@ interface CalendarDay {
             <div class="w-5 h-5 border-2 border-cta-default/30 border-t-cta-default rounded-full animate-spin"></div>
           </div>
         } @else {
-          <div class="grid grid-cols-7 gap-0.5">
+          <div
+            class="mini-calendar-grid"
+            style="display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important;"
+          >
             @for (day of calendarDays(); track day.date.toISOString()) {
               <div
-                [class]="getDayClasses(day)"
+                class="mini-calendar-day"
+                [ngClass]="getDayClasses(day)"
                 [title]="getDayTitle(day)"
               >
                 {{ day.dayNumber }}
@@ -102,17 +108,50 @@ interface CalendarDay {
 
       <!-- Legend -->
       <div class="flex items-center justify-center gap-4 p-2 border-t border-border-default bg-surface-base text-[10px]">
-        <div class="flex items-center gap-1">
-          <div class="w-2.5 h-2.5 rounded-full bg-success-default"></div>
-          <span class="text-text-secondary">Disponible</span>
+        <div class="flex items-center gap-1.5">
+          <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+          <span class="text-text-primary font-medium">Disponible</span>
         </div>
-        <div class="flex items-center gap-1">
-          <div class="w-2.5 h-2.5 rounded-full bg-error-default"></div>
-          <span class="text-text-secondary">Reservado</span>
+        <div class="flex items-center gap-1.5">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <span class="text-text-primary font-medium">Reservado</span>
         </div>
       </div>
     </div>
   `,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+
+      :host .availability-mini-calendar {
+        width: 100%;
+        min-width: 0;
+      }
+
+      :host .mini-calendar-weekdays,
+      :host .mini-calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.25rem;
+      }
+
+      :host .mini-calendar-day {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      @media (max-width: 480px) {
+        :host .mini-calendar-day {
+          font-size: 0.7rem;
+        }
+      }
+    `,
+  ],
 })
 export class AvailabilityMiniCalendarComponent implements OnInit {
   private readonly availabilityService = inject(CarAvailabilityService);
@@ -208,8 +247,6 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
     date: Date,
     ranges: DetailedBlockedRange[]
   ): 'available' | 'booked' | 'blocked' {
-    const dateStr = format(date, 'yyyy-MM-dd');
-
     for (const range of ranges) {
       const from = new Date(range.from);
       const to = new Date(range.to);
@@ -225,7 +262,8 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
   }
 
   getDayClasses(day: CalendarDay): string {
-    const base = 'w-7 h-7 flex items-center justify-center text-xs rounded-full transition-colors';
+    const base =
+      'flex items-center justify-center text-[10px] sm:text-xs rounded-full transition-colors';
 
     if (!day.isCurrentMonth) {
       return `${base} text-text-muted/30`;
@@ -247,12 +285,15 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
   private getStatusColor(status: 'available' | 'booked' | 'blocked'): string {
     switch (status) {
       case 'booked':
-        return 'bg-error-default/20 text-error-default font-medium';
+        // Rojo sólido para reservado
+        return 'bg-red-500 text-white font-semibold';
       case 'blocked':
-        return 'bg-warning-default/20 text-warning-default font-medium';
+        // Naranja para bloqueado manualmente
+        return 'bg-orange-500 text-white font-semibold';
       case 'available':
       default:
-        return 'bg-success-default/20 text-success-default';
+        // Verde sólido para disponible
+        return 'bg-emerald-500 text-white font-medium';
     }
   }
 

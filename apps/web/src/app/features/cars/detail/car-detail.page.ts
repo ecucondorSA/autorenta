@@ -630,6 +630,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   readonly totalPrice = computed(() => this.rentalTotal());
 
   readonly canBook = computed(() => {
+    if (this.isCarOwner()) {
+      return false;
+    }
     if (this.expressMode()) {
       return !!this.totalPrice() && this.urgentAvailability()?.available;
     }

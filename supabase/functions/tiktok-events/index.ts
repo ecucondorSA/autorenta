@@ -173,13 +173,21 @@ async function sendTikTokEvent(
 }
 
 serve(async (req) => {
-  // CORS headers
-  const corsHeaders = {
-    ...getCorsHeaders(req),
-    // Extend allowed headers for this endpoint
-    'Access-Control-Allow-Headers':
-      'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
-  };
+  // CORS headers - wrap in try-catch for safety
+  let corsHeaders: Record<string, string>;
+  try {
+    corsHeaders = {
+      ...getCorsHeaders(req),
+      'Access-Control-Allow-Headers':
+        'authorization, x-client-info, apikey, content-type, x-forwarded-for, x-real-ip',
+    };
+  } catch {
+    corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    };
+  }
 
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
@@ -190,18 +198,23 @@ serve(async (req) => {
     // Get TikTok access token from environment
     const accessToken = Deno.env.get('TIKTOK_ACCESS_TOKEN');
     if (!accessToken) {
-      console.warn('TikTok Events disabled: TIKTOK_ACCESS_TOKEN not configured');
+      // Silently skip - TikTok not configured
       return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'TikTok Events disabled - missing access token',
-        }),
+        JSON.stringify({ success: true, message: 'TikTok Events disabled' }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    // Parse request body
-    const eventData: TikTokEventData = await req.json();
+    // Parse request body with error handling
+    let eventData: TikTokEventData;
+    try {
+      eventData = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Invalid JSON body' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
 
     // Validate required fields
     if (!eventData.event) {

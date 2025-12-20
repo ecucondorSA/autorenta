@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component';
 
 /**
@@ -34,11 +34,11 @@ export class CarInquiryChatComponent {
     headerSubtitle: this.carTitle() ? `Consulta sobre ${this.carTitle()}` : 'Consulta previa a reserva',
   }));
 
-  onMessageSent(event: { messageId: string; context: ChatContext }): void {
+  onMessageSent(_event: { messageId: string; context: ChatContext }): void {
     // Analytics si es necesario
   }
 
-  onMessageReceived(event: { message: unknown; context: ChatContext }): void {
+  onMessageReceived(_event: { message: unknown; context: ChatContext }): void {
     // Analytics si es necesario
   }
 }

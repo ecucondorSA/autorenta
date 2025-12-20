@@ -1794,14 +1794,14 @@
                     <app-ai-legal-panel
                       [booking]="booking()!"
                       [isExpanded]="expandedAiPanel() === 'legal'"
-                      (toggle)="toggleAiPanel('legal')"
+                      (togglePanel)="toggleAiPanel('legal')"
                     />
 
                     @if (showTripPlanner()) {
                       <app-ai-trip-panel
                         [booking]="booking()!"
                         [isExpanded]="expandedAiPanel() === 'trip'"
-                        (toggle)="toggleAiPanel('trip')"
+                        (togglePanel)="toggleAiPanel('trip')"
                       />
                     }
 
@@ -1810,7 +1810,7 @@
                         [booking]="booking()!"
                         [inspectionType]="checklistInspectionType()"
                         [isExpanded]="expandedAiPanel() === 'checklist'"
-                        (toggle)="toggleAiPanel('checklist')"
+                        (togglePanel)="toggleAiPanel('checklist')"
                       />
                     }
                   </div>

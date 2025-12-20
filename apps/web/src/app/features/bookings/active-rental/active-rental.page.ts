@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
   inject,
   signal,
@@ -13,13 +12,13 @@ import { Booking } from '../../../core/models';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { LoggerService } from '../../../core/services/logger.service';
+import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
+import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
+import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 import { TripTimerComponent } from './components/trip-timer/trip-timer.component';
 import { QuickActionsComponent } from './components/quick-actions/quick-actions.component';
 import { EmergencyPanelComponent } from './components/emergency-panel/emergency-panel.component';
 import { DigitalKeyComponent } from './components/digital-key/digital-key.component';
-import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
-import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
-import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/ai-trip-panel.component';
 
 @Component({
   selector: 'app-active-rental',
@@ -39,7 +38,7 @@ import { AiTripPanelComponent } from '../../../shared/components/ai-trip-panel/a
   templateUrl: './active-rental.page.html',
   styleUrl: './active-rental.page.css',
 })
-export class ActiveRentalPage implements OnInit, OnDestroy {
+export class ActiveRentalPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
@@ -138,9 +137,7 @@ export class ActiveRentalPage implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    // Cleanup if needed
-  }
+  // ngOnDestroy not needed - using takeUntilDestroyed for subscriptions
 
   private async loadOwnerInfo(carId: string): Promise<void> {
     try {

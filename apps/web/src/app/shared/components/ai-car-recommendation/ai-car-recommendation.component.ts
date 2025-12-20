@@ -33,107 +33,92 @@ const CACHE_DURATION_HOURS = 24;
   imports: [CommonModule],
   template: `
     <div class="relative group">
-      <!-- Animated gradient border -->
-      <div class="absolute -inset-0.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 rounded-2xl opacity-75 blur-sm group-hover:opacity-100 transition-opacity duration-500 animate-gradient-xy"></div>
+      <!-- Subtle gradient border -->
+      <div class="absolute -inset-px bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 rounded-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
-      <!-- Main card with glassmorphism -->
-      <div class="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden">
-        <!-- Header with AI indicator -->
-        <div class="relative px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500"></div>
+      <!-- Main card -->
+      <div class="relative bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+        <!-- Header with AI indicator (compact) -->
+        <div class="relative px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+          <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500"></div>
 
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
               <!-- AI Icon with glow -->
               <div class="relative">
-                <div class="absolute inset-0 bg-orange-500/30 rounded-xl blur-md animate-pulse"></div>
-                <div class="relative w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <div class="absolute inset-0 bg-orange-500/20 rounded-lg blur-sm"></div>
+                <div class="relative w-7 h-7 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow">
+                  <svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
                   </svg>
                 </div>
               </div>
               <div>
-                <h3 class="font-bold text-gray-900 dark:text-white text-lg">Sugerencia para Vos</h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Basado en tu historial</p>
+                <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Sugerencia para Vos</h3>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400">Basado en tu historial</p>
               </div>
             </div>
 
-            <!-- AI Badge with sparkle -->
-            <div class="flex items-center gap-2">
-              <div class="relative">
-                <div class="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full animate-ping"></div>
-                <div class="absolute -top-1 -right-1 w-2 h-2 bg-orange-500 rounded-full"></div>
-              </div>
-              <span class="text-[10px] bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-lg">
-                AI
-              </span>
-            </div>
+            <!-- AI Badge -->
+            <span class="text-[9px] bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+              AI
+            </span>
           </div>
         </div>
 
         <!-- Content -->
-        <div class="p-5">
+        <div class="p-3">
           <!-- Initial State: Not Recommended -->
           @if (!hasRecommendation() && !loading()) {
-            <div class="text-center py-6">
+            <div class="text-center py-3">
               <!-- Animated car icon -->
-              <div class="relative w-20 h-20 mx-auto mb-4">
+              <div class="relative w-12 h-12 mx-auto mb-3">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-full animate-pulse"></div>
                 <div class="relative w-full h-full bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30 rounded-full flex items-center justify-center">
-                  <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 17h.01M16 17h.01M4 11l1.664-4.992A2 2 0 017.56 4h8.88a2 2 0 011.896 1.368L20 10m0 0h-4m-8 0H4m0 0v6a1 1 0 001 1h1m14-7v6a1 1 0 01-1 1h-1m-8 0h4" />
                   </svg>
                 </div>
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-300 mb-5 max-w-xs mx-auto">
+              <p class="text-xs text-gray-600 dark:text-gray-300 mb-3 max-w-xs mx-auto">
                 Nuestra IA analiza tu historial para recomendarte el auto perfecto
               </p>
               <button
                 (click)="getRecommendation()"
-                class="relative group/btn overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-3 px-8 rounded-xl text-sm transition-all duration-300 shadow-lg hover:shadow-orange-500/25 hover:scale-105"
+                class="relative group/btn overflow-hidden bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2 px-5 rounded-lg text-xs transition-all duration-300 shadow hover:shadow-orange-500/25"
               >
-                <span class="relative z-10 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <span class="relative z-10 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
                   </svg>
                   Ver Sugerencia
                 </span>
-                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700"></div>
               </button>
             </div>
           }
 
-          <!-- Loading State with shimmer -->
+          <!-- Loading State -->
           @if (loading()) {
-            <div class="py-6">
-              <div class="flex items-center justify-center gap-3 mb-5">
-                <div class="relative">
-                  <div class="w-8 h-8 border-2 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
-                  <div class="absolute inset-0 w-8 h-8 border-2 border-transparent border-b-amber-500 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
-                </div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Analizando tu historial...</span>
+            <div class="py-3">
+              <div class="flex items-center justify-center gap-2 mb-3">
+                <div class="w-5 h-5 border-2 border-orange-200 border-t-orange-500 rounded-full animate-spin"></div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Analizando...</span>
               </div>
-              <!-- Shimmer skeleton -->
-              <div class="space-y-3">
-                <div class="h-16 bg-gradient-to-r from-orange-100 via-orange-50 to-orange-100 dark:from-orange-900/30 dark:via-orange-800/20 dark:to-orange-900/30 rounded-xl animate-shimmer bg-[length:200%_100%]"></div>
-                <div class="flex gap-2">
-                  <div class="h-8 w-24 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-full animate-shimmer bg-[length:200%_100%]"></div>
-                  <div class="h-8 w-20 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-full animate-shimmer bg-[length:200%_100%]"></div>
-                </div>
+              <div class="space-y-2">
+                <div class="h-10 bg-gradient-to-r from-orange-100 via-orange-50 to-orange-100 dark:from-orange-900/30 dark:via-orange-800/20 dark:to-orange-900/30 rounded-lg animate-shimmer bg-[length:200%_100%]"></div>
               </div>
             </div>
           }
 
           <!-- Error State -->
           @if (error() && !loading()) {
-            <div class="py-6 text-center">
-              <div class="w-14 h-14 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-3 ring-4 ring-red-100 dark:ring-red-900/30">
-                <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="py-3 text-center">
+              <div class="w-10 h-10 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p class="text-sm text-red-600 dark:text-red-400 mb-4 font-medium">{{ error() }}</p>
+              <p class="text-xs text-red-600 dark:text-red-400 mb-2 font-medium">{{ error() }}</p>
               <button
                 (click)="getRecommendation()"
                 class="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400 font-medium flex items-center gap-1 mx-auto hover:underline"

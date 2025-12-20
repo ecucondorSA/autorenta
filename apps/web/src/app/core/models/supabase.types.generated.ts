@@ -1095,6 +1095,194 @@ export type Database = {
           },
         ]
       }
+      booking_extension_requests: {
+        Row: {
+          booking_id: string
+          created_at: string
+          estimated_cost_amount: number | null
+          estimated_cost_currency: string | null
+          id: string
+          new_end_at: string
+          original_end_at: string
+          owner_id: string
+          owner_response: string | null
+          renter_id: string
+          renter_message: string | null
+          request_status: string
+          requested_at: string
+          responded_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          estimated_cost_amount?: number | null
+          estimated_cost_currency?: string | null
+          id?: string
+          new_end_at: string
+          original_end_at: string
+          owner_id: string
+          owner_response?: string | null
+          renter_id: string
+          renter_message?: string | null
+          request_status?: string
+          requested_at?: string
+          responded_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          estimated_cost_amount?: number | null
+          estimated_cost_currency?: string | null
+          id?: string
+          new_end_at?: string
+          original_end_at?: string
+          owner_id?: string
+          owner_response?: string | null
+          renter_id?: string
+          renter_message?: string | null
+          request_status?: string
+          requested_at?: string
+          responded_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_extension_requests_renter_id_fkey"
+            columns: ["renter_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       booking_extensions: {
         Row: {
           additional_amount_cents: number
@@ -2293,135 +2481,513 @@ export type Database = {
           },
         ]
       }
-      calendar_sync_log: {
+      bookings_cancellation: {
         Row: {
-          booking_id: string | null
-          car_id: string | null
-          completed_at: string | null
-          created_at: string | null
-          error_code: string | null
-          error_message: string | null
-          google_calendar_event_id: string | null
-          id: string
-          operation: string
-          request_payload: Json | null
-          response_payload: Json | null
-          retry_count: number | null
-          status: string
-          sync_direction: string | null
-          user_id: string | null
+          booking_id: string
+          cancel_policy_id: number | null
+          cancellation_fee_cents: number | null
+          cancellation_reason: string | null
+          cancelled_at: string
+          cancelled_by: string | null
+          created_at: string
         }
         Insert: {
-          booking_id?: string | null
-          car_id?: string | null
-          completed_at?: string | null
-          created_at?: string | null
-          error_code?: string | null
-          error_message?: string | null
-          google_calendar_event_id?: string | null
-          id?: string
-          operation: string
-          request_payload?: Json | null
-          response_payload?: Json | null
-          retry_count?: number | null
-          status: string
-          sync_direction?: string | null
-          user_id?: string | null
+          booking_id: string
+          cancel_policy_id?: number | null
+          cancellation_fee_cents?: number | null
+          cancellation_reason?: string | null
+          cancelled_at?: string
+          cancelled_by?: string | null
+          created_at?: string
         }
         Update: {
-          booking_id?: string | null
-          car_id?: string | null
-          completed_at?: string | null
-          created_at?: string | null
-          error_code?: string | null
-          error_message?: string | null
-          google_calendar_event_id?: string | null
-          id?: string
-          operation?: string
-          request_payload?: Json | null
-          response_payload?: Json | null
-          retry_count?: number | null
-          status?: string
-          sync_direction?: string | null
-          user_id?: string | null
+          booking_id?: string
+          cancel_policy_id?: number | null
+          cancellation_fee_cents?: number | null
+          cancellation_reason?: string | null
+          cancelled_at?: string
+          cancelled_by?: string | null
+          created_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "calendar_sync_log_booking_id_fkey"
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "_schema_cache_refresh"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_booking_id_fkey"
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_booking_id_fkey"
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "my_bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_booking_id_fkey"
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "owner_bookings"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_booking_id_fkey"
+            foreignKeyName: "bookings_cancellation_booking_id_fkey"
             columns: ["booking_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "pending_payouts_critical"
             referencedColumns: ["booking_id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: false
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
             isOneToOne: false
             referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
+            referencedColumns: ["owner_id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
             isOneToOne: false
             referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
+            referencedColumns: ["owner_id"]
           },
           {
-            foreignKeyName: "calendar_sync_log_car_id_fkey"
-            columns: ["car_id"]
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
             isOneToOne: false
-            referencedRelation: "v_cars_with_main_photo"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_cancellation_cancelled_by_fkey"
+            columns: ["cancelled_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      bookings_confirmation: {
+        Row: {
+          booking_id: string
+          created_at: string
+          dropoff_confirmed_at: string | null
+          dropoff_confirmed_by: string | null
+          funds_released_at: string | null
+          owner_confirmation_at: string | null
+          pickup_confirmed_at: string | null
+          pickup_confirmed_by: string | null
+          renter_confirmation_at: string | null
+          returned_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          dropoff_confirmed_at?: string | null
+          dropoff_confirmed_by?: string | null
+          funds_released_at?: string | null
+          owner_confirmation_at?: string | null
+          pickup_confirmed_at?: string | null
+          pickup_confirmed_by?: string | null
+          renter_confirmation_at?: string | null
+          returned_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          dropoff_confirmed_at?: string | null
+          dropoff_confirmed_by?: string | null
+          funds_released_at?: string | null
+          owner_confirmation_at?: string | null
+          pickup_confirmed_at?: string | null
+          pickup_confirmed_by?: string | null
+          renter_confirmation_at?: string | null
+          returned_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_dropoff_confirmed_by_fkey"
+            columns: ["dropoff_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_confirmation_pickup_confirmed_by_fkey"
+            columns: ["pickup_confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      bookings_insurance: {
+        Row: {
+          booking_id: string
+          coverage_upgrade: string | null
+          created_at: string
+          guarantee_amount_cents: number | null
+          guarantee_type: string | null
+          insurance_coverage_id: string | null
+          insurance_premium_total: number | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          coverage_upgrade?: string | null
+          created_at?: string
+          guarantee_amount_cents?: number | null
+          guarantee_type?: string | null
+          insurance_coverage_id?: string | null
+          insurance_premium_total?: number | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          coverage_upgrade?: string | null
+          created_at?: string
+          guarantee_amount_cents?: number | null
+          guarantee_type?: string | null
+          insurance_coverage_id?: string | null
+          insurance_premium_total?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_insurance_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
+          },
+        ]
+      }
+      bookings_payment: {
+        Row: {
+          booking_id: string
+          created_at: string
+          deposit_status: string | null
+          paid_at: string | null
+          payment_method: string | null
+          payment_mode: string | null
+          updated_at: string
+          wallet_charged_at: string | null
+          wallet_status: string | null
+        }
+        Insert: {
+          booking_id: string
+          created_at?: string
+          deposit_status?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_mode?: string | null
+          updated_at?: string
+          wallet_charged_at?: string | null
+          wallet_status?: string | null
+        }
+        Update: {
+          booking_id?: string
+          created_at?: string
+          deposit_status?: string | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_mode?: string | null
+          updated_at?: string
+          wallet_charged_at?: string | null
+          wallet_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_payment_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
+          },
+        ]
+      }
+      bookings_pricing: {
+        Row: {
+          booking_id: string
+          breakdown: Json | null
+          created_at: string
+          days_count: number | null
+          discounts_cents: number | null
+          fees_cents: number | null
+          insurance_cents: number | null
+          nightly_rate_cents: number | null
+          subtotal_cents: number | null
+          total_cents: number | null
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          breakdown?: Json | null
+          created_at?: string
+          days_count?: number | null
+          discounts_cents?: number | null
+          fees_cents?: number | null
+          insurance_cents?: number | null
+          nightly_rate_cents?: number | null
+          subtotal_cents?: number | null
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          breakdown?: Json | null
+          created_at?: string
+          days_count?: number | null
+          discounts_cents?: number | null
+          fees_cents?: number | null
+          insurance_cents?: number | null
+          nightly_rate_cents?: number | null
+          subtotal_cents?: number | null
+          total_cents?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_pricing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
           },
         ]
       }
@@ -2527,85 +3093,6 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
-      }
-      car_google_calendars: {
-        Row: {
-          calendar_description: string | null
-          calendar_name: string
-          car_id: string
-          created_at: string | null
-          google_calendar_id: string
-          last_synced_at: string | null
-          owner_id: string | null
-          sync_enabled: boolean | null
-          updated_at: string | null
-        }
-        Insert: {
-          calendar_description?: string | null
-          calendar_name: string
-          car_id: string
-          created_at?: string | null
-          google_calendar_id: string
-          last_synced_at?: string | null
-          owner_id?: string | null
-          sync_enabled?: boolean | null
-          updated_at?: string | null
-        }
-        Update: {
-          calendar_description?: string | null
-          calendar_name?: string
-          car_id?: string
-          created_at?: string | null
-          google_calendar_id?: string
-          last_synced_at?: string | null
-          owner_id?: string | null
-          sync_enabled?: boolean | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "bookable_cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars_multi_currency"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "cars_payment_status_diagnostic"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "pending_payouts_critical"
-            referencedColumns: ["car_id"]
-          },
-          {
-            foreignKeyName: "car_google_calendars_car_id_fkey"
-            columns: ["car_id"]
-            isOneToOne: true
-            referencedRelation: "v_cars_with_main_photo"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       car_handover_points: {
         Row: {
@@ -4613,51 +5100,6 @@ export type Database = {
         }
         Relationships: []
       }
-      google_calendar_tokens: {
-        Row: {
-          access_token: string
-          connected_at: string | null
-          created_at: string | null
-          expires_at: string
-          last_synced_at: string | null
-          primary_calendar_id: string | null
-          refresh_token: string
-          scope: string
-          sync_enabled: boolean | null
-          token_type: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          access_token: string
-          connected_at?: string | null
-          created_at?: string | null
-          expires_at: string
-          last_synced_at?: string | null
-          primary_calendar_id?: string | null
-          refresh_token: string
-          scope: string
-          sync_enabled?: boolean | null
-          token_type?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          access_token?: string
-          connected_at?: string | null
-          created_at?: string | null
-          expires_at?: string
-          last_synced_at?: string | null
-          primary_calendar_id?: string | null
-          refresh_token?: string
-          scope?: string
-          sync_enabled?: boolean | null
-          token_type?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
       insurance_addons: {
         Row: {
           active: boolean | null
@@ -4690,6 +5132,175 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      insurance_claims: {
+        Row: {
+          adjuster_contact: string | null
+          assigned_adjuster: string | null
+          booking_id: string
+          claim_type: string
+          closed_at: string | null
+          created_at: string
+          deductible_charged: number | null
+          description: string
+          estimated_damage_amount: number | null
+          evidence_photos: Json | null
+          id: string
+          incident_date: string
+          incident_location: string | null
+          insurance_payout: number | null
+          location: string | null
+          metadata: Json | null
+          photos: Json | null
+          police_report_number: string | null
+          police_report_url: string | null
+          policy_id: string | null
+          reported_by: string
+          reporter_role: string
+          resolution_notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          adjuster_contact?: string | null
+          assigned_adjuster?: string | null
+          booking_id: string
+          claim_type: string
+          closed_at?: string | null
+          created_at?: string
+          deductible_charged?: number | null
+          description: string
+          estimated_damage_amount?: number | null
+          evidence_photos?: Json | null
+          id?: string
+          incident_date: string
+          incident_location?: string | null
+          insurance_payout?: number | null
+          location?: string | null
+          metadata?: Json | null
+          photos?: Json | null
+          police_report_number?: string | null
+          police_report_url?: string | null
+          policy_id?: string | null
+          reported_by: string
+          reporter_role: string
+          resolution_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          adjuster_contact?: string | null
+          assigned_adjuster?: string | null
+          booking_id?: string
+          claim_type?: string
+          closed_at?: string | null
+          created_at?: string
+          deductible_charged?: number | null
+          description?: string
+          estimated_damage_amount?: number | null
+          evidence_photos?: Json | null
+          id?: string
+          incident_date?: string
+          incident_location?: string | null
+          insurance_payout?: number | null
+          location?: string | null
+          metadata?: Json | null
+          photos?: Json | null
+          police_report_number?: string | null
+          police_report_url?: string | null
+          policy_id?: string | null
+          reported_by?: string
+          reporter_role?: string
+          resolution_notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "_schema_cache_refresh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "my_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "owner_bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["booking_id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "insurance_claims_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       insurance_policies: {
         Row: {
@@ -5936,14 +6547,14 @@ export type Database = {
       payment_splits: {
         Row: {
           booking_id: string
-          collector_id: string
+          collector_id: string | null
           created_at: string | null
           currency: string
           id: string
           marketplace_id: string | null
           metadata: Json | null
           owner_amount_cents: number
-          payment_id: string
+          payment_id: string | null
           platform_fee_cents: number
           status: string | null
           total_amount_cents: number
@@ -5953,14 +6564,14 @@ export type Database = {
         }
         Insert: {
           booking_id: string
-          collector_id: string
+          collector_id?: string | null
           created_at?: string | null
           currency?: string
           id?: string
           marketplace_id?: string | null
           metadata?: Json | null
           owner_amount_cents: number
-          payment_id: string
+          payment_id?: string | null
           platform_fee_cents: number
           status?: string | null
           total_amount_cents: number
@@ -5970,14 +6581,14 @@ export type Database = {
         }
         Update: {
           booking_id?: string
-          collector_id?: string
+          collector_id?: string | null
           created_at?: string | null
           currency?: string
           id?: string
           marketplace_id?: string | null
           metadata?: Json | null
           owner_amount_cents?: number
-          payment_id?: string
+          payment_id?: string | null
           platform_fee_cents?: number
           status?: string | null
           total_amount_cents?: number
@@ -7404,6 +8015,129 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocked_id_fkey"
+            columns: ["blocked_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "cars_payment_status_diagnostic"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "me_profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "pending_payouts_critical"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_decrypted"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_blocks_blocker_id_fkey"
+            columns: ["blocker_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       user_documents: {
         Row: {
@@ -10686,6 +11420,10 @@ export type Database = {
         Args: { p_period: string }
         Returns: undefined
       }
+      complete_booking_and_process_payout: {
+        Args: { p_booking_id: string }
+        Returns: Json
+      }
       complete_checkout: { Args: { p_booking_id: string }; Returns: Json }
       complete_payment_split: {
         Args: {
@@ -11146,14 +11884,6 @@ export type Database = {
         Returns: boolean
       }
       geomfromewkt: { Args: { "": string }; Returns: unknown }
-      get_active_calendar_token: {
-        Args: { user_uuid: string }
-        Returns: {
-          access_token: string
-          expires_at: string
-          refresh_token: string
-        }[]
-      }
       get_active_tracking_for_booking: {
         Args: { p_booking_id: string }
         Returns: {
@@ -11535,10 +12265,6 @@ export type Database = {
         Returns: boolean
       }
       is_car_owner: { Args: { p_car_id: string }; Returns: boolean }
-      is_google_calendar_connected: {
-        Args: { user_uuid: string }
-        Returns: boolean
-      }
       issue_autorentar_credit: {
         Args: { p_amount_cents: number; p_reason?: string; p_user_id: string }
         Returns: {
@@ -11848,6 +12574,11 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      process_booking_payout: { Args: { p_booking_id: string }; Returns: Json }
+      process_pending_payouts: {
+        Args: { p_batch_size?: number }
+        Returns: Json
       }
       process_split_payment: {
         Args: { p_booking_id: string; p_total_amount: number }
@@ -13408,3 +14139,4 @@ export const Constants = {
     },
   },
 } as const
+

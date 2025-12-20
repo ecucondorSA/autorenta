@@ -100,7 +100,7 @@
             [ownerName]="ownerName()"
             [ownerPhone]="ownerPhone()"
             [insuranceInfo]="insuranceInfo()"
-            (close)="showEmergencyPanel.set(false)"
+            (panelClose)="showEmergencyPanel.set(false)"
           />
         </section>
       }
@@ -238,20 +238,20 @@
           <app-ai-legal-panel
             [booking]="booking()"
             [isExpanded]="expandedAiPanel() === 'legal'"
-            (toggle)="toggleAiPanel('legal')"
+            (togglePanel)="toggleAiPanel('legal')"
           />
 
           <app-ai-trip-panel
             [booking]="booking()"
             [isExpanded]="expandedAiPanel() === 'trip'"
-            (toggle)="toggleAiPanel('trip')"
+            (togglePanel)="toggleAiPanel('trip')"
           />
 
           <app-ai-checklist-panel
             [booking]="booking()"
             inspectionType="check_out"
             [isExpanded]="expandedAiPanel() === 'checklist'"
-            (toggle)="toggleAiPanel('checklist')"
+            (togglePanel)="toggleAiPanel('checklist')"
           />
         </div>
       </section>

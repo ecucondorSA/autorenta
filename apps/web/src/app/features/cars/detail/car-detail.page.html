@@ -50,6 +50,9 @@
             [src]="heroPhotoUrls()[currentPhotoIndex()]"
             [alt]="displayTitle() + ' - Foto ' + (currentPhotoIndex() + 1)"
             class="w-full h-full object-cover transition-opacity duration-300"
+            width="800"
+            height="320"
+            fetchpriority="high"
             (error)="onImgError($event)"
           />
 
@@ -175,7 +178,7 @@
               [car]="car()"
               [suggestedDays]="daysCount() || 3"
               [isExpanded]="true"
-              (toggle)="toggleAiPanel('trip')"
+              (togglePanel)="toggleAiPanel('trip')"
             />
           }
           @if (expandedAiPanel() === 'checklist') {
@@ -183,14 +186,14 @@
               [car]="car()"
               inspectionType="check_in"
               [isExpanded]="true"
-              (toggle)="toggleAiPanel('checklist')"
+              (togglePanel)="toggleAiPanel('checklist')"
             />
           }
           @if (expandedAiPanel() === 'legal') {
             <app-ai-legal-panel
               [car]="car()"
               [isExpanded]="true"
-              (toggle)="toggleAiPanel('legal')"
+              (togglePanel)="toggleAiPanel('legal')"
             />
           }
         </div>
@@ -476,21 +479,24 @@
 
         <!-- Terms & Conditions Checkbox -->
         @if (authService.isAuthenticated() && canBook()) {
-          <label class="flex items-start gap-3 mb-4 cursor-pointer group">
+          <div class="flex items-start gap-3 mb-4 cursor-pointer group">
             <input
               type="checkbox"
+              id="termsCheckbox"
+              name="termsCheckbox"
               [checked]="termsAccepted()"
               (change)="termsAccepted.set($any($event.target).checked)"
               class="mt-1 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-2 cursor-pointer"
+              aria-describedby="termsDescription"
             />
-            <span class="text-sm text-text-secondary leading-relaxed">
+            <label for="termsCheckbox" id="termsDescription" class="text-sm text-text-secondary leading-relaxed cursor-pointer">
               Acepto los
               <a href="/terminos" target="_blank" class="text-cta-default hover:underline font-medium">Términos y Condiciones</a>
               y la
               <a href="/politica-seguros" target="_blank" class="text-cta-default hover:underline font-medium">Póliza de Seguro</a>
               de AutoRenta.
-            </span>
-          </label>
+            </label>
+          </div>
         }
 
         <!-- Reserve Button -->
@@ -498,9 +504,9 @@
           <button
             id="book-now"
             (click)="onBookClick()"
-            [disabled]="bookingInProgress() || (canBook() && !termsAccepted())"
+            [disabled]="bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted())"
             class="w-full py-4 bg-gradient-to-r from-cta-default to-cta-hover text-cta-text font-bold rounded-xl text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
-            [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() || (canBook() && !termsAccepted()) }"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': bookingInProgress() || isCarOwner() || (canBook() && !termsAccepted()) }"
           >
             @if (!bookingInProgress()) {
               <span>{{ canBook() ? 'Solicitar Reserva' : 'Ver Disponibilidad' }}</span>
@@ -529,6 +535,12 @@
               <span>{{ bookingError() }}</span>
             </div>
           </div>
+        }
+
+        @if (isCarOwner()) {
+          <p class="text-center text-sm text-error-text mt-3">
+            Parece que ese auto te pertenece. No podés reservar tu propio vehículo.
+          </p>
         }
 
         <!-- Price Breakdown -->

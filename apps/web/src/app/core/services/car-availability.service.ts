@@ -88,12 +88,17 @@ export class CarAvailabilityService {
 
     // Execute all queries in parallel for better performance
     // Overlap logic: range1 overlaps range2 when start1 <= end2 AND end1 >= start2
+    // Include ALL booking statuses that block the calendar:
+    // - pending: user initiated booking, waiting for payment
+    // - pending_payment: payment in progress
+    // - confirmed: booking confirmed, waiting for start
+    // - in_progress: rental is active
     const [bookingsResult, manualBlocksResult] = await Promise.all([
       this.supabase
         .from('bookings')
-        .select('start_at, end_at')
+        .select('start_at, end_at, status')
         .eq('car_id', carId)
-        .in('status', ['confirmed', 'in_progress'])
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
         .lte('start_at', toIso)
         .gte('end_at', fromIso),
       this.supabase
@@ -266,11 +271,12 @@ export class CarAvailabilityService {
     carIds?: string[],
   ): Promise<Set<string>> {
     // Build queries with optional car_id filter
+    // Include ALL booking statuses that block availability
     const buildBookingsQuery = () => {
       let q = this.supabase
         .from('bookings')
         .select('car_id')
-        .in('status', ['confirmed', 'in_progress'])
+        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
         .lte('start_at', toDate)
         .gte('end_at', fromDate);
       if (carIds?.length) q = q.in('car_id', carIds);
@@ -348,11 +354,12 @@ export class CarAvailabilityService {
     bookings?: Array<{ id: string; status: string; start_date: string; end_date: string }>;
   }> {
     type BookingRow = { id: string; status: string; start_at: string; end_at: string };
+    // Include ALL blocking statuses, not just active ones
     const { data, error, count } = await this.supabase
       .from('bookings')
       .select('id, status, start_at, end_at', { count: 'exact' })
       .eq('car_id', carId)
-      .in('status', ['confirmed', 'in_progress'])
+      .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
       .order('start_at', { ascending: true })
       .limit(10);
 

@@ -41,6 +41,8 @@ export class DigitalKeyComponent {
         return 'Bloquear';
       case 'locking':
         return 'Bloqueando...';
+      default:
+        return 'Desbloquear';
     }
   }
 

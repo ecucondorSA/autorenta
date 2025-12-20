@@ -22,7 +22,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
  * <app-ai-trip-panel
  *   [booking]="booking()"
  *   [isExpanded]="expandedPanel() === 'trip'"
- *   (toggle)="togglePanel('trip')"
+ *   (togglePanel)="togglePanel('trip')"
  * />
  * ```
  */
@@ -37,7 +37,7 @@ import { GeminiService } from '../../../core/services/gemini.service';
       <button
         type="button"
         class="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-surface-base/50"
-        (click)="toggle.emit()"
+        (click)="togglePanel.emit()"
       >
         <div class="flex items-center gap-3">
           <div class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-500/10">
@@ -91,10 +91,12 @@ import { GeminiService } from '../../../core/services/gemini.service';
             <div class="space-y-3">
               <!-- Days -->
               <div>
-                <label class="mb-1 block text-xs font-medium text-text-secondary">
+                <label for="tripDaysSelect" class="mb-1 block text-xs font-medium text-text-secondary">
                   Duracion del viaje
                 </label>
                 <select
+                  id="tripDaysSelect"
+                  name="tripDaysSelect"
                   [(ngModel)]="selectedDays"
                   class="w-full rounded-lg border border-border-muted bg-surface-base px-3 py-2 text-sm"
                 >
@@ -106,11 +108,13 @@ import { GeminiService } from '../../../core/services/gemini.service';
 
               <!-- Start Location -->
               <div>
-                <label class="mb-1 block text-xs font-medium text-text-secondary">
+                <label for="tripStartLocation" class="mb-1 block text-xs font-medium text-text-secondary">
                   Punto de partida
                 </label>
                 <input
                   type="text"
+                  id="tripStartLocation"
+                  name="tripStartLocation"
                   [(ngModel)]="startLocation"
                   class="w-full rounded-lg border border-border-muted bg-surface-base px-3 py-2 text-sm"
                   [placeholder]="defaultLocation()"
@@ -279,7 +283,7 @@ export class AiTripPanelComponent {
   readonly suggestedDays = input<number | null>(null);
 
   readonly isExpanded = input<boolean>(false);
-  readonly toggle = output<void>();
+  readonly togglePanel = output<void>();
 
   // State
   readonly itinerary = signal<TripItinerary | null>(null);

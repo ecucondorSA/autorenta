@@ -32,7 +32,7 @@ export class EmergencyPanelComponent {
   @Input() ownerName = 'Propietario';
   @Input() ownerPhone: string | null = null;
   @Input() insuranceInfo: InsuranceInfo | null = null;
-  @Output() close = new EventEmitter<void>();
+  @Output() panelClose = new EventEmitter<void>();
 
   readonly emergencyContacts: EmergencyContact[] = [
     {
@@ -76,6 +76,6 @@ export class EmergencyPanelComponent {
   }
 
   onClose(): void {
-    this.close.emit();
+    this.panelClose.emit();
   }
 }

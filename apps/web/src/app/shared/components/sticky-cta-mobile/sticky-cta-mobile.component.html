@@ -6,20 +6,23 @@
   <!-- Terms Checkbox (shown when can book) -->
   @if (showTermsCheckbox) {
     <div class="px-4 pt-3 pb-1 border-b border-border-default/50">
-      <label class="flex items-start gap-2 cursor-pointer">
+      <div class="flex items-start gap-2">
         <input
           type="checkbox"
+          id="mobileTermsCheckbox"
+          name="mobileTermsCheckbox"
           [checked]="termsAccepted"
           (change)="onTermsChange($any($event.target).checked)"
           class="mt-0.5 w-4 h-4 rounded border-2 border-border-default text-cta-default focus:ring-cta-default focus:ring-1 cursor-pointer"
+          aria-describedby="mobileTermsLabel"
         />
-        <span class="text-xs text-text-secondary leading-tight">
+        <label for="mobileTermsCheckbox" id="mobileTermsLabel" class="text-xs text-text-secondary leading-tight cursor-pointer">
           Acepto los
           <a href="/terminos" target="_blank" class="text-cta-default font-medium">Términos</a>
           y la
           <a href="/politica-seguros" target="_blank" class="text-cta-default font-medium">Póliza de Seguro</a>
-        </span>
-      </label>
+        </label>
+      </div>
     </div>
   }
 

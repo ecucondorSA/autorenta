@@ -220,7 +220,7 @@ export class AiReputationCardComponent implements OnInit {
       // Prepare params
       const params = {
         reviews: reviews.slice(0, 10).map(r => ({
-          rating: this.calculateAverageRating(r),
+          rating: this.calculateAverageRating(r as unknown as Record<string, unknown>),
           comment: r.comment_public || '',
           date: r.created_at,
           reviewerName: r.reviewer_name || 'Usuario',
@@ -257,15 +257,15 @@ export class AiReputationCardComponent implements OnInit {
     await this.analyze();
   }
 
-  private calculateAverageRating(review: any): number {
+  private calculateAverageRating(review: Record<string, unknown>): number {
     const ratings = [
-      review.rating_cleanliness,
-      review.rating_communication,
-      review.rating_accuracy,
-      review.rating_location,
-      review.rating_checkin,
-      review.rating_value,
-    ].filter(r => r !== null && r !== undefined);
+      review['rating_cleanliness'],
+      review['rating_communication'],
+      review['rating_accuracy'],
+      review['rating_location'],
+      review['rating_checkin'],
+      review['rating_value'],
+    ].filter((r): r is number => typeof r === 'number');
 
     if (ratings.length === 0) return 0;
     return ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
