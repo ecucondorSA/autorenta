@@ -27,6 +27,7 @@ import { filter } from 'rxjs';
 import { GuidedTourService } from './core/guided-tour';
 import { AssetPreloaderService } from './core/services/asset-preloader.service';
 import { AuthService } from './core/services/auth.service';
+import { BookingApprovalService } from './core/services/booking-approval.service';
 import { CarsCompareService } from './core/services/cars-compare.service';
 import { DebugService } from './core/services/debug.service';
 import { HapticFeedbackService } from './core/services/haptic-feedback.service';
@@ -188,6 +189,7 @@ export class AppComponent implements OnInit {
   private readonly assetPreloader = inject(AssetPreloaderService);
   private readonly mapboxPreloader = inject(MapboxPreloaderService);
   private readonly debugService = inject(DebugService); // Initialize early for e2e tests
+  private readonly bookingApprovalService = inject(BookingApprovalService);
 
   readonly userEmail = this.authService.userEmail;
   private readonly compareService = inject(CarsCompareService);
@@ -225,6 +227,7 @@ export class AppComponent implements OnInit {
   readonly userProfile = signal<UserProfile | null>(null);
   readonly isOnVerificationPage = signal(false);
   readonly isHomePage = signal(false); // Header transparente en homepage
+  readonly pendingApprovalCount = signal(0); // Contador de solicitudes pendientes para propietarios
 
   @ViewChild('menuButton', { read: ElementRef }) menuButton?: ElementRef<HTMLButtonElement>;
   @ViewChild('sidebarPanel', { read: ElementRef }) sidebarPanel?: ElementRef<HTMLElement>;
@@ -290,6 +293,7 @@ export class AppComponent implements OnInit {
     this.initializeTheme();
     this.initializeLayoutWatcher();
     this.loadUserProfile();
+    this.loadPendingApprovalCount();
     this.pushNotificationService.initializePushNotifications();
     this.initializeProfileMenuCloseOnNavigation();
     this.checkVerificationPage(this.router.url);
@@ -435,6 +439,21 @@ export class AppComponent implements OnInit {
       this.userProfile.set(profile);
     } catch {
       // Silently fail - avatar will show placeholder
+    }
+  }
+
+  private async loadPendingApprovalCount(): Promise<void> {
+    if (!this.isAuthenticatedSig()) {
+      this.pendingApprovalCount.set(0);
+      return;
+    }
+
+    try {
+      const pendingApprovals = await this.bookingApprovalService.getPendingApprovals();
+      this.pendingApprovalCount.set(pendingApprovals.length);
+    } catch {
+      // Silently fail - badge will not show
+      this.pendingApprovalCount.set(0);
     }
   }
 
