@@ -6,7 +6,7 @@ import {
   Input, Output
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CarMapLocation } from '@core/services/car-locations.service';
+import { CarMapLocation } from '@core/services/cars/car-locations.service';
 import { NavigationService } from '../../../core/services/navigation.service';
 
 @Component({

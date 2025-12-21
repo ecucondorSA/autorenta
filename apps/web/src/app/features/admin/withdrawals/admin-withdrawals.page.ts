@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { AdminService } from '@core/services/admin.service';
+import { AdminService } from '@core/services/admin/admin.service';
 import { WithdrawalRequest, WithdrawalStatus } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';

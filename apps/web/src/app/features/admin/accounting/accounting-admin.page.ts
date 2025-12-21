@@ -18,7 +18,7 @@ import {
   ProvisionDetail,
   RevenueRecognition,
   WalletReconciliation,
-} from '@core/services/accounting.service';
+} from '@core/services/payments/accounting.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 

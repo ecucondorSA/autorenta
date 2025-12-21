@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { WithdrawalService } from '@core/services/withdrawal.service';
-import { NotificationManagerService } from '@core/services/notification-manager.service';
+import { WithdrawalService } from '@core/services/payments/withdrawal.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import type { WithdrawalRequest } from '@core/models/wallet.model';
 
 @Component({

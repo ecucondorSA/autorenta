@@ -11,7 +11,7 @@ import {Component,
   PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { TrackingSession } from '@core/services/location-tracking.service';
+import { TrackingSession } from '@core/services/geo/location-tracking.service';
 import { environment } from '../../../../environments/environment';
 
 // Lazy load mapbox-gl at runtime to reduce initial bundle size

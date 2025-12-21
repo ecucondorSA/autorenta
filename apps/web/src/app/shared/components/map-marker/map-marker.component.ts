@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CarMapLocation } from '@core/services/car-locations.service';
+import { CarMapLocation } from '@core/services/cars/car-locations.service';
 
 @Component({
   selector: 'app-map-marker',

@@ -9,7 +9,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { AdminService, VerificationStats } from '@core/services/admin.service';
+import { AdminService, VerificationStats } from '@core/services/admin/admin.service';
 import { Car, Booking } from '@core/models';
 import { MoneyPipe } from '@shared/pipes/money.pipe';
 import { TranslateModule } from '@ngx-translate/core';

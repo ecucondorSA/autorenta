@@ -13,8 +13,8 @@ import {
   AdminService,
   VerificationQueueItem,
   VerificationStats,
-} from '@core/services/admin.service';
-import { NotificationManagerService } from '@core/services/notification-manager.service';
+} from '@core/services/admin/admin.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 type VerificationFilterType = 'all' | 'level_2' | 'level_3';
