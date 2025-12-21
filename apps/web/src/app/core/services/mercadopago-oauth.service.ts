@@ -1,7 +1,7 @@
 import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface MercadoPagoConnectionStatus {
   connected: boolean;
@@ -49,7 +49,7 @@ export interface OAuthCallbackResponse {
 })
 export class MercadoPagoOAuthService {
   private readonly logger = inject(LoggerService);
-  private supabase = inject(SupabaseClientService).getClient();
+  private supabase = injectSupabase();
   private router = inject(Router);
 
   /**

@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
+import { Injectable } from '@angular/core';
+import { injectSupabase } from './supabase-client.service';
 
 export interface BookingPricingRow {
   booking_id: string;
@@ -65,7 +65,8 @@ export interface BookingPaymentRow {
 
 @Injectable({ providedIn: 'root' })
 export class BookingOpsService {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
+  private readonly supabase = injectSupabase();
 
   async getPricing(bookingId: string): Promise<BookingPricingRow | null> {
     const { data, error } = await this.supabase

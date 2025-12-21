@@ -1,6 +1,6 @@
 import { Injectable, computed, signal, inject } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
 
 /**
@@ -57,7 +57,7 @@ interface DriverProfileState {
   providedIn: 'root',
 })
 export class DriverProfileService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
   private readonly authService = inject(AuthService);
 
   constructor() {

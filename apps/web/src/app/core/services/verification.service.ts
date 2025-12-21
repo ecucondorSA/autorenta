@@ -2,7 +2,7 @@ import { LoggerService } from './logger.service';
 import { Injectable, inject, signal } from '@angular/core';
 import type { UserDocument, UserVerificationStatus, VerificationRole } from '../models';
 import type { Database } from '../types/database.types';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface VerificationStatus {
   status: 'PENDIENTE' | 'VERIFICADO' | 'RECHAZADO';
@@ -49,7 +49,7 @@ function validateDocType(docType: string): asserts docType is ValidDocType {
 })
 export class VerificationService {
   private readonly logger = inject(LoggerService);
-  private supabase = inject(SupabaseClientService).getClient();
+  private supabase = injectSupabase();
 
   // Reactive state consumed by guards/widgets/pages
   readonly statuses = signal<UserVerificationStatus[]>([]);

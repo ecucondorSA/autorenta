@@ -204,7 +204,7 @@ export class AccountingService {
   private readonly supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = inject(SupabaseClientService).getClient();
+    this.supabase = injectSupabase();
   }
 
   /**

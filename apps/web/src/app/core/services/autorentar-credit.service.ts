@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
 export interface AutorentarCreditInfo {
@@ -53,7 +53,7 @@ export interface AutorentarCreditBreakageResult {
   providedIn: 'root',
 })
 export class AutorentarCreditService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService);
   private readonly destroyRef = inject(DestroyRef);
 

@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Observable, from, of, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import type { DashboardStats, DashboardStatsCache } from '../models/dashboard.model';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import { LoggerService } from './logger.service';
 
 /**
@@ -16,7 +16,7 @@ import { LoggerService } from './logger.service';
   providedIn: 'root',
 })
 export class DashboardService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService);
 
   // Cache TTL: 5 minutes

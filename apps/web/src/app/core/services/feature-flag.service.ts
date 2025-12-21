@@ -13,13 +13,13 @@ import {
   UserSegment,
 } from '../models/feature-flag.model';
 import { LoggerService } from './logger.service';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeatureFlagService {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
   private readonly logger = inject(LoggerService).createChildLogger('FeatureFlagService');
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);

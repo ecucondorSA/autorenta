@@ -1,6 +1,6 @@
-import { inject, Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * User Identity Level Data
@@ -110,7 +110,7 @@ export interface LevelAccessCheck {
   providedIn: 'root',
 })
 export class IdentityLevelService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
 
   // Reactive state
   readonly identityLevel = signal<UserIdentityLevel | null>(null);

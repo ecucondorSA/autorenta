@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
+import { Injectable } from '@angular/core';
+import { injectSupabase } from './supabase-client.service';
 
 export interface CarLatestLocation {
   car_id: string;
@@ -10,7 +10,7 @@ export interface CarLatestLocation {
 
 @Injectable({ providedIn: 'root' })
 export class CarLocationService {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
 
   /**
    * Fetch latest tracking location per car using the `car_latest_location` view.

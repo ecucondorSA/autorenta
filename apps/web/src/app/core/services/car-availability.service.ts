@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import type { Car } from '../models';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface CarBlackout {
   starts_at: string;
@@ -32,7 +32,7 @@ export interface AvailabilityRange {
 
 @Injectable({ providedIn: 'root' })
 export class CarAvailabilityService {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
 
   async getBlackouts(carId: string): Promise<CarBlackout[]> {
     // car_blackouts table no longer exists; use car_blocked_dates as source

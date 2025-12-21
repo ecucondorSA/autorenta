@@ -8,7 +8,7 @@ import {
   isFxVariationExceeded,
 } from '../models/booking-detail-payment.model';
 import { ExchangeRateService } from './exchange-rate.service';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Servicio para gestionar tipos de cambio (FX)
@@ -27,7 +27,7 @@ import { SupabaseClientService } from './supabase-client.service';
 })
 export class FxService {
   private readonly logger = inject(LoggerService);
-  private supabaseClient = inject(SupabaseClientService).getClient();
+  private supabaseClient = injectSupabase();
   private exchangeRateService = inject(ExchangeRateService);
 
   /**

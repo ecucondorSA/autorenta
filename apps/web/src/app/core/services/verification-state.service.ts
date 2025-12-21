@@ -28,6 +28,7 @@ type VerificationStatusRow = {
 })
 export class VerificationStateService implements OnDestroy {
   private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
 
   // Reactive state
   readonly verificationProgress = signal<VerificationProgress | null>(null);

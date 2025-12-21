@@ -5,7 +5,7 @@ import { SwPush } from '@angular/service-worker';
 import { Capacitor } from '@capacitor/core';
 import { PushNotifications, Token, ActionPerformed, PushNotificationSchema } from '@capacitor/push-notifications';
 import { Subject } from 'rxjs';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import { AuthService } from './auth.service';
 
 /**
@@ -25,7 +25,7 @@ export class PushNotificationService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly isNative = this.isBrowser && Capacitor.isNativePlatform();
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
   private readonly swPush = inject(SwPush);
 

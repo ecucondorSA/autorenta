@@ -1,5 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { SupabaseClientService } from './supabase-client.service';
+import { Injectable } from '@angular/core';
+import { injectSupabase } from './supabase-client.service';
 
 export interface PromoCode {
   code: string;
@@ -11,7 +11,7 @@ export interface PromoCode {
   providedIn: 'root',
 })
 export class PromotionService {
-  private supabase = inject(SupabaseClientService).getClient();
+  private supabase = injectSupabase();
 
   async validatePromoCode(
     code: string,

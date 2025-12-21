@@ -1,7 +1,7 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Face Verification Result from Cloudflare Worker
@@ -55,7 +55,7 @@ export interface VideoUploadProgress {
   providedIn: 'root',
 })
 export class FaceVerificationService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
   private readonly DOC_VERIFIER_URL =
     environment.docVerifierUrl || 'https://doc-verifier.autorentar.workers.dev';
 

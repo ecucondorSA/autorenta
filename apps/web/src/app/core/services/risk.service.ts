@@ -9,7 +9,7 @@ import {
   calculateDeductibleUsd,
 } from '../models/booking-detail-payment.model';
 import { RiskCalculatorService } from './risk-calculator.service';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Servicio para cálculo de riesgos y garantías
@@ -20,7 +20,7 @@ import { SupabaseClientService } from './supabase-client.service';
   providedIn: 'root',
 })
 export class RiskService {
-  private supabaseClient = inject(SupabaseClientService).getClient();
+  private supabaseClient = injectSupabase();
   private riskCalculator = inject(RiskCalculatorService);
   private readonly riskSnapshotTable = 'booking_risk_snapshots';
 

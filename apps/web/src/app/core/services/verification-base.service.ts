@@ -1,6 +1,6 @@
-import { inject, signal, Signal } from '@angular/core';
+import { signal, Signal } from '@angular/core';
 import type { SupabaseClient, AuthChangeEvent, Session } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Generic Verification Status
@@ -51,7 +51,7 @@ export type VerificationType = 'email' | 'phone';
 export abstract class VerificationBaseService<
   TStatus extends VerificationStatus = VerificationStatus,
 > {
-  protected readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  protected readonly supabase: SupabaseClient = injectSupabase();
   protected lastSendTime: number = 0;
 
   /**

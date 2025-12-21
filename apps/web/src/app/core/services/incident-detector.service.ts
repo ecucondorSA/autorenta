@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Motion } from '@capacitor/motion';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 interface AccelerationEvent {
   x: number;
@@ -23,7 +23,7 @@ interface AccelListenerEvent {
 @Injectable({ providedIn: 'root' })
 export class IncidentDetectorService {
   private readonly logger = inject(LoggerService);
-  private supabase = inject(SupabaseClientService).getClient();
+  private supabase = injectSupabase();
   private isMonitoring = false;
   private currentBookingId: string | null = null;
   private accelerationBuffer: AccelerationEvent[] = [];

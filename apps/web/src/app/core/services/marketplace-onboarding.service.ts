@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import { EncryptionService } from './encryption.service';
 
 /**
@@ -63,7 +63,7 @@ export interface MarketplaceStatus {
   providedIn: 'root',
 })
 export class MarketplaceOnboardingService {
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
   private readonly encryptionService = inject(EncryptionService);
 
   // URLs de Mercado Pago

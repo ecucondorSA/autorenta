@@ -9,7 +9,7 @@ export class FgoService {
   private readonly supabase: SupabaseClient;
 
   constructor() {
-    this.supabase = inject(SupabaseClientService).getClient();
+    this.supabase = injectSupabase();
   }
 
   async getFgoBalance(): Promise<number> {
