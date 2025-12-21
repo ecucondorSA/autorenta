@@ -1,8 +1,8 @@
-import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { SupabaseClientService } from './supabase-client.service';
 import { AuthService } from './auth.service';
+import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Tipos de eventos de conversión que trackeamos
@@ -79,7 +79,7 @@ declare global {
 })
 export class AnalyticsService {
   private readonly logger = inject(LoggerService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
   private readonly isEnabled = environment.enableAnalytics;
   private readonly ga4MeasurementId = environment.googleAnalyticsMeasurementId;

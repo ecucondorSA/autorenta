@@ -1,34 +1,34 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
-  inject,
-  signal,
   DestroyRef,
   ElementRef,
-  ViewChild,
-  AfterViewChecked,
   OnDestroy,
   PLATFORM_ID,
+  ViewChild,
   effect,
+  inject,
+  signal,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  RentarfastAgentService,
-  ChatMessage,
-  ChatContext,
-} from '../../core/services/rentarfast-agent.service';
-import { LocationService, LocationData } from '../../core/services/location.service';
-import { GeocodingService } from '../../core/services/geocoding.service';
-import { ProfileStore } from '../../core/stores/profile.store';
-import { AuthService } from '../../core/services/auth.service';
-import { WalletService } from '../../core/services/wallet.service';
-import { CarsService } from '../../core/services/cars.service';
-import { VerificationService } from '../../core/services/verification.service';
-import { BookingsService } from '../../core/services/bookings.service';
 import type { WalletBalance } from '../../core/models/wallet.model';
+import { AuthService } from '../../core/services/auth.service';
+import { BookingsService } from '../../core/services/bookings.service';
+import { CarsService } from '../../core/services/cars.service';
+import { GeocodingService } from '../../core/services/geocoding.service';
+import { LocationData, LocationService } from '../../core/services/location.service';
+import {
+  ChatContext,
+  ChatMessage,
+  RentarfastAgentService,
+} from '../../core/services/rentarfast-agent.service';
+import { VerificationService } from '../../core/services/verification.service';
+import { WalletService } from '../../core/services/wallet.service';
+import { ProfileStore } from '../../core/stores/profile.store';
 
 // Web Speech API types
 interface SpeechRecognitionEvent extends Event {
@@ -118,6 +118,9 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   // Voice recognition state
   readonly isListening = signal(false);
   readonly voiceSupported = signal(false);
+
+  private lastVoiceErrorAt = 0;
+  private voiceStartInFlight = false;
 
   private recognition: SpeechRecognition | null = null;
   private shouldScrollToBottom = false;
@@ -214,16 +217,20 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
         }
       };
 
-      this.recognition.onerror = () => {
+      this.recognition.onerror = (event: Event) => {
         this.isListening.set(false);
+        this.voiceStartInFlight = false;
+        this.notifyVoiceError(event);
       };
 
       this.recognition.onend = () => {
         this.isListening.set(false);
+        this.voiceStartInFlight = false;
       };
 
       this.recognition.onstart = () => {
         this.isListening.set(true);
+        this.voiceStartInFlight = false;
       };
     }
   }
@@ -253,7 +260,28 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   }
 
   startListening(): void {
-    if (!this.recognition || this.isLoading()) return;
+    if (this.isLoading()) {
+      this.agentService.addLocalAgentMessage(
+        'Estoy procesando tu último mensaje. Apenas termino, tocá el micrófono y hablá.',
+        ['local_voice'],
+      );
+      return;
+    }
+    if (!this.recognition) {
+      this.agentService.addLocalAgentMessage(
+        'Tu navegador no habilitó el reconocimiento de voz. Podés escribir o probar en Chrome/Edge y aceptar permisos de micrófono.',
+        ['local_voice'],
+      );
+      return;
+    }
+
+    if (this.isListening() || this.voiceStartInFlight) {
+      // Evitar el error: "recognition has already started"
+      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', [
+        'local_voice',
+      ]);
+      return;
+    }
 
     try {
       // Haptic feedback
@@ -261,9 +289,11 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
         navigator.vibrate(50);
       }
       this.inputText.set('');
+      this.voiceStartInFlight = true;
       this.recognition.start();
-    } catch {
-      // Already listening or error
+    } catch (err) {
+      this.voiceStartInFlight = false;
+      this.notifyVoiceError(err);
     }
   }
 
@@ -276,6 +306,7 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       // Not listening
     }
     this.isListening.set(false);
+    this.voiceStartInFlight = false;
   }
 
   async sendMessage(): Promise<void> {
@@ -335,6 +366,15 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
 
   private async tryHandleLocalIntent(text: string): Promise<boolean> {
     const normalized = this.normalizeInput(text);
+
+    if (
+      /(no me escuch|no me entiende|no estas escuch|no est[aá]s escuch|microfono|micr[oó]fono|voz no funciona|no anda la voz)/.test(
+        normalized,
+      )
+    ) {
+      await this.respondWithVoiceHelp(text);
+      return true;
+    }
 
     if (/(publicar|publica|subir).*(auto|veh[ií]culo)/.test(normalized)) {
       this.agentService.addLocalUserMessage(text);
@@ -396,17 +436,32 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       const location = await this.locationService.getLocationByChoice('current');
       if (location) {
         this.lastLocation.set(location);
+        const coords =
+          typeof location.lat === 'number' && typeof location.lng === 'number'
+            ? ` (lat ${location.lat.toFixed(5)}, lng ${location.lng.toFixed(5)})`
+            : '';
         this.agentService.addLocalAgentMessage(
           location.address
-            ? `Perfecto, usaré tu ubicación actual: ${location.address}.`
-            : 'Perfecto, usaré tu ubicación actual.',
+            ? `Tu ubicación es: ${location.address}.${coords}`
+            : `Tomé tu ubicación.${coords}`,
           ['local_location'],
         );
       } else {
-        this.agentService.addLocalAgentMessage(
-          'No pude acceder a tu ubicación. ¿Podés habilitar permisos o decirme una dirección?',
-          ['local_location'],
-        );
+        const home = await this.locationService.getHomeLocation();
+        if (home) {
+          this.lastLocation.set(home);
+          this.agentService.addLocalAgentMessage(
+            home.address
+              ? `No pude leer tu GPS ahora. Uso tu ubicación guardada: ${home.address}.`
+              : 'No pude leer tu GPS ahora. Uso tu ubicación guardada.',
+            ['local_location'],
+          );
+        } else {
+          this.agentService.addLocalAgentMessage(
+            'No pude acceder a tu ubicación. ¿Podés habilitar permisos o decirme una dirección?',
+            ['local_location'],
+          );
+        }
       }
       return true;
     }
@@ -443,6 +498,21 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       )
     ) {
       await this.respondWithAccountSummary(text);
+      return true;
+    }
+
+    const personalInfo = this.getPersonalInfoQueryKind(normalized);
+    if (personalInfo) {
+      await this.respondWithPersonalInfo(text, personalInfo);
+      return true;
+    }
+
+    if (
+      /(a que no tenes acceso|a que no tienes acceso|que no tenes acceso|que no tienes acceso|no tenes acceso|no tienes acceso|limitaciones|privacidad)/.test(
+        normalized,
+      )
+    ) {
+      await this.respondWithAccessLimitations(text);
       return true;
     }
 
@@ -520,6 +590,120 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
 
     return false;
+  }
+
+  private getPersonalInfoQueryKind(
+    normalized: string,
+  ): 'name' | 'email' | 'dni' | null {
+    if (/(mi nombre|como me llamo|cu[aá]l es mi nombre)/.test(normalized)) return 'name';
+    if (/(mi email|mi correo|mi mail|cu[aá]l es mi correo|cu[aá]l es mi email)/.test(normalized)) {
+      return 'email';
+    }
+    if (/(mi dni|mi documento|n[uú]mero de documento|documento nacional)/.test(normalized)) {
+      return 'dni';
+    }
+    return null;
+  }
+
+  private async respondWithPersonalInfo(
+    originalText: string,
+    kind: 'name' | 'email' | 'dni',
+  ): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+    const auth = await this.getAuthSnapshot();
+    if (!auth) {
+      this.agentService.addLocalAgentMessage(
+        'Para ver tus datos necesito que estés logueado. ¿Querés que abra el login?',
+        ['local_profile'],
+      );
+      return;
+    }
+
+    let profile = this.profileStore.profile();
+    if (!profile) {
+      try {
+        profile = await this.profileStore.loadProfile();
+      } catch {
+        profile = this.profileStore.profile();
+      }
+    }
+
+    if (kind === 'email') {
+      this.agentService.addLocalAgentMessage(
+        auth.email
+          ? `Tu email es: ${auth.email}.`
+          : 'No tengo un email disponible en tu sesión. Podés revisarlo en tu perfil.',
+        ['local_profile'],
+      );
+      return;
+    }
+
+    if (kind === 'name') {
+      const name = profile?.full_name?.trim();
+      this.agentService.addLocalAgentMessage(
+        name
+          ? `Tu nombre (según tu perfil) es: ${name}.`
+          : 'No veo tu nombre cargado en el perfil. Si querés, abrimos tu perfil para completarlo.',
+        ['local_profile'],
+      );
+      return;
+    }
+
+    const dniCandidate =
+      profile?.gov_id_number ??
+      (profile as unknown as { dni?: string | null }).dni ??
+      null;
+
+    if (!dniCandidate) {
+      this.agentService.addLocalAgentMessage(
+        'No tengo un DNI cargado/visible en tu perfil. Podés revisarlo o completarlo desde tu perfil.',
+        ['local_profile'],
+      );
+      return;
+    }
+
+    this.agentService.addLocalAgentMessage(
+      `DNI (enmascarado): ${this.maskSensitiveNumber(dniCandidate)}.`,
+      ['local_profile'],
+    );
+  }
+
+  private maskSensitiveNumber(value: string): string {
+    const raw = String(value).trim();
+    const digits = raw.replace(/\D/g, '');
+    if (digits.length === 0) return '***';
+    if (digits.length <= 3) return `***${digits}`;
+    const tail = digits.slice(-3);
+    return `***${tail}`;
+  }
+
+  private async respondWithAccessLimitations(originalText: string): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+
+    const auth = await this.getAuthSnapshot();
+    const canReadAccount = Boolean(auth);
+
+    const response = [
+      'Acceso que SÍ tengo dentro de la app:',
+      canReadAccount
+        ? '• Tus datos de sesión (tu ID y tu email si existe en la sesión).'
+        : '• Solo datos generales (si no estás logueado, no puedo ver tu cuenta).',
+      canReadAccount
+        ? '• Tu perfil (por ejemplo nombre si está cargado).'
+        : '• Autos públicos (marketplace) y navegación dentro de la app.',
+      canReadAccount ? '• Tu wallet (saldos) y tus reservas.' : '• Búsqueda de autos y estimaciones sin cuenta.',
+      '• Tu ubicación SOLO si das permiso al navegador o me das una dirección.',
+      '',
+      'Acceso que NO tengo:',
+      '• Contraseñas o códigos de verificación.',
+      '• Datos de pago completos (tarjetas completas, CVV).',
+      '• Información personal de otros usuarios.',
+      '• Datos que no estén cargados en tu perfil o que el backend no exponga al frontend.',
+      '',
+      'Si querés “programarme” para más personalización, la clave es exponer herramientas locales/servicios que lean esos campos del perfil (con RLS) y luego interceptar intents como “mi nombre / mi email / mi DNI”.',
+    ].join('\n');
+
+    this.agentService.addLocalAgentMessage(response, ['local_info']);
   }
 
   private parseBookingCommand(text: string): { carId: string; startDate: string; endDate: string } | null {
@@ -709,7 +893,82 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   }
 
   private wantsCurrentLocation(text: string): boolean {
-    return /ubicaci[oó]n actual|usar mi ubicaci[oó]n|usar ubicaci[oó]n actual/.test(text);
+    const normalized = this.normalizeInput(text);
+
+    // Evita capturar frases de búsqueda de autos (se manejan con otro intent)
+    if (/(auto|autos|vehiculo|vehiculos|coche|coches)/.test(normalized)) return false;
+
+    // Tolerante a typos comunes: "ubicaicon" / "ubication" etc.
+    const mentionsLocationWord = /(ubic|ubica|ubicac|ubicaic|ubicaicon|ubication)/.test(normalized);
+    const mentionsNow = /(actual|ahora|en este momento)/.test(normalized);
+    const explicit =
+      /ubicacion actual|usar mi ubicacion|usar ubicacion actual|mi ubicacion actual|mi ubicacion|cual es mi ubicacion|donde estoy/.test(
+        normalized,
+      );
+
+    return explicit || (mentionsLocationWord && mentionsNow);
+  }
+
+  private notifyVoiceError(err: unknown): void {
+    const now = Date.now();
+    if (now - this.lastVoiceErrorAt < 1500) return;
+    this.lastVoiceErrorAt = now;
+
+    const message =
+      typeof err === 'string'
+        ? err
+        : err instanceof Error
+          ? err.message
+          : (err as { error?: string })?.error
+            ? String((err as { error?: string }).error)
+            : null;
+
+    if (message?.toLowerCase().includes('recognition has already started')) {
+      // Caso benigno: doble tap o evento duplicado
+      this.agentService.addLocalAgentMessage('Ya estoy escuchando. Hablame ahora.', ['local_voice']);
+      return;
+    }
+
+    const hint =
+      'No pude activar el micrófono. Revisá permisos del navegador y que estés en HTTPS (o localhost).';
+
+    this.agentService.addLocalAgentMessage(
+      message ? `${hint} Detalle: ${message}` : hint,
+      ['local_voice'],
+    );
+  }
+
+  private async respondWithVoiceHelp(originalText: string): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+
+    if (!this.voiceSupported()) {
+      this.agentService.addLocalAgentMessage(
+        [
+          'En este dispositivo/navegador no está disponible el reconocimiento de voz.',
+          'Probá con Chrome/Edge (Android/desktop) y aceptá el permiso de micrófono.',
+          'Mientras tanto, podés escribirme acá mismo.',
+        ].join(' '),
+        ['local_voice'],
+      );
+      return;
+    }
+
+    if (this.isLoading()) {
+      this.agentService.addLocalAgentMessage(
+        'Estoy procesando tu último mensaje. Apenas termino, tocá el micrófono y hablá.',
+        ['local_voice'],
+      );
+      return;
+    }
+
+    this.agentService.addLocalAgentMessage(
+      [
+        'Para hablarme: tocá el botón del micrófono y empezá a hablar.',
+        'Si no arranca, el navegador puede estar bloqueando permisos de micrófono.',
+        'Probá: permitir micrófono en el candadito del navegador y recargar la página.',
+      ].join(' '),
+      ['local_voice'],
+    );
   }
 
   private wantsLocationContext(text: string): boolean {

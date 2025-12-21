@@ -1,4 +1,3 @@
-import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {
   EnvironmentProviders,
@@ -9,6 +8,7 @@ import {
 } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from './logger.service';
 
 type SupabaseLock = <T>(name: string, acquireTimeout: number, fn: () => Promise<T>) => Promise<T>;
 
@@ -91,7 +91,7 @@ function createSSRStubClient(): SupabaseClient {
           return () => Promise.resolve({ data: { session: null, user: null }, error: null });
         }
         if (prop === 'onAuthStateChange') {
-          return () => ({ data: { subscription: { unsubscribe: () => {} } } });
+          return () => ({ data: { subscription: { unsubscribe: () => { } } } });
         }
         // RPC calls
         if (typeof prop === 'string' && prop.startsWith('rpc')) {
@@ -99,10 +99,10 @@ function createSSRStubClient(): SupabaseClient {
         }
         // Realtime channel
         if (prop === 'subscribe') {
-          return () => ({ unsubscribe: () => {} });
+          return () => ({ unsubscribe: () => { } });
         }
         if (prop === 'unsubscribe') {
-          return () => {};
+          return () => { };
         }
         // Default: return chainable stub
         return createChainableStub();
@@ -238,7 +238,11 @@ export class SupabaseClientService {
  * Returns the real client in browser
  */
 export const injectSupabase = (): SupabaseClient => {
-  const service = inject(SupabaseClientService);
+  const service = inject(SupabaseClientService) as unknown as {
+    getClient?: () => SupabaseClient;
+    getClientOrNull?: () => SupabaseClient | null;
+    client?: SupabaseClient | null;
+  };
   const platformId = inject(PLATFORM_ID);
 
   // During SSR, return a stub client that doesn't throw
@@ -246,5 +250,19 @@ export const injectSupabase = (): SupabaseClient => {
     return createSSRStubClient();
   }
 
-  return service.getClient();
+  // Browser: prefer the real method, but tolerate test doubles that only expose `client`.
+  if (typeof service.getClient === 'function') {
+    return service.getClient();
+  }
+
+  if (typeof service.getClientOrNull === 'function') {
+    const client = service.getClientOrNull();
+    if (client) return client;
+  }
+
+  if (service.client) {
+    return service.client;
+  }
+
+  throw new Error('Supabase client is not available');
 };

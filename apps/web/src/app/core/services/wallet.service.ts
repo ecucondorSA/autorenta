@@ -1,26 +1,26 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
-import { RealtimeChannel, SupabaseClient, PostgrestSingleResponse } from '@supabase/supabase-js';
-import { from, Observable, throwError, firstValueFrom } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { PostgrestSingleResponse, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { firstValueFrom, from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import type {
-  WalletBalance,
-  WalletHistoryEntry as WalletTransaction,
-  InitiateDepositParams,
-  WalletLockFundsResponse,
-  WalletUnlockFundsResponse,
-  WalletLockRentalAndDepositResponse,
-  WalletTransactionFilters,
-  WalletInitiateDepositResponse,
   ExpiringCredit,
+  InitiateDepositParams,
+  WalletBalance,
+  WalletInitiateDepositResponse,
+  WalletLockFundsResponse,
+  WalletLockRentalAndDepositResponse,
+  WalletHistoryEntry as WalletTransaction,
+  WalletTransactionFilters,
+  WalletUnlockFundsResponse,
 } from '../models/wallet.model';
-import { SupabaseClientService } from './supabase-client.service';
 import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WalletService {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
+  private readonly supabase: SupabaseClient = injectSupabase();
   private readonly logger = inject(LoggerService);
 
   // ✅ SIGNALS: Single source of truth for wallet state
@@ -260,8 +260,8 @@ export class WalletService {
 
       if (!result.success) throw new Error(result.error_message || 'Fallo al depositar fondos');
 
-      this.fetchBalance().catch(() => {});
-      this.fetchTransactions().catch(() => {});
+      this.fetchBalance().catch(() => { });
+      this.fetchTransactions().catch(() => { });
 
       return { success: true, transactionId: result.transaction_id };
     } catch (err) {
@@ -313,7 +313,7 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => {});
+        this.fetchBalance().catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockFundsResponse),
     );
@@ -328,7 +328,7 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => {});
+        this.fetchBalance().catch(() => { });
       }),
       map((response) => response.data![0] as WalletUnlockFundsResponse),
     );
@@ -348,7 +348,7 @@ export class WalletService {
     ).pipe(
       tap((response) => {
         if (response['error']) throw response['error'];
-        this.fetchBalance().catch(() => {});
+        this.fetchBalance().catch(() => { });
       }),
       map((response) => response.data![0] as WalletLockRentalAndDepositResponse),
     );
@@ -412,8 +412,8 @@ export class WalletService {
     try {
       const { data, error } = await this.supabase.rpc('wallet_poll_pending_payments');
       if (error) throw error;
-      this.fetchBalance().catch(() => {});
-      this.fetchTransactions().catch(() => {});
+      this.fetchBalance().catch(() => { });
+      this.fetchTransactions().catch(() => { });
       return (data ?? { success: false, confirmed: 0, message: 'No data returned' }) as {
         success: boolean;
         confirmed: number;
@@ -459,7 +459,7 @@ export class WalletService {
       });
 
       if (error) throw error;
-      this.fetchBalance().catch(() => {});
+      this.fetchBalance().catch(() => { });
       return data;
     } catch (err) {
       this.handleError(err, 'Error al emitir Crédito de Protección');

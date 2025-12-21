@@ -170,13 +170,13 @@ cmd_test() {
 cmd_test_quick() {
     header "🧪 Running Quick Tests (No Coverage)"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadless --no-sandbox --code-coverage=false
+    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=false
 }
 
 cmd_test_coverage() {
     header "🧪 Running Tests with Coverage"
     cd "$WEB_DIR"
-    npm run test -- --watch=false --browsers=ChromeHeadless --no-sandbox --code-coverage=true
+    npm run test -- --watch=false --browsers=ChromeHeadlessCI --code-coverage=true
     success "Coverage report: apps/web/coverage/index.html"
 }
 

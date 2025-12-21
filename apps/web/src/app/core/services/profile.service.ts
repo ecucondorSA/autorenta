@@ -1,15 +1,15 @@
-import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  UserProfile,
-  Role,
-  UserDocument,
   DocumentKind,
   NotificationPrefs,
   ProfileAudit,
+  Role,
+  UserDocument,
+  UserProfile,
 } from '../models';
-import { SupabaseClientService } from './supabase-client.service';
+import { LoggerService } from './logger.service';
+import { injectSupabase } from './supabase-client.service';
 
 // Re-export UserProfile for convenience
 export type { UserProfile };
@@ -50,7 +50,7 @@ export interface UpdateProfileData {
 })
 export class ProfileService {
   private readonly logger = inject(LoggerService);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
 
   async getCurrentProfile(): Promise<UserProfile | null> {
     const {

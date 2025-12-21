@@ -1,12 +1,12 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, OnDestroy, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthChangeEvent, Session, SupabaseClient } from '@supabase/supabase-js';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { getErrorMessage } from '../utils/type-guards';
 import { LoggerService } from './logger.service';
-import { SupabaseClientService } from './supabase-client.service';
 import { RateLimiterService } from './rate-limiter.service';
+import { injectSupabase } from './supabase-client.service';
 
 interface AuthState {
   session: Session | null;
@@ -17,7 +17,7 @@ interface AuthState {
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  private readonly supabaseService = inject(SupabaseClientService);
+  private readonly supabase = injectSupabase();
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly TIKTOK_STATE_KEY = 'tiktok_oauth_state';
@@ -35,12 +35,10 @@ export class AuthService implements OnDestroy {
   }
 
   /**
-   * Get Supabase client - only available in browser
-   * @throws Error if called during SSR
+    * Supabase client (SSR-safe)
+    * - Browser: real client
+    * - SSR: stub client that returns empty results
    */
-  private get supabase(): SupabaseClient {
-    return this.supabaseService.getClient();
-  }
   private readonly state = signal<AuthState>({ session: null, loading: true });
   private restoreSessionPromise: Promise<void> | null = null;
   private authSubscription: { data: { subscription: { unsubscribe: () => void } } } | null = null;
@@ -141,7 +139,7 @@ export class AuthService implements OnDestroy {
       data: { session },
       error,
     } = await this.supabase.auth.getSession();
-    
+
     this.logger.debug('loadSession: getSession result', 'AuthService', {
       hasSession: !!session,
       error: error?.message,

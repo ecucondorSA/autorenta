@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { GeocodingResult, GeocodingService } from './geocoding.service';
 import { ProfileService } from './profile.service';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 /**
  * Location coordinates
@@ -37,7 +37,7 @@ export interface LocationData extends LocationCoordinates {
 export class LocationService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
-  private readonly supabase = inject(SupabaseClientService).getClient();
+  private readonly supabase = injectSupabase();
   private readonly profileService = inject(ProfileService);
   private readonly geocodingService = inject(GeocodingService);
 

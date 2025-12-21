@@ -1,18 +1,17 @@
-import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VideoInspectionRecorderComponent } from '../../../shared/components/video-inspection-recorder/video-inspection-recorder.component';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { VideoDamageAnalysis, VideoDamageDetectionService } from '../../../core/services/video-damage-detection.service';
 import { DamageReportComponent } from '../../../shared/components/damage-report/damage-report.component';
-import { VideoDamageDetectionService, VideoDamageAnalysis } from '../../../core/services/video-damage-detection.service';
-import { ToastController } from '@ionic/angular';
+import { VideoInspectionRecorderComponent } from '../../../shared/components/video-inspection-recorder/video-inspection-recorder.component';
 
 /**
  * Booking Check-In Page
- * 
+ *
  * Página para que el Owner grabe la inspección de check-in
  * antes de entregarle el auto al Renter.
- * 
+ *
  * Flujo:
  * 1. Owner graba video del auto (90s mínimo)
  * 2. Video se sube automáticamente a GCP
@@ -38,10 +37,10 @@ import { ToastController } from '@ionic/angular';
         <ion-title>Check-In: Inspección del Vehículo</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content>
       <div class="checkin-container">
-        
+
         <!-- Header Info -->
         <ion-card class="info-card">
           <ion-card-content>
@@ -56,7 +55,7 @@ import { ToastController } from '@ionic/angular';
             </ion-note>
           </ion-card-content>
         </ion-card>
-        
+
         <!-- Step 1: Record Video -->
         @if (!videoUploaded()) {
           <app-video-inspection-recorder
@@ -67,7 +66,7 @@ import { ToastController } from '@ionic/angular';
             (error)="onError($event)">
           </app-video-inspection-recorder>
         }
-        
+
         <!-- Step 2: Analyzing Video -->
         @if (videoUploaded() && !analysisResult()) {
           <ion-card class="analyzing-card">
@@ -78,7 +77,7 @@ import { ToastController } from '@ionic/angular';
                 <p>Vertex AI está procesando el video</p>
                 <p class="small">Esto tomará 30-60 segundos</p>
                 <ion-progress-bar type="indeterminate"></ion-progress-bar>
-                
+
                 <div class="tips">
                   <ion-note>
                     <ion-icon name="information-circle"></ion-icon>
@@ -96,15 +95,15 @@ import { ToastController } from '@ionic/angular';
             </ion-card-content>
           </ion-card>
         }
-        
+
         <!-- Step 3: Show Results -->
         @if (analysisResult()) {
           <app-damage-report [analysis]="analysisResult()"></app-damage-report>
-          
+
           <!-- Actions -->
           <div class="actions">
-            <ion-button 
-              expand="block" 
+            <ion-button
+              expand="block"
               color="primary"
               (click)="confirmInspection()"
               [disabled]="isSubmitting()">
@@ -116,9 +115,9 @@ import { ToastController } from '@ionic/angular';
                 Guardando...
               }
             </ion-button>
-            
-            <ion-button 
-              expand="block" 
+
+            <ion-button
+              expand="block"
               fill="outline"
               (click)="retakeVideo()">
               <ion-icon slot="start" name="videocam"></ion-icon>
@@ -126,7 +125,7 @@ import { ToastController } from '@ionic/angular';
             </ion-button>
           </div>
         }
-        
+
       </div>
     </ion-content>
   `,
@@ -136,51 +135,51 @@ import { ToastController } from '@ionic/angular';
       max-width: 800px;
       margin: 0 auto;
     }
-    
+
     .info-card h2 {
       display: flex;
       align-items: center;
       gap: 8px;
       margin: 0 0 8px 0;
     }
-    
+
     .info-card ion-note {
       display: block;
       margin-top: 12px;
       line-height: 1.5;
     }
-    
+
     .analyzing-card {
       margin-top: 16px;
     }
-    
+
     .analyzing {
       text-align: center;
       padding: 32px 16px;
     }
-    
+
     .analyzing ion-spinner {
       font-size: 48px;
       margin-bottom: 16px;
     }
-    
+
     .analyzing h3 {
       margin: 16px 0 8px 0;
     }
-    
+
     .analyzing p {
       margin: 4px 0;
       color: var(--ion-color-medium);
     }
-    
+
     .analyzing .small {
       font-size: 14px;
     }
-    
+
     .analyzing ion-progress-bar {
       margin: 16px 0;
     }
-    
+
     .tips {
       margin-top: 24px;
       text-align: left;
@@ -188,7 +187,7 @@ import { ToastController } from '@ionic/angular';
       padding: 16px;
       border-radius: 8px;
     }
-    
+
     .tips ion-note {
       display: flex;
       align-items: center;
@@ -196,17 +195,17 @@ import { ToastController } from '@ionic/angular';
       font-weight: bold;
       margin-bottom: 12px;
     }
-    
+
     .tips ul {
       margin: 0;
       padding-left: 20px;
     }
-    
+
     .tips li {
       margin-bottom: 8px;
       line-height: 1.5;
     }
-    
+
     .actions {
       margin-top: 24px;
       display: flex;
@@ -220,18 +219,18 @@ export class BookingCheckinPage {
   private router = inject(Router);
   private videoService = inject(VideoDamageDetectionService);
   private toastCtrl = inject(ToastController);
-  
+
   // Route params
   bookingId = signal('');
   carId = signal('');
   carBrand = signal('');
   carModel = signal('');
-  
+
   // State
   videoUploaded = signal(false);
   analysisResult = signal<VideoDamageAnalysis | null>(null);
   isSubmitting = signal(false);
-  
+
   ngOnInit() {
     // Get params from route
     this.bookingId.set(this.route.snapshot.params['id'] || 'booking_123');
@@ -239,10 +238,10 @@ export class BookingCheckinPage {
     this.carBrand.set(this.route.snapshot.queryParams['brand'] || 'Tesla');
     this.carModel.set(this.route.snapshot.queryParams['model'] || 'Model 3');
   }
-  
+
   async onVideoUploaded(videoPath: string) {
     this.videoUploaded.set(true);
-    
+
     // Show toast
     const toast = await this.toastCtrl.create({
       message: '✅ Video subido. Analizando con IA...',
@@ -250,7 +249,7 @@ export class BookingCheckinPage {
       color: 'success'
     });
     await toast.present();
-    
+
     // Subscribe to real-time results
     this.videoService.subscribeToAnalysisResults(
       this.bookingId(),
@@ -260,7 +259,7 @@ export class BookingCheckinPage {
       }
     );
   }
-  
+
   async onError(error: string) {
     const toast = await this.toastCtrl.create({
       message: `❌ Error: ${error}`,
@@ -269,12 +268,12 @@ export class BookingCheckinPage {
     });
     await toast.present();
   }
-  
+
   async showAnalysisToast(analysis: VideoDamageAnalysis) {
     const message = analysis.damages.length > 0
       ? `⚠️ Se detectaron ${analysis.damages.length} daño(s)`
       : '✅ No se detectaron daños';
-      
+
     const toast = await this.toastCtrl.create({
       message,
       duration: 5000,
@@ -282,26 +281,26 @@ export class BookingCheckinPage {
     });
     await toast.present();
   }
-  
+
   async confirmInspection() {
     this.isSubmitting.set(true);
-    
+
     try {
       // TODO: Call booking service to update status
       // await this.bookingService.confirmCheckin(this.bookingId());
-      
+
       const toast = await this.toastCtrl.create({
         message: '✅ Check-In confirmado exitosamente',
         duration: 3000,
         color: 'success'
       });
       await toast.present();
-      
+
       // Navigate back to booking detail
       setTimeout(() => {
         this.router.navigate(['/bookings', this.bookingId()]);
       }, 1000);
-      
+
     } catch (error) {
       const toast = await this.toastCtrl.create({
         message: '❌ Error al confirmar check-in',
@@ -313,7 +312,7 @@ export class BookingCheckinPage {
       this.isSubmitting.set(false);
     }
   }
-  
+
   retakeVideo() {
     this.videoUploaded.set(false);
     this.analysisResult.set(null);
