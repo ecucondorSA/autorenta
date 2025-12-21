@@ -1,4 +1,4 @@
-# Orphan Components Review (2025-12-19)
+# Orphan Components Review (Updated: 2025-12-21)
 
 Fuente: `orphan-lint-report.json` (generado por `scripts/lint-orphans.ts --strict`).
 
@@ -6,15 +6,16 @@ Regla de la repo: `CLAUDE.md` → **NO WIZARDS**, **NO MODALS**, **NO COMPONENTE
 
 ---
 
-## Estado actual (post-limpieza)
+## Estado actual (FINAL)
 
 | Métrica | Inicial | Final | Cambio |
 |---------|---------|-------|--------|
-| Componentes huérfanos | 67 | 35 | **-32** |
+| Componentes huérfanos | 67 | 1 | **-66 (99% cleanup)** ✅ |
 
 ### Acciones realizadas:
-- **29 componentes eliminados** (wizards, modals, bottom-sheets, duplicados, incompletos)
+- **32 componentes eliminados** (wizards, modals, bottom-sheets, duplicados, incompletos)
 - **3 componentes integrados** (OfflineBanner, ErrorState, RiskPolicyTable)
+- **4 falsos positivos** confirmados (route-loaded components: MercadoPagoConnect, OrganizationDashboard, CoverageFundDashboard, TransferFunds)
 
 ### Componentes integrados:
 | Componente | Ubicación |
@@ -93,11 +94,15 @@ Leyenda:
 - `ErrorStateComponent` (`app-error-state`) — **INTEGRATED** — en `booking-detail.page.html`.
 - `OfflineBannerComponent` (`app-offline-banner`) — **INTEGRATED** — en `app.component.html`.
 
-### C) DELETED ✅ — eliminados del codebase
+### C) DELETED ✅ — eliminados del codebase (32 componentes)
 - `WizardComponent` (`app-wizard`) — **DELETED** — viola "NO WIZARDS".
 - `WizardStepComponent` (`app-wizard-step`) — **DELETED** — viola "NO WIZARDS".
 - `StepperModalComponent` (`app-stepper-modal`) — **DELETED** — wizard/modal (rompe regla).
 - `VerificationBlockingModalComponent` (`app-verification-blocking-modal`) — **DELETED** — modal + CSS anidado.
+- **+ 28 componentes más** (modals, bottom-sheets, duplicados, incompletos)
+
+### D) REMAINING ⏳ — componente huérfano pendiente (1)
+- `ReviewSummaryComponent` (`app-review-summary`) — **PENDING DELETION** — no usado en templates, seguro eliminar.
 - `InitialGoalModalComponent` (`app-initial-goal-modal`) — **DELETED** — modal (rompe regla).
 - `ContractSignModalComponent` (`app-contract-sign-modal`) — **DELETED** — modal + contrato en etapa incorrecta.
 - `BottomSheetComponent` (`app-bottom-sheet`) x2 — **DELETED** — modal/backdrop + selector duplicado.

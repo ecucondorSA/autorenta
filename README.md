@@ -48,3 +48,40 @@ python autorenta/optimize_glb.py assets/coche_sin_optimizar.glb assets/coche_opt
 Asegúrate de que la ruta de salida especifique un archivo `.glb`. Si el directorio de salida no existe, el script intentará crearlo.
 
 ---
+
+## Tests (Vitest)
+
+Los tests unitarios viven principalmente en `functions/` y se ejecutan con Vitest.
+
+### Requisitos
+- Dependencias instaladas en la raíz (Vitest y plugins).
+
+### Comandos rápidos (PNPM)
+```bash
+pnpm run test:unit
+pnpm run test:unit:watch
+pnpm run test:unit:coverage
+pnpm run test:unit:ui
+```
+
+### Limpieza antes de correr tests
+```bash
+pnpm run test:unit:clean
+```
+
+### Notas
+- Los tests usan configuración en `vitest.config.ts`.
+- El reporte de cobertura es opcional y se guarda en `coverage/`.
+- En CI podés usar `pnpm run test:unit:ci` para salida concisa.
+
+### Apps/Web (Vitest + jsdom)
+Para tests unitarios del frontend (Angular) con Vitest:
+
+```bash
+pnpm --dir apps/web run test:unit
+pnpm --dir apps/web run test:unit:watch
+pnpm --dir apps/web run test:unit:coverage
+pnpm --dir apps/web run test:unit:ui
+```
+
+La configuración vive en `apps/web/vitest.config.ts` y el setup en `apps/web/src/test/vitest.setup.ts`.
