@@ -170,6 +170,10 @@ export const buildEnvironment = (defaults: EnvDefaults) => ({
   tiktok: {
     clientId: resolve('NG_APP_TIKTOK_CLIENT_ID', defaults.tiktok?.clientId),
   },
+  // GCP Video Damage Detection
+  videoIngestionUrl: resolve('NG_APP_VIDEO_INGESTION_URL', defaults.videoIngestionUrl ?? ''),
+  gcpProjectId: resolve('NG_APP_GCP_PROJECT_ID', defaults.gcpProjectId ?? 'autorenta-prod'),
+  gcpBucketName: resolve('NG_APP_GCP_BUCKET_NAME', defaults.gcpBucketName ?? 'autorenta-inspection-videos'),
 });
 
 export type Environment = ReturnType<typeof buildEnvironment>;
