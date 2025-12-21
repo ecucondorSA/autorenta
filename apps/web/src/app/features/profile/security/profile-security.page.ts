@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { IonicModule } from '@ionic/angular';
 
 import { ProfileStore } from '../../../core/stores/profile.store';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 /**
  * Profile Security Page

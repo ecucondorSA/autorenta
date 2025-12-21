@@ -1,11 +1,11 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, OnInit, OnDestroy, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { PaymentsService } from '../../../core/services/payments.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
 import { Booking } from '../../../core/models';
 import { ReferralBannerComponent } from '../../../shared/components/referral-banner/referral-banner.component';
 

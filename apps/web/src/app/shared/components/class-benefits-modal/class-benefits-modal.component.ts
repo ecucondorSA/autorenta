@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { IonicModule, ModalController } from '@ionic/angular';
-import { DriverProfileService, ClassBenefits } from '../../../core/services/driver-profile.service';
+import { DriverProfileService, ClassBenefits } from '@core/services/auth/driver-profile.service';
 
 /**
  * ClassBenefitsModalComponent

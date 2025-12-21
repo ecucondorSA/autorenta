@@ -2,8 +2,8 @@
 import { FormsModule } from '@angular/forms';
 import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { DatabaseExportService } from '../../../core/services/database-export.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { DatabaseExportService } from '@core/services/admin/database-export.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
   selector: 'app-database-export',

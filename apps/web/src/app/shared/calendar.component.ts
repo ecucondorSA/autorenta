@@ -1,7 +1,7 @@
 
 import {Component, EventEmitter, Input, Output, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { CarAvailabilityService } from '../core/services/car-availability.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 
 @Component({
   selector: 'app-calendar',

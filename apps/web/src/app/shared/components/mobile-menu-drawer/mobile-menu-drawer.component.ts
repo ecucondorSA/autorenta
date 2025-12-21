@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuIconComponent } from '../menu-icon/menu-icon.component';
-import { AuthService } from '../../../core/services/auth.service';
-import { UserProfile } from '../../../core/services/profile.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { UserProfile } from '@core/services/auth/profile.service';
 
 interface MenuItem {
   label: string;

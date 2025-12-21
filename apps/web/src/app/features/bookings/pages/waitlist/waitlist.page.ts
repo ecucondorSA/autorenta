@@ -2,7 +2,7 @@ import {Component, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { WaitlistService, WaitlistEntry } from '../../../../core/services/waitlist.service';
+import { WaitlistService, WaitlistEntry } from '@core/services/bookings/waitlist.service';
 
 @Component({
   standalone: true,

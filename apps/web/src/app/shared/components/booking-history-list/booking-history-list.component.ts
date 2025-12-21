@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import type { Booking } from '../../../core/models';
 
 /**

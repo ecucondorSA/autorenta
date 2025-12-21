@@ -10,11 +10,11 @@ import { AiReputationCardComponent } from '../../shared/components/ai-reputation
 import { AiCarRecommendationComponent } from '../../shared/components/ai-car-recommendation/ai-car-recommendation.component';
 import { BookingHistoryListComponent } from '../../shared/components/booking-history-list/booking-history-list.component';
 import { ReferralBannerComponent } from '../../shared/components/referral-banner/referral-banner.component';
-import { AuthService } from '../../core/services/auth.service';
-import { MetaService } from '../../core/services/meta.service';
-import { VerificationStateService } from '../../core/services/verification-state.service';
-import { VerificationService } from '../../core/services/verification.service';
-import { ReviewsService } from '../../core/services/reviews.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { VerificationStateService } from '@core/services/verification/verification-state.service';
+import { VerificationService } from '@core/services/verification/verification.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
 import { KycStatus } from '../../core/models';
 
 /**

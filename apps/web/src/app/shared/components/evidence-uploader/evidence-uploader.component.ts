@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { LoggerService } from '../../../core/services/logger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 type UploadedEvidence = {
   name: string;

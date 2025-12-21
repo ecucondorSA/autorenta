@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -18,13 +18,13 @@ import { finalize } from 'rxjs/operators';
 
 // Core imports
 import { DatePipe } from '@angular/common';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { BonusMalusService } from '../../../core/services/bonus-malus.service';
-import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
-import { MercadoPagoPaymentService } from '../../../core/services/mercadopago-payment.service';
-import { ToastService } from '../../../core/services/toast.service';
-import { WalletService } from '../../../core/services/wallet.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
+import { MercadoPagoScriptService } from '@core/services/payments/mercado-pago-script.service';
+import { MercadoPagoPaymentService } from '@core/services/payments/mercadopago-payment.service';
+import { ToastService } from '@core/services/ui/toast.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { MercadopagoCardFormComponent } from '../../../shared/components/mercadopago-card-form/mercadopago-card-form.component';

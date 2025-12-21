@@ -1,9 +1,9 @@
-import { LoggerService } from '../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { MercadoPagoOAuthService } from '../../core/services/mercadopago-oauth.service';
+import { MercadoPagoOAuthService } from '@core/services/payments/mercadopago-oauth.service';
 
 @Component({
   selector: 'app-mercadopago-callback',

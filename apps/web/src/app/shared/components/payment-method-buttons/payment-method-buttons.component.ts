@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletService } from '../../../core/services/wallet.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { IconComponent } from '../icon/icon.component';
 

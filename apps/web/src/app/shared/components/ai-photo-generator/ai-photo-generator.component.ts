@@ -12,8 +12,8 @@ import {
   AiPhotoEnhancerService,
   EnhancedPhoto,
   GenerationMethod,
-} from '../../../core/services/ai-photo-enhancer.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+} from '@core/services/ai/ai-photo-enhancer.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
   selector: 'app-ai-photo-generator',

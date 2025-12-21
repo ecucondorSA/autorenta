@@ -3,7 +3,7 @@ import {Component, OnInit, inject, signal, computed,
 
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { AccountingService, IncomeStatement } from '../../../../core/services/accounting.service';
+import { AccountingService, IncomeStatement } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-income-statement',

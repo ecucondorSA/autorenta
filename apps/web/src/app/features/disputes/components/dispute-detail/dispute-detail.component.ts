@@ -3,12 +3,12 @@ import {Component, OnInit, inject, input, output, signal, computed,
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DisputesService, Dispute, DisputeEvidence, DisputeStatus } from '../../../../core/services/disputes.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
+import { DisputesService, Dispute, DisputeEvidence, DisputeStatus } from '@core/services/admin/disputes.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
-import { WalletService } from '../../../../core/services/wallet.service';
-import { ProfileService } from '../../../../core/services/profile.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { ProfileService } from '@core/services/auth/profile.service';
 
 @Component({
   selector: 'app-dispute-detail',

@@ -11,7 +11,7 @@ import {Component,
   signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { WalletService } from '../../../core/services/wallet.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 
 /**
  * WalletBalanceCardComponent

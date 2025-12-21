@@ -2,7 +2,7 @@ import {Component, OnInit, signal, computed, inject, PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 // Window Controls Overlay API types
 interface WindowControlsOverlay extends EventTarget {

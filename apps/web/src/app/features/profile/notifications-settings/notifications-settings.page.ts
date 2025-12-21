@@ -3,9 +3,9 @@ import {Component, inject, OnInit, PLATFORM_ID, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoggerService } from '../../../core/services/logger.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { NotificationPreferences, NotificationsService } from '../../../core/services/user-notifications.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { NotificationPreferences, NotificationsService } from '@core/services/infrastructure/user-notifications.service';
 
 /**
  * NotificationsSettingsPage

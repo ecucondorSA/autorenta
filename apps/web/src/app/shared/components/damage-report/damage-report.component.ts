@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import type { VideoDamageAnalysis } from '../../../core/services/video-damage-detection.service';
+import type { VideoDamageAnalysis } from '@core/services/verification/video-damage-detection.service';
 
 @Component({
   selector: 'app-damage-report',

@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 /**
  * Página de Check-in para locatarios

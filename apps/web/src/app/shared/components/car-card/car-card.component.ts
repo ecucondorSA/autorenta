@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -16,11 +16,11 @@ import {
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car } from '../../../core/models';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { RealtimePricingService } from '../../../core/services/realtime-pricing.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
+import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { RealtimePricingService } from '@core/services/payments/realtime-pricing.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { getCarImageUrl } from '../../utils/car-placeholder.util';
 
 @Component({

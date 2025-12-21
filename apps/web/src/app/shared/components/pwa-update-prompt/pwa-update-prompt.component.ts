@@ -2,7 +2,7 @@ import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { PwaService } from '../../../core/services/pwa.service';
+import { PwaService } from '@core/services/infrastructure/pwa.service';
 
 @Component({
   selector: 'app-pwa-update-prompt',

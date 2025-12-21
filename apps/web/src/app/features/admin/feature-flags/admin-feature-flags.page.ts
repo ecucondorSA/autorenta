@@ -17,7 +17,7 @@ import {
   FeatureFlag,
   FeatureFlagAuditLog,
 } from '../../../core/models/feature-flag.model';
-import { FeatureFlagService } from '../../../core/services/feature-flag.service';
+import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.service';
 
 @Component({
   selector: 'app-admin-feature-flags',

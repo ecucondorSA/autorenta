@@ -2,7 +2,7 @@ import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, BalanceSheet } from '../../../../core/services/accounting.service';
+import { AccountingService, BalanceSheet } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-balance-sheet',

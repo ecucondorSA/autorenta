@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from '@ang
 
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { PricingService } from '../../../core/services/pricing.service';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { PricingService } from '@core/services/payments/pricing.service';
+import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface PricingRule {
   id: string;

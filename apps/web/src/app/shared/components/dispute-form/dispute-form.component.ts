@@ -2,8 +2,8 @@ import {Component, input, output, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { DisputesService, DisputeKind } from '../../../core/services/disputes.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { DisputesService, DisputeKind } from '@core/services/admin/disputes.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { EvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
 
 @Component({

@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, signal,
   ChangeDetectionStrategy, inject} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';

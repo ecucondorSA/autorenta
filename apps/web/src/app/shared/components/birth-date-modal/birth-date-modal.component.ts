@@ -3,8 +3,8 @@ import {Component, EventEmitter, inject, Output, signal, DestroyRef, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ProfileService } from '../../../core/services/profile.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { calculateAge, validateBirthDate, getMin18BirthDate } from '../../utils/age-calculator';
 
 /**

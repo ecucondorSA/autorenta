@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { CarsService } from '../../../../core/services/cars.service';
-import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 export interface PhotoPreview {
   file: File;

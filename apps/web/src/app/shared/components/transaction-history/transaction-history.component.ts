@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
-import { WalletService } from '../../../core/services/wallet.service';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { BookingDepositStatus } from '../../../core/models';
 import { DepositStatusBadgeComponent } from '../deposit-status-badge/deposit-status-badge.component';
 

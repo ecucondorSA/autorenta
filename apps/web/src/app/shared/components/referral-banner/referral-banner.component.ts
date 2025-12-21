@@ -6,7 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReferralsService } from '../../../core/services/referrals.service';
+import { ReferralsService } from '@core/services/auth/referrals.service';
 
 /**
  * ReferralBannerComponent

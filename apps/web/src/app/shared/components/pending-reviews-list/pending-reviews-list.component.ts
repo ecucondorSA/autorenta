@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ReviewsService } from '../../../core/services/reviews.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
 
 @Component({
   selector: 'app-pending-reviews-list',

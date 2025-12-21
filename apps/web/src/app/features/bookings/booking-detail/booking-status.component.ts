@@ -2,7 +2,7 @@ import {Component, Input, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Booking } from '../../../core/models';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 
 /**
  * BookingStatusComponent

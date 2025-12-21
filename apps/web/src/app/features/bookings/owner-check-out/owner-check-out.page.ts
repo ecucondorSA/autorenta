@@ -5,10 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingConfirmationService } from '../../../core/services/booking-confirmation.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingConfirmationService } from '@core/services/bookings/booking-confirmation.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 
 /**

@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { Car, CarStatus } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { CarsService } from '../../../core/services/cars.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
 import { MpOnboardingModalComponent } from '../../../shared/components/mp-onboarding-modal/mp-onboarding-modal.component';
 

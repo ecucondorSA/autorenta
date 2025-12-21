@@ -11,12 +11,12 @@ import {AfterViewInit,
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { AddBankAccountParams, RequestWithdrawalParams } from '../../core/models/wallet.model';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { MetaService } from '../../core/services/meta.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
-import { ProfileService } from '../../core/services/profile.service';
-import { WalletService } from '../../core/services/wallet.service';
-import { WithdrawalService } from '../../core/services/withdrawal.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { WithdrawalService } from '@core/services/payments/withdrawal.service';
 import { BankAccountFormComponent } from '../../shared/components/bank-account-form/bank-account-form.component';
 import { BankAccountsListComponent } from '../../shared/components/bank-accounts-list/bank-accounts-list.component';
 

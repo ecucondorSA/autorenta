@@ -3,7 +3,7 @@ import {Component, OnInit, signal, computed, inject, effect,
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { VerificationService } from '../../core/services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 import {
   DocumentTypeConfig,
   getDocumentsByCategory,

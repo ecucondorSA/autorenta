@@ -20,7 +20,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
-import { AnalyticsService } from '../../../core/services/analytics.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
 
 export interface DateRange {
   from: string | null;

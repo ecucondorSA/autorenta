@@ -4,13 +4,13 @@ import { Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Booking } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
-} from '../../../core/services/marketplace-onboarding.service';
-import { Message, MessagesService } from '../../../core/services/messages.service';
+} from '@core/services/bookings/marketplace-onboarding.service';
+import { Message, MessagesService } from '@core/services/bookings/messages.service';
 import { DepositStatusBadgeComponent } from '../../../shared/components/deposit-status-badge/deposit-status-badge.component';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { formatDateRange } from '../../../shared/utils/date.utils';

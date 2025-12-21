@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {Component, Input, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
+import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
 import {
   UrgentRentalAvailability,
   UrgentRentalQuote,
   UrgentRentalService,
-} from '../../../core/services/urgent-rental.service';
+} from '@core/services/bookings/urgent-rental.service';
 
 @Component({
   selector: 'app-urgent-rental-banner',

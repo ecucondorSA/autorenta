@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
-import { WalletService } from '../../core/services/wallet.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { DepositPage } from './deposit.page';
 
 describe('DepositPage', () => {

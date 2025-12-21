@@ -7,8 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
-} from '../../../core/services/booking-confirmation.service';
-import { AuthService } from '../../../core/services/auth.service';
+} from '@core/services/bookings/booking-confirmation.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 /**
  * Componente de confirmación del propietario (locador)

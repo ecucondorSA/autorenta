@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
@@ -24,9 +24,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
-import { MapboxDirectionsService } from '../../../core/services/mapbox-directions.service';
-import { MapboxPreloaderService } from '../../../core/services/mapbox-preloader.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { MapboxDirectionsService } from '@core/services/geo/mapbox-directions.service';
+import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
 import { EnhancedMapTooltipComponent } from '../enhanced-map-tooltip/enhanced-map-tooltip.component';
 import type { BookingFormData } from '../map-booking-panel/map-booking-panel.component';
 import { MapBookingPanelComponent } from '../map-booking-panel/map-booking-panel.component';

@@ -1,19 +1,19 @@
-import { LoggerService } from '../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import type { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
 import type { ConversationDTO } from '../../core/repositories/messages.repository';
-import { AuthService } from '../../core/services/auth.service';
-import { Message, MessagesService } from '../../core/services/messages.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { Message, MessagesService } from '@core/services/bookings/messages.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import {
   ConnectionStatus,
   RealtimeConnectionService,
-} from '../../core/services/realtime-connection.service';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
-import { UnreadMessagesService } from '../../core/services/unread-messages.service';
+} from '@core/services/infrastructure/realtime-connection.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { UnreadMessagesService } from '@core/services/bookings/unread-messages.service';
 
 /**
  * 📬 Bandeja de entrada de mensajes

@@ -1,10 +1,10 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, Input, Output, EventEmitter, signal, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { StockPhotosService, StockPhoto } from '../../../core/services/stock-photos.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { StockPhotosService, StockPhoto } from '@core/services/ai/stock-photos.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
   selector: 'app-stock-photos-selector',

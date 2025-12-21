@@ -13,8 +13,8 @@ import { Subject, from, interval } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
 // Services
-import { BookingsService } from '../../../core/services/bookings.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { ToastService } from '@core/services/ui/toast.service';
 
 // Components
 import { ButtonComponent } from '../../../shared/components/button/button.component';

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { VideoDamageAnalysis, VideoDamageDetectionService } from '../../../core/services/video-damage-detection.service';
+import { VideoDamageAnalysis, VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
 import { DamageReportComponent } from '../../../shared/components/damage-report/damage-report.component';
 import { VideoInspectionRecorderComponent } from '../../../shared/components/video-inspection-recorder/video-inspection-recorder.component';
 

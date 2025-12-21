@@ -1,5 +1,5 @@
 import { Directive, effect, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
-import { FeatureFlagService } from '../../core/services/feature-flag.service';
+import { FeatureFlagService } from '@core/services/infrastructure/feature-flag.service';
 
 /**
  * Structural directive for conditionally rendering content based on feature flags

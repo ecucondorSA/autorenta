@@ -6,14 +6,14 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, firstValueFrom } from 'rxjs';
 
 // Services
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { FxService } from '../../../core/services/fx.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { MessagesService } from '../../../core/services/messages.service';
-import { WalletService } from '../../../core/services/wallet.service';
-import { PaymentAuthorizationService } from '../../../core/services/payment-authorization.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FxService } from '@core/services/payments/fx.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { MessagesService } from '@core/services/bookings/messages.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { PaymentAuthorizationService } from '@core/services/payments/payment-authorization.service';
 
 // Models
 import { Car } from '../../../core/models';

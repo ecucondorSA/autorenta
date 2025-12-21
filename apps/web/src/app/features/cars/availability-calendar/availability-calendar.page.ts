@@ -18,9 +18,9 @@ import type { Instance } from 'flatpickr/dist/types/instance';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
-} from '../../../core/services/car-availability.service';
-import { CarBlockingService } from '../../../core/services/car-blocking.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+} from '@core/services/cars/car-availability.service';
+import { CarBlockingService } from '@core/services/cars/car-blocking.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import {
   BlockDateModalComponent,
   BlockDateRequest,

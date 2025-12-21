@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 import { IconComponent } from '../icon/icon.component';
 
 interface RenterAnalysis {

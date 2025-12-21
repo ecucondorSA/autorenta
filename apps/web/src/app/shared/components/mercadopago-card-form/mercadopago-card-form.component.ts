@@ -12,7 +12,7 @@ import {Component,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { environment } from '@environment';
-import { MercadoPagoScriptService } from '../../../core/services/mercado-pago-script.service';
+import { MercadoPagoScriptService } from '@core/services/payments/mercado-pago-script.service';
 
 /**
  * MercadoPago Payment Brick SDK interfaces

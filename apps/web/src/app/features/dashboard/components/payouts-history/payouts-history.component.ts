@@ -1,10 +1,10 @@
-import { LoggerService } from '../../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { firstValueFrom } from 'rxjs';
-import { PayoutService, Payout } from '../../../../core/services/payout.service';
-import { AuthService } from '../../../../core/services/auth.service';
+import { PayoutService, Payout } from '@core/services/payments/payout.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 @Component({
   selector: 'app-payouts-history',

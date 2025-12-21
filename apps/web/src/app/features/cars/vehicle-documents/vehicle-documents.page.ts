@@ -8,10 +8,10 @@ import {
   VehicleDocument,
   VehicleDocumentKind,
   UploadDocumentParams,
-} from '../../../core/services/vehicle-documents.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
-import { CarsService } from '../../../core/services/cars.service';
+} from '@core/services/verification/vehicle-documents.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
+import { CarsService } from '@core/services/cars/cars.service';
 
 /**
  * VehicleDocumentsPage

@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { TranslateModule } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { AddBankAccountParams, BankAccountType } from '../../../core/models/wallet.model';
-import { ProfileService } from '../../../core/services/profile.service';
+import { ProfileService } from '@core/services/auth/profile.service';
 
 /**
  * Componente para agregar cuentas bancarias

@@ -1,8 +1,8 @@
 
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { ReviewsService } from '../../../../core/services/reviews.service';
-import { NotificationManagerService } from '../../../../core/services/notification-manager.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import type { Review } from '../../../../core/models';
 
 @Component({

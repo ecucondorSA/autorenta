@@ -2,9 +2,9 @@ import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { BonusMalusService, TierDisplay } from '../../../core/services/bonus-malus.service';
+import { BonusMalusService, TierDisplay } from '@core/services/payments/bonus-malus.service';
 import type { UserBonusMalus, BonusMalusDisplay } from '../../../core/models';
-import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
+import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
 
 @Component({
   selector: 'app-bonus-malus-card',

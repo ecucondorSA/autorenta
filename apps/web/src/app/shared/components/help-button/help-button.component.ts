@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { GuidedTourService } from '../../../core/guided-tour/guided-tour.service';
 import { TourId } from '../../../core/guided-tour/interfaces/tour-definition.interface';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 @Component({

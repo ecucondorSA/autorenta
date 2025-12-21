@@ -7,7 +7,7 @@ import {
   AccountingService,
   AccountingDashboard,
   FinancialHealth,
-} from '../../../../core/services/accounting.service';
+} from '@core/services/payments/accounting.service';
 import { KpiCardComponent } from '../components/kpi-card.component';
 
 @Component({

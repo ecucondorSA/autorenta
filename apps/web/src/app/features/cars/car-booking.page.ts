@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
-import { BookingsService } from '../../core/services/bookings.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { CalendarComponent } from '../../shared/calendar.component';
 
 @Component({

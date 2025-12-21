@@ -8,9 +8,9 @@ import {
   input,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GeminiService } from '../../../core/services/gemini.service';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import { GeminiService } from '@core/services/ai/gemini.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
 import { ProfileStore } from '../../../core/stores/profile.store';
 import type { ReputationAnalysis } from '../../../core/models/gemini.model';
 

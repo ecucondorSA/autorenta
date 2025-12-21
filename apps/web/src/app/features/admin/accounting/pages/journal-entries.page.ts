@@ -2,7 +2,7 @@ import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, JournalEntry } from '../../../../core/services/accounting.service';
+import { AccountingService, JournalEntry } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-journal-entries',

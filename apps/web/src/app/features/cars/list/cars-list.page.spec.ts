@@ -1,13 +1,13 @@
 import { CUSTOM_ELEMENTS_SCHEMA, PLATFORM_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CarsCompareService } from '../../../core/services/cars-compare.service';
-import { CarsService } from '../../../core/services/cars.service';
-import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
-import { LocationService } from '../../../core/services/location.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { MetaService } from '../../../core/services/meta.service';
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
+import { CarsCompareService } from '@core/services/cars/cars-compare.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { LocationService } from '@core/services/geo/location.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { CarsListPage } from './cars-list.page';
 
 describe('CarsListPage', () => {

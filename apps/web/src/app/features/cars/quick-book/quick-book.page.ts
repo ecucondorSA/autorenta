@@ -13,10 +13,10 @@ import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import { CarChatComponent } from '../../messages/components/car-chat.component';
 
 // Services
-import { AnalyticsService } from '../../../core/services/analytics.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingInitiationService } from '../../../core/services/booking-initiation.service';
-import { CarsService } from '../../../core/services/cars.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingInitiationService } from '@core/services/bookings/booking-initiation.service';
+import { CarsService } from '@core/services/cars/cars.service';
 
 @Component({
   standalone: true,

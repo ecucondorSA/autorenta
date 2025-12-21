@@ -1,7 +1,7 @@
 import { Component, signal, inject, output, input, ViewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { VideoDamageDetectionService } from '../../../core/services/video-damage-detection.service';
+import { VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
 
 /**
  * Video Inspection Recorder Component

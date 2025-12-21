@@ -13,9 +13,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { debounceTime, distinctUntilChanged, filter, Subject, takeUntil } from 'rxjs';
-import { LocationService } from '../../core/services/location.service';
-import { ProfileService } from '../../core/services/profile.service';
-import { GeocodingService } from '../../core/services/geocoding.service';
+import { LocationService } from '@core/services/geo/location.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
 import { UserProfile } from '../../core/models';
 import {
   LocationMapPickerComponent,

@@ -8,9 +8,9 @@ import {
   Dispute,
   DisputeEvidence,
   DisputeStatus,
-} from '../../../core/services/disputes.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service'; // NEW: Import toast service
+} from '@core/services/admin/disputes.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service'; // NEW: Import toast service
 
 @Component({
   selector: 'app-admin-disputes',

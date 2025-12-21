@@ -4,7 +4,7 @@ import {Component, computed, inject, signal,
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { FxService } from '../../../core/services/fx.service';
+import { FxService } from '@core/services/payments/fx.service';
 
 /**
  * Super Calculadora de Ganancias - AutoRenta

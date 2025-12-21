@@ -7,7 +7,7 @@ import {
   AccountingService,
   LedgerEntry,
   PaginatedResult,
-} from '../../../../core/services/accounting.service';
+} from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-ledger',

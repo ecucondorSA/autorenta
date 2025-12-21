@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { signal, WritableSignal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { WalletService } from '../../core/services/wallet.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
-import { WithdrawalService } from '../../core/services/withdrawal.service';
-import { ProfileService } from '../../core/services/profile.service';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { MetaService } from '../../core/services/meta.service';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { WithdrawalService } from '@core/services/payments/withdrawal.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { WalletPage } from './wallet.page';
 
 describe('WalletPage', () => {

@@ -1,12 +1,12 @@
-import { LoggerService } from '../../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
-import { BookingsService } from '../../../../core/services/bookings.service';
-import { DriverProfileService } from '../../../../core/services/driver-profile.service';
-import { PaymentGatewayFactory } from '../../../../core/services/payment-gateway.factory';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { DriverProfileService } from '@core/services/auth/driver-profile.service';
+import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
 import { PaymentProviderSelectorComponent } from '../../../../shared/components/payment-provider-selector/payment-provider-selector.component';
 import { PayPalButtonComponent } from '../../../../shared/components/paypal-button/paypal-button.component';
 

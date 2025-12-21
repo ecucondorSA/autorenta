@@ -10,9 +10,9 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { Booking } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import {
   BookingPricingBreakdownComponent,

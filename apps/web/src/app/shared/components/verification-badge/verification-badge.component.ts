@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@a
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import type { VerificationStatus } from '../../../core/models';
-import { VerificationService } from '../../../core/services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 
 @Component({
   standalone: true,

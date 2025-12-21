@@ -9,21 +9,21 @@ import { Booking, BookingExtensionRequest } from '../../../core/models';
 import { TrafficInfraction } from '../../admin/traffic-infractions/admin-traffic-infractions.page'; // NEW
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { CLAIM_STATUS_LABELS, InsuranceClaim } from '../../../core/models/insurance.model';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import {
   BookingConfirmationService,
   ConfirmAndReleaseResponse,
-} from '../../../core/services/booking-confirmation.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { ExchangeRateService } from '../../../core/services/exchange-rate.service';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { InsuranceService } from '../../../core/services/insurance.service';
-import { MetaService } from '../../../core/services/meta.service';
-import { PaymentsService } from '../../../core/services/payments.service';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { LoggerService } from '../../../core/services/logger.service';
-import { TrafficInfractionsService } from '../../../core/services/traffic-infractions.service'; // NEW
-import { BookingFlowService, NextStep } from '../../../core/services/booking-flow.service';
+} from '@core/services/bookings/booking-confirmation.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { ExchangeRateService } from '@core/services/payments/exchange-rate.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { InsuranceService } from '@core/services/bookings/insurance.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { TrafficInfractionsService } from '@core/services/infrastructure/traffic-infractions.service'; // NEW
+import { BookingFlowService, NextStep } from '@core/services/bookings/booking-flow.service';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
@@ -47,7 +47,7 @@ import {
   BookingOpsService,
   BookingPaymentRow,
   BookingPricingRow,
-} from '../../../core/services/booking-ops.service';
+} from '@core/services/bookings/booking-ops.service';
 import { ReportTrafficFineComponent } from '../../../shared/components/report-traffic-fine/report-traffic-fine.component'; // NEW
 import { ReportOwnerNoShowComponent } from '../../../shared/components/report-owner-no-show/report-owner-no-show.component'; // NEW
 import { ReportRenterNoShowComponent } from '../../../shared/components/report-renter-no-show/report-renter-no-show.component'; // NEW

@@ -1,7 +1,7 @@
 import {Component, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { injectSupabase } from '@app/core/services/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 interface CoverageFund {
   id: string;

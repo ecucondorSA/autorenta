@@ -4,8 +4,8 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { BonusProtectorPurchaseComponent } from '../../shared/components/bonus-protector-purchase/bonus-protector-purchase.component';
-import { MetaService } from '../../core/services/meta.service';
-import { WalletService } from '../../core/services/wallet.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 
 /**
  * ProtectionsPage

@@ -1,4 +1,4 @@
-import { LoggerService } from '../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -19,13 +19,13 @@ import { Router, RouterModule } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { Car } from '../../core/models';
-import { CarMapLocation } from '../../core/services/car-locations.service';
-import { CarsService } from '../../core/services/cars.service';
-import { DistanceCalculatorService } from '../../core/services/distance-calculator.service';
-import { GeocodingResult, GeocodingService } from '../../core/services/geocoding.service';
-import { LocationService } from '../../core/services/location.service';
-import { injectSupabase } from '../../core/services/supabase-client.service';
-import { UrgentRentalService } from '../../core/services/urgent-rental.service';
+import { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { GeocodingResult, GeocodingService } from '@core/services/geo/geocoding.service';
+import { LocationService } from '@core/services/geo/location.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
 import { FilterState } from '../../shared/components/map-filters/map-filters.component';
 
 // QuickFilter interface defined locally (component was removed)
@@ -43,11 +43,11 @@ interface FabAction {
   color?: 'primary' | 'secondary';
 }
 
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { BookingsService } from '../../core/services/bookings.service';
-import { BreakpointService } from '../../core/services/breakpoint.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
-import { TikTokEventsService } from '../../core/services/tiktok-events.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 
 import { HdriBackgroundComponent } from '../../shared/components/hdri-background/hdri-background.component';
 import {
@@ -55,11 +55,11 @@ import {
   DateRangePickerComponent,
 } from '../../shared/components/date-range-picker/date-range-picker.component';
 
-import { AssetPreloaderService } from '../../core/services/asset-preloader.service';
-import { CarLatestLocation, CarLocationService } from '../../core/services/car-location.service';
-import { MapboxPreloaderService } from '../../core/services/mapbox-preloader.service';
-import { SeoSchemaService } from '../../core/services/seo-schema.service';
-import { ThemeService } from '../../core/services/theme.service';
+import { AssetPreloaderService } from '@core/services/ui/asset-preloader.service';
+import { CarLatestLocation, CarLocationService } from '@core/services/geo/car-location.service';
+import { MapboxPreloaderService } from '@core/services/geo/mapbox-preloader.service';
+import { SeoSchemaService } from '@core/services/ui/seo-schema.service';
+import { ThemeService } from '@core/services/ui/theme.service';
 
 export interface LatLngBoundsLiteral {
   north: number;

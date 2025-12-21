@@ -2,7 +2,7 @@ import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
 import type { UserBonusMalus, AutorentaTier } from '../../../core/models';
 
 interface LevelRequirement {

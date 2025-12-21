@@ -7,8 +7,8 @@ import {Component,
   output,
   signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { DamageItem, SettlementService } from '../../../core/services/settlement.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { DamageItem, SettlementService } from '@core/services/payments/settlement.service';
 
 @Component({
   selector: 'app-damage-comparison',

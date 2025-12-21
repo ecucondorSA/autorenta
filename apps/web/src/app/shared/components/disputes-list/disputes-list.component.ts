@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output, EventEmitter, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { DisputesService, Dispute, DisputeEvidence } from '../../../core/services/disputes.service';
+import { DisputesService, Dispute, DisputeEvidence } from '@core/services/admin/disputes.service';
 import { DisputeDetailComponent } from '../../../features/disputes/components/dispute-detail/dispute-detail.component';
 
 @Component({

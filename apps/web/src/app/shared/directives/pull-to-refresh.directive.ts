@@ -10,7 +10,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HapticFeedbackService } from '../../core/services/haptic-feedback.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**
  * PullToRefreshDirective - Native-like pull to refresh

@@ -3,7 +3,7 @@ import {Component, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReviewsService } from '../../../core/services/reviews.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
 
 interface PendingReview {
   booking_id: string;

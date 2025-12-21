@@ -16,18 +16,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import type { WalletBalance } from '../../core/models/wallet.model';
-import { AuthService } from '../../core/services/auth.service';
-import { BookingsService } from '../../core/services/bookings.service';
-import { CarsService } from '../../core/services/cars.service';
-import { GeocodingService } from '../../core/services/geocoding.service';
-import { LocationData, LocationService } from '../../core/services/location.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
+import { LocationData, LocationService } from '@core/services/geo/location.service';
 import {
   ChatContext,
   ChatMessage,
   RentarfastAgentService,
-} from '../../core/services/rentarfast-agent.service';
-import { VerificationService } from '../../core/services/verification.service';
-import { WalletService } from '../../core/services/wallet.service';
+} from '@core/services/ai/rentarfast-agent.service';
+import { VerificationService } from '@core/services/verification/verification.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { ProfileStore } from '../../core/stores/profile.store';
 
 // Web Speech API types

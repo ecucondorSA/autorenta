@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CarCardComponent } from '../../../shared/components/car-card/car-card.component';
-import { CarsService } from '../../../core/services/cars.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { Car } from '../../../core/models';
 
 @Component({

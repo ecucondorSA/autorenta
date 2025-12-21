@@ -1,5 +1,5 @@
 import { Directive, HostListener, inject, Input } from '@angular/core';
-import { HapticFeedbackService } from '../../core/services/haptic-feedback.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**
  * TouchFeedbackDirective

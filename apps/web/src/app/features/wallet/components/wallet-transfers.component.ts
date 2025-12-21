@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { WalletLedgerService } from '../../../core/services/wallet-ledger.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { WalletLedgerService } from '@core/services/payments/wallet-ledger.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 @Component({
   selector: 'app-wallet-transfers',

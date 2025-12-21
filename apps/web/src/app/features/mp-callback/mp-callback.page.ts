@@ -3,7 +3,7 @@ import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { MarketplaceOnboardingService } from '../../core/services/marketplace-onboarding.service';
+import { MarketplaceOnboardingService } from '@core/services/bookings/marketplace-onboarding.service';
 
 /**
  * Página de callback para OAuth de Mercado Pago

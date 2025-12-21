@@ -1,14 +1,14 @@
-import { LoggerService } from '../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { AnalyticsService } from '../../core/services/analytics.service';
-import { WalletService } from '../../core/services/wallet.service';
-import { injectSupabase } from '../../core/services/supabase-client.service';
-import { NotificationManagerService } from '../../core/services/notification-manager.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { WalletService } from '@core/services/payments/wallet.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 /**
  * DepositPage

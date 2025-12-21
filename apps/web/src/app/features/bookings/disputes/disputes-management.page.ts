@@ -9,11 +9,11 @@ import {
   Dispute,
   DisputeEvidence,
   DisputeKind,
-} from '../../../core/services/disputes.service';
-import { BookingsService } from '../../../core/services/bookings.service';
+} from '@core/services/admin/disputes.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { Booking } from '../../../core/models';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 @Component({
   selector: 'app-disputes-management',

@@ -3,7 +3,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import { HdriBackgroundComponent } from '../../../shared/components/hdri-background/hdri-background.component';
 
 @Component({

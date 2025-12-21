@@ -3,9 +3,9 @@ import {Component, OnInit, inject, signal, effect, PLATFORM_ID,
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { NotificationSoundService } from '../../../core/services/notification-sound.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { NotificationSoundService } from '@core/services/infrastructure/notification-sound.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 interface NotificationPreference {
   type: string;

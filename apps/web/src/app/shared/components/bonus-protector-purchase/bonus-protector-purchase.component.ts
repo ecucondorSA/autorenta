@@ -3,8 +3,8 @@ import {Component, computed, inject, OnInit, signal,
 
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { BonusProtectorService } from '../../../core/services/bonus-protector.service';
-import { DriverProfileService } from '../../../core/services/driver-profile.service';
+import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
+import { DriverProfileService } from '@core/services/auth/driver-profile.service';
 
 /**
  * BonusProtectorPurchaseComponent

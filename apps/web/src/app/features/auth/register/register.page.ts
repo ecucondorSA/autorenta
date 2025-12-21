@@ -3,8 +3,8 @@ import { NgOptimizedImage } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { AuthService } from '../../../core/services/auth.service';
-import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({

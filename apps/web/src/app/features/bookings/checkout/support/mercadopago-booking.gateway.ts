@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SupabaseClientService } from '../../../../core/services/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 export interface MercadoPagoPreferenceResponse {
   preferenceId: string;

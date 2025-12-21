@@ -10,8 +10,8 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { FaceVerificationService } from '../../../core/services/face-verification.service';
-import { IdentityLevelService } from '../../../core/services/identity-level.service';
+import { FaceVerificationService } from '@core/services/verification/face-verification.service';
+import { IdentityLevelService } from '@core/services/auth/identity-level.service';
 
 @Component({
   standalone: true,

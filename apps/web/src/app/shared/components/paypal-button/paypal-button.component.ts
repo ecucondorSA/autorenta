@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {AfterViewInit,
   Component,
@@ -11,7 +11,7 @@ import {AfterViewInit,
   PLATFORM_ID,
   ChangeDetectionStrategy} from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { PayPalBookingGatewayService } from '../../../core/services/paypal-booking-gateway.service';
+import { PayPalBookingGatewayService } from '@core/services/payments/paypal-booking-gateway.service';
 
 // PayPal SDK types
 interface PayPalWindow extends Window {

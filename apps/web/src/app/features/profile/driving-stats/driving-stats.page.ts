@@ -2,13 +2,13 @@ import {Component, inject, signal, computed, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TelemetryService } from '../../../core/services/telemetry.service';
+import { TelemetryService } from '@core/services/infrastructure/telemetry.service';
 import type {
   TelemetryHistory,
   TelemetryAverage,
   TelemetryInsights,
-} from '../../../core/services/telemetry.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+} from '@core/services/infrastructure/telemetry.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 /**
  * DrivingStatsPage

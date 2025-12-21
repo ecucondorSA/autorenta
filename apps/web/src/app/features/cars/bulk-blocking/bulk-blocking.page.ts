@@ -4,8 +4,8 @@ import {Component, inject, OnInit, signal,
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Car } from '../../../core/models';
-import { CarBlockingService } from '../../../core/services/car-blocking.service';
-import { CarsService } from '../../../core/services/cars.service';
+import { CarBlockingService } from '@core/services/cars/car-blocking.service';
+import { CarsService } from '@core/services/cars/cars.service';
 
 @Component({
   selector: 'app-bulk-blocking',

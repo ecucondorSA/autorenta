@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {
   Component,
   Input,
@@ -15,12 +15,12 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
-import { CarAvailabilityService } from '../../../core/services/car-availability.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { PricingService } from '../../../core/services/pricing.service';
-import { ProfileService } from '../../../core/services/profile.service';
-import { NavigationService } from '../../../core/services/navigation.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { PricingService } from '@core/services/payments/pricing.service';
+import { ProfileService } from '@core/services/auth/profile.service';
+import { NavigationService } from '@core/services/ui/navigation.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 import { getAgeFromProfile } from '../../utils/age-calculator';
 import { BirthDateModalComponent } from '../birth-date-modal/birth-date-modal.component';

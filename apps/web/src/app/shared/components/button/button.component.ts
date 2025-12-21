@@ -1,7 +1,7 @@
 
 import {Component, computed, inject, input, output,
   ChangeDetectionStrategy} from '@angular/core';
-import { HapticFeedbackService } from '../../../core/services/haptic-feedback.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**
  * ButtonComponent - Sistema de botones unificado Mobile-First

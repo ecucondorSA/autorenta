@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { VerificationService } from '../../../core/services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 
 interface DocumentConfig {
   id: string;

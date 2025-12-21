@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { Booking, BookingTerms, Car, LegalAnswer, VehicleInfo } from '../../../core/models';
-import { GeminiService } from '../../../core/services/gemini.service';
+import { GeminiService } from '@core/services/ai/gemini.service';
 
 /**
  * Panel de Asistente Legal IA

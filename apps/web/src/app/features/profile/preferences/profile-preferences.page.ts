@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, inject, OnInit, OnDestroy, signal, effect,
   ChangeDetectionStrategy} from '@angular/core';
 

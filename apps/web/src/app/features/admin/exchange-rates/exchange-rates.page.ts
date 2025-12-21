@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {Component, computed, OnDestroy, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 interface ExchangeRate {
   id: string;

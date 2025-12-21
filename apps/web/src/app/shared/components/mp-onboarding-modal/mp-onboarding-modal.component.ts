@@ -2,11 +2,11 @@
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '@core/services/auth/auth.service';
 import {
   MarketplaceOnboardingService,
   MarketplaceStatus,
-} from '../../../core/services/marketplace-onboarding.service';
+} from '@core/services/bookings/marketplace-onboarding.service';
 
 /**
  * Modal para onboarding de plataformas de pago

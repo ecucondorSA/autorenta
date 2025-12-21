@@ -10,8 +10,8 @@ import {Component,
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaymentProvider } from '../../../core/interfaces/payment-gateway.interface';
-import { PaymentGatewayFactory } from '../../../core/services/payment-gateway.factory';
-import { FxService } from '../../../core/services/fx.service';
+import { PaymentGatewayFactory } from '@core/services/payments/payment-gateway.factory';
+import { FxService } from '@core/services/payments/fx.service';
 
 /**
  * Payment Provider Selector Component

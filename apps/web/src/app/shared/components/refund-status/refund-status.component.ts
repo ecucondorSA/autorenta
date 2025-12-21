@@ -1,7 +1,7 @@
 
 import {Component, Input, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { RefundService } from '../../../core/services/refund.service';
+import { RefundService } from '@core/services/payments/refund.service';
 
 @Component({
   selector: 'app-refund-status',

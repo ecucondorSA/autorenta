@@ -2,14 +2,14 @@
 import {Component, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CarsService } from '../../core/services/cars.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
-} from '../../core/services/car-availability.service';
+} from '@core/services/cars/car-availability.service';
 import { Car } from '../../core/models';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-import { SupabaseClientService } from '../../core/services/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 interface CalendarDay {
   day: number | null;

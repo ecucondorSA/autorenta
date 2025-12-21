@@ -6,7 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import {
   NotificationsService,
   NotificationItem,
-} from '../../core/services/user-notifications.service';
+} from '@core/services/infrastructure/user-notifications.service';
 
 type ExtendedNotificationItem = NotificationItem & { dbType?: string };
 

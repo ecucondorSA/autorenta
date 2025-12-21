@@ -3,7 +3,7 @@ import {Component, OnInit, signal, inject,
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, PeriodClosure } from '../../../../core/services/accounting.service';
+import { AccountingService, PeriodClosure } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-period-closures',

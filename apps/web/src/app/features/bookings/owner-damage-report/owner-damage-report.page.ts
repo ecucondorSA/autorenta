@@ -6,10 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
 import { Booking } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Owner Damage Report Page

@@ -15,7 +15,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter, fromEvent, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UnreadMessagesService } from '../../../core/services/unread-messages.service';
+import { UnreadMessagesService } from '@core/services/bookings/unread-messages.service';
 import { NavIconComponent } from '../nav-icon/nav-icon.component';
 
 interface NavItem {

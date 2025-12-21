@@ -4,7 +4,7 @@ import {Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, input,
 import {
   RiskCalculation,
   RiskCalculatorService,
-} from '../../../core/services/risk-calculator.service';
+} from '@core/services/verification/risk-calculator.service';
 
 @Component({
   selector: 'app-risk-calculator-viewer',

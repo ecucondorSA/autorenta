@@ -7,7 +7,7 @@ import {
   DisputesService,
   Dispute,
   DisputeStatus,
-} from '../../../../core/services/disputes.service';
+} from '@core/services/admin/disputes.service';
 import { EvidenceUploaderComponent } from '../../components/evidence-uploader/evidence-uploader.component'; // Importar el uploader
 
 @Component({

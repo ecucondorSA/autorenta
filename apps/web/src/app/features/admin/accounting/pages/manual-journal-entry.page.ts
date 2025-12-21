@@ -3,7 +3,7 @@ import {Component, OnInit, signal, inject,
 
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, AccountingAccount } from '../../../../core/services/accounting.service';
+import { AccountingService, AccountingAccount } from '@core/services/payments/accounting.service';
 
 interface JournalEntryLine {
   account_code: string;

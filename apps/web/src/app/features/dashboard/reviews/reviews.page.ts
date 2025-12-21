@@ -2,8 +2,8 @@
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { PendingReviewsListComponent } from '../../../shared/components/pending-reviews-list/pending-reviews-list.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 

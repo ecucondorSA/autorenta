@@ -3,7 +3,7 @@ import {Component, OnInit, signal, computed, inject,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { RouterLink } from '@angular/router';
-import { DashboardService } from '../../../core/services/dashboard.service';
+import { DashboardService } from '@core/services/admin/dashboard.service';
 import { MoneyPipe } from '../../../shared/pipes/money.pipe';
 import type { DashboardStats } from '../../../core/models/dashboard.model';
 

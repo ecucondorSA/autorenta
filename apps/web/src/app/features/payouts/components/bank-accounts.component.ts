@@ -3,7 +3,7 @@ import {Component, EventEmitter, inject, Input, OnInit, Output, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
-import { BankAccount, PayoutService } from '../../../core/services/payout.service';
+import { BankAccount, PayoutService } from '@core/services/payments/payout.service';
 
 /**
  * Bank Accounts Component

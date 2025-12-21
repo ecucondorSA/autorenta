@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import {
   AccountingService,
   WalletReconciliation,
-} from '../../../../core/services/accounting.service';
+} from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-reconciliation',

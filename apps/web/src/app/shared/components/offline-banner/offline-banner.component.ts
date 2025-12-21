@@ -1,7 +1,7 @@
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { OfflineManagerService } from '../../../core/services/offline-manager.service';
+import { OfflineManagerService } from '@core/services/infrastructure/offline-manager.service';
 
 /**
  * P1-024 FIX: Offline Banner Component

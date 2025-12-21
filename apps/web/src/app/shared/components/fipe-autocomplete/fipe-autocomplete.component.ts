@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, signal, computed, OnChanges, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { CarBrandsService } from '../../../core/services/car-brands.service';
+import { CarBrandsService } from '@core/services/cars/car-brands.service';
 
 export interface FipeAutocompleteOption {
   code: string;

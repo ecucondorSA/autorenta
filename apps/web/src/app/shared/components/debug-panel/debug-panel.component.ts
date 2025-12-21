@@ -2,7 +2,7 @@ import {Component, inject, signal, computed, HostListener,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { DebugService, DebugLogEntry } from '../../../core/services/debug.service';
+import { DebugService, DebugLogEntry } from '@core/services/admin/debug.service';
 
 /**
  * DebugPanelComponent - Floating debug panel for AutoRenta

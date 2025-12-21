@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { GestureService } from '../../core/services/gesture.service';
-import { HapticFeedbackService } from '../../core/services/haptic-feedback.service';
+import { GestureService } from '@core/services/ui/gesture.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 
 /**
  * SwipeBackDirective - iOS-style swipe back navigation

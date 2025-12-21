@@ -28,11 +28,11 @@ import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interce
 import { httpCacheInterceptor } from './core/interceptors/http-cache.interceptor';
 import { httpErrorInterceptor } from './core/interceptors/http-error.interceptor';
 import { SupabaseAuthInterceptor } from './core/interceptors/supabase-auth.interceptor';
-import { DebugService } from './core/services/debug.service';
-import { LoggerService } from './core/services/logger.service';
-import { GlobalErrorHandler } from './core/services/global-error-handler';
-import { PerformanceMonitoringService } from './core/services/performance-monitoring.service';
-import { SupabaseClientService } from './core/services/supabase-client.service';
+import { DebugService } from '@core/services/admin/debug.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { GlobalErrorHandler } from '@core/services/infrastructure/global-error-handler';
+import { PerformanceMonitoringService } from '@core/services/infrastructure/performance-monitoring.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import { routeReuseStrategyProvider } from './core/strategies/custom-route-reuse.strategy';
 
 /**

@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, inject, computed,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { FavoritesService } from '../../../core/services/favorites.service';
+import { FavoritesService } from '@core/services/cars/favorites.service';
 
 @Component({
   selector: 'app-favorite-button',

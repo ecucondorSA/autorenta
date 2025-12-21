@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@a
 
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { CarsCompareService } from '../../../core/services/cars-compare.service';
+import { CarsCompareService } from '@core/services/cars/cars-compare.service';
 import { ComparisonRow } from '../../../core/models';
 
 @Component({

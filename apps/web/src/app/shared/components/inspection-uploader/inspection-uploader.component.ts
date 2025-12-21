@@ -16,8 +16,8 @@ import {
   InspectionPhoto,
   InspectionStage,
 } from '../../../core/models/fgo-v1-1.model';
-import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 import {
   validateFiles,
   allFilesValid,

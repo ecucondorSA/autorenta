@@ -13,7 +13,7 @@ import {AfterViewInit,
 import { TranslateModule } from '@ngx-translate/core';
 import type mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
-import { GeocodingService } from '../../../core/services/geocoding.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
 
 // Type import (doesn't increase bundle size)
 

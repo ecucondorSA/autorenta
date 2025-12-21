@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 @Component({
   selector: 'app-insurance-page',

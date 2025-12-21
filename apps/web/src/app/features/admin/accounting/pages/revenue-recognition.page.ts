@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import {
   AccountingService,
   RevenueRecognition,
-} from '../../../../core/services/accounting.service';
+} from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-revenue-recognition',

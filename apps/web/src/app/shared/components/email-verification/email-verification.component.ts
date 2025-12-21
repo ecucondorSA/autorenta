@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SUCCESS_MESSAGE_DURATION_MS } from '../../../core/constants/timing.constants';
-import { EmailVerificationService } from '../../../core/services/email-verification.service';
+import { EmailVerificationService } from '@core/services/auth/email-verification.service';
 
 @Component({
   standalone: true,

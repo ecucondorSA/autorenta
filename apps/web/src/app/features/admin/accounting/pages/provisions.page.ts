@@ -2,7 +2,7 @@ import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
-import { AccountingService, ProvisionDetail } from '../../../../core/services/accounting.service';
+import { AccountingService, ProvisionDetail } from '@core/services/payments/accounting.service';
 
 @Component({
   selector: 'app-provisions',

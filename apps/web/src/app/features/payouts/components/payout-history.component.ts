@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import {Component, inject, Input, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { take } from 'rxjs/operators';
-import { Payout, PayoutService } from '../../../core/services/payout.service';
+import { Payout, PayoutService } from '@core/services/payments/payout.service';
 
 /**
  * Payout History Component

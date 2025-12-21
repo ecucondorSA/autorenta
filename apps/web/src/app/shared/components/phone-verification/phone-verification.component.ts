@@ -11,7 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { SUCCESS_MESSAGE_DURATION_MS } from '../../../core/constants/timing.constants';
-import { PhoneVerificationService } from '../../../core/services/phone-verification.service';
+import { PhoneVerificationService } from '@core/services/auth/phone-verification.service';
 
 @Component({
   standalone: true,

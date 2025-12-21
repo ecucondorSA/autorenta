@@ -3,7 +3,7 @@ import {Component, OnInit, inject, signal, computed,
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ReviewsService } from '../../../core/services/reviews.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
 import { Review } from '../../../core/models';
 
 interface ModerationStatusOption {

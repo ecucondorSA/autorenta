@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { HapticFeedbackService } from '../../core/services/haptic-feedback.service';
+import { HapticFeedbackService } from '@core/services/ui/haptic-feedback.service';
 import { PullToRefreshDirective } from './pull-to-refresh.directive';
 
 /**

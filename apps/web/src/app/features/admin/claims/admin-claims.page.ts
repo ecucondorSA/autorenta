@@ -3,7 +3,7 @@ import {Component, OnInit, inject, signal, computed,
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { InsuranceService } from '../../../core/services/insurance.service';
+import { InsuranceService } from '@core/services/bookings/insurance.service';
 import {
   InsuranceClaim,
   ClaimStatus,

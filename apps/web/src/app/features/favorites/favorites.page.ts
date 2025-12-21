@@ -2,8 +2,8 @@
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { FavoritesService } from '../../core/services/favorites.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { FavoritesService } from '@core/services/cars/favorites.service';
 import { FavoriteButtonComponent } from '../../shared/components/favorite-button/favorite-button.component';
 
 /**

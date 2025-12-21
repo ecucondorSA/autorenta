@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -19,17 +19,17 @@ import { combineLatest, from, fromEvent, of, Subject } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
 
 // Services
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
-import { CarsService } from '../../../core/services/cars.service';
-import { DistanceCalculatorService } from '../../../core/services/distance-calculator.service';
-import { DynamicPricingService } from '../../../core/services/dynamic-pricing.service';
-import { FxService } from '../../../core/services/fx.service';
-import { LocationService } from '../../../core/services/location.service';
-import { MetaService } from '../../../core/services/meta.service';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { injectSupabase } from '../../../core/services/supabase-client.service';
-import { WalletService } from '../../../core/services/wallet.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { DynamicPricingService } from '@core/services/payments/dynamic-pricing.service';
+import { FxService } from '@core/services/payments/fx.service';
+import { LocationService } from '@core/services/geo/location.service';
+import { MetaService } from '@core/services/ui/meta.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 
 // Models
 import { Car, CarPhoto, CarStats, Review } from '../../../core/models';
@@ -37,7 +37,7 @@ import { calculateCreditSecurityUsd } from '../../../core/models/booking-detail-
 import { BookingPaymentMethod } from '../../../core/models/wallet.model';
 
 // Components
-import { RiskCalculation, RiskCalculatorService } from '../../../core/services/risk-calculator.service';
+import { RiskCalculation, RiskCalculatorService } from '@core/services/verification/risk-calculator.service';
 import { AiChecklistPanelComponent } from '../../../shared/components/ai-checklist-panel/ai-checklist-panel.component';
 import { AiLegalPanelComponent } from '../../../shared/components/ai-legal-panel/ai-legal-panel.component';
 import { AiReputationCardComponent } from '../../../shared/components/ai-reputation-card/ai-reputation-card.component';
@@ -72,11 +72,11 @@ export interface BreadcrumbItem {
 }
 
 // Services
-import { AnalyticsService } from '../../../core/services/analytics.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { TikTokEventsService } from '../../../core/services/tiktok-events.service';
-import { UrgentRentalService } from '../../../core/services/urgent-rental.service';
-import { WaitlistService } from '../../../core/services/waitlist.service';
+import { AnalyticsService } from '@core/services/infrastructure/analytics.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
+import { TikTokEventsService } from '@core/services/infrastructure/tiktok-events.service';
+import { UrgentRentalService } from '@core/services/bookings/urgent-rental.service';
+import { WaitlistService } from '@core/services/bookings/waitlist.service';
 
 interface CarDetailState {
   car: Car | null;

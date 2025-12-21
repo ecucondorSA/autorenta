@@ -2,8 +2,8 @@ import {Component, OnInit, inject, signal, computed,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminService } from '../../../core/services/admin.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { AdminService } from '@core/services/admin/admin.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 interface SuspendedUser {
   id: string;

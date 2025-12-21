@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import {
   MercadoPagoOAuthService,
   type MercadoPagoConnectionStatus,
-} from '../../core/services/mercadopago-oauth.service';
+} from '@core/services/payments/mercadopago-oauth.service';
 
 @Component({
   selector: 'app-mercadopago-connect',

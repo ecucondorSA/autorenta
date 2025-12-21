@@ -2,8 +2,8 @@ import {Component, input, output, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { RefundService } from '../../../core/services/refund.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { RefundService } from '@core/services/payments/refund.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
   selector: 'app-refund-request',

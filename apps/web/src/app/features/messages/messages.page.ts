@@ -5,8 +5,8 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BookingChatComponent } from '../../shared/components/booking-chat/booking-chat.component';
-import { AuthService } from '../../core/services/auth.service';
-import { BookingsService } from '../../core/services/bookings.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { Booking } from '../../core/models';
 import { CarChatComponent } from './components/car-chat.component';
 

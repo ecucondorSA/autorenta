@@ -2,7 +2,7 @@ import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { LanguageService, SupportedLanguage } from '../../../core/services/language.service';
+import { LanguageService, SupportedLanguage } from '@core/services/ui/language.service';
 import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 /**

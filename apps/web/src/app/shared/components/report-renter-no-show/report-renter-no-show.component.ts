@@ -3,10 +3,10 @@ import {Component, EventEmitter, Input, Output, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { Booking } from '../../../core/models';
 import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 
 @Component({
   selector: 'app-report-renter-no-show',

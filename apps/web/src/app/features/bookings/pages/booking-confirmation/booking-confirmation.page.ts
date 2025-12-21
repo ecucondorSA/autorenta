@@ -3,7 +3,7 @@ import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentProvider } from '../../../../core/interfaces/payment-gateway.interface';
-import { BookingsService } from '../../../../core/services/bookings.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 
 type ConfirmationStatus = 'success' | 'pending' | 'error';
 

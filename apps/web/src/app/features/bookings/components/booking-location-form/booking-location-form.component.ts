@@ -12,9 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Services
-import { LocationService } from '../../../../core/services/location.service';
-import { GeocodingService } from '../../../../core/services/geocoding.service';
-import { DistanceCalculatorService } from '../../../../core/services/distance-calculator.service';
+import { LocationService } from '@core/services/geo/location.service';
+import { GeocodingService } from '@core/services/geo/geocoding.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
 
 // Components
 // LocationPickerComponent removed - not used in template

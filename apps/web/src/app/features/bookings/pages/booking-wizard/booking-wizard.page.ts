@@ -16,11 +16,11 @@ import { BookingStepIndicatorComponent } from '../../components/booking-step-ind
 
 // Services
 import { Car } from '../../../../core/models';
-import { BookingsService } from '../../../../core/services/bookings.service';
-import { CarsService } from '../../../../core/services/cars.service';
-import { DistanceCalculatorService } from '../../../../core/services/distance-calculator.service';
-import { EmailVerificationService } from '../../../../core/services/email-verification.service';
-import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { DistanceCalculatorService } from '@core/services/geo/distance-calculator.service';
+import { EmailVerificationService } from '@core/services/auth/email-verification.service';
+import { ErrorHandlerService } from '@core/services/infrastructure/error-handler.service';
 
 export interface BookingWizardData {
   // Step 1: Dates & Location

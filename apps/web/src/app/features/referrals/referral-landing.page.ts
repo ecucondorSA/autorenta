@@ -2,8 +2,8 @@
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { ReferralsService } from '../../core/services/referrals.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { ReferralsService } from '@core/services/auth/referrals.service';
 
 /**
  * Referral Landing Page

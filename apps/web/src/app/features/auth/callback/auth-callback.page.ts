@@ -1,10 +1,10 @@
-import { LoggerService } from '../../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
-import { ProfileService } from '../../../core/services/profile.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { ProfileService } from '@core/services/auth/profile.service';
 
 /**
  * AuthCallbackPage

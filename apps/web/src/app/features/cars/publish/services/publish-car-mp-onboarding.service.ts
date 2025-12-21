@@ -3,7 +3,7 @@ import { Injectable, computed, inject, PLATFORM_ID, signal } from '@angular/core
 import {
   MarketplaceService,
   MarketplaceStatus,
-} from '../../../../core/services/marketplace.service';
+} from '@core/services/bookings/marketplace.service';
 
 /**
  * Service for managing MercadoPago onboarding

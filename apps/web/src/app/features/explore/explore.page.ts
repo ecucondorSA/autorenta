@@ -1,4 +1,4 @@
-import { LoggerService } from '../../core/services/logger.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
 import { CommonModule } from '@angular/common';
 import {AfterViewInit,
   ChangeDetectionStrategy,
@@ -25,12 +25,12 @@ import {
   mapOutline,
   optionsOutline,
 } from 'ionicons/icons';
-import { LocationService } from '../../core/services/location.service';
+import { LocationService } from '@core/services/geo/location.service';
 import { Car } from '../../core/models';
-import { BreakpointService } from '../../core/services/breakpoint.service';
-import type { CarMapLocation } from '../../core/services/car-locations.service';
-import { CarsService } from '../../core/services/cars.service';
-import { CarAvailabilityService } from '../../core/services/car-availability.service';
+import { BreakpointService } from '@core/services/ui/breakpoint.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { CarsService } from '@core/services/cars/cars.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
 import { CarsMapComponent } from '../../shared/components/cars-map/cars-map.component';
 import { MapDrawerComponent } from '../../shared/components/map-drawer/map-drawer.component';
 import {

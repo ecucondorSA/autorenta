@@ -2,8 +2,8 @@ import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { RouterLink } from '@angular/router';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { AuthService } from '@core/services/auth/auth.service';
 
 interface PendingReview {
   booking_id: string;

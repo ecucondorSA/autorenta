@@ -12,9 +12,9 @@ import {
   signal,
 } from '@angular/core';
 
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
-import { CarLocationsService } from '../../../core/services/car-locations.service';
-import { NavigationService } from '../../../core/services/navigation.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
+import { CarLocationsService } from '@core/services/cars/car-locations.service';
+import { NavigationService } from '@core/services/ui/navigation.service';
 import { MoneyPipe } from '../../pipes/money.pipe';
 
 /**

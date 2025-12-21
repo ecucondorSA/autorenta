@@ -1,7 +1,7 @@
 import {Component, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { VerificationService } from '../../../../core/services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 
 @Component({
   selector: 'app-dni-uploader',

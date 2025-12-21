@@ -22,7 +22,7 @@ import { es } from 'date-fns/locale';
 import {
   CarAvailabilityService,
   DetailedBlockedRange,
-} from '../../../core/services/car-availability.service';
+} from '@core/services/cars/car-availability.service';
 
 interface CalendarDay {
   date: Date;

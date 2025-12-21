@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { VideoDamageDetectionService } from '../../../core/services/video-damage-detection.service';
+import { VideoDamageDetectionService } from '@core/services/verification/video-damage-detection.service';
 
 @Component({
   selector: 'app-inspection-comparison-modal',

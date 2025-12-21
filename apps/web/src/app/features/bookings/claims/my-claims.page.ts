@@ -3,9 +3,9 @@ import {Component, OnInit, inject, signal, computed,
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { InsuranceService } from '../../../core/services/insurance.service';
+import { InsuranceService } from '@core/services/bookings/insurance.service';
 import { InsuranceClaim } from '../../../core/models/insurance.model';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 /**
  * MyClaimsPage

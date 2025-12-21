@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {Component, Input, inject, signal, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
-import { BonusMalusService } from '../../../core/services/bonus-malus.service';
+import { BonusMalusService } from '@core/services/payments/bonus-malus.service';
 import type { BonusMalusDisplay } from '../../../core/models';
 
 export interface PricingBreakdownInput {

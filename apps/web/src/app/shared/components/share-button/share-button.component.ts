@@ -1,8 +1,8 @@
 import {Component, Input, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
-import { ShareService } from '../../../core/services/share.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { ShareService } from '@core/services/ui/share.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 import { HeaderIconComponent } from '../header-icon/header-icon.component';
 
 export type ShareType = 'car' | 'booking' | 'app' | 'custom';

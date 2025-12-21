@@ -3,10 +3,10 @@ import {Component, computed, inject, OnInit,
 
 import { IonicModule, ModalController, AlertController } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
-import { DriverProfileService } from '../../core/services/driver-profile.service';
-import { BonusProtectorService } from '../../core/services/bonus-protector.service';
+import { DriverProfileService } from '@core/services/auth/driver-profile.service';
+import { BonusProtectorService } from '@core/services/payments/bonus-protector.service';
 import { ClassBenefitsModalComponent } from '../../shared/components/class-benefits-modal/class-benefits-modal.component';
-import { MetaService } from '../../core/services/meta.service';
+import { MetaService } from '@core/services/ui/meta.service';
 
 /**
  * DriverProfilePage - Perfil de Conductor Estilo Aseguradora

@@ -1,8 +1,8 @@
 import { Injectable, inject, signal, computed, type Signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CarsService } from '../../../../core/services/cars.service';
+import { CarsService } from '@core/services/cars/cars.service';
 import { CarBrand, CarModel, VehicleCategory } from '../../../../core/models';
-import { injectSupabase } from '../../../../core/services/supabase-client.service';
+import { injectSupabase } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Service for managing the publish car form

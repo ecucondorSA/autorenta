@@ -4,11 +4,11 @@ import { firstValueFrom, of } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { Booking } from '../../../../core/models';
 import { BookingPaymentMethod } from '../../../../core/models/wallet.model';
-import { BookingsService } from '../../../../core/services/bookings.service';
-import { FgoV1_1Service } from '../../../../core/services/fgo-v1-1.service';
-import { LoggerService } from '../../../../core/services/logger.service';
-import { PaymentsService } from '../../../../core/services/payments.service';
-import { WalletService } from '../../../../core/services/wallet.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
+import { FgoV1_1Service } from '@core/services/verification/fgo-v1-1.service';
+import { LoggerService } from '@core/services/infrastructure/logger.service';
+import { PaymentsService } from '@core/services/payments/payments.service';
+import { WalletService } from '@core/services/payments/wallet.service';
 import { CheckoutStateService } from '../state/checkout-state.service';
 import {
   MercadoPagoBookingGateway,

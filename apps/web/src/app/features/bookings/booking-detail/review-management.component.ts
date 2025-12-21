@@ -2,9 +2,9 @@ import {Component, Input, OnInit, computed, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 
 import { Booking, CreateReviewParams, Review } from '../../../core/models';
-import { ReviewsService } from '../../../core/services/reviews.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { BookingsService } from '../../../core/services/bookings.service';
+import { ReviewsService } from '@core/services/cars/reviews.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { BookingsService } from '@core/services/bookings/bookings.service';
 import { ReviewFormComponent } from '../../../shared/components/review-form/review-form.component';
 import { ReviewCardComponent } from '../../../shared/components/review-card/review-card.component';
 

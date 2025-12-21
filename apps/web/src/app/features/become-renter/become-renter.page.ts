@@ -3,8 +3,8 @@ import {Component, OnInit, inject, signal, computed,
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
-import { ReferralsService } from '../../core/services/referrals.service';
+import { AuthService } from '@core/services/auth/auth.service';
+import { ReferralsService } from '@core/services/auth/referrals.service';
 
 /**
  * Become Renter Page

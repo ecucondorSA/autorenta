@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CarMapLocation } from '@core/services/cars/car-locations.service';
-import { NavigationService } from '../../../core/services/navigation.service';
+import { NavigationService } from '@core/services/ui/navigation.service';
 
 @Component({
   selector: 'app-map-details-panel',

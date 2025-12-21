@@ -8,7 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 
 /**
  * Map Drawer Component

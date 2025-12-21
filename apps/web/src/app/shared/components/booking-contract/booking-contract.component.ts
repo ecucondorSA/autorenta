@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import {Component, Input, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
-import { ContractsService, BookingContract } from '../../../core/services/contracts.service';
-import { NotificationManagerService } from '../../../core/services/notification-manager.service';
+import { ContractsService, BookingContract } from '@core/services/bookings/contracts.service';
+import { NotificationManagerService } from '@core/services/infrastructure/notification-manager.service';
 
 @Component({
   selector: 'app-booking-contract',

@@ -3,7 +3,7 @@ import {Component, computed, OnDestroy, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environment';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 interface DepositStats {
   total_deposits: number;

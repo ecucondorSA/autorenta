@@ -3,7 +3,7 @@ import {Component, OnInit, signal, computed, inject,
 
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { VerificationService } from '../../../core/services/verification.service';
+import { VerificationService } from '@core/services/verification/verification.service';
 import { getDocumentEmoji, getDocumentLabel } from '../../../core/config/document-types.config';
 
 @Component({

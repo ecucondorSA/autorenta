@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import {Component, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Claim, SettlementService } from '../../../core/services/settlement.service';
-import { SupabaseClientService } from '../../../core/services/supabase-client.service';
+import { Claim, SettlementService } from '@core/services/payments/settlement.service';
+import { SupabaseClientService } from '@core/services/infrastructure/supabase-client.service';
 
 /**
  * Admin Settlements Page

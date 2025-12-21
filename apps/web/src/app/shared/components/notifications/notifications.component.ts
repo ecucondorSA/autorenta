@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import {
   NotificationsService,
   NotificationItem,
-} from '../../../core/services/user-notifications.service';
-import { CarOwnerNotificationsService } from '../../../core/services/car-owner-notifications.service';
+} from '@core/services/infrastructure/user-notifications.service';
+import { CarOwnerNotificationsService } from '@core/services/cars/car-owner-notifications.service';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { HeaderIconComponent } from '../header-icon/header-icon.component';
 

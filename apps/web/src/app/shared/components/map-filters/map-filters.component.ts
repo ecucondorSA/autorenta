@@ -13,8 +13,8 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CarAvailabilityService } from '../../../core/services/car-availability.service';
-import type { CarMapLocation } from '../../../core/services/car-locations.service';
+import { CarAvailabilityService } from '@core/services/cars/car-availability.service';
+import type { CarMapLocation } from '@core/services/cars/car-locations.service';
 import type { FilterState } from '../../../core/models/marketplace.model';
 import {
   BlockedDateRange,
