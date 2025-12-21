@@ -27,6 +27,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { WalletService } from '../../core/services/wallet.service';
 import { CarsService } from '../../core/services/cars.service';
 import { VerificationService } from '../../core/services/verification.service';
+import { BookingsService } from '../../core/services/bookings.service';
 import type { WalletBalance } from '../../core/models/wallet.model';
 
 // Web Speech API types
@@ -92,6 +93,7 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
   private readonly walletService = inject(WalletService);
   private readonly carsService = inject(CarsService);
   private readonly verificationService = inject(VerificationService);
+  private readonly bookingsService = inject(BookingsService);
   private readonly platformId = inject(PLATFORM_ID);
 
   @ViewChild('messagesContainer') messagesContainer?: ElementRef<HTMLDivElement>;
@@ -347,6 +349,14 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
       /(crear|hacer|iniciar).*(reserva|reservar)/.test(normalized) ||
       /(buscar|alquilar|rentar).*(auto|veh[ií]culo)/.test(normalized)
     ) {
+      // ✅ Si el usuario ya aportó carId + fechas, crear la reserva con su sesión.
+      const command = this.parseBookingCommand(text);
+      if (command) {
+        await this.createBookingFromCommand(text, command);
+        return true;
+      }
+
+      // Fallback: navegación al flujo estándar (selección de auto + fechas)
       this.agentService.addLocalUserMessage(text);
       this.agentService.addLocalAgentMessage(
         'Te llevo a buscar autos disponibles. Ahí podés elegir fechas y reservar.',
@@ -510,6 +520,119 @@ export class RentarfastPage implements AfterViewChecked, OnDestroy {
     }
 
     return false;
+  }
+
+  private parseBookingCommand(text: string): { carId: string; startDate: string; endDate: string } | null {
+    const uuid = this.extractFirstUuid(text);
+    if (!uuid) return null;
+
+    const dates = this.extractDateCandidates(text);
+    if (dates.length < 2) return null;
+
+    const startDate = this.normalizeToLocalDateString(dates[0]);
+    const endDate = this.normalizeToLocalDateString(dates[1]);
+    if (!this.isIsoDate(startDate) || !this.isIsoDate(endDate)) return null;
+
+    return { carId: uuid, startDate, endDate };
+  }
+
+  private extractFirstUuid(text: string): string | null {
+    const match = text.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+    return match?.[0] ?? null;
+  }
+
+  private extractDateCandidates(text: string): string[] {
+    // Acepta formatos comunes:
+    // - YYYY-MM-DD
+    // - DD/MM/YYYY
+    const isoMatches = text.match(/\b\d{4}-\d{2}-\d{2}\b/g) ?? [];
+    const dmyMatches = text.match(/\b\d{1,2}\/\d{1,2}\/\d{4}\b/g) ?? [];
+    return [...isoMatches, ...dmyMatches];
+  }
+
+  private isIsoDate(value: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}$/.test(value);
+  }
+
+  private normalizeToLocalDateString(value: string): string {
+    // YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return value;
+    }
+
+    // DD/MM/YYYY
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)) {
+      const [d, m, y] = value.split('/').map((v) => Number(v));
+      if (!y || !m || !d) return value;
+      const year = String(y).padStart(4, '0');
+      const month = String(m).padStart(2, '0');
+      const day = String(d).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Fallback (best effort)
+    try {
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return value;
+      const year = parsed.getFullYear();
+      const month = String(parsed.getMonth() + 1).padStart(2, '0');
+      const day = String(parsed.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch {
+      return value;
+    }
+  }
+
+  private async createBookingFromCommand(
+    originalText: string,
+    command: { carId: string; startDate: string; endDate: string },
+  ): Promise<void> {
+    this.agentService.addLocalUserMessage(originalText);
+    const msgId = this.agentService.addLocalAgentMessage(
+      `Creando tu reserva para ${command.startDate} → ${command.endDate}...`,
+      ['local_booking'],
+    );
+
+    const auth = await this.getAuthSnapshot();
+    if (!auth) {
+      this.agentService.updateMessageContent(
+        msgId,
+        'Necesitás iniciar sesión para crear una reserva. ¿Querés que abra el login?',
+        ['local_booking'],
+      );
+      return;
+    }
+
+    try {
+      const result = await this.bookingsService.createBookingWithValidation(
+        command.carId,
+        command.startDate,
+        command.endDate,
+      );
+
+      if (!result.success || !result.booking) {
+        this.agentService.updateMessageContent(
+          msgId,
+          result.error || 'No pude crear la reserva. Probá con otro auto o cambiá fechas.',
+          ['local_booking'],
+        );
+        return;
+      }
+
+      this.agentService.updateMessageContent(
+        msgId,
+        `Listo. Creé la reserva en tu cuenta (ID: ${result.booking.id}). Te llevo al pago/detalle.`,
+        ['local_booking'],
+      );
+
+      this.router.navigate(['/bookings', result.booking.id, 'detail-payment']);
+    } catch {
+      this.agentService.updateMessageContent(
+        msgId,
+        'Error al crear la reserva. Si el auto ya está reservado en esas fechas, probá con otras.',
+        ['local_booking'],
+      );
+    }
   }
 
   private async buildChatContext(text: string): Promise<ChatContext | undefined> {
