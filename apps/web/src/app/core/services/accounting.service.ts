@@ -3,9 +3,9 @@
  * Integración con sistema contable basado en NIIF 15 y NIIF 37
  */
 
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 
 export interface AccountingAccount {
   id: string;

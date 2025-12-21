@@ -66,7 +66,6 @@ export interface BookingPaymentRow {
 @Injectable({ providedIn: 'root' })
 export class BookingOpsService {
   private readonly supabase = injectSupabase();
-  private readonly supabase = injectSupabase();
 
   async getPricing(bookingId: string): Promise<BookingPricingRow | null> {
     const { data, error } = await this.supabase

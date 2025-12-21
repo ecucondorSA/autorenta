@@ -1,10 +1,10 @@
-import { Injectable, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Injectable, computed, signal, OnDestroy } from '@angular/core';
 import type {
   RealtimeChannel,
   RealtimePostgresChangesPayload,
   SupabaseClient,
 } from '@supabase/supabase-js';
-import { SupabaseClientService } from './supabase-client.service';
+import { injectSupabase } from './supabase-client.service';
 import type { VerificationProgress } from './identity-level.service';
 
 type VerificationStatusRow = {
@@ -27,7 +27,6 @@ type VerificationStatusRow = {
   providedIn: 'root',
 })
 export class VerificationStateService implements OnDestroy {
-  private readonly supabase: SupabaseClient = inject(SupabaseClientService).getClient();
   private readonly supabase: SupabaseClient = injectSupabase();
 
   // Reactive state

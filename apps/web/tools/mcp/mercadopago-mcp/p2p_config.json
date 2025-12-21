@@ -1,0 +1,79 @@
+{
+  "dry_run": true,
+  "_comment_dry_run": "CAMBIAR A false SOLO en producción verificada",
+
+  "poll_interval_seconds": 30,
+  "price_check_interval_seconds": 60,
+
+  "browser_profile": "/home/edu/.p2p-automation-profile",
+  "headless": false,
+  "log_file": "/tmp/p2p_daemon_v3.log",
+  "state_file": "/home/edu/autorenta/apps/web/tools/mercadopago-mcp/daemon_state_v3.json",
+
+  "_comment_optimization": "v3 optimization settings",
+  "price_cache_ttl_seconds": 30,
+  "min_price_change_for_update": 1.0,
+  "min_update_interval_seconds": 120,
+  "state_flush_interval_seconds": 30,
+
+  "ads": [
+    {
+      "id": "ad_sell_usdt",
+      "type": "sell",
+      "asset": "USDT",
+      "fiat": "ARS",
+      "enabled": true,
+      "price_strategy": "top1",
+      "price_margin": 0.5,
+      "min_price": 1100,
+      "max_price": 1600,
+      "min_amount": 5000,
+      "max_amount": 500000,
+      "payment_methods": ["MercadoPagoNew"],
+      "auto_reply": "Hola! Libero en menos de 5 minutos una vez verificado el pago."
+    },
+    {
+      "id": "ad_buy_usdt",
+      "type": "buy",
+      "asset": "USDT",
+      "fiat": "ARS",
+      "enabled": false,
+      "_comment": "Deshabilitado - Solo vendemos en Argentina",
+      "price_strategy": "top1",
+      "price_margin": 0.5,
+      "min_price": 1000,
+      "max_price": 1400,
+      "min_amount": 5000,
+      "max_amount": 500000,
+      "payment_methods": ["MercadoPagoNew"],
+      "auto_reply": "Hola! Transfiero en menos de 5 minutos."
+    }
+  ],
+
+  "buy_flow": {
+    "auto_pay": true,
+    "mark_as_paid_after_transfer": true
+  },
+
+  "sell_flow": {
+    "verify_mp_payment": true,
+    "auto_release": true,
+    "payment_verification_window_minutes": 30,
+    "require_exact_amount": false,
+    "amount_tolerance_percent": 1
+  },
+
+  "notifications": {
+    "sound": true,
+    "desktop": true,
+    "telegram_bot_token": null,
+    "telegram_chat_id": null
+  },
+
+  "safety": {
+    "max_single_order_ars": 500000,
+    "daily_volume_limit_ars": 5000000,
+    "pause_on_error_count": 3,
+    "require_2fa_confirmation": true
+  }
+}
