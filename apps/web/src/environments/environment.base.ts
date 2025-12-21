@@ -52,6 +52,10 @@ interface EnvDefaults {
   googleCalendarClientId?: string;
   googleGeolocationApiKey?: string;
   tiktok?: TikTokConfig;
+  // GCP Video Damage Detection
+  videoIngestionUrl?: string;
+  gcpProjectId?: string;
+  gcpBucketName?: string;
 }
 
 // Type-safe interfaces for global environment access
