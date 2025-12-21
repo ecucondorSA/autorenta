@@ -654,7 +654,7 @@ export class NotificationsPage implements OnInit {
     }
 
     if (notification.actionUrl) {
-      await this.router.navigate([notification.actionUrl]);
+      await this.router.navigateByUrl(notification.actionUrl);
     }
   }
 

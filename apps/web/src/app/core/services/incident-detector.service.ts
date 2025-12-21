@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { LocalNotifications } from '@capacitor/local-notifications';
@@ -21,6 +22,7 @@ interface AccelListenerEvent {
 
 @Injectable({ providedIn: 'root' })
 export class IncidentDetectorService {
+  private readonly logger = inject(LoggerService);
   private supabase = inject(SupabaseClientService).getClient();
   private isMonitoring = false;
   private currentBookingId: string | null = null;
@@ -50,7 +52,7 @@ export class IncidentDetectorService {
         this.handleAccelerationEvent(event);
       });
 
-      console.log('✅ Incident detector started for booking:', bookingId);
+      this.logger.debug('✅ Incident detector started for booking:', bookingId);
     } catch (error) {
       this.isMonitoring = false;
       this.currentBookingId = null;
@@ -64,7 +66,7 @@ export class IncidentDetectorService {
     this.currentBookingId = null;
     this.accelerationBuffer = [];
     await Motion.removeAllListeners();
-    console.log('⏹️ Incident detector stopped');
+    this.logger.debug('⏹️ Incident detector stopped');
   }
 
   private handleAccelerationEvent(event: AccelListenerEvent): void {

@@ -46,6 +46,7 @@ type SentryModule = typeof import('@sentry/angular');
   providedIn: 'root',
 })
 export class LoggerService {
+  private readonly logger = globalThis.console;
   private readonly isDevelopment = !environment.production;
   private traceId?: string;
   private debugService?: DebugService;
@@ -116,6 +117,52 @@ export class LoggerService {
     return parts.join('');
   }
 
+  private looksLikeContext(value: string): boolean {
+    if (!/^[A-Za-z0-9]+$/.test(value)) return false;
+    return /[A-Z]/.test(value) && /[a-z]/.test(value);
+  }
+
+  private resolveLogArgs(
+    message: string,
+    args: unknown[],
+  ): { context?: string; data?: unknown; extra: unknown[] } {
+    if (args.length === 0) {
+      return { extra: [] };
+    }
+
+    const [first, ...rest] = args;
+
+    if (typeof first === 'string') {
+      if (rest.length >= 1) {
+        return { context: first, data: rest[0], extra: rest.slice(1) };
+      }
+
+      const messageLooksLikeData = message.trim().endsWith(':');
+      if (!messageLooksLikeData && this.looksLikeContext(first)) {
+        return { context: first, data: undefined, extra: [] };
+      }
+    }
+
+    return { context: undefined, data: first, extra: rest };
+  }
+
+  private mergeLogData(data: unknown, extra: unknown[]): unknown {
+    if (!extra.length) return data;
+    const merged: unknown[] = [];
+    if (data !== undefined) merged.push(data);
+    merged.push(...extra);
+    return merged.length === 1 ? merged[0] : merged;
+  }
+
+  private sanitizeLogArgs(data: unknown, extra: unknown[]): unknown[] {
+    const safeArgs: unknown[] = [];
+    if (data !== undefined) safeArgs.push(this.sanitizeData(data));
+    for (const item of extra) {
+      if (item !== undefined) safeArgs.push(this.sanitizeData(item));
+    }
+    return safeArgs;
+  }
+
   /**
    * Log to DebugService for in-app panel
    */
@@ -139,15 +186,17 @@ export class LoggerService {
    * Debug level: Detailed diagnostic information
    * Only logged in development mode
    */
-  debug(message: string, context?: string, data?: unknown): void {
+  debug(message: string, ...args: unknown[]): void {
+    const { context, data, extra } = this.resolveLogArgs(message, args);
+    const mergedData = this.mergeLogData(data, extra);
     // Always log to DebugService if enabled
-    this.logToDebugService('DEBUG', context || 'App', message, data);
+    this.logToDebugService('DEBUG', context || 'App', message, mergedData);
 
     if (this.isDevelopment) {
       // In development, log to console with safe data only
-      const safeData = this.sanitizeData(data);
+      const safeArgs = this.sanitizeLogArgs(data, extra);
       const prefix = this.buildLogPrefix('[DEBUG]', context);
-      console.log(`${prefix} ${message}`, safeData ?? '');
+      this.logger.debug(`${prefix} ${message}`, ...safeArgs);
     }
   }
 
@@ -156,14 +205,16 @@ export class LoggerService {
    * Production: Filtered (not logged)
    * Development: Logged to console
    */
-  info(message: string, context?: string, data?: unknown): void {
+  info(message: string, ...args: unknown[]): void {
+    const { context, data, extra } = this.resolveLogArgs(message, args);
+    const mergedData = this.mergeLogData(data, extra);
     // Always log to DebugService if enabled
-    this.logToDebugService('INFO', context || 'App', message, data);
+    this.logToDebugService('INFO', context || 'App', message, mergedData);
 
     if (this.isDevelopment) {
-      const safeData = this.sanitizeData(data);
+      const safeArgs = this.sanitizeLogArgs(data, extra);
       const prefix = this.buildLogPrefix('[INFO]', context);
-      console.log(`${prefix} ${message}`, safeData ?? '');
+      this.logger.debug(`${prefix} ${message}`, ...safeArgs);
     }
     // Production: INFO is too noisy, don't send to Sentry
   }
@@ -173,15 +224,18 @@ export class LoggerService {
    * Production: Sent to Sentry
    * Development: Logged to console
    */
-  warn(message: string, context?: string, error?: Error | unknown): void {
+  warn(message: string, ...args: unknown[]): void {
+    const { context, data, extra } = this.resolveLogArgs(message, args);
+    const mergedData = this.mergeLogData(data, extra);
     // Always log to DebugService if enabled
-    this.logToDebugService('WARN', context || 'App', message, error);
+    this.logToDebugService('WARN', context || 'App', message, mergedData);
 
     const prefix = this.buildLogPrefix('[WARN]', context);
     if (this.isDevelopment) {
-      console.warn(`${prefix} ${message}`, error ?? '');
+      const safeArgs = this.sanitizeLogArgs(data, extra);
+      this.logger.warn(`${prefix} ${message}`, ...safeArgs);
     } else {
-      this.sendToSentry('warning', message, error);
+      this.sendToSentry('warning', message, mergedData);
     }
   }
 
@@ -190,20 +244,25 @@ export class LoggerService {
    * ALWAYS sent to Sentry with full stack trace
    * Development: Also logged to console
    */
-  error(message: string, context?: string, error?: Error | unknown): void {
+  error(message: string, ...args: unknown[]): void {
+    const { context, data, extra } = this.resolveLogArgs(message, args);
+    const mergedData = this.mergeLogData(data, extra);
     // Always log to DebugService if enabled
-    this.logToDebugService('ERROR', context || 'App', message, error);
+    this.logToDebugService('ERROR', context || 'App', message, mergedData);
 
     const prefix = this.buildLogPrefix('[ERROR]', context);
     if (this.isDevelopment) {
-      console.error(`${prefix} ${message}`, error ?? '');
+      const safeArgs = this.sanitizeLogArgs(data, extra);
+      this.logger.error(`${prefix} ${message}`, ...safeArgs);
     }
 
     // Always report errors to Sentry
-    if (error instanceof Error) {
-      this.sendToSentry('error', message, error);
+    if (mergedData instanceof Error) {
+      this.sendToSentry('error', message, mergedData);
+    } else if (mergedData !== undefined) {
+      this.sendToSentry('error', message, new Error(String(mergedData)));
     } else {
-      this.sendToSentry('error', message, new Error(String(error)));
+      this.sendToSentry('error', message, new Error(message));
     }
   }
 
@@ -211,15 +270,18 @@ export class LoggerService {
    * Critical level: Critical errors that may cause downtime
    * ALWAYS sent to Sentry with highest priority
    */
-  critical(message: string, context?: string, error?: Error): void {
+  critical(message: string, ...args: unknown[]): void {
+    const { context, data, extra } = this.resolveLogArgs(message, args);
+    const mergedData = this.mergeLogData(data, extra);
     // Always log to DebugService if enabled
-    this.logToDebugService('CRITICAL', context || 'App', message, error);
+    this.logToDebugService('CRITICAL', context || 'App', message, mergedData);
 
     const prefix = this.buildLogPrefix('[CRITICAL]', context);
     if (this.isDevelopment) {
-      console.error(`${prefix} ${message}`, error ?? '');
+      const safeArgs = this.sanitizeLogArgs(data, extra);
+      this.logger.error(`${prefix} ${message}`, ...safeArgs);
     }
-    this.sendToSentry('fatal', message, error);
+    this.sendToSentry('fatal', message, mergedData);
   }
 
   /**
@@ -229,7 +291,7 @@ export class LoggerService {
   logAction(action: string, metadata?: Record<string, unknown>): void {
     const safeMeta = this.sanitizeData(metadata);
     if (this.isDevelopment) {
-      console.log(`[ACTION] ${action}`, safeMeta);
+      this.logger.debug(`[ACTION] ${action}`, safeMeta);
     } else {
       this.sendToSentry('info', action, safeMeta);
     }
@@ -245,7 +307,7 @@ export class LoggerService {
     const safeMeta = this.sanitizeData(metadata);
 
     if (this.isDevelopment) {
-      console.log(`[PERF] ${message}`, safeMeta);
+      this.logger.debug(`[PERF] ${message}`, safeMeta);
     } else {
       this.sendToSentry(level, message, safeMeta);
     }
@@ -256,7 +318,7 @@ export class LoggerService {
    * @private
    */
   private sanitizeData(data: unknown): unknown {
-    if (!data) return undefined;
+    if (data === null || data === undefined) return undefined;
 
     if (typeof data === 'string') {
       // Don't log strings that look like tokens
@@ -442,23 +504,23 @@ export class ChildLogger {
     private context: string,
   ) {}
 
-  debug(message: string, data?: unknown): void {
-    this.parent.debug(message, this.context, data);
+  debug(message: string, ...args: unknown[]): void {
+    this.parent.debug(message, this.context, ...args);
   }
 
-  info(message: string, data?: unknown): void {
-    this.parent.info(message, this.context, data);
+  info(message: string, ...args: unknown[]): void {
+    this.parent.info(message, this.context, ...args);
   }
 
-  warn(message: string, error?: Error | unknown): void {
-    this.parent.warn(message, this.context, error);
+  warn(message: string, ...args: unknown[]): void {
+    this.parent.warn(message, this.context, ...args);
   }
 
-  error(message: string, error?: Error | unknown): void {
-    this.parent.error(message, this.context, error);
+  error(message: string, ...args: unknown[]): void {
+    this.parent.error(message, this.context, ...args);
   }
 
-  critical(message: string, error?: Error): void {
-    this.parent.critical(message, this.context, error);
+  critical(message: string, ...args: unknown[]): void {
+    this.parent.critical(message, this.context, ...args);
   }
 }

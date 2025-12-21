@@ -1,0 +1,311 @@
+<div class="max-w-7xl mx-auto py-8 px-4">
+  @if (loading()) {
+    <div class="text-center py-12">
+      <p class="text-text-secondary">Cargando reserva...</p>
+    </div>
+  }
+
+  @if (error() && !loading()) {
+    <app-error-state
+      title="Error al cargar la reserva"
+      [message]="error() ?? 'Ocurrió un error inesperado'"
+      variant="banner">
+      <button
+        (click)="goBack()"
+        class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-error-600 text-text-inverse rounded-xl hover:bg-error-700 transition-colors text-sm font-medium">
+        Volver a reservas de propietarios
+      </button>
+    </app-error-state>
+  }
+
+  @if (booking() && !loading()) {
+    <div class="space-y-4 sm:space-y-6">
+      <button
+        (click)="goBack()"
+        class="inline-flex items-center gap-2 text-sm font-medium text-cta-default hover:text-warning-strong transition-base mb-2">
+        <span class="pr-0.5">Volver a reservas de propietarios</span>
+      </button>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+        <!-- Left: Car + Summary -->
+        <div class="lg:col-span-3 space-y-4">
+          <div class="rounded-2xl border border-border-default bg-surface-raised overflow-hidden shadow-sm">
+            <div class="relative h-48 bg-surface-secondary">
+              @if (booking()?.car_image) {
+                <img [src]="booking()!.car_image" [alt]="booking()?.car_title" class="w-full h-full object-cover" />
+              } @else {
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                  <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                  </svg>
+                </div>
+              }
+            </div>
+
+            <div class="p-4 space-y-4">
+              <div>
+                <h2 class="text-lg font-bold text-text-primary">{{ booking()?.car_title }}</h2>
+                <p class="text-sm text-text-secondary">
+                  {{ booking()?.car_brand }} {{ booking()?.car_model }} • {{ booking()?.car_city || 'Buenos Aires' }}
+                </p>
+              </div>
+
+              <div class="text-sm text-text-secondary">
+                <div>Estado: <span class="font-medium text-text-primary">{{ statusLabel(booking()?.status) }}</span></div>
+                <div>Fechas: <span class="font-medium text-text-primary">{{ booking()?.start_at | date:'dd MMM' }} - {{ booking()?.end_at | date:'dd MMM' }}</span></div>
+              </div>
+            </div>
+
+            <div class="border-t border-border-default">
+              <div class="p-4">
+                <h3 class="text-base font-semibold text-text-primary mb-3">Detalle del pago</h3>
+                @if (pricingView()) {
+                  <app-booking-pricing-breakdown [data]="pricingView()!"></app-booking-pricing-breakdown>
+                } @else {
+                  <p class="text-sm text-text-secondary">No hay detalle disponible.</p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4 shadow-sm">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-surface-secondary overflow-hidden flex items-center justify-center">
+                @if (renterAvatar()) {
+                  <img [src]="renterAvatar()!" alt="avatar" class="w-full h-full object-cover" />
+                } @else {
+                  <span class="text-sm font-semibold text-text-secondary">{{ renterName()[0] }}</span>
+                }
+              </div>
+              <div>
+                <p class="text-sm text-text-secondary">Locatario</p>
+                <p class="font-semibold text-text-primary">{{ renterName() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle: Chat -->
+        <div class="lg:col-span-5">
+          @defer (on viewport) {
+            <app-booking-chat
+              [bookingId]="booking()!.id"
+              [recipientId]="booking()!.renter_id"
+              [recipientName]="renterName()"
+              [booking]="booking()"
+            ></app-booking-chat>
+          } @placeholder {
+            <div class="h-[550px] bg-surface-raised animate-pulse rounded-2xl border border-border-default"></div>
+          }
+        </div>
+
+        <!-- Right: Owner Actions -->
+        <div class="lg:col-span-4 space-y-4">
+          @if (shouldShowReturnChecklist()) {
+            <div class="rounded-2xl border border-border-default bg-surface-raised p-4 shadow-sm">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-base font-semibold text-text-primary">Checklist de devolución</h3>
+                <span class="text-xs text-text-secondary">
+                  {{ renterReturnChecklistProgress().completed }} / {{ renterReturnChecklistProgress().total }}
+                </span>
+              </div>
+              @if (renterReturnChecklist().length === 0) {
+                <p class="text-sm text-text-secondary">El locatario aún no completó el checklist.</p>
+              } @else {
+                <div class="space-y-2">
+                  @for (item of renterReturnChecklist(); track item.id) {
+                    <div
+                      class="flex items-start gap-3 rounded-lg border border-border-default px-3 py-2"
+                      [ngClass]="{
+                        'bg-success-light/10 border-success-light/40': item.checked
+                      }"
+                    >
+                      <span
+                        class="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border"
+                        [ngClass]="{
+                          'border-success-light text-success-700': item.checked,
+                          'border-border-muted text-text-muted': !item.checked
+                        }"
+                      >
+                        @if (item.checked) { ✓ }
+                      </span>
+                      <span class="text-sm text-text-secondary">{{ item.label }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4 shadow-sm">
+            <h3 class="text-base font-semibold text-text-primary mb-3">Perfil del locatario</h3>
+
+            @if (renterLoading()) {
+              <p class="text-sm text-text-secondary">Cargando perfil...</p>
+            } @else {
+              <div class="space-y-3 text-sm text-text-secondary">
+                <div class="flex items-center justify-between">
+                  <span>Bonus/Malus</span>
+                  <span class="font-medium text-text-primary">
+                    @if (feeMultiplier() !== null) {
+                      x{{ feeMultiplier() }}
+                    } @else {
+                      No disponible
+                    }
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Clase / Score</span>
+                  <span class="font-medium text-text-primary">
+                    @if (driverClass() !== null) {
+                      Clase {{ driverClass() }}
+                    } @else {
+                      -
+                    }
+                    @if (driverScore() !== null) {
+                      • {{ driverScore() }}
+                    }
+                  </span>
+                </div>
+                @if (classDescription()) {
+                  <p class="text-xs text-text-muted">{{ classDescription() }}</p>
+                }
+              </div>
+
+              <div class="h-px bg-border-default/60 my-3"></div>
+
+              <div class="space-y-2 text-sm text-text-secondary">
+                <div class="flex items-center justify-between">
+                  <span>Verificación conductor</span>
+                  <span class="font-medium" [ngClass]="licenseVerified() ? 'text-success-strong' : 'text-warning-strong'">
+                    {{ licenseVerified() ? 'Verificada' : 'Pendiente' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>{{ renterDniType() }}</span>
+                  <span class="font-medium text-text-primary">{{ renterDni() || 'No informado' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>DNI vigente</span>
+                  <span class="font-medium" [ngClass]="idVerified() ? 'text-success-strong' : 'text-warning-strong'">
+                    {{ idVerified() ? 'Verificado' : 'Pendiente' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Licencia (tipo)</span>
+                  <span class="font-medium text-text-primary">
+                    {{ renterLicenseClass() || 'No informado' }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Licencia profesional</span>
+                  <span class="font-medium text-text-primary">
+                    {{
+                      renterLicenseProfessional() === null
+                        ? 'No informado'
+                        : renterLicenseProfessional()
+                          ? 'Sí'
+                          : 'No'
+                    }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Puntos licencia</span>
+                  <span class="font-medium text-text-primary">
+                    {{ renterLicensePoints() ?? 'No informado' }}
+                  </span>
+                </div>
+                @if (renterLicenseExpiry()) {
+                  <div class="flex items-center justify-between">
+                    <span>Vencimiento licencia</span>
+                    <span class="font-medium text-text-primary">
+                      {{ renterLicenseExpiry() | date:'dd/MM/yyyy' }}
+                    </span>
+                  </div>
+                }
+              </div>
+
+              <div class="h-px bg-border-default/60 my-3"></div>
+
+              <div class="space-y-2 text-sm text-text-secondary">
+                <div class="flex items-center justify-between">
+                  <span>Comprobante residencia</span>
+                  <span class="font-medium"
+                    [ngClass]="residenceDocStatus().tone === 'success' ? 'text-success-strong' : residenceDocStatus().tone === 'warning' ? 'text-warning-strong' : 'text-error-600'">
+                    {{ residenceDocStatus().label }}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>Antecedentes penales</span>
+                  <span class="font-medium"
+                    [ngClass]="docStatus('criminal_record').tone === 'success' ? 'text-success-strong' : docStatus('criminal_record').tone === 'warning' ? 'text-warning-strong' : 'text-error-600'">
+                    {{ docStatus('criminal_record').label }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="h-px bg-border-default/60 my-3"></div>
+
+              <div class="space-y-2 text-sm text-text-secondary">
+                <div class="flex items-center justify-between">
+                  <span>Teléfono</span>
+                  <span class="font-medium text-text-primary">{{ renterPhone() || 'No informado' }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span>WhatsApp</span>
+                  <span class="font-medium text-text-primary">{{ renterWhatsApp() || 'No informado' }}</span>
+                </div>
+                @if (videoCallUrl()) {
+                  <a
+                    [href]="videoCallUrl()!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-2 inline-flex w-full items-center justify-center gap-2 px-4 py-2 rounded-lg border border-cta-default text-cta-default text-sm font-medium hover:bg-cta-default/10 transition-colors">
+                    Iniciar videollamada
+                  </a>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="rounded-2xl border border-border-default bg-surface-raised p-4 shadow-sm">
+            <h3 class="text-base font-semibold text-text-primary mb-3">Acciones del locador</h3>
+
+            @if (canApprove()) {
+              <div class="flex gap-2">
+                <button
+                  (click)="approveBooking()"
+                  [disabled]="processing()"
+                  class="flex-1 px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg disabled:opacity-50">
+                  Aprobar
+                </button>
+                <button
+                  (click)="rejectBooking()"
+                  [disabled]="processing()"
+                  class="flex-1 px-4 py-2 bg-error-600 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50">
+                  Rechazar
+                </button>
+              </div>
+            }
+
+            @if (canOwnerCheckIn()) {
+              <a
+                [routerLink]="['/bookings', booking()!.id, 'owner-check-in']"
+                class="mt-3 inline-flex w-full items-center justify-center gap-2 px-4 py-2 bg-cta-default text-cta-text text-sm font-medium rounded-lg">
+                Iniciar check-in (entrega)
+              </a>
+            }
+
+            @if (canOwnerCheckOut()) {
+              <a
+                [routerLink]="['/bookings', booking()!.id, 'owner-check-out']"
+                class="mt-3 inline-flex w-full items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-text-inverse text-sm font-medium rounded-lg">
+                Confirmar devolución
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

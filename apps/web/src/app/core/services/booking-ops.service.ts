@@ -50,6 +50,7 @@ export interface BookingCancellationRow {
   cancellation_fee_cents: number | null;
   cancelled_at: string | null;
   cancel_policy_id: number | null;
+  cancelled_by_role?: 'renter' | 'owner' | 'system' | 'admin' | null;
 }
 
 export interface BookingPaymentRow {
@@ -125,7 +126,7 @@ export class BookingOpsService {
     const { data, error } = await this.supabase
       .from('bookings_cancellation')
       .select(
-        'booking_id, cancellation_reason, cancellation_fee_cents, cancelled_at, cancel_policy_id',
+        'booking_id, cancellation_reason, cancellation_fee_cents, cancelled_at, cancel_policy_id, cancelled_by_role',
       )
       .eq('booking_id', bookingId)
       .maybeSingle();

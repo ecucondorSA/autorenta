@@ -1,14 +1,13 @@
+import { LoggerService } from '../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
+import {AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   ElementRef,
   OnInit,
   signal,
-  ViewChild,
-} from '@angular/core';
+  ViewChild, inject} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -61,6 +60,7 @@ import { WazeLiveMapComponent } from '../../shared/components/waze-live-map/waze
   ],
 })
 export class ExplorePage implements OnInit, AfterViewInit {
+  private readonly logger = inject(LoggerService);
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
   @ViewChild('carouselContainer') carouselContainer?: ElementRef<HTMLDivElement>;
   @ViewChild(CarsMapComponent) carsMap?: CarsMapComponent;
@@ -254,7 +254,7 @@ export class ExplorePage implements OnInit, AfterViewInit {
    */
   onChatClick(carId: string) {
     // TODO: Abrir chat con anfitrión
-    console.log('Chat requested for car:', carId);
+    this.logger.debug('Chat requested for car:', carId);
   }
 
   /**

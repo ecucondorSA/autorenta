@@ -5,14 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { Booking } from '../../../core/models';
-// TODO: Create a generic EvidenceUploader component that can be reused
-// import { EvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
+import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-report-owner-no-show',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, EvidenceUploaderComponent],
   templateUrl: './report-owner-no-show.component.html',
   styleUrls: ['./report-owner-no-show.component.scss'],
 })
@@ -23,6 +23,7 @@ export class ReportOwnerNoShowComponent {
   @Output() noShowReported = new EventEmitter<{ success: boolean; message?: string }>();
 
   private readonly bookingsService = inject(BookingsService);
+  private readonly logger = inject(LoggerService);
 
   readonly loading = signal(false);
   readonly formError = signal<string | null>(null);
@@ -54,7 +55,7 @@ export class ReportOwnerNoShowComponent {
       this.noShowReported.emit(result);
       this.closeModal.emit();
     } catch (error) {
-      console.error('Error reporting owner no-show:', error);
+      this.logger.error('Error reporting owner no-show', 'ReportOwnerNoShowComponent', error);
       this.formError.set(error instanceof Error ? error.message : 'Error al reportar no-show.');
     } finally {
       this.loading.set(false);

@@ -20,17 +20,42 @@ DECLARE
   v_recent_bookings JSONB;
   v_verification RECORD;
   v_warnings JSONB := '[]'::JSONB;
+  v_is_authorized BOOLEAN := FALSE;
+  v_caller_id UUID := auth.uid();
 BEGIN
-  -- Verificar que el usuario autenticado sea propietario del booking (si se proporciona)
+  -- Autorización:
+  -- A) Si hay booking_id, el caller debe ser owner del auto.
+  -- B) Si no hay booking_id, debe existir relación owner<->renter o ser admin.
+  IF v_caller_id IS NULL THEN
+    RAISE EXCEPTION 'No autorizado para ver este análisis';
+  END IF;
+
   IF p_booking_id IS NOT NULL THEN
-    IF NOT EXISTS (
+    SELECT EXISTS (
       SELECT 1 FROM bookings b
       JOIN cars c ON b.car_id = c.id
       WHERE b.id = p_booking_id
-      AND c.owner_id = auth.uid()
-    ) THEN
-      RAISE EXCEPTION 'No autorizado para ver este análisis';
-    END IF;
+        AND c.owner_id = v_caller_id
+    ) INTO v_is_authorized;
+  ELSE
+    SELECT EXISTS (
+      SELECT 1 FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.renter_id = p_renter_id
+        AND c.owner_id = v_caller_id
+        AND b.status IN ('pending','confirmed','in_progress','completed','cancelled','expired')
+    ) INTO v_is_authorized;
+  END IF;
+
+  IF NOT v_is_authorized AND to_regclass('public.admin_users') IS NOT NULL THEN
+    SELECT EXISTS (
+      SELECT 1 FROM admin_users
+      WHERE user_id = v_caller_id AND is_active = TRUE
+    ) INTO v_is_authorized;
+  END IF;
+
+  IF NOT v_is_authorized THEN
+    RAISE EXCEPTION 'No autorizado para ver este análisis';
   END IF;
 
   -- 1. Obtener perfil básico del renter
@@ -53,9 +78,24 @@ BEGIN
   END IF;
 
   -- 2. Estadísticas de bookings
+  -- Preferimos cancelled_by_role cuando está disponible, con fallback a cancellation_reason
   SELECT
     COUNT(*) FILTER (WHERE status = 'completed') AS completed_rentals,
-    COUNT(*) FILTER (WHERE status = 'cancelled' AND cancelled_by = p_renter_id) AS cancellations_by_renter,
+    COUNT(*) FILTER (
+      WHERE status = 'cancelled'
+        AND (
+          cancelled_by_role = 'renter'
+          OR (
+            cancelled_by_role IS NULL AND (
+              cancellation_reason ILIKE '%user%' OR
+              cancellation_reason ILIKE '%renter%' OR
+              cancellation_reason ILIKE '%locatario%' OR
+              cancellation_reason ILIKE '%cancelled by user%' OR
+              cancellation_reason ILIKE '%cancelled by renter%'
+            )
+          )
+        )
+    ) AS cancellations_by_renter,
     COUNT(*) FILTER (WHERE status = 'cancelled') AS total_cancellations,
     COUNT(*) AS total_bookings,
     COALESCE(AVG(CASE WHEN status = 'completed' THEN total_amount END), 0) AS avg_booking_value,
@@ -67,16 +107,24 @@ BEGIN
   -- 3. Perfil de riesgo (si existe)
   SELECT
     drp.class AS risk_class,
-    drp.years_without_claims,
+    drp.good_years AS years_without_claims,
     drp.updated_at AS risk_updated_at,
-    EXISTS (
-      SELECT 1 FROM bonus_protectors bp
-      WHERE bp.user_id = p_renter_id
-      AND bp.expires_at > NOW()
-    ) AS has_bonus_protection
+    FALSE AS has_bonus_protection
   INTO v_risk
   FROM driver_risk_profile drp
   WHERE drp.user_id = p_renter_id;
+
+  -- Bonus protector (si existe tabla driver_protection_addons)
+  IF to_regclass('public.driver_protection_addons') IS NOT NULL THEN
+    SELECT EXISTS (
+      SELECT 1 FROM driver_protection_addons dpa
+      WHERE dpa.user_id = p_renter_id
+        AND dpa.addon_type = 'bonus_protector'
+        AND dpa.is_active = true
+        AND (dpa.expires_at IS NULL OR dpa.expires_at > NOW())
+        AND dpa.claims_used < dpa.max_protected_claims
+    ) INTO v_risk.has_bonus_protection;
+  END IF;
 
   -- 4. Reviews recibidas como renter (de propietarios)
   SELECT COALESCE(
@@ -131,9 +179,8 @@ BEGIN
     EXISTS (
       SELECT 1 FROM user_documents ud
       WHERE ud.user_id = p_renter_id
-      AND ud.document_type = 'drivers_license'
-      AND ud.status = 'approved'
-      AND (ud.expiry_date IS NULL OR ud.expiry_date > NOW())
+        AND ud.kind IN ('driver_license', 'license_front', 'license_back')
+        AND ud.status = 'verified'
     ) AS license_verified
   INTO v_verification;
 

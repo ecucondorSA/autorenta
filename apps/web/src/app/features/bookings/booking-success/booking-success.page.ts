@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, OnInit, OnDestroy, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -19,6 +20,7 @@ type PaymentStatus = 'pending' | 'completed' | 'failed' | 'timeout';
   styleUrls: ['./booking-success.page.scss'],
 })
 export class BookingSuccessPage implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
@@ -28,6 +30,10 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
   readonly booking = signal<Booking | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly autoRedirectSeconds = signal<number>(12);
+  readonly autoRedirectActive = signal(false);
+  private redirectInterval: number | null = null;
+  private redirectTimeout: number | null = null;
 
   // ✅ Payment polling state
   readonly paymentStatus = signal<PaymentStatus>('pending');
@@ -56,6 +62,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopPolling();
+    this.stopAutoRedirect();
   }
 
   private async loadBooking(id: string): Promise<void> {
@@ -65,11 +72,54 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
         throw new Error('Reserva no encontrada');
       }
       this.booking.set(booking);
+      this.startAutoRedirect();
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Error al cargar la reserva');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  private startAutoRedirect(): void {
+    if (this.autoRedirectActive() || this.autoRedirectSeconds() <= 0) {
+      return;
+    }
+
+    this.autoRedirectActive.set(true);
+
+    this.redirectInterval = window.setInterval(() => {
+      const next = this.autoRedirectSeconds() - 1;
+      this.autoRedirectSeconds.set(Math.max(0, next));
+      if (next <= 0) {
+        this.goToBookingDetail();
+      }
+    }, 1000);
+
+    this.redirectTimeout = window.setTimeout(() => {
+      this.goToBookingDetail();
+    }, this.autoRedirectSeconds() * 1000);
+  }
+
+  private stopAutoRedirect(): void {
+    if (this.redirectInterval !== null) {
+      window.clearInterval(this.redirectInterval);
+      this.redirectInterval = null;
+    }
+    if (this.redirectTimeout !== null) {
+      window.clearTimeout(this.redirectTimeout);
+      this.redirectTimeout = null;
+    }
+    this.autoRedirectActive.set(false);
+  }
+
+  cancelAutoRedirect(): void {
+    this.stopAutoRedirect();
+  }
+
+  goToBookingDetail(): void {
+    if (!this.bookingId()) return;
+    this.stopAutoRedirect();
+    this.router.navigate(['/bookings', this.bookingId()]);
   }
 
   /**
@@ -117,14 +167,14 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
           this.paymentStatus.set('completed');
           this.pollProgress.set(100);
           this.stopPolling();
-          console.log(`✅ Payment confirmed after ${this.pollAttempts} attempts`);
+          this.logger.debug(`✅ Payment confirmed after ${this.pollAttempts} attempts`);
           return;
         }
 
         if (booking.status === 'cancelled') {
           this.paymentStatus.set('failed');
           this.stopPolling();
-          console.log(`❌ Payment failed after ${this.pollAttempts} attempts`);
+          this.logger.debug(`❌ Payment failed after ${this.pollAttempts} attempts`);
           return;
         }
 
@@ -161,7 +211,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
    * Retry manual del polling (para caso de timeout)
    */
   retryPolling(): void {
-    console.log('🔄 Retrying payment polling...');
+    this.logger.debug('🔄 Retrying payment polling...');
     this.startPolling();
   }
 
@@ -175,7 +225,7 @@ export class BookingSuccessPage implements OnInit, OnDestroy {
       return;
     }
 
-    console.log('🔄 Retrying payment for booking:', booking.id);
+    this.logger.debug('🔄 Retrying payment for booking:', booking.id);
 
     // Navegar al wizard de checkout con el booking ID
     this.router.navigate(['/bookings', booking.id, 'checkout'], {

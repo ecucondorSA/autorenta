@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {AfterViewInit,
   Component,
@@ -53,6 +54,7 @@ declare const window: PayPalWindow;
   styleUrls: ['./paypal-button.component.css'],
 })
 export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   @Input() bookingId!: string;
   @Input() useSplitPayment = false;
   @Input() clientId?: string; // Optional: Override PayPal client ID
@@ -181,7 +183,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // Handle cancellation
         onCancel: (data: unknown) => {
-          console.log('PayPal payment cancelled', data);
+          this.logger.debug('PayPal payment cancelled', data);
           this.paymentCancelled.emit();
         },
 
@@ -214,7 +216,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
         throw new Error(response?.error || 'Failed to create PayPal order');
       }
 
-      console.log('PayPal order created:', response.preference_id);
+      this.logger.debug('PayPal order created:', response.preference_id);
 
       this.isLoading = false;
       this.loadingChange.emit(false);
@@ -239,7 +241,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingChange.emit(true);
       this.error = null;
 
-      console.log('Capturing PayPal order:', orderId);
+      this.logger.debug('Capturing PayPal order:', orderId);
 
       const captureResponse = await this.gatewayService.captureOrder(orderId).toPromise();
 
@@ -247,7 +249,7 @@ export class PayPalButtonComponent implements OnInit, AfterViewInit, OnDestroy {
         throw new Error(captureResponse?.error || 'Failed to capture PayPal payment');
       }
 
-      console.log('PayPal payment captured:', captureResponse.capture_id);
+      this.logger.debug('PayPal payment captured:', captureResponse.capture_id);
 
       this.isLoading = false;
       this.loadingChange.emit(false);

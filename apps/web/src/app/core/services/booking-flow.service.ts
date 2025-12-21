@@ -65,14 +65,14 @@ export class BookingFlowService {
         actions.push({
           label: 'Aprobar Reserva',
           action: 'approve',
-          route: `/bookings/${booking.id}`,
+          route: `/bookings/owner/${booking.id}`,
           variant: 'primary',
           icon: 'checkmark-circle',
         });
         actions.push({
           label: 'Rechazar',
           action: 'reject',
-          route: `/bookings/${booking.id}`,
+          route: `/bookings/owner/${booking.id}`,
           variant: 'danger',
           icon: 'close-circle',
         });
@@ -231,7 +231,7 @@ export class BookingFlowService {
           title: 'Revisar Solicitud',
           description: 'Un locatario quiere alquilar tu auto. Revisa y aprueba la solicitud.',
           action: 'Aprobar o Rechazar',
-          route: `/bookings/${booking.id}`,
+          route: `/bookings/owner/${booking.id}`,
           priority: 'high',
         };
       }
@@ -249,7 +249,7 @@ export class BookingFlowService {
           title: 'Esperando Devolución',
           description: 'El locatario está usando el vehículo. Prepárate para el check-out.',
           action: 'Ver Detalles',
-          route: `/bookings/${booking.id}`,
+          route: `/bookings/owner/${booking.id}`,
           priority: 'medium',
         };
       }
@@ -260,7 +260,7 @@ export class BookingFlowService {
             title: 'Dejar Reseña',
             description: 'Califica tu experiencia con el locatario.',
             action: 'Escribir Reseña',
-            route: `/bookings/${booking.id}`,
+            route: `/bookings/owner/${booking.id}`,
             priority: 'low',
           };
         }
@@ -281,8 +281,9 @@ export class BookingFlowService {
       }
       if (status === 'confirmed') {
         return {
-          title: 'Esperando Check-In',
-          description: 'El locador realizará el check-in antes de entregarte el vehículo.',
+          title: 'Esperando entrega',
+          description:
+            'El locador realizará el check-in. Luego podrás documentar la recepción del vehículo.',
           action: 'Ver Detalles',
           route: `/bookings/${booking.id}`,
           priority: 'medium',

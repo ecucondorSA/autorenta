@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { SupabaseClientService } from './supabase-client.service';
@@ -77,6 +78,7 @@ declare global {
   providedIn: 'root',
 })
 export class AnalyticsService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = inject(SupabaseClientService).getClient();
   private readonly authService = inject(AuthService);
   private readonly isEnabled = environment.enableAnalytics;
@@ -91,7 +93,7 @@ export class AnalyticsService {
 
     // P0-033 FIX: Check for cookie consent before tracking
     if (!this.hasConsentForTracking()) {
-      console.log('[Analytics] Tracking blocked - no cookie consent');
+      this.logger.debug('[Analytics] Tracking blocked - no cookie consent');
       return;
     }
 

@@ -403,8 +403,7 @@ export class CheckoutPaymentService {
       actionRequired: 'IMMEDIATE_MANUAL_INTERVENTION',
     });
 
-    // 3. ⚠️ TODO: Guardar en tabla payment_issues para background retry
-    // Esto requiere un servicio de PaymentIssuesService que guardará en Supabase
+    // 3. Guardar en tabla payment_issues para background retry
     try {
       await this.bookings.createPaymentIssue({
         booking_id: bookingId,

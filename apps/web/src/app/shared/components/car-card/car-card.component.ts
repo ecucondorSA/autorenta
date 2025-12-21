@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -30,6 +31,7 @@ import { getCarImageUrl } from '../../utils/car-placeholder.util';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarCardComponent implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly pricingService = inject(DynamicPricingService);
   private readonly realtimePricing = inject(RealtimePricingService);
@@ -108,7 +110,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
 
   @Input({ required: true })
   set car(value: Car) {
-    console.log('🚗 [CarCard] Car set:', {
+    this.logger.debug('🚗 [CarCard] Car set:', {
       id: value?.id,
       title: value?.title,
       region_id: value?.region_id,
@@ -275,7 +277,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
   private async loadDynamicPrice(): Promise<void> {
     const car = this._car();
 
-    console.log('💰 [CarCard] Loading dynamic price for:', {
+    this.logger.debug('💰 [CarCard] Loading dynamic price for:', {
       carId: car?.id,
       carTitle: car?.title,
       regionId: car?.region_id,
@@ -296,7 +298,7 @@ export class CarCardComponent implements OnInit, OnDestroy {
       } = await this.supabase.auth.getUser();
       const userId = user?.id || '00000000-0000-0000-0000-000000000000';
 
-      console.log('🔍 [CarCard] Calling calculate_dynamic_price RPC with:', {
+      this.logger.debug('🔍 [CarCard] Calling calculate_dynamic_price RPC with:', {
         regionId: car.region_id,
         userId,
       });
@@ -313,12 +315,12 @@ export class CarCardComponent implements OnInit, OnDestroy {
         throw error;
       }
 
-      console.log('✅ [CarCard] RPC response:', data);
+      this.logger.debug('✅ [CarCard] RPC response:', data);
 
       if (data && data.total_price) {
         const dynamicPricePerDay = data.total_price;
         this.dynamicPrice.set(dynamicPricePerDay);
-        console.log(
+        this.logger.debug(
           `💰 [CarCard] Dynamic price set: $${dynamicPricePerDay} (was $${car.price_per_day})`,
         );
 

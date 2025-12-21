@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {
   Component,
   Input,
@@ -357,6 +358,7 @@ export interface BookingFormData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapBookingPanelComponent implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   @Input() car: CarMapLocation | null = null;
   @Input() isOpen = signal(false);
   @Input() userLocation?: { lat: number; lng: number };
@@ -605,7 +607,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
    * Cierra el modal y reintenta la confirmación del booking
    */
   onBirthDateCompleted(birthDate: string): void {
-    console.log('[MapBookingPanel] Birth date completed:', birthDate);
+    this.logger.debug('[MapBookingPanel] Birth date completed:', birthDate);
     this.showBirthDateModal.set(false);
 
     // Reintentar confirmación automáticamente
@@ -619,7 +621,7 @@ export class MapBookingPanelComponent implements OnInit, OnDestroy {
    * Solo cierra el modal, no procede con el booking
    */
   onBirthDateCancelled(): void {
-    console.log('[MapBookingPanel] Birth date cancelled');
+    this.logger.debug('[MapBookingPanel] Birth date cancelled');
     this.showBirthDateModal.set(false);
     // No hacer nada más, el usuario puede decidir si quiere intentar nuevamente
   }

@@ -3,7 +3,6 @@
   "private": true,
   "packageManager": "pnpm@10.22.0",
   "scripts": {
-    "postinstall": "cd apps/web && npm install",
     "_comment_dev": "=== DEVELOPMENT ===",
     "dev": "./tools/dev/dev.sh",
     "dev:web": "./tools/run.sh dev:web",
@@ -13,6 +12,12 @@
     "test": "./tools/run.sh test",
     "test:quick": "./tools/run.sh test:quick",
     "test:coverage": "./tools/run.sh test:coverage",
+    "test:unit": "vitest",
+    "test:unit:watch": "vitest --watch",
+    "test:unit:coverage": "vitest run --coverage",
+    "test:unit:ui": "vitest --ui",
+    "test:unit:ci": "vitest run --reporter=dot",
+    "test:unit:clean": "rm -rf coverage .vitest",
     "test:e2e": "./tools/run.sh test:e2e",
     "test:selectors": "node tools/analyze-test-selectors.mjs",
     "test:selectors:check": "node tools/analyze-test-selectors.mjs --check",
@@ -63,7 +68,7 @@
     "lint:orphans:json": "npx tsx scripts/lint-orphans.ts --json > orphan-lint-report.json",
     "format": "./tools/run.sh format",
     "_comment_utils": "=== UTILITIES ===",
-    "install": "./tools/run.sh install",
+    "install": "AUTORENTA_SKIP_INSTALL=1 ./tools/run.sh install",
     "install:all": "./tools/run.sh install",
     "clean": "./tools/ops/cleanup.sh",
     "clean:deep": "./tools/ops/deep-clean.sh",
@@ -120,8 +125,11 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "uuid": "^13.0.0",
+    "vitest": "^3.1.1",
     "wait-on": "^9.0.3",
-    "zod": "^4.2.0"
+    "zod": "^4.2.0",
+    "@vitest/coverage-v8": "^3.1.1",
+    "@vitest/ui": "^3.1.1"
   },
   "autorenta": {
     "version": "0.1.0",
@@ -189,5 +197,24 @@
     "shepherd.js": "^14.5.1",
     "three": "^0.181.2",
     "tslib": "^2.8.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "@ionic/core": "8.6.0"
+    },
+    "onlyBuiltDependencies": [
+      "@compodoc/compodoc",
+      "@parcel/watcher",
+      "@scarf/scarf",
+      "@sentry/capacitor",
+      "@sentry/cli",
+      "core-js",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "protobufjs",
+      "puppeteer",
+      "sharp"
+    ]
   }
 }

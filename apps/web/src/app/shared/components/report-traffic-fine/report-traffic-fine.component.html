@@ -52,11 +52,12 @@
           ></ion-textarea>
         </ion-item>
 
-        <!-- TODO: Add evidence uploader when generic component is available -->
-        <ion-item>
-          <ion-label position="stacked">Evidencias (Opcional)</ion-label>
-          <ion-note>Funcionalidad de subida de evidencias próximamente</ion-note>
-        </ion-item>
+        <app-evidence-uploader
+          [bookingId]="booking.id"
+          [context]="'traffic_fine'"
+          [disabled]="loading()"
+          (urlsChange)="onEvidenceUploaded($event)"
+        ></app-evidence-uploader>
 
         @if (formError()) {
           <div class="ion-padding-top ion-text-danger ion-text-center">

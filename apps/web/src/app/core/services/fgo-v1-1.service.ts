@@ -278,7 +278,7 @@ export class FgoV1_1Service {
    */
   getInspectionByStage(
     bookingId: string,
-    stage: 'check_in' | 'check_out',
+    stage: 'check_in' | 'check_out' | 'renter_check_in',
   ): Observable<BookingInspection | null> {
     return from(
       this.supabaseClient
@@ -286,7 +286,7 @@ export class FgoV1_1Service {
         .select('*')
         .eq('booking_id', bookingId)
         .eq('stage', stage)
-        .single(),
+        .maybeSingle(),
     ).pipe(
       map((response) => {
         if (response['error']) {

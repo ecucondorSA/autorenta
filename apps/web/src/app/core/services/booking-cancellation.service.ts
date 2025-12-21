@@ -64,6 +64,7 @@ export class BookingCancellationService {
         .update({
           status: 'cancelled',
           updated_at: new Date().toISOString(),
+          cancelled_by_role: 'renter',
         })
         .eq('id', booking['id']);
 
@@ -121,6 +122,7 @@ export class BookingCancellationService {
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),
         cancellation_reason: reason ?? 'Cancelled by user',
+        cancelled_by_role: 'renter',
         wallet_status: booking.wallet_status === 'locked' ? 'refunded' : booking.wallet_status,
       })
       .eq('id', booking['id']);
@@ -281,6 +283,7 @@ export class BookingCancellationService {
           status: 'cancelled',
           updated_at: new Date().toISOString(),
           cancellation_reason: 'no_show',
+          cancelled_by_role: 'system',
         })
         .eq('id', booking['id']);
 

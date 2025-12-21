@@ -341,25 +341,13 @@
                   </a>
                 }
 
-                @if (canStartRental(booking)) {
-                  <button
-                    (click)="onStartRental(booking.id)"
-                    [disabled]="processingAction() === booking.id"
-                    class="px-4 py-2 bg-success-light text-text-primary text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                    {{ processingAction() === booking.id ? '...' : '🚗 Iniciar Alquiler (Manual)' }}
-                  </button>
-                }
-
                 @if (canCompleteRental(booking)) {
                   <button
                     (click)="onCompleteRental(booking.id)"
                     [disabled]="processingAction() === booking.id"
                     class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-text-inverse text-sm font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                    {{
-                    processingAction() === booking.id ? '...' : '✅ Finalizar Alquiler (Manual)'
-                    }}
+                    {{ processingAction() === booking.id ? '...' : '✅ Confirmar devolución' }}
                   </button>
                 }
 
@@ -374,7 +362,7 @@
                 }
 
                 <a
-                  [routerLink]="['/bookings', booking.id]"
+                  [routerLink]="['/bookings', 'owner', booking.id]"
                   class="px-4 py-2 border border-border-default dark:border-neutral-700 text-text-primary dark:text-text-primary text-sm font-medium rounded-lg hover:bg-surface-base dark:hover:bg-graphite-dark transition-colors"
                   >
                   Ver Detalles →

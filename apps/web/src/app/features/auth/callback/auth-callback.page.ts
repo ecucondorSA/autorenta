@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
@@ -103,6 +104,7 @@ import { ProfileService } from '../../../core/services/profile.service';
     `,
 })
 export class AuthCallbackPage implements OnInit {
+  private readonly logger = inject(LoggerService);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly profileService = inject(ProfileService);
@@ -139,7 +141,7 @@ export class AuthCallbackPage implements OnInit {
 
       if (tiktokCode) {
         // Procesar callback de TikTok
-        console.log('🎵 Detectado callback de TikTok');
+        this.logger.debug('🎵 Detectado callback de TikTok');
         sessionResult = await this.auth.handleTikTokCallback(tiktokCode);
       } else {
         // Procesar tokens del hash de OAuth (Google, etc.)

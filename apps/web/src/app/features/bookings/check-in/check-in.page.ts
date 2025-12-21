@@ -9,6 +9,7 @@ import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
+import { LoggerService } from '../../../core/services/logger.service';
 
 /**
  * Página de Check-in para locatarios
@@ -30,12 +31,14 @@ export class CheckInPage implements OnInit {
   private readonly bookingsService = inject(BookingsService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly authService = inject(AuthService);
+  private readonly logger = inject(LoggerService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   inspectionCompleted = signal(false);
   existingInspection = signal<BookingInspection | null>(null);
+  ownerCheckInInspection = signal<BookingInspection | null>(null);
 
   // Computed properties
   readonly canPerformCheckIn = computed(() => {
@@ -48,15 +51,32 @@ export class CheckInPage implements OnInit {
     // 3. No hay check-in completado ya
     const isRenter = booking.renter_id === this.authService.session$()?.user?.id;
     const validStatus = booking.status === 'confirmed' || booking.status === 'in_progress';
+    const ownerCheckInReady = this.ownerCheckInInspection()?.signedAt !== undefined;
     const hasCheckIn = this.existingInspection()?.signedAt !== undefined;
 
-    return isRenter && validStatus && !hasCheckIn;
+    if (!isRenter || !validStatus || hasCheckIn) return false;
+
+    // Legacy fallback: allow renter documentation even if owner check-in is missing
+    if (booking.status === 'in_progress') {
+      return true;
+    }
+
+    return ownerCheckInReady;
   });
 
   readonly isRenter = computed(() => {
     const booking = this.booking();
     const currentUser = this.authService.session$()?.user;
     return booking?.renter_id === currentUser?.id;
+  });
+
+  readonly ownerCheckInCompleted = computed(() => {
+    return this.ownerCheckInInspection()?.signedAt !== undefined;
+  });
+
+  readonly isLegacyInProgress = computed(() => {
+    const booking = this.booking();
+    return booking?.status === 'in_progress' && !this.ownerCheckInCompleted();
   });
 
   async ngOnInit(): Promise<void> {
@@ -92,18 +112,23 @@ export class CheckInPage implements OnInit {
         return;
       }
 
-      // Cargar inspección existente (si existe)
-      const inspection = await firstValueFrom(
-        this.fgoService.getInspectionByStage(bookingId, 'check_in'),
-      );
+      // Cargar inspección del locador y del locatario
+      const [ownerCheckIn, renterCheckIn] = await Promise.all([
+        firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'check_in')),
+        firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'renter_check_in')),
+      ]);
 
-      if (inspection?.signedAt) {
-        this.existingInspection.set(inspection);
+      if (ownerCheckIn?.signedAt) {
+        this.ownerCheckInInspection.set(ownerCheckIn);
+      }
+
+      if (renterCheckIn?.signedAt) {
+        this.existingInspection.set(renterCheckIn);
         this.inspectionCompleted.set(true);
       }
     } catch (err) {
       this.error.set('Error al cargar la reserva');
-      console.error('Error loading booking:', err);
+      this.logger.error('Error loading booking', 'CheckInPage', err);
     } finally {
       this.loading.set(false);
     }
@@ -138,7 +163,7 @@ export class CheckInPage implements OnInit {
       }, 2000);
     } catch (err) {
       this.error.set('Error al completar el check-in');
-      console.error('Error completing check-in:', err);
+      this.logger.error('Error completing check-in', 'CheckInPage', err);
     }
   }
 

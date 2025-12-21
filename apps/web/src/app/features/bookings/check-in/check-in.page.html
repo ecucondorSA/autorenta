@@ -57,10 +57,10 @@
         >
           <h1 class="text-2xl font-bold text-text-primary dark:text-text-inverse mb-2 flex items-center gap-3 font-satoshi">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 17h14v-5l-2-4H7l-2 4v5z" stroke-width="1.75" stroke-linejoin="round"/><circle cx="7.5" cy="17" r="1.5" stroke-width="1.5"/><circle cx="16.5" cy="17" r="1.5" stroke-width="1.5"/></svg>
-            Check-in del Vehículo
+            Recepción y documentación
           </h1>
           <p class="text-text-secondary dark:text-text-secondary dark:text-text-secondary">
-            Realizá la inspección inicial del vehículo antes de iniciar el alquiler
+            Documentá el estado del auto antes de comenzar el viaje
           </p>
         </div>
       </div>
@@ -162,11 +162,45 @@
         </div>
       }
 
+      <!-- Waiting for owner check-in -->
+      @else if (!ownerCheckInCompleted() && booking()?.status === 'confirmed') {
+        <div
+          class="bg-warning-bg border border-warning-border rounded-xl p-6 dark:bg-warning-900/20 dark:border-warning-800"
+        >
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 text-2xl">⏳</div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-warning-strong dark:text-warning-200 mb-2 font-satoshi">
+                Esperando al locador
+              </h3>
+              <p class="text-warning-strong dark:text-warning-300 mb-4">
+                El locador todavía no completó su check-in. Apenas lo haga, podrás
+                documentar la recepción del vehículo.
+              </p>
+              <button
+                (click)="goToBookingDetail()"
+                class="px-4 py-2 bg-warning-600 text-text-inverse rounded-lg hover:bg-warning-700 transition-colors"
+              >
+                Ver Detalle de Reserva
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- Check-in Form -->
       @else if (canPerformCheckIn()) {
         <div
           class="bg-surface-raised dark:bg-surface-base rounded-xl shadow-sm border border-border-default dark:border-border-muted p-6"
         >
+          @if (isLegacyInProgress()) {
+            <div class="mb-6 rounded-xl border border-warning-border bg-warning-bg p-4 dark:bg-warning-900/20">
+              <p class="text-sm text-warning-strong dark:text-warning-200">
+                Esta reserva ya está en curso y no encontramos el check-in del locador.
+                Documentá la recepción ahora para completar el registro.
+              </p>
+            </div>
+          }
           <div class="mb-6">
             <h2 class="text-lg font-semibold text-text-primary dark:text-text-inverse mb-2 font-satoshi">
               Instrucciones
@@ -183,7 +217,7 @@
 
           <app-inspection-uploader
             [bookingId]="booking()!.id"
-            stage="check_in"
+            stage="renter_check_in"
             (inspectionCompleted)="onInspectionCompleted($event)"
           ></app-inspection-uploader>
         </div>

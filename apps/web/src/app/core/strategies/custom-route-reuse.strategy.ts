@@ -1,3 +1,5 @@
+import { inject } from '@angular/core';
+import { LoggerService } from '../services/logger.service';
 import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from '@angular/router';
 
 /**
@@ -18,6 +20,7 @@ import { ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy } from 
  * - 'cars/list' - Heavy Mapbox map
  */
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
+  private readonly logger = inject(LoggerService);
   /**
    * Routes to keep in memory for instant restore
    * Add route paths here (without leading slash)
@@ -59,7 +62,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
     const shouldCache = this.routesToCache.has(path);
 
     if (shouldCache) {
-      console.log(`[RouteReuse] Detaching route for cache: "${path}"`);
+      this.logger.debug(`[RouteReuse] Detaching route for cache: "${path}"`);
     }
 
     return shouldCache;
@@ -77,13 +80,13 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
       if (this.handlers.size >= this.maxCacheSize && !this.handlers.has(path)) {
         const oldestKey = this.handlers.keys().next().value;
         if (oldestKey) {
-          console.log(`[RouteReuse] Evicting oldest cached route: "${oldestKey}"`);
+          this.logger.debug(`[RouteReuse] Evicting oldest cached route: "${oldestKey}"`);
           this.handlers.delete(oldestKey);
         }
       }
 
       this.handlers.set(path, handle);
-      console.log(`[RouteReuse] Stored route: "${path}" (cache size: ${this.handlers.size})`);
+      this.logger.debug(`[RouteReuse] Stored route: "${path}" (cache size: ${this.handlers.size})`);
     } else {
       this.handlers.delete(path);
     }
@@ -98,7 +101,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
     const hasHandle = this.handlers.has(path);
 
     if (hasHandle) {
-      console.log(`[RouteReuse] Restoring cached route: "${path}"`);
+      this.logger.debug(`[RouteReuse] Restoring cached route: "${path}"`);
     }
 
     return hasHandle;
@@ -126,7 +129,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
    * Clear all cached routes (call on logout, etc.)
    */
   clearCache(): void {
-    console.log(`[RouteReuse] Clearing all cached routes (${this.handlers.size} routes)`);
+    this.logger.debug(`[RouteReuse] Clearing all cached routes (${this.handlers.size} routes)`);
     this.handlers.clear();
   }
 
@@ -136,7 +139,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
   clearRoute(path: string): void {
     if (this.handlers.has(path)) {
       this.handlers.delete(path);
-      console.log(`[RouteReuse] Cleared cached route: "${path}"`);
+      this.logger.debug(`[RouteReuse] Cleared cached route: "${path}"`);
     }
   }
 

@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseClientService } from './supabase-client.service';
@@ -47,6 +48,7 @@ export interface OAuthCallbackResponse {
   providedIn: 'root',
 })
 export class MercadoPagoOAuthService {
+  private readonly logger = inject(LoggerService);
   private supabase = inject(SupabaseClientService).getClient();
   private router = inject(Router);
 
@@ -88,16 +90,16 @@ export class MercadoPagoOAuthService {
    * @returns Promise<boolean> - true si la conexión fue exitosa
    */
   async handleCallback(code: string, state: string): Promise<boolean> {
-    console.log('[OAuth Service] handleCallback called');
-    console.log('[OAuth Service] State to send:', state);
-    console.log('[OAuth Service] State length:', state?.length);
+    this.logger.debug('[OAuth Service] handleCallback called');
+    this.logger.debug('[OAuth Service] State to send:', state);
+    this.logger.debug('[OAuth Service] State length:', state?.length);
 
     const { data, error } = await this.supabase.functions.invoke('mercadopago-oauth-callback', {
       body: { code, state },
     });
 
-    console.log('[OAuth Service] Response:', JSON.stringify(data));
-    console.log('[OAuth Service] Error:', error);
+    this.logger.debug('[OAuth Service] Response:', JSON.stringify(data));
+    this.logger.debug('[OAuth Service] Error:', error);
 
     if (error) {
       throw new Error(error.message || 'Error procesando callback');
@@ -127,7 +129,7 @@ export class MercadoPagoOAuthService {
 
       const status = (data as MercadoPagoConnectionStatus) || { connected: false };
 
-      console.log('[OAuth] Estado:', status.connected ? '✅ Conectado' : '❌ No conectado');
+      this.logger.debug('[OAuth] Estado:', status.connected ? '✅ Conectado' : '❌ No conectado');
 
       return status;
     } catch {

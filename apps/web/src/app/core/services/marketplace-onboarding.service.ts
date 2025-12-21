@@ -156,12 +156,12 @@ export class MarketplaceOnboardingService {
   async getMarketplaceStatus(userId: string): Promise<MarketplaceStatus> {
     try {
       const { data, error } = await this.supabase
-        .from('users')
+        .from('profiles')
         .select(
-          'mercadopago_collector_id, marketplace_approved, mp_onboarding_completed_at, mp_token_expires_at',
+          'mercadopago_collector_id, mp_onboarding_completed, mp_onboarding_url, mercadopago_access_token_expires_at',
         )
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         return {
@@ -170,14 +170,14 @@ export class MarketplaceOnboardingService {
         };
       }
 
-      const hasActiveTokens = data?.mp_token_expires_at
-        ? new Date(data.mp_token_expires_at) > new Date()
+      const hasActiveTokens = data?.mercadopago_access_token_expires_at
+        ? new Date(data.mercadopago_access_token_expires_at) > new Date()
         : false;
 
       return {
-        isApproved: data?.marketplace_approved || false,
+        isApproved: data?.mp_onboarding_completed || false,
         collectorId: data?.mercadopago_collector_id || undefined,
-        completedAt: data?.mp_onboarding_completed_at || undefined,
+        completedAt: undefined,
         hasActiveTokens,
       };
     } catch {
@@ -224,13 +224,14 @@ export class MarketplaceOnboardingService {
 
     // Limpiar datos locales
     const { error } = await this.supabase
-      .from('users')
+      .from('profiles')
       .update({
         mercadopago_collector_id: null,
-        marketplace_approved: false,
-        mp_access_token_encrypted: null,
-        mp_refresh_token_encrypted: null,
-        mp_token_expires_at: null,
+        mp_onboarding_completed: false,
+        mp_onboarding_url: null,
+        mercadopago_access_token: null,
+        mercadopago_refresh_token: null,
+        mercadopago_access_token_expires_at: null,
       })
       .eq('id', userId);
 
@@ -247,17 +248,17 @@ export class MarketplaceOnboardingService {
   async getDecryptedAccessToken(userId: string): Promise<string | null> {
     try {
       const { data, error } = await this.supabase
-        .from('users')
-        .select('mp_access_token_encrypted')
+        .from('profiles')
+        .select('mercadopago_access_token')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (error || !data?.mp_access_token_encrypted) {
+      if (error || !data?.mercadopago_access_token) {
         return null;
       }
 
       // Desencriptar token
-      return await this.encryptionService.decrypt(data.mp_access_token_encrypted);
+      return await this.encryptionService.decrypt(data.mercadopago_access_token);
     } catch {
       return null;
     }
@@ -273,17 +274,17 @@ export class MarketplaceOnboardingService {
   async getDecryptedRefreshToken(userId: string): Promise<string | null> {
     try {
       const { data, error } = await this.supabase
-        .from('users')
-        .select('mp_refresh_token_encrypted')
+        .from('profiles')
+        .select('mercadopago_refresh_token')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (error || !data?.mp_refresh_token_encrypted) {
+      if (error || !data?.mercadopago_refresh_token) {
         return null;
       }
 
       // Desencriptar token
-      return await this.encryptionService.decrypt(data.mp_refresh_token_encrypted);
+      return await this.encryptionService.decrypt(data.mercadopago_refresh_token);
     } catch {
       return null;
     }
@@ -383,14 +384,13 @@ export class MarketplaceOnboardingService {
     const encryptedRefreshToken = await this.encryptionService.encrypt(tokenResponse.refresh_token);
 
     const { error } = await this.supabase
-      .from('users')
+      .from('profiles')
       .update({
         mercadopago_collector_id: tokenResponse.user_id,
-        marketplace_approved: true,
-        mp_onboarding_completed_at: new Date().toISOString(),
-        mp_access_token_encrypted: encryptedAccessToken,
-        mp_refresh_token_encrypted: encryptedRefreshToken,
-        mp_token_expires_at: expiresAt,
+        mp_onboarding_completed: true,
+        mercadopago_access_token: encryptedAccessToken,
+        mercadopago_refresh_token: encryptedRefreshToken,
+        mercadopago_access_token_expires_at: expiresAt,
       })
       .eq('id', userId);
 

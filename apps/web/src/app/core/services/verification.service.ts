@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject, signal } from '@angular/core';
 import type { UserDocument, UserVerificationStatus, VerificationRole } from '../models';
 import type { Database } from '../types/database.types';
@@ -47,6 +48,7 @@ function validateDocType(docType: string): asserts docType is ValidDocType {
   providedIn: 'root',
 })
 export class VerificationService {
+  private readonly logger = inject(LoggerService);
   private supabase = inject(SupabaseClientService).getClient();
 
   // Reactive state consumed by guards/widgets/pages
@@ -111,7 +113,7 @@ export class VerificationService {
         await this.supabase.storage
           .from('verification-docs')
           .remove([filePath]);
-        console.log('Rollback successful: file removed from storage');
+        this.logger.debug('Rollback successful: file removed from storage');
       } catch (rollbackError) {
         // Log pero no fallar - el archivo huérfano se puede limpiar después
         console.error('Rollback failed: could not remove uploaded file:', rollbackError);

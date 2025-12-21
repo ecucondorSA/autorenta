@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-12-19T19:25:32.054Z",
+  "timestamp": "2025-12-21T05:51:42.810Z",
   "summary": {
-    "orphanComponents": 27,
-    "unusedRpcFunctions": 185,
-    "tablesWithoutQueries": 49,
+    "orphanComponents": 1,
+    "unusedRpcFunctions": 202,
+    "tablesWithoutQueries": 51,
     "criticalOrphans": 0,
-    "passed": false
+    "passed": true
   },
   "criticalIssues": [],
   "orphanComponents": [
@@ -13,142 +13,84 @@
       "name": "ReviewSummaryComponent",
       "path": "apps/web/src/app/shared/components/review-summary/review-summary.component.ts",
       "selector": "app-review-summary"
-    },
-    {
-      "name": "PendingReviewsListComponent",
-      "path": "apps/web/src/app/shared/components/pending-reviews-list/pending-reviews-list.component.ts",
-      "selector": "app-pending-reviews-list"
-    },
-    {
-      "name": "OfflineMessagesPanelComponent",
-      "path": "apps/web/src/app/shared/components/offline-messages-panel/offline-messages-panel.component.ts",
-      "selector": "app-offline-messages-panel"
-    },
-    {
-      "name": "MakeCalendarPublicButtonComponent",
-      "path": "apps/web/src/app/shared/components/make-calendar-public-button/make-calendar-public-button.component.ts",
-      "selector": "app-make-calendar-public-button"
-    },
-    {
-      "name": "HostSupportInfoPanelComponent",
-      "path": "apps/web/src/app/shared/components/host-support-info-panel/host-support-info-panel.component.ts",
-      "selector": "app-host-support-info-panel"
-    },
-    {
-      "name": "FloatingActionFabComponent",
-      "path": "apps/web/src/app/shared/components/floating-action-fab/floating-action-fab.component.ts",
-      "selector": "app-floating-action-fab"
-    },
-    {
-      "name": "DynamicPriceDisplayComponent",
-      "path": "apps/web/src/app/shared/components/dynamic-price-display/dynamic-price-display.component.ts",
-      "selector": "app-dynamic-price-display"
-    },
-    {
-      "name": "DistanceSummaryComponent",
-      "path": "apps/web/src/app/shared/components/distance-summary/distance-summary.component.ts",
-      "selector": "app-distance-summary"
-    },
-    {
-      "name": "DistanceRiskTierBadgeComponent",
-      "path": "apps/web/src/app/shared/components/distance-risk-tier-badge/distance-risk-tier-badge.component.ts",
-      "selector": "app-distance-risk-tier-badge"
-    },
-    {
-      "name": "DistanceBadgeComponent",
-      "path": "apps/web/src/app/shared/components/distance-badge/distance-badge.component.ts",
-      "selector": "app-distance-badge"
-    },
-    {
-      "name": "DepositWarningComponent",
-      "path": "apps/web/src/app/shared/components/deposit-warning/deposit-warning.component.ts",
-      "selector": "app-deposit-warning"
-    },
-    {
-      "name": "ClaimFormComponent",
-      "path": "apps/web/src/app/shared/components/claim-form/claim-form.component.ts",
-      "selector": "app-claim-form"
-    },
-    {
-      "name": "CarsDrawerComponent",
-      "path": "apps/web/src/app/shared/components/cars-drawer/cars-drawer.component.ts",
-      "selector": "app-cars-drawer"
-    },
-    {
-      "name": "CalendarEventsListComponent",
-      "path": "apps/web/src/app/shared/components/calendar-events-list/calendar-events-list.component.ts",
-      "selector": "app-calendar-events-list"
-    },
-    {
-      "name": "PayoutStatsComponent",
-      "path": "apps/web/src/app/features/payouts/payout-stats/payout-stats.component.ts",
-      "selector": "app-payout-stats"
-    },
-    {
-      "name": "SkeletonComponent",
-      "path": "apps/web/src/app/features/marketplace/components/ui/skeleton.component.ts",
-      "selector": "app-skeleton"
-    },
-    {
-      "name": "ChipComponent",
-      "path": "apps/web/src/app/features/marketplace/components/ui/chip.component.ts",
-      "selector": "app-chip"
-    },
-    {
-      "name": "FAQSectionComponent",
-      "path": "apps/web/src/app/features/marketplace/components/faq-section/faq-section.component.ts",
-      "selector": "app-faq-section"
-    },
-    {
-      "name": "ChatShellComponent",
-      "path": "apps/web/src/app/features/experiences/communication/chat-shell/chat-shell.component.ts",
-      "selector": "app-chat-shell"
-    },
-    {
-      "name": "GoogleAiPhotoGeneratorComponent",
-      "path": "apps/web/src/app/features/cars/publish/components/google-ai-photo-generator/google-ai-photo-generator.component.ts",
-      "selector": "app-google-ai-photo-generator"
-    },
-    {
-      "name": "InsuranceSelectorComponent",
-      "path": "apps/web/src/app/features/bookings/insurance-selector/insurance-selector.component.ts",
-      "selector": "app-insurance-selector"
-    },
-    {
-      "name": "TermsAndConsentsComponent",
-      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/terms-and-consents.component.ts",
-      "selector": "app-terms-and-consents"
-    },
-    {
-      "name": "DynamicPriceLockPanelComponent",
-      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/dynamic-price-lock-panel.component.ts",
-      "selector": "app-dynamic-price-lock-panel"
-    },
-    {
-      "name": "CreditSecurityPanelComponent",
-      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/credit-security-panel.component.ts",
-      "selector": "app-credit-security-panel"
-    },
-    {
-      "name": "CoverageUpgradeSelectorComponent",
-      "path": "apps/web/src/app/features/bookings/booking-detail-payment/components/coverage-upgrade-selector.component.ts",
-      "selector": "app-coverage-upgrade-selector"
-    },
-    {
-      "name": "FgoManagementComponent",
-      "path": "apps/web/src/app/features/bookings/booking-detail/fgo-management.component.ts",
-      "selector": "app-fgo-management"
-    },
-    {
-      "name": "WaterfallSimulatorComponent",
-      "path": "apps/web/src/app/features/admin/settlements/components/waterfall-simulator.component.ts",
-      "selector": "app-waterfall-simulator"
     }
   ],
   "unusedRpcFunctions": [
     {
+      "name": "enforce_renter_checkin_before_in_progress",
+      "definedIn": "supabase/migrations/20251221_enforce_renter_checkin_before_in_progress.sql"
+    },
+    {
+      "name": "send_welcome_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_verification_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_nearby_cars_notifications",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_car_views_milestone_notification",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_car_recommendations",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_renter_tips",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_favorite_car_available",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_pending_requests_reminder",
+      "definedIn": "supabase/migrations/20251220_extended_notifications.sql"
+    },
+    {
+      "name": "send_booking_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_document_expiry_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_inactive_owner_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_optimization_tips",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "send_booking_completion_reminders",
+      "definedIn": "supabase/migrations/20251220_complete_notification_system.sql"
+    },
+    {
+      "name": "expire_pending_approvals",
+      "definedIn": "supabase/migrations/20251220_booking_approval_system.sql"
+    },
+    {
+      "name": "set_approval_expires_at",
+      "definedIn": "supabase/migrations/20251220_booking_approval_system.sql"
+    },
+    {
+      "name": "user_is_member_of_org",
+      "definedIn": "supabase/migrations/20251220120000_fix_organization_member_policy.sql"
+    },
+    {
       "name": "update_updated_at_column",
       "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
+    },
+    {
+      "name": "prevent_self_booking",
+      "definedIn": "supabase/migrations/20251219080000_prevent_self_booking.sql"
     },
     {
       "name": "process_booking_payout",
@@ -563,10 +505,6 @@
       "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
     },
     {
-      "name": "get_car_blocked_dates",
-      "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
-    },
-    {
       "name": "get_car_conversation_participants",
       "definedIn": "supabase/snapshots/remote-schema-20251201.sql"
     },
@@ -888,6 +826,12 @@
     }
   ],
   "tablesWithoutQueries": [
+    {
+      "name": "car_views"
+    },
+    {
+      "name": "user_favorites"
+    },
     {
       "name": "risk_events"
     },

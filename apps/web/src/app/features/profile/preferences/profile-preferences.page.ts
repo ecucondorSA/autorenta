@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, inject, OnInit, OnDestroy, signal, effect,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -233,6 +234,7 @@ import { ProfileStore } from '../../../core/stores/profile.store';
   ],
 })
 export class ProfilePreferencesPage implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly fb = inject(FormBuilder);
   private readonly profileStore = inject(ProfileStore);
   private readonly destroy$ = new Subject<void>();
@@ -322,7 +324,7 @@ export class ProfilePreferencesPage implements OnInit, OnDestroy {
       await this.profileStore.updateSection('preferences', updates);
 
       this.preferencesForm.markAsPristine();
-      console.log('✅ Preferencias guardadas automáticamente');
+      this.logger.debug('✅ Preferencias guardadas automáticamente');
     } catch (err) {
       console.error('Error auto-saving preferences:', err);
     } finally {

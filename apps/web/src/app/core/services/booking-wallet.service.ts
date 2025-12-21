@@ -370,7 +370,7 @@ export class BookingWalletService {
       if (!booking.owner_id || !booking.car_id) return;
 
       const amount = amountCents / 100; // Convertir centavos a pesos
-      const bookingUrl = `/bookings/${booking.id}`;
+      const bookingUrl = `/bookings/owner/${booking.id}`;
 
       this.carOwnerNotifications.notifyPaymentReceived(amount, booking.id, bookingUrl);
     } catch (error) {

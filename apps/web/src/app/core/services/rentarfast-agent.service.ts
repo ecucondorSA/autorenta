@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject, signal, PLATFORM_ID, NgZone } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -94,6 +95,7 @@ export interface TTSChunkEvent {
 
 @Injectable({ providedIn: 'root' })
 export class RentarfastAgentService {
+  private readonly logger = inject(LoggerService);
   private readonly http = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
@@ -152,14 +154,14 @@ export class RentarfastAgentService {
     this.socket.on('connect', () => {
       this.ngZone.run(() => {
         this._isConnected.set(true);
-        console.log('[Rentarfast] WebSocket connected');
+        this.logger.debug('[Rentarfast] WebSocket connected');
       });
     });
 
     this.socket.on('disconnect', () => {
       this.ngZone.run(() => {
         this._isConnected.set(false);
-        console.log('[Rentarfast] WebSocket disconnected');
+        this.logger.debug('[Rentarfast] WebSocket disconnected');
       });
     });
 
@@ -220,7 +222,7 @@ export class RentarfastAgentService {
     });
 
     this.socket.on('recording_started', () => {
-      console.log('[Rentarfast] Recording started');
+      this.logger.debug('[Rentarfast] Recording started');
     });
   }
 

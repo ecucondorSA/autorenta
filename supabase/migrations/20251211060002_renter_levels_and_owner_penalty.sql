@@ -216,7 +216,8 @@ BEGIN
   UPDATE bookings
   SET status = 'cancelled_owner',
       cancelled_at = NOW(),
-      cancellation_reason = COALESCE(p_reason, 'Cancelado por el propietario')
+      cancellation_reason = COALESCE(p_reason, 'Cancelado por el propietario'),
+      cancelled_by_role = 'owner'
   WHERE id = p_booking_id;
 
   -- Si el renter ya había pagado, reembolsar como créditos

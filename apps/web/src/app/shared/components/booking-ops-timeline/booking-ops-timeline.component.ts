@@ -14,6 +14,7 @@ export interface BookingOpsData {
   cancellation_reason?: string | null;
   cancellation_fee_cents?: number | null;
   cancelled_at?: string | null;
+  cancelled_by_role?: 'renter' | 'owner' | 'system' | 'admin' | null;
 }
 
 @Component({
@@ -43,11 +44,16 @@ export interface BookingOpsData {
         }
       </div>
     
-      @if (data.cancellation_reason || data.cancellation_fee_cents) {
+      @if (data.cancellation_reason || data.cancellation_fee_cents || data.cancelled_by_role) {
         <div
           class="pt-3 border-t border-border-default/60 dark:border-neutral-700 text-sm"
           >
           <p class="font-semibold text-error-strong">Cancelación</p>
+          @if (data.cancelled_by_role) {
+            <p class="text-text-secondary">
+              Cancelado por: {{ formatCancelledByRole(data.cancelled_by_role) }}
+            </p>
+          }
           @if (data.cancellation_reason) {
             <p class="text-text-secondary">
               Motivo: {{ data.cancellation_reason }}
@@ -92,5 +98,20 @@ export class BookingOpsTimelineComponent {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(cents / 100);
+  }
+
+  formatCancelledByRole(role: BookingOpsData['cancelled_by_role']): string {
+    switch (role) {
+      case 'renter':
+        return 'Locatario';
+      case 'owner':
+        return 'Propietario';
+      case 'admin':
+        return 'Administrador';
+      case 'system':
+        return 'Sistema';
+      default:
+        return 'Desconocido';
+    }
   }
 }

@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 
 /**
  * Gesture Service V2
@@ -60,6 +61,7 @@ export interface LongPressEvent {
   providedIn: 'root',
 })
 export class GestureService {
+  private readonly logger = inject(LoggerService);
   // Configuration
   private config: Required<GestureConfig> = {
     swipeThreshold: 50,
@@ -84,7 +86,7 @@ export class GestureService {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      console.log('🤚 GestureService initialized');
+      this.logger.debug('🤚 GestureService initialized');
     }
   }
 

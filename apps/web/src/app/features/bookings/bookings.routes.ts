@@ -19,6 +19,14 @@ export const BOOKINGS_ROUTES: Routes = [
     canMatch: [AuthGuard],
   },
   {
+    path: 'owner/:id',
+    loadComponent: () =>
+      import('./owner-booking-detail/owner-booking-detail.page').then(
+        (m) => m.OwnerBookingDetailPage,
+      ),
+    canMatch: [AuthGuard],
+  },
+  {
     path: 'pending-approval',
     loadComponent: () =>
       import('./pending-approval/pending-approval.page').then((m) => m.PendingApprovalPage),

@@ -155,39 +155,59 @@
     </div>
   }
 
-  <!-- Reject Modal -->
-  @if (showRejectModal()) {
-    <div class="modal-overlay" (click)="onCancelReject()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>Rechazar Reserva</h2>
-          <button class="close-btn" (click)="onCancelReject()">×</button>
+  <!-- Drawer de Rechazo -->
+  @if (showRejectDrawer() && selectedBookingId()) {
+    <div class="analysis-overlay" (click)="onCancelReject()">
+      <div class="analysis-drawer reject-drawer" (click)="$event.stopPropagation()">
+        <div class="drawer-header">
+          <div class="drawer-info">
+            <h2>Rechazar Reserva</h2>
+            <p class="drawer-subtitle">Selecciona el motivo del rechazo</p>
+          </div>
+          <button class="close-btn" (click)="onCancelReject()">
+            <app-icon name="x" [size]="24" />
+          </button>
         </div>
-        <div class="modal-body">
-          <p>Selecciona la razón por la cual rechazas esta solicitud:</p>
-          <div class="reason-options">
-            @for (reason of rejectionReasons; track reason) {
-              <label class="reason-option">
-                <input
-                  type="radio"
-                  name="rejection-reason"
-                  [value]="reason.value"
-                  [(ngModel)]="rejectionReason"
+        <div class="drawer-content">
+          <div class="reject-form">
+            <div class="reason-options">
+              @for (reason of rejectionReasons; track reason.value) {
+                <label class="reason-option" [class.selected]="rejectionReason() === reason.value">
+                  <input
+                    type="radio"
+                    name="rejection-reason"
+                    [value]="reason.value"
+                    [checked]="rejectionReason() === reason.value"
+                    (change)="rejectionReason.set(reason.value)"
                   />
-                <span>{{ reason.label }}</span>
-              </label>
+                  <span>{{ reason.label }}</span>
+                </label>
+              }
+            </div>
+
+            @if (rejectionReason() === 'other') {
+              <div class="custom-reason">
+                <label>Especifica la razon:</label>
+                <textarea
+                  [value]="customReason()"
+                  (input)="customReason.set($any($event.target).value)"
+                  placeholder="Escribe aqui..."
+                  rows="3"
+                ></textarea>
+              </div>
             }
           </div>
-          @if (rejectionReason() === 'other') {
-            <div class="custom-reason">
-              <label>Especifica la razón:</label>
-              <textarea [(ngModel)]="rejectionReason" placeholder="Escribe aquí..." rows="3"></textarea>
-            </div>
-          }
         </div>
-        <div class="modal-footer">
+        <div class="drawer-footer">
           <button class="btn-secondary" (click)="onCancelReject()">Cancelar</button>
-          <button class="btn-danger" (click)="onConfirmReject()" [disabled]="!rejectionReason()">
+          <button
+            class="btn-danger"
+            (click)="onConfirmReject()"
+            [disabled]="!rejectionReason() || processingBookingId()"
+          >
+            @if (processingBookingId()) {
+              <span class="spinner-small"></span>
+            }
             Confirmar Rechazo
           </button>
         </div>

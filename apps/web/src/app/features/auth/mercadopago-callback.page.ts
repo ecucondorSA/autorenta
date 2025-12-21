@@ -1,3 +1,4 @@
+import { LoggerService } from '../../core/services/logger.service';
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -179,6 +180,7 @@ import { MercadoPagoOAuthService } from '../../core/services/mercadopago-oauth.s
   ],
 })
 export class MercadoPagoCallbackPage implements OnInit {
+  private readonly logger = inject(LoggerService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private oauthService = inject(MercadoPagoOAuthService);
@@ -195,10 +197,10 @@ export class MercadoPagoCallbackPage implements OnInit {
     const errorDescription = this.route.snapshot.queryParamMap.get('error_description');
 
     // DEBUG: Log state para diagnóstico
-    console.log('[MP Callback] Raw URL:', window.location.href);
-    console.log('[MP Callback] Code:', code ? `${code.substring(0, 10)}...` : 'missing');
-    console.log('[MP Callback] State received:', state);
-    console.log('[MP Callback] State length:', state?.length);
+    this.logger.debug('[MP Callback] Raw URL:', window.location.href);
+    this.logger.debug('[MP Callback] Code:', code ? `${code.substring(0, 10)}...` : 'missing');
+    this.logger.debug('[MP Callback] State received:', state);
+    this.logger.debug('[MP Callback] State length:', state?.length);
 
     // Verificar si el usuario canceló
     if (error) {

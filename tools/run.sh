@@ -437,17 +437,15 @@ cmd_format() {
 ###############################################################################
 
 cmd_install() {
-    header "📦 Installing All Dependencies"
-    cmd_install_web &
-    WEB_PID=$!
-    cmd_install_worker &
-    WORKER_PID=$!
-    cmd_install_ai_worker &
-    AI_WORKER_PID=$!
+    if [[ "${AUTORENTA_SKIP_INSTALL:-}" == "1" ]]; then
+        info "Skipping nested install (AUTORENTA_SKIP_INSTALL=1)"
+        return 0
+    fi
 
-    wait $WEB_PID
-    wait $WORKER_PID
-    wait $AI_WORKER_PID
+    header "📦 Installing All Dependencies"
+    cmd_install_web
+    cmd_install_worker
+    cmd_install_ai_worker
 
     success "All dependencies installed"
 }
@@ -455,21 +453,21 @@ cmd_install() {
 cmd_install_web() {
     log "Installing web dependencies..."
     cd "$WEB_DIR"
-    npm install
+    pnpm install
     success "Web dependencies installed"
 }
 
 cmd_install_worker() {
     log "Installing worker dependencies..."
     cd "$WORKER_DIR"
-    npm install
+    pnpm install
     success "Worker dependencies installed"
 }
 
 cmd_install_ai_worker() {
     log "Installing AI worker dependencies..."
     cd "$AI_WORKER_DIR"
-    npm install
+    pnpm install
     success "AI worker dependencies installed"
 }
 

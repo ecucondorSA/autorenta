@@ -237,11 +237,12 @@ export class BookingConfirmationService {
         }
       }
 
+      const damageAmountCents = Math.round((params.damage_amount ?? 0) * 100);
       const { data, error } = await this.supabase.getClient().rpc('booking_confirm_and_release', {
         p_booking_id: params.booking_id,
         p_confirming_user_id: params.confirming_user_id,
         p_has_damages: params.has_damages ?? false,
-        p_damage_amount: params.damage_amount ?? 0,
+        p_damage_amount: damageAmountCents,
         p_damage_description: params.damage_description ?? null,
       });
 

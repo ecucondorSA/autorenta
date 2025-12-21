@@ -1,4 +1,5 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {computed, effect, Injectable, signal, inject} from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -23,7 +24,7 @@ import { injectSupabase } from './supabase-client.service';
  * ngOnInit() {
  *   // Suscribirse a updates
  *   this.realtimePricing.subscribeToExchangeRates(() => {
- *     console.log('Nueva tasa de cambio:', this.realtimePricing.latestExchangeRate());
+ *     this.logger.debug('Nueva tasa de cambio:', this.realtimePricing.latestExchangeRate());
  *   });
  * }
  * ```
@@ -65,6 +66,7 @@ export interface SpecialEvent {
   providedIn: 'root',
 })
 export class RealtimePricingService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
   // Realtime channels

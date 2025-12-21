@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, inject} from '@angular/core';
 import type { Booking } from '../models';
 import { getErrorMessage } from '../utils/type-guards';
 import { injectSupabase } from './supabase-client.service';
@@ -15,6 +16,7 @@ import { injectSupabase } from './supabase-client.service';
   providedIn: 'root',
 })
 export class BookingNotificationsService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
   /**
@@ -63,7 +65,7 @@ export class BookingNotificationsService {
             type: 'payment_successful',
             title: 'Pago Recibido',
             body: `${renterName} completó el pago de la reserva de ${carTitle}.`,
-            cta_link: `/bookings/${booking.id}`,
+            cta_link: `/bookings/owner/${booking.id}`,
             metadata: {
               booking_id: booking.id,
               car_id: booking.car_id,
@@ -93,7 +95,7 @@ export class BookingNotificationsService {
             type: 'generic_announcement',
             title: 'Alquiler en Curso',
             body: `El alquiler de ${carTitle} con ${renterName} ha comenzado.`,
-            cta_link: `/bookings/${booking.id}`,
+            cta_link: `/bookings/owner/${booking.id}`,
             metadata: {
               booking_id: booking.id,
               car_id: booking.car_id,
@@ -124,7 +126,7 @@ export class BookingNotificationsService {
             type: 'payout_successful',
             title: 'Reserva Completada - Ganancias Disponibles',
             body: `La reserva de ${carTitle} con ${renterName} ha finalizado. Tus ganancias están disponibles en tu wallet.`,
-            cta_link: `/bookings/${booking.id}`,
+            cta_link: `/bookings/owner/${booking.id}`,
             metadata: {
               booking_id: booking.id,
               car_id: booking.car_id,
@@ -169,7 +171,7 @@ export class BookingNotificationsService {
 
         default:
           // No notification for other status changes
-          console.log(`[BookingNotifications] No notification configured for status: ${newStatus}`);
+          this.logger.debug(`[BookingNotifications] No notification configured for status: ${newStatus}`);
           break;
       }
     } catch (error) {
@@ -220,7 +222,7 @@ export class BookingNotificationsService {
         approve: {
           title: 'Nueva Solicitud de Reserva',
           body: `Tenés una nueva solicitud de reserva para ${carTitle}. Revisala y aprobala.`,
-          cta_link: `/bookings/${booking.id}`,
+          cta_link: `/bookings/owner/${booking.id}`,
         },
         payment: {
           title: 'Pago Pendiente',
@@ -246,6 +248,81 @@ export class BookingNotificationsService {
       });
     } catch (error) {
       console.error('Error creating action required notification:', error);
+    }
+  }
+
+  /**
+   * Notifica al propietario cuando el locatario solicita una extensión.
+   */
+  async notifyExtensionRequested(
+    booking: Booking,
+    newEndAt: string,
+    renterMessage?: string,
+  ): Promise<void> {
+    try {
+      const { data: car, error: carError } = await this.supabase
+        .from('cars')
+        .select('id, title, brand, model, owner_id')
+        .eq('id', booking.car_id)
+        .single();
+
+      if (carError || !car?.owner_id) return;
+
+      const { data: renter } = await this.supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', booking.renter_id)
+        .single();
+
+      const carTitle = car.title || `${car.brand} ${car.model}`;
+      const renterName = renter?.full_name || 'El locatario';
+      const formattedDate = new Date(newEndAt).toLocaleDateString('es-AR');
+
+      await this.createNotification({
+        user_id: car.owner_id,
+        type: 'generic_announcement',
+        title: 'Solicitud de extensión',
+        body: `${renterName} solicita extender la reserva de ${carTitle} hasta ${formattedDate}.`,
+        cta_link: `/bookings/owner/${booking.id}`,
+        metadata: {
+          booking_id: booking.id,
+          car_id: booking.car_id,
+          new_end_at: newEndAt,
+          renter_message: renterMessage || null,
+        },
+      });
+    } catch (error) {
+      this.logger.warn('Error creating extension request notification', 'BookingNotifications', error);
+    }
+  }
+
+  /**
+   * Notifica al locatario cuando el propietario rechaza la extensión.
+   */
+  async notifyExtensionRejected(booking: Booking, reason: string): Promise<void> {
+    try {
+      const { data: car } = await this.supabase
+        .from('cars')
+        .select('title, brand, model')
+        .eq('id', booking.car_id)
+        .single();
+
+      const carTitle = car?.title || `${car?.brand ?? ''} ${car?.model ?? ''}`.trim() || 'tu auto';
+
+      await this.createNotification({
+        user_id: booking.renter_id,
+        type: 'generic_announcement',
+        title: 'Extensión rechazada',
+        body: `Tu solicitud de extensión para ${carTitle} fue rechazada. Motivo: ${reason}`,
+        cta_link: `/bookings/${booking.id}`,
+        metadata: {
+          booking_id: booking.id,
+          car_id: booking.car_id,
+          reason,
+        },
+      });
+    } catch (error) {
+      this.logger.warn('Error creating extension rejection notification', 'BookingNotifications', error);
     }
   }
 

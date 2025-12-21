@@ -7,6 +7,7 @@ import { Booking } from '../../../core/models';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingNotificationsService } from '../../../core/services/booking-notifications.service';
 import {
   LocationTrackingService,
   TrackingSession,
@@ -34,6 +35,7 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly authService = inject(AuthService);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly bookingNotifications = inject(BookingNotificationsService);
   private readonly locationTracking = inject(LocationTrackingService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -213,10 +215,20 @@ export class OwnerCheckInPage implements OnInit, OnDestroy {
     if (!booking) return;
 
     try {
-      // 2. Iniciar alquiler (confirmed → in_progress)
-      await this.bookingsService.updateBooking(booking.id, { status: 'in_progress' });
+      // Notificar al locatario para que documente la recepción
+      const currentUserId = this.currentUserId();
+      if (currentUserId) {
+        await this.bookingNotifications.notifyInspectionCompleted(
+          booking,
+          'check_in',
+          currentUserId,
+        );
+      }
 
-      this.toastService.success('Éxito', '✅ Check-in completado. El alquiler ha comenzado.');
+      this.toastService.success(
+        'Éxito',
+        '✅ Check-in completado. El locatario ahora debe documentar la recepción.',
+      );
 
       // Navegar al detalle de la reserva
       this.router.navigate(['/bookings/detail', booking.id]);

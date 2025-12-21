@@ -1,3 +1,4 @@
+import { LoggerService } from '../../core/services/logger.service';
 
 import {Component, inject,
   ChangeDetectionStrategy} from '@angular/core';
@@ -14,10 +15,11 @@ import { SmartOnboardingComponent } from '../../shared/components/smart-onboardi
   `,
 })
 export class OnboardingPage {
+  private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
 
   onOnboardingCompleted(data: unknown) {
-    console.log('🎉 Onboarding completed:', data);
+    this.logger.debug('🎉 Onboarding completed:', data);
 
     // El componente ya maneja la redirección automática
     // Solo necesitamos hacer logging para analytics

@@ -9,6 +9,7 @@ import { BookingValidationService } from './booking-validation.service';
 import { BookingWalletService } from './booking-wallet.service';
 import { CarOwnerNotificationsService } from './car-owner-notifications.service';
 import { CarsService } from './cars.service';
+import { BookingNotificationsService } from './booking-notifications.service';
 import { InsuranceService } from './insurance.service';
 import { LoggerService } from './logger.service';
 import { ProfileService } from './profile.service';
@@ -50,6 +51,7 @@ export class BookingsService {
 
   // Notification services
   private readonly carOwnerNotifications = inject(CarOwnerNotificationsService);
+  private readonly bookingNotifications = inject(BookingNotificationsService);
   private readonly carsService = inject(CarsService);
   private readonly profileService = inject(ProfileService);
 
@@ -331,6 +333,31 @@ export class BookingsService {
   }
 
   /**
+   * Get owner booking by ID (owner view only)
+   */
+  async getOwnerBookingById(bookingId: string): Promise<Booking | null> {
+    if (!UUID_REGEX.test(bookingId)) {
+      this.logger.warn(`getOwnerBookingById: invalid bookingId - ${bookingId}`);
+      return null;
+    }
+
+    return this.fetchBookingFromView('owner_bookings', bookingId);
+  }
+
+  async getRenterVerificationForOwner(bookingId: string): Promise<Record<string, unknown> | null> {
+    const { data, error } = await this.supabase.rpc('get_renter_verification_for_owner', {
+      p_booking_id: bookingId,
+    });
+
+    if (error) {
+      return null;
+    }
+
+    if (!data) return null;
+    return Array.isArray(data) ? (data[0] as Record<string, unknown> | null) : (data as Record<string, unknown> | null);
+  }
+
+  /**
    * Get booking by ID with full details
    * ✅ OPTIMIZED: Parallel loading of car details and insurance coverage
    */
@@ -341,18 +368,11 @@ export class BookingsService {
       return null;
     }
 
-    const { data, error } = await this.supabase
-      .from('my_bookings')
-      .select('*')
-      .eq('id', bookingId)
-      .single();
+    const booking =
+      (await this.fetchBookingFromView('my_bookings', bookingId)) ??
+      (await this.fetchBookingFromView('owner_bookings', bookingId));
 
-    if (error) {
-      if (error.code === 'PGRST116') return null;
-      throw error;
-    }
-
-    const booking = data as Booking;
+    if (!booking) return null;
 
     // ✅ OPTIMIZED: Load car details and insurance coverage in parallel
     const loadPromises: Promise<void>[] = [];
@@ -370,6 +390,23 @@ export class BookingsService {
     }
 
     return booking;
+  }
+
+  private async fetchBookingFromView(
+    viewName: 'my_bookings' | 'owner_bookings',
+    bookingId: string,
+  ): Promise<Booking | null> {
+    const { data, error } = await this.supabase
+      .from(viewName)
+      .select('*')
+      .eq('id', bookingId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Booking;
   }
 
   /**
@@ -440,10 +477,10 @@ export class BookingsService {
   }> {
     try {
       const { data, error } = await this.supabase
-        .from('users')
+        .from('profiles')
         .select('email, phone, full_name')
         .eq('id', ownerId)
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         return {
@@ -833,7 +870,11 @@ export class BookingsService {
 
       if (insertError) throw insertError;
 
-      // TODO: Notificar al propietario de la nueva solicitud de extensión
+      await this.bookingNotifications.notifyExtensionRequested(
+        booking,
+        newEndDate.toISOString(),
+        renterMessage,
+      );
 
       return { success: true, additionalCost: estimatedAdditionalCostCents / 100 };
     } catch (error) {
@@ -913,8 +954,7 @@ export class BookingsService {
         total_amount: (booking.total_amount || 0) + request.estimated_cost_amount,
       });
 
-      // TODO: Extender seguro (llamada a insuranceService)
-      // This should probably be triggered by a backend event based on booking update.
+      await this.extendInsuranceCoverageIfNeeded(booking.id, request.new_end_at);
 
       return { success: true };
     } catch (error) {
@@ -967,7 +1007,7 @@ export class BookingsService {
 
       if (updateRequestError) throw updateRequestError;
 
-      // TODO: Notificar al renter del rechazo (via push/email/chat)
+      await this.bookingNotifications.notifyExtensionRejected(booking, reason);
 
       return { success: true };
     } catch (error) {
@@ -975,6 +1015,60 @@ export class BookingsService {
         success: false,
         error: error instanceof Error ? error.message : 'Error al rechazar extensión',
       };
+    }
+  }
+
+  private async extendInsuranceCoverageIfNeeded(
+    bookingId: string,
+    newEndAt: string,
+  ): Promise<void> {
+    try {
+      const { data: coverage, error } = await this.supabase
+        .from('booking_insurance_coverage')
+        .select('id, coverage_end')
+        .eq('booking_id', bookingId)
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!coverage) return;
+
+      const { error: updateError } = await this.supabase
+        .from('booking_insurance_coverage')
+        .update({
+          coverage_end: newEndAt,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', coverage.id);
+
+      if (updateError) throw updateError;
+
+      this.logger.info('Insurance coverage extended', 'BookingsService', {
+        booking_id: bookingId,
+        new_end_at: newEndAt,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : getErrorMessage(error);
+      this.logger.warn('Failed to extend insurance coverage; recorded issue', 'BookingsService', {
+        booking_id: bookingId,
+        new_end_at: newEndAt,
+        error: message,
+      });
+
+      try {
+        await this.createPaymentIssue({
+          booking_id: bookingId,
+          issue_type: 'insurance_extension_required',
+          severity: 'high',
+          description: 'Extensión de seguro pendiente luego de aprobar extensión de reserva',
+          metadata: {
+            new_end_at: newEndAt,
+            error: message,
+          },
+        });
+      } catch (issueError) {
+        this.logger.error('Failed to create insurance extension issue', 'BookingsService', issueError);
+      }
     }
   }
 
@@ -1000,6 +1094,7 @@ export class BookingsService {
       // 2. Actualizar motivo específico y evidencia
       await this.updateBooking(booking.id, {
         cancellation_reason: `RECHAZADO EN CHECK-IN: ${reason}`,
+        cancelled_by_role: 'owner',
         metadata: {
           ...booking.metadata,
           rejection_evidence: evidencePhotos,
@@ -1333,7 +1428,7 @@ export class BookingsService {
       const { data: car, error: carError } = await this.supabase
         .from('cars')
         .select(
-          'id, title, brand, model, year, car_photos(id, url, stored_path, position, sort_order, created_at)',
+          'id, title, brand, model, year, fuel_policy, mileage_limit, extra_km_price, allow_smoking, allow_pets, allow_rideshare, max_distance_km, car_photos(id, url, stored_path, position, sort_order, created_at)',
         )
         .eq('id', booking.car_id)
         .single();
@@ -1708,6 +1803,7 @@ export class BookingsService {
         status: 'cancelled',
         cancellation_reason: 'system_failure:insurance_activation_failed',
         cancelled_at: new Date().toISOString(),
+        cancelled_by_role: 'system',
       });
 
       this.logger.info(

@@ -127,7 +127,7 @@ export class NotificationsComponent {
     await this.markAsRead(notification);
 
     if (notification.actionUrl) {
-      this.router.navigate([notification.actionUrl]);
+      this.router.navigateByUrl(notification.actionUrl);
       this.closeDropdown();
     }
   }

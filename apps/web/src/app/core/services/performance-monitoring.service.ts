@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, inject} from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -55,6 +56,7 @@ type NavigatorWithOptionalConnection = Navigator & {
   providedIn: 'root',
 })
 export class PerformanceMonitoringService {
+  private readonly logger = inject(LoggerService);
   private fpsFrameCount = 0;
   private fpsSampleStart = 0;
   private fpsBaselineSamples = 0;
@@ -217,7 +219,7 @@ export class PerformanceMonitoringService {
           const lastEntry = entries[entries.length - 1];
 
           const lcp = lastEntry?.renderTime ?? lastEntry?.loadTime ?? 0;
-          console.log(`📊 LCP: ${lcp.toFixed(2)}ms`);
+          this.logger.debug(`📊 LCP: ${lcp.toFixed(2)}ms`);
 
           // Send to Sentry as measurement (lazy-loaded)
           void this.sendToSentry('lcp', lcp);
@@ -241,7 +243,7 @@ export class PerformanceMonitoringService {
           list.getEntries().forEach((entry) => {
             const fidEntry = entry as FirstInputDelayEntry;
             const fid = fidEntry.processingStart - fidEntry.startTime;
-            console.log(`📊 FID: ${fid.toFixed(2)}ms`);
+            this.logger.debug(`📊 FID: ${fid.toFixed(2)}ms`);
 
             // Send to Sentry as measurement (lazy-loaded)
             void this.sendToSentry('fid', fid);
@@ -292,7 +294,7 @@ export class PerformanceMonitoringService {
           }
 
           // Final snapshot
-          console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+          this.logger.debug(`📊 CLS: ${clsScore.toFixed(4)}`);
           void this.sendToSentry('cls', clsScore);
 
           if (clsScore > 0.1 && !warnedPoorCls) {
@@ -340,7 +342,7 @@ export class PerformanceMonitoringService {
               // Throttle console noise: log only when CLS meaningfully changes.
               if (clsScore - lastLoggedCls >= 0.01) {
                 lastLoggedCls = clsScore;
-                console.log(`📊 CLS: ${clsScore.toFixed(4)}`);
+                this.logger.debug(`📊 CLS: ${clsScore.toFixed(4)}`);
               }
 
               // Throttle Sentry updates.
@@ -398,7 +400,7 @@ export class PerformanceMonitoringService {
       },
     };
 
-    console.log('📱 Device Info:', info);
+    this.logger.debug('📱 Device Info:', info);
   }
 
   /**
@@ -409,7 +411,7 @@ export class PerformanceMonitoringService {
 
     const finish = () => {
       const duration = performance.now() - start;
-      console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
+      this.logger.debug(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
 
       // Send to Sentry as measurement (lazy-loaded)
       const metricKey = name.toLowerCase().replace(/\s+/g, '_');

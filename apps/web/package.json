@@ -2,7 +2,7 @@
   "name": "autorenta-web",
   "version": "0.1.0",
   "engines": {
-    "node": ">=20.0.0 <=22.0.0",
+    "node": ">=20.0.0 <23.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -19,6 +19,12 @@
     "test": "ng test",
     "test:quick": "ng test --watch=false --browsers=ChromeHeadless",
     "test:coverage": "ng test --watch=false --code-coverage --browsers=ChromeHeadless",
+    "test:unit": "vitest --config vitest.config.ts",
+    "test:unit:watch": "vitest --config vitest.config.ts --watch",
+    "test:unit:coverage": "vitest --config vitest.config.ts run --coverage",
+    "test:unit:ui": "vitest --config vitest.config.ts --ui",
+    "test:unit:ci": "vitest --config vitest.config.ts run --reporter=dot",
+    "test:unit:clean": "rm -rf coverage .vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
@@ -85,14 +91,13 @@
     "@capacitor/splash-screen": "^7.0.4",
     "@capacitor/status-bar": "^7.0.4",
     "@capgo/capacitor-native-biometric": "^7.6.0",
-    "@ionic/angular": "^8.7.11",
+    "@ionic/angular": "8.6.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@sentry/angular": "9.46.0",
     "@sentry/capacitor": "^2.4.1",
     "@supabase/storage-js": "^2.86.2",
     "@supabase/supabase-js": "^2.87.3",
-    "@types/flatpickr": "^3.1.4",
     "@types/mapbox-gl": "^3.4.1",
     "@types/mercadopago": "^1.5.11",
     "date-fns": "^4.1.0",
@@ -139,6 +144,7 @@
     "express": "^5.2.1",
     "glob": "^10.5.0",
     "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
@@ -152,6 +158,12 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.18",
     "typescript": "~5.9.3",
+    "@testing-library/angular": "^18.1.1",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^3.1.1",
+    "@vitest/ui": "^3.1.1",
+    "vitest": "^3.1.1",
     "vite": "^7.2.6"
   }
 }

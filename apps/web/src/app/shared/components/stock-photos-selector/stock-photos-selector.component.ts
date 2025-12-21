@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, Input, Output, EventEmitter, signal, inject, OnInit,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -145,6 +146,7 @@ import { NotificationManagerService } from '../../../core/services/notification-
   ],
 })
 export class StockPhotosSelectorComponent implements OnInit {
+  private readonly logger = inject(LoggerService);
   @Input() brand = '';
   @Input() model = '';
   @Input() year?: number;
@@ -165,7 +167,7 @@ export class StockPhotosSelectorComponent implements OnInit {
   ngOnInit(): void {
     // If brand and model are provided, automatically search for photos
     if (this.canSearch()) {
-      console.log(`🔍 Auto-searching stock photos for ${this.brand} ${this.model}`);
+      this.logger.debug(`🔍 Auto-searching stock photos for ${this.brand} ${this.model}`);
       this.searchPhotos();
     }
   }

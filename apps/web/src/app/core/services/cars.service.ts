@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { Car, CarFilters, CarPhoto } from '../models';
@@ -15,6 +16,7 @@ type CarWithPhotosRaw = Record<string, unknown> & {
   providedIn: 'root',
 })
 export class CarsService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly carAvailabilityService = inject(CarAvailabilityService);
   private readonly defaultValuationConfig = {
@@ -87,7 +89,7 @@ export class CarsService {
       created_at: new Date().toISOString(),
     };
 
-    console.log('🚗 Creating car with data:', {
+    this.logger.debug('🚗 Creating car with data:', {
       ...carData,
       // Redact sensitive fields for logging
       owner_id: '***',
@@ -104,7 +106,7 @@ export class CarsService {
       throw error;
     }
 
-    console.log('✅ Car created successfully:', data['id']);
+    this.logger.debug('✅ Car created successfully:', data['id']);
 
     return {
       ...data,

@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../../../core/services/logger.service';
 /**
  * PROFILE CONTACT SECTION COMPONENT
  *
@@ -38,6 +39,7 @@ import { SectionCardComponent } from '../../shared/section-card';
   styleUrls: ['./profile-contact-section.component.scss'],
 })
 export class ProfileContactSectionComponent implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly fb = inject(FormBuilder);
   private readonly profileStore = inject(ProfileStore);
   private readonly destroy$ = new Subject<void>();
@@ -190,7 +192,7 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
         this.savedRecently.set(false);
       }, 3000);
 
-      console.log('✅ Contacto guardado automáticamente');
+      this.logger.debug('✅ Contacto guardado automáticamente');
     } catch (err) {
       console.error('Error auto-saving contact section:', err);
       // Don't show error for auto-save failures (user can manually save)
@@ -245,7 +247,7 @@ export class ProfileContactSectionComponent implements OnInit, OnDestroy {
       this.isEditing.set(false);
       this.form.markAsPristine();
 
-      console.log('✅ Contacto actualizado correctamente');
+      this.logger.debug('✅ Contacto actualizado correctamente');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error al guardar cambios';
       this.error.set(message);

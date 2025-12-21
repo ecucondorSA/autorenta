@@ -1,10 +1,12 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { ChatMessageInsertSchema } from '../contracts/chat-message.schemas';
+import { LoggerService } from './logger.service';
 
 // Mock for queueOffline
+const logger = new LoggerService();
 const queueOffline = (data: unknown) => {
-  console.log('Queuing offline:', data);
+  logger.debug('Queuing offline', 'MessagesRepo', data);
 };
 
 type RawInsertInput = z.input<typeof ChatMessageInsertSchema> & {

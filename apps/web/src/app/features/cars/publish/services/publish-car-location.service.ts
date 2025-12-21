@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from '../../../../core/services/logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 
 export interface GeoLocation {
@@ -25,6 +26,7 @@ export interface Address {
  */
 @Injectable()
 export class PublishCarLocationService {
+  private readonly logger = inject(LoggerService);
   // State
   readonly manualCoordinates = signal<GeoLocation | null>(null);
   readonly isLoadingLocation = signal(false);
@@ -68,7 +70,7 @@ export class PublishCarLocationService {
     } catch (error) {
       // GPS failure is common in dev/headless environments
       // Use Google Geolocation API as fallback (more accurate than IP-based)
-      console.log('GPS signal not available, using Google Geolocation API fallback.');
+      this.logger.debug('GPS signal not available, using Google Geolocation API fallback.');
 
       // Fallback: Google Geolocation API
       if (this.GOOGLE_GEOLOCATION_API_KEY) {
@@ -88,7 +90,7 @@ export class PublishCarLocationService {
                 latitude: data.location.lat,
                 longitude: data.location.lng,
               };
-              console.log('Google Geolocation API success:', location);
+              this.logger.debug('Google Geolocation API success:', location);
               this.manualCoordinates.set(location);
               return location;
             }
@@ -151,7 +153,7 @@ export class PublishCarLocationService {
       const timeoutId = setTimeout(() => {
         cleanup();
         if (bestPosition) {
-          console.log(
+          this.logger.debug(
             `[Geolocation] Timeout reached. Best accuracy: ${bestPosition.coords.accuracy}m`,
           );
           resolve(bestPosition);
@@ -165,7 +167,7 @@ export class PublishCarLocationService {
       // Watch position and wait for good accuracy
       watchId = navigator.geolocation.watchPosition(
         (position) => {
-          console.log(`[Geolocation] Got position with accuracy: ${position.coords.accuracy}m`);
+          this.logger.debug(`[Geolocation] Got position with accuracy: ${position.coords.accuracy}m`);
 
           // Keep the best (most accurate) position
           if (!bestPosition || position.coords.accuracy < bestPosition.coords.accuracy) {
@@ -176,7 +178,7 @@ export class PublishCarLocationService {
           if (position.coords.accuracy <= desiredAccuracy) {
             clearTimeout(timeoutId);
             cleanup();
-            console.log(`[Geolocation] ✅ Achieved target accuracy: ${position.coords.accuracy}m`);
+            this.logger.debug(`[Geolocation] ✅ Achieved target accuracy: ${position.coords.accuracy}m`);
             resolve(position);
           }
         },

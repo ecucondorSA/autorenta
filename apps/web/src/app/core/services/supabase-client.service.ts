@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {
   EnvironmentProviders,
@@ -121,6 +122,7 @@ function createSSRStubClient(): SupabaseClient {
   providedIn: 'root',
 })
 export class SupabaseClientService {
+  private readonly logger = inject(LoggerService);
   private client: SupabaseClient | null = null;
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -129,7 +131,7 @@ export class SupabaseClientService {
     // SSR-safe: Don't initialize Supabase during server-side rendering
     // The client will be created lazily on first getClient() call in browser
     if (!this.isBrowser) {
-      console.log('[SupabaseClientService] SSR mode - skipping initialization');
+      this.logger.debug('[SupabaseClientService] SSR mode - skipping initialization');
       return;
     }
 
@@ -143,7 +145,7 @@ export class SupabaseClientService {
   private initializeClient(): void {
     if (this.client) return; // Already initialized
 
-    console.log('[SupabaseClientService] Initializing...');
+    this.logger.debug('[SupabaseClientService] Initializing...');
     const supabaseUrl = environment.supabaseUrl;
     const supabaseAnonKey = environment.supabaseAnonKey;
 

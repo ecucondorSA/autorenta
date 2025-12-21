@@ -4,40 +4,62 @@
 -- el locador pueda ver un resumen (sin exponer clase exacta)
 -- =====================================================
 
-CREATE OR REPLACE FUNCTION get_renter_profile_badge(p_renter_id UUID)
+CREATE OR REPLACE FUNCTION public.get_renter_profile_badge(p_renter_id UUID)
 RETURNS JSON
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  v_result JSON;
+  v_caller_id UUID;
+  v_is_authorized BOOLEAN := FALSE;
   v_class INTEGER;
   v_badge_level TEXT;
-  v_has_protection BOOLEAN;
+  v_has_protection BOOLEAN := FALSE;
   v_total_rentals INTEGER;
   v_years_without_claims INTEGER;
   v_renter_name TEXT;
 BEGIN
-  -- Get driver profile
-  SELECT
-    COALESCE(drp.class, 5),
-    COALESCE(drp.good_years, 0)
+  v_caller_id := auth.uid();
+  IF v_caller_id IS NULL THEN
+    RAISE EXCEPTION 'No autorizado' USING ERRCODE = 'P0001';
+  END IF;
+
+  -- 1) Si el caller es el renter, permitido
+  IF v_caller_id = p_renter_id THEN
+    v_is_authorized := TRUE;
+  END IF;
+
+  -- 2) Si es owner con relación en bookings, permitido
+  IF NOT v_is_authorized THEN
+    SELECT EXISTS(
+      SELECT 1
+      FROM bookings b
+      JOIN cars c ON b.car_id = c.id
+      WHERE b.renter_id = p_renter_id
+        AND c.owner_id = v_caller_id
+        AND b.status IN ('pending','confirmed','in_progress','completed','cancelled','expired')
+    ) INTO v_is_authorized;
+  END IF;
+
+  -- 3) Admin (si existe tabla admin_users)
+  IF NOT v_is_authorized AND to_regclass('public.admin_users') IS NOT NULL THEN
+    SELECT EXISTS(
+      SELECT 1 FROM admin_users
+      WHERE user_id = v_caller_id AND is_active = TRUE
+    ) INTO v_is_authorized;
+  END IF;
+
+  IF NOT v_is_authorized THEN
+    RAISE EXCEPTION 'No autorizado' USING ERRCODE = 'P0001';
+  END IF;
+
+  -- Driver risk profile
+  SELECT COALESCE(drp.class, 5), COALESCE(drp.good_years, 0)
   INTO v_class, v_years_without_claims
   FROM driver_risk_profile drp
   WHERE drp.user_id = p_renter_id;
 
-  -- Default values if no profile
-  IF v_class IS NULL THEN
-    v_class := 5;
-    v_years_without_claims := 0;
-  END IF;
-
-  -- Determine badge level (simplified, not exact class)
-  -- Excelente: clase 0-2
-  -- Bueno: clase 3-5
-  -- Regular: clase 6-7
-  -- Atención: clase 8-10
   v_badge_level := CASE
     WHEN v_class <= 2 THEN 'excelente'
     WHEN v_class <= 5 THEN 'bueno'
@@ -45,47 +67,45 @@ BEGIN
     ELSE 'atencion'
   END;
 
-  -- Check if has active bonus protector
-  SELECT EXISTS(
-    SELECT 1 FROM bonus_protectors
-    WHERE user_id = p_renter_id
-    AND is_active = true
-    AND remaining_uses > 0
-    AND expires_at > NOW()
-  ) INTO v_has_protection;
+  -- Bonus protector (si existe tabla driver_protection_addons)
+  IF to_regclass('public.driver_protection_addons') IS NOT NULL THEN
+    SELECT EXISTS(
+      SELECT 1 FROM driver_protection_addons
+      WHERE user_id = p_renter_id
+        AND addon_type = 'bonus_protector'
+        AND is_active = true
+        AND (expires_at IS NULL OR expires_at > NOW())
+        AND claims_used < max_protected_claims
+    ) INTO v_has_protection;
+  END IF;
 
-  -- Get total completed rentals
+  -- Total completed rentals
   SELECT COUNT(*)
   INTO v_total_rentals
   FROM bookings
   WHERE renter_id = p_renter_id
-  AND status = 'completed';
+    AND status = 'completed';
 
-  -- Get renter name
-  SELECT
-    COALESCE(p.first_name || ' ' || LEFT(COALESCE(p.last_name, ''), 1) || '.', 'Usuario')
+  -- Renter name (schema real)
+  SELECT COALESCE(p.full_name, 'Usuario')
   INTO v_renter_name
   FROM profiles p
   WHERE p.id = p_renter_id;
 
-  -- Build result JSON
-  v_result := json_build_object(
+  RETURN json_build_object(
     'renter_id', p_renter_id,
-    'renter_name', COALESCE(v_renter_name, 'Usuario'),
+    'renter_name', v_renter_name,
     'badge_level', v_badge_level,
     'has_protection', COALESCE(v_has_protection, false),
     'total_rentals', COALESCE(v_total_rentals, 0),
-    'years_without_claims', v_years_without_claims
+    'years_without_claims', COALESCE(v_years_without_claims, 0)
   );
-
-  RETURN v_result;
 END;
 $$;
 
--- Grant execute permission
-GRANT EXECUTE ON FUNCTION get_renter_profile_badge(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_renter_profile_badge(UUID) TO authenticated;
 
-COMMENT ON FUNCTION get_renter_profile_badge IS
+COMMENT ON FUNCTION public.get_renter_profile_badge IS
 'Returns simplified renter profile badge for owners to see.
 Does not expose exact driver class, only badge level (excelente/bueno/regular/atencion).
-Also shows if renter has active bonus protection.';
+Also shows if renter has active bonus protection when available.';

@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
@@ -34,6 +35,7 @@ import { PayPalButtonComponent } from '../../../../shared/components/paypal-butt
   styleUrls: ['./booking-checkout.page.css'],
 })
 export class BookingCheckoutPage implements OnInit {
+  private readonly logger = inject(LoggerService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly gatewayFactory = inject(PaymentGatewayFactory);
@@ -220,7 +222,7 @@ export class BookingCheckoutPage implements OnInit {
     this.mercadoPagoPreferenceId.set('');
     this.mercadoPagoInitPoint.set('');
 
-    console.log('Provider changed:', event);
+    this.logger.debug('Provider changed:', event);
   }
 
   /**
@@ -257,7 +259,7 @@ export class BookingCheckoutPage implements OnInit {
    * Maneja la aprobación del pago de PayPal
    */
   handlePayPalApprove(event: { orderId: string; captureId: string }): void {
-    console.log('PayPal payment approved:', event);
+    this.logger.debug('PayPal payment approved:', event);
 
     // Redirigir a página de confirmación
     this.router.navigate(['/bookings', this.bookingId(), 'confirmation'], {

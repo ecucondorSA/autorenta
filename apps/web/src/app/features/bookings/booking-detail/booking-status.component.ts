@@ -19,6 +19,11 @@ import { BookingsService } from '../../../core/services/bookings.service';
     @if (booking) {
       <div class="status-badge" [ngClass]="statusClass()">
         {{ statusIcon() }} {{ statusLabel() }}
+        @if (showDeliveryCountdown()) {
+          <span class="delivery-countdown">
+            ⏱ {{ deliveryCountdown }}
+          </span>
+        }
       </div>
     }
     `,
@@ -27,16 +32,27 @@ import { BookingsService } from '../../../core/services/bookings.service';
       .status-badge {
         display: inline-flex;
         align-items: center;
+        gap: 0.5rem;
         padding: 0.25rem 0.75rem;
         border-radius: 9999px;
         font-weight: 500;
         font-size: 0.875rem;
+      }
+      .delivery-countdown {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding-left: 0.5rem;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 0.75rem;
+        font-weight: 600;
       }
     `,
   ],
 })
 export class BookingStatusComponent {
   @Input({ required: true }) booking!: Booking;
+  @Input() deliveryCountdown: string | null = null;
 
   constructor(private bookingsService: BookingsService) {}
 
@@ -56,10 +72,23 @@ export class BookingStatusComponent {
 
   statusClass = computed(() => {
     const status = this.booking?.status;
+    const startAt = this.booking?.start_at ? new Date(this.booking.start_at).getTime() : null;
+    const isBeforeStart =
+      status === 'in_progress' && startAt && !Number.isNaN(startAt) && Date.now() < startAt;
+    const isReturnFlow =
+      !!this.booking?.returned_at ||
+      this.booking?.completion_status === 'returned' ||
+      this.booking?.completion_status === 'pending_owner' ||
+      this.booking?.completion_status === 'pending_renter' ||
+      this.booking?.completion_status === 'pending_both';
 
     // P2P wallet: pending approval (amber, not error)
     if (this.isPendingApproval()) {
       return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+    }
+
+    if (isReturnFlow) {
+      return 'bg-warning-light/20 text-warning-strong';
     }
 
     // Traditional: expired payment
@@ -74,6 +103,9 @@ export class BookingStatusComponent {
       case 'confirmed':
         return 'bg-success-light/20 text-success-strong';
       case 'in_progress':
+        if (isBeforeStart) {
+          return 'bg-success-light/20 text-success-strong';
+        }
         return 'bg-cta-default/20 text-cta-default';
       case 'pending_review':
         return 'bg-warning-light/20 text-warning-strong';
@@ -91,10 +123,23 @@ export class BookingStatusComponent {
 
   statusLabel = computed(() => {
     const status = this.booking?.status;
+    const startAt = this.booking?.start_at ? new Date(this.booking.start_at).getTime() : null;
+    const isBeforeStart =
+      status === 'in_progress' && startAt && !Number.isNaN(startAt) && Date.now() < startAt;
+    const isReturnFlow =
+      !!this.booking?.returned_at ||
+      this.booking?.completion_status === 'returned' ||
+      this.booking?.completion_status === 'pending_owner' ||
+      this.booking?.completion_status === 'pending_renter' ||
+      this.booking?.completion_status === 'pending_both';
 
     // P2P wallet: waiting for owner approval
     if (this.isPendingApproval()) {
       return 'Esperando aprobación';
+    }
+
+    if (isReturnFlow) {
+      return 'En revisión';
     }
 
     // Traditional: expired payment (only for non-wallet bookings)
@@ -107,8 +152,11 @@ export class BookingStatusComponent {
       case 'pending_payment':
         return 'Pendiente de pago';
       case 'confirmed':
-        return 'Confirmada';
+        return 'Aprobada';
       case 'in_progress':
+        if (isBeforeStart) {
+          return 'Check-in pendiente';
+        }
         return 'En curso';
       case 'pending_review':
         return 'En revisión';
@@ -128,9 +176,24 @@ export class BookingStatusComponent {
   });
 
   statusIcon = computed(() => {
+    const status = this.booking?.status;
+    const startAt = this.booking?.start_at ? new Date(this.booking.start_at).getTime() : null;
+    const isBeforeStart =
+      status === 'in_progress' && startAt && !Number.isNaN(startAt) && Date.now() < startAt;
+    const isReturnFlow =
+      !!this.booking?.returned_at ||
+      this.booking?.completion_status === 'returned' ||
+      this.booking?.completion_status === 'pending_owner' ||
+      this.booking?.completion_status === 'pending_renter' ||
+      this.booking?.completion_status === 'pending_both';
+
     // P2P wallet: clock icon for pending approval
     if (this.isPendingApproval()) {
       return '⏳';
+    }
+
+    if (isReturnFlow) {
+      return '🔍';
     }
 
     // Traditional: expired
@@ -138,7 +201,6 @@ export class BookingStatusComponent {
       return '⛔';
     }
 
-    const status = this.booking?.status;
     switch (status) {
       case 'pending':
       case 'pending_payment':
@@ -146,6 +208,9 @@ export class BookingStatusComponent {
       case 'confirmed':
         return '✅';
       case 'in_progress':
+        if (isBeforeStart) {
+          return '✅';
+        }
         return '🚗';
       case 'pending_review':
         return '🔍';
@@ -160,5 +225,16 @@ export class BookingStatusComponent {
       default:
         return 'ℹ️';
     }
+  });
+
+  showDeliveryCountdown = computed(() => {
+    const startAt = this.booking?.start_at ? new Date(this.booking.start_at).getTime() : null;
+    const isBeforeStart =
+      this.booking?.status === 'in_progress' &&
+      startAt &&
+      !Number.isNaN(startAt) &&
+      Date.now() < startAt;
+
+    return this.booking?.status === 'in_progress' && !!this.deliveryCountdown && !isBeforeStart;
   });
 }

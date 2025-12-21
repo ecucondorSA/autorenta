@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -29,6 +30,7 @@ import { injectSupabase } from './supabase-client.service';
   providedIn: 'root',
 })
 export class ExchangeRateService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase: SupabaseClient = injectSupabase();
   private readonly BINANCE_API = 'https://api.binance.com/api/v3/ticker/price';
   private readonly CACHE_TTL_MS = 30000; // 30 segundos - precio en tiempo real
@@ -88,7 +90,7 @@ export class ExchangeRateService {
     // Check cache (30 segundos)
     if (this.lastRates() !== null && cacheAge < this.CACHE_TTL_MS) {
       const cached = this.lastRates()!;
-      console.log(
+      this.logger.debug(
         `💱 Usando cotización cacheada: Binance ${cached.binance.toFixed(2)} | Platform ${cached.platform.toFixed(2)} ARS/USD (age: ${Math.round(cacheAge / 1000)}s)`,
       );
       return;
@@ -120,7 +122,7 @@ export class ExchangeRateService {
       });
       this.lastFetch.set(now);
 
-      console.log(
+      this.logger.debug(
         `✅ Binance USDT/ARS EN TIEMPO REAL: ${binanceRate.toFixed(2)} | Con margen 10% (garantías): ${platformRate.toFixed(2)} ARS/USD`,
       );
     } catch (error) {

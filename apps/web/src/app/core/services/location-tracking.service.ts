@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -33,6 +34,7 @@ export interface TrackingSession {
   providedIn: 'root',
 })
 export class LocationTrackingService {
+  private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private supabaseClient: SupabaseClient;
@@ -68,7 +70,7 @@ export class LocationTrackingService {
       // Start watching user's location
       this.startWatchingLocation(trackingId);
 
-      console.log('[LocationTracking] Started tracking session:', trackingId);
+      this.logger.debug('[LocationTracking] Started tracking session:', trackingId);
       return trackingId;
     } catch (error) {
       console.error('[LocationTracking] Error starting tracking:', error);
@@ -97,7 +99,7 @@ export class LocationTrackingService {
       this.currentTrackingId.set(null);
       this.isTracking.set(false);
 
-      console.log('[LocationTracking] Stopped tracking session');
+      this.logger.debug('[LocationTracking] Stopped tracking session');
     } catch (error) {
       console.error('[LocationTracking] Error stopping tracking:', error);
     }
@@ -291,7 +293,7 @@ export class LocationTrackingService {
       },
     );
 
-    console.log('[LocationTracking] Started watching location');
+    this.logger.debug('[LocationTracking] Started watching location');
   }
 
   /**
@@ -308,7 +310,7 @@ export class LocationTrackingService {
       this.updateInterval = null;
     }
 
-    console.log('[LocationTracking] Stopped watching location');
+    this.logger.debug('[LocationTracking] Stopped watching location');
   }
 
   /**
@@ -327,7 +329,7 @@ export class LocationTrackingService {
 
       if (error) throw error;
 
-      console.log('[LocationTracking] Location updated:', {
+      this.logger.debug('[LocationTracking] Location updated:', {
         lat: location.latitude.toFixed(6),
         lon: location.longitude.toFixed(6),
         accuracy: location.accuracy?.toFixed(1),

@@ -1,6 +1,8 @@
 import * as Sentry from '@sentry/angular';
+import { inject } from '@angular/core';
 import type { Breadcrumb } from '@sentry/types';
 import { environment } from '../../../environments/environment';
+import { LoggerService } from '../services/logger.service';
 
 /**
  * Initialize Sentry for error tracking and performance monitoring
@@ -14,10 +16,11 @@ import { environment } from '../../../environments/environment';
  * - Release tracking with git commit SHA
  */
 export function initializeSentry(): void {
+  const logger = inject(LoggerService);
   // Only initialize if DSN is provided
   if (!environment.sentryDsn) {
     if (!environment.production) {
-      console.log('ℹ️ Sentry not initialized - no DSN provided');
+      logger.info('Sentry not initialized - no DSN provided', 'Sentry');
     }
     return;
   }
@@ -95,7 +98,7 @@ export function initializeSentry(): void {
       const testMode =
         typeof localStorage !== 'undefined' ? localStorage.getItem('sentry-test-mode') : null;
       if (!environment.production && !testMode) {
-        console.warn('🚫 Sentry error blocked in development:', hint.originalException);
+        logger.warn('Sentry error blocked in development', 'Sentry', hint.originalException);
         return null;
       }
 
@@ -142,6 +145,6 @@ export function initializeSentry(): void {
   });
 
   if (!environment.production) {
-    console.log('✅ Sentry initialized in development mode');
+    logger.info('Sentry initialized in development mode', 'Sentry');
   }
 }

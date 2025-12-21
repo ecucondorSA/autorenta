@@ -71,7 +71,8 @@ export type DocumentKind =
   | 'vehicle_registration'
   | 'vehicle_insurance'
   | 'utility_bill'
-  | 'selfie';
+  | 'selfie'
+  | 'criminal_record';
 
 export interface NotificationChannelPrefs {
   bookings: boolean;
@@ -103,6 +104,9 @@ export interface UserProfile {
   driver_license_number?: string | null;
   driver_license_country?: string | null;
   driver_license_expiry?: string | null;
+  driver_license_class?: string | null;
+  driver_license_professional?: boolean | null;
+  driver_license_points?: number | null;
 
   // Fecha de nacimiento (para cálculo de edad en seguros)
   date_of_birth?: string | null; // ISO date string YYYY-MM-DD
@@ -500,6 +504,7 @@ export interface Booking {
   cancellation_fee_cents?: number;
   cancelled_at?: string;
   cancellation_reason?: string;
+  cancelled_by_role?: 'renter' | 'owner' | 'system' | 'admin' | null;
 
   // ✅ DISTANCE-BASED PRICING: Campos de ubicación y distancia
   pickup_location_lat?: number | null;

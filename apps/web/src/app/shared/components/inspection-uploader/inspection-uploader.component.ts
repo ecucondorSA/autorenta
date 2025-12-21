@@ -82,7 +82,9 @@ export class InspectionUploaderComponent implements OnInit {
   });
 
   readonly stageLabel = computed(() => {
-    return this.stage === 'check_in' ? 'Check-in' : 'Check-out';
+    if (this.stage === 'check_in') return 'Check-in';
+    if (this.stage === 'renter_check_in') return 'Recepción';
+    return 'Check-out';
   });
 
   readonly photoCount = computed(() => this.photos().length);

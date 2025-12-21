@@ -165,7 +165,7 @@
       }
 
       <p
-        class="text-center text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-8"
+        class="text-center text-text-secondary dark:text-text-secondary dark:text-text-secondary mb-6"
       >
         @if (bkg.status === 'confirmed') {
           Hemos enviado los detalles a tu email
@@ -173,6 +173,28 @@
           El anfitrión revisará tu solicitud. Te avisaremos cuando responda.
         }
       </p>
+
+      <div class="flex flex-col items-center gap-3 mb-8">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-surface-hover text-text-secondary border border-border-default text-sm"
+        >
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Te llevamos al detalle en {{ autoRedirectSeconds() }}s</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <ion-button size="small" fill="solid" color="primary" (click)="goToBookingDetail()">
+            Ver detalles ahora
+          </ion-button>
+          <ion-button
+            size="small"
+            fill="clear"
+            color="medium"
+            (click)="cancelAutoRedirect()"
+          >
+            Quedarme aquí
+          </ion-button>
+        </div>
+      </div>
 
       <!-- Booking Summary Card -->
       <ion-card class="mb-6">

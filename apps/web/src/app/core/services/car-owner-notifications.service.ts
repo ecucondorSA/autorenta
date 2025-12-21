@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationManagerService } from './notification-manager.service';
@@ -23,6 +24,7 @@ import { injectSupabase } from './supabase-client.service';
   providedIn: 'root',
 })
 export class CarOwnerNotificationsService {
+  private readonly logger = inject(LoggerService);
   private readonly notificationManager = inject(NotificationManagerService);
   private readonly notificationsService = inject(NotificationsService);
   private readonly router = inject(Router);
@@ -446,7 +448,7 @@ export class CarOwnerNotificationsService {
       );
 
       if (result) {
-        console.log('✅ Notificación guardada en BD:', title);
+        this.logger.debug('✅ Notificación guardada en BD:', title);
         // Refrescar notificaciones para que aparezcan inmediatamente
         await this.notificationsService.refresh();
       }
@@ -751,7 +753,7 @@ export class CarOwnerNotificationsService {
       }
 
       if (!cars || cars.length === 0) {
-        console.log('No cars found for user');
+        this.logger.debug('No cars found for user');
         return;
       }
 

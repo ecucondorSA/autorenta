@@ -248,10 +248,9 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
     ranges: DetailedBlockedRange[]
   ): 'available' | 'booked' | 'blocked' {
     for (const range of ranges) {
-      const from = new Date(range.from);
-      const to = new Date(range.to);
-      from.setHours(0, 0, 0, 0);
-      to.setHours(0, 0, 0, 0);
+      // FIX: Parse dates without timezone shift
+      const from = this.parseToLocalDate(range.from);
+      const to = this.parseToLocalDate(range.to);
 
       if (date >= from && date <= to) {
         return range.type === 'booking' ? 'booked' : 'blocked';
@@ -259,6 +258,20 @@ export class AvailabilityMiniCalendarComponent implements OnInit {
     }
 
     return 'available';
+  }
+
+  /**
+   * Parse date string to local Date without timezone issues
+   * "2026-01-23" → Date(2026, 0, 23) in local timezone
+   */
+  private parseToLocalDate(value: string): Date {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    // Fallback: parse and normalize to local midnight
+    const parsed = new Date(value);
+    return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
   }
 
   getDayClasses(day: CalendarDay): string {

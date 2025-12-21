@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 
 /**
  * Asset Preloader Service
@@ -14,6 +15,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class AssetPreloaderService {
+  private readonly logger = inject(LoggerService);
   private readonly _isPreloading = signal(false);
   private readonly _progress = signal(0);
   private readonly _errors = signal<string[]>([]);
@@ -81,7 +83,7 @@ export class AssetPreloaderService {
     this._errors.set(errors);
     this._isPreloading.set(false);
 
-    console.log(`[Preloader] Complete. Errors: ${errors.length > 0 ? errors.join(', ') : 'none'}`);
+    this.logger.debug(`[Preloader] Complete. Errors: ${errors.length > 0 ? errors.join(', ') : 'none'}`);
   }
 
   /**
@@ -130,7 +132,7 @@ export class AssetPreloaderService {
       return Promise.resolve();
     }
 
-    console.log('[Preloader] Starting Mapbox preload...');
+    this.logger.debug('[Preloader] Starting Mapbox preload...');
 
     this.mapboxPreloadPromise = this.runMapboxPreload();
     return this.mapboxPreloadPromise;
@@ -150,7 +152,7 @@ export class AssetPreloaderService {
       await Promise.all([cssPromise, jsPromise, tilesPromise]);
 
       this._mapboxReady.set(true);
-      console.log('[Preloader] Mapbox preload complete');
+      this.logger.debug('[Preloader] Mapbox preload complete');
     } catch (error) {
       console.warn('[Preloader] Mapbox preload failed (non-blocking):', error);
       // Don't fail - map will still load when user navigates to /cars/list
@@ -208,7 +210,7 @@ export class AssetPreloaderService {
       script.src = 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js';
       script.async = true;
       script.onload = () => {
-        console.log('[Preloader] Mapbox JS loaded');
+        this.logger.debug('[Preloader] Mapbox JS loaded');
         resolve();
       };
       script.onerror = () => resolve();

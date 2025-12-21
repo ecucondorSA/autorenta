@@ -1,4 +1,5 @@
-import { Injectable, signal, OnDestroy } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, OnDestroy, inject} from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -31,6 +32,7 @@ export type DatabaseRecord = { [key: string]: any };
   providedIn: 'root',
 })
 export class RealtimeConnectionService implements OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
 
   // Global connection status
@@ -77,7 +79,7 @@ export class RealtimeConnectionService implements OnDestroy {
     // This prevents multiple components from creating duplicate WebSocket connections
     const existingChannel = this.activeChannels.get(channelName);
     if (!forceNew && existingChannel) {
-      console.log(`♻️ [Realtime] Reusing existing channel: ${channelName}`);
+      this.logger.debug(`♻️ [Realtime] Reusing existing channel: ${channelName}`);
       // Notify status change callback with current status
       if (this.connectionStatus() === 'connected') {
         onStatusChange?.('connected');
@@ -229,7 +231,7 @@ export class RealtimeConnectionService implements OnDestroy {
     const retryCount = this.retryCounters.get(channelName) ?? 0;
 
     if (retryCount >= this.maxRetries) {
-      console.log(`❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`);
+      this.logger.debug(`❌ [Realtime] Max retries (${this.maxRetries}) reached for ${channelName}`);
       this.connectionStatus.set('error');
       onStatusChange?.('error');
       return;
@@ -238,7 +240,7 @@ export class RealtimeConnectionService implements OnDestroy {
     // Calculate delay with exponential backoff
     const delay = Math.min(this.baseDelay * Math.pow(2, retryCount), this.maxDelay);
 
-    console.log(
+    this.logger.debug(
       `🔄 [Realtime] Reconnecting ${channelName} in ${delay}ms (attempt ${retryCount + 1}/${this.maxRetries})`,
     );
 

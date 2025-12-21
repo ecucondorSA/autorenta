@@ -22,6 +22,14 @@
           <div class="flex-1">
             <h3 class="text-lg font-semibold text-error-strong mb-2 font-satoshi">Error</h3>
             <p class="text-error-strong">{{ error() }}</p>
+            @if (missingReception()) {
+              <a
+                [routerLink]="['/bookings', booking()?.id, 'check-in']"
+                class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-warning-600 text-text-inverse rounded-lg hover:bg-warning-700 transition-colors"
+              >
+                Ir a Recepción y documentación
+              </a>
+            }
             <button
               routerLink="/bookings"
               class="mt-4 px-4 py-2 bg-error-600 text-text-inverse rounded-lg hover:bg-error-700 transition-colors"
@@ -287,8 +295,8 @@
                 No se puede realizar el check-out
               </h3>
               <p class="text-warning-strong dark:text-warning-300 mb-4">
-                @if (!checkInInspection()) {
-                  El check-out no está disponible porque no se completó el check-in.
+                @if (!renterCheckInInspection()) {
+                  El check-out no está disponible porque no completaste la recepción del vehículo.
                 } @else {
                   El check-out no está disponible en este momento. Verificá que la reserva esté en
                   progreso y que seas el locatario.

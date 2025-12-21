@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 
@@ -19,6 +20,7 @@ type WindowWithMSStream = Window & { MSStream?: unknown };
   providedIn: 'root',
 })
 export class PwaInstallService {
+  private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
@@ -48,7 +50,7 @@ export class PwaInstallService {
       this.deferredPrompt = beforeInstallPrompt;
       this.canInstall.set(true);
 
-      console.log('✅ PWA instalable detectada');
+      this.logger.debug('✅ PWA instalable detectada');
 
       // Mostrar prompt personalizado después de 30 segundos
       setTimeout(() => {
@@ -60,7 +62,7 @@ export class PwaInstallService {
 
     // Detectar cuando se instala
     window.addEventListener('appinstalled', () => {
-      console.log('✅ PWA instalada exitosamente');
+      this.logger.debug('✅ PWA instalada exitosamente');
       this.isInstalled.set(true);
       this.canInstall.set(false);
       this.showInstallPrompt.set(false);
@@ -80,14 +82,14 @@ export class PwaInstallService {
     // Detecta si se abrió desde PWA instalada
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.isInstalled.set(true);
-      console.log('✅ App ya instalada (standalone mode)');
+      this.logger.debug('✅ App ya instalada (standalone mode)');
     }
 
     // Detecta si es iOS instalado
     const navigatorWithStandalone = window.navigator as NavigatorWithStandalone;
     if (navigatorWithStandalone.standalone === true) {
       this.isInstalled.set(true);
-      console.log('✅ App ya instalada (iOS standalone)');
+      this.logger.debug('✅ App ya instalada (iOS standalone)');
     }
   }
 
@@ -106,7 +108,7 @@ export class PwaInstallService {
     // Esperar la respuesta del usuario
     const { outcome } = await this.deferredPrompt.userChoice;
 
-    console.log(`Usuario ${outcome === 'accepted' ? 'aceptó' : 'rechazó'} la instalación`);
+    this.logger.debug(`Usuario ${outcome === 'accepted' ? 'aceptó' : 'rechazó'} la instalación`);
 
     // Limpiar el prompt usado
     this.deferredPrompt = null;

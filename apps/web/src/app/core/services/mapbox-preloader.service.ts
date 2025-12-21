@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -22,6 +23,7 @@ type MapboxMap = import('mapbox-gl').Map;
   providedIn: 'root',
 })
 export class MapboxPreloaderService {
+  private readonly logger = inject(LoggerService);
   private mapboxgl: MapboxGL | null = null;
   private preloadedMap: MapboxMap | null = null;
   private hiddenContainer: HTMLDivElement | null = null;
@@ -59,7 +61,7 @@ export class MapboxPreloaderService {
       return Promise.resolve();
     }
 
-    console.log('[MapboxPreloader] Starting map preload...');
+    this.logger.debug('[MapboxPreloader] Starting map preload...');
     this._isLoading.set(true);
     this.isPreloading = true;
 
@@ -113,7 +115,7 @@ export class MapboxPreloaderService {
 
         this.preloadedMap!.on('load', () => {
           clearTimeout(timeout);
-          console.log('[MapboxPreloader] Map fully loaded and ready');
+          this.logger.debug('[MapboxPreloader] Map fully loaded and ready');
           resolve();
         });
 
@@ -132,7 +134,7 @@ export class MapboxPreloaderService {
       this._isLoading.set(false);
       this.isPreloading = false;
 
-      console.log('[MapboxPreloader] Map preload complete');
+      this.logger.debug('[MapboxPreloader] Map preload complete');
     } catch (error: unknown) {
       if (error instanceof Error && error.message?.includes('timeout')) {
         console.warn('[MapboxPreloader] Skipping map preload due to timeout (non-critical)');
@@ -201,7 +203,7 @@ export class MapboxPreloaderService {
       // Resize to fit new container
       this.preloadedMap.resize();
 
-      console.log('[MapboxPreloader] Map transferred to target container');
+      this.logger.debug('[MapboxPreloader] Map transferred to target container');
 
       // Return the map instance for the component to use
       const map = this.preloadedMap;
@@ -239,7 +241,7 @@ export class MapboxPreloaderService {
       attributionControl: true,
     });
 
-    console.log('[MapboxPreloader] Created new map with preloaded module');
+    this.logger.debug('[MapboxPreloader] Created new map with preloaded module');
     return map;
   }
 

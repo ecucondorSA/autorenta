@@ -3,8 +3,9 @@ import {Component, inject, OnInit, PLATFORM_ID, signal,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoggerService } from '../../../core/services/logger.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
-import { NotificationsService } from '../../../core/services/user-notifications.service';
+import { NotificationPreferences, NotificationsService } from '../../../core/services/user-notifications.service';
 
 /**
  * NotificationsSettingsPage
@@ -33,6 +34,7 @@ export class NotificationsSettingsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly notificationsService = inject(NotificationsService);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly logger = inject(LoggerService);
 
   // Estado de configuración
   readonly settings = signal({
@@ -58,8 +60,8 @@ export class NotificationsSettingsPage implements OnInit {
   readonly saving = signal(false);
 
   async ngOnInit() {
-    // Cargar preferencias del usuario desde localStorage o backend
-    this.loadSettings();
+    // Cargar preferencias del usuario desde backend/localStorage
+    await this.loadSettings();
 
     // Check browser push permission
     if ('Notification' in window) {
@@ -71,17 +73,26 @@ export class NotificationsSettingsPage implements OnInit {
     }
   }
 
-  private loadSettings() {
+  private async loadSettings() {
     if (!this.isBrowser) return;
-    // TODO: Cargar desde backend o localStorage
-    const savedSettings = localStorage.getItem('notification_settings');
-    if (savedSettings) {
-      try {
-        const parsed = JSON.parse(savedSettings);
-        this.settings.set({ ...this.settings(), ...parsed });
-      } catch (e) {
-        console.error('Error loading notification settings', e);
+    try {
+      const backendSettings = await this.notificationsService.getSettings();
+      if (backendSettings) {
+        this.settings.set({ ...this.settings(), ...backendSettings });
+        localStorage.setItem('notification_settings', JSON.stringify(backendSettings));
+        return;
       }
+    } catch (error) {
+      this.logger.warn('Error loading notification settings from backend', 'NotificationsSettings', error);
+    }
+
+    const savedSettings = localStorage.getItem('notification_settings');
+    if (!savedSettings) return;
+    try {
+      const parsed = JSON.parse(savedSettings) as NotificationPreferences;
+      this.settings.set({ ...this.settings(), ...parsed });
+    } catch (error) {
+      this.logger.warn('Error loading notification settings from localStorage', 'NotificationsSettings', error);
     }
   }
 
@@ -126,17 +137,13 @@ export class NotificationsSettingsPage implements OnInit {
     this.saving.set(true);
 
     try {
-      // Guardar en localStorage (en producción, enviar a backend)
       const settings = this.settings();
       if (this.isBrowser) localStorage.setItem('notification_settings', JSON.stringify(settings));
 
-      // TODO: Enviar a backend
-      // await this.notificationsService.updateSettings(settings);
-
-      await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate API call
+      await this.notificationsService.saveSettings(settings);
       this.toastService.success('Configuración guardada', '');
     } catch (error) {
-      console.error('Error saving settings', error);
+      this.logger.error('Error saving notification settings', 'NotificationsSettings', error);
       this.toastService.error('Error al guardar configuración', '');
     } finally {
       this.saving.set(false);

@@ -5,10 +5,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Booking } from '../../../core/models';
 import { BookingsService } from '../../../core/services/bookings.service';
+import { BookingConfirmationService } from '../../../core/services/booking-confirmation.service';
 import { FgoV1_1Service } from '../../../core/services/fgo-v1-1.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { InspectionUploaderComponent } from '../../../shared/components/inspection-uploader/inspection-uploader.component';
 import { BookingInspection } from '../../../core/models/fgo-v1-1.model';
+import { LoggerService } from '../../../core/services/logger.service';
 
 /**
  * Página de Check-out para locatarios
@@ -29,15 +31,19 @@ export class CheckOutPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly bookingsService = inject(BookingsService);
+  private readonly confirmationService = inject(BookingConfirmationService);
   private readonly fgoService = inject(FgoV1_1Service);
   private readonly authService = inject(AuthService);
+  private readonly logger = inject(LoggerService);
 
   booking = signal<Booking | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  missingReception = signal(false);
   inspectionCompleted = signal(false);
   existingInspection = signal<BookingInspection | null>(null);
   checkInInspection = signal<BookingInspection | null>(null);
+  renterCheckInInspection = signal<BookingInspection | null>(null);
 
   // Computed properties
   readonly canPerformCheckOut = computed(() => {
@@ -52,7 +58,7 @@ export class CheckOutPage implements OnInit {
     const isRenter = booking.renter_id === this.authService.session$()?.user?.id;
     const validStatus = booking.status === 'in_progress' || booking.status === 'completed';
     const hasCheckOut = this.existingInspection()?.signedAt !== undefined;
-    const hasCheckIn = this.checkInInspection()?.signedAt !== undefined;
+    const hasCheckIn = this.renterCheckInInspection()?.signedAt !== undefined;
 
     return isRenter && validStatus && !hasCheckOut && hasCheckIn;
   });
@@ -136,14 +142,29 @@ export class CheckOutPage implements OnInit {
         return;
       }
 
-      // Cargar inspecciones (check-in y check-out)
-      const [checkIn, checkOut] = await Promise.all([
+      // Cargar inspecciones (check-in locador, recepción locatario y check-out)
+      const [checkIn, renterCheckIn, checkOut] = await Promise.all([
         firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'check_in')),
+        firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'renter_check_in')),
         firstValueFrom(this.fgoService.getInspectionByStage(bookingId, 'check_out')),
       ]);
 
-      if (checkIn) {
+      if (!renterCheckIn?.signedAt) {
+        this.missingReception.set(true);
+        this.error.set('Debés completar la recepción del vehículo antes del check-out');
+        this.loading.set(false);
+        return;
+      }
+
+      if (renterCheckIn?.signedAt) {
+        this.renterCheckInInspection.set(renterCheckIn);
+      }
+
+      if (checkIn?.signedAt) {
         this.checkInInspection.set(checkIn);
+      } else if (renterCheckIn?.signedAt) {
+        // Fallback for comparison if owner check-in is missing
+        this.checkInInspection.set(renterCheckIn);
       }
 
       if (checkOut?.signedAt) {
@@ -152,7 +173,7 @@ export class CheckOutPage implements OnInit {
       }
     } catch (err) {
       this.error.set('Error al cargar la reserva');
-      console.error('Error loading booking:', err);
+      this.logger.error('Error loading booking', 'CheckOutPage', err);
     } finally {
       this.loading.set(false);
     }
@@ -166,18 +187,20 @@ export class CheckOutPage implements OnInit {
       this.inspectionCompleted.set(true);
       this.existingInspection.set(inspection);
 
-      // Si el booking está en 'in_progress', actualizar a 'completed' con completion_status 'returned'
+      // Marcar devolución y confirmar como locatario (no cerrar hasta confirmación del locador)
       const booking = this.booking();
-      if (booking && booking.status === 'in_progress') {
-        await this.bookingsService.updateBooking(booking.id, {
-          status: 'completed',
-          completion_status: 'returned',
+      const renterId = this.authService.session$()?.user?.id;
+      if (booking && renterId) {
+        await this.confirmationService.markAsReturned({
+          booking_id: booking.id,
+          returned_by: renterId,
         });
-        // Recargar booking
+        await this.confirmationService.confirmRenter({
+          booking_id: booking.id,
+          confirming_user_id: renterId,
+        });
         const updated = await this.bookingsService.getBookingById(booking.id);
-        if (updated) {
-          this.booking.set(updated);
-        }
+        if (updated) this.booking.set(updated);
       }
 
       // Redirigir a detalle de booking después de un breve delay
@@ -188,7 +211,7 @@ export class CheckOutPage implements OnInit {
       }, 2000);
     } catch (err) {
       this.error.set('Error al completar el check-out');
-      console.error('Error completing check-out:', err);
+      this.logger.error('Error completing check-out', 'CheckOutPage', err);
     }
   }
 

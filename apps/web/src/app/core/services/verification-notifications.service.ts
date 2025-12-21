@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { NotificationManagerService } from './notification-manager.service';
 import { VerificationStateService } from './verification-state.service';
@@ -12,6 +13,7 @@ import { VerificationStateService } from './verification-state.service';
   providedIn: 'root',
 })
 export class VerificationNotificationsService implements OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly toast = inject(NotificationManagerService);
   private readonly verificationStateService = inject(VerificationStateService);
 
@@ -26,7 +28,7 @@ export class VerificationNotificationsService implements OnDestroy {
       this.handleVerificationEvent(event.detail.type);
     });
 
-    console.log('[VerificationNotifications] Initialized');
+    this.logger.debug('[VerificationNotifications] Initialized');
   }
 
   /**
@@ -71,7 +73,7 @@ export class VerificationNotificationsService implements OnDestroy {
         break;
 
       default:
-        console.log('[VerificationNotifications] Unknown event:', eventType);
+        this.logger.debug('[VerificationNotifications] Unknown event:', eventType);
     }
   }
 

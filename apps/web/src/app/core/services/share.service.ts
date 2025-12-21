@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, inject} from '@angular/core';
 
 type NavigatorWithAdvancedShare = Navigator & {
   canShare?: (data?: ShareData | { files: File[] }) => boolean;
@@ -14,6 +15,7 @@ type NavigatorWithAdvancedShare = Navigator & {
   providedIn: 'root',
 })
 export class ShareService {
+  private readonly logger = inject(LoggerService);
   /**
    * Verifica si Web Share API está disponible
    */
@@ -32,11 +34,11 @@ export class ShareService {
 
     try {
       await navigator.share(data);
-      console.log('✅ Compartido exitosamente');
+      this.logger.debug('✅ Compartido exitosamente');
       return true;
     } catch (error: unknown) {
       if (error instanceof DOMException && error.name === 'AbortError') {
-        console.log('Usuario canceló compartir');
+        this.logger.debug('Usuario canceló compartir');
         return false;
       }
       console.error('❌ Error al compartir:', error);

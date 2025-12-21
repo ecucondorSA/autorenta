@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
@@ -56,6 +57,7 @@ interface ReviewsCacheEntry {
   providedIn: 'root',
 })
 export class CarLocationsService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly availabilityService = inject(CarAvailabilityService);
   private readonly cacheTtlMs = environment.carLocationsCacheTtlMs ?? DEFAULT_CACHE_TTL_MS;
@@ -221,7 +223,7 @@ export class CarLocationsService {
 
     // If channel already exists, just return cleanup (reuse channel)
     if (this.realtimeChannel) {
-      console.log('♻️ [CarLocations] Reusing existing realtime channel');
+      this.logger.debug('♻️ [CarLocations] Reusing existing realtime channel');
       return () => {
         this.realtimeSubscribers.delete(onChange);
         // Only remove channel if no more subscribers

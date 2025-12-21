@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, signal, inject, OnDestroy, effect } from '@angular/core';
 import type { RealtimeChannel, RealtimePostgresInsertPayload } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
@@ -28,10 +29,24 @@ interface NotificationRow {
 
 type NotificationListItem = NotificationItem & { dbType: string };
 
+export type NotificationPreferences = {
+  browserPushEnabled: boolean;
+  browserPushPermission: NotificationPermission;
+  bookingUpdates: boolean;
+  paymentNotifications: boolean;
+  messageNotifications: boolean;
+  promotionsAndOffers: boolean;
+  systemUpdates: boolean;
+  inAppNotifications: boolean;
+  emailNotifications: boolean;
+  soundEnabled: boolean;
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService implements OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = injectSupabase();
   private readonly authService = inject(AuthService);
 
@@ -97,6 +112,47 @@ export class NotificationsService implements OnDestroy {
     await this.loadNotificationsInternal();
   }
 
+  async getSettings(): Promise<NotificationPreferences | null> {
+    try {
+      const {
+        data: { user },
+      } = await this.supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data, error } = await this.supabase
+        .from('notification_settings')
+        .select('preferences')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+      return (data?.preferences as NotificationPreferences) || null;
+    } catch (error) {
+      this.logger.warn('Failed to load notification settings', 'NotificationsService', error);
+      return null;
+    }
+  }
+
+  async saveSettings(preferences: NotificationPreferences): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await this.supabase
+      .from('notification_settings')
+      .upsert({
+        user_id: user.id,
+        preferences,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (error) {
+      this.logger.error('Failed to save notification settings', 'NotificationsService', error);
+      throw error;
+    }
+  }
+
   private async loadNotificationsInternal() {
     try {
       const {
@@ -147,7 +203,7 @@ export class NotificationsService implements OnDestroy {
       }
 
       this.connectionStatus.set('connecting');
-      console.log(
+      this.logger.debug(
         '[NotificationsService] Subscribing to Realtime notifications for user:',
         user.id,
       );
@@ -164,17 +220,17 @@ export class NotificationsService implements OnDestroy {
             filter: `user_id=eq.${user.id}`,
           },
           (payload: RealtimePostgresInsertPayload<NotificationRow>) => {
-            console.log('[NotificationsService] New notification received via Realtime:', payload);
+            this.logger.debug('[NotificationsService] New notification received via Realtime:', payload);
             this.addNotification(payload.new);
           },
         )
         .subscribe((status) => {
-          console.log('[NotificationsService] Realtime subscription status:', status);
+          this.logger.debug('[NotificationsService] Realtime subscription status:', status);
 
           if (status === 'SUBSCRIBED') {
             this.connectionStatus.set('connected');
             this.isSubscribed = true;
-            console.log(
+            this.logger.debug(
               '[NotificationsService] ✅ Successfully subscribed to Realtime notifications',
             );
           } else if (status === 'CHANNEL_ERROR') {
@@ -187,7 +243,7 @@ export class NotificationsService implements OnDestroy {
               clearTimeout(this.reconnectTimeoutId);
             }
             this.reconnectTimeoutId = setTimeout(() => {
-              console.log('[NotificationsService] Attempting to reconnect...');
+              this.logger.debug('[NotificationsService] Attempting to reconnect...');
               void this.subscribeToRealtime();
             }, 5000);
           } else if (status === 'TIMED_OUT') {
@@ -200,13 +256,13 @@ export class NotificationsService implements OnDestroy {
               clearTimeout(this.reconnectTimeoutId);
             }
             this.reconnectTimeoutId = setTimeout(() => {
-              console.log('[NotificationsService] Attempting to reconnect after timeout...');
+              this.logger.debug('[NotificationsService] Attempting to reconnect after timeout...');
               void this.subscribeToRealtime();
             }, 5000);
           } else if (status === 'CLOSED') {
             this.connectionStatus.set('disconnected');
             this.isSubscribed = false;
-            console.log('[NotificationsService] Realtime channel closed');
+            this.logger.debug('[NotificationsService] Realtime channel closed');
           }
         });
     } catch (error) {
@@ -219,7 +275,7 @@ export class NotificationsService implements OnDestroy {
         clearTimeout(this.reconnectTimeoutId);
       }
       this.reconnectTimeoutId = setTimeout(() => {
-        console.log('[NotificationsService] Attempting to reconnect after error...');
+        this.logger.debug('[NotificationsService] Attempting to reconnect after error...');
         void this.subscribeToRealtime();
       }, 5000);
     }
@@ -230,7 +286,7 @@ export class NotificationsService implements OnDestroy {
    */
   private unsubscribe(): void {
     if (this.realtimeChannel) {
-      console.log('[NotificationsService] Unsubscribing from Realtime notifications');
+      this.logger.debug('[NotificationsService] Unsubscribing from Realtime notifications');
       this.supabase.removeChannel(this.realtimeChannel);
       this.realtimeChannel = null;
       this.isSubscribed = false;
@@ -242,7 +298,7 @@ export class NotificationsService implements OnDestroy {
    * Reconectar manualmente a Realtime
    */
   async reconnect(): Promise<void> {
-    console.log('[NotificationsService] Manual reconnect requested');
+    this.logger.debug('[NotificationsService] Manual reconnect requested');
     this.unsubscribe();
     await this.subscribeToRealtime();
   }
@@ -262,6 +318,23 @@ export class NotificationsService implements OnDestroy {
     notification: NotificationRow,
     preserveReadState: boolean = true,
   ): NotificationItem {
+    const dbType = notification.type;
+    const metadata = notification.metadata ?? undefined;
+    let actionUrl = notification.cta_link ?? undefined;
+
+    if (dbType === 'new_booking_for_owner') {
+      const bookingId =
+        (metadata && (metadata['booking_id'] as string)) ||
+        (metadata && (metadata['bookingId'] as string));
+      actionUrl = bookingId
+        ? `/bookings/pending-approval?bookingId=${bookingId}`
+        : '/bookings/pending-approval';
+    } else if (dbType === 'pending_requests_reminder') {
+      actionUrl = '/bookings/pending-approval';
+    } else if (dbType === 'booking_cancelled_for_owner') {
+      actionUrl = '/bookings/owner';
+    }
+
     return {
       id: notification.id,
       title: notification.title,
@@ -269,9 +342,9 @@ export class NotificationsService implements OnDestroy {
       type: this.mapNotificationType(notification.type),
       read: preserveReadState ? (notification.is_read ?? false) : false,
       createdAt: new Date(notification.created_at),
-      actionUrl: notification.cta_link ?? undefined,
+      actionUrl,
       actionText: 'Ver detalles',
-      metadata: notification.metadata ?? undefined,
+      metadata,
     };
   }
 
@@ -456,7 +529,7 @@ export class NotificationsService implements OnDestroy {
         title: 'Nueva reserva recibida',
         message: `${renterName} solicitó reservar tu ${carTitle}`,
         type: 'success',
-        actionUrl: `/bookings/${bookingId}`,
+        actionUrl: `/bookings/pending-approval?bookingId=${bookingId}`,
         metadata: { bookingId, renterName, carTitle },
       },
       'new_booking_for_owner',

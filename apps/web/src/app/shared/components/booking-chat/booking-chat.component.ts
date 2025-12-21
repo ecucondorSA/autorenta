@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, computed, inject, input,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -26,6 +27,7 @@ import { BaseChatComponent, ChatContext } from '../base-chat/base-chat.component
   `,
 })
 export class BookingChatComponent {
+  private readonly logger = inject(LoggerService);
   private readonly authService = inject(AuthService);
 
   // Inputs (compatibilidad hacia atrás)
@@ -72,20 +74,20 @@ export class BookingChatComponent {
    * Maneja eventos de mensaje enviado (para analytics)
    */
   onMessageSent(event: { messageId: string; context: ChatContext }): void {
-    console.log('Message sent:', event);
+    this.logger.debug('Message sent:', event);
   }
 
   /**
    * Maneja eventos de mensaje recibido (para analytics)
    */
   onMessageReceived(event: { message: unknown; context: ChatContext }): void {
-    console.log('Message received:', event);
+    this.logger.debug('Message received:', event);
   }
 
   /**
    * Maneja click en menú
    */
   onMenuClicked(): void {
-    console.log('Menu clicked');
+    this.logger.debug('Menu clicked');
   }
 }

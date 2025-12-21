@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -65,6 +66,7 @@ interface PaymentOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookingPaymentPage implements OnInit {
+  private readonly logger = inject(LoggerService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
@@ -311,7 +313,7 @@ export class BookingPaymentPage implements OnInit {
 
       // Log for debugging
       if (result.savings > 0) {
-        console.log(
+        this.logger.debug(
           `[BookingPayment] Bonus-malus applied: factor=${result.factor}, savings=${result.savings / 100} USD`
         );
       }

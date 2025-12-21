@@ -1,5 +1,6 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component, signal,
-  ChangeDetectionStrategy} from '@angular/core';
+  ChangeDetectionStrategy, inject} from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -34,6 +35,7 @@ interface FooterLink {
   styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent {
+  private readonly logger = inject(LoggerService);
   currentYear = new Date().getFullYear();
 
   // Footer sections
@@ -103,11 +105,11 @@ export class FooterComponent {
 
   onLanguageChange(): void {
     // TODO: Implement language selector
-    console.log('Language selector clicked');
+    this.logger.debug('Language selector clicked');
   }
 
   onCurrencyChange(): void {
     // TODO: Implement currency selector
-    console.log('Currency selector clicked');
+    this.logger.debug('Currency selector clicked');
   }
 }

@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -27,6 +28,7 @@ export interface NavigationOptions {
   providedIn: 'root',
 })
 export class NavigationService {
+  private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -166,7 +168,7 @@ export class NavigationService {
   private openExternalLink(url: string, appName: string): void {
     try {
       window.open(url, '_blank', 'noopener,noreferrer');
-      console.log(`[NavigationService] Opened ${appName}:`, url);
+      this.logger.debug(`[NavigationService] Opened ${appName}:`, url);
     } catch (error) {
       console.error(`[NavigationService] Error opening ${appName}:`, error);
     }

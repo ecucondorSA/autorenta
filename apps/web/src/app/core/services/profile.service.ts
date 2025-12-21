@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -25,6 +26,9 @@ export interface UpdateProfileData {
   driver_license_number?: string;
   driver_license_country?: string;
   driver_license_expiry?: string;
+  driver_license_class?: string;
+  driver_license_professional?: boolean;
+  driver_license_points?: number | null;
   date_of_birth?: string | null; // ISO date string YYYY-MM-DD
   address_line1?: string;
   address_line2?: string;
@@ -45,6 +49,7 @@ export interface UpdateProfileData {
   providedIn: 'root',
 })
 export class ProfileService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase = inject(SupabaseClientService).getClient();
 
   async getCurrentProfile(): Promise<UserProfile | null> {
@@ -204,7 +209,7 @@ export class ProfileService {
       );
     }
 
-    console.log('✅ Perfil creado:', {
+    this.logger.debug('✅ Perfil creado:', {
       id: data?.['id'],
       full_name: data?.['full_name'],
     });
@@ -502,7 +507,7 @@ export class ProfileService {
       if (error) {
         console.warn('Could not record strike (table might not exist):', error['message']);
       } else {
-        console.log(`Strike added to user ${userId}: ${reason}`);
+        this.logger.debug(`Strike added to user ${userId}: ${reason}`);
       }
     } catch (err) {
       console['error']('Error adding strike:', err);

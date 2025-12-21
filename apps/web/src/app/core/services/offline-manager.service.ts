@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, signal, inject, DestroyRef } from '@angular/core';
 import { fromEvent, merge, map, startWith } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -26,6 +27,7 @@ export interface QueuedMutation {
   providedIn: 'root',
 })
 export class OfflineManagerService {
+  private readonly logger = inject(LoggerService);
   private readonly isOnlineSignal = signal(true);
   private readonly mutationQueue = signal<QueuedMutation[]>([]);
   private readonly destroyRef = inject(DestroyRef);
@@ -93,7 +95,7 @@ export class OfflineManagerService {
 
     if (queue.length === 0) return;
 
-    console.log(`[Offline] Processing ${queue.length} queued mutations`);
+    this.logger.debug(`[Offline] Processing ${queue.length} queued mutations`);
 
     for (const mutation of queue) {
       try {
@@ -121,7 +123,7 @@ export class OfflineManagerService {
    * Retry a specific mutation (override in app)
    */
   private async retryMutation(mutation: QueuedMutation): Promise<void> {
-    console.log(`[Offline] Retrying mutation ${mutation.type}`);
+    this.logger.debug(`[Offline] Retrying mutation ${mutation.type}`);
 
     // This should be overridden by app-specific logic
     // For now, just log

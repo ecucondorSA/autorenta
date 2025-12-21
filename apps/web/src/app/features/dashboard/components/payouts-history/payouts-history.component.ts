@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../../core/services/logger.service';
 import {Component, OnInit, signal, inject,
   ChangeDetectionStrategy} from '@angular/core';
 
@@ -179,6 +180,7 @@ import { AuthService } from '../../../../core/services/auth.service';
   `,
 })
 export class PayoutsHistoryComponent implements OnInit {
+  private readonly logger = inject(LoggerService);
   private readonly payoutService = inject(PayoutService);
   private readonly authService = inject(AuthService);
 
@@ -292,7 +294,7 @@ export class PayoutsHistoryComponent implements OnInit {
 
   downloadReceipt(payout: Payout): void {
     // TODO: Implementar descarga de comprobante PDF
-    console.log('Descargar comprobante para payout:', payout.id);
+    this.logger.debug('Descargar comprobante para payout:', payout.id);
     // Por ahora solo mostramos un mensaje
     alert('Funcionalidad de descarga de comprobante próximamente disponible');
   }

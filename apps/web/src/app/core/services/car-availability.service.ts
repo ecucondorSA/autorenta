@@ -81,8 +81,6 @@ export class CarAvailabilityService {
     };
 
     // Normalize date boundaries
-    const fromIso = this.normalizeToDate(fromDate).toISOString();
-    const toIso = this.normalizeToDate(toDate).toISOString();
     const fromDateOnly = this.toDateString(this.normalizeToDate(fromDate));
     const toDateOnly = this.toDateString(this.normalizeToDate(toDate));
 
@@ -94,13 +92,12 @@ export class CarAvailabilityService {
     // - confirmed: booking confirmed, waiting for start
     // - in_progress: rental is active
     const [bookingsResult, manualBlocksResult] = await Promise.all([
-      this.supabase
-        .from('bookings')
-        .select('start_at, end_at, status')
-        .eq('car_id', carId)
-        .in('status', ['pending', 'pending_payment', 'confirmed', 'in_progress'])
-        .lte('start_at', toIso)
-        .gte('end_at', fromIso),
+      // SECURITY DEFINER RPC: returns confirmed/in_progress ranges for public calendars
+      this.supabase.rpc('get_car_blocked_dates', {
+        p_car_id: carId,
+        p_start_date: fromDateOnly,
+        p_end_date: toDateOnly,
+      }),
       this.supabase
         .from('car_blocked_dates')
         .select('id, blocked_from, blocked_to, reason, notes')
@@ -109,7 +106,9 @@ export class CarAvailabilityService {
         .gte('blocked_to', fromDateOnly),
     ]);
 
-    const bookings = bookingsResult.data;
+    const bookings = bookingsResult.data as
+      | Array<{ start_date: string; end_date: string; status: string }>
+      | null;
     const manualRows = (manualBlocksResult.data || []) as ManualBlockRow[];
 
     const ranges: DetailedBlockedRange[] = [];
@@ -117,8 +116,8 @@ export class CarAvailabilityService {
     if (bookings) {
       ranges.push(
         ...bookings.map((b) => ({
-          from: this.toDateString(b.start_at),
-          to: this.toDateString(b.end_at),
+          from: this.toDateString(b.start_date),
+          to: this.toDateString(b.end_date),
           type: 'booking' as const,
           reason: 'Reserva',
         })),

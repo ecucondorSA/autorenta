@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {Component, Input, OnInit, inject,
   ChangeDetectionStrategy} from '@angular/core';
@@ -28,6 +29,7 @@ import { ReviewCardComponent } from '../review-card/review-card.component';
   styleUrls: ['./car-reviews-section.component.css'],
 })
 export class CarReviewsSectionComponent implements OnInit {
+  private readonly logger = inject(LoggerService);
   @Input({ required: true }) carId!: string;
 
   private readonly reviewsService = inject(ReviewsService);
@@ -46,7 +48,7 @@ export class CarReviewsSectionComponent implements OnInit {
     // Esto se debe remover una vez que haya reviews reales en la base de datos
     setTimeout(() => {
       if (this.reviewsCount() === 0 && !this.loading()) {
-        console.log('🔧 No hay reviews reales, mostrando datos de prueba para verificar UI');
+        this.logger.debug('🔧 No hay reviews reales, mostrando datos de prueba para verificar UI');
         this.showTestDataForUI();
       }
     }, 2000); // Esperar 2 segundos para que termine la carga
@@ -112,7 +114,7 @@ export class CarReviewsSectionComponent implements OnInit {
     // Forzar los signals con datos de prueba (esto es temporal para testing)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this.reviewsService as any).reviewsSignal.set(testReviews);
-    console.log('✅ Datos de prueba cargados. La UI debería mostrar las reviews ahora.');
+    this.logger.debug('✅ Datos de prueba cargados. La UI debería mostrar las reviews ahora.');
   }
 
   /**

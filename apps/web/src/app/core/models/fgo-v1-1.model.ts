@@ -19,7 +19,7 @@ import { FgoHealthStatus } from './fgo.model';
 
 export type BucketType = 'economy' | 'premium' | 'luxury' | 'default';
 
-export type InspectionStage = 'check_in' | 'check_out';
+export type InspectionStage = 'check_in' | 'check_out' | 'renter_check_in';
 
 export type CurrencyCode = 'USD' | 'ARS' | 'COP' | 'MXN';
 

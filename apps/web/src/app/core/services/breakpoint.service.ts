@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, Signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -23,6 +24,7 @@ export type Breakpoint = keyof typeof BREAKPOINTS;
  * @example
  * ```ts
  * export class MyComponent {
+  private readonly logger = inject(LoggerService);
  *   private breakpoint = inject(BreakpointService);
  *
  *   // Señales reactivas
@@ -149,7 +151,7 @@ export class BreakpointService {
    * ```ts
    * ngOnInit() {
    *   this.cleanup = this.breakpoint.observe('md', (matches) => {
-   *     console.log('Mobile:', matches);
+   *     this.logger.debug('Mobile:', matches);
    *   });
    * }
    *

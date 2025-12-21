@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, inject} from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { injectSupabase } from './supabase-client.service';
 
@@ -31,6 +32,7 @@ export interface BookingConfirmationEmailData {
   providedIn: 'root',
 })
 export class EmailService {
+  private readonly logger = inject(LoggerService);
   private readonly supabase: SupabaseClient = injectSupabase();
 
   /**
@@ -52,7 +54,7 @@ export class EmailService {
         return { success: false, error: error.message };
       }
 
-      console.log('Booking confirmation email sent:', result);
+      this.logger.debug('Booking confirmation email sent:', result);
       return { success: true };
     } catch (error) {
       console.error('Unexpected error sending email:', error);

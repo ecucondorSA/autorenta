@@ -48,6 +48,21 @@ export class AdminDashboardPage implements OnInit {
     }
   }
 
+  formatCancelledByRole(role: Booking['cancelled_by_role']): string {
+    switch (role) {
+      case 'renter':
+        return 'Locatario';
+      case 'owner':
+        return 'Propietario';
+      case 'admin':
+        return 'Administrador';
+      case 'system':
+        return 'Sistema';
+      default:
+        return 'Desconocido';
+    }
+  }
+
   private async loadData(): Promise<void> {
     this.loadingSignal.set(true);
     try {

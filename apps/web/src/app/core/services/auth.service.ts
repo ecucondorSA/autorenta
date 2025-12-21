@@ -56,18 +56,23 @@ export class AuthService implements OnDestroy {
   }
 
   async ensureSession(): Promise<Session | null> {
-    console.log('[AuthService DEBUG] ensureSession called. Loading:', this.state().loading, 'Session exists:', !!this.state().session);
+    this.logger.debug('ensureSession called', 'AuthService', {
+      loading: this.state().loading,
+      hasSession: !!this.state().session,
+    });
     if (!this.state().loading) {
       return this.state().session;
     }
     if (!this.restoreSessionPromise) {
-      console.log('[AuthService DEBUG] ensureSession: waiting for loadSession...');
+      this.logger.debug('ensureSession: waiting for loadSession...', 'AuthService');
       this.restoreSessionPromise = this.loadSession().finally(() => {
         this.restoreSessionPromise = null;
       });
     }
     await this.restoreSessionPromise;
-    console.log('[AuthService DEBUG] ensureSession: resolved. Session:', !!this.state().session);
+    this.logger.debug('ensureSession: resolved', 'AuthService', {
+      hasSession: !!this.state().session,
+    });
     return this.state().session;
   }
 
@@ -131,15 +136,15 @@ export class AuthService implements OnDestroy {
   }
 
   private async loadSession(): Promise<void> {
-    console.log('[AuthService DEBUG] loadSession: starting...');
+    this.logger.debug('loadSession: starting...', 'AuthService');
     const {
       data: { session },
       error,
     } = await this.supabase.auth.getSession();
     
-    console.log('[AuthService DEBUG] loadSession: getSession result:', { 
-      hasSession: !!session, 
-      error: error?.message 
+    this.logger.debug('loadSession: getSession result', 'AuthService', {
+      hasSession: !!session,
+      error: error?.message,
     });
 
     if (error) {
@@ -153,15 +158,15 @@ export class AuthService implements OnDestroy {
   }
 
   async refreshSession(): Promise<Session | null> {
-    console.log('[AuthService DEBUG] refreshSession called');
+    this.logger.debug('refreshSession called', 'AuthService');
     const { data, error } = await this.supabase.auth.refreshSession();
     if (error) {
       this.logger.warn('Failed to refresh session', 'AuthService', error);
-      console.log('[AuthService DEBUG] refreshSession failed:', error.message);
+      this.logger.debug('refreshSession failed', 'AuthService', { message: error.message });
       return null;
     }
     if (data.session) {
-      console.log('[AuthService DEBUG] refreshSession success');
+      this.logger.debug('refreshSession success', 'AuthService');
       this.state.set({ session: data.session, loading: false });
     }
     return data.session;
@@ -170,7 +175,10 @@ export class AuthService implements OnDestroy {
   private listenToAuthChanges(): void {
     this.authSubscription = this.supabase.auth.onAuthStateChange(
       (event: AuthChangeEvent, session: Session | null) => {
-        console.log('[AuthService DEBUG] onAuthStateChange:', event, 'Has session:', !!session);
+        this.logger.debug('onAuthStateChange', 'AuthService', {
+          event,
+          hasSession: !!session,
+        });
         this.state.set({ session: session ?? null, loading: false });
       },
     );

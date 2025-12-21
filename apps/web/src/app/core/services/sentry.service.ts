@@ -1,4 +1,5 @@
-import { ErrorHandler, Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {ErrorHandler, Injectable, inject} from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -51,6 +52,7 @@ async function getSentry(): Promise<SentryModule | null> {
  */
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
+  private readonly logger = inject(LoggerService);
   handleError(error: Error | unknown): void {
     // Log to console in development
     if (!environment.production) {
@@ -96,6 +98,7 @@ export async function initSentry(): Promise<void> {
 
   const Sentry = await getSentry();
   if (!Sentry) return;
+  const logger = inject(LoggerService);
 
   const options = {
     dsn: environment.sentryDsn,
@@ -174,5 +177,5 @@ export async function initSentry(): Promise<void> {
 
   // Por ahora, solo inicializamos la parte web debido a conflictos de tipos con Sentry Capacitor
   Sentry.init(options);
-  console.log('✅ Sentry initialized (Web only)');
+  logger.debug('✅ Sentry initialized (Web only)', 'Sentry');
 }

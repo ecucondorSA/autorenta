@@ -8,10 +8,12 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
   PLATFORM_ID,
   signal,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -56,7 +58,7 @@ export interface AlternativeDateSuggestion {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
+export class DateRangePickerComponent implements AfterViewInit, OnChanges, OnDestroy {
   private readonly analytics = inject(AnalyticsService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
@@ -77,6 +79,7 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('dateRangeInput') dateRangeInput!: ElementRef<HTMLInputElement>;
   private fpInstance: flatpickr.Instance | null = null;
+  private blockedDatesSet = new Set<string>(); // Stores blocked dates for styling in onDayCreate
 
   readonly from = signal<string | null>(this.initialFrom);
   readonly to = signal<string | null>(this.initialTo);
@@ -114,6 +117,37 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * FIX: Update flatpickr when blockedRanges changes
+   * This ensures the calendar shows correct availability when dates are loaded async
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['blockedRanges'] && !changes['blockedRanges'].firstChange) {
+      // blockedRanges changed after initial load - reinitialize flatpickr
+      if (this.isBrowser && this.fpInstance) {
+        this.updateFlatpickrBlockedDates();
+      }
+    }
+  }
+
+  /**
+   * Updates flatpickr's disabled dates without full reinitialization
+   */
+  private updateFlatpickrBlockedDates(): void {
+    if (!this.fpInstance) return;
+
+    const blockedDates = this.blockedDatesArray;
+
+    // Update the shared set for use in onDayCreate styling callback
+    this.blockedDatesSet = new Set(blockedDates);
+
+    // Flatpickr set method to update disabled dates
+    this.fpInstance.set('disable', blockedDates);
+
+    // Force redraw to show updated blocked dates with correct styling
+    this.fpInstance.redraw();
+  }
+
   ngOnDestroy(): void {
     if (this.fpInstance) {
       this.fpInstance.destroy();
@@ -125,7 +159,8 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
     if (!this.dateRangeInput) return;
 
     const blockedDates = this.blockedDatesArray;
-    const blockedSet = new Set(blockedDates);
+    // Update the shared set for use in onDayCreate callback
+    this.blockedDatesSet = new Set(blockedDates);
 
     try {
       this.fpInstance = flatpickr(this.dateRangeInput.nativeElement, {
@@ -147,15 +182,16 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
         onDayCreate: (_dObj, _dStr, _instance, dayElem) => {
           const dateObj = (dayElem as { dateObj?: Date }).dateObj;
           if (!dateObj) return;
-          const dateKey = dateObj.toISOString().split('T')[0];
-          if (blockedSet.has(dateKey)) {
+          const dateKey = this.toLocalDateString(dateObj);
+          // Use the shared blockedDatesSet which gets updated via ngOnChanges
+          if (this.blockedDatesSet.has(dateKey)) {
             dayElem.classList.add('calendar-day-reserved');
           }
         },
         onChange: (selectedDates, _dateStr) => {
           if (selectedDates.length === 2) {
-            const from = selectedDates[0].toISOString().split('T')[0];
-            const to = selectedDates[1].toISOString().split('T')[0];
+            const from = this.toLocalDateString(selectedDates[0]);
+            const to = this.toLocalDateString(selectedDates[1]);
 
             this.from.set(from);
             this.to.set(to);
@@ -225,12 +261,12 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
       toDate.setDate(fromDate.getDate() + (preset.days as number));
     }
 
-    const fromStr = fromDate.toISOString().split('T')[0];
-    const toStr = toDate.toISOString().split('T')[0];
+    const fromLocal = this.toLocalDateString(fromDate);
+    const toLocal = this.toLocalDateString(toDate);
 
     // Update signals
-    this.from.set(fromStr);
-    this.to.set(toStr);
+    this.from.set(fromLocal);
+    this.to.set(toLocal);
 
     // Update flatpickr
     if (this.fpInstance) {
@@ -348,8 +384,8 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
       const toDate = new Date(fromDate);
       toDate.setDate(fromDate.getDate() + requestedDays);
 
-      const fromStr = fromDate.toISOString().split('T')[0];
-      const toStr = toDate.toISOString().split('T')[0];
+      const fromStr = this.toLocalDateString(fromDate);
+      const toStr = this.toLocalDateString(toDate);
 
       try {
         if (this.availabilityChecker && this.carId) {
@@ -499,16 +535,34 @@ export class DateRangePickerComponent implements AfterViewInit, OnDestroy {
     const blockedDates: string[] = [];
 
     for (const range of this.blockedRanges) {
-      const start = new Date(range.from);
-      const end = new Date(range.to);
+      const start = this.parseToLocalDate(range.from);
+      const end = this.parseToLocalDate(range.to);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
 
       const currentDate = new Date(start);
       while (currentDate <= end) {
-        blockedDates.push(currentDate.toISOString().split('T')[0]);
+        blockedDates.push(this.toLocalDateString(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);
       }
     }
 
     return blockedDates;
+  }
+
+  private toLocalDateString(value: Date): string {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseToLocalDate(value: string): Date {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
   }
 }

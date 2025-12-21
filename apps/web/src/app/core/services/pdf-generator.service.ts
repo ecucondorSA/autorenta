@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, inject} from '@angular/core';
 
 export interface PdfOptions {
   filename?: string;
@@ -30,6 +31,7 @@ export interface PdfOptions {
   providedIn: 'root',
 })
 export class PdfGeneratorService {
+  private readonly logger = inject(LoggerService);
   /**
    * Genera un PDF a partir de un elemento HTML
    *
@@ -70,7 +72,7 @@ export class PdfGeneratorService {
       const jsPDF = jsPDFModule.default;
 
       // 3. Capturar el HTML como canvas
-      console.log('📸 Capturando HTML como imagen...');
+      this.logger.debug('📸 Capturando HTML como imagen...');
       const canvas = await html2canvas(element, {
         scale,
         useCORS: true, // Permitir imágenes de otros dominios
@@ -108,7 +110,7 @@ export class PdfGeneratorService {
       pdf.addImage(imgData, 'JPEG', 0, 0, imgPdfWidth, imgPdfHeight);
 
       // 10. Descargar PDF
-      console.log('✅ PDF generado exitosamente');
+      this.logger.debug('✅ PDF generado exitosamente');
       pdf.save(filename);
     } catch (error) {
       console.error('❌ Error generando PDF:', error);
@@ -154,7 +156,7 @@ export class PdfGeneratorService {
       const jsPDF = jsPDFModule.default;
 
       // 3. Capturar HTML como canvas
-      console.log('📸 Capturando HTML como imagen...');
+      this.logger.debug('📸 Capturando HTML como imagen...');
       const canvas = await html2canvas(element, {
         scale,
         useCORS: true,
@@ -203,7 +205,7 @@ export class PdfGeneratorService {
       }
 
       // 11. Descargar PDF
-      console.log(`✅ PDF multipágina generado (${pdf.getNumberOfPages()} páginas)`);
+      this.logger.debug(`✅ PDF multipágina generado (${pdf.getNumberOfPages()} páginas)`);
       pdf.save(filename);
     } catch (error) {
       console.error('❌ Error generando PDF multipágina:', error);

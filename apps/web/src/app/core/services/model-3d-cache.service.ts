@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, inject} from '@angular/core';
 
 /**
  * Model 3D Cache Service
@@ -31,6 +32,7 @@ interface CachedModel {
   providedIn: 'root',
 })
 export class Model3DCacheService {
+  private readonly logger = inject(LoggerService);
   private readonly cache = new Map<string, CachedModel>();
   private readonly maxCacheSize = 5; // Maximum number of models to cache
 
@@ -85,7 +87,7 @@ export class Model3DCacheService {
    */
   cacheModel(src: string, model: ThreeGroup): void {
     if (this.cache.has(src)) {
-      console.log(`[Model3DCache] Model already cached: ${src}`);
+      this.logger.debug(`[Model3DCache] Model already cached: ${src}`);
       return;
     }
 
@@ -105,7 +107,7 @@ export class Model3DCacheService {
     this._cachedModels.set(Array.from(this.cache.keys()));
     this._isCaching.set(false);
 
-    console.log(`[Model3DCache] Model cached: ${src} (total: ${this.cache.size})`);
+    this.logger.debug(`[Model3DCache] Model cached: ${src} (total: ${this.cache.size})`);
   }
 
   /**
@@ -128,7 +130,7 @@ export class Model3DCacheService {
       this.disposeModel(cached['model']);
       this.cache.delete(src);
       this._cachedModels.set(Array.from(this.cache.keys()));
-      console.log(`[Model3DCache] Model cleared: ${src}`);
+      this.logger.debug(`[Model3DCache] Model cleared: ${src}`);
     }
   }
 
@@ -141,7 +143,7 @@ export class Model3DCacheService {
     }
     this.cache.clear();
     this._cachedModels.set([]);
-    console.log('[Model3DCache] Cache cleared');
+    this.logger.debug('[Model3DCache] Cache cleared');
   }
 
   /**
@@ -171,7 +173,7 @@ export class Model3DCacheService {
 
     if (oldestKey) {
       this.clearModel(oldestKey);
-      console.log(`[Model3DCache] Evicted oldest model: ${oldestKey}`);
+      this.logger.debug(`[Model3DCache] Evicted oldest model: ${oldestKey}`);
     }
   }
 

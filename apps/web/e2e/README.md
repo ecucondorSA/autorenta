@@ -9,6 +9,7 @@ End-to-end tests using **Patchright** (patched Chromium for anti-bot bypass) wit
 | Login | 9 | Authentication flows, form validation |
 | Marketplace | 8 | Car listing, search, filters |
 | Payment | 7 | MercadoPago brick, payment flow |
+| Renter-Owner | 2 | Booking request + owner approval/rejection |
 
 ## Quick Start
 
@@ -27,16 +28,21 @@ TEST_USER_PASSWORD="your-password" npm run test:all
 TEST_USER_PASSWORD="your-password" npm run test:login
 TEST_USER_PASSWORD="your-password" npm run test:marketplace
 TEST_USER_PASSWORD="your-password" npm run test:payment
+TEST_USER_EMAIL="renter@email" TEST_USER_PASSWORD="renter-pass" TEST_OWNER_EMAIL="owner@email" TEST_OWNER_PASSWORD="owner-pass" npm run test:renter-owner
 
 # Run with visible browser (debugging)
 TEST_USER_PASSWORD="your-password" npm run test:all:headed
+HEADLESS=false TEST_USER_EMAIL="renter@email" TEST_USER_PASSWORD="renter-pass" TEST_OWNER_EMAIL="owner@email" TEST_OWNER_PASSWORD="owner-pass" npm run test:renter-owner
 ```
 
 ## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
+| `TEST_USER_EMAIL` | No | Renter email (default from fixtures) |
 | `TEST_USER_PASSWORD` | Yes | Password for test user (ecucondor@gmail.com) |
+| `TEST_OWNER_EMAIL` | Required for renter-owner suite | Owner email for approval flow |
+| `TEST_OWNER_PASSWORD` | Required for renter-owner suite | Owner password for approval flow |
 | `BASE_URL` | No | App URL (default: http://localhost:4200) |
 | `HEADLESS` | No | Run headless (default: true) |
 | `CI` | No | CI mode flag |
@@ -77,7 +83,8 @@ apps/web/e2e/
 │   │   └── login.spec.ts
 │   └── booking/
 │       ├── browse-cars.spec.ts
-│       └── payment.spec.ts
+│       ├── payment.spec.ts
+│       └── renter-owner-flow.spec.ts
 ├── utils/                # Utilities
 │   ├── selectors.ts      # Centralized CSS selectors
 │   ├── waits.ts          # Smart wait functions

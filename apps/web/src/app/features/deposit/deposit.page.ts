@@ -1,3 +1,4 @@
+import { LoggerService } from '../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {Component, computed, inject, OnInit, signal,
   ChangeDetectionStrategy} from '@angular/core';
@@ -32,6 +33,7 @@ import { NotificationManagerService } from '../../core/services/notification-man
   styleUrls: ['./deposit.page.css'],
 })
 export class DepositPage implements OnInit {
+  private readonly logger = inject(LoggerService);
   private readonly walletService = inject(WalletService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -241,7 +243,7 @@ export class DepositPage implements OnInit {
       // La función retorna el transaction_id directamente (UUID)
       const transactionId = txData as string;
       this.transactionId.set(transactionId);
-      console.log('✅ Deposit transaction created:', transactionId);
+      this.logger.debug('✅ Deposit transaction created:', transactionId);
 
       // 3. Crear preferencia de MercadoPago (Checkout Pro) con purpose wallet_purchase
       let preferenceId: string | null = null;
@@ -264,7 +266,7 @@ export class DepositPage implements OnInit {
           initPoint = prefData.init_point || prefData.sandbox_init_point || null;
           this.preferenceId.set(preferenceId);
           this.initPoint.set(initPoint);
-          console.log('✅ MercadoPago preference created:', preferenceId);
+          this.logger.debug('✅ MercadoPago preference created:', preferenceId);
         } else {
           console.warn('⚠️ Could not create preference, continuing without it:', prefError);
         }

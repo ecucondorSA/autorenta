@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { BookingStatus } from '../models';
+import { LoggerService } from './logger.service';
 
 /**
  * BookingFlowLoggerService
@@ -11,6 +12,7 @@ import type { BookingStatus } from '../models';
   providedIn: 'root',
 })
 export class BookingFlowLoggerService {
+  private readonly logger = inject(LoggerService);
   // import.meta.env may not have type definitions in this TS config used by the Angular
   // template/type checker plugin. Cast to unknown to avoid "Property 'env' does not exist on type 'ImportMeta'".
   private readonly isDevelopment = !(import.meta as unknown as { env?: { PROD?: boolean } }).env
@@ -29,11 +31,11 @@ export class BookingFlowLoggerService {
     if (!this.isDevelopment) return;
 
     console.group(`🔄 Booking Status Transition: ${bookingId}`);
-    console.log('From:', from);
-    console.log('To:', to);
-    console.log('User:', userId);
+    this.logger.debug('From:', from);
+    this.logger.debug('To:', to);
+    this.logger.debug('User:', userId);
     if (metadata) {
-      console.log('Metadata:', metadata);
+      this.logger.debug('Metadata:', metadata);
     }
     console.groupEnd();
   }
@@ -51,7 +53,7 @@ export class BookingFlowLoggerService {
     if (!this.isDevelopment) return;
 
     const emoji = success ? '✅' : '❌';
-    console.log(`${emoji} Booking Action: ${action}`, {
+    this.logger.debug(`${emoji} Booking Action: ${action}`, {
       bookingId,
       userId,
       success,
@@ -66,7 +68,7 @@ export class BookingFlowLoggerService {
     if (!this.isDevelopment) return;
 
     const emoji = passed ? '✅' : '⚠️';
-    console.log(`${emoji} Validation: ${validation}`, {
+    this.logger.debug(`${emoji} Validation: ${validation}`, {
       bookingId,
       passed,
       reason,
@@ -101,7 +103,7 @@ export class BookingFlowLoggerService {
   ): void {
     if (!this.isDevelopment) return;
 
-    console.log(`⏱️ Performance [${operation}]:`, {
+    this.logger.debug(`⏱️ Performance [${operation}]:`, {
       bookingId,
       duration: `${duration}ms`,
       metadata,

@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { SwPush } from '@angular/service-worker';
@@ -20,6 +21,7 @@ export interface PushMessage {
   providedIn: 'root',
 })
 export class PushNotificationService {
+  private readonly logger = inject(LoggerService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   private readonly isNative = this.isBrowser && Capacitor.isNativePlatform();
@@ -123,7 +125,7 @@ export class PushNotificationService {
 
       // Listen for registration success
       PushNotifications.addListener('registration', async (token: Token) => {
-        console.log('Push registration success, token:', token.value);
+        this.logger.debug('Push registration success, token:', token.value);
         await this.saveTokenToDatabase(token.value, 'fcm');
       });
 
@@ -134,13 +136,13 @@ export class PushNotificationService {
 
       // Listen for push notifications received
       PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-        console.log('Push notification received:', notification);
+        this.logger.debug('Push notification received:', notification);
         this.nativeMessages$.next(notification);
       });
 
       // Listen for notification action performed (user tapped notification)
       PushNotifications.addListener('pushNotificationActionPerformed', (action: ActionPerformed) => {
-        console.log('Push notification action performed:', action);
+        this.logger.debug('Push notification action performed:', action);
         this.nativeNotificationClicks$.next(action);
       });
     } catch (error) {

@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { CanMatchFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { LoggerService } from '../services/logger.service';
 
 /**
  * Guard that prevents authenticated users from accessing guest-only pages
@@ -9,16 +10,17 @@ import { AuthService } from '../services/auth.service';
 export const GuestGuard: CanMatchFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);
+  const logger = inject(LoggerService);
 
   // Ensure session is loaded
   await auth.ensureSession();
   
   const isAuthenticated = auth.isAuthenticated();
-  console.log(`[GuestGuard DEBUG] Triggered. Is Authenticated: ${isAuthenticated}`);
+  logger.debug(`Triggered. Is Authenticated: ${isAuthenticated}`, 'GuestGuard');
 
   // If user is authenticated, redirect to cars list page
   if (isAuthenticated) {
-    console.log('[GuestGuard DEBUG] User IS authenticated. Redirecting to /cars/list');
+    logger.debug('User IS authenticated. Redirecting to /cars/list', 'GuestGuard');
     return router.createUrlTree(['/cars/list']);
   }
 

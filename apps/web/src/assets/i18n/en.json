@@ -655,5 +655,12 @@
     "reviews": "reseñas",
     "loginToViewProfile": "Iniciá sesión para ver el perfil completo",
     "loginDescription": "Accedé a verificaciones, información de contacto y más detalles del anfitrión"
+  },
+  "PENDING_APPROVALS": {
+    "TITLE": "Pending requests",
+    "SUBTITLE": "Review and approve bookings for your cars",
+    "NO_PENDING": "No pending requests",
+    "NO_PENDING_DESC": "New requests will appear here.",
+    "VIEW_MY_CARS": "View my cars"
   }
 }

@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -56,6 +57,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly cdr = inject(ChangeDetectorRef);
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -409,7 +411,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     lowResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
-      console.log('[HdriBackground] Low-res loaded:', sources.low);
+      this.logger.debug('[HdriBackground] Low-res loaded:', sources.low);
 
       this.updateTexture(lowResImage);
 
@@ -442,7 +444,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
 
     highResImage.onload = () => {
       if (this.isDestroyed || !this.gl || !this.texture) return;
-      console.log('[HdriBackground] High-res loaded:', highResSrc);
+      this.logger.debug('[HdriBackground] High-res loaded:', highResSrc);
 
       this.updateTexture(highResImage);
       this.isHighResLoaded = true;
@@ -494,7 +496,7 @@ export class HdriBackgroundComponent implements AfterViewInit, OnDestroy {
       const newWidth = Math.floor(image.width * scale);
       const newHeight = Math.floor(image.height * scale);
 
-      console.log(`[HdriBackground] Resizing texture from ${image.width}x${image.height} to ${newWidth}x${newHeight} (max: ${maxTextureSize})`);
+      this.logger.debug(`[HdriBackground] Resizing texture from ${image.width}x${image.height} to ${newWidth}x${newHeight} (max: ${maxTextureSize})`);
 
       const canvas = document.createElement('canvas');
       canvas.width = newWidth;

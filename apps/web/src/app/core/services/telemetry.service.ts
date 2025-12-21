@@ -187,7 +187,7 @@ export class TelemetryService {
       },
     });
 
-    console.log('[TelemetryService] Recolección iniciada para booking:', bookingId);
+    this.logger.debug('[TelemetryService] Recolección iniciada para booking:', bookingId);
   }
 
   /**
@@ -217,7 +217,7 @@ export class TelemetryService {
         sessionData: {},
       });
 
-      console.log('[TelemetryService] Datos enviados exitosamente:', telemetryId);
+      this.logger.debug('[TelemetryService] Datos enviados exitosamente:', telemetryId);
       return telemetryId;
     } catch (error) {
       console.error('[TelemetryService] Error al enviar datos:', error);
@@ -247,7 +247,7 @@ export class TelemetryService {
       },
     }));
 
-    console.log('[TelemetryService] Frenada brusca registrada:', force);
+    this.logger.debug('[TelemetryService] Frenada brusca registrada:', force);
   }
 
   /**
@@ -265,7 +265,7 @@ export class TelemetryService {
       },
     }));
 
-    console.log('[TelemetryService] Exceso de velocidad:', speed, '/', speedLimit);
+    this.logger.debug('[TelemetryService] Exceso de velocidad:', speed, '/', speedLimit);
   }
 
   /**
@@ -315,7 +315,7 @@ export class TelemetryService {
       },
     }));
 
-    console.log('[TelemetryService] Zona de riesgo visitada');
+    this.logger.debug('[TelemetryService] Zona de riesgo visitada');
   }
 
   /**

@@ -23,6 +23,7 @@ import { PaymentsService } from '../../../core/services/payments.service';
 import { ReviewsService } from '../../../core/services/reviews.service';
 import { LoggerService } from '../../../core/services/logger.service';
 import { TrafficInfractionsService } from '../../../core/services/traffic-infractions.service'; // NEW
+import { BookingFlowService, NextStep } from '../../../core/services/booking-flow.service';
 import { BookingChatComponent } from '../../../shared/components/booking-chat/booking-chat.component';
 import { BookingConfirmationTimelineComponent } from '../../../shared/components/booking-confirmation-timeline/booking-confirmation-timeline.component';
 import { BookingContractComponent } from '../../../shared/components/booking-contract/booking-contract.component';
@@ -56,6 +57,12 @@ import { AiChecklistPanelComponent } from '../../../shared/components/ai-checkli
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { BookingStatusComponent } from './booking-status.component';
 import { ReviewManagementComponent } from './review-management.component';
+
+interface ReturnChecklistItem {
+  id: string;
+  label: string;
+  checked: boolean;
+}
 
 /**
  * BookingDetailPage
@@ -112,6 +119,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly paymentsService = inject(PaymentsService);
   private readonly reviewsService = inject(ReviewsService);
+  private readonly bookingFlowService = inject(BookingFlowService);
   private readonly authService = inject(AuthService);
   private readonly confirmationService = inject(BookingConfirmationService);
   private readonly alertController = inject(AlertController); // NEW
@@ -127,6 +135,13 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   loading = signal(true);
   error = signal<string | null>(null);
   timeRemaining = signal<string | null>(null);
+  nextStep = signal<NextStep | null>(null);
+  nextStepLoading = signal(false);
+  deliveryTimeRemaining = signal<string | null>(null);
+  returnChecklistItems = signal<ReturnChecklistItem[]>([]);
+  private readonly isBrowser = typeof window !== 'undefined';
+  private readonly returnChecklistStoragePrefix = 'autorenta:return-checklist:';
+  private returnChecklistSaveTimeout: number | null = null;
 
   readonly bookingFlowSteps = [
     {
@@ -146,13 +161,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     },
     {
       key: 'confirmed',
-      label: 'Reserva confirmada',
-      description: 'Preparate para coordinar el check-in y la entrega.',
+      label: 'Aprobada por locador',
+      description: 'Reserva aprobada. Coordiná el check-in y la entrega.',
+    },
+    {
+      key: 'renter_checkin',
+      label: 'Recepción y documentación',
+      description: 'Confirmá la recepción, sacá fotos y registrá el estado del auto.',
     },
     {
       key: 'in_progress',
       label: 'Check-in y uso',
-      description: 'Realizá las inspecciones y disfrutá del viaje.',
+      description: 'Check-in completado. Disfrutá del viaje y cuidá el vehículo.',
     },
     {
       key: 'pending_review',
@@ -166,6 +186,17 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     },
   ] as const;
 
+  readonly effectiveStatus = computed(() => {
+    const booking = this.booking();
+    if (!booking) return null;
+
+    if (this.hasCheckOut()) return 'pending_review';
+    if (this.hasRenterCheckIn()) return 'in_progress';
+    if (this.hasOwnerCheckIn()) return 'renter_checkin';
+
+    return booking.status;
+  });
+
   /**
    * Determines the current step index in the booking flow.
    * For P2P (wallet) bookings: pending status means steps 1-2 are done, waiting at step 3.
@@ -173,11 +204,35 @@ export class BookingDetailPage implements OnInit, OnDestroy {
    */
   readonly currentBookingStageIndex = computed(() => {
     const booking = this.booking();
-    if (!booking) return 0;
+    const status = this.effectiveStatus();
+    if (!booking || !status) return 0;
+
+    // If return flow started (returned_at or pending confirmations), show review step
+    if (
+      booking.returned_at ||
+      booking.completion_status === 'returned' ||
+      booking.completion_status === 'pending_owner' ||
+      booking.completion_status === 'pending_renter' ||
+      booking.completion_status === 'pending_both'
+    ) {
+      return 6; // Step 7: Revisión final
+    }
+
+    // If marked in_progress but start date is in the future, treat as confirmed for UI
+    if (status === 'in_progress' && booking.start_at) {
+      const startAt = new Date(booking.start_at).getTime();
+      if (!Number.isNaN(startAt) && Date.now() < startAt) {
+        return 3; // Step 4: Aprobada por locador / Reserva confirmada
+      }
+    }
 
     // P2P wallet flow: pending + wallet = already paid, waiting for owner approval
-    if (booking.status === 'pending' && booking.payment_mode === 'wallet') {
+    if (status === 'pending' && booking.payment_mode === 'wallet') {
       return 2; // Step 3: "Esperando aprobación" (0-indexed = 2)
+    }
+
+    if (status === 'renter_checkin') {
+      return 4; // Step 5: Recepción y documentación
     }
 
     // Traditional flow or other statuses
@@ -185,16 +240,16 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       'pending': 0,           // Step 1: Solicitud enviada
       'pending_payment': 1,   // Step 2: Garantía bloqueada
       'confirmed': 3,         // Step 4: Reserva confirmada
-      'in_progress': 4,       // Step 5: Check-in y uso
-      'pending_review': 5,    // Step 6: Revisión final
-      'completed': 6,         // Step 7: Cierre
-      'disputed': 5,          // Map to pending_review
+      'in_progress': 5,       // Step 6: Check-in y uso (después de documentación)
+      'pending_review': 6,    // Step 7: Revisión final
+      'completed': 7,         // Step 8: Cierre
+      'disputed': 6,          // Map to pending_review
     };
 
-    const idx = statusMap[booking.status];
+    const idx = statusMap[status];
     if (idx !== undefined) return idx;
 
-    if (booking.status === 'cancelled' || booking.status === 'expired') {
+    if (status === 'cancelled' || status === 'expired') {
       return 0; // Cancelled bookings show at start
     }
 
@@ -292,6 +347,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   });
 
   private countdownInterval: number | null = null;
+  private deliveryCountdownInterval: number | null = null;
 
   // Computed properties
   isExpired = computed(() => {
@@ -328,6 +384,11 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking?.renter_id === currentUser?.id;
   });
 
+  readonly backLink = computed(() => (this.isOwner() ? '/bookings/owner' : '/bookings'));
+  readonly backLabel = computed(() =>
+    this.isOwner() ? 'Volver a reservas de propietarios' : 'Volver a mis reservas',
+  );
+
   // Car owner ID and name (loaded separately)
   carOwnerId = signal<string | null>(null);
   carOwnerName = signal<string>('el anfitrión');
@@ -338,8 +399,14 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     return booking?.status === 'in_progress' || booking?.status === 'completed';
   });
 
-  readonly hasCheckIn = computed(() => {
+  readonly hasOwnerCheckIn = computed(() => {
     return this.inspections().some((i: BookingInspection) => i.stage === 'check_in' && i.signedAt);
+  });
+
+  readonly hasRenterCheckIn = computed(() => {
+    return this.inspections().some(
+      (i: BookingInspection) => i.stage === 'renter_check_in' && i.signedAt,
+    );
   });
 
   readonly hasCheckOut = computed(() => {
@@ -457,8 +524,67 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   /** Determine checklist inspection type based on booking state */
   readonly checklistInspectionType = computed<'check_in' | 'check_out'>(() => {
     // If already has check-in done, show check-out
-    if (this.hasCheckIn()) return 'check_out';
+    if (this.hasRenterCheckIn()) return 'check_out';
     return 'check_in';
+  });
+
+  readonly returnChecklistProgress = computed(() => {
+    const items = this.returnChecklistItems();
+    if (items.length === 0) return { completed: 0, total: 0 };
+    const completed = items.filter((i) => i.checked).length;
+    return { completed, total: items.length };
+  });
+
+  readonly carReturnConsiderations = computed(() => {
+    const booking = this.booking();
+    const car = booking?.car;
+    if (!booking || !car) return [];
+
+    const items: string[] = [];
+
+    if (car.fuel_policy === 'full_to_full') {
+      items.push('Combustible: devolvé el auto con tanque lleno.');
+    } else if (car.fuel_policy === 'same_to_same') {
+      items.push('Combustible: devolvé el auto con el mismo nivel.');
+    }
+
+    if (car.mileage_limit !== null && car.mileage_limit !== undefined) {
+      if (car.mileage_limit === 0) {
+        items.push('Kilometraje: ilimitado.');
+      } else {
+        items.push(`Kilometraje máximo incluido: ${car.mileage_limit} km.`);
+      }
+    }
+
+    if (car.extra_km_price !== null && car.extra_km_price !== undefined) {
+      items.push(`Exceso de km: ${car.extra_km_price} por km adicional.`);
+    }
+
+    if (car.allow_smoking === false) {
+      items.push('No se permite fumar dentro del vehículo.');
+    }
+
+    if (car.allow_pets === false) {
+      items.push('No se permiten mascotas en el vehículo.');
+    }
+
+    if (car.allow_rideshare === false) {
+      items.push('No se permite uso para rideshare.');
+    }
+
+    if (car.max_distance_km !== null && car.max_distance_km !== undefined) {
+      items.push(`Distancia máxima recomendada: ${car.max_distance_km} km.`);
+    }
+
+    if (booking.delivery_required) {
+      items.push('Coordiná la devolución en el punto de entrega acordado.');
+    }
+
+    if (items.length === 0) {
+      items.push('Respetá el estado del vehículo y devolvelo limpio y en horario.');
+    }
+
+    return items;
   });
 
   onDisputeCreated(): void {
@@ -482,16 +608,18 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   // Computed properties para acciones de check-in/check-out
   readonly canPerformCheckIn = computed(() => {
     const booking = this.booking();
-    if (!booking || !this.isRenter()) return false;
-    const validStatus = booking.status === 'confirmed' || booking.status === 'in_progress';
-    return validStatus && !this.hasCheckIn();
+    const status = this.effectiveStatus();
+    if (!booking || !this.isRenter() || !status) return false;
+    const validStatus = status === 'confirmed' || status === 'in_progress' || status === 'renter_checkin';
+    return validStatus && this.hasOwnerCheckIn() && !this.hasRenterCheckIn();
   });
 
   readonly canPerformCheckOut = computed(() => {
     const booking = this.booking();
-    if (!booking || !this.isRenter()) return false;
-    const validStatus = booking.status === 'in_progress';
-    return validStatus && this.hasCheckIn() && !this.hasCheckOut();
+    const status = this.effectiveStatus();
+    if (!booking || !this.isRenter() || !status) return false;
+    const validStatus = status === 'in_progress' || status === 'pending_review';
+    return validStatus && this.hasRenterCheckIn() && !this.hasCheckOut();
   });
 
   readonly canReportDamage = computed(() => {
@@ -600,12 +728,10 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   onTrafficFineReported(fine: TrafficInfraction): void {
-    console.log('Traffic fine reported:', fine);
+    this.logger.debug('Traffic fine reported:', fine);
     this.showReportTrafficFineModal.set(false);
     // Reload pending extension requests to ensure the UI is up-to-date.
-    // This is a placeholder, ideally we should reload fines or the booking itself if fines affect it
     this.loadPendingExtensionRequests(this.booking()!.id);
-    // TODO: Implement loading of fines for display or updating booking status if fines affect it.
   }
 
   isStepCompleted(index: number): boolean {
@@ -637,7 +763,9 @@ export class BookingDetailPage implements OnInit, OnDestroy {
       }
 
       this.booking.set(booking);
+      await this.loadNextStep(booking);
       this.startCountdown();
+      this.loadReturnChecklist(booking);
 
       // Load pending extension requests
       await this.loadPendingExtensionRequests(booking.id);
@@ -671,6 +799,123 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  private async loadNextStep(booking: Booking): Promise<void> {
+    try {
+      this.nextStepLoading.set(true);
+      const role: 'owner' | 'renter' = this.isOwner() ? 'owner' : 'renter';
+      const step = await this.bookingFlowService.getNextStep(booking, role);
+      this.nextStep.set(step);
+    } catch {
+      this.nextStep.set(null);
+    } finally {
+      this.nextStepLoading.set(false);
+    }
+  }
+
+  async goToNextStep(): Promise<void> {
+    const booking = this.booking();
+    const next = this.nextStep();
+    if (!booking || !next) return;
+    await this.router.navigateByUrl(next.route);
+  }
+
+  toggleReturnChecklistItem(itemId: string): void {
+    const booking = this.booking();
+    if (!booking) return;
+
+    this.returnChecklistItems.update((items) =>
+      items.map((item) =>
+        item.id === itemId ? { ...item, checked: !item.checked } : item,
+      ),
+    );
+    this.persistReturnChecklist(booking.id);
+    this.scheduleReturnChecklistSave(booking.id);
+  }
+
+  private loadReturnChecklist(booking: Booking): void {
+    const bookingId = booking.id;
+    if (!this.isBrowser) {
+      this.returnChecklistItems.set(this.mergeChecklistFromMetadata(booking));
+      return;
+    }
+
+    const key = `${this.returnChecklistStoragePrefix}${bookingId}`;
+    const stored = window.localStorage.getItem(key);
+    const base = this.mergeChecklistFromMetadata(booking);
+
+    if (!stored) {
+      this.returnChecklistItems.set(base);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as ReturnChecklistItem[];
+      const merged = base.map((item) => {
+        const storedItem = parsed.find((p) => p.id === item.id);
+        return storedItem ? { ...item, checked: !!storedItem.checked } : item;
+      });
+      this.returnChecklistItems.set(merged);
+    } catch {
+      this.returnChecklistItems.set(base);
+    }
+  }
+
+  private persistReturnChecklist(bookingId: string): void {
+    if (!this.isBrowser) return;
+    const key = `${this.returnChecklistStoragePrefix}${bookingId}`;
+    window.localStorage.setItem(key, JSON.stringify(this.returnChecklistItems()));
+  }
+
+  private mergeChecklistFromMetadata(booking: Booking): ReturnChecklistItem[] {
+    const base = this.buildReturnChecklist();
+    const raw = booking.metadata?.['return_checklist'];
+    if (!Array.isArray(raw)) return base;
+
+    return base.map((item) => {
+      const storedItem = raw.find((p: ReturnChecklistItem) => p?.id === item.id);
+      return storedItem ? { ...item, checked: !!storedItem.checked } : item;
+    });
+  }
+
+  private scheduleReturnChecklistSave(bookingId: string): void {
+    if (this.returnChecklistSaveTimeout !== null) {
+      clearTimeout(this.returnChecklistSaveTimeout);
+    }
+
+    this.returnChecklistSaveTimeout = window.setTimeout(async () => {
+      const booking = this.booking();
+      if (!booking) return;
+
+      const currentMetadata = booking.metadata ?? {};
+      const nextMetadata = {
+        ...currentMetadata,
+        return_checklist: this.returnChecklistItems(),
+      };
+
+      try {
+        const updated = await this.bookingsService.updateBooking(bookingId, {
+          metadata: nextMetadata,
+        });
+        if (updated) {
+          this.booking.set(updated);
+        }
+      } catch (error) {
+        this.logger.warn('No se pudo sincronizar el checklist de devolución', error);
+      }
+    }, 500);
+  }
+
+  private buildReturnChecklist(): ReturnChecklistItem[] {
+    return [
+      { id: 'final-photos', label: 'Subir fotos finales (exterior, interior, odómetro)', checked: false },
+      { id: 'fuel', label: 'Dejar el combustible según la política del auto', checked: false },
+      { id: 'clean', label: 'Retirar objetos personales y basura', checked: false },
+      { id: 'accessories', label: 'Devolver llaves y accesorios completos', checked: false },
+      { id: 'location-time', label: 'Confirmar lugar y horario de devolución', checked: false },
+      { id: 'damages', label: 'Reportar incidentes o daños si los hubo', checked: false },
+    ];
   }
 
   private async loadExchangeRate(): Promise<void> {
@@ -834,23 +1079,36 @@ export class BookingDetailPage implements OnInit, OnDestroy {
 
   private startCountdown() {
     const booking = this.booking();
-    if (!booking || booking.status !== 'pending' || !booking.expires_at) {
-      return;
-    }
+    if (!booking) return;
 
     this.stopCountdown();
-    this.updateCountdown();
 
-    // Update every second
-    this.countdownInterval = window.setInterval(() => {
+    if (booking.status === 'pending' && booking.expires_at) {
       this.updateCountdown();
-    }, 1000);
+      // Update every second
+      this.countdownInterval = window.setInterval(() => {
+        this.updateCountdown();
+      }, 1000);
+    }
+
+    if (booking.status === 'in_progress') {
+      this.updateDeliveryCountdown();
+      // Update every 30 seconds
+      this.deliveryCountdownInterval = window.setInterval(() => {
+        this.updateDeliveryCountdown();
+      }, 30000);
+    }
+
   }
 
   private stopCountdown() {
     if (this.countdownInterval !== null) {
       clearInterval(this.countdownInterval);
       this.countdownInterval = null;
+    }
+    if (this.deliveryCountdownInterval !== null) {
+      clearInterval(this.deliveryCountdownInterval);
+      this.deliveryCountdownInterval = null;
     }
   }
 
@@ -866,6 +1124,44 @@ export class BookingDetailPage implements OnInit, OnDestroy {
     }
 
     this.timeRemaining.set(this.bookingsService.formatTimeRemaining(remaining));
+  }
+
+  private updateDeliveryCountdown() {
+    const booking = this.booking();
+    if (!booking || booking.status !== 'in_progress') {
+      this.deliveryTimeRemaining.set(null);
+      return;
+    }
+
+    const startAt = booking.start_at ? new Date(booking.start_at).getTime() : null;
+    if (startAt && !Number.isNaN(startAt) && Date.now() < startAt) {
+      const remainingMs = startAt - Date.now();
+      const totalMinutes = Math.ceil(remainingMs / (1000 * 60));
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      const timeLabel = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+      this.deliveryTimeRemaining.set(`Comienza en ${timeLabel}`);
+      return;
+    }
+
+    const endAt = booking.end_at ? new Date(booking.end_at).getTime() : null;
+    if (!endAt) {
+      this.deliveryTimeRemaining.set(null);
+      return;
+    }
+
+    const remainingMs = endAt - Date.now();
+    if (remainingMs <= 0) {
+      this.deliveryTimeRemaining.set('Vencido');
+      return;
+    }
+
+    const totalMinutes = Math.ceil(remainingMs / (1000 * 60));
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const timeLabel = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+
+    this.deliveryTimeRemaining.set(`Entrega en ${timeLabel}`);
   }
 
   formatCurrency(cents: number, currency: string): string {
@@ -1054,7 +1350,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   onOwnerNoShowReported(result: { success: boolean; message?: string }): void {
-    console.log('Owner No-Show reported:', result);
+    this.logger.debug('Owner No-Show reported:', result);
     this.showReportOwnerNoShowModal.set(false);
     if (result.success) {
       const alert = this.alertController.create({ // Assuming alertController is available
@@ -1101,7 +1397,7 @@ export class BookingDetailPage implements OnInit, OnDestroy {
   }
 
   onRenterNoShowReported(result: { success: boolean; message?: string }): void {
-    console.log('Renter No-Show reported:', result);
+    this.logger.debug('Renter No-Show reported:', result);
     this.showReportRenterNoShowModal.set(false);
     if (result.success) {
       alert('Reporte de no-show enviado. Nuestro equipo se pondrá en contacto para validar la situación y aplicar las penalidades correspondientes.');

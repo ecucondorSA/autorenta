@@ -6,14 +6,14 @@ import { IonicModule } from '@ionic/angular';
 import { TrafficInfractionsService } from '../../../core/services/traffic-infractions.service';
 import { TrafficInfraction } from '../../../features/admin/traffic-infractions/admin-traffic-infractions.page'; // Re-use the interface
 import { Booking } from '../../../core/models'; // To get owner_id, renter_id, booking_id
-// TODO: Create a generic EvidenceUploader component that can be reused
-// import { EvidenceUploaderComponent } from '../../../features/disputes/components/evidence-uploader/evidence-uploader.component';
+import { EvidenceUploaderComponent } from '../evidence-uploader/evidence-uploader.component';
+import { LoggerService } from '../../../core/services/logger.service';
 
 @Component({
   selector: 'app-report-traffic-fine',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, EvidenceUploaderComponent],
   templateUrl: './report-traffic-fine.component.html',
   styleUrls: ['./report-traffic-fine.component.scss'],
 })
@@ -24,6 +24,7 @@ export class ReportTrafficFineComponent implements OnInit {
   @Output() fineReported = new EventEmitter<TrafficInfraction>();
 
   private readonly trafficInfractionsService = inject(TrafficInfractionsService);
+  private readonly logger = inject(LoggerService);
 
   readonly loading = signal(false);
   readonly formError = signal<string | null>(null);
@@ -71,7 +72,7 @@ export class ReportTrafficFineComponent implements OnInit {
       this.fineReported.emit(reportedFine);
       this.closeModal.emit();
     } catch (error) {
-      console.error('Error reporting traffic fine:', error);
+      this.logger.error('Error reporting traffic fine', 'ReportTrafficFineComponent', error);
       this.formError.set(error instanceof Error ? error.message : 'Error al reportar multa.');
     } finally {
       this.loading.set(false);

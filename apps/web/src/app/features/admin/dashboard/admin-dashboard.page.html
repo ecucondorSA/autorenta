@@ -435,6 +435,18 @@
               <div>Fin: {{ booking.end_at | date: 'dd/MM/yyyy' }}</div>
               <div>Total: {{ booking.total_amount | money: booking.currency }}</div>
             </div>
+            @if (booking.status === 'cancelled' || booking.status === 'cancelled_owner' || booking.status === 'expired') {
+              <div class="mt-3 grid gap-2 text-xs text-slate-600 dark:text-text-secondary/70 md:grid-cols-2">
+                <div>
+                  Cancelado por:
+                  <span class="font-semibold">{{ formatCancelledByRole(booking.cancelled_by_role) }}</span>
+                </div>
+                <div>
+                  Motivo:
+                  <span class="font-semibold">{{ booking.cancellation_reason || '—' }}</span>
+                </div>
+              </div>
+            }
           </article>
         }
       </div>

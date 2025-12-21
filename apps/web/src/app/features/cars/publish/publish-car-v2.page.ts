@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -62,6 +63,7 @@ import { PublishCarPhotoService } from './services/publish-car-photo.service';
   ],
 })
 export class PublishCarV2Page implements OnInit {
+  private readonly logger = inject(LoggerService);
   // Core services
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -319,13 +321,13 @@ export class PublishCarV2Page implements OnInit {
    */
   private async updateCategoryName(categoryId: string): Promise<void> {
     try {
-      console.log('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
+      this.logger.debug('[PublishCarV2] updateCategoryName called with categoryId:', categoryId);
       const categories = await this.pricingService.getVehicleCategories();
-      console.log('[PublishCarV2] Loaded categories:', categories.length);
+      this.logger.debug('[PublishCarV2] Loaded categories:', categories.length);
       const category = categories.find((c) => c['id'] === categoryId);
       if (category) {
         const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
-        console.log('[PublishCarV2] ✅ Category name updated:', categoryName);
+        this.logger.debug('[PublishCarV2] ✅ Category name updated:', categoryName);
         this.selectedCategoryName.set(categoryName);
       } else {
         console.warn('[PublishCarV2] ⚠️ Category not found for ID:', categoryId);
@@ -394,7 +396,7 @@ export class PublishCarV2Page implements OnInit {
     this.isLoadingFIPEBrands.set(true);
     try {
       const brands = await this.pricingService.getFipeBrands();
-      console.log('[PublishCarV2] Loaded FIPE brands:', brands.length);
+      this.logger.debug('[PublishCarV2] Loaded FIPE brands:', brands.length);
 
       // Convert to FIPEAutocompleteOption format
       const formattedBrands = brands.map((brand) => ({
@@ -403,7 +405,7 @@ export class PublishCarV2Page implements OnInit {
       }));
 
       this.fipeBrands.set(formattedBrands);
-      console.log('[PublishCarV2] Formatted brands:', formattedBrands.slice(0, 5));
+      this.logger.debug('[PublishCarV2] Formatted brands:', formattedBrands.slice(0, 5));
     } catch (error) {
       console.error('[PublishCarV2] Error loading FIPE brands:', error);
       this.fipeBrands.set([]);
@@ -416,7 +418,7 @@ export class PublishCarV2Page implements OnInit {
    * Handle FIPE brand selection
    */
   async onFIPEBrandSelected(brand: { code: string; name: string } | null): Promise<void> {
-    console.log('[PublishCarV2] Brand selected:', brand);
+    this.logger.debug('[PublishCarV2] Brand selected:', brand);
     this.selectedFIPEBrand.set(brand);
     this.selectedFIPEModel.set(null);
     this.fipeModels.set([]);
@@ -439,7 +441,7 @@ export class PublishCarV2Page implements OnInit {
       this.isLoadingFIPEModels.set(true);
       try {
         const models = await this.pricingService.getFipeModels(brand.code);
-        console.log('[PublishCarV2] Loaded models for brand:', models.length);
+        this.logger.debug('[PublishCarV2] Loaded models for brand:', models.length);
 
         // Convert to FIPEAutocompleteOption format
         const formattedModels = models.map((model) => ({
@@ -461,7 +463,7 @@ export class PublishCarV2Page implements OnInit {
    * Handle FIPE model selection
    */
   async onFIPEModelSelected(model: { code: string; name: string } | null): Promise<void> {
-    console.log('[PublishCarV2] Model selected:', model);
+    this.logger.debug('[PublishCarV2] Model selected:', model);
     this.selectedFIPEModel.set(model);
 
     // ✅ CRITICAL: model_id es UUID, NO código FIPE
@@ -483,7 +485,7 @@ export class PublishCarV2Page implements OnInit {
    */
   async onYearChange(): Promise<void> {
     const year = this.publishForm?.get('year')?.value;
-    console.log('[PublishCarV2] Year changed to:', year);
+    this.logger.debug('[PublishCarV2] Year changed to:', year);
 
     // Re-fetch FIPE value if we have all required data
     if (year && this.selectedFIPEBrand() && this.selectedFIPEModel()) {
@@ -501,7 +503,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Need all three to fetch value
     if (!brand || !model || !year) {
-      console.log('[PublishCarV2] Cannot fetch FIPE value - missing data:', {
+      this.logger.debug('[PublishCarV2] Cannot fetch FIPE value - missing data:', {
         brand: !!brand,
         model: !!model,
         year: !!year,
@@ -509,7 +511,7 @@ export class PublishCarV2Page implements OnInit {
       return;
     }
 
-    console.log('[PublishCarV2] Fetching FIPE value for:', {
+    this.logger.debug('[PublishCarV2] Fetching FIPE value for:', {
       brand: brand.name,
       model: model.name,
       year,
@@ -528,7 +530,7 @@ export class PublishCarV2Page implements OnInit {
         country: 'AR',
       });
 
-      console.log('[PublishCarV2] FIPE value result:', result);
+      this.logger.debug('[PublishCarV2] FIPE value result:', result);
 
       if (result && result.success && result.data) {
         // Store multi-currency values
@@ -561,7 +563,7 @@ export class PublishCarV2Page implements OnInit {
         });
 
         // ✅ NEW: Auto-categorize vehicle based on value USD
-        console.log('[PublishCarV2] Calling autoCategorizeVehicle with:', {
+        this.logger.debug('[PublishCarV2] Calling autoCategorizeVehicle with:', {
           valueUsd,
           brand: brand.name,
           model: model.name,
@@ -602,7 +604,7 @@ export class PublishCarV2Page implements OnInit {
 
         // ✅ FIPE es opcional - permitir input manual
         this.allowManualValueEdit.set(true);
-        console.log('[PublishCarV2] ⚠️ FIPE failed but manual input allowed');
+        this.logger.debug('[PublishCarV2] ⚠️ FIPE failed but manual input allowed');
       }
     } catch (err) {
       console.error('[PublishCarV2] Error fetching FIPE value:', err);
@@ -635,7 +637,7 @@ export class PublishCarV2Page implements OnInit {
     model: string,
     year: number,
   ): Promise<void> {
-    console.log('[PublishCarV2] Auto-categorizing vehicle:', { valueUsd, brand, model, year });
+    this.logger.debug('[PublishCarV2] Auto-categorizing vehicle:', { valueUsd, brand, model, year });
 
     // Validate inputs
     if (!valueUsd || valueUsd <= 0) {
@@ -653,7 +655,7 @@ export class PublishCarV2Page implements OnInit {
       });
 
       if (estimate && estimate.category_id) {
-        console.log(
+        this.logger.debug(
           '[PublishCarV2] ✅ Category from pricing_models:',
           estimate.category_name,
           `(${valueUsd} USD)`,
@@ -665,7 +667,7 @@ export class PublishCarV2Page implements OnInit {
           categoryControl.setValue(estimate.category_id, { emitEvent: true });
           categoryControl.markAsTouched();
           categoryControl.updateValueAndValidity();
-          console.log(
+          this.logger.debug(
             '[PublishCarV2] Category control updated, value:',
             categoryControl.value,
             'valid:',
@@ -714,12 +716,12 @@ export class PublishCarV2Page implements OnInit {
       categoryCode = 'luxury';
     }
 
-    console.log('[PublishCarV2] Value-based classification:', { valueUsd, categoryCode });
+    this.logger.debug('[PublishCarV2] Value-based classification:', { valueUsd, categoryCode });
 
     const category = categories.find((c) => c.code === categoryCode);
     if (category) {
       const categoryName = (category as { name_es?: string; name: string }).name_es || category.name;
-      console.log(
+      this.logger.debug(
         '[PublishCarV2] ✅ Category from value USD:',
         categoryName,
         `(${valueUsd} USD)`,
@@ -731,7 +733,7 @@ export class PublishCarV2Page implements OnInit {
         categoryControl.setValue(category['id'], { emitEvent: true });
         categoryControl.markAsTouched();
         categoryControl.updateValueAndValidity();
-        console.log(
+        this.logger.debug(
           '[PublishCarV2] Category control updated, value:',
           categoryControl.value,
           'valid:',
@@ -763,7 +765,7 @@ export class PublishCarV2Page implements OnInit {
     const categoryId = this.publishForm?.get('category_id')?.value;
     const isDynamic = this.isDynamicPricing();
 
-    console.log('[PublishCarV2] calculateSuggestedRate called:', {
+    this.logger.debug('[PublishCarV2] calculateSuggestedRate called:', {
       valueUsd,
       categoryId,
       isDynamic,
@@ -771,7 +773,7 @@ export class PublishCarV2Page implements OnInit {
 
     // Only calculate if dynamic pricing is enabled
     if (!isDynamic) {
-      console.log('[PublishCarV2] Dynamic pricing not enabled, skipping calculation');
+      this.logger.debug('[PublishCarV2] Dynamic pricing not enabled, skipping calculation');
       this.suggestedPrice.set(0);
       return;
     }
@@ -808,7 +810,7 @@ export class PublishCarV2Page implements OnInit {
         // ✅ CRITICAL: Also update the form field directly to ensure it's set
         if (this.publishForm && this.isDynamicPricing()) {
           const currentPrice = this.publishForm.get('price_per_day')?.value;
-          console.log('[PublishCarV2] Updating price_per_day:', {
+          this.logger.debug('[PublishCarV2] Updating price_per_day:', {
             currentPrice,
             suggestedPrice: roundedPrice,
             willUpdate: !currentPrice || currentPrice !== roundedPrice,
@@ -1100,7 +1102,7 @@ export class PublishCarV2Page implements OnInit {
       // Get form data
       const formData = this.formService.getFormData();
 
-      console.log('📝 Form data before processing:', {
+      this.logger.debug('📝 Form data before processing:', {
         brand_id: formData['brand_id'],
         model_id: formData['model_id'],
         year: formData['year'],
@@ -1116,7 +1118,7 @@ export class PublishCarV2Page implements OnInit {
           ? 50
           : 100; // Default: 50 si dinámico, 100 si custom
 
-      console.log('💰 Calculated price_per_day:', pricePerDay);
+      this.logger.debug('💰 Calculated price_per_day:', pricePerDay);
 
       const carData: Record<string, unknown> = {
         ...formData,
@@ -1171,7 +1173,7 @@ export class PublishCarV2Page implements OnInit {
 
       carData['status'] = 'active' as const; // Car is active inmediatamente y aparecerá en el mapa
 
-      console.log('🚗 Final car data to submit:', {
+      this.logger.debug('🚗 Final car data to submit:', {
         ...carData,
         // Redact sensitive data
         owner_id: carData['owner_id'] ? '***' : undefined,

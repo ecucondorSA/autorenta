@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import {Component,
   Input,
   OnInit,
@@ -168,6 +169,7 @@ export interface WazeMapOptions {
   ],
 })
 export class WazeLiveMapComponent implements OnInit, OnChanges {
+  private readonly logger = inject(LoggerService);
   @Input({ required: true }) lat!: number;
   @Input({ required: true }) lng!: number;
   @Input() zoom = 14; // Default zoom level
@@ -253,7 +255,7 @@ export class WazeLiveMapComponent implements OnInit, OnChanges {
   onMapLoad(): void {
     this.isLoading.set(false);
     this.hasError.set(false);
-    console.log('[WazeLiveMap] Map loaded successfully');
+    this.logger.debug('[WazeLiveMap] Map loaded successfully');
   }
 
   /**

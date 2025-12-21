@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { LoggerService } from './logger.service';
+import {Injectable, signal, computed, inject} from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 /**
@@ -59,6 +60,7 @@ export interface HttpLogEntry {
   providedIn: 'root'
 })
 export class DebugService {
+  private readonly logger = inject(LoggerService);
   private readonly MAX_LOGS = 500;
   private readonly MAX_HTTP_LOGS = 100;
   private logIdCounter = 0;
@@ -127,7 +129,7 @@ export class DebugService {
       sessionInfo: this.sessionInfo,
     };
 
-    console.log('[AR] __AR_DEBUG__ exposed globally for e2e tests');
+    this.logger.debug('[AR] __AR_DEBUG__ exposed globally for e2e tests');
   }
 
   /**
@@ -327,7 +329,7 @@ export class DebugService {
 
     switch (entry.level) {
       case 'DEBUG':
-        console.log(`%c${prefix}%c ${entry.message}`, style, resetStyle, entry.data ?? '');
+        console.debug(`%c${prefix}%c ${entry.message}`, style, resetStyle, entry.data ?? '');
         break;
       case 'INFO':
         console.info(`%c${prefix}%c ${entry.message}`, style, resetStyle, entry.data ?? '');

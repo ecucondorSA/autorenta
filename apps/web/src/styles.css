@@ -1705,3 +1705,51 @@ app-pwa-install-banner > div {
   @apply font-tech text-xs text-text-secondary;
   font-feature-settings: 'tnum' 1;
 }
+
+/* Modern approve confirmation (Ionic Alert) */
+.pending-approval-alert .alert-wrapper {
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow:
+    0 20px 40px rgba(15, 23, 42, 0.18),
+    0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.pending-approval-alert .alert-head h2 {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pending-approval-alert .alert-message {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.pending-approval-alert .alert-button-group {
+  padding: 0 16px 16px;
+  gap: 8px;
+}
+
+.pending-approval-alert .alert-button {
+  border-radius: 999px;
+  padding: 8px 18px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.pending-approval-alert .alert-button.alert-confirm {
+  border-color: #2ecc71;
+  background: #2ecc71;
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(46, 204, 113, 0.28);
+}
+
+.pending-approval-alert .alert-button.alert-button-role-cancel {
+  background: #f8fafc;
+  color: #334155;
+}

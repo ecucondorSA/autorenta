@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -31,6 +32,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class TikTokEventsService {
+  private readonly logger = inject(LoggerService);
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
 
@@ -247,7 +249,7 @@ export class TikTokEventsService {
    */
   private async sendEvent(event: string, properties: Record<string, unknown>): Promise<void> {
     if (!this.isEnabled) {
-      console.log('[TikTok Events] Disabled in development');
+      this.logger.debug('[TikTok Events] Disabled in development');
       return;
     }
 
@@ -277,7 +279,7 @@ export class TikTokEventsService {
         }),
       );
 
-      console.log(`[TikTok Events] ${event} sent successfully`);
+      this.logger.debug(`[TikTok Events] ${event} sent successfully`);
     } catch (error) {
       // Fail silently to not break user experience
       console.error(`[TikTok Events] Error sending ${event}:`, error);

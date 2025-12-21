@@ -3,6 +3,7 @@ import {Component, OnDestroy, OnInit, computed, inject, signal, ViewChild,
   ChangeDetectionStrategy} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { BookingsService } from '../../../core/services/bookings.service';
 import { NotificationManagerService } from '../../../core/services/notification-manager.service';
@@ -38,15 +39,17 @@ interface PendingApproval {
 export class PendingApprovalPage implements OnInit, OnDestroy {
   private readonly bookingsService = inject(BookingsService);
   private readonly toastService = inject(NotificationManagerService);
+  private readonly alertController = inject(AlertController);
   private readonly router = inject(Router);
   private pollInterval?: ReturnType<typeof setInterval>;
 
   readonly loading = signal(true);
   readonly pendingBookings = signal<PendingApproval[]>([]);
   readonly processingBookingId = signal<string | null>(null);
-  readonly showRejectModal = signal(false);
+  readonly showRejectDrawer = signal(false);
   readonly selectedBookingId = signal<string | null>(null);
   readonly rejectionReason = signal('');
+  readonly customReason = signal('');
   readonly showAnalysisPanel = signal(false);
   readonly selectedAnalysisBooking = signal<PendingApproval | null>(null);
 
@@ -94,9 +97,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
   async onApprove(bookingId: string) {
     if (this.processingBookingId()) return;
 
-    const confirmed = confirm(
-      '¿Estás seguro de aprobar esta reserva? El pago se procesará y la reserva quedará confirmada.',
-    );
+    const confirmed = await this.confirmApprove();
     if (!confirmed) return;
 
     this.processingBookingId.set(bookingId);
@@ -120,12 +121,19 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
   onRejectClick(bookingId: string) {
     this.selectedBookingId.set(bookingId);
     this.rejectionReason.set('');
-    this.showRejectModal.set(true);
+    this.customReason.set('');
+    this.showRejectDrawer.set(true);
+    document.body.style.overflow = 'hidden';
   }
 
   async onConfirmReject() {
     const bookingId = this.selectedBookingId();
-    const reason = this.rejectionReason();
+    let reason = this.rejectionReason();
+
+    // Si eligió "other", usar la razón personalizada
+    if (reason === 'other') {
+      reason = this.customReason() || 'Otra razón';
+    }
 
     if (!bookingId || !reason) {
       this.toastService.warning('Advertencia', 'Por favor selecciona una razón');
@@ -133,13 +141,13 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
     }
 
     this.processingBookingId.set(bookingId);
-    this.showRejectModal.set(false);
 
     try {
       const result = await this.bookingsService.rejectBooking(bookingId, reason);
 
       if (result.success) {
-        this.toastService.success('Éxito', '✅ Reserva rechazada. Se notificará al cliente.');
+        this.toastService.success('Éxito', 'Reserva rechazada. Se notificará al cliente.');
+        this.onCancelReject();
         await this.loadPendingApprovals();
       } else {
         this.toastService.error('Error', `Error: ${result.error}`);
@@ -148,14 +156,15 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
       this.toastService.error('Error', 'Error al rechazar reserva');
     } finally {
       this.processingBookingId.set(null);
-      this.selectedBookingId.set(null);
     }
   }
 
   onCancelReject() {
-    this.showRejectModal.set(false);
+    this.showRejectDrawer.set(false);
     this.selectedBookingId.set(null);
     this.rejectionReason.set('');
+    this.customReason.set('');
+    document.body.style.overflow = '';
   }
 
   getUrgencyClass(hoursRemaining: number): string {
@@ -203,9 +212,7 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
     const booking = this.selectedAnalysisBooking();
     if (!booking) return;
 
-    const confirmed = confirm(
-      '¿Estás seguro de aprobar esta reserva? El pago se procesará y la reserva quedará confirmada.',
-    );
+    const confirmed = await this.confirmApprove();
     if (!confirmed) {
       this.analysisPanel?.resetApproving();
       return;
@@ -230,6 +237,23 @@ export class PendingApprovalPage implements OnInit, OnDestroy {
     } finally {
       this.processingBookingId.set(null);
     }
+  }
+
+  private async confirmApprove(): Promise<boolean> {
+    const alert = await this.alertController.create({
+      cssClass: 'pending-approval-alert',
+      header: 'Confirmar aprobación',
+      message:
+        '<strong>El pago se procesará</strong> y la reserva quedará confirmada. ¿Querés continuar?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Aprobar', role: 'confirm', cssClass: 'alert-confirm' },
+      ],
+    });
+
+    await alert.present();
+    const { role } = await alert.onDidDismiss();
+    return role === 'confirm';
   }
 
   onAnalysisReject(): void {

@@ -31,7 +31,7 @@ describe('PublishCarPhotoService', () => {
     ]);
 
     // Mock fetch para devolver blob
-    spyOn(window, 'fetch').and.callFake(async (url: RequestInfo) => {
+    spyOn(window, 'fetch').and.callFake(async (url: RequestInfo | URL) => {
       const data = new Uint8Array([1, 2, 3]);
       return new Response(data, { status: 200, headers: { 'Content-Type': 'image/jpeg' } });
     });

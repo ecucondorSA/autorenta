@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
@@ -193,6 +194,7 @@ class QuadTree {
   encapsulation: ViewEncapsulation.None,
 })
 export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  private readonly logger = inject(LoggerService);
   @ViewChild('mapContainer') mapContainer!: ElementRef<HTMLDivElement>;
 
   @Input() cars: CarMapLocation[] = [];
@@ -454,11 +456,11 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       const preloadedMapboxGL = this.mapboxPreloader.getMapboxGL();
 
       if (preloadedMapboxGL) {
-        console.log('[CarsMap] Using preloaded Mapbox GL module - faster initialization!');
+        this.logger.debug('[CarsMap] Using preloaded Mapbox GL module - faster initialization!');
         this.mapboxgl = preloadedMapboxGL;
       } else {
         // Fallback: Lazy load Mapbox GL if not preloaded
-        console.log('[CarsMap] Mapbox GL not preloaded, loading dynamically...');
+        this.logger.debug('[CarsMap] Mapbox GL not preloaded, loading dynamically...');
         const mapboxModule = await import('mapbox-gl');
         this.mapboxgl = mapboxModule.default;
       }
@@ -2300,7 +2302,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         this.map.setPaintProperty(this.isochroneOutlineLayerId, 'line-color', outlineColor);
       }
 
-      console.log(
+      this.logger.debug(
         `[CarsMap] Added delivery isochrone: ${minutes} min driving radius from car location`,
       );
     } catch (error) {
@@ -2444,7 +2446,7 @@ export class CarsMapComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
         pitch: 0, // Flat 2D view
       });
 
-      console.log('[CarsMap] Directions route added:', {
+      this.logger.debug('[CarsMap] Directions route added:', {
         duration: this.directionsService.formatDuration(route.duration),
         distance: this.directionsService.formatDistance(route.distance),
       });

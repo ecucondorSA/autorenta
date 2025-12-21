@@ -193,10 +193,6 @@ export class OwnerBookingsPage implements OnInit {
     return booking.status === 'in_progress';
   }
 
-  canStartRental(booking: Booking): boolean {
-    return booking.status === 'confirmed';
-  }
-
   canCompleteRental(booking: Booking): boolean {
     return booking.status === 'in_progress';
   }
@@ -216,46 +212,9 @@ export class OwnerBookingsPage implements OnInit {
     return validStatusForDispute && !existingDisputeActive;
   }
 
-  async onStartRental(bookingId: string): Promise<void> {
-    const confirmed = await this.presentConfirmation({
-      header: 'Iniciar alquiler',
-      message: 'Confirmá que el locatario recibió el auto.',
-      confirmText: 'Iniciar',
-    });
-    if (!confirmed) return;
-
-    this.processingAction.set(bookingId);
-    try {
-      await this.bookingsService.updateBooking(bookingId, { status: 'in_progress' });
-      await this.loadBookings();
-      await this.presentToast('Alquiler iniciado correctamente');
-    } catch (error) {
-      console.error('Error starting rental:', error);
-      await this.presentToast('Error al iniciar el alquiler', 'danger');
-    } finally {
-      this.processingAction.set(null);
-    }
-  }
-
   async onCompleteRental(bookingId: string): Promise<void> {
-    const confirmed = await this.presentConfirmation({
-      header: 'Finalizar alquiler',
-      message: 'Confirmá que el locatario devolvió el auto en buen estado.',
-      confirmText: 'Finalizar',
-    });
-    if (!confirmed) return;
-
-    this.processingAction.set(bookingId);
-    try {
-      await this.bookingsService.updateBooking(bookingId, { status: 'completed' });
-      await this.loadBookings();
-      await this.presentToast('Alquiler finalizado correctamente');
-    } catch (error) {
-      console.error('Error completing rental:', error);
-      await this.presentToast('Error al finalizar el alquiler', 'danger');
-    } finally {
-      this.processingAction.set(null);
-    }
+    // Redirect owner to proper check-out flow (inspection + confirmation)
+    this.router.navigate(['/bookings', bookingId, 'owner-check-out']);
   }
 
   async onCancelBooking(bookingId: string): Promise<void> {

@@ -1,3 +1,4 @@
+import { LoggerService } from '../../../core/services/logger.service';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -109,6 +110,7 @@ interface CarDetailState {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   // ✅ NEW: ViewChild references for scroll behavior
   @ViewChild('stickyHeader', { read: ElementRef }) stickyHeaderRef?: ElementRef<HTMLDivElement>;
   @ViewChild('mainHeader', { read: ElementRef }) mainHeaderRef?: ElementRef<HTMLDivElement>;
@@ -221,9 +223,9 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       }
       // ✅ FIX: Validar que el ID sea un UUID válido
       // Previene errores cuando se navega a rutas como /cars/publish
-      console.log(`CarDetailPage: Validating ID: ${id}`);
+      this.logger.debug(`CarDetailPage: Validating ID: ${id}`);
       if (!this.isValidUUID(id)) {
-        console.log(`CarDetailPage: Invalid UUID: ${id}, redirecting to /cars`);
+        this.logger.debug(`CarDetailPage: Invalid UUID: ${id}, redirecting to /cars`);
         // Redirigir a la lista de autos si el ID no es válido
         setTimeout(() => this.router.navigate(['/cars']), 100);
         return of({
@@ -234,7 +236,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
           error: 'ID de auto inválido',
         });
       }
-      console.log(`CarDetailPage: Valid UUID: ${id}, fetching data...`);
+      this.logger.debug(`CarDetailPage: Valid UUID: ${id}, fetching data...`);
       return combineLatest([
         from(this.carsService.getCarById(id)),
         from(this.reviewsService.getReviewsForCar(id)).pipe(
@@ -246,7 +248,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       ]).pipe(
         map(([car, reviews, stats]) => {
           if (car) {
-            console.log('CarDetailPage: Car loaded:', JSON.stringify(car));
+            this.logger.debug('CarDetailPage: Car loaded:', JSON.stringify(car));
             this.updateMetaTags(car, stats);
           }
           return { car, reviews, stats, loading: false, error: car ? null : 'Auto no disponible' };
@@ -925,7 +927,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         const quote = await this.urgentRentalService.getUrgentQuote(car.id, car.region_id, hours);
         // Usar el precio por hora del sistema de pricing dinámico
         this.dynamicHourlyRate.set(quote.hourlyRate);
-        console.log(
+        this.logger.debug(
           `💰 [CarDetail] Express mode hourly rate: $${quote.hourlyRate}/hora (quote para ${hours} horas)`,
         );
       } catch {
@@ -935,7 +937,7 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
         if (pricePerDay > 0) {
           const fallbackHourly = (pricePerDay * 0.75) / 24;
           this.dynamicHourlyRate.set(fallbackHourly);
-          console.log(`💰 [CarDetail] Using fallback hourly rate: $${fallbackHourly}/hora`);
+          this.logger.debug(`💰 [CarDetail] Using fallback hourly rate: $${fallbackHourly}/hora`);
         }
       } finally {
         this.hourlyRateLoading.set(false);
@@ -1382,11 +1384,13 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
       // TODO: Migrar inline calendar a usar blockedRanges también
       const blocked = new Set<string>();
       ranges.forEach((range: { from: string; to: string }) => {
-        const start = new Date(range.from);
-        const end = new Date(range.to);
+        const start = this.parseToLocalDate(range.from);
+        const end = this.parseToLocalDate(range.to);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
         const currentDate = new Date(start);
         while (currentDate <= end) {
-          blocked.add(currentDate.toISOString().split('T')[0]);
+          blocked.add(this.toLocalDateString(currentDate));
           currentDate.setDate(currentDate.getDate() + 1);
         }
       });
@@ -1410,8 +1414,24 @@ export class CarDetailPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private normalizeDateInput(value: string): string {
+    const parsed = this.parseToLocalDate(value);
+    return isNaN(parsed.getTime()) ? value : this.toLocalDateString(parsed);
+  }
+
+  private toLocalDateString(value: Date): string {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseToLocalDate(value: string): Date {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
     const parsed = new Date(value);
-    return isNaN(parsed.getTime()) ? value : parsed.toISOString().split('T')[0];
+    return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
   }
 
   /**

@@ -1,3 +1,4 @@
+import { LoggerService } from '../../core/services/logger.service';
 
 import {Component, OnDestroy, OnInit, inject, signal,
   ChangeDetectionStrategy} from '@angular/core';
@@ -223,6 +224,7 @@ import { UnreadMessagesService } from '../../core/services/unread-messages.servi
   `,
 })
 export class InboxPage implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   private readonly router = inject(Router);
   private readonly messagesService = inject(MessagesService);
   private readonly authService = inject(AuthService);
@@ -501,7 +503,7 @@ export class InboxPage implements OnInit, OnDestroy {
       const bucket = fileType === 'document' ? 'documents' : 'avatars';
       const fileSize = (file.size / 1024).toFixed(2);
 
-      console.log(`📤 Subiendo archivo: ${fileName} (${fileSize}KB) al bucket ${bucket}`);
+      this.logger.debug(`📤 Subiendo archivo: ${fileName} (${fileSize}KB) al bucket ${bucket}`);
 
       // Mostrar notificación de progreso
       this.notifications.info('Subiendo archivo', `${file.name} (${fileSize}KB)`, 2000);
@@ -518,12 +520,12 @@ export class InboxPage implements OnInit, OnDestroy {
         throw new Error(error['message'] || 'Error al subir archivo');
       }
 
-      console.log(`✅ Archivo subido exitosamente:`, data);
+      this.logger.debug(`✅ Archivo subido exitosamente:`, data);
 
       // Obtener URL pública del archivo
       const { data: urlData } = this.supabase.storage.from(bucket).getPublicUrl(filePath);
 
-      console.log(`🔗 URL pública: ${urlData.publicUrl}`);
+      this.logger.debug(`🔗 URL pública: ${urlData.publicUrl}`);
 
       // Notificación de éxito profesional
       this.notifications.success(

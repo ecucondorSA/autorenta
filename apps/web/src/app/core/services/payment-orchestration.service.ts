@@ -303,6 +303,8 @@ export class PaymentOrchestrationService {
       } else if (status === 'rejected' || status === 'failed') {
         await this.bookingsService.updateBooking(booking_id, {
           status: 'cancelled',
+          cancelled_by_role: 'system',
+          cancellation_reason: 'payment_failed',
         });
 
         // Unlock wallet funds if they were locked

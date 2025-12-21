@@ -1,3 +1,4 @@
+import { LoggerService } from './logger.service';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, from, map, of } from 'rxjs';
 import {
@@ -25,6 +26,7 @@ import { SupabaseClientService } from './supabase-client.service';
   providedIn: 'root',
 })
 export class FxService {
+  private readonly logger = inject(LoggerService);
   private supabaseClient = inject(SupabaseClientService).getClient();
   private exchangeRateService = inject(ExchangeRateService);
 
@@ -70,7 +72,7 @@ export class FxService {
           variationThreshold: 0.1,
         };
 
-        console.log(
+        this.logger.debug(
           `💱 FX Snapshot - Tasa: ${snapshot.rate} ARS/USD (fuente: ${data.source}, actualizada: ${data.last_updated})`,
         );
 

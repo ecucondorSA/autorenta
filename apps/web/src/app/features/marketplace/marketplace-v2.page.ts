@@ -1,3 +1,4 @@
+import { LoggerService } from '../../core/services/logger.service';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -102,6 +103,7 @@ export interface Stat {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarketplaceV2Page implements OnInit, OnDestroy {
+  private readonly logger = inject(LoggerService);
   @ViewChild('drawerContent', { read: ElementRef }) drawerContent?: ElementRef<HTMLDivElement>;
   @ViewChild('hdriViewer') hdriViewer?: HdriBackgroundComponent;
 
@@ -377,7 +379,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
     if (this.isBrowser) {
       setTimeout(() => {
         this.mapboxPreloader.preloadMap().then(() => {
-          console.log('[Marketplace] Mapbox map fully preloaded');
+          this.logger.debug('[Marketplace] Mapbox map fully preloaded');
         });
       }, 1000);
     }
@@ -675,7 +677,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
       }
       const ids: string[] = await response.json();
       this.generatedPhotoIds.set(new Set(ids));
-      console.log(`✅ Manifest de fotos cargado. ${ids.length} fotos IA disponibles.`);
+      this.logger.debug(`✅ Manifest de fotos cargado. ${ids.length} fotos IA disponibles.`);
     } catch (error) {
       console.error('Error cargando manifest de fotos:', error);
     }
@@ -832,7 +834,7 @@ export class MarketplaceV2Page implements OnInit, OnDestroy {
         const carsData = (data as Car[]) || [];
         
         // DEBUG: Listar autos para generar fotos correctas
-        console.log('🚗 AUTOS EN GRID:', carsData.map(c => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`));
+        this.logger.debug('🚗 AUTOS EN GRID:', carsData.map(c => `${c.id}: ${c.brand_text_backup} ${c.model_text_backup}`));
 
         this.cars.set(carsData);
         await this.loadLatestLocationsFor(carsData);
